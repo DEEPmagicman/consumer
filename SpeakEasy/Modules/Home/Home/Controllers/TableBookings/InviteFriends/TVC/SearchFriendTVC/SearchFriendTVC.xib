@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SearchFriendTVC" rowHeight="52" id="KGk-i7-Jjw" customClass="SearchFriendTVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MuF-WP-VJQ" customClass="RoundedView" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                        <rect key="frame" x="20" y="0.0" width="280" height="40"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SearchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="RUb-y9-dzm">
+                                <rect key="frame" x="12" y="11" width="18" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="18" id="Aca-Ld-ShN"/>
+                                    <constraint firstAttribute="height" constant="18" id="atu-74-a7W"/>
+                                </constraints>
+                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Friends" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uXh-W9-2Qo">
+                                <rect key="frame" x="38" y="8" width="230" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="0.20392155649999999" green="0.20392155649999999" blue="0.20392155649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="uXh-W9-2Qo" secondAttribute="trailing" constant="12" id="5kV-9C-ACl"/>
+                            <constraint firstAttribute="height" constant="40" id="Efc-np-cz5"/>
+                            <constraint firstItem="uXh-W9-2Qo" firstAttribute="top" secondItem="MuF-WP-VJQ" secondAttribute="top" constant="8" id="OF2-lK-4lL"/>
+                            <constraint firstItem="uXh-W9-2Qo" firstAttribute="leading" secondItem="RUb-y9-dzm" secondAttribute="trailing" constant="8" id="R3h-mk-KPk"/>
+                            <constraint firstItem="RUb-y9-dzm" firstAttribute="centerY" secondItem="MuF-WP-VJQ" secondAttribute="centerY" id="hGV-5N-w9E"/>
+                            <constraint firstAttribute="bottom" secondItem="uXh-W9-2Qo" secondAttribute="bottom" constant="8" id="wBV-CI-Z0w"/>
+                            <constraint firstItem="RUb-y9-dzm" firstAttribute="leading" secondItem="MuF-WP-VJQ" secondAttribute="leading" constant="12" id="ySj-2f-Ef2"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="MuF-WP-VJQ" secondAttribute="bottom" id="0yU-Tt-5l6"/>
+                    <constraint firstItem="MuF-WP-VJQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="AyD-kA-kOX"/>
+                    <constraint firstAttribute="trailing" secondItem="MuF-WP-VJQ" secondAttribute="trailing" constant="20" id="T0H-Tf-FTa"/>
+                    <constraint firstItem="MuF-WP-VJQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="tJr-id-tR6"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <point key="canvasLocation" x="137.68115942028987" y="80.357142857142847"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="SearchIcon" width="19" height="19"/>
+    </resources>
+</document>

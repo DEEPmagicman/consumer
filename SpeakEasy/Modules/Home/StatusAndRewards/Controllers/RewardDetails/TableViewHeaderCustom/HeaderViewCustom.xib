@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Bold.ttf">
+            <string>Poppins-Bold</string>
+        </array>
+        <array key="Poppins-Regular.ttf">
+            <string>Poppins-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HeaderViewCustom" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RewardCover" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-bZ-FMQ">
+                    <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRYSM Chicago" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-2f-E7N" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                    <rect key="frame" x="16" y="183" width="208" height="35"/>
+                    <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                            <real key="value" value="25"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-location" translatesAutoresizingMaskIntoConstraints="NO" id="776-IN-w6A">
+                    <rect key="frame" x="16" y="237" width="12" height="15"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="632 N. Dearborn Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFG-hn-X9Y" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                    <rect key="frame" x="40" y="234" width="205" height="21"/>
+                    <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                            <real key="value" value="15"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(224) 888-0388" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-ic-xoi" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                    <rect key="frame" x="40" y="267" width="124" height="21"/>
+                    <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                            <real key="value" value="15"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone" translatesAutoresizingMaskIntoConstraints="NO" id="hPP-di-3XM">
+                    <rect key="frame" x="16" y="270" width="12" height="15.5"/>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <constraints>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="m0e-ic-xoi" secondAttribute="trailing" constant="12" id="19C-Sg-tfZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="d3O-2f-E7N" secondAttribute="trailing" constant="12" id="3Kx-sj-dh9"/>
+                <constraint firstItem="m0e-bZ-FMQ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="3Le-R9-TCj"/>
+                <constraint firstItem="hPP-di-3XM" firstAttribute="centerY" secondItem="m0e-ic-xoi" secondAttribute="centerY" id="6z5-f0-5gF"/>
+                <constraint firstItem="m0e-ic-xoi" firstAttribute="leading" secondItem="hPP-di-3XM" secondAttribute="trailing" constant="12" id="DOS-vJ-t7s"/>
+                <constraint firstAttribute="bottom" secondItem="m0e-ic-xoi" secondAttribute="bottom" constant="12" id="EBN-Tg-0J1"/>
+                <constraint firstItem="hPP-di-3XM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="FCu-4O-wCV"/>
+                <constraint firstItem="776-IN-w6A" firstAttribute="leading" secondItem="hPP-di-3XM" secondAttribute="leading" id="Iz9-2w-6J5"/>
+                <constraint firstAttribute="bottom" secondItem="m0e-bZ-FMQ" secondAttribute="bottom" id="LUF-Ti-aFI"/>
+                <constraint firstItem="vFG-hn-X9Y" firstAttribute="top" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="16" id="M6x-mh-BMD"/>
+                <constraint firstItem="m0e-ic-xoi" firstAttribute="top" secondItem="vFG-hn-X9Y" secondAttribute="bottom" constant="12" id="PBD-gJ-6Ly"/>
+                <constraint firstItem="d3O-2f-E7N" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="leading" id="Yvr-rq-Jt2"/>
+                <constraint firstItem="vFG-hn-X9Y" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="trailing" constant="12" id="agE-zA-a08"/>
+                <constraint firstItem="vFG-hn-X9Y" firstAttribute="centerY" secondItem="776-IN-w6A" secondAttribute="centerY" id="epe-uT-PHZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="m0e-bZ-FMQ" secondAttribute="trailing" id="l3s-nK-FkP"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vFG-hn-X9Y" secondAttribute="trailing" constant="12" id="rHM-Af-axq"/>
+                <constraint firstItem="m0e-bZ-FMQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wWH-So-ci4"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="205.07246376811597" y="-166.74107142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="RewardCover" width="390" height="301"/>
+        <image name="ic-location" width="12.5" height="15"/>
+        <image name="phone" width="12" height="15.5"/>
+    </resources>
+</document>

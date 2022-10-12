@@ -1,0 +1,52 @@
+//
+//  InviteFriendsCostSplitTVC.swift
+//  SpeakEasy-Consumer
+//
+//  Created by Osama on 28/09/2022.
+//
+
+import UIKit
+
+class InviteFriendsCostSplitTVC: UITableViewCell {
+
+    @IBOutlet weak var collectionView: UICollectionView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setUI()
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+    }
+    
+    private func setUI() {
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        
+        self.registerCells()
+    }
+    private func registerCells() {
+        self.collectionView.register(UINib(nibName: "FriendsListCVC", bundle: nil), forCellWithReuseIdentifier: "FriendsListCVC")
+    }
+}
+
+//MARK: CollectionView
+extension InviteFriendsCostSplitTVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FriendsListCVC", for: indexPath) as! FriendsListCVC
+        return cell
+        
+    }
+}
+extension InviteFriendsCostSplitTVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellSize: CGSize = CGSize(width: 66, height: collectionView.frame.height)
+            return cellSize
+    }
+}

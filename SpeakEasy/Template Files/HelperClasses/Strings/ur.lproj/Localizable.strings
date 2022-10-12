@@ -1,0 +1,81 @@
+/*
+  localizable.strings
+  TruckerDriver
+
+  Created by macbook on 18/02/2021.
+  Copyright © 2021 Marine group. All rights reserved.
+*/
+
+
+    //MARK: Notifies
+"No data available." = "کوئی ڈیٹا میسر نہیں.";
+"Alert" = "انتباہ";
+"Alert" = "خرابی";
+"Unknown error" = "نامعلوم خامی";
+"Yes" = "جی ہاں";
+"No" = "نہیں";
+"Ok" = "ٹھیک ہے";
+"Cancel" = "منسوخ کریں";
+"Continue" = "جاری رہے";
+"Confirm" = "تصدیق کریں";
+"Later" = "بعد میں";
+"Success" = "کامیابی";
+"Confirmation" = "تصدیق";
+"A verification PIN has been sent to your provided email address." = "آپ کے فراہم کردہ ای میل پتے پر توثیقی پن بھیج دیا گیا ہے۔.";
+    
+    //MARK: Validation
+"Please provide your valid email address or mobile number to login." = "براہ کرم لاگ ان کے لئے اپنا درست ای میل پتہ یا موبائل نمبر فراہم کریں۔.";
+"Please upload your profile picture." = "براہ کرم اپنی پروفائل تصویر اپ لوڈ کریں۔.";
+"Name should contain atleast 3 characters." = "نام میں کم از کم 3 حرف ہونے چاہ.۔";
+"First name should contain atleast 3 characters." = "پہلے نام میں کم از کم 3 حرف ہونے چاہ.۔";
+"Last name should contain atleast 3 characters." = "آخری نام میں کم از کم 3 حرف ہونے چاہ.۔";
+"Please select your gender." = "براہ کرم اپنی جنس منتخب کریں۔";
+"Please select your date of birth." = "براہ کرم اپنی تاریخ پیدائش منتخب کریں۔";
+"Please provide a valid Email Address." = "براہ کرم ایک درست ای میل ایڈریس فراہم کریں۔";
+"Please provide a valid Phone Number." = "براہ کرم ایک درست فون نمبر فراہم کریں۔";
+"Please provide a valid OTP Code." = "براہ کرم ایک درست او ٹی پی کوڈ فراہم کریں۔";
+"Please select your country." = "براہ کرم اپنا ملک منتخب کریں۔";
+"Please enter your city." = "براہ کرم اپنے شہر میں داخل ہوں۔";
+"Please enter your zip code." = "براہ مہربانی اپنا زپ کوڈ درج کریں.";
+"Please provide password." = "براہ کرم پاس ورڈ مہیا کریں";
+"Please confirm your password." = "براہ کرم اپنے پاس ورڈ کی تصدیق کریں۔";
+"Password should contain minimum of 6 characters." = "پاس ورڈ میں کم از کم 6 حرف ہونے چاہئیں۔";
+"Password should contain minimum of 8 characters with atleast 1 uppercase, 1 lowercase and 1 digit." = "پاس ورڈ میں کم از کم 8 حرف ہونا چاہئے جس میں کم از کم 1 بڑے ، 1 چھوٹے اور 1 ہندسہ ہوتا ہے۔";
+"At least 6 characters." = "کم از کم 6 حرف";
+"New password and confirm password does not match." = "نیا پاس ورڈ اور تصدیق شدہ پاس ورڈ مماثل نہیں ہیں۔";
+"All Fields are required!" = "تمام خانے ضروری ہیں!";
+"Please provide complete PIN." = "براہ کرم پورا پن مہیا کریں۔";
+"You have successfully updated your password." = "آپ نے کامیابی کے ساتھ اپنا پاس ورڈ اپ ڈیٹ کر لیا ہے۔";
+"Invalid URL" = "غلط URL";
+"Login" = "لاگ ان کریں";
+"Logout" = "لاگ آوٹ";
+"Are you sure you want to logout?" = "کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟";
+"Please login to continue." = "جاری رکھنے کے لئے لاگ ان کریں.";
+    
+"Invalid response for route:" = "راستے کے لئے غلط جواب:";
+"Unable to connect server\n Please check your internet connection and try again later." = "سرور سے رابطہ قائم کرنے سے قاصر \ n براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں اور بعد میں دوبارہ کوشش کریں۔";
+"Invalid authentication token supplied." = "غلط توثیق کا ٹوکن فراہم ہوا۔";
+"Password updated successfully." = "پاس ورڈ کامیابی کے ساتھ اپ ڈیٹ ہوا۔";
+"Message delivered" = "پیغام پہنچایا";
+"Our team will respond you shortly." = "ہماری ٹیم جلد ہی آپ کو جواب دے گی۔";
+"Please check your email and click on the provided link to reset your password." = "براہ کرم اپنا ای میل چیک کریں اور اپنے پاس ورڈ کو دوبارہ ترتیب دینے کیلئے فراہم کردہ لنک پر کلک کریں۔";
+"Are you sure you want to delete this notification?" = "کیا آپ واقعی اس اطلاع کو حذف کرنا چاہتے ہیں؟";
+"Privacy Policy" = "رازداری کی پالیسی";
+"Terms And Conditions" = "شرائط و ضوابط";
+"KM" = "کلومیٹر";
+"you have a shipment ready to pick" = "آپ کے پاس سامان لینے کے لئے تیار ہے";
+"PKR" = "PKR";
+"Please select Expense type" = "برائے کرم اخراجات کی قسم منتخب کریں";
+"Please enter valid amount" = "براہ کرم درست رقم درج کریں";
+"Please select atleast one attachment" = "براہ کرم کم از کم ایک ملحق منتخب کریں";
+"How do you want to set your document?" = "آپ اپنی دستاویز کیسے ترتیب دینا چاہتے ہیں؟";
+"Camera" = "کیمرہ";
+"Gallery" = "گیلری";
+"N/A" = "N/A";
+"SOS enabled" = "مصیبت کا اشارہ فعال ہے";
+"SOS disabled" = "مصیبت کا اشارہ غیر فعال";
+"Expense added successfully" = "لاگت کامیابی کے ساتھ شامل کی گئی";
+"Pull to refresh" = "ریفریش";
+"Please complete current trip first" = "براہ کرم پہلے موجودہ سفر مکمل کریں";
+"Please install google maps to use this feature" = "براہ کرم اس خصوصیت کو استعمال کرنے کیلئے گوگل نقشہ جات انسٹال کریں";
+"Please write your remarks here" = "برائے کرم اپنے تاثرات یہاں لکھیں";

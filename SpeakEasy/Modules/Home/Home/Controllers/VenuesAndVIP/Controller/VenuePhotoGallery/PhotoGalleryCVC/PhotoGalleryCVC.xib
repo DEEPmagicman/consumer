@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoGalleryCVC" id="gTV-IL-0wX" userLabel="PhotoGalleryCVC" customClass="PhotoGalleryCVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="290" height="228"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="290" height="228"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDd-Fc-7PX">
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="228"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="venueBG" translatesAutoresizingMaskIntoConstraints="NO" id="Xxd-iG-IRN">
+                                <rect key="frame" x="0.0" y="0.0" width="290" height="228"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Xxd-iG-IRN" firstAttribute="leading" secondItem="sDd-Fc-7PX" secondAttribute="leading" id="3uI-NU-rGq"/>
+                            <constraint firstAttribute="trailing" secondItem="Xxd-iG-IRN" secondAttribute="trailing" id="FLz-rM-tME"/>
+                            <constraint firstAttribute="bottom" secondItem="Xxd-iG-IRN" secondAttribute="bottom" id="Pkn-1g-27c"/>
+                            <constraint firstItem="Xxd-iG-IRN" firstAttribute="top" secondItem="sDd-Fc-7PX" secondAttribute="top" id="Z6x-4B-wlp"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="sDd-Fc-7PX" secondAttribute="bottom" id="UZC-sy-SFS"/>
+                <constraint firstAttribute="trailing" secondItem="sDd-Fc-7PX" secondAttribute="trailing" id="aJl-Aj-3oT"/>
+                <constraint firstItem="sDd-Fc-7PX" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="fFF-PN-HPc"/>
+                <constraint firstItem="sDd-Fc-7PX" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="zfX-8G-beT"/>
+            </constraints>
+            <size key="customSize" width="381" height="153"/>
+            <connections>
+                <outlet property="imgProduct" destination="Xxd-iG-IRN" id="820-Bq-3Rk"/>
+            </connections>
+            <point key="canvasLocation" x="376.81159420289856" y="85.714285714285708"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="venueBG" width="390" height="400"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

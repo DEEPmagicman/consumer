@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Regular.ttf">
+            <string>Poppins-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FavouriteArtistCVC" id="gTV-IL-0wX" customClass="FavouriteArtistCVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="172" height="51"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="172" height="51"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQh-Sm-RQ2">
+                        <rect key="frame" x="0.0" y="0.0" width="164" height="51"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tQn-fO-Vhj">
+                                <rect key="frame" x="59.666666666666657" y="15" width="45" height="21"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Friday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GI2-i9-9ss" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="45" height="21"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                                                <real key="value" value="15"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.45882352941176469" green="0.18823529411764706" blue="0.62352941176470589" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="tQn-fO-Vhj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fQh-Sm-RQ2" secondAttribute="leading" constant="6" id="d4V-bK-ahD"/>
+                            <constraint firstItem="tQn-fO-Vhj" firstAttribute="centerX" secondItem="fQh-Sm-RQ2" secondAttribute="centerX" id="diR-mn-0rZ"/>
+                            <constraint firstItem="tQn-fO-Vhj" firstAttribute="centerY" secondItem="fQh-Sm-RQ2" secondAttribute="centerY" id="nV9-av-NFx"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                <real key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="top" secondItem="fQh-Sm-RQ2" secondAttribute="top" id="8hk-eA-bqR"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="bottom" secondItem="fQh-Sm-RQ2" secondAttribute="bottom" id="N6H-3v-6hw"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="leading" secondItem="fQh-Sm-RQ2" secondAttribute="leading" id="OvQ-NX-zU9"/>
+                <constraint firstItem="fQh-Sm-RQ2" firstAttribute="trailing" secondItem="ZTg-uK-7eu" secondAttribute="trailing" constant="-8" id="dqk-Zf-Dli"/>
+            </constraints>
+            <size key="customSize" width="172" height="51"/>
+            <connections>
+                <outlet property="lblArtist" destination="GI2-i9-9ss" id="kld-Xv-pq1"/>
+            </connections>
+            <point key="canvasLocation" x="226.08695652173915" y="76.22282608695653"/>
+        </collectionViewCell>
+    </objects>
+</document>

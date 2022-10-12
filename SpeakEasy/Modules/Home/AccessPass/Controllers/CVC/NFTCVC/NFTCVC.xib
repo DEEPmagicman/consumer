@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Regular.ttf">
+            <string>Poppins-Regular</string>
+        </array>
+        <array key="Poppins-SemiBold.ttf">
+            <string>Poppins-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NFTCVC" id="gTV-IL-0wX" customClass="NFTCVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="260"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="200" height="260"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="teS-BK-nZX">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="260"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nft-1" translatesAutoresizingMaskIntoConstraints="NO" id="Qhq-s6-3Y4">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="208"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AeN-cp-TeU">
+                                <rect key="frame" x="0.0" y="180" width="200" height="28"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="uGR-ov-zfo">
+                                        <rect key="frame" x="2.6666666666666714" y="4.3333333333333428" width="157" height="19.666666666666668"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TAO Group Hospitality" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEz-tj-IQ4">
+                                                <rect key="frame" x="0.0" y="1.3333333333333144" width="137" height="17"/>
+                                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Selected Icon" translatesAutoresizingMaskIntoConstraints="NO" id="8BE-Pw-Uad">
+                                                <rect key="frame" x="137" y="0.0" width="20" height="19.666666666666668"/>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.45000000000000001" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="Aan-CG-XVg"/>
+                                    <constraint firstItem="uGR-ov-zfo" firstAttribute="leading" secondItem="AeN-cp-TeU" secondAttribute="leading" constant="2.6666666666666572" id="B4e-IP-YKC"/>
+                                    <constraint firstItem="uGR-ov-zfo" firstAttribute="centerY" secondItem="AeN-cp-TeU" secondAttribute="centerY" id="e9A-FJ-rdC"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="uGR-ov-zfo" secondAttribute="trailing" constant="10" id="u2d-5n-1ae"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="A3V-f7-iIy">
+                                <rect key="frame" x="2.6666666666666714" y="208" width="192.66666666666663" height="45"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="bg7-Qp-vdz">
+                                        <rect key="frame" x="0.0" y="0.0" width="192.66666666666666" height="28"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="speakEasy" translatesAutoresizingMaskIntoConstraints="NO" id="ZXk-1x-9U4">
+                                                <rect key="frame" x="0.0" y="0.0" width="72" height="28"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="28" id="2Ml-ar-Mmp"/>
+                                                    <constraint firstAttribute="width" constant="72" id="EfY-hf-pyc"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Day Club Premium Member" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1iJ-6f-aGm">
+                                                <rect key="frame" x="74" y="0.0" width="118.66666666666669" height="28"/>
+                                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="14"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Issue No. 1,244 / 4,333" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mF7-bF-b3m">
+                                        <rect key="frame" x="0.0" y="28" width="192.66666666666666" height="17"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="12"/>
+                                        <color key="textColor" red="0.65098039215686276" green="0.65098039215686276" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Qhq-s6-3Y4" firstAttribute="leading" secondItem="teS-BK-nZX" secondAttribute="leading" id="4M5-bX-VWn"/>
+                            <constraint firstItem="A3V-f7-iIy" firstAttribute="top" secondItem="AeN-cp-TeU" secondAttribute="bottom" id="500-Pi-mTc"/>
+                            <constraint firstItem="AeN-cp-TeU" firstAttribute="trailing" secondItem="Qhq-s6-3Y4" secondAttribute="trailing" id="8x0-L9-uq6"/>
+                            <constraint firstItem="AeN-cp-TeU" firstAttribute="leading" secondItem="Qhq-s6-3Y4" secondAttribute="leading" id="EQt-w6-9GX"/>
+                            <constraint firstAttribute="trailing" secondItem="Qhq-s6-3Y4" secondAttribute="trailing" id="agI-BU-EjS"/>
+                            <constraint firstItem="A3V-f7-iIy" firstAttribute="leading" secondItem="teS-BK-nZX" secondAttribute="leading" constant="2.6699999999999999" id="fxw-Cb-m2b"/>
+                            <constraint firstItem="Qhq-s6-3Y4" firstAttribute="top" secondItem="teS-BK-nZX" secondAttribute="top" id="ieo-rF-CZh"/>
+                            <constraint firstAttribute="trailing" secondItem="A3V-f7-iIy" secondAttribute="trailing" constant="4.6666666666666856" id="k7V-AY-rHz"/>
+                            <constraint firstItem="AeN-cp-TeU" firstAttribute="bottom" secondItem="Qhq-s6-3Y4" secondAttribute="bottom" id="kMc-Am-DYO"/>
+                            <constraint firstItem="Qhq-s6-3Y4" firstAttribute="height" secondItem="teS-BK-nZX" secondAttribute="height" multiplier="0.8" id="llT-16-Vf9"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="4"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="bottom" secondItem="teS-BK-nZX" secondAttribute="bottom" id="0HG-CV-xw0"/>
+                <constraint firstItem="teS-BK-nZX" firstAttribute="trailing" secondItem="ZTg-uK-7eu" secondAttribute="trailing" id="7CM-Ww-b4Z"/>
+                <constraint firstItem="teS-BK-nZX" firstAttribute="top" secondItem="ZTg-uK-7eu" secondAttribute="top" id="VLw-Y9-HFT"/>
+                <constraint firstItem="ZTg-uK-7eu" firstAttribute="leading" secondItem="teS-BK-nZX" secondAttribute="leading" id="czH-9T-bZH"/>
+            </constraints>
+            <size key="customSize" width="199" height="167"/>
+            <connections>
+                <outlet property="imgNFT" destination="Qhq-s6-3Y4" id="Njv-jm-rAG"/>
+                <outlet property="imgSpeakEasy" destination="ZXk-1x-9U4" id="hrV-FJ-BxT"/>
+                <outlet property="lblGroup" destination="CEz-tj-IQ4" id="SXR-80-RuD"/>
+                <outlet property="lblIssueNo" destination="mF7-bF-b3m" id="UGz-Qm-DCH"/>
+                <outlet property="lblName" destination="1iJ-6f-aGm" id="QoE-kc-FaQ"/>
+            </connections>
+            <point key="canvasLocation" x="245.6521739130435" y="106.80803571428571"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Selected Icon" width="20" height="19.666666030883789"/>
+        <image name="nft-1" width="180.66667175292969" height="208.33332824707031"/>
+        <image name="speakEasy" width="90" height="49"/>
+    </resources>
+</document>
