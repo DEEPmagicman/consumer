@@ -387,7 +387,10 @@ enum Strings: String{
     case MESSAGES = "Messages"
     
     case TICKETS = "Tickets"
-    case VIP_TABLE_BOOKING = "VIP Table Booking"
+    case VIP_TABLE_BOOKING = "VIP Tables"
+    case PUBLIK_ATTENDEES = "Public Attendees"
+    case PREFERENCES = "Preferences"
+    case MEMBERSGIP_NFT = "Memberships & NFT"
     
     case SEARCH_RESULTS = "Search Results"
     

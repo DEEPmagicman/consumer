@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -431,12 +431,12 @@
                                             <rect key="frame" x="20" y="344.5" width="374" height="60"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X6i-S1-gtP">
-                                                    <rect key="frame" x="105.5" y="19.5" width="163" height="21"/>
+                                                    <rect key="frame" x="115" y="21" width="144" height="18"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Add friend's birthday">
                                                             <attributes>
                                                                 <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                                <font key="NSFont" size="15" name="Poppins-SemiBold"/>
+                                                                <font key="NSFont" metaFont="system" size="15"/>
                                                                 <integer key="NSUnderline" value="1"/>
                                                             </attributes>
                                                         </fragment>
@@ -840,11 +840,11 @@
     </objects>
     <resources>
         <image name="ArrowDown" width="13" height="23"/>
-        <image name="WelcomeBackground" width="195" height="433.5"/>
+        <image name="WelcomeBackground" width="2708.5" height="5860"/>
         <image name="cameraicon" width="30" height="30"/>
         <image name="ic-close" width="38" height="38"/>
         <image name="ic-insta" width="19" height="19"/>
-        <image name="linkedin" width="24" height="24"/>
+        <image name="linkedin" width="19" height="19"/>
         <image name="locationicon" width="15" height="15"/>
         <image name="you" width="56" height="56"/>
         <systemColor name="systemBackgroundColor">

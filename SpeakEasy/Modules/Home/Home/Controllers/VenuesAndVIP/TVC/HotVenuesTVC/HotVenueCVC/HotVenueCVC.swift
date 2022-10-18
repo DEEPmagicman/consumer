@@ -33,7 +33,11 @@ class HotVenueCVC: UICollectionViewCell {
         self.lblEntryFees.text = data.lblEventFees
         self.lblClosesTime.text = data.lblEventClosingTime
         self.lblWaitingTime.text = data.lblEventWaitingTime
-        
+        if data.isFavourite == true {
+            self.btnFavourite.setImage(UIImage(named: "FavouriteSelected"), for: .normal)
+        } else {
+            self.btnFavourite.setImage(UIImage(named: "Favourite"), for: .normal)
+        }
 //        self.currentLiveEventFires.isHidden = !(data.isLive ?? false)
     }
 }

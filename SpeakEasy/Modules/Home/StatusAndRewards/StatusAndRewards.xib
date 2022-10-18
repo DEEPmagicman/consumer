@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -39,8 +39,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Yu-MT-iM2">
                     <rect key="frame" x="0.0" y="44" width="390" height="60"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status &amp; Rewards" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="81z-rG-XZ5" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="79" y="12.666666666666664" width="232" height="35"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rewards" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="81z-rG-XZ5" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="138.33333333333334" y="12.666666666666664" width="113.66666666666666" height="35"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -52,7 +52,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KgU-eF-eJ8">
-                            <rect key="frame" x="331" y="19" width="12" height="22"/>
+                            <rect key="frame" x="272" y="19" width="12" height="22"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" image="InfoIcon"/>
                         </button>
@@ -64,6 +64,11 @@
                         <constraint firstItem="KgU-eF-eJ8" firstAttribute="leading" secondItem="81z-rG-XZ5" secondAttribute="trailing" constant="20" id="sJg-zb-68e"/>
                         <constraint firstItem="KgU-eF-eJ8" firstAttribute="centerY" secondItem="81z-rG-XZ5" secondAttribute="centerY" id="z1G-2K-yuj"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="subviews">
+                            <exclude reference="KgU-eF-eJ8"/>
+                        </mask>
+                    </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2bJ-nR-et8">
                     <rect key="frame" x="0.0" y="115" width="390" height="25.333333333333343"/>
@@ -110,10 +115,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iuw-h8-GrC">
-                    <rect key="frame" x="0.0" y="148.33333333333334" width="390" height="53.333333333333343"/>
+                    <rect key="frame" x="0.0" y="104" width="390" height="43.333333333333343"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Rewards" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q4s-HC-cnW" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="12" y="20" width="143.33333333333334" height="25.333333333333329"/>
+                            <rect key="frame" x="12" y="9.9999999999999982" width="143.33333333333334" height="25.333333333333329"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -125,7 +130,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tJq-BI-I2t" customClass="CardView" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="161.33333333333334" y="23.666666666666657" width="18" height="18"/>
+                            <rect key="frame" x="161.33333333333334" y="13.666666666666671" width="18" height="18"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="4" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXb-Tb-tOC" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                     <rect key="frame" x="2" y="2" width="14" height="14"/>
@@ -140,7 +145,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" red="0.45882352939999999" green="0.18823529410000001" blue="0.62352941179999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.80000000000000004" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="9Nl-7z-Dd4"/>
                                 <constraint firstAttribute="trailing" secondItem="wXb-Tb-tOC" secondAttribute="trailing" constant="2" id="Pb0-rX-LVU"/>
@@ -154,7 +159,7 @@
                                     <real key="value" value="9"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
-                                    <color key="value" red="0.50211530920000003" green="0.29604834320000001" blue="0.66278201339999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="value" red="0.80000000000000004" green="0.0" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
@@ -164,11 +169,11 @@
                         <constraint firstItem="tJq-BI-I2t" firstAttribute="leading" secondItem="Q4s-HC-cnW" secondAttribute="trailing" constant="6" id="J6D-g7-sQ9"/>
                         <constraint firstAttribute="bottom" secondItem="Q4s-HC-cnW" secondAttribute="bottom" constant="8" id="bIh-gN-iEX"/>
                         <constraint firstItem="tJq-BI-I2t" firstAttribute="centerY" secondItem="Q4s-HC-cnW" secondAttribute="centerY" id="dsg-WU-XgL"/>
-                        <constraint firstItem="Q4s-HC-cnW" firstAttribute="top" secondItem="Iuw-h8-GrC" secondAttribute="top" constant="20" id="h06-8u-nIK"/>
+                        <constraint firstItem="Q4s-HC-cnW" firstAttribute="top" secondItem="Iuw-h8-GrC" secondAttribute="top" constant="10" id="h06-8u-nIK"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SBO-gJ-ZdK">
-                    <rect key="frame" x="0.0" y="201.66666666666669" width="390" height="608.33333333333326"/>
+                    <rect key="frame" x="0.0" y="147.33333333333331" width="390" height="662.66666666666674"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="6d3-hC-gWp"/>
@@ -194,9 +199,15 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="SBO-gJ-ZdK" secondAttribute="bottom" id="WuW-na-OeC"/>
                 <constraint firstItem="2bJ-nR-et8" firstAttribute="top" secondItem="4Yu-MT-iM2" secondAttribute="bottom" constant="11" id="cEb-RE-shP"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="SBO-gJ-ZdK" secondAttribute="trailing" id="sm1-lO-kSG"/>
+                <constraint firstItem="Iuw-h8-GrC" firstAttribute="top" secondItem="4Yu-MT-iM2" secondAttribute="bottom" id="t3M-pB-fuV"/>
                 <constraint firstItem="CAd-Zw-StH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="x4Q-yt-Bbh"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2bJ-nR-et8" secondAttribute="trailing" id="z9G-6U-vuA"/>
             </constraints>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="2bJ-nR-et8"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="136.92307692307691" y="73.222748815165872"/>
         </view>
     </objects>

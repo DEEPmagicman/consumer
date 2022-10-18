@@ -208,6 +208,7 @@ extension EditProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         case favouriteDrinkCollectionView:
             let cell = favouriteDrinkCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteDrinksCVC", for: indexPath) as! FavouriteDrinksCVC
             cell.lblDrinks.text = self.arrFavouriteDrinks[indexPath.row]
+            cell.backGroundView.backgroundColor = UIColor(hex: "#007AFF")
             return cell
         case favouriteArtistCollectionView:
             let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteArtistCVC", for: indexPath) as! FavouriteArtistCVC

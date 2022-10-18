@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
+		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
+		04FDAF7E28F91DE9007129CC /* PublikAttendeesTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */; };
+		04FDAF8028F91DFF007129CC /* PublikAttendeesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */; };
+		04FDAF8328F920B3007129CC /* PublikAttendeesProfileCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8228F920B3007129CC /* PublikAttendeesProfileCVC.xib */; };
+		04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */; };
+		04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */; };
+		04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */; };
 		4A7CC53028E377C200F8BA63 /* BookingInvites.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */; };
@@ -429,6 +437,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
+		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
+		04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesTVC.xib; sourceTree = "<group>"; };
+		04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesTVC.swift; sourceTree = "<group>"; };
+		04FDAF8228F920B3007129CC /* PublikAttendeesProfileCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesProfileCVC.xib; sourceTree = "<group>"; };
+		04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesProfileCVC.swift; sourceTree = "<group>"; };
+		04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePopUp.swift; sourceTree = "<group>"; };
+		04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserProfilePopUp.xib; sourceTree = "<group>"; };
 		3EE924C9B6C10A031DDBA9F7 /* Pods-SpeakEasy-Consumer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.release.xcconfig"; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingInvites.swift; sourceTree = "<group>"; };
@@ -875,6 +891,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0423CA9D28F843C100127A1D /* PublikAttendeesTVC */ = {
+			isa = PBXGroup;
+			children = (
+				047473FD28FD17190097A523 /* ArtistProfilePopUp */,
+				04FDAF8628F944ED007129CC /* UserProfilePopUp */,
+				04FDAF8128F9204B007129CC /* PublikAttendeesProfileCVC */,
+				04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */,
+				04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */,
+			);
+			path = PublikAttendeesTVC;
+			sourceTree = "<group>";
+		};
+		047473FD28FD17190097A523 /* ArtistProfilePopUp */ = {
+			isa = PBXGroup;
+			children = (
+				047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */,
+				0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */,
+			);
+			path = ArtistProfilePopUp;
+			sourceTree = "<group>";
+		};
+		0477E38428FEAA5C009C86C6 /* FavoriteArtistProfileCVC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FavoriteArtistProfileCVC;
+			sourceTree = "<group>";
+		};
+		04FDAF8128F9204B007129CC /* PublikAttendeesProfileCVC */ = {
+			isa = PBXGroup;
+			children = (
+				04FDAF8228F920B3007129CC /* PublikAttendeesProfileCVC.xib */,
+				04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */,
+			);
+			path = PublikAttendeesProfileCVC;
+			sourceTree = "<group>";
+		};
+		04FDAF8628F944ED007129CC /* UserProfilePopUp */ = {
+			isa = PBXGroup;
+			children = (
+				04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */,
+				04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */,
+			);
+			path = UserProfilePopUp;
+			sourceTree = "<group>";
+		};
 		2618555335F8CF7D7AAA33CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1830,6 +1892,7 @@
 				E11F4B5D28C8358C008D2E30 /* EventBookingDetails.xib */,
 				E11F4B5E28C8358C008D2E30 /* EventBookingSelectionTVC */,
 				E11F4B6428C8358C008D2E30 /* VIPTableBookingTVC */,
+				0423CA9D28F843C100127A1D /* PublikAttendeesTVC */,
 				E11F4B6728C8358C008D2E30 /* EventTableViewHeader */,
 			);
 			path = EventBookingDetails;
@@ -3054,6 +3117,7 @@
 		E1A9E7DE28C579690081FB28 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				0477E38428FEAA5C009C86C6 /* FavoriteArtistProfileCVC */,
 				E1A9E7DF28C579690081FB28 /* FavouriteArtistsCVC */,
 				E1A9E7E228C579690081FB28 /* FriendsListCVC */,
 				E1A9E7E528C579690081FB28 /* ImportantDatesCVC */,
@@ -3264,6 +3328,7 @@
 				E11F4B9328C8358C008D2E30 /* AllEventsTVC.xib in Resources */,
 				E11F4C0128C835F3008D2E30 /* BookingDetails.xib in Resources */,
 				E11F4BAD28C8358C008D2E30 /* VIPTableBookingCalenderTVC.xib in Resources */,
+				047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */,
 				E1A9E7C228C56FD10081FB28 /* SearchTVC.xib in Resources */,
 				E11F4A8E28C800B1008D2E30 /* Wallet.xib in Resources */,
 				E11F4BF728C835F3008D2E30 /* BookingsAndInvites.xib in Resources */,
@@ -3288,6 +3353,7 @@
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
 				E15D6B6428BC39AC0076286C /* SignUp.xib in Resources */,
+				04FDAF8328F920B3007129CC /* PublikAttendeesProfileCVC.xib in Resources */,
 				E1A9E7D428C56FD10081FB28 /* ManageFriendTVC.xib in Resources */,
 				E167058D28CA6AB800644BF0 /* SelectedBookingTVC.xib in Resources */,
 				4A7CC53B28E37EE500F8BA63 /* BookingDetailTVC.xib in Resources */,
@@ -3329,6 +3395,7 @@
 				E11F4B9E28C8358C008D2E30 /* EventBookingDetails.xib in Resources */,
 				E11F4B8E28C8358C008D2E30 /* TopEventCVC.xib in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
+				04FDAF7E28F91DE9007129CC /* PublikAttendeesTVC.xib in Resources */,
 				E11F4B8D28C8358C008D2E30 /* TopEventsTVC.xib in Resources */,
 				E1A9E74E28C55D550081FB28 /* VenuePhotoGallery.xib in Resources */,
 				E167056228CA442800644BF0 /* ViewEventHeader.xib in Resources */,
@@ -3356,6 +3423,7 @@
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
 				E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */,
+				04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */,
 				E17DC97128C6D01700244C4F /* MainTVC.xib in Resources */,
 				E11F4C0C28C835F3008D2E30 /* ChatHeadTVC.xib in Resources */,
 				9D4A029128CE9E4B009CD670 /* CostSplitSelectionTVC.xib in Resources */,
@@ -3477,6 +3545,7 @@
 				E11F4BA228C8358C008D2E30 /* EventBookingSelectionTVC.swift in Sources */,
 				E11F4B3128C83564008D2E30 /* AdditionalGuest.swift in Sources */,
 				E1FAD5E428CEA9C4004F70DE /* EditProfileVC.swift in Sources */,
+				0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */,
 				E1A9E75328C55D550081FB28 /* BottleMenuTVC.swift in Sources */,
 				E11F4A9728C800B1008D2E30 /* NFTsonSpeakEasy.swift in Sources */,
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
@@ -3533,6 +3602,7 @@
 				E11F4B9128C8358C008D2E30 /* EventCVC.swift in Sources */,
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
+				04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CE4867A5286F358800FD277E /* MOLHFont.swift in Sources */,
@@ -3649,8 +3719,10 @@
 				84248D9E28D2A4CE00A6E260 /* All.swift in Sources */,
 				E17DC96F28C6D01700244C4F /* MainHeader.swift in Sources */,
 				CAC4140928A478050007BA86 /* MonthsCollectionViewCell.swift in Sources */,
+				04FDAF8028F91DFF007129CC /* PublikAttendeesTVC.swift in Sources */,
 				E11F4B3428C83564008D2E30 /* CostSplitTVC.swift in Sources */,
 				CE4867BB286F358800FD277E /* ProjectEnums.swift in Sources */,
+				04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */,
 				CE4867A9286F358800FD277E /* Validation.swift in Sources */,
 				E1A9E80028C579690081FB28 /* MyAccount.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
@@ -3828,7 +3900,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -3848,8 +3920,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 25;
-				DEVELOPMENT_TEAM = 843432T6P5;
-				"EXCLUDED_ARCHS[sdk=*]" = arm64;
+				DEVELOPMENT_TEAM = 8G6373A768;
+				"EXCLUDED_ARCHS[sdk=*]" = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
@@ -3866,7 +3938,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer123";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3885,7 +3957,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 25;
-				DEVELOPMENT_TEAM = 843432T6P5;
+				DEVELOPMENT_TEAM = 8G6373A768;
 				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
@@ -3903,7 +3975,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer123";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

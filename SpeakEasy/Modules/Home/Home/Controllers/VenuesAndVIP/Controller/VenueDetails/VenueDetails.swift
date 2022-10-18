@@ -28,6 +28,7 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var vibesCollectionView: UICollectionView!
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
     var arrHours = [
@@ -46,6 +47,7 @@ class VenueDetails: UIViewController {
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true),
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false),
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false)]
+    var arrVibes = ["VIP Bottle Service","Strict Dress Code","Premium Bottles","Celebrity DJs",  "EDM", "Fashion Forward","Musical Variety", "Dress to Impress","Tables Recommended"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,6 +98,7 @@ extension VenueDetails{
         self.venueCollectionView.register(UINib(nibName: "TabCVC", bundle: nil), forCellWithReuseIdentifier: "TabCVC")
         self.tableViewHours.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
         self.tableViewDressCode.register(UINib(nibName: "DressCodeTVC", bundle: nil), forCellReuseIdentifier: "DressCodeTVC")
+        self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
     }
 }
 //MARK: - UICollectionViewDataSource
@@ -108,6 +111,8 @@ extension VenueDetails: UICollectionViewDataSource {
             return self.arrTabBarOptions.count
         case self.collectionView:
             return self.arrayTopEvents.count
+        case self.vibesCollectionView:
+            return self.arrVibes.count
         default:
             return 0
         }
@@ -129,6 +134,11 @@ extension VenueDetails: UICollectionViewDataSource {
             let data = self.arrayTopEvents[indexPath.item]
             cell.setData(data: data)
             return cell
+        case self.vibesCollectionView:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
+            cell.lblVibes.text = arrVibes[indexPath.row]
+            
+            return cell
         default:
             return UICollectionViewCell()
         }
@@ -137,8 +147,10 @@ extension VenueDetails: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegate
 extension VenueDetails: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item == 1 {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.viewVenueDetails.frame.minY - 100), animated: true)
+        if collectionView == venueCollectionView {
+            if indexPath.item == 1 {
+                self.scrollView.setContentOffset(CGPoint(x: 0, y: self.viewVenueDetails.frame.minY - 100), animated: true)
+            }
         }
     }
 }
@@ -161,6 +173,13 @@ extension VenueDetails: UICollectionViewDelegateFlowLayout {
         case self.venueCollectionView:
             let width = collectionView.frame.width * 0.32
             let height = collectionView.frame.height
+            let size = CGSize(width: width, height: height)
+            return size
+        case vibesCollectionView:
+            let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "medium", fontSize: 15.0)
+            let height = 40.0
+            let tabOption = self.arrVibes[indexPath.item]
+            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 30.0
             let size = CGSize(width: width, height: height)
             return size
         default:
