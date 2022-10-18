@@ -31,22 +31,58 @@ class EditProfileVC: BaseController {
     @IBOutlet weak var heightVibesCollectionView: NSLayoutConstraint!
     @IBOutlet weak var heightFavouriteDrinkCollectionView: NSLayoutConstraint!
     @IBOutlet weak var heightFavouriteArtistCollectionView: NSLayoutConstraint!
+    @IBOutlet weak var industryPrivateLbl: UILabelDeviceClass!
+    @IBOutlet weak var industryPrivateLineView: UIView!
+    @IBOutlet weak var industryPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var industryPublicLineView: UIView!
+    @IBOutlet weak var industryPrivateView: UIView!
+    @IBOutlet weak var industryPublicView: UIView!
+    @IBOutlet weak var socialMediaPrivateLbl: UILabelDeviceClass!
+    @IBOutlet weak var socialMediaPrivateLineView: UIView!
+    @IBOutlet weak var socialMediaPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var socialMediaPublicLineView: UIView!
+    @IBOutlet weak var socialMediaPrivateView: UIView!
+    @IBOutlet weak var socialMediaPublicView: UIView!
+    @IBOutlet weak var vibesPrivateLbl: UILabelDeviceClass!
+    @IBOutlet weak var vibesPrivateLineView: UIView!
+    @IBOutlet weak var vibesPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var vibesPublicLineView: UIView!
+    @IBOutlet weak var vibesPrivateView: UIView!
+    @IBOutlet weak var vibesPublicView: UIView!
+    @IBOutlet weak var favDrinksPrivateLbl: UILabelDeviceClass!
+    @IBOutlet weak var favDrinksPrivateLineView: UIView!
+    @IBOutlet weak var favDrinksPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var favDrinksPublicLineView: UIView!
+    @IBOutlet weak var favDrinksPrivateView: UIView!
+    @IBOutlet weak var favDrinksPublicView: UIView!
+    @IBOutlet weak var datePrivateLbl: UILabelDeviceClass!
+    @IBOutlet weak var datePrivateLineView: UIView!
+    @IBOutlet weak var datePublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var datePublicLineView: UIView!
+    @IBOutlet weak var datePrivateView: UIView!
+    @IBOutlet weak var datePublicView: UIView!
     
     var arrVibes = ["Fridays", "EDM", "Bottle Service","Crowds"]
     var arrFavouriteDrinks = ["Whiskey", "Dom Perignon", "Moscow Mule", "Whiskey Sour", "Martini", "Whiskey Coke"]
     var arrFavouriteArtists = ["Steve Aoki", "DJ Heavy", "Martin Garrix", "Armin van Buuren"]
     
     var arrImportantDates =
-       [ImportantDates(leftImage: "YourBirthday", rightImage: nil, title: "Your  birthday", month: "September", day: "30"),
+       [ImportantDates(leftImage: "YourBirthday", rightImage: nil, title: "My  birthday", month: "September", day: "30"),
         ImportantDates(leftImage: "partnersBirthday", rightImage: "delete", title: "Partner’s  birthday", month: "September", day: "30"),
         ImportantDates(leftImage: "ic-friends", rightImage: "delete", title: "Paul’s  birthday", month: "September", day: "30")]
+
+    private var isIndustryPublic = true
+    private var isSocialMediaPublic = true
+    private var isVibesPublic = true
+    private var isFavDrinksPublic = true
+    private var isDatePublic = true
     
     let occupationDropDown = DropDown()
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        self.setPublicPrivate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +98,14 @@ class EditProfileVC: BaseController {
     
     private func setUI(){
         self.registerCell()
+    }
+    
+    private func setPublicPrivate() {
+        setPrivatePublicUI(privateLbl: industryPrivateLbl, publicLbl: industryPublicLbl, privateLine: industryPrivateLineView, publicLine: industryPublicLineView, privateView: industryPrivateView, publicView: industryPublicView, isPublic: isIndustryPublic)
+        setPrivatePublicUI(privateLbl: socialMediaPrivateLbl, publicLbl: socialMediaPublicLbl, privateLine: socialMediaPrivateLineView, publicLine: socialMediaPublicLineView, privateView: socialMediaPrivateView, publicView: socialMediaPublicView, isPublic: isSocialMediaPublic)
+        setPrivatePublicUI(privateLbl: vibesPrivateLbl, publicLbl: vibesPublicLbl, privateLine: vibesPrivateLineView, publicLine: vibesPublicLineView, privateView: vibesPrivateView, publicView: vibesPublicView, isPublic: isVibesPublic)
+        setPrivatePublicUI(privateLbl: favDrinksPrivateLbl, publicLbl: favDrinksPublicLbl, privateLine: favDrinksPrivateLineView, publicLine: favDrinksPublicLineView, privateView: favDrinksPrivateView, publicView: favDrinksPublicView, isPublic: isFavDrinksPublic)
+        setPrivatePublicUI(privateLbl: datePrivateLbl, publicLbl: datePublicLbl, privateLine: datePrivateLineView, publicLine: datePublicLineView, privateView: datePrivateView, publicView: datePublicView, isPublic: isDatePublic)
     }
     
     private func registerCell() {
@@ -255,5 +299,59 @@ extension EditProfileVC: UICollectionViewDelegateFlowLayout {
     }
 }
 
-
-
+private extension EditProfileVC {
+    func setPrivatePublicUI(privateLbl: UILabelDeviceClass, publicLbl: UILabelDeviceClass, privateLine: UIView, publicLine: UIView, privateView: UIView, publicView: UIView, isPublic: Bool) {
+        let privateTap = UITapGestureRecognizer(target: self, action: #selector(onClickPrivate))
+        privateView.isUserInteractionEnabled = true
+        privateView.addGestureRecognizer(privateTap)
+        let publicTap = UITapGestureRecognizer(target: self, action: #selector(onClickPrivate))
+        publicView.isUserInteractionEnabled = true
+        publicView.addGestureRecognizer(publicTap)
+        switch isPublic {
+        case true:
+            publicLbl.textColor = .white
+            privateLbl.textColor = Global.APP_COLOR_DARK_GREY
+            publicLbl.isShadowed = true
+            privateLbl.isShadowed = false
+            publicLine.isHidden = false
+            privateLine.isHidden = true
+        case false:
+            publicLbl.textColor = Global.APP_COLOR_DARK_GREY
+            privateLbl.textColor = .white
+            publicLbl.isShadowed = false
+            privateLbl.isShadowed = true
+            publicLine.isHidden = true
+            privateLine.isHidden = false
+        }
+        publicLbl.layoutSubviews()
+        privateLbl.layoutSubviews()
+    }
+    
+    @objc func onClickPrivate(_ sender: UISwipeGestureRecognizer) {
+        switch (sender.view?.tag ?? 0) {
+        case 1:
+            isIndustryPublic = false
+        case 2:
+            isIndustryPublic = true
+        case 3:
+            isSocialMediaPublic = false
+        case 4:
+            isSocialMediaPublic = true
+        case 5:
+            isVibesPublic = false
+        case 6:
+            isVibesPublic = true
+        case 7:
+            isFavDrinksPublic = false
+        case 8:
+            isFavDrinksPublic = true
+        case 9:
+            isDatePublic = false
+        case 10:
+            isDatePublic = true
+        default:
+            break
+        }
+        setPublicPrivate()
+    }
+}
