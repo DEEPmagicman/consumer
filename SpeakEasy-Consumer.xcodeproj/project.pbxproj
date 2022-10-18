@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
+		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
+		0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */; };
 		04FDAF7E28F91DE9007129CC /* PublikAttendeesTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */; };
 		04FDAF8028F91DFF007129CC /* PublikAttendeesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */; };
 		04FDAF8328F920B3007129CC /* PublikAttendeesProfileCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8228F920B3007129CC /* PublikAttendeesProfileCVC.xib */; };
@@ -439,6 +441,8 @@
 /* Begin PBXFileReference section */
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
 		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
+		0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteArtistProfileCVC.swift; sourceTree = "<group>"; };
+		0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteArtistProfileCVC.xib; sourceTree = "<group>"; };
 		04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesTVC.xib; sourceTree = "<group>"; };
 		04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesTVC.swift; sourceTree = "<group>"; };
 		04FDAF8228F920B3007129CC /* PublikAttendeesProfileCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesProfileCVC.xib; sourceTree = "<group>"; };
@@ -915,6 +919,8 @@
 		0477E38428FEAA5C009C86C6 /* FavoriteArtistProfileCVC */ = {
 			isa = PBXGroup;
 			children = (
+				0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */,
+				0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */,
 			);
 			path = FavoriteArtistProfileCVC;
 			sourceTree = "<group>";
@@ -3382,6 +3388,7 @@
 				E1A9E75228C55D550081FB28 /* BottleMenuTVC.xib in Resources */,
 				E166184A28BED1810027C6EA /* HeaderViewCustom.xib in Resources */,
 				E1A9E76828C55D550081FB28 /* Locations.xib in Resources */,
+				0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */,
 				E1A9E7F928C579690081FB28 /* MyAccount.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
 				E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */,
@@ -3526,6 +3533,7 @@
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
 				E15D6B6828BC39AC0076286C /* SignIn.swift in Sources */,
+				0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */,
 				E17DC86028C6C16500244C4F /* NFTsonSpeakEasy.swift in Sources */,
 				E166184928BED1810027C6EA /* HeaderViewCustom.swift in Sources */,
 				CAC4140328A478040007BA86 /* TimeInterval.swift in Sources */,

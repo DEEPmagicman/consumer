@@ -24,7 +24,7 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="RewardDetailsStretchyTVC" rowHeight="528" id="KGk-i7-Jjw" customClass="RewardDetailsStretchyTVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="520" height="528"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="528"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -157,6 +157,61 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REWARD NOTE:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2D-rf-8TV" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                        <rect key="frame" x="16" y="513" width="136.5" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="rDG-XJ-GeM"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                                <real key="value" value="18"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hey Tamas, join us for a table. We’ve included 20% off for you for this weekend. We hope to see you here at PRSYM! " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UhT-1A-Ole" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                        <rect key="frame" x="16" y="553" width="459" height="42"/>
+                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                                <real key="value" value="15"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Xp1-DD-Omt">
+                        <rect key="frame" x="16" y="193" width="504" height="310"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fdh-Gy-CMC">
+                                <rect key="frame" x="0.0" y="0.0" width="504" height="310"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="310" id="4I1-JS-3rK"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="12" id="g5d-GB-xAl">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <connections>
+                                    <outlet property="dataSource" destination="-1" id="6A4-3k-oAA"/>
+                                    <outlet property="delegate" destination="-1" id="sGd-8N-Q1L"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="fdh-Gy-CMC" secondAttribute="bottom" id="URH-CB-7p0"/>
+                            <constraint firstItem="fdh-Gy-CMC" firstAttribute="leading" secondItem="Xp1-DD-Omt" secondAttribute="leading" id="a3c-fO-XQ3"/>
+                            <constraint firstAttribute="trailing" secondItem="fdh-Gy-CMC" secondAttribute="trailing" id="qcN-Ko-ils"/>
+                            <constraint firstItem="fdh-Gy-CMC" firstAttribute="top" secondItem="Xp1-DD-Omt" secondAttribute="top" id="tIt-cg-lhu"/>
+                        </constraints>
+                    </stackView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reward Title " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gST-ym-lyI" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                         <rect key="frame" x="16" y="170" width="120.5" height="25.5"/>
                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
@@ -229,33 +284,6 @@
                             <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
                         </userDefinedRuntimeAttributes>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REWARD NOTE:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2D-rf-8TV" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                        <rect key="frame" x="16" y="190" width="136.5" height="40"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="40" id="rDG-XJ-GeM"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
-                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <nil key="highlightedColor"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                <real key="value" value="18"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
-                        </userDefinedRuntimeAttributes>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hey Tamas, join us for a table. We’ve included 20% off for you for this weekend. We hope to see you here at PRSYM! " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UhT-1A-Ole" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                        <rect key="frame" x="16" y="230" width="459" height="42"/>
-                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
-                        <color key="textColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <nil key="highlightedColor"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                <real key="value" value="15"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
-                        </userDefinedRuntimeAttributes>
-                    </label>
                 </subviews>
                 <color key="backgroundColor" red="0.054901960780000002" green="0.054901960784313725" blue="0.054901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                 <constraints>
@@ -266,13 +294,15 @@
                     <constraint firstItem="QS4-pi-rhc" firstAttribute="top" secondItem="gST-ym-lyI" secondAttribute="bottom" constant="8" id="9Qj-KA-rtd"/>
                     <constraint firstItem="7eb-6o-RZL" firstAttribute="top" secondItem="IZd-ba-NR7" secondAttribute="bottom" constant="8" id="BJ5-8L-j7H"/>
                     <constraint firstItem="gST-ym-lyI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="C4Y-d0-Gut"/>
-                    <constraint firstItem="o2D-rf-8TV" firstAttribute="top" secondItem="2eJ-1v-A5Z" secondAttribute="bottom" constant="12" id="HWk-gP-J8x"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="QS4-pi-rhc" secondAttribute="trailing" constant="8" id="LG5-KD-uFh"/>
                     <constraint firstItem="7eb-6o-RZL" firstAttribute="leading" secondItem="IZd-ba-NR7" secondAttribute="leading" id="NDM-DH-YiT"/>
                     <constraint firstItem="7gY-SM-isg" firstAttribute="leading" secondItem="nTo-0w-POj" secondAttribute="leading" id="RiJ-1h-qs4"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="gST-ym-lyI" secondAttribute="trailing" constant="8" id="VMY-94-fpO"/>
+                    <constraint firstItem="Xp1-DD-Omt" firstAttribute="top" secondItem="2eJ-1v-A5Z" secondAttribute="bottom" constant="15" id="W9I-eE-7e4"/>
                     <constraint firstItem="nTo-0w-POj" firstAttribute="top" secondItem="7eb-6o-RZL" secondAttribute="bottom" constant="24" id="Yav-D6-cwe"/>
+                    <constraint firstAttribute="trailing" secondItem="Xp1-DD-Omt" secondAttribute="trailing" id="dhg-pG-nub"/>
                     <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="UhT-1A-Ole" secondAttribute="trailing" constant="24" id="e8d-kv-DcF"/>
+                    <constraint firstItem="Xp1-DD-Omt" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="f7x-7c-pw0"/>
                     <constraint firstItem="7gY-SM-isg" firstAttribute="top" secondItem="nTo-0w-POj" secondAttribute="bottom" constant="8" id="grR-XR-QzX"/>
                     <constraint firstItem="o2D-rf-8TV" firstAttribute="top" secondItem="7gY-SM-isg" secondAttribute="bottom" constant="24" id="hGu-2V-ZcC"/>
                     <constraint firstItem="QS4-pi-rhc" firstAttribute="leading" secondItem="gST-ym-lyI" secondAttribute="leading" id="iVZ-VA-l1r"/>
@@ -281,6 +311,7 @@
                     <constraint firstItem="o2D-rf-8TV" firstAttribute="leading" secondItem="7gY-SM-isg" secondAttribute="leading" id="laj-0h-2wF"/>
                     <constraint firstItem="UhT-1A-Ole" firstAttribute="leading" secondItem="o2D-rf-8TV" secondAttribute="leading" id="mHX-za-1bL"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="UhT-1A-Ole" secondAttribute="bottom" constant="24" id="qUm-QL-B50"/>
+                    <constraint firstItem="o2D-rf-8TV" firstAttribute="top" secondItem="Xp1-DD-Omt" secondAttribute="bottom" constant="10" id="urc-XL-cbz"/>
                     <constraint firstItem="gST-ym-lyI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="170" id="utF-88-yQx"/>
                     <constraint firstItem="2eJ-1v-A5Z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="vDz-Hl-LEr"/>
                     <constraint firstItem="UhT-1A-Ole" firstAttribute="top" secondItem="o2D-rf-8TV" secondAttribute="bottom" id="vZZ-c1-Jup"/>
@@ -297,6 +328,9 @@
                 </variation>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="EventCollectionView" destination="fdh-Gy-CMC" id="Aqc-I1-hhS"/>
+            </connections>
             <point key="canvasLocation" x="281.15942028985512" y="185.49107142857142"/>
         </tableViewCell>
     </objects>

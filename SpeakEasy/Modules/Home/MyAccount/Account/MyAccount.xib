@@ -25,8 +25,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyAccount" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
                 <outlet property="favoriteVenueCollectionView" destination="3tU-HV-jWS" id="efB-98-l5t"/>
-                <outlet property="favouriteArtistCollectionView" destination="ujj-sf-Fo1" id="sbb-1l-uxe"/>
-                <outlet property="favouriteArtistsCollectionViewHeight" destination="cFX-Qx-lg0" id="P0c-jg-8ds"/>
+                <outlet property="favouriteArtistCollectionView" destination="HwZ-9K-BK7" id="KwS-2y-u91"/>
                 <outlet property="favouriteDrinkCollectionView" destination="X2m-G2-JPw" id="cUu-qD-T0Z"/>
                 <outlet property="favouriteDrinksCollectionViewHeight" destination="USH-TP-yDD" id="shS-iW-4j6"/>
                 <outlet property="friendsListCollectionView" destination="yob-rN-lAs" id="mg6-2z-Nmk"/>
@@ -701,28 +700,33 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
-                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ujj-sf-Fo1">
+                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="HwZ-9K-BK7">
                                             <rect key="frame" x="0.0" y="37.5" width="374" height="90"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="90" id="cFX-Qx-lg0"/>
+                                                <constraint firstAttribute="height" constant="90" id="cy0-7G-dic"/>
                                             </constraints>
-                                            <collectionViewLayout key="collectionViewLayout" id="5CE-g3-Nfh" customClass="LeftAlignedCollectionViewFlowLayout" customModule="SpeakEasy_Consumer" customModuleProvider="target"/>
+                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="k7n-Uc-QZT">
+                                                <size key="itemSize" width="128" height="128"/>
+                                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            </collectionViewFlowLayout>
                                             <connections>
-                                                <outlet property="dataSource" destination="-1" id="pzI-LN-RDO"/>
-                                                <outlet property="delegate" destination="-1" id="KC8-kX-eFb"/>
+                                                <outlet property="dataSource" destination="-1" id="Qem-rW-AYI"/>
+                                                <outlet property="delegate" destination="-1" id="fMa-Ek-DUK"/>
                                             </connections>
                                         </collectionView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="27i-8v-bqN" secondAttribute="trailing" constant="12" id="0nQ-GH-AY0"/>
-                                        <constraint firstItem="ujj-sf-Fo1" firstAttribute="leading" secondItem="AzM-06-9eM" secondAttribute="leading" id="BVu-0D-gSY"/>
+                                        <constraint firstItem="HwZ-9K-BK7" firstAttribute="top" secondItem="27i-8v-bqN" secondAttribute="bottom" constant="12" id="4TR-wZ-66B"/>
+                                        <constraint firstItem="HwZ-9K-BK7" firstAttribute="leading" secondItem="AzM-06-9eM" secondAttribute="leading" id="9hJ-cD-0gP"/>
                                         <constraint firstItem="27i-8v-bqN" firstAttribute="top" secondItem="AzM-06-9eM" secondAttribute="top" constant="3" id="RAP-0M-VNZ"/>
-                                        <constraint firstAttribute="trailing" secondItem="ujj-sf-Fo1" secondAttribute="trailing" id="aMo-Gc-t4c"/>
+                                        <constraint firstAttribute="bottom" secondItem="HwZ-9K-BK7" secondAttribute="bottom" constant="4" id="RNR-sw-G48"/>
+                                        <constraint firstAttribute="trailing" secondItem="HwZ-9K-BK7" secondAttribute="trailing" id="dPb-Pb-mv4"/>
                                         <constraint firstItem="27i-8v-bqN" firstAttribute="leading" secondItem="AzM-06-9eM" secondAttribute="leading" constant="3" id="y3X-WT-gJp"/>
-                                        <constraint firstItem="ujj-sf-Fo1" firstAttribute="top" secondItem="27i-8v-bqN" secondAttribute="bottom" constant="12" id="z6H-LW-nwV"/>
-                                        <constraint firstAttribute="bottom" secondItem="ujj-sf-Fo1" secondAttribute="bottom" constant="4" id="zMG-FN-Dlg"/>
                                     </constraints>
                                 </view>
                             </subviews>

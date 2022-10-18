@@ -19,7 +19,6 @@ class MyAccount: BaseController {
     @IBOutlet weak var socialMediaCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var vibesCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var favouriteDrinksCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var favouriteArtistsCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var favoriteVenueCollectionView: UICollectionView!
     
     var arrSocialMedia = ["@tamasan", "Tamas An", "@tamasan"]
@@ -53,7 +52,6 @@ class MyAccount: BaseController {
         self.socialMediaCollectionViewHeight.constant = self.socialMediaCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.vibesCollectionViewHeight.constant = self.vibesCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.favouriteDrinksCollectionViewHeight.constant = self.favouriteDrinkCollectionView.collectionViewLayout.collectionViewContentSize.height
-        self.favouriteArtistsCollectionViewHeight.constant = self.favouriteArtistCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
     
     private func register() {
@@ -62,7 +60,7 @@ class MyAccount: BaseController {
         self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
         self.importantDatesCollectionView.register(UINib(nibName: "ImportantDatesCVC", bundle: nil), forCellWithReuseIdentifier: "ImportantDatesCVC")
         self.favouriteDrinkCollectionView.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
-        self.favouriteArtistCollectionView.register(UINib(nibName: "FavouriteArtistCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteArtistCVC")
+        self.favouriteArtistCollectionView.register(UINib(nibName: "FavoriteArtistProfileCVC", bundle: nil), forCellWithReuseIdentifier: "FavoriteArtistProfileCVC")
         self.favoriteVenueCollectionView.register(UINib(nibName: "HotVenueCVC", bundle: nil), forCellWithReuseIdentifier: "HotVenueCVC")
     }
     
@@ -106,7 +104,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
         case self.favouriteDrinkCollectionView:
             return self.arrFavouriteDrinks.count
         case self.favouriteArtistCollectionView:
-            return self.arrFavouriteArtists.count
+            return 10
         case self.favoriteVenueCollectionView:
             return self.arrayFavoriteVenueEvents.count
         default:
@@ -137,8 +135,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.backGroundView.backgroundColor = UIColor(hex: "#007AFF")
             return cell
         case favouriteArtistCollectionView:
-            let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteArtistCVC", for: indexPath) as! FavouriteArtistCVC
-            cell.lblArtist.text = self.arrFavouriteArtists[indexPath.row]
+            let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteArtistProfileCVC", for: indexPath) as! FavoriteArtistProfileCVC
             return cell
         case favoriteVenueCollectionView:
             let cell = favoriteVenueCollectionView.dequeueReusableCell(withReuseIdentifier: "HotVenueCVC", for: indexPath) as! HotVenueCVC
@@ -186,11 +183,9 @@ extension MyAccount: UICollectionViewDelegateFlowLayout {
             return size
         case favouriteArtistCollectionView:
 
-            let height = 40.0
-            
-            let tabOption = self.arrFavouriteArtists[indexPath.item]
-            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
-            
+            let height = 102.0
+            let width = 102.0
+
             let size = CGSize(width: width, height: height)
             return size
         case favoriteVenueCollectionView:
