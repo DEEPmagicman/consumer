@@ -32,9 +32,9 @@ class VenueDetails: UIViewController {
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
     var arrHours = [
-        HoursDataSet(day: "Thursday", time: "10:00PM - Late"),
-        HoursDataSet(day: "Friday", time: "10:00PM - Late"),
-        HoursDataSet(day: "Saturday", time: "10:00PM - Late")
+        HoursDataSet(day: "Thursday", time: "10:00 PM - 3:00 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 PM - Late"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM - Late")
     ]
     var arrDressCode = [DressCodeDataSet(dressCode: "Smart casual"),
                         DressCodeDataSet(dressCode: "No shorts, baseball caps and athletic apparel"),

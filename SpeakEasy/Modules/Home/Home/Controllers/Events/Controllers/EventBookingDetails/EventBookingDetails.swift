@@ -175,6 +175,8 @@ extension EventBookingDetails: UITableViewDataSource {
             } else {
                 guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "PublikAttendeesTVC", for: indexPath) as? PublikAttendeesTVC else { return UITableViewCell() }
                 cell.eventDetailDelegate = self
+                cell.collectionView.reloadData()
+                cell.delegate = self
 //                cell.btnBookVIPTable.addTarget(self, action: #selector(self.onBtnBookVIPTable), for: .touchUpInside)
                 return cell
             }
@@ -218,10 +220,25 @@ extension EventBookingDetails: UITableViewDelegate {
 
 extension EventBookingDetails: EventDetailsDelegate {
     func onClickArtistProfile() {
-        self.navigationController?.present(ArtistProfilePopUp(), animated: true, completion: nil)
+        let vc = ArtistProfilePopUp()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        self.tabBarController?.present(vc, animated: true, completion: nil)
     }
     
     func onClickUserProfile() {
-        self.navigationController?.present(UserProfilePopUp(), animated: true, completion: nil)
+        let vc = UserProfilePopUp()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        self.tabBarController?.present(vc, animated: true, completion: nil)
+    }
+}
+
+extension EventBookingDetails: PublikAttendeesTVCDelegate {
+    func refreshTableViewIfNeeded() {
+        strechyTableView.layoutIfNeeded()
+        DispatchQueue.main.async {
+            self.strechyTableView.performBatchUpdates(nil)
+        }
     }
 }

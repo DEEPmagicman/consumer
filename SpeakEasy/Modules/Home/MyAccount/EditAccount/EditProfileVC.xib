@@ -131,7 +131,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IpF-v1-NQs">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="1739"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your user profile is what is shown on Public Attnedees Lists as well as for your friends to view" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WzK-iS-XNX">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your user profile is what is shown on Public Attnedees Lists as well as for your friends to view" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WzK-iS-XNX">
                                     <rect key="frame" x="20" y="8" width="374" height="42"/>
                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -207,7 +207,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mzQ-td-jlA">
-                                    <rect key="frame" x="308.5" y="235.5" width="84.5" height="22"/>
+                                    <rect key="frame" x="308.5" y="237.5" width="84.5" height="22"/>
                                     <subviews>
                                         <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yRs-5z-iiP">
                                             <rect key="frame" x="0.0" y="0.0" width="44.5" height="22"/>
@@ -635,15 +635,15 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TFg-hM-87n">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8f0-nW-3IK">
                                             <rect key="frame" x="0.0" y="210" width="374" height="60"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OhY-cj-kwa" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7PW-VI-SK3" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                                     <rect key="frame" x="127.5" y="20" width="119.5" height="20.5"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Remove Spotify">
                                                             <attributes>
-                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <font key="NSFont" metaFont="system" size="17"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                 <integer key="NSUnderline" value="1"/>
@@ -658,21 +658,21 @@
                                                         <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="medium"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileSpotify" translatesAutoresizingMaskIntoConstraints="NO" id="MFY-2I-PuQ">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profileSpotify" translatesAutoresizingMaskIntoConstraints="NO" id="eNp-ND-pCB">
                                                     <rect key="frame" x="19" y="13" width="34" height="34"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="34" id="3Kq-kC-4IJ"/>
-                                                        <constraint firstAttribute="width" secondItem="MFY-2I-PuQ" secondAttribute="height" multiplier="1:1" id="l7B-GO-Poh"/>
+                                                        <constraint firstAttribute="width" secondItem="eNp-ND-pCB" secondAttribute="height" multiplier="1:1" id="81X-fo-c3X"/>
+                                                        <constraint firstAttribute="height" constant="34" id="8mm-T9-3bw"/>
                                                     </constraints>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstItem="MFY-2I-PuQ" firstAttribute="centerY" secondItem="TFg-hM-87n" secondAttribute="centerY" id="AKS-Aq-CZs"/>
-                                                <constraint firstItem="OhY-cj-kwa" firstAttribute="centerX" secondItem="TFg-hM-87n" secondAttribute="centerX" id="ICf-FR-44t"/>
-                                                <constraint firstItem="MFY-2I-PuQ" firstAttribute="leading" secondItem="TFg-hM-87n" secondAttribute="leading" constant="19" id="YZh-ib-Vnm"/>
-                                                <constraint firstItem="OhY-cj-kwa" firstAttribute="centerY" secondItem="TFg-hM-87n" secondAttribute="centerY" id="dal-av-WjU"/>
-                                                <constraint firstAttribute="height" constant="60" id="hdL-1x-62W"/>
+                                                <constraint firstAttribute="height" constant="60" id="08d-hA-dbn"/>
+                                                <constraint firstItem="7PW-VI-SK3" firstAttribute="centerX" secondItem="8f0-nW-3IK" secondAttribute="centerX" id="3VJ-Wj-wbp"/>
+                                                <constraint firstItem="eNp-ND-pCB" firstAttribute="leading" secondItem="8f0-nW-3IK" secondAttribute="leading" constant="19" id="Agd-x9-FhR"/>
+                                                <constraint firstItem="7PW-VI-SK3" firstAttribute="centerY" secondItem="8f0-nW-3IK" secondAttribute="centerY" id="MOg-82-Zh9"/>
+                                                <constraint firstItem="eNp-ND-pCB" firstAttribute="centerY" secondItem="8f0-nW-3IK" secondAttribute="centerY" id="aDf-M5-1WB"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -773,7 +773,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z5d-cL-TIu">
-                                    <rect key="frame" x="308.5" y="753.5" width="84.5" height="22"/>
+                                    <rect key="frame" x="308.5" y="755.5" width="84.5" height="22"/>
                                     <subviews>
                                         <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="liq-0X-bBd">
                                             <rect key="frame" x="0.0" y="0.0" width="44.5" height="22"/>
@@ -1293,7 +1293,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zwe-Bf-dBX">
-                                    <rect key="frame" x="308.5" y="432.5" width="84.5" height="22"/>
+                                    <rect key="frame" x="308.5" y="430.5" width="84.5" height="22"/>
                                     <subviews>
                                         <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MpR-fm-BF3">
                                             <rect key="frame" x="0.0" y="0.0" width="44.5" height="22"/>
@@ -1379,7 +1379,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="ozG-u5-npW" secondAttribute="trailing" constant="20" symbolic="YES" id="043-w4-kt2"/>
-                                <constraint firstItem="Z5d-cL-TIu" firstAttribute="bottom" secondItem="s0a-4X-75f" secondAttribute="top" constant="22" id="0jo-5o-qDp"/>
+                                <constraint firstItem="Z5d-cL-TIu" firstAttribute="bottom" secondItem="s0a-4X-75f" secondAttribute="top" constant="24" id="0jo-5o-qDp"/>
                                 <constraint firstItem="s0a-4X-75f" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" constant="20" symbolic="YES" id="2SZ-Cu-KW9"/>
                                 <constraint firstItem="WzK-iS-XNX" firstAttribute="top" secondItem="IpF-v1-NQs" secondAttribute="top" constant="8" id="3p4-wk-wD0"/>
                                 <constraint firstItem="f6V-RP-Dza" firstAttribute="top" secondItem="S9c-y2-3Wy" secondAttribute="bottom" constant="38" id="5Ko-L8-Pit"/>
@@ -1392,7 +1392,7 @@
                                 <constraint firstItem="WzK-iS-XNX" firstAttribute="centerX" secondItem="IpF-v1-NQs" secondAttribute="centerX" id="B0P-l8-OAq"/>
                                 <constraint firstItem="ZD9-M9-s82" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" constant="20" id="B4s-K9-4CV"/>
                                 <constraint firstItem="fFV-jF-asX" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" constant="20" symbolic="YES" id="BA9-O2-AMu"/>
-                                <constraint firstItem="9uE-zO-n6W" firstAttribute="top" secondItem="zwe-Bf-dBX" secondAttribute="bottom" constant="14" id="Bjj-0g-Q4z"/>
+                                <constraint firstItem="9uE-zO-n6W" firstAttribute="top" secondItem="zwe-Bf-dBX" secondAttribute="bottom" constant="16" id="Bjj-0g-Q4z"/>
                                 <constraint firstAttribute="trailing" secondItem="s0a-4X-75f" secondAttribute="trailing" constant="20" symbolic="YES" id="G2B-cC-Z2d"/>
                                 <constraint firstItem="UFm-zX-cR4" firstAttribute="leading" secondItem="S9c-y2-3Wy" secondAttribute="trailing" constant="23" id="G63-Vc-XOe"/>
                                 <constraint firstItem="ozG-u5-npW" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" constant="20" symbolic="YES" id="G7R-6M-v5J"/>
@@ -1424,7 +1424,7 @@
                                 <constraint firstItem="K45-12-vzj" firstAttribute="top" secondItem="FWA-cM-YCT" secondAttribute="bottom" constant="18" id="k4f-77-CqZ"/>
                                 <constraint firstItem="9uE-zO-n6W" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" constant="20" symbolic="YES" id="lU7-09-R5Z"/>
                                 <constraint firstItem="2Xy-xs-aEd" firstAttribute="leading" secondItem="gLI-5j-8x5" secondAttribute="leading" id="lyX-16-3cf"/>
-                                <constraint firstItem="yBn-xv-X1G" firstAttribute="top" secondItem="mzQ-td-jlA" secondAttribute="bottom" constant="14" id="m7F-tD-PCx"/>
+                                <constraint firstItem="yBn-xv-X1G" firstAttribute="top" secondItem="mzQ-td-jlA" secondAttribute="bottom" constant="12" id="m7F-tD-PCx"/>
                                 <constraint firstItem="fFV-jF-asX" firstAttribute="top" secondItem="ozG-u5-npW" secondAttribute="bottom" constant="20" id="nAN-zo-R3K"/>
                                 <constraint firstItem="FWA-cM-YCT" firstAttribute="leading" secondItem="IpF-v1-NQs" secondAttribute="leading" id="nLO-lw-1Wc"/>
                                 <constraint firstItem="UFm-zX-cR4" firstAttribute="centerY" secondItem="S9c-y2-3Wy" secondAttribute="centerY" id="qEe-CU-Bf4"/>
@@ -1483,8 +1483,8 @@
         <image name="ic-insta" width="19" height="19"/>
         <image name="locationicon" width="15" height="15"/>
         <image name="profileSpotify" width="46" height="46"/>
-        <image name="snapIc" width="82" height="46"/>
-        <image name="tiktokIc" width="128" height="128"/>
+        <image name="snapIc" width="44" height="45"/>
+        <image name="tiktokIc" width="33" height="33"/>
         <image name="you" width="56" height="56"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

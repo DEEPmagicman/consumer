@@ -5,18 +5,24 @@
 //  Created by MAC on 14/10/22.
 //
 
-import Foundation
 import UIKit
+
+protocol PublikAttendeesTVCDelegate: AnyObject {
+    func refreshTableViewIfNeeded()
+}
 
 class PublikAttendeesTVC: UITableViewCell {
     
     var eventDetailDelegate: EventDetailsDelegate?
+    weak var delegate: PublikAttendeesTVCDelegate?
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setUpUI()
+        collectionView.addObserver(self, forKeyPath: "contentSize", options: [], context: nil)
     }
     
     func setUpUI() {
@@ -28,11 +34,16 @@ class PublikAttendeesTVC: UITableViewCell {
     private func registerCell() {
         self.collectionView.register(UINib(nibName: "PublikAttendeesProfileCVC", bundle: nil), forCellWithReuseIdentifier: "PublikAttendeesProfileCVC")
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        collectionViewHeightConstraint.constant = collectionView.contentSize.height
+        delegate?.refreshTableViewIfNeeded()
+    }
 }
 
 extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        17
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -42,7 +53,6 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
         } else {
             cell.profileImgMark.image = UIImage(named: "blueCheck")
         }
-        
         return cell
     }
     
@@ -53,5 +63,4 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
             self.eventDetailDelegate?.onClickUserProfile()
         }
     }
-    
 }

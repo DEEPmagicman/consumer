@@ -17,7 +17,7 @@ class RewardDetailsStretchyTVC: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        self.EventCollectionView.isHidden = true
         self.EventCollectionView.delegate = self
         self.EventCollectionView.dataSource = self
         self.EventCollectionView.register(UINib(nibName: "TopEventCVC", bundle: nil), forCellWithReuseIdentifier: "TopEventCVC")

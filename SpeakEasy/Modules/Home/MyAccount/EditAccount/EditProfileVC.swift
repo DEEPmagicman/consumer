@@ -67,9 +67,9 @@ class EditProfileVC: BaseController {
     var arrFavouriteArtists = ["Steve Aoki", "DJ Heavy", "Martin Garrix", "Armin van Buuren"]
     
     var arrImportantDates =
-       [ImportantDates(leftImage: "YourBirthday", rightImage: nil, title: "My  birthday", month: "September", day: "30"),
-        ImportantDates(leftImage: "partnersBirthday", rightImage: "delete", title: "Partner’s  birthday", month: "September", day: "30"),
-        ImportantDates(leftImage: "ic-friends", rightImage: "delete", title: "Paul’s  birthday", month: "September", day: "30")]
+       [ImportantDates(leftImage: "YourBirthday", rightImage: nil, title: "My  Birthday", month: "September", day: "30"),
+        ImportantDates(leftImage: "partnersBirthday", rightImage: "delete", title: "Partner’s  Birthday", month: "September", day: "30"),
+        ImportantDates(leftImage: "ic-friends", rightImage: "delete", title: "Paul’s  Birthday", month: "September", day: "30")]
 
     private var isIndustryPublic = true
     private var isSocialMediaPublic = true
