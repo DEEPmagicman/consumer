@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Bold.ttf">
+            <string>Poppins-Bold</string>
+        </array>
+        <array key="Poppins-SemiBold.ttf">
+            <string>Poppins-SemiBold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -37,13 +45,43 @@
                                     <outlet property="delegate" destination="-1" id="1aB-bO-NxQ"/>
                                 </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YWC-gq-5Ia">
+                                <rect key="frame" x="0.0" y="0.0" width="658" height="131.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchase Ticket to View Public Attendees" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wKP-ba-NQp">
+                                        <rect key="frame" x="16" y="0.0" width="626" height="39.5"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="28"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*Being listed here is optional during checkout - all those attending may not be listed* " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgV-y8-t8c">
+                                        <rect key="frame" x="16" y="59.5" width="626" height="62"/>
+                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="wKP-ba-NQp" firstAttribute="top" secondItem="YWC-gq-5Ia" secondAttribute="top" id="2Pz-X6-9dc"/>
+                                    <constraint firstAttribute="trailing" secondItem="wKP-ba-NQp" secondAttribute="trailing" constant="16" id="3GT-DZ-hqM"/>
+                                    <constraint firstItem="UgV-y8-t8c" firstAttribute="top" secondItem="wKP-ba-NQp" secondAttribute="bottom" constant="20" id="SqA-QJ-wJE"/>
+                                    <constraint firstItem="UgV-y8-t8c" firstAttribute="leading" secondItem="YWC-gq-5Ia" secondAttribute="leading" constant="16" id="Xd0-QN-C8Q"/>
+                                    <constraint firstItem="wKP-ba-NQp" firstAttribute="leading" secondItem="YWC-gq-5Ia" secondAttribute="leading" constant="16" id="aMH-X2-44C"/>
+                                    <constraint firstAttribute="bottom" secondItem="UgV-y8-t8c" secondAttribute="bottom" constant="10" id="vla-rV-rfS"/>
+                                    <constraint firstAttribute="trailing" secondItem="UgV-y8-t8c" secondAttribute="trailing" constant="16" id="wAd-ye-w0k"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="YWC-gq-5Ia" firstAttribute="leading" secondItem="XTj-gP-Rcd" secondAttribute="leading" id="01t-ge-5tF"/>
+                            <constraint firstItem="YWC-gq-5Ia" firstAttribute="trailing" secondItem="XTj-gP-Rcd" secondAttribute="trailing" id="7im-UM-eGo"/>
                             <constraint firstAttribute="trailing" secondItem="XTj-gP-Rcd" secondAttribute="trailing" id="FoF-sp-DRJ"/>
                             <constraint firstItem="XTj-gP-Rcd" firstAttribute="top" secondItem="VaT-bK-12h" secondAttribute="top" id="eBk-xw-bGz"/>
                             <constraint firstItem="XTj-gP-Rcd" firstAttribute="leading" secondItem="VaT-bK-12h" secondAttribute="leading" id="qpS-5Q-CKm"/>
                             <constraint firstAttribute="bottom" secondItem="XTj-gP-Rcd" secondAttribute="bottom" id="tvt-F9-WaG"/>
+                            <constraint firstItem="YWC-gq-5Ia" firstAttribute="top" secondItem="XTj-gP-Rcd" secondAttribute="top" id="yjK-5x-wgf"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -58,6 +96,8 @@
             <viewLayoutGuide key="safeArea" id="xR5-h6-Zkd"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="blurView" destination="YWC-gq-5Ia" id="8zF-zw-gsV"/>
+                <outlet property="blurViewTopConstraint" destination="yjK-5x-wgf" id="bbs-tM-P0j"/>
                 <outlet property="collectionView" destination="XTj-gP-Rcd" id="C1Y-Ho-SSu"/>
                 <outlet property="collectionViewHeightConstraint" destination="QbL-cR-n6v" id="BGf-rf-M0R"/>
             </connections>

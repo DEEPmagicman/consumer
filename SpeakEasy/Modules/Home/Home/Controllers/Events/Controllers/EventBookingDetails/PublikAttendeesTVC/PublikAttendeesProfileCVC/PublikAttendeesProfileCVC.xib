@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -47,8 +47,17 @@
                                 <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <visualEffectView opaque="NO" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7IL-ke-hfI">
+                                <rect key="frame" x="0.0" y="0.0" width="93" height="111"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="TlN-c2-NT2">
+                                    <rect key="frame" x="0.0" y="0.0" width="93" height="111"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="prominent"/>
+                            </visualEffectView>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7IL-ke-hfI" secondAttribute="trailing" id="0SY-69-j3e"/>
                             <constraint firstItem="gQn-Sv-nb5" firstAttribute="top" secondItem="IgS-NX-Zhj" secondAttribute="bottom" constant="9" id="0kv-T4-gF2"/>
                             <constraint firstAttribute="bottom" secondItem="gQn-Sv-nb5" secondAttribute="bottom" constant="2" id="3Vy-KC-PHJ"/>
                             <constraint firstItem="gQn-Sv-nb5" firstAttribute="centerX" secondItem="5VA-m2-DFV" secondAttribute="centerX" id="EQh-9a-nF4"/>
@@ -56,7 +65,10 @@
                             <constraint firstItem="4rg-ah-egM" firstAttribute="bottom" secondItem="IgS-NX-Zhj" secondAttribute="bottom" id="PgG-Dk-Xv3"/>
                             <constraint firstItem="4rg-ah-egM" firstAttribute="trailing" secondItem="IgS-NX-Zhj" secondAttribute="trailing" id="Qhu-FN-QQf"/>
                             <constraint firstItem="IgS-NX-Zhj" firstAttribute="top" secondItem="5VA-m2-DFV" secondAttribute="top" constant="20" id="X4g-qT-cUh"/>
+                            <constraint firstAttribute="bottom" secondItem="7IL-ke-hfI" secondAttribute="bottom" id="bef-BL-Vhw"/>
                             <constraint firstItem="IgS-NX-Zhj" firstAttribute="leading" secondItem="5VA-m2-DFV" secondAttribute="leading" constant="15" id="fNa-pi-bp8"/>
+                            <constraint firstItem="7IL-ke-hfI" firstAttribute="top" secondItem="5VA-m2-DFV" secondAttribute="top" id="phL-W9-jNF"/>
+                            <constraint firstItem="7IL-ke-hfI" firstAttribute="leading" secondItem="5VA-m2-DFV" secondAttribute="leading" id="qvS-9x-Mic"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -71,6 +83,7 @@
             </constraints>
             <size key="customSize" width="117" height="50"/>
             <connections>
+                <outlet property="hideUserProfileView" destination="7IL-ke-hfI" id="8n7-Qy-ziH"/>
                 <outlet property="profileImg" destination="IgS-NX-Zhj" id="cJa-bN-YDG"/>
                 <outlet property="profileImgMark" destination="4rg-ah-egM" id="Y3e-RC-VMm"/>
                 <outlet property="profileName" destination="gQn-Sv-nb5" id="zQl-Dh-Plu"/>
