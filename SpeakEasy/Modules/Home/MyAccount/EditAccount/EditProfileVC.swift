@@ -23,14 +23,12 @@ class EditProfileVC: BaseController {
     @IBOutlet weak var imgUser: UIImageView!
     @IBOutlet weak var vibesCollectionView: UICollectionView!
     @IBOutlet weak var favouriteDrinkCollectionView: UICollectionView!
-    @IBOutlet weak var favouriteArtistCollectionView: UICollectionView!
     @IBOutlet weak var importantDatesTableView: UITableView!
     @IBOutlet weak var tfOccupation: UITextField!
     @IBOutlet weak var btnOccupation: UIButton!
     @IBOutlet weak var heightImportantDatesTableView: NSLayoutConstraint!
     @IBOutlet weak var heightVibesCollectionView: NSLayoutConstraint!
     @IBOutlet weak var heightFavouriteDrinkCollectionView: NSLayoutConstraint!
-    @IBOutlet weak var heightFavouriteArtistCollectionView: NSLayoutConstraint!
     @IBOutlet weak var industryPrivateLbl: UILabelDeviceClass!
     @IBOutlet weak var industryPrivateLineView: UIView!
     @IBOutlet weak var industryPublicLbl: UILabelDeviceClass!
@@ -111,7 +109,6 @@ class EditProfileVC: BaseController {
     private func registerCell() {
         self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
         self.favouriteDrinkCollectionView.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
-        self.favouriteArtistCollectionView.register(UINib(nibName: "FavouriteArtistCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteArtistCVC")
         self.importantDatesTableView.register(UINib(nibName: "ImportantDatesTVC", bundle: nil), forCellReuseIdentifier: "ImportantDatesTVC")
     }
     
@@ -120,7 +117,6 @@ class EditProfileVC: BaseController {
         self.heightImportantDatesTableView.constant = self.importantDatesTableView.contentSize.height
         self.heightVibesCollectionView.constant = self.vibesCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.heightFavouriteDrinkCollectionView.constant = self.favouriteDrinkCollectionView.collectionViewLayout.collectionViewContentSize.height
-        self.heightFavouriteArtistCollectionView.constant = self.favouriteArtistCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
     
     @IBAction func onBtnClose(_ sender: UIButton) {
@@ -169,12 +165,10 @@ extension EditProfileVC {
     private func addCollectionViewContentObservers(){
         self.vibesCollectionView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         self.favouriteDrinkCollectionView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
-        self.favouriteArtistCollectionView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
     }
     private func removeCollectionViewContentObservers(){
         self.vibesCollectionView.removeObserver(self, forKeyPath: "contentSize")
         self.favouriteDrinkCollectionView.removeObserver(self, forKeyPath: "contentSize")
-        self.favouriteArtistCollectionView.removeObserver(self, forKeyPath: "contentSize")
     }
 }
 
@@ -254,10 +248,6 @@ extension EditProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.lblDrinks.text = self.arrFavouriteDrinks[indexPath.row]
             cell.backGroundView.backgroundColor = UIColor(hex: "#007AFF")
             return cell
-        case favouriteArtistCollectionView:
-            let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteArtistCVC", for: indexPath) as! FavouriteArtistCVC
-            cell.lblArtist.text = self.arrFavouriteArtists[indexPath.row]
-            return cell
         default:
             return UICollectionViewCell()
         }
@@ -285,14 +275,6 @@ extension EditProfileVC: UICollectionViewDelegateFlowLayout {
             let size = CGSize(width: width, height: height)
             return size
 
-        case favouriteArtistCollectionView:
-            
-            let height = 40.0
-            let tabOption = self.arrFavouriteArtists[indexPath.item]
-            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
-            
-            let size = CGSize(width: width, height: height)
-            return size
         default:
             return CGSize()
         }
