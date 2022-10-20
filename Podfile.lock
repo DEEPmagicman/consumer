@@ -1,19 +1,19 @@
 PODS:
   - Alamofire (4.9.1)
-  - Charts (4.0.3):
-    - Charts/Core (= 4.0.3)
-  - Charts/Core (4.0.3):
+  - Charts (4.1.0):
+    - Charts/Core (= 4.1.0)
+  - Charts/Core (4.1.0):
     - SwiftAlgorithms (~> 1.0)
   - DropDown (2.3.13)
   - DZNEmptyDataSet (1.8.1)
   - FSCalendar (2.8.4)
-  - GoogleMaps (7.0.0):
-    - GoogleMaps/Maps (= 7.0.0)
-  - GoogleMaps/Base (7.0.0)
-  - GoogleMaps/Maps (7.0.0):
+  - GoogleMaps (7.1.0):
+    - GoogleMaps/Maps (= 7.1.0)
+  - GoogleMaps/Base (7.1.0)
+  - GoogleMaps/Maps (7.1.0):
     - GoogleMaps/Base
   - GSImageViewerController (1.6.3)
-  - Hero (1.6.1)
+  - Hero (1.6.2)
   - IQKeyboardManagerSwift (6.5.10)
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
@@ -28,15 +28,15 @@ PODS:
   - PhoneNumberKit/PhoneNumberKitCore (3.3.4)
   - PhoneNumberKit/UIKit (3.3.4):
     - PhoneNumberKit/PhoneNumberKitCore
-  - Realm (10.28.6):
-    - Realm/Headers (= 10.28.6)
-  - Realm/Headers (10.28.6)
-  - RealmSwift (10.28.6):
-    - Realm (= 10.28.6)
+  - Realm (10.32.0):
+    - Realm/Headers (= 10.32.0)
+  - Realm/Headers (10.32.0)
+  - RealmSwift (10.32.0):
+    - Realm (= 10.32.0)
   - SCPageControl (0.4.0)
-  - SDWebImage (5.13.2):
-    - SDWebImage/Core (= 5.13.2)
-  - SDWebImage/Core (5.13.2)
+  - SDWebImage (5.13.4):
+    - SDWebImage/Core (= 5.13.4)
+  - SDWebImage/Core (5.13.4)
   - SwiftAlgorithms (1.0.0)
   - SwiftyJSON (5.0.1)
   - "UITextView+Placeholder (1.4.0)"
@@ -86,22 +86,22 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  Charts: d959d6723c8eedfdd0735dfc28cb0a71762ac4d9
+  Charts: 354f86803d11d9c35de280587fef50d1af063978
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FSCalendar: 2d1d0d9398f12d439f55c1fe0f01525b151b8260
-  GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
+  GoogleMaps: bc56ffb0324e345a2d91bac1a64a920f9c8f1b20
   GSImageViewerController: 20a257d7e3dd9ee171c2dfea659992eba2761839
-  Hero: 215865ba3ae41dd9bb08cd6c60a645529c6fc94b
+  Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   IQKeyboardManagerSwift: 52962c76ab33532f15ad9f3ff4e5715eda5335bb
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   "ObjectMapper+Realm": 0f8d0ac5b0e87ba63d2d0bea76a111b4eae98b9a
   PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
-  Realm: 9b12f16a14446d7d46a9e36225d0a0332a6ec739
-  RealmSwift: 5927726fce21005f43b1fb57c832297a22031bfc
+  Realm: a00e93347b8d26d372c7a82f6c0b08d6536a21c8
+  RealmSwift: fe09c29ca409f8f905fe4086f2a52936193f2e3d
   SCPageControl: 8a8dfbba7d7d8c66487a317cb4c4578a7e4af27a
-  SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
+  SDWebImage: e5cc87bf736e60f49592f307bdf9e157189298a3
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
