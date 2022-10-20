@@ -17,6 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InviteFriends" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
+                <outlet property="imgBrandLogo" destination="bnr-v9-730" id="LWP-bH-d9R"/>
                 <outlet property="inviteFriendsTableView" destination="nsd-7a-Cj4" id="lXM-N6-K87"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>

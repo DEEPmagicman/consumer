@@ -17,6 +17,7 @@ struct CostSplitModel {
 
 class CostSplit: BaseController {
     
+    @IBOutlet weak var imgBrandLogo: RoundedImage!
     @IBOutlet weak var costSplitTableView: UITableView!
     var tagValue = 1
     
@@ -45,6 +46,10 @@ class CostSplit: BaseController {
     }
     private func setUI() {
         self.registerCell()
+        self.setData()
+    }
+    private func setData(){
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
     }
     private func registerCell(){
         self.costSplitTableView.register(UINib(nibName: "CostSplitTVC", bundle: nil), forCellReuseIdentifier: "CostSplitTVC")

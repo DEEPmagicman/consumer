@@ -20,6 +20,7 @@ struct InviteFriendsModel {
 
 class InviteFriends: BaseController {
     
+    @IBOutlet weak var imgBrandLogo: RoundedImage!
     @IBOutlet weak var inviteFriendsTableView: UITableView!
     
     var arrHeadersData: [InviteFriendsHeadersData] = [
@@ -41,7 +42,9 @@ class InviteFriends: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.registerCell()
+        self.setData()
     }
+    
     
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -59,6 +62,9 @@ extension InviteFriends {
         self.inviteFriendsTableView.register(UINib(nibName: "FriendTVC", bundle: nil), forCellReuseIdentifier: "FriendTVC")
         self.inviteFriendsTableView.register(UINib(nibName: "TableBookingInviteFriendsTVC", bundle: nil), forCellReuseIdentifier: "TableBookingInviteFriendsTVC")
         self.inviteFriendsTableView.register(UINib(nibName: "InviteFromContactTVC", bundle: nil), forCellReuseIdentifier: "InviteFromContactTVC")
+    }
+    private func setData(){
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
     }
 }
 

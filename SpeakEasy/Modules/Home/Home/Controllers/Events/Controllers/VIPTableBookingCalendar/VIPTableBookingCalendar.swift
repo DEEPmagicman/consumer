@@ -10,12 +10,14 @@ import UIKit
 class VIPTableBookingCalendar: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var imgBrandLogo: UIImageView!
     
     var arrayHeaders = [HeaderOption(label: "Associated Event", icon: nil)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        self.setData()
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -34,6 +36,9 @@ extension VIPTableBookingCalendar {
             // Fallback on earlier versions
         }
         self.registerCells()
+    }
+    private func setData() {
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
     }
     private func registerCells(){
         self.tableView.register(UINib(nibName: "VIPTableBookingCalenderTVC", bundle: nil), forCellReuseIdentifier: "VIPTableBookingCalenderTVC")

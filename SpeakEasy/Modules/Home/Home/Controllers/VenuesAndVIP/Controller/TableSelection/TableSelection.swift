@@ -11,6 +11,7 @@ class TableSelection: UIViewController {
     
     @IBOutlet weak var tableCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var imgBrandLogo: UIImageView!
     
     var selectedIndex = 0
     var pageMenu: CAPSPageMenu?
@@ -40,6 +41,10 @@ class TableSelection: UIViewController {
 extension TableSelection {
     private func setUI(){
         self.registerCells()
+        self.setData()
+    }
+    private func setData(){
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
     }
     private func registerCells(){
         self.tableCollectionView.register(UINib(nibName: "TabCVC", bundle: nil), forCellWithReuseIdentifier: "TabCVC")

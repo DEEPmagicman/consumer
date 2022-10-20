@@ -11,7 +11,9 @@ class BookingRequests: BaseController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setData()
     }
+    @IBOutlet weak var imgBrandLogo: UIImageView!
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true
         )
@@ -29,7 +31,9 @@ class BookingRequests: BaseController {
         sender.text = "\(Constants.currency)\(inputText)"
 
     }
-    
+    private func setData(){
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
+    }
 }
 extension BookingRequests: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
