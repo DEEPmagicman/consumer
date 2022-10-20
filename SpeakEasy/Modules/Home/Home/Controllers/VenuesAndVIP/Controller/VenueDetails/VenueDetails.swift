@@ -28,6 +28,10 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var lblTitle: UILabelDeviceClass!
+    @IBOutlet weak var imgBrandLogo: RoundedImage!
+    @IBOutlet weak var lblLocation: UILabelDeviceClass!
+    @IBOutlet weak var lblPhoneNumber: UILabelDeviceClass!
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
     var arrHours = [
@@ -43,9 +47,11 @@ class VenueDetails: UIViewController {
                             TabBarOption(label: Strings.VENUE_DEAILS.text,   index: 1, icon: nil, selectedIcon: nil, isSelected: false)]
     
     var arrayTopEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false)]
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"),
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St. Newyork"),
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St. California")]
+    
+   static var hotVenuesData: VenuesVIPEventDataSet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,8 +85,21 @@ class VenueDetails: UIViewController {
 extension VenueDetails{
     private func setUI() {
         registerCell()
+        setData()
         addObservers(tableView: self.tableViewHours)
         addObservers(tableView: self.tableViewDressCode)
+    }
+    private func setData() {
+        self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
+        self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
+        self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName ?? ""
+        self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
+        let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
+        self.arrGallery[0] = imgEventCover
+        
+        DispatchQueue.main.async {
+            self.galleryCollectionView.reloadData()
+        }
     }
     private func addObservers(tableView: UITableView) {
         tableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)

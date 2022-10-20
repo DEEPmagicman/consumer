@@ -15,7 +15,9 @@ struct TopEventDataSet {
     var lblEventDate: String? = ""
     var currentLiveEventFires: UIStackView?
     var isLive: Bool? = false
+    var location: String?
 }
+
 
 class Events: BaseController {
     
@@ -58,12 +60,17 @@ extension Events: UITableViewDataSource {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TopEventsTVC", for: indexPath) as! TopEventsTVC
             cell.selectedTopEvent = { index in
-                Utility.main.topViewController()?.navigationController?.pushViewController(EventBookingDetails(), animated: true)
+                let eventBookingDetailsController = EventBookingDetails()
+                eventBookingDetailsController.topEventData = Constants.arrayTopEvents[index]
+                Utility.main.topViewController()?.navigationController?.pushViewController(eventBookingDetailsController, animated: true)
             }
             return cell
         default:
             if indexPath.section == self.arrayHeaders.count - 1 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AllEventsTVC", for: indexPath) as! AllEventsTVC
+                cell.selectedRemainingEvent = { index in
+                    self.pushToEventBookingDetails(indexPath: indexPath, index: index)
+                }
                 cell.setData(seeAll: true)
                 cell.tag = indexPath.section - 1
                 cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
@@ -71,6 +78,9 @@ extension Events: UITableViewDataSource {
             }
             else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AllEventsTVC", for: indexPath) as! AllEventsTVC
+                cell.selectedRemainingEvent = { index in
+                    self.pushToEventBookingDetails(indexPath: indexPath, index: index)
+                }
                 cell.setData(seeAll: false)
                 cell.tag = indexPath.section - 1
                 return cell
@@ -79,6 +89,21 @@ extension Events: UITableViewDataSource {
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
         self.pushToAllEvents()
+    }
+    
+    func pushToEventBookingDetails(indexPath: IndexPath,index: Int) {
+        let eventBookingDetailsController = EventBookingDetails()
+        switch indexPath.section {
+        case 1:
+            eventBookingDetailsController.topEventData = Constants.arrayFeaturedEvents[index]
+        case 2:
+            eventBookingDetailsController.topEventData = Constants.arrayUpcomingEvents[index]
+        case 3:
+            eventBookingDetailsController.topEventData = Constants.arrayGeneralAdmission[index]
+        default:
+            break
+        }
+        Utility.main.topViewController()?.navigationController?.pushViewController(eventBookingDetailsController, animated: true)
     }
     
 }

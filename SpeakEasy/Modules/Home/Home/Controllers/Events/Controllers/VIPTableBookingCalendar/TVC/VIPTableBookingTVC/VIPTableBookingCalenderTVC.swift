@@ -26,7 +26,7 @@ class VIPTableBookingCalenderTVC: UITableViewCell {
     }
     
     var arrayAssociatedEvent = [
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  lblEventDate: "")
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  lblEventDate: "",location: "632 N. Dearborn St. chicago, IL")
     ]
     
     func setData(seeAll: Bool){

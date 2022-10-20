@@ -14,6 +14,14 @@ class ViewEventHeader: UIView {
     @IBOutlet weak var btnCloseDescription: UIButtonDeviceClass!
     @IBOutlet weak var lblDescription: UILabelDeviceClass!
     
+    @IBOutlet weak var imgEventCover: UIImageView!
+    @IBOutlet weak var imgBrandCover: UIImageView!
+    @IBOutlet weak var lblPerformerName: UILabelDeviceClass!
+    @IBOutlet weak var lblEventDate: UILabelDeviceClass!
+    @IBOutlet weak var lblEventVenueName: UILabelDeviceClass!
+    @IBOutlet weak var lblLocation: UILabelDeviceClass!
+    
+    
     class func instanceFromNib() -> UIView {
         return UINib(nibName: "ViewEventHeader", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! UIView
     }
@@ -35,6 +43,15 @@ class ViewEventHeader: UIView {
     private func updatedLable() {
         self.lblDescription.isHidden = !self.lblDescription.isHidden
         self.layoutIfNeeded()
+    }
+    
+    func setData(data: TopEventDataSet) {
+        self.imgEventCover.image = data.imgEventCover
+        self.imgBrandCover.image = data.imgBrandLogo
+        self.lblPerformerName.text = data.lblPerformerName ?? ""
+        self.lblEventVenueName.text = data.lblVenueName ?? ""
+        self.lblEventDate.text = data.lblEventDate ?? ""
+        self.lblLocation.text = data.location ?? ""
     }
 }
 

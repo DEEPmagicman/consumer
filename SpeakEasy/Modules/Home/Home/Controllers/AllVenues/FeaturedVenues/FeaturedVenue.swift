@@ -65,7 +65,7 @@ extension FeaturedVenue: UITableViewDelegate {
     }
 }
 extension FeaturedVenue: VenueDetailProtocol {
-    func didSelect() {
+    func didSelect(index: Int) {
         Utility.main.topViewController()?.navigationController?.pushViewController(VenueDetails(), animated: true)
     }
 }

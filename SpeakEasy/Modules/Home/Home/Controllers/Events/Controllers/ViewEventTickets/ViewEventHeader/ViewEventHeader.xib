@@ -143,6 +143,14 @@
                 <constraint firstItem="ZLT-0n-xgZ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="zg7-cM-Nvb"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="imgBrandCover" destination="ZN8-PD-1tF" id="Tzh-AE-NyX"/>
+                <outlet property="imgEventCover" destination="ncr-Uo-Sek" id="McD-8Y-hvE"/>
+                <outlet property="lblEventDate" destination="eYa-hF-ggf" id="lYp-U5-ADL"/>
+                <outlet property="lblEventVenueName" destination="5y7-iM-qoB" id="f33-Fi-BQW"/>
+                <outlet property="lblLocation" destination="NJt-8Q-atu" id="yV5-e4-ZxF"/>
+                <outlet property="lblPerformerName" destination="ukc-PE-XJD" id="1Fs-gH-Qal"/>
+            </connections>
             <point key="canvasLocation" x="137.68115942028987" y="-54.211956521739133"/>
         </view>
     </objects>

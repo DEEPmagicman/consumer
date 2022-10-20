@@ -7,17 +7,18 @@
 
 import UIKit
 
+protocol didSelectEvents {
+    
+    func selectEvent()
+}
+
 class TopEventsTVC: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
         
     var selectedTopEvent: ((Int)->Void)?
+
     
-    var arrayTopEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false)
-    ]
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,11 +36,11 @@ extension TopEventsTVC{
 }
 extension TopEventsTVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.arrayTopEvents.count
+        return Constants.arrayTopEvents.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopEventCVC", for: indexPath) as! TopEventCVC
-        let data = self.arrayTopEvents[indexPath.item]
+        let data = Constants.arrayTopEvents[indexPath.item]
         cell.setData(data: data)
         return cell
     }

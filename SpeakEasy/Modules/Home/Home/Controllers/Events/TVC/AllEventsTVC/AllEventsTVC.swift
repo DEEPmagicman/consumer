@@ -15,24 +15,10 @@ class AllEventsTVC: UITableViewCell {
     @IBOutlet weak var viewSeperator: UIView!
     @IBOutlet weak var btnSeeAll: UIButton!
     
-    var arrayFeaturedEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR CHICAGO", lblEventDate: "Saturday, June 18"),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9"),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO Chicago", lblEventDate: "Thursday, July 7")
-    ]
+    var selectedRemainingEvent: ((Int)->Void)?
+    
+
     var arrayFilteredFeaturedEvents = [TopEventDataSet]()
-    
-    var arrayUpcomingEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  lblEventDate: "Saturday, July 2"),
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG2"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  lblEventDate: "Thursday, June 7"),
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG3"), lblPerformerName: "DJ Daily", lblVenueName: "Bounce Chicago",  lblEventDate: "Friday, July 24")
-    ]
-    
-    var arrayGeneralAdmission = [
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  lblEventDate: "Friday, July 1"),
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce Chicago",  lblEventDate: "Thursday, June 7"),
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG3"), lblPerformerName: "Sundown Sundaze", lblVenueName: "PRYSM Chicago",  lblEventDate: "Sunday, July 3")
-    ]
     
     var searchText = ""
     var isFilter = false
@@ -64,7 +50,7 @@ extension AllEventsTVC{
         }
         else{
             self.isFilter = true
-            self.arrayFilteredFeaturedEvents = self.arrayFeaturedEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(self.searchText)}
+            self.arrayFilteredFeaturedEvents = Constants.arrayFeaturedEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(self.searchText)}
         }
         
         self.collectionView.reloadData()
@@ -78,7 +64,7 @@ extension AllEventsTVC: UICollectionViewDataSource {
         case true:
             return self.arrayFilteredFeaturedEvents.count
         case false:
-            return self.arrayFeaturedEvents.count
+            return Constants.arrayFeaturedEvents.count
         }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -91,20 +77,26 @@ extension AllEventsTVC: UICollectionViewDataSource {
                 let data = self.arrayFilteredFeaturedEvents[indexPath.item]
                 cell.setData(data: data)
             case false:
-                let data = self.arrayFeaturedEvents[indexPath.item]
+                let data = Constants.arrayFeaturedEvents[indexPath.item]
                 cell.setData(data: data)
             }
         case 1:
-            let data = self.arrayUpcomingEvents[indexPath.item]
+            let data = Constants.arrayUpcomingEvents[indexPath.item]
             cell.setData(data: data)
         case 2:
-            let data = self.arrayGeneralAdmission[indexPath.item]
+            let data = Constants.arrayGeneralAdmission[indexPath.item]
             cell.setData(data: data)
         default:
             break
         }
         
         return cell
+    }
+}
+extension AllEventsTVC: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.selectedRemainingEvent?(indexPath.row)
     }
 }
 extension AllEventsTVC: UICollectionViewDelegateFlowLayout {

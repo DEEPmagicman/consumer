@@ -17,6 +17,7 @@ class EventBookingDetails: UIViewController {
     @IBOutlet weak var viewProceed: UIView!
     @IBOutlet weak var btnProceed: UIButtonDeviceClass!
     @IBOutlet weak var strechyTableView: UITableView!
+    
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
@@ -24,6 +25,8 @@ class EventBookingDetails: UIViewController {
     var arrEventBooking = [EventBooking(ticketCount: 0),
                            EventBooking(ticketCount: 0),
                            EventBooking(ticketCount: 0)]
+    
+    var topEventData: TopEventDataSet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +58,9 @@ class EventBookingDetails: UIViewController {
     }
     @IBAction func onBtnProceed(_ sender: UIButtonDeviceClass) {
         //        self.navigationController?.pushViewController(TicketRecipients(), animated: true)
-        self.navigationController?.pushViewController(ViewEventTickets(), animated: true)
+        let viewEventTicketsController = ViewEventTickets()
+        viewEventTicketsController.topEventData = self.topEventData
+        self.navigationController?.pushViewController(viewEventTicketsController, animated: true)
         
     }
 }
@@ -71,7 +76,9 @@ extension EventBookingDetails {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = EventTableViewHeader.instanceFromNib()
+            let tableHeaderView  = EventTableViewHeader.instanceFromNib() as! EventTableViewHeader
+            guard let data = self.topEventData else {return}
+            tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }

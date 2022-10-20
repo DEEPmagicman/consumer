@@ -17,6 +17,8 @@ class TicketConfirmation: UIViewController {
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
     var screenType: TicketConfirmationType = .FromHome
+    var topEventData: TopEventDataSet?
+
     
     
     override func viewDidLoad() {
@@ -74,7 +76,9 @@ extension TicketConfirmation {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = ViewEventHeader.instanceFromNib()
+            let tableHeaderView  = ViewEventHeader.instanceFromNib() as! ViewEventHeader
+            guard let data = self.topEventData else {return}
+            tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }

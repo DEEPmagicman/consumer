@@ -16,6 +16,8 @@ struct VenuesVIPEventDataSet {
     var lblEventFees: String? = ""
     var lblEventWaitingTime: String? = ""
     var lblEventClosingTime: String? = ""
+    var location: String?
+    var phoneNumber: String?
 }
 
 class VenuesAndVIP: BaseController {
@@ -23,15 +25,6 @@ class VenuesAndVIP: BaseController {
     @IBOutlet weak var tableView: UITableView!
     
     var arrayHeaders = [HeaderOption(label: Strings.HOT_VENUES.text, icon: UIImage(named: "EventsTabSelected"))]
-    
-    var arrayRemainingHotVenueEvents = [
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM"),
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG2"), lblPerformerName: "PRYSM Chicago", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo2"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM"),
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG3"), lblPerformerName: "RocBar", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo3"), isLive: true, isFavourite: false, lblEventFees: "$35", lblEventWaitingTime: "15 mins", lblEventClosingTime: "Closes 3:00 AM"),
-    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +54,7 @@ extension VenuesAndVIP: UITableViewDataSource {
         case 0:
             return 1
         default:
-            return 3
+            return Constants.arrayRemainingHotVenueEvents.count
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -73,13 +66,13 @@ extension VenuesAndVIP: UITableViewDataSource {
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
             if indexPath.row == 2 {
-                let data = self.arrayRemainingHotVenueEvents[indexPath.row]
+                let data = Constants.arrayRemainingHotVenueEvents[indexPath.row]
                 cell.setData(data: data)
                 cell.setData(seeAll: true)
                 cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
             }
             else {
-                let data = self.arrayRemainingHotVenueEvents[indexPath.row]
+                let data = Constants.arrayRemainingHotVenueEvents[indexPath.row]
                 cell.setData(data: data)
                 cell.setData(seeAll: false)
             }
@@ -91,6 +84,13 @@ extension VenuesAndVIP: UITableViewDataSource {
     }
 }
 extension VenuesAndVIP: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let venueDetailsController = VenueDetails()
+        VenueDetails.hotVenuesData = Constants.arrayRemainingHotVenueEvents[indexPath.row]
+        Utility.main.topViewController()?.navigationController?.pushViewController(venueDetailsController, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
@@ -121,7 +121,9 @@ extension VenuesAndVIP: UITableViewDelegate {
     }
 }
 extension VenuesAndVIP: VenueDetailProtocol {
-    func didSelect() {
-        Utility.main.topViewController()?.navigationController?.pushViewController(VenueDetails(), animated: true)
+    func didSelect(index: Int) {
+        let venueDetailsController = VenueDetails()
+        VenueDetails.hotVenuesData = Constants.arrayHotVenueEvents[index]
+        Utility.main.topViewController()?.navigationController?.pushViewController(venueDetailsController, animated: true)
     }
 }

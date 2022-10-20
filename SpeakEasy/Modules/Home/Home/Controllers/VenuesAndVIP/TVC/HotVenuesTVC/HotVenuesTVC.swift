@@ -12,14 +12,7 @@ class HotVenuesTVC: UITableViewCell {
     @IBOutlet weak var collectionView: UICollectionView!
     var delegate: VenueDetailProtocol?
     
-    var arrayHotVenueEvents = [
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO Chicago", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM"),
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM"),
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM"),
-    ]
+
     var arrayFilteredHotVenueEvents = [VenuesVIPEventDataSet]()
     
     var searchText = ""
@@ -45,7 +38,7 @@ extension HotVenuesTVC{
         }
         else{
             self.isFilter = true
-            self.arrayFilteredHotVenueEvents = self.arrayHotVenueEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
         }
         
         self.collectionView.reloadData()
@@ -59,7 +52,7 @@ extension HotVenuesTVC: UICollectionViewDataSource {
         case true:
             return self.arrayFilteredHotVenueEvents.count
         case false:
-            return self.arrayHotVenueEvents.count
+            return Constants.arrayHotVenueEvents.count
         }
         
     }
@@ -72,7 +65,7 @@ extension HotVenuesTVC: UICollectionViewDataSource {
             return cell
         case false:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HotVenueCVC", for: indexPath) as! HotVenueCVC
-            let data = self.arrayHotVenueEvents[indexPath.item]
+            let data = Constants.arrayHotVenueEvents[indexPath.item]
             cell.setData(data: data)
             return cell
         }
@@ -86,10 +79,10 @@ extension HotVenuesTVC: UICollectionViewDelegateFlowLayout {
         return size
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.delegate?.didSelect()
+        self.delegate?.didSelect(index: indexPath.row)
     }
 }
 
 protocol VenueDetailProtocol {
-    func didSelect()
+    func didSelect(index: Int)
 }

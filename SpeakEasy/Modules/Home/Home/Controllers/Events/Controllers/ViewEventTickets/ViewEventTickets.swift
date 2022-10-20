@@ -22,6 +22,8 @@ class ViewEventTickets: UIViewController {
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
+    var topEventData: TopEventDataSet?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +72,7 @@ class ViewEventTickets: UIViewController {
     @IBAction func onBtnProceed(_ sender: UIButtonDeviceClass) {
         let controller = TicketConfirmation()
         controller.screenType = .FromHome
+        controller.topEventData = self.topEventData
         self.navigationController?.pushViewController(controller, animated: true)
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
@@ -93,7 +96,9 @@ extension ViewEventTickets {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = ViewEventHeader.instanceFromNib()
+            let tableHeaderView  = ViewEventHeader.instanceFromNib() as! ViewEventHeader
+            guard let data = self.topEventData else {return}
+            tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }

@@ -191,7 +191,13 @@
             <connections>
                 <outlet property="btnCloseDescription" destination="YGy-sF-9Eg" id="7gN-DK-Bho"/>
                 <outlet property="btnDescription" destination="k1q-jQ-loy" id="zAk-wF-NMQ"/>
+                <outlet property="imgBrandLogo" destination="20a-4U-GSE" id="OtV-Tz-FRv"/>
+                <outlet property="imgEventCover" destination="oUy-TY-hWZ" id="68x-g0-0kK"/>
                 <outlet property="lblDescription" destination="kJC-7c-utt" id="wbg-Ch-ZTh"/>
+                <outlet property="lblEventDate" destination="JMm-1C-fu3" id="Gpe-Ad-k3T"/>
+                <outlet property="lblLocation" destination="Fgo-7R-vhK" id="LYX-Vj-f21"/>
+                <outlet property="lblPerformerName" destination="Cek-Zd-DlN" id="eZN-ER-1wi"/>
+                <outlet property="lblVenueName" destination="p2Y-pj-JDX" id="V6M-79-yYk"/>
             </connections>
             <point key="canvasLocation" x="163.768115942029" y="-4.4836956521739131"/>
         </view>
