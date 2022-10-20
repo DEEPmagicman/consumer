@@ -15,9 +15,9 @@ class PublikAttendeesTVC: UITableViewCell {
     
     var eventDetailDelegate: EventDetailsDelegate?
     weak var delegate: PublikAttendeesTVCDelegate?
-    var isTickitPurches = true
+    var isTicketPurchased = true
     private var userCount = 17
-    private var artistCount = 5
+    private var artistCount = 1
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
@@ -47,7 +47,7 @@ class PublikAttendeesTVC: UITableViewCell {
     }
     
     private func setBlurView() {
-        self.blurView.isHidden = isTickitPurches
+        self.blurView.isHidden = isTicketPurchased
 
         if self.artistCount%4 == 0 {
             self.blurViewTopConstraint.constant = CGFloat(111*(artistCount/4))
@@ -60,7 +60,7 @@ class PublikAttendeesTVC: UITableViewCell {
 extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let cellCount = userCount + artistCount
-        return isTickitPurches ? cellCount : cellCount + (cellCount%4 != 0 ? (4-(cellCount%4)) : 0)
+        return isTicketPurchased ? cellCount : cellCount + (cellCount%4 != 0 ? (4-(cellCount%4)) : 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -70,7 +70,7 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
             cell.hideUserProfileView.isHidden = true
         } else {
             cell.profileImgMark.image = UIImage(named: "blueCheck")
-            if isTickitPurches {
+            if isTicketPurchased {
                 cell.hideUserProfileView.isHidden = true
             } else {
                 cell.hideUserProfileView.isHidden = false
@@ -87,7 +87,7 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
         if indexPath.row < artistCount {
             self.eventDetailDelegate?.onClickArtistProfile()
         } else {
-            if isTickitPurches {
+            if isTicketPurchased {
                 self.eventDetailDelegate?.onClickUserProfile()
             }
         }

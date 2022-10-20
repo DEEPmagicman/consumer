@@ -31,10 +31,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g0M-33-yzd">
-                    <rect key="frame" x="0.0" y="44" width="414" height="778"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xXi-nG-ZS5">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="778"/>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xXi-nG-ZS5">
+                            <rect key="frame" x="0.0" y="30" width="414" height="748"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ViW-FF-oUE">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="727"/>
@@ -280,7 +280,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.11764705882352941" green="0.11764705882352941" blue="0.11764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.023529411764705882" green="0.023529411764705882" blue="0.023529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstItem="SyK-av-tOt" firstAttribute="leading" secondItem="ViW-FF-oUE" secondAttribute="leading" constant="20" id="04B-O6-zSg"/>
                                         <constraint firstItem="APm-ps-GY4" firstAttribute="centerX" secondItem="ViW-FF-oUE" secondAttribute="centerX" id="4xr-kx-fJQ"/>
@@ -309,7 +309,7 @@
                                         <constraint firstItem="Lki-aw-Uf4" firstAttribute="centerX" secondItem="ViW-FF-oUE" secondAttribute="centerX" id="rcd-v7-GSR"/>
                                         <constraint firstItem="QBy-kU-sey" firstAttribute="centerX" secondItem="ViW-FF-oUE" secondAttribute="centerX" id="s78-Eg-4FY"/>
                                         <constraint firstItem="T59-Ac-Glh" firstAttribute="top" secondItem="ViW-FF-oUE" secondAttribute="top" constant="20" id="ua1-4X-WAi"/>
-                                        <constraint firstAttribute="bottom" secondItem="SyK-av-tOt" secondAttribute="bottom" constant="20" id="zv9-Xe-cQE"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="SyK-av-tOt" secondAttribute="bottom" constant="20" id="zv9-Xe-cQE"/>
                                         <constraint firstItem="vb9-fz-6lu" firstAttribute="centerX" secondItem="ViW-FF-oUE" secondAttribute="centerX" id="zzs-UL-dBz"/>
                                     </constraints>
                                 </view>
@@ -320,30 +320,36 @@
                                 <constraint firstItem="ViW-FF-oUE" firstAttribute="leading" secondItem="xXi-nG-ZS5" secondAttribute="leading" id="YZa-Y5-ZqM"/>
                                 <constraint firstAttribute="bottom" secondItem="ViW-FF-oUE" secondAttribute="bottom" id="yCF-4M-w4q"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                    <color key="value" red="0.090196078431372548" green="0.090196078431372548" blue="0.090196078431372548" alpha="1" colorSpace="calibratedRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                    <integer key="value" value="3"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </scrollView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="ViW-FF-oUE" firstAttribute="height" secondItem="g0M-33-yzd" secondAttribute="height" priority="250" id="0ee-pm-pqA"/>
+                        <constraint firstItem="ViW-FF-oUE" firstAttribute="height" secondItem="g0M-33-yzd" secondAttribute="height" multiplier="0.8" priority="250" id="0ee-pm-pqA"/>
                         <constraint firstAttribute="trailing" secondItem="xXi-nG-ZS5" secondAttribute="trailing" id="3HU-pV-PnI"/>
                         <constraint firstItem="xXi-nG-ZS5" firstAttribute="leading" secondItem="g0M-33-yzd" secondAttribute="leading" id="3Oa-r3-7p4"/>
                         <constraint firstItem="ViW-FF-oUE" firstAttribute="width" secondItem="g0M-33-yzd" secondAttribute="width" id="CWH-kr-VHu"/>
-                        <constraint firstAttribute="bottom" secondItem="xXi-nG-ZS5" secondAttribute="bottom" id="NHm-o3-42M"/>
-                        <constraint firstItem="xXi-nG-ZS5" firstAttribute="top" secondItem="g0M-33-yzd" secondAttribute="top" id="kxr-lL-cuw"/>
+                        <constraint firstAttribute="bottom" secondItem="xXi-nG-ZS5" secondAttribute="bottom" constant="40" id="NHm-o3-42M"/>
+                        <constraint firstItem="xXi-nG-ZS5" firstAttribute="top" secondItem="g0M-33-yzd" secondAttribute="top" constant="30" id="kxr-lL-cuw"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="20"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="g0M-33-yzd" secondAttribute="trailing" id="0V1-vS-Meg"/>
                 <constraint firstItem="g0M-33-yzd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="MyI-kK-dsY"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="g0M-33-yzd" secondAttribute="bottom" constant="40" id="cDp-I6-yRN"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="g0M-33-yzd" secondAttribute="bottom" id="cDp-I6-yRN"/>
                 <constraint firstItem="g0M-33-yzd" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="mYZ-rV-GoZ"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="59.598214285714285"/>

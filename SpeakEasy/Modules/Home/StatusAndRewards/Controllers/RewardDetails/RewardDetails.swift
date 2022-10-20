@@ -10,8 +10,14 @@ import UIKit
 class RewardDetails: UIViewController {
 
     @IBOutlet weak var strechyTableView: UITableView!
+
     var headerView: UIView!
     var kTableHeaderHeight: CGFloat = 0.0
+    var isShowEvent = false
+    var isFree = false
+    private let freeTicket = "FREE TICKET:"
+    private let twentyOff = "20% OFF TICKET:"
+    private let minOff = "20% LOWER MIN. SPEND"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,6 +97,10 @@ extension RewardDetails: UITableViewDataSource {
         
         guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "RewardDetailsStretchyTVC", for: indexPath) as? RewardDetailsStretchyTVC else { return UITableViewCell() }
         cell.indentationLevel = 2;
+        cell.guestView.isHidden = isShowEvent
+        cell.EventCollectionView.isHidden = !isShowEvent
+        cell.discountLbl.text = isFree ? freeTicket : twentyOff
+        cell.discountLbl.textColor = isFree ? UIColor(red: 245/255, green: 129/255, blue: 254/255, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
         return cell
     }
 }

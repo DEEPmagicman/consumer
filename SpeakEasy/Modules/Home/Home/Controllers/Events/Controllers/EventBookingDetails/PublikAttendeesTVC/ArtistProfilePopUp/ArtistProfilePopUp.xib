@@ -29,13 +29,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="56R-PY-Nm6">
-                    <rect key="frame" x="0.0" y="44" width="414" height="778"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
-                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sQd-MU-ZgY">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="778"/>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sQd-MU-ZgY">
+                            <rect key="frame" x="0.0" y="30" width="414" height="748"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBd-uC-ZyQ">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="778"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELt-eh-Bt6">
                                             <rect key="frame" x="373" y="20" width="27" height="27"/>
@@ -163,7 +163,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.1176470588" green="0.1176470588" blue="0.1176470588" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.023529411764705882" green="0.023529411764705882" blue="0.023529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstItem="a42-8h-zYJ" firstAttribute="top" secondItem="7av-4k-3ke" secondAttribute="bottom" constant="25" id="3O4-rD-cmf"/>
                                         <constraint firstItem="Qgf-Gs-zYN" firstAttribute="centerX" secondItem="qBd-uC-ZyQ" secondAttribute="centerX" id="Cmq-Pk-3Nf"/>
@@ -195,28 +195,34 @@
                                 <constraint firstItem="qBd-uC-ZyQ" firstAttribute="leading" secondItem="sQd-MU-ZgY" secondAttribute="leading" id="hCk-qq-gF7"/>
                                 <constraint firstAttribute="trailing" secondItem="qBd-uC-ZyQ" secondAttribute="trailing" id="ixw-JT-ULw"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                    <color key="value" red="0.090196078430000007" green="0.090196078430000007" blue="0.090196078430000007" alpha="1" colorSpace="calibratedRGB"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                    <integer key="value" value="3"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </scrollView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="sQd-MU-ZgY" firstAttribute="top" secondItem="56R-PY-Nm6" secondAttribute="top" id="4Iu-8C-6fC"/>
+                        <constraint firstItem="sQd-MU-ZgY" firstAttribute="top" secondItem="56R-PY-Nm6" secondAttribute="top" constant="30" id="4Iu-8C-6fC"/>
                         <constraint firstItem="qBd-uC-ZyQ" firstAttribute="height" secondItem="56R-PY-Nm6" secondAttribute="height" priority="250" id="Ivm-Fo-2CM"/>
-                        <constraint firstAttribute="bottom" secondItem="sQd-MU-ZgY" secondAttribute="bottom" id="PHL-7z-gav"/>
+                        <constraint firstAttribute="bottom" secondItem="sQd-MU-ZgY" secondAttribute="bottom" constant="40" id="PHL-7z-gav"/>
                         <constraint firstAttribute="trailing" secondItem="sQd-MU-ZgY" secondAttribute="trailing" id="XB1-4v-6XL"/>
                         <constraint firstItem="qBd-uC-ZyQ" firstAttribute="width" secondItem="56R-PY-Nm6" secondAttribute="width" id="Zs2-rj-zj0"/>
                         <constraint firstItem="sQd-MU-ZgY" firstAttribute="leading" secondItem="56R-PY-Nm6" secondAttribute="leading" id="ywh-B7-g3c"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="20"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="6wI-q2-30e"/>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="6wI-q2-30e" firstAttribute="bottom" secondItem="56R-PY-Nm6" secondAttribute="bottom" constant="40" id="9C5-Jc-QPj"/>
+                <constraint firstItem="6wI-q2-30e" firstAttribute="bottom" secondItem="56R-PY-Nm6" secondAttribute="bottom" id="9C5-Jc-QPj"/>
                 <constraint firstItem="56R-PY-Nm6" firstAttribute="leading" secondItem="6wI-q2-30e" secondAttribute="leading" id="aFo-Ow-8NY"/>
                 <constraint firstItem="56R-PY-Nm6" firstAttribute="top" secondItem="6wI-q2-30e" secondAttribute="top" id="sfq-nv-SB8"/>
                 <constraint firstItem="6wI-q2-30e" firstAttribute="trailing" secondItem="56R-PY-Nm6" secondAttribute="trailing" id="uZL-dM-Ty0"/>

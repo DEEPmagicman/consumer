@@ -136,7 +136,7 @@ extension EventBookingDetails: UITableViewDataSource {
             } else if selectedTabAt == 1 {
                 return 0
             } else {
-                return 1
+                return 0
             }
 //            return selectedTabAt == 0 ? 1 : 0
         }
@@ -147,7 +147,7 @@ extension EventBookingDetails: UITableViewDataSource {
             cell.selectedTabAt = { index in
                 self.selectedTabAt = index
                 DispatchQueue.main.async {
-                    self.viewProceed.isHidden = self.selectedTabAt == 1 ? true : false
+                    self.viewProceed.isHidden = !(self.selectedTabAt == 0)
                     self.strechyTableView.reloadData()
                     
                     self.updateHeaderView()

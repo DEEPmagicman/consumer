@@ -10,6 +10,8 @@ import UIKit
 class RewardDetailsStretchyTVC: UITableViewCell {
     
     @IBOutlet weak var EventCollectionView: UICollectionView!
+    @IBOutlet weak var discountLbl: UILabelDeviceClass!
+    @IBOutlet weak var guestView: UIStackView!
     
     var arrayEvents = [
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true)
