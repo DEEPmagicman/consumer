@@ -3849,6 +3849,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 843432T6P5;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
@@ -3885,6 +3886,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 843432T6P5;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
