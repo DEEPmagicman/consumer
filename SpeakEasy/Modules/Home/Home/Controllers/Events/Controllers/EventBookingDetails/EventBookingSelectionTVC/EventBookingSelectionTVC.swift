@@ -12,7 +12,7 @@ class EventBookingSelectionTVC: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var selectedTabAt : ((Int)->Void)?
-    var arrayHeaders = [EventHeaderOptions(label: Strings.TICKETS.text, isSelected: true),EventHeaderOptions(label: Strings.VIP_TABLE_BOOKING.text, isSelected: false)]
+    var arrayHeaders = [EventHeaderOptions(label: Strings.TICKETS.text, isSelected: true),EventHeaderOptions(label: Strings.VIP_TABLE_BOOKING.text, isSelected: false),EventHeaderOptions(label: Strings.PUBLIK_ATTENDEES.text, isSelected: false)]
     
     override func awakeFromNib() {
         super.awakeFromNib()

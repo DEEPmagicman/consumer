@@ -12,6 +12,11 @@ struct EventBooking {
     var ticketCount: Int
 }
 
+protocol EventDetailsDelegate {
+    func onClickUserProfile()
+    func onClickArtistProfile()
+}
+
 class EventBookingDetails: UIViewController {
     
     @IBOutlet weak var viewProceed: UIView!
@@ -58,9 +63,11 @@ class EventBookingDetails: UIViewController {
     }
     @IBAction func onBtnProceed(_ sender: UIButtonDeviceClass) {
         //        self.navigationController?.pushViewController(TicketRecipients(), animated: true)
-        let viewEventTicketsController = ViewEventTickets()
-        viewEventTicketsController.topEventData = self.topEventData
-        self.navigationController?.pushViewController(viewEventTicketsController, animated: true)
+        if selectedTabAt == 0 {
+            self.navigationController?.pushViewController(ViewEventTickets(), animated: true)
+        } else {
+            
+        }
         
     }
 }
@@ -73,6 +80,7 @@ extension EventBookingDetails {
         self.strechyTableView.register(UINib(nibName: "ViewEventTicketTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketTVC")
         self.strechyTableView.register(UINib(nibName: "EventBookingSelectionTVC", bundle: nil), forCellReuseIdentifier: "EventBookingSelectionTVC")
         self.strechyTableView.register(UINib(nibName: "VIPTableBookingTVC", bundle: nil), forCellReuseIdentifier: "VIPTableBookingTVC")
+        self.strechyTableView.register(UINib(nibName: "PublikAttendeesTVC", bundle: nil), forCellReuseIdentifier: "PublikAttendeesTVC")
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
@@ -118,10 +126,24 @@ extension EventBookingDetails: UITableViewDataSource {
             return 1
         }
         else if section == 1 {
-            return selectedTabAt == 0 ? self.arrEventBooking.count : 1
+            if selectedTabAt == 0 {
+               return self.arrEventBooking.count
+            } else if selectedTabAt == 1 {
+                return 1
+            } else {
+                return 1
+            }
+//            return selectedTabAt == 0 ? self.arrEventBooking.count : 1
         }
         else {
-            return selectedTabAt == 0 ? 1 : 0
+            if selectedTabAt == 0 {
+               return 1
+            } else if selectedTabAt == 1 {
+                return 0
+            } else {
+                return 0
+            }
+//            return selectedTabAt == 0 ? 1 : 0
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -130,7 +152,7 @@ extension EventBookingDetails: UITableViewDataSource {
             cell.selectedTabAt = { index in
                 self.selectedTabAt = index
                 DispatchQueue.main.async {
-                    self.viewProceed.isHidden = self.selectedTabAt == 0 ? false : true
+                    self.viewProceed.isHidden = !(self.selectedTabAt == 0)
                     self.strechyTableView.reloadData()
                     
                     self.updateHeaderView()
@@ -151,9 +173,16 @@ extension EventBookingDetails: UITableViewDataSource {
                 let data = self.arrEventBooking[indexPath.row]
                 cell.setData(data: data)
                 return cell
-            }else {
+            }else if selectedTabAt == 1 {
                 guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "VIPTableBookingTVC", for: indexPath) as? VIPTableBookingTVC else { return UITableViewCell() }
                 cell.btnBookVIPTable.addTarget(self, action: #selector(self.onBtnBookVIPTable), for: .touchUpInside)
+                return cell
+            } else {
+                guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "PublikAttendeesTVC", for: indexPath) as? PublikAttendeesTVC else { return UITableViewCell() }
+                cell.eventDetailDelegate = self
+                cell.collectionView.reloadData()
+                cell.delegate = self
+//                cell.btnBookVIPTable.addTarget(self, action: #selector(self.onBtnBookVIPTable), for: .touchUpInside)
                 return cell
             }
         }
@@ -187,7 +216,34 @@ extension EventBookingDetails: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 && self.selectedTabAt == 0 {
             return self.viewProceed.frame.height
+        } else if indexPath.section == 2 && self.selectedTabAt == 2 {
+            return self.viewProceed.frame.height
         }
         return UITableView.automaticDimension
+    }
+}
+
+extension EventBookingDetails: EventDetailsDelegate {
+    func onClickArtistProfile() {
+        let vc = ArtistProfilePopUp()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        self.tabBarController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func onClickUserProfile() {
+        let vc = UserProfilePopUp()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .crossDissolve
+        self.tabBarController?.present(vc, animated: true, completion: nil)
+    }
+}
+
+extension EventBookingDetails: PublikAttendeesTVCDelegate {
+    func refreshTableViewIfNeeded() {
+        strechyTableView.layoutIfNeeded()
+        DispatchQueue.main.async {
+            self.strechyTableView.performBatchUpdates(nil)
+        }
     }
 }

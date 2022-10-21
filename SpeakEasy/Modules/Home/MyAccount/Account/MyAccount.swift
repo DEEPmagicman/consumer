@@ -19,14 +19,22 @@ class MyAccount: BaseController {
     @IBOutlet weak var socialMediaCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var vibesCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var favouriteDrinksCollectionViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var favouriteArtistsCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var favoriteVenueCollectionView: UICollectionView!
     
     var arrSocialMedia = ["@tamasan", "Tamas An", "@tamasan"]
-    var arrSocialMediaIcons = [UIImage(named: "instagram1"), UIImage(named: "linkedin"), UIImage(named: "instagram1")]
+    var arrSocialMediaIcons = [UIImage(named: "profileInsta"), UIImage(named: "snapIc"), UIImage(named: "profileSpotify")]
     
     var arrVibes = ["Fridays", "EDM", "Bottle Service", "Crowds"]
     var arrFavouriteDrinks = ["Whiskey", "Dom Perignon", "Moscow Mule", "Whiskey Sour", "Martini", "Whiskey Coke"]
     var arrFavouriteArtists = ["Steve Aoki", "DJ Heavy", "Martin Garrix", "Armin van Buuren"]
+    var arrayFavoriteVenueEvents = [
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO Chicago", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: true, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM"),
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: true, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM"),
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: true, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM"),
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +52,6 @@ class MyAccount: BaseController {
         self.socialMediaCollectionViewHeight.constant = self.socialMediaCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.vibesCollectionViewHeight.constant = self.vibesCollectionView.collectionViewLayout.collectionViewContentSize.height
         self.favouriteDrinksCollectionViewHeight.constant = self.favouriteDrinkCollectionView.collectionViewLayout.collectionViewContentSize.height
-        self.favouriteArtistsCollectionViewHeight.constant = self.favouriteArtistCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
     
     private func register() {
@@ -53,7 +60,8 @@ class MyAccount: BaseController {
         self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
         self.importantDatesCollectionView.register(UINib(nibName: "ImportantDatesCVC", bundle: nil), forCellWithReuseIdentifier: "ImportantDatesCVC")
         self.favouriteDrinkCollectionView.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
-        self.favouriteArtistCollectionView.register(UINib(nibName: "FavouriteArtistCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteArtistCVC")
+        self.favouriteArtistCollectionView.register(UINib(nibName: "FavoriteArtistProfileCVC", bundle: nil), forCellWithReuseIdentifier: "FavoriteArtistProfileCVC")
+        self.favoriteVenueCollectionView.register(UINib(nibName: "HotVenueCVC", bundle: nil), forCellWithReuseIdentifier: "HotVenueCVC")
     }
     
     @IBAction func onBtnSearchAndAddFriends(_ sender: UIButton) {
@@ -86,7 +94,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
         case self.socialMediaCollectionView:
-            return self.arrSocialMedia.count
+            return self.arrSocialMediaIcons.count
         case self.friendsListCollectionView:
             return 8
         case self.vibesCollectionView:
@@ -96,7 +104,9 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
         case self.favouriteDrinkCollectionView:
             return self.arrFavouriteDrinks.count
         case self.favouriteArtistCollectionView:
-            return self.arrFavouriteArtists.count
+            return 10
+        case self.favoriteVenueCollectionView:
+            return self.arrayFavoriteVenueEvents.count
         default:
             return 0
         }
@@ -106,7 +116,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
         switch collectionView {
         case socialMediaCollectionView:
             let cell = socialMediaCollectionView.dequeueReusableCell(withReuseIdentifier: "SocialMediaCVC", for: indexPath) as! SocialMediaCVC
-            cell.setData(userName: self.arrSocialMedia[indexPath.item], socialLink: self.arrSocialMediaIcons[indexPath.item])
+            cell.setData(socialLink: self.arrSocialMediaIcons[indexPath.item])
             return cell
         case friendsListCollectionView:
             let cell = friendsListCollectionView.dequeueReusableCell(withReuseIdentifier: "FriendsListCVC", for: indexPath) as! FriendsListCVC
@@ -122,10 +132,15 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
         case favouriteDrinkCollectionView:
             let cell = favouriteDrinkCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteDrinksCVC", for: indexPath) as! FavouriteDrinksCVC
             cell.lblDrinks.text = self.arrFavouriteDrinks[indexPath.row]
+            cell.backGroundView.backgroundColor = UIColor(hex: "#007AFF")
             return cell
         case favouriteArtistCollectionView:
-            let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteArtistCVC", for: indexPath) as! FavouriteArtistCVC
-            cell.lblArtist.text = self.arrFavouriteArtists[indexPath.row]
+            let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteArtistProfileCVC", for: indexPath) as! FavoriteArtistProfileCVC
+            return cell
+        case favoriteVenueCollectionView:
+            let cell = favoriteVenueCollectionView.dequeueReusableCell(withReuseIdentifier: "HotVenueCVC", for: indexPath) as! HotVenueCVC
+            let data = arrayFavoriteVenueEvents[indexPath.row]
+            cell.setData(data: data)
             return cell
         default:
             return UICollectionViewCell()
@@ -139,8 +154,8 @@ extension MyAccount: UICollectionViewDelegateFlowLayout {
         let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "medium", fontSize: 15.0)
         switch collectionView {
         case socialMediaCollectionView:
-            let stringWidth = self.arrSocialMedia[indexPath.item].getWidth(with: 15.0, font: UIFont(name: "Poppins-Medium", size: 15.0)!)
-            let cellSize: CGSize = CGSize(width: stringWidth + 60, height: 40)
+//            let stringWidth = self.arrSocialMedia[indexPath.item].getWidth(with: 15.0, font: UIFont(name: "Poppins-Medium", size: 15.0)!)
+            let cellSize: CGSize = CGSize(width: 60, height: 46)
             return cellSize
         case friendsListCollectionView:
             let cellSize: CGSize = CGSize(width: (collectionView.frame.width/5), height: collectionView.frame.height)
@@ -168,14 +183,16 @@ extension MyAccount: UICollectionViewDelegateFlowLayout {
             return size
         case favouriteArtistCollectionView:
 
-            let height = 40.0
-            
-            let tabOption = self.arrFavouriteArtists[indexPath.item]
-            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
-            
+            let height = 102.0
+            let width = 102.0
+
             let size = CGSize(width: width, height: height)
             return size
-            
+        case favoriteVenueCollectionView:
+            let width = favoriteVenueCollectionView.frame.width * 0.675
+            let height = favoriteVenueCollectionView.frame.height
+            let size = CGSize(width: width, height: height)
+            return size
         default:
             return CGSize()
         }

@@ -10,8 +10,14 @@ import UIKit
 class RewardDetails: UIViewController {
 
     @IBOutlet weak var strechyTableView: UITableView!
+
     var headerView: UIView!
-    var kTableHeaderHeight: CGFloat = 0.0
+    var kTableHeaderHeight: CGFloat = 300.0
+    var isShowEvent = false
+    var isFree = false
+    private let freeTicket = "FREE TICKET:"
+    private let twentyOff = "20% OFF TICKET:"
+    private let minOff = "20% LOWER MIN. SPEND"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,8 +25,10 @@ class RewardDetails: UIViewController {
         self.loadHeaderView()
         
         self.setupStreachyHeaderViewFrames()
-        self.updateHeaderView()
         self.strechyTableView.layoutIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.updateHeaderView()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -59,7 +67,6 @@ extension RewardDetails {
         }
     }
     func setupStreachyHeaderViewFrames() {
-        kTableHeaderHeight = self.view.frame.height * 0.4
         strechyTableView.rowHeight = UITableView.automaticDimension
         headerView = strechyTableView.tableHeaderView
         strechyTableView.tableHeaderView = nil
@@ -82,15 +89,18 @@ extension RewardDetails {
 }
 
 extension RewardDetails: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "RewardDetailsStretchyTVC", for: indexPath) as? RewardDetailsStretchyTVC else { return UITableViewCell() }
         cell.indentationLevel = 2;
+        cell.guestView.isHidden = isShowEvent
+        cell.EventCollectionView.isHidden = !isShowEvent
+        cell.discountLbl.text = isFree ? freeTicket : twentyOff
+        cell.discountLbl.textColor = isFree ? UIColor(red: 245/255, green: 129/255, blue: 254/255, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
         return cell
     }
 }

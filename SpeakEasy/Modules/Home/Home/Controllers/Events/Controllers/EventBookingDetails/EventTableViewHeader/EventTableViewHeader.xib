@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,24 +32,58 @@
                     <rect key="frame" x="0.0" y="0.0" width="390" height="487"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bKB-XV-a16">
-                    <rect key="frame" x="0.0" y="314" width="390" height="173"/>
+                    <rect key="frame" x="0.0" y="307.33333333333331" width="390" height="179.66666666666669"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steve Aoki" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cek-Zd-DlN" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="16" y="12" width="156.66666666666666" height="39.333333333333336"/>
-                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="28"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nataKong" translatesAutoresizingMaskIntoConstraints="NO" id="AUp-AL-zcB">
+                            <rect key="frame" x="19" y="12" width="54" height="54"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="54" id="UwL-1u-oEX"/>
+                                <constraint firstAttribute="height" constant="54" id="gmr-Pw-bbu"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="4"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNe-aF-jqi">
+                            <rect key="frame" x="51" y="42" width="34" height="34"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="34" id="LfQ-zy-cuJ"/>
+                                <constraint firstAttribute="height" constant="34" id="fRN-ZB-x8w"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="playVideo"/>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nataaoki" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cek-Zd-DlN" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="89" y="14" width="88.666666666666686" height="27"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="27" id="Bhf-Wm-rfP"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                    <real key="value" value="28"/>
+                                    <real key="value" value="18"/>
                                 </userDefinedRuntimeAttribute>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, June 16 at 10:00 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JMm-1C-fu3" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="16" y="51.333333333333314" width="225" height="21"/>
-                            <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
-                            <color key="textColor" red="0.96078431372549022" green="0.42352941176470588" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="spotify" translatesAutoresizingMaskIntoConstraints="NO" id="JRo-GS-pqu">
+                            <rect key="frame" x="89" y="47" width="12" height="12"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="12" id="B3L-Hc-xxJ"/>
+                                <constraint firstAttribute="height" constant="12" id="JOd-1F-CUs"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steve Aoki, Nathaniel..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JMm-1C-fu3" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="105" y="45" width="159" height="14"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="14" id="Z7T-xj-n1b"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="14"/>
+                            <color key="textColor" red="0.71372549019607845" green="0.71372549019607845" blue="0.71372549019607845" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -59,7 +93,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="c5x-Ku-e68">
-                            <rect key="frame" x="16" y="74.333333333333314" width="358" height="8"/>
+                            <rect key="frame" x="16" y="81" width="358" height="8"/>
                             <subviews>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJC-7c-utt" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="4" width="1698" height="0.0"/>
@@ -82,7 +116,7 @@
                             </constraints>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tao Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p2Y-pj-JDX" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="16" y="84.333333333333314" width="154" height="32.333333333333343"/>
+                            <rect key="frame" x="19" y="91" width="154" height="32.333333333333343"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="23"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -94,7 +128,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="632 N. Dearborn St. Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fgo-7R-vhK" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="31.000000000000014" y="120.66666666666667" width="200.33333333333337" height="18.333333333333329"/>
+                            <rect key="frame" x="19" y="127.33333333333336" width="200.33333333333334" height="18.333333333333329"/>
                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                             <color key="textColor" red="0.71372549019607845" green="0.71372549019607845" blue="0.71372549019607845" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -105,11 +139,8 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="medium"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locationIcon2" translatesAutoresizingMaskIntoConstraints="NO" id="cgP-rU-0Op">
-                            <rect key="frame" x="16" y="123" width="11" height="14"/>
-                        </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1q-jQ-loy" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="265" y="16.333333333333314" width="113" height="31"/>
+                            <rect key="frame" x="265" y="12" width="113" height="31"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -128,7 +159,7 @@
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YGy-sF-9Eg" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="260" y="16.333333333333314" width="118" height="31"/>
+                            <rect key="frame" x="260" y="12" width="118" height="31"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -147,32 +178,36 @@
                             </connections>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogo2" translatesAutoresizingMaskIntoConstraints="NO" id="20a-4U-GSE">
-                            <rect key="frame" x="302" y="76" width="61" height="61"/>
+                            <rect key="frame" x="302" y="82.666666666666686" width="61" height="61"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.74783052356037871" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="k1q-jQ-loy" firstAttribute="centerY" secondItem="Cek-Zd-DlN" secondAttribute="centerY" id="1BB-qA-UMR"/>
                         <constraint firstAttribute="trailing" secondItem="c5x-Ku-e68" secondAttribute="trailing" constant="16" id="68A-x6-wNd"/>
-                        <constraint firstItem="JMm-1C-fu3" firstAttribute="top" secondItem="Cek-Zd-DlN" secondAttribute="bottom" id="9dR-OY-RhX"/>
+                        <constraint firstItem="Cek-Zd-DlN" firstAttribute="top" secondItem="bKB-XV-a16" secondAttribute="top" constant="14" id="81I-eR-T6a"/>
+                        <constraint firstItem="JMm-1C-fu3" firstAttribute="top" secondItem="Cek-Zd-DlN" secondAttribute="bottom" constant="4" id="9dR-OY-RhX"/>
+                        <constraint firstItem="JRo-GS-pqu" firstAttribute="leading" secondItem="Cek-Zd-DlN" secondAttribute="leading" id="BK5-XG-0R8"/>
+                        <constraint firstItem="JMm-1C-fu3" firstAttribute="leading" secondItem="JRo-GS-pqu" secondAttribute="trailing" constant="4" id="BqQ-NN-pWu"/>
+                        <constraint firstItem="AUp-AL-zcB" firstAttribute="top" secondItem="bKB-XV-a16" secondAttribute="top" constant="12" id="C6S-3L-HtL"/>
                         <constraint firstAttribute="trailing" secondItem="20a-4U-GSE" secondAttribute="trailing" constant="27" id="DF6-ru-ciK"/>
-                        <constraint firstItem="JMm-1C-fu3" firstAttribute="leading" secondItem="Cek-Zd-DlN" secondAttribute="leading" id="Jdp-5m-Kqe"/>
+                        <constraint firstItem="JRo-GS-pqu" firstAttribute="top" secondItem="Cek-Zd-DlN" secondAttribute="bottom" constant="6" id="JKd-jd-8aO"/>
+                        <constraint firstItem="p2Y-pj-JDX" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="19" id="JnW-em-Gj0"/>
+                        <constraint firstItem="c5x-Ku-e68" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="16" id="M2c-m8-p9O"/>
                         <constraint firstItem="Fgo-7R-vhK" firstAttribute="top" secondItem="p2Y-pj-JDX" secondAttribute="bottom" constant="4" id="OPk-8c-ZvS"/>
                         <constraint firstAttribute="bottom" secondItem="Fgo-7R-vhK" secondAttribute="bottom" constant="34" id="OYH-6k-l4X"/>
-                        <constraint firstItem="c5x-Ku-e68" firstAttribute="top" secondItem="JMm-1C-fu3" secondAttribute="bottom" constant="2" id="Szp-ki-zof"/>
+                        <constraint firstItem="c5x-Ku-e68" firstAttribute="top" secondItem="AUp-AL-zcB" secondAttribute="bottom" constant="15" id="Tcy-AK-rUu"/>
+                        <constraint firstItem="AUp-AL-zcB" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="19" id="Z4p-pB-XH1"/>
                         <constraint firstAttribute="trailing" secondItem="YGy-sF-9Eg" secondAttribute="trailing" constant="12" id="ZXB-YD-VIc"/>
-                        <constraint firstItem="cgP-rU-0Op" firstAttribute="centerY" secondItem="Fgo-7R-vhK" secondAttribute="centerY" id="ZXD-7X-EoX"/>
-                        <constraint firstItem="c5x-Ku-e68" firstAttribute="leading" secondItem="JMm-1C-fu3" secondAttribute="leading" id="aqf-hy-2hJ"/>
                         <constraint firstItem="p2Y-pj-JDX" firstAttribute="top" relation="greaterThanOrEqual" secondItem="JMm-1C-fu3" secondAttribute="bottom" constant="8" id="azG-Jo-QFC"/>
                         <constraint firstAttribute="bottom" secondItem="20a-4U-GSE" secondAttribute="bottom" constant="36" id="cmg-vQ-nRj"/>
+                        <constraint firstItem="Fgo-7R-vhK" firstAttribute="leading" secondItem="p2Y-pj-JDX" secondAttribute="leading" id="gTn-WQ-f3x"/>
                         <constraint firstItem="YGy-sF-9Eg" firstAttribute="centerY" secondItem="Cek-Zd-DlN" secondAttribute="centerY" id="gY9-99-JmI"/>
-                        <constraint firstItem="cgP-rU-0Op" firstAttribute="leading" secondItem="p2Y-pj-JDX" secondAttribute="leading" id="jJr-Zh-HYm"/>
-                        <constraint firstItem="p2Y-pj-JDX" firstAttribute="leading" secondItem="JMm-1C-fu3" secondAttribute="leading" id="mmY-9g-7iG"/>
-                        <constraint firstItem="Fgo-7R-vhK" firstAttribute="leading" secondItem="cgP-rU-0Op" secondAttribute="trailing" constant="4" id="p71-Nw-qpF"/>
                         <constraint firstItem="p2Y-pj-JDX" firstAttribute="top" secondItem="c5x-Ku-e68" secondAttribute="bottom" constant="2" id="rFr-HA-kDB"/>
                         <constraint firstAttribute="trailing" secondItem="k1q-jQ-loy" secondAttribute="trailing" constant="12" id="ry8-zt-bSX"/>
-                        <constraint firstItem="Cek-Zd-DlN" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="16" id="sou-hb-vMb"/>
-                        <constraint firstItem="Cek-Zd-DlN" firstAttribute="top" secondItem="bKB-XV-a16" secondAttribute="top" constant="12" id="udd-TL-bea"/>
+                        <constraint firstItem="Cek-Zd-DlN" firstAttribute="leading" secondItem="AUp-AL-zcB" secondAttribute="trailing" constant="16" id="upO-eU-1zN"/>
+                        <constraint firstItem="sNe-aF-jqi" firstAttribute="leading" secondItem="AUp-AL-zcB" secondAttribute="leading" constant="32" id="wUs-5B-BaZ"/>
+                        <constraint firstItem="sNe-aF-jqi" firstAttribute="top" secondItem="AUp-AL-zcB" secondAttribute="top" constant="30" id="xul-K3-Nak"/>
                     </constraints>
                 </view>
             </subviews>
@@ -205,7 +240,9 @@
     <resources>
         <image name="EventDetailsBG" width="390" height="487.66665649414062"/>
         <image name="TaoLogo2" width="61" height="61"/>
-        <image name="locationIcon2" width="11" height="14"/>
+        <image name="nataKong" width="54" height="54"/>
+        <image name="playVideo" width="35" height="33"/>
+        <image name="spotify" width="12" height="11"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
