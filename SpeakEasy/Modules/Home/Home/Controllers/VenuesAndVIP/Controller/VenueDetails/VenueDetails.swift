@@ -28,10 +28,11 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    //fixthis - add connection
     @IBOutlet weak var lblTitle: UILabelDeviceClass!
     @IBOutlet weak var imgBrandLogo: RoundedImage!
-    @IBOutlet weak var lblLocation: UILabelDeviceClass!
-    @IBOutlet weak var lblPhoneNumber: UILabelDeviceClass!
+    //@IBOutlet weak var lblLocation: UILabelDeviceClass!
+    //@IBOutlet weak var lblPhoneNumber: UILabelDeviceClass!
     @IBOutlet weak var vibesCollectionView: UICollectionView!
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
@@ -93,8 +94,8 @@ extension VenueDetails{
         addObservers(tableView: self.tableViewDressCode)
     }
     private func setData() {
-        self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
-        self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
+        //self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
+        //self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
         self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName ?? ""
         self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""

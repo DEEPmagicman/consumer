@@ -43,13 +43,13 @@ class EventTableViewHeader: UIView {
         self.lblDescription.isHidden = !self.lblDescription.isHidden
         self.layoutIfNeeded()
     }
-    
+    //fixthis
     func setData(data: TopEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
-        self.imgBrandLogo.image = data.imgBrandLogo
-        self.lblPerformerName.text = data.lblPerformerName ?? ""
+        //self.imgBrandLogo.image = data.imgBrandLogo
+        //self.lblPerformerName.text = data.lblPerformerName ?? ""
         self.lblVenueName.text = data.lblVenueName ?? ""
-        self.lblEventDate.text = data.lblEventDate ?? ""
+        //self.lblEventDate.text = data.lblEventDate ?? ""
         self.lblLocation.text = data.location ?? ""
     }
 }

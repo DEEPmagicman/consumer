@@ -64,7 +64,9 @@ class EventBookingDetails: UIViewController {
     @IBAction func onBtnProceed(_ sender: UIButtonDeviceClass) {
         //        self.navigationController?.pushViewController(TicketRecipients(), animated: true)
         if selectedTabAt == 0 {
-            self.navigationController?.pushViewController(ViewEventTickets(), animated: true)
+            let viewEventTicketsController = ViewEventTickets()
+            viewEventTicketsController.topEventData = self.topEventData
+            self.navigationController?.pushViewController(viewEventTicketsController, animated: true)
         } else {
             
         }
