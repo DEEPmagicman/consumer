@@ -139,9 +139,11 @@ extension BookingInvites {
     
     private func loadHeaderView() {
         if tableView.tableHeaderView == nil {
-            let tableHeaderView  = BookingInvitesHeaderView.instanceFromNib() as! BookingInvitesHeaderView
-            guard let data = VenueDetails.hotVenuesData else {return}
-            tableHeaderView.setData(data: data)
+            // fixthis
+            let tableHeaderView  = BookingInvitesHeaderView.instanceFromNib()
+//            let tableHeaderView  = BookingInvitesHeaderView.instanceFromNib() as! BookingInvitesHeaderView
+//            guard let data = VenueDetails.hotVenuesData else {return}
+//            tableHeaderView.setData(data: data)
             tableView.tableHeaderView = tableHeaderView
         }
     }

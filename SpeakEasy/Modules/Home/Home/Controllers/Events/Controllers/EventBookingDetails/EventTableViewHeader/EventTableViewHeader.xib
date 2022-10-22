@@ -177,7 +177,7 @@
                                 <action selector="onBtnCloseDescription:" destination="iN0-l3-epB" eventType="touchUpInside" id="m7K-0B-yqM"/>
                             </connections>
                         </button>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogo2" translatesAutoresizingMaskIntoConstraints="NO" id="20a-4U-GSE">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogoLarge" translatesAutoresizingMaskIntoConstraints="NO" id="20a-4U-GSE">
                             <rect key="frame" x="302" y="82.666666666666686" width="61" height="61"/>
                         </imageView>
                     </subviews>
@@ -239,7 +239,7 @@
     </objects>
     <resources>
         <image name="EventDetailsBG" width="390" height="487.66665649414062"/>
-        <image name="TaoLogo2" width="61" height="61"/>
+        <image name="TaoLogoLarge" width="61" height="61"/>
         <image name="nataKong" width="54" height="54"/>
         <image name="playVideo" width="35" height="33"/>
         <image name="spotify" width="12" height="11"/>

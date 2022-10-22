@@ -16,6 +16,7 @@ struct TopEventDataSet {
     var currentLiveEventFires: UIStackView?
     var isLive: Bool? = false
     var location: String?
+    var imgBrandLogoLarge: UIImage?
 }
 
 

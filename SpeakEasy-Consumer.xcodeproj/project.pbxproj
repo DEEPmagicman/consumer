@@ -2554,8 +2554,8 @@
 		E167059528CA6B3700644BF0 /* VenueDetails */ = {
 			isa = PBXGroup;
 			children = (
-				E167059628CA6B3700644BF0 /* VenueDetails.swift */,
 				E167059A28CA6B3700644BF0 /* VenueDetails.xib */,
+				E167059628CA6B3700644BF0 /* VenueDetails.swift */,
 				E13F4CF028D2884900D9C64E /* GalleryCVC */,
 				E167059728CA6B3700644BF0 /* HoursTVC */,
 				E167059B28CA6B3700644BF0 /* DressCodeTVC */,

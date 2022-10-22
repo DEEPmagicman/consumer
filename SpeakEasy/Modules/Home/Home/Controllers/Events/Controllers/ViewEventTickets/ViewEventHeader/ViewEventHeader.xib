@@ -105,7 +105,7 @@
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locationIcon2" translatesAutoresizingMaskIntoConstraints="NO" id="RyD-8A-M5S">
                             <rect key="frame" x="16" y="123" width="11" height="14"/>
                         </imageView>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogo2" translatesAutoresizingMaskIntoConstraints="NO" id="ZN8-PD-1tF">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogoLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ZN8-PD-1tF">
                             <rect key="frame" x="326" y="76" width="61" height="61"/>
                         </imageView>
                     </subviews>
@@ -156,7 +156,7 @@
     </objects>
     <resources>
         <image name="EventDetailsBG" width="390" height="487.66665649414062"/>
-        <image name="TaoLogo2" width="61" height="61"/>
+        <image name="TaoLogoLarge" width="61" height="61"/>
         <image name="locationIcon2" width="11" height="14"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

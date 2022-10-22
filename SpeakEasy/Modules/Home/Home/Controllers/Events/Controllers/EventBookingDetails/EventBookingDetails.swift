@@ -22,6 +22,8 @@ class EventBookingDetails: UIViewController {
     @IBOutlet weak var viewProceed: UIView!
     @IBOutlet weak var btnProceed: UIButtonDeviceClass!
     @IBOutlet weak var strechyTableView: UITableView!
+    @IBOutlet weak var lblArtistName: UILabelDeviceClass!
+    @IBOutlet weak var lblEventDate: UILabelDeviceClass!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 487.0
@@ -36,6 +38,7 @@ class EventBookingDetails: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        self.setData()
         self.loadHeaderView()
         self.strechyTableView.alpha = 0
         self.setupStreachyHeaderViewFrames()
@@ -77,6 +80,10 @@ class EventBookingDetails: UIViewController {
 extension EventBookingDetails {
     private func setUI(){
         self.registerCell()
+    }
+    private func setData() {
+        self.lblArtistName.text = topEventData?.lblPerformerName ?? ""
+        self.lblEventDate.text = topEventData?.lblEventDate ?? ""
     }
     private func registerCell() {
         self.strechyTableView.register(UINib(nibName: "ViewEventTicketTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketTVC")
@@ -210,6 +217,7 @@ extension EventBookingDetails: UITableViewDataSource {
         self.strechyTableView.reloadData()
     }
     @objc func onBtnBookVIPTable(){
+        // fixthis
         Utility.main.topViewController()?.navigationController?.pushViewController(TableSelection(), animated: true)
     }
 }

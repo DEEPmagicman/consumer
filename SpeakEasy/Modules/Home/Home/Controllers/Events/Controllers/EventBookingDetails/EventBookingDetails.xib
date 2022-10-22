@@ -18,6 +18,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EventBookingDetails" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
                 <outlet property="btnProceed" destination="f1j-hg-aXG" id="oVv-8I-4K9"/>
+                <outlet property="lblArtistName" destination="AEf-Ia-c6I" id="On8-Kg-iMC"/>
+                <outlet property="lblEventDate" destination="gIz-fz-tuV" id="v1J-K6-1JG"/>
                 <outlet property="strechyTableView" destination="kJF-xW-h0d" id="BPE-uA-Pby"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewProceed" destination="gO4-za-42V" id="KoS-Ew-zIl"/>

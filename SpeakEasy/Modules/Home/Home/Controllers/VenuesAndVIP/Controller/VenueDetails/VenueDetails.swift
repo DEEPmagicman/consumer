@@ -28,7 +28,6 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
-    //fixthis - add connection
     @IBOutlet weak var lblTitle: UILabelDeviceClass!
     @IBOutlet weak var imgBrandLogo: RoundedImage!
     //@IBOutlet weak var lblLocation: UILabelDeviceClass!

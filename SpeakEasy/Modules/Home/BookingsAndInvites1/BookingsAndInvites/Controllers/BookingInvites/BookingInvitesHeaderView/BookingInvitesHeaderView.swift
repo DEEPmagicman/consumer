@@ -22,6 +22,7 @@ class BookingInvitesHeaderView: UIView {
         self.lblLocation.text = data.location ?? ""
         self.lblPhoneNumber.text = data.phoneNumber ?? ""
         self.lblPerfomerName.text = data.lblPerformerName ?? ""
+        //fixthis
         self.imgVenueCover.image = data.imgEventCover
     }
 }

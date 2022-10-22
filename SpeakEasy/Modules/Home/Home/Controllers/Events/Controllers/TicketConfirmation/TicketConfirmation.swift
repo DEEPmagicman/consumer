@@ -76,9 +76,10 @@ extension TicketConfirmation {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = ViewEventHeader.instanceFromNib() as! ViewEventHeader
-            guard let data = self.topEventData else {return}
-            tableHeaderView.setData(data: data)
+            let tableHeaderView  = ViewEventHeader.instanceFromNib()
+//            let tableHeaderView  = ViewEventHeader.instanceFromNib() as! ViewEventHeader
+//            guard let data = self.topEventData else {return}
+//            tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }
