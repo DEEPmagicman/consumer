@@ -89,22 +89,22 @@ struct Constants {
     
     // Featured Events Array
     static var arrayFeaturedEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR CHICAGO",imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 7",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge"))
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR CHICAGO",imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "SpybarLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 7",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"))
     ]
     
     // Upcomming Events Array
     static var arrayUpcomingEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, July 2",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG2"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG3"), lblPerformerName: "DJ Daily", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 24",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge"))
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, July 2",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG2"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG3"), lblPerformerName: "DJ Daily", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 24",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "BounceLogoLarge"))
     ]
     
     // General Admission Array
     static var arrayGeneralAdmission = [
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 1",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 1",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge")),
+        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "BounceLogoLarge")),
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG3"), lblPerformerName: "Sundown Sundaze", lblVenueName: "PRYSM Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Sunday, July 3",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge"))
     ]
     
