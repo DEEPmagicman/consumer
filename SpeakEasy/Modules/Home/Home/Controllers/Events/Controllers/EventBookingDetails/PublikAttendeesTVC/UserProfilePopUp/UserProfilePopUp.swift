@@ -18,11 +18,13 @@ class UserProfilePopUp: UIViewController {
     var profileTabArry = [EventHeaderOptions(label: Strings.PREFERENCES.text, isSelected: true),EventHeaderOptions(label: Strings.MEMBERSGIP_NFT.text, isSelected: false)]
     var arrFavouriteDrinks = ["The Bag", "Casamigos", "Carlsberg", "Krombacher", "Martini", "Whiskey Coke"]
     var arrFavouriteArtists = ["Ezell Foster", "Ericka from KP", "Shawn Wuu", "DJ Dorobiala"]
+    
+    var attendeeData: AttendeeProfile?
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.setData()
         self.profileTabCollectionView.register(UINib(nibName: "EventOptionCVC", bundle: nil), forCellWithReuseIdentifier: "EventOptionCVC")
         self.favoriteDrinksCollection.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
         self.favoriteArtistCollection.register(UINib(nibName: "FavouriteArtistCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteArtistCVC")
@@ -97,6 +99,13 @@ extension UserProfilePopUp: UICollectionViewDelegate, UICollectionViewDataSource
 }
 
 extension UserProfilePopUp: UICollectionViewDelegateFlowLayout {
+    //Dummy Data
+    private func setData() {
+        self.profileImg.image = attendeeData?.profileImgLarge
+        self.userNameLbl.text = attendeeData?.fullName ?? ""
+        print(attendeeData?.fullName ?? "")
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch collectionView {
         case profileTabCollectionView:

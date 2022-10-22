@@ -126,4 +126,25 @@ struct Constants {
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG3"), lblPerformerName: "RocBar", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo3"), isLive: true, isFavourite: false, lblEventFees: "$35", lblEventWaitingTime: "15 mins", lblEventClosingTime: "Closes 3:00 AM",location: "632 N. Dearborn St. chicago, IL",phoneNumber: "(224) 888-0388"),
     ]
+    
+    // Attendees User Profile Array
+    static var arrayAttendees = [
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "abbyLarge")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "you"), firstName: "Tamas", fullName: "Tamas A.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Atanu A.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Dana W.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others")),
+        AttendeeProfile(profileImgSmall: UIImage(named: "abby"), firstName: "Abby", fullName: "Abby S.", profileImgLarge: UIImage(named: "user1-others"))
+    ]
 }

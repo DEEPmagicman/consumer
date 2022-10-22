@@ -13,7 +13,7 @@ struct EventBooking {
 }
 
 protocol EventDetailsDelegate {
-    func onClickUserProfile()
+    func onClickUserProfile(index: Int)
     func onClickArtistProfile()
 }
 
@@ -34,6 +34,7 @@ class EventBookingDetails: UIViewController {
                            EventBooking(ticketCount: 0)]
     
     var topEventData: TopEventDataSet?
+    var attendeeData: AttendeeProfile?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -234,6 +235,7 @@ extension EventBookingDetails: UITableViewDelegate {
 }
 
 extension EventBookingDetails: EventDetailsDelegate {
+    
     func onClickArtistProfile() {
         let vc = ArtistProfilePopUp()
         vc.modalPresentationStyle = .overCurrentContext
@@ -241,8 +243,9 @@ extension EventBookingDetails: EventDetailsDelegate {
         self.tabBarController?.present(vc, animated: true, completion: nil)
     }
     
-    func onClickUserProfile() {
+    func onClickUserProfile(index: Int) {
         let vc = UserProfilePopUp()
+        vc.attendeeData = Constants.arrayAttendees[index]
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
         self.tabBarController?.present(vc, animated: true, completion: nil)

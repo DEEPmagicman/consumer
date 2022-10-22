@@ -11,13 +11,44 @@ protocol PublikAttendeesTVCDelegate: AnyObject {
     func refreshTableViewIfNeeded()
 }
 
+//Dummy data
+struct AttendeeProfile {
+    var profileImgSmall: UIImage?
+    var firstName: String
+    var fullName: String
+    var profileImgLarge: UIImage?
+}
+
 class PublikAttendeesTVC: UITableViewCell {
+    
+    //Dummy data
+//    var attendeeArray = [
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Abby"),
+//        AttendeeProfile(profileImg: UIImage(named: "henry"), firstName: "Henry"),
+//        AttendeeProfile(profileImg: UIImage(named: "madison"), firstName: "Madison"),
+//        AttendeeProfile(profileImg: UIImage(named: "paul"), firstName: "Paul"),
+//        AttendeeProfile(profileImg: UIImage(named: "you"), firstName: "Tamas"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve6"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve7"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve8"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve9"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve1"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve2"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve3"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve4"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve5"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve6"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve7"),
+//        AttendeeProfile(profileImg: UIImage(named: "abby"), firstName: "Steve8")
+//    ]
     
     var eventDetailDelegate: EventDetailsDelegate?
     weak var delegate: PublikAttendeesTVCDelegate?
     var isTicketPurchased = true
     private var userCount = 17
     private var artistCount = 1
+    //var attendeeData: AttendeeProfile?
+    
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
@@ -66,9 +97,13 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PublikAttendeesProfileCVC", for: indexPath) as! PublikAttendeesProfileCVC
         if indexPath.row < artistCount {
+            cell.profileImg.image = UIImage(named: "steve")
+            cell.profileName.text = "Aoki"
             cell.profileImgMark.image = UIImage(named: "purpul_Check")
             cell.hideUserProfileView.isHidden = true
         } else {
+            cell.profileImg.image = Constants.arrayAttendees[indexPath.row - 1].profileImgSmall
+            cell.profileName.text = Constants.arrayAttendees[indexPath.row - 1].firstName
             cell.profileImgMark.image = UIImage(named: "blueCheck")
             if isTicketPurchased {
                 cell.hideUserProfileView.isHidden = true
@@ -88,7 +123,7 @@ extension PublikAttendeesTVC: UICollectionViewDelegate, UICollectionViewDataSour
             self.eventDetailDelegate?.onClickArtistProfile()
         } else {
             if isTicketPurchased {
-                self.eventDetailDelegate?.onClickUserProfile()
+                self.eventDetailDelegate?.onClickUserProfile(index: indexPath.row-1)
             }
         }
     }
