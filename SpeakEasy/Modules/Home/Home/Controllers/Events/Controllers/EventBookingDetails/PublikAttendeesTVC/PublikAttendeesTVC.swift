@@ -17,6 +17,7 @@ struct AttendeeProfile {
     var firstName: String
     var fullName: String
     var profileImgLarge: UIImage?
+    var profession: String
 }
 
 class PublikAttendeesTVC: UITableViewCell {

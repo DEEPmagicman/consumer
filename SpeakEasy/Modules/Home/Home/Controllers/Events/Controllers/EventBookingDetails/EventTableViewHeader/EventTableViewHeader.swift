@@ -16,10 +16,10 @@ class EventTableViewHeader: UIView {
     
     @IBOutlet weak var imgEventCover: UIImageView!
     @IBOutlet weak var imgBrandLogo: UIImageView!
-    @IBOutlet weak var lblPerformerName: UILabelDeviceClass!
     @IBOutlet weak var lblVenueName: UILabelDeviceClass!
     @IBOutlet weak var lblLocation: UILabelDeviceClass!
-    @IBOutlet weak var lblEventDate: UILabelDeviceClass!
+    @IBOutlet weak var lblSongName: UILabelDeviceClass!
+    @IBOutlet weak var lblSongArtists: UILabelDeviceClass!
     
     class func instanceFromNib() -> UIView {
         return UINib(nibName: "EventTableViewHeader", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! UIView
@@ -47,9 +47,9 @@ class EventTableViewHeader: UIView {
     func setData(data: TopEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
         self.imgBrandLogo.image = data.imgBrandLogoLarge
-        //self.lblPerformerName.text = data.lblPerformerName ?? ""
+        self.lblSongName.text = data.lblSongName ?? ""
         self.lblVenueName.text = data.lblVenueName ?? ""
-        //self.lblEventDate.text = data.lblEventDate ?? ""
+        self.lblSongArtists.text = data.lblSongArtist ?? ""
         self.lblLocation.text = data.location ?? ""
     }
 }

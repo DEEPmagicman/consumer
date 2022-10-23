@@ -14,6 +14,7 @@ class UserProfilePopUp: UIViewController {
     @IBOutlet weak var profileTabCollectionView: UICollectionView!
     @IBOutlet weak var favoriteDrinksCollection: UICollectionView!
     @IBOutlet weak var favoriteArtistCollection: UICollectionView!
+    @IBOutlet weak var userProfessionLbl: UILabel!
     
     var profileTabArry = [EventHeaderOptions(label: Strings.PREFERENCES.text, isSelected: true),EventHeaderOptions(label: Strings.MEMBERSGIP_NFT.text, isSelected: false)]
     var arrFavouriteDrinks = ["The Bag", "Casamigos", "Carlsberg", "Krombacher", "Martini", "Whiskey Coke"]
@@ -103,7 +104,7 @@ extension UserProfilePopUp: UICollectionViewDelegateFlowLayout {
     private func setData() {
         self.profileImg.image = attendeeData?.profileImgLarge
         self.userNameLbl.text = attendeeData?.fullName ?? ""
-        print(attendeeData?.fullName ?? "")
+        self.userProfessionLbl.text = attendeeData?.profession ?? ""
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

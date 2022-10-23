@@ -17,6 +17,8 @@ struct TopEventDataSet {
     var isLive: Bool? = false
     var location: String?
     var imgBrandLogoLarge: UIImage?
+    var lblSongName: String?
+    var lblSongArtist: String?
 }
 
 

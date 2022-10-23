@@ -7,6 +7,15 @@
 
 import UIKit
 
+//Dummy data
+struct FriendProfile {
+    var firstName: String
+    var friendImg: UIImage?
+}
+struct ArtistProfile {
+    var artistImg: UIImage?
+}
+
 class MyAccount: BaseController {
     
     @IBOutlet weak var socialMediaCollectionView: UICollectionView!
@@ -34,6 +43,24 @@ class MyAccount: BaseController {
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: true, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM"),
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: true, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM"),
+    ]
+    //Dummy Date
+    var friendsArray = [
+        FriendProfile(firstName: "Paul", friendImg: UIImage(named: "ic-friends")),
+        FriendProfile(firstName: "Anna", friendImg: UIImage(named: "annamSmall")),
+        FriendProfile(firstName: "Conor", friendImg: UIImage(named: "conormSmall")),
+        FriendProfile(firstName: "Dana", friendImg: UIImage(named: "danawSmall")),
+        FriendProfile(firstName: "Georges", friendImg: UIImage(named: "gspSmall")),
+        FriendProfile(firstName: "Madison", friendImg: UIImage(named: "madisonsSmall")),
+        FriendProfile(firstName: "Hieu", friendImg: UIImage(named: "nguyenhSmall")),
+        FriendProfile(firstName: "Virgil", friendImg: UIImage(named: "virgilsSmall"))
+    ]
+    var artistArray = [
+        ArtistProfile(artistImg: UIImage(named: "artistIc")),
+        ArtistProfile(artistImg: UIImage(named: "davidG")),
+        ArtistProfile(artistImg: UIImage(named: "martinG")),
+        ArtistProfile(artistImg: UIImage(named: "morten")),
+        ArtistProfile(artistImg: UIImage(named: "tiesto"))
     ]
 
     override func viewDidLoad() {
@@ -104,7 +131,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
         case self.favouriteDrinkCollectionView:
             return self.arrFavouriteDrinks.count
         case self.favouriteArtistCollectionView:
-            return 10
+            return 5
         case self.favoriteVenueCollectionView:
             return self.arrayFavoriteVenueEvents.count
         default:
@@ -120,6 +147,9 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
             return cell
         case friendsListCollectionView:
             let cell = friendsListCollectionView.dequeueReusableCell(withReuseIdentifier: "FriendsListCVC", for: indexPath) as! FriendsListCVC
+            //Dummy Data
+            cell.profileImg.image = friendsArray[indexPath.row].friendImg
+            cell.firstName.text = friendsArray[indexPath.row].firstName
             return cell
         case vibesCollectionView:
             let cell = vibesCollectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
@@ -136,6 +166,7 @@ extension MyAccount: UICollectionViewDelegate, UICollectionViewDataSource {
             return cell
         case favouriteArtistCollectionView:
             let cell = favouriteArtistCollectionView.dequeueReusableCell(withReuseIdentifier: "FavoriteArtistProfileCVC", for: indexPath) as! FavoriteArtistProfileCVC
+            cell.artistImg.image = artistArray[indexPath.row].artistImg
             return cell
         case favoriteVenueCollectionView:
             let cell = favoriteVenueCollectionView.dequeueReusableCell(withReuseIdentifier: "HotVenueCVC", for: indexPath) as! HotVenueCVC
