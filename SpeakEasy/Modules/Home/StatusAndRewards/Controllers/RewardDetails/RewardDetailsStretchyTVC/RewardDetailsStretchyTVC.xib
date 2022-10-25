@@ -353,6 +353,8 @@
                 <outlet property="EventCollectionView" destination="fdh-Gy-CMC" id="Aqc-I1-hhS"/>
                 <outlet property="discountLbl" destination="SDp-nA-HI8" id="fqg-3f-NRT"/>
                 <outlet property="guestView" destination="QM1-y6-di1" id="rAT-Pp-llY"/>
+                <outlet property="lblRewardName" destination="reU-d7-4Iz" id="Pkw-DE-Qqr"/>
+                <outlet property="rewardNote" destination="UhT-1A-Ole" id="sAT-Gm-O7Z"/>
             </connections>
             <point key="canvasLocation" x="281.15942028985512" y="185.49107142857142"/>
         </tableViewCell>

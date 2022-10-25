@@ -21,7 +21,7 @@
             <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RewardCover" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-bZ-FMQ">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RewardCoverPrysm" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-bZ-FMQ">
                     <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRYSM Chicago" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-2f-E7N" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
@@ -110,11 +110,16 @@
                     <exclude reference="hPP-di-3XM"/>
                 </mask>
             </variation>
+            <connections>
+                <outlet property="imgVenue" destination="m0e-bZ-FMQ" id="oP1-3w-pGf"/>
+                <outlet property="imgVenueLogo" destination="SMm-Xg-lZP" id="aqn-5H-Nnx"/>
+                <outlet property="lblVenue" destination="d3O-2f-E7N" id="wR9-3d-D7O"/>
+            </connections>
             <point key="canvasLocation" x="205.07246376811597" y="-166.74107142857142"/>
         </view>
     </objects>
     <resources>
-        <image name="RewardCover" width="390" height="301"/>
+        <image name="RewardCoverPrysm" width="390" height="301"/>
         <image name="TaoLogo" width="33" height="33"/>
         <image name="ic-location" width="12.5" height="15"/>
         <image name="phone" width="12" height="15.5"/>

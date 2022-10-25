@@ -64,6 +64,11 @@ struct StatusAndRewardDataSet {
     var ticketDescription: String?
     var date: String?
     var rewardDescription: String?
+    var rewardName: String?
+    var imgVenue: UIImage?
+    var imgVenueLogo: UIImage?
+    var rewardNote: String?
+    var hasEventBanner: Bool
 }
 
 struct OthersInvites{

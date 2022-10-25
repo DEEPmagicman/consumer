@@ -19,6 +19,8 @@ class RewardDetails: UIViewController {
     private let twentyOff = "20% OFF TICKET:"
     private let minOff = "20% LOWER MIN. SPEND"
     
+    var rewardData: StatusAndRewardDataSet?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.registerCell()
@@ -61,7 +63,10 @@ extension RewardDetails {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = HeaderViewCustom.instanceFromNib()
+            let tableHeaderView  = HeaderViewCustom.instanceFromNib() as! HeaderViewCustom
+            tableHeaderView.imgVenue.image = rewardData?.imgVenue
+            tableHeaderView.lblVenue.text = rewardData?.venueName
+            tableHeaderView.imgVenueLogo.image = rewardData?.imgVenueLogo
             strechyTableView.contentOffset = CGPoint(x: 0, y: -32)
             strechyTableView.tableHeaderView = tableHeaderView
         }
@@ -97,9 +102,12 @@ extension RewardDetails: UITableViewDataSource {
         
         guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "RewardDetailsStretchyTVC", for: indexPath) as? RewardDetailsStretchyTVC else { return UITableViewCell() }
         cell.indentationLevel = 2;
-        cell.guestView.isHidden = isShowEvent
-        cell.EventCollectionView.isHidden = !isShowEvent
-        cell.discountLbl.text = isFree ? freeTicket : twentyOff
+        cell.lblRewardName.text = rewardData?.rewardName
+        
+        cell.rewardNote.text = rewardData?.rewardNote
+        cell.guestView.isHidden = !rewardData!.isTable
+        cell.EventCollectionView.isHidden = !rewardData!.hasEventBanner
+        cell.discountLbl.text = isFree ? freeTicket : minOff
         cell.discountLbl.textColor = isFree ? UIColor(red: 245/255, green: 129/255, blue: 254/255, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
         return cell
     }
