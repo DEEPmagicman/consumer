@@ -53,11 +53,11 @@ class BookingsTVC: UITableViewCell {
             self.lblStatus.font = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 13.0)
         }
         else {
-            self.lblStatus.font = Utility.main.getDeviceSpecificFont(fontWeight: "regular", fontSize: 13.0)
+            self.lblStatus.font = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 13.0)
         }
         
         if data.status == .PurchaseConfirmed || data.status == .TicketPurchasedConfirmed {
-            self.lblStatus.textColor = Global.APP_COLOR_LIGHT_PINK
+            self.lblStatus.textColor = Global.APP_COLOR_BLUE
         }
         else {
             self.lblStatus.textColor = Global.APP_COLOR_LIGHT_GREY

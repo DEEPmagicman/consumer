@@ -21,15 +21,15 @@ class ImportantDatesCVC: UICollectionViewCell {
     
     //Dummy date
     var datesArray = [
-        CustomDate( dateImg: UIImage(named:"paulsXS"), dateTitle: "Paul's Birthday"),
-        CustomDate( dateImg: UIImage(named:"conormXS"), dateTitle: "Conor's Birthday"),
-        CustomDate( dateImg: UIImage(named:"danawXS"), dateTitle: "Dana's Birthday")
+        CustomDate( dateImg: UIImage(named:"paulsXS"), dateTitle: "Paul BDay"),
+        CustomDate( dateImg: UIImage(named:"conormXS"), dateTitle: "Conor BDay"),
+        CustomDate( dateImg: UIImage(named:"danawXS"), dateTitle: "Dana BDay")
     ]
     
     func setData(index: Int) {
         if index == 0 {
             self.imgProfile.image = UIImage(named: "Birthday")
-            self.lblBirthday.text = "Your  birthday"
+            self.lblBirthday.text = "Your  BDay"
         }
         else {
             self.imgProfile.image = datesArray[index-1].dateImg

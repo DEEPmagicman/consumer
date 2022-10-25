@@ -189,7 +189,7 @@ extension MyAccount: UICollectionViewDelegateFlowLayout {
             let cellSize: CGSize = CGSize(width: 60, height: 46)
             return cellSize
         case friendsListCollectionView:
-            let cellSize: CGSize = CGSize(width: (collectionView.frame.width/5), height: collectionView.frame.height)
+            let cellSize: CGSize = CGSize(width: (collectionView.frame.width/5), height: collectionView.frame.height*1.1)
             return cellSize
         case vibesCollectionView:
 

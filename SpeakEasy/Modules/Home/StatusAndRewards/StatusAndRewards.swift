@@ -11,7 +11,8 @@ class StatusAndRewards: UIViewController {
     
     @IBOutlet weak var tableViewReward: UITableView!
     
-    var arrStatusAndRewardDataSet = [StatusAndRewardDataSet(brand: UIImage(named: "ic-tao"), eventCover: UIImage(named: "ic-artist"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "TAO Chicago", performerName: "Steve Aoki", ticketDescription: "GA + Skip Line", date: "Thursday, June 30", rewardDescription: "FREE"),
+    var arrStatusAndRewardDataSet = [
+        StatusAndRewardDataSet(brand: UIImage(named: "ic-tao"), eventCover: UIImage(named: "ic-artist"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "TAO Chicago", performerName: "Steve Aoki", ticketDescription: "GA + Skip Line", date: "Thursday, June 30", rewardDescription: "FREE"),
                                      StatusAndRewardDataSet(brand: UIImage(named: "ic-prism"), eventCover: UIImage(named: "ic-prism-cover"), isPerformer: false, isTable: true, isGroupInvite: true, isTicket: false, venueName: "PRYSM Chicago", performerName: nil, ticketDescription: nil, date: "Sunday, August 7", rewardDescription: "20% OFF"),
                                      StatusAndRewardDataSet(brand: UIImage(named: "ic-prism"), eventCover: UIImage(named: "ic-prism-cover2"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "PRYSM Chicago", performerName: "Qrion", ticketDescription: "GA + DJ Booth Access", date: "Friday, July 8", rewardDescription: "20% OFF"),
                                      StatusAndRewardDataSet(brand: UIImage(named: "ic-rocbar"), eventCover: UIImage(named: "ic-rocbar-cover"), isPerformer: false, isTable: false, isGroupInvite: false, isTicket: true, venueName: "ROCBAR", performerName: nil, ticketDescription: "General Admission", date: "Saturday, July 9", rewardDescription: "FREE")]

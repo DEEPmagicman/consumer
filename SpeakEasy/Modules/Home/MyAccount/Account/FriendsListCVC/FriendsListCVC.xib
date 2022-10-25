@@ -54,7 +54,7 @@
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="leading" secondItem="TCi-pL-8Qy" secondAttribute="leading" constant="5" id="AuC-2x-zHX"/>
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="centerY" secondItem="TCi-pL-8Qy" secondAttribute="centerY" id="Qe8-Jy-bsw"/>
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="centerX" secondItem="TCi-pL-8Qy" secondAttribute="centerX" id="ybG-gC-sjW"/>
-                            <constraint firstItem="ENt-BD-T2t" firstAttribute="top" secondItem="TCi-pL-8Qy" secondAttribute="top" constant="9.6666666666666643" id="zew-iU-UqG"/>
+                            <constraint firstItem="ENt-BD-T2t" firstAttribute="top" secondItem="TCi-pL-8Qy" secondAttribute="top" constant="9.6699999999999999" id="zew-iU-UqG"/>
                         </constraints>
                     </view>
                 </subviews>

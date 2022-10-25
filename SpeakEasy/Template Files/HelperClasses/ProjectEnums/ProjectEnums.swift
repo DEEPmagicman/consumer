@@ -250,10 +250,10 @@ enum TicketConfigType {
     case edit
 }
 enum BookingStatusType: String {
-    case PurchaseConfirmed = "Purchase Confirmed"
-    case AwaitingApproval = "Awaiting Approval"
+    case PurchaseConfirmed = "Confirmed"
+    case AwaitingApproval = "Awaiting Payment"
     case TicketPurchasedConfirmed = "Ticket purchased confirmed"
-    case AwaitingVenueApproval = "Awaiting venue approval"
+    case AwaitingVenueApproval = "Awaiting Approval"
     case SubmitRequest = "Submit Request"
     case BookingConfirmation = "Booking Confirmation"
 }
