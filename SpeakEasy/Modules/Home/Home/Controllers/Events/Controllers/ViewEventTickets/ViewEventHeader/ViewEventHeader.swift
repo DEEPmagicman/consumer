@@ -49,9 +49,9 @@ class ViewEventHeader: UIView {
         self.imgEventCover.image = data.imgEventCover
         self.imgBrandCover.image = data.imgBrandLogo
         self.lblPerformerName.text = data.lblPerformerName ?? ""
-        self.lblEventVenueName.text = "\(data.lblVenueName ?? "") \(Constants.localizedCity)"
+        self.lblEventVenueName.text = data.lblVenueName
         self.lblEventDate.text = data.lblEventDate ?? ""
-        self.lblLocation.text = "\(data.location ?? "") \(Constants.localizedCity)"
+        self.lblLocation.text = data.location
     }
 }
 

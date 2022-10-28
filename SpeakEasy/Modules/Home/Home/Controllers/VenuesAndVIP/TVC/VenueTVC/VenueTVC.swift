@@ -26,7 +26,7 @@ class VenueTVC: UITableViewCell {
     
     func setData(data: VenuesVIPEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
-        self.lblPerformerName.text = "\(data.lblPerformerName ?? "") \(Constants.localizedCity)"
+        self.lblPerformerName.text = data.lblPerformerName
         self.imgBrandLogo.image = data.imgBrandLogo
         self.lblClosesTime.text = data.lblEventClosingTime
 //        self.lblEntryFees.text = data.lblEventFees

@@ -28,7 +28,7 @@ class HotVenueCVC: UICollectionViewCell {
     }
     func setData(data: VenuesVIPEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
-        self.lblPerformerName.text = "\(data.lblPerformerName ?? "") \(Constants.localizedCity)"
+        self.lblPerformerName.text = data.lblPerformerName
         self.imgBrandLogo.image = data.imgBrandLogo
         self.lblEntryFees.text = data.lblEventFees
         self.lblClosesTime.text = data.lblEventClosingTime

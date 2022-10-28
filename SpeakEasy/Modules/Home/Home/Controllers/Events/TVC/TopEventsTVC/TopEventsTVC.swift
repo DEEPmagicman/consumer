@@ -36,11 +36,21 @@ extension TopEventsTVC{
 }
 extension TopEventsTVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Constants.arrayTopEvents.count
+        if Constants.localizedCity == "Chicago" {
+            return Constants.arrayTopEventsChicago.count
+        }else {
+            return Constants.arrayTopEventsCleveland.count
+        }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopEventCVC", for: indexPath) as! TopEventCVC
-        let data = Constants.arrayTopEvents[indexPath.item]
+        let data: TopEventDataSet!
+        
+        if Constants.localizedCity == "Chicago" {
+            data = Constants.arrayTopEventsChicago[indexPath.item]
+        }else {
+            data = Constants.arrayTopEventsCleveland[indexPath.item]
+        }
         cell.setData(data: data)
         return cell
     }

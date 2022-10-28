@@ -81,35 +81,51 @@ struct Constants {
     // Global Array
     static var localizedCity = "Cleveland"
    // Events Array
-   static var arrayTopEvents = [
+   static var arrayTopEventsChicago = [
         TopEventDataSet(imgEventCover: UIImage(named: "EventDetailsBG"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St.")
     ]
+    static var arrayTopEventsCleveland = [
+         TopEventDataSet(imgEventCover: UIImage(named: "EventDetailsBG"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St."),
+         TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St.")
+     ]
     
     // Featured Events Array
-    static var arrayFeaturedEvents = [
+    static var arrayFeaturedEventsChicago = [
         TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO", lblEventDate: "Thursday, July 7",location: "335 N. Dearborn St.")
     ]
+    static var arrayFeaturedEventsCleveland = [
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St.")
+    ]
     
     // Upcomming Events Array
-    static var arrayUpcomingEvents = [
+    static var arrayUpcomingEventsChicago = [
         TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO",  lblEventDate: "Saturday, July 2",location: "632 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG2"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG3"), lblPerformerName: "DJ Daily", lblVenueName: "Bounce",  lblEventDate: "Friday, July 24",location: "335 N. Dearborn St.")
     ]
+    static var arrayUpcomingEventsCleveland = [
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO",  lblEventDate: "Saturday, July 2",location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG2"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St.")
+    ]
     
     // General Admission Array
-    static var arrayGeneralAdmission = [
+    static var arrayGeneralAdmissionChicago = [
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO",  lblEventDate: "Friday, July 1",location: "632 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce",  lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St."),
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG3"), lblPerformerName: "Sundown Sundaze", lblVenueName: "PRYSM",  lblEventDate: "Sunday, July 3",location: "335 N. Dearborn St.")
     ]
+    static var arrayGeneralAdmissionCleveland = [
+        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO",  lblEventDate: "Friday, July 1",location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce",  lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St.")
+    ]
     
     // Venue & VIP Array
-    static var arrayHotVenueEvents = [
+    static var arrayHotVenueEventsChicago = [
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "632 N. Dearborn St.",phoneNumber: "(224) 888-0388"),
         
@@ -117,8 +133,14 @@ struct Constants {
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM",location: "335 N. Dearborn St.",phoneNumber: "(224) 888-576"),
     ]
+    static var arrayHotVenueEventsCleveland = [
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "632 N. Dearborn St.",phoneNumber: "(224) 888-0388"),
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "586 N. Dearborn St.",phoneNumber: "(224) 888-2345")
+    ]
     
-    static var arrayRemainingHotVenueEvents = [
+    static var arrayRemainingHotVenueEventsChicago = [
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St.",phoneNumber: "(224) 888-576"),
         
@@ -126,4 +148,26 @@ struct Constants {
         
         VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG3"), lblPerformerName: "RocBar", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo3"), isLive: true, isFavourite: false, lblEventFees: "$35", lblEventWaitingTime: "15 mins", lblEventClosingTime: "Closes 3:00 AM",location: "632 N. Dearborn St.",phoneNumber: "(224) 888-0388"),
     ]
+    
+    static var arrayRemainingHotVenueEventsCleveland = [
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St.",phoneNumber: "(224) 888-576"),
+        
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG2"), lblPerformerName: "PRYSM", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo2"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "586 N. Dearborn St.",phoneNumber: "(224) 888-2345")
+    ]
+    
+    // See All Array
+    
+    static var arrayAllEventsChicago = [
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO", lblEventDate: "Thursday, July 7",location: "335 N. Dearborn St.")
+    ]
+    
+    static var arrayAllEventsCleveland = [
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St.")
+    ]
+    
+    
 }

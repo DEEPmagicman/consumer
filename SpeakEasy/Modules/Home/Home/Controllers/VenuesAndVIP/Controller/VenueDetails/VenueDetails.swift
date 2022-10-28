@@ -90,9 +90,9 @@ extension VenueDetails{
         addObservers(tableView: self.tableViewDressCode)
     }
     private func setData() {
-        self.lblLocation.text = "\(VenueDetails.hotVenuesData?.location ?? "") \(Constants.localizedCity)"
+        self.lblLocation.text = VenueDetails.hotVenuesData?.location
         self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
-        self.lblTitle.text = "\(VenueDetails.hotVenuesData?.lblPerformerName ?? "") \(Constants.localizedCity)"
+        self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName
         self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
         self.arrGallery[0] = imgEventCover

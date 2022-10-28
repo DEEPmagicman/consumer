@@ -75,14 +75,14 @@ extension Home {
             
             self.viewPageMenu.addSubview(pageMenu.view)
         }
-        else{
-            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? Events {
-                controller.tableView.reloadData()
-            }
-            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? VenuesAndVIP {
-                controller.tableView.reloadData()
-            }
-        }
+//        else{
+//            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? Events {
+//                controller.tableView.reloadData()
+//            }
+//            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? VenuesAndVIP {
+//                controller.tableView.reloadData()
+//            }
+//        }
     }
 }
 //MARK: - Container controllers

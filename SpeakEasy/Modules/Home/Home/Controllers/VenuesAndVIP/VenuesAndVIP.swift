@@ -54,7 +54,11 @@ extension VenuesAndVIP: UITableViewDataSource {
         case 0:
             return 1
         default:
-            return Constants.arrayRemainingHotVenueEvents.count
+            if Constants.localizedCity == "Chicago" {
+                return Constants.arrayRemainingHotVenueEventsChicago.count
+            }else {
+                return Constants.arrayRemainingHotVenueEventsCleveland.count
+            }
         }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -66,13 +70,24 @@ extension VenuesAndVIP: UITableViewDataSource {
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
             if indexPath.row == 2 {
-                let data = Constants.arrayRemainingHotVenueEvents[indexPath.row]
+                let data: VenuesVIPEventDataSet!
+                if Constants.localizedCity == "Chicago" {
+                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+                }else {
+                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                }
                 cell.setData(data: data)
                 cell.setData(seeAll: true)
                 cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
             }
             else {
-                let data = Constants.arrayRemainingHotVenueEvents[indexPath.row]
+                let data: VenuesVIPEventDataSet!
+                if Constants.localizedCity == "Chicago" {
+                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+                }else {
+                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                }
+
                 cell.setData(data: data)
                 cell.setData(seeAll: false)
             }
@@ -87,7 +102,11 @@ extension VenuesAndVIP: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let venueDetailsController = VenueDetails()
-        VenueDetails.hotVenuesData = Constants.arrayRemainingHotVenueEvents[indexPath.row]
+        if Constants.localizedCity == "Chicago" {
+            VenueDetails.hotVenuesData = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+        }else {
+            VenueDetails.hotVenuesData = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+        }
         Utility.main.topViewController()?.navigationController?.pushViewController(venueDetailsController, animated: true)
     }
     
@@ -123,7 +142,11 @@ extension VenuesAndVIP: UITableViewDelegate {
 extension VenuesAndVIP: VenueDetailProtocol {
     func didSelect(index: Int) {
         let venueDetailsController = VenueDetails()
-        VenueDetails.hotVenuesData = Constants.arrayHotVenueEvents[index]
+        if Constants.localizedCity == "Chicago" {
+            VenueDetails.hotVenuesData = Constants.arrayHotVenueEventsChicago[index]
+        }else {
+            VenueDetails.hotVenuesData = Constants.arrayHotVenueEventsCleveland[index]
+        }
         Utility.main.topViewController()?.navigationController?.pushViewController(venueDetailsController, animated: true)
     }
 }

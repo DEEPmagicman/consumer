@@ -21,7 +21,7 @@ class EventCVC: UICollectionViewCell {
     func setData(data: TopEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
         self.lblPerformerName.text = data.lblPerformerName
-        self.lblVenueName.text = "\(data.lblVenueName ?? "") \(Constants.localizedCity)"
+        self.lblVenueName.text = data.lblVenueName
         self.lblEventDate.text = data.lblEventDate
     }
 }

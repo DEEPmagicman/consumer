@@ -11,15 +11,7 @@ class All: BaseController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var arrayAllEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG3"), lblPerformerName: "Nathan Scott", lblVenueName: "TAO", lblEventDate: "Thursday, July 7",location: "335 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "586 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "586 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG1"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR", lblEventDate: "Saturday, June 18",location: "586 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "FeaturedEventsBG2"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St.")
-    ]
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,13 +29,24 @@ extension All {
 
 extension All: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.arrayAllEvents.count
+        if Constants.localizedCity == "Chicago" {
+            return Constants.arrayAllEventsChicago.count
+        }else {
+            return Constants.arrayAllEventsCleveland.count
+        }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EventCVC", for: indexPath) as! EventCVC
-        let data = self.arrayAllEvents[indexPath.item]
-        cell.setData(data: data)
-        return cell
+        if Constants.localizedCity == "Chicago" {
+            let data = Constants.arrayAllEventsChicago[indexPath.item]
+            cell.setData(data: data)
+            return cell
+        }else {
+            let data = Constants.arrayAllEventsCleveland[indexPath.item]
+            cell.setData(data: data)
+            return cell
+        }
+
     }
 }
 extension All: UICollectionViewDelegateFlowLayout {

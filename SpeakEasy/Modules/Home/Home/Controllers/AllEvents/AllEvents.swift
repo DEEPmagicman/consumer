@@ -11,6 +11,7 @@ class AllEvents: BaseController {
 
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     
    
     var arrTabBarOptions = [TabBarOption(label: Strings.ALL.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
@@ -45,6 +46,7 @@ class AllEvents: BaseController {
 //MARK: - Helper Methods
 extension AllEvents {
     private func setUI(){
+        self.lblCity.text = Constants.localizedCity
         self.registerCells()
     }
     private func registerCells(){

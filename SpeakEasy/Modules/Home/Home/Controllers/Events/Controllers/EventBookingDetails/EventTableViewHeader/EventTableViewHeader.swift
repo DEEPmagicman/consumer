@@ -48,8 +48,8 @@ class EventTableViewHeader: UIView {
         self.imgEventCover.image = data.imgEventCover
         self.imgBrandLogo.image = data.imgBrandLogo
         self.lblPerformerName.text = data.lblPerformerName ?? ""
-        self.lblVenueName.text = "\(data.lblVenueName ?? "") \(Constants.localizedCity)"
+        self.lblVenueName.text = data.lblVenueName
         self.lblEventDate.text = data.lblEventDate ?? ""
-        self.lblLocation.text = "\(data.location ?? "") \(Constants.localizedCity)"
+        self.lblLocation.text = data.location
     }
 }

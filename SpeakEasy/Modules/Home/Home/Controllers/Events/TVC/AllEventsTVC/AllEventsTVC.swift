@@ -50,7 +50,11 @@ extension AllEventsTVC{
         }
         else{
             self.isFilter = true
-            self.arrayFilteredFeaturedEvents = Constants.arrayFeaturedEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(self.searchText)}
+            if Constants.localizedCity == "Chicago" {
+                self.arrayFilteredFeaturedEvents = Constants.arrayFeaturedEventsChicago.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(self.searchText)}
+            }else {
+                self.arrayFilteredFeaturedEvents = Constants.arrayFeaturedEventsCleveland.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(self.searchText)}
+            }
         }
         
         self.collectionView.reloadData()
@@ -64,7 +68,11 @@ extension AllEventsTVC: UICollectionViewDataSource {
         case true:
             return self.arrayFilteredFeaturedEvents.count
         case false:
-            return Constants.arrayFeaturedEvents.count
+            if Constants.localizedCity == "Chicago" {
+                return Constants.arrayFeaturedEventsChicago.count
+            }else {
+                return Constants.arrayFeaturedEventsCleveland.count
+            }
         }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -77,15 +85,33 @@ extension AllEventsTVC: UICollectionViewDataSource {
                 let data = self.arrayFilteredFeaturedEvents[indexPath.item]
                 cell.setData(data: data)
             case false:
-                let data = Constants.arrayFeaturedEvents[indexPath.item]
-                cell.setData(data: data)
+                if Constants.localizedCity == "Chicago" {
+                    let data = Constants.arrayFeaturedEventsChicago[indexPath.item]
+                    cell.setData(data: data)
+                }else {
+                    let data = Constants.arrayFeaturedEventsCleveland[indexPath.item]
+                    cell.setData(data: data)
+                }
             }
         case 1:
-            let data = Constants.arrayUpcomingEvents[indexPath.item]
-            cell.setData(data: data)
+            if Constants.localizedCity == "Chicago" {
+                let data = Constants.arrayUpcomingEventsChicago[indexPath.item]
+                cell.setData(data: data)
+            }else {
+                let data = Constants.arrayUpcomingEventsCleveland[indexPath.item]
+                cell.setData(data: data)
+            }
+
         case 2:
-            let data = Constants.arrayGeneralAdmission[indexPath.item]
-            cell.setData(data: data)
+            if Constants.localizedCity == "Chicago" {
+                let data = Constants.arrayGeneralAdmissionChicago[indexPath.item]
+                cell.setData(data: data)
+            }else {
+                let data = Constants.arrayGeneralAdmissionCleveland[indexPath.item]
+                cell.setData(data: data)
+            }
+
+
         default:
             break
         }

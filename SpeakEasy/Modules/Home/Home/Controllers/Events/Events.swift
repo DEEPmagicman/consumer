@@ -61,7 +61,11 @@ extension Events: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TopEventsTVC", for: indexPath) as! TopEventsTVC
             cell.selectedTopEvent = { index in
                 let eventBookingDetailsController = EventBookingDetails()
-                eventBookingDetailsController.topEventData = Constants.arrayTopEvents[index]
+                if Constants.localizedCity == "Chicago" {
+                    eventBookingDetailsController.topEventData = Constants.arrayTopEventsChicago[index]
+                }else {
+                    eventBookingDetailsController.topEventData = Constants.arrayTopEventsCleveland[index]
+                }
                 Utility.main.topViewController()?.navigationController?.pushViewController(eventBookingDetailsController, animated: true)
             }
             return cell
@@ -93,19 +97,34 @@ extension Events: UITableViewDataSource {
     
     func pushToEventBookingDetails(indexPath: IndexPath,index: Int) {
         let eventBookingDetailsController = EventBookingDetails()
+        
         switch indexPath.section {
+            
         case 1:
-            eventBookingDetailsController.topEventData = Constants.arrayFeaturedEvents[index]
+            if Constants.localizedCity == "Chicago" {
+                eventBookingDetailsController.topEventData = Constants.arrayFeaturedEventsChicago[index]
+            }else {
+                eventBookingDetailsController.topEventData = Constants.arrayFeaturedEventsCleveland[index]
+            }
         case 2:
-            eventBookingDetailsController.topEventData = Constants.arrayUpcomingEvents[index]
+            if Constants.localizedCity == "Chicago" {
+                eventBookingDetailsController.topEventData = Constants.arrayUpcomingEventsChicago[index]
+            }else {
+                eventBookingDetailsController.topEventData = Constants.arrayUpcomingEventsCleveland[index]
+            }
         case 3:
-            eventBookingDetailsController.topEventData = Constants.arrayGeneralAdmission[index]
+            if Constants.localizedCity == "Chicago" {
+                eventBookingDetailsController.topEventData = Constants.arrayGeneralAdmissionChicago[index]
+            }else {
+                eventBookingDetailsController.topEventData = Constants.arrayGeneralAdmissionCleveland[index]
+            }
         default:
             break
         }
+        
         Utility.main.topViewController()?.navigationController?.pushViewController(eventBookingDetailsController, animated: true)
     }
-    
+
 }
 extension Events: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
