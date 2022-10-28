@@ -23,7 +23,7 @@ class TopEventCVC: UICollectionViewCell {
     func setData(data: TopEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
         self.lblPerformerName.text = data.lblPerformerName
-        self.lblVenueName.text = data.lblVenueName
+        self.lblVenueName.text = "\(data.lblVenueName ?? "") \(Constants.localizedCity)"
         self.imgBrandLogo.image = data.imgBrandLogo
         self.lblEventDate.text = data.lblEventDate
         self.lblEventDate.textColor = data.isLive ?? false ? Global.APP_COLOR_PINK : Global.APP_COLOR_GREY_LIGHT

@@ -11,6 +11,7 @@ class Home: BaseController {
     
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.EVENTS.text, index: 0, icon: UIImage(named: "EventsTab"), selectedIcon: UIImage(named: "EventsTabSelected"), isSelected: true),
                             TabBarOption(label: Strings.VENUE_AND_VIP.text, index: 1, icon: UIImage(named: "VenueAndVIPTab"), selectedIcon: UIImage(named: "VenueAndVIPTabSelected"), isSelected: false),
@@ -23,8 +24,6 @@ class Home: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
-        
-        // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -44,6 +43,7 @@ class Home: BaseController {
 //MARK: - Helper Methods
 extension Home {
     private func setUI(){
+        self.lblCity.text = Constants.localizedCity
         self.registerCells()
     }
     private func registerCells(){
@@ -74,6 +74,14 @@ extension Home {
             pageMenu.controllerScrollView.isScrollEnabled = false
             
             self.viewPageMenu.addSubview(pageMenu.view)
+        }
+        else{
+            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? Events {
+                controller.tableView.reloadData()
+            }
+            if let controller = (self.pageMenuControllers[self.pageMenu?.currentPageIndex ?? 0] as? UINavigationController)?.viewControllers.first as? VenuesAndVIP {
+                controller.tableView.reloadData()
+            }
         }
     }
 }

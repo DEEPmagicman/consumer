@@ -47,9 +47,9 @@ class VenueDetails: UIViewController {
                             TabBarOption(label: Strings.VENUE_DEAILS.text,   index: 1, icon: nil, selectedIcon: nil, isSelected: false)]
     
     var arrayTopEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St. Newyork"),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St. California")]
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St."),
+        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St.")]
     
    static var hotVenuesData: VenuesVIPEventDataSet?
     
@@ -90,9 +90,9 @@ extension VenueDetails{
         addObservers(tableView: self.tableViewDressCode)
     }
     private func setData() {
-        self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
+        self.lblLocation.text = "\(VenueDetails.hotVenuesData?.location ?? "") \(Constants.localizedCity)"
         self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
-        self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName ?? ""
+        self.lblTitle.text = "\(VenueDetails.hotVenuesData?.lblPerformerName ?? "") \(Constants.localizedCity)"
         self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
         self.arrGallery[0] = imgEventCover
