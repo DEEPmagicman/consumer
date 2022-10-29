@@ -25,9 +25,7 @@ class VIPTableBookingCalenderTVC: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    var arrayAssociatedEvent = [
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  lblEventDate: "",location: "632 N. Dearborn St. chicago, IL")
-    ]
+    var arrayAssociatedEvent: [TopEventDataSet] = []
     
     func setData(seeAll: Bool){
         self.viewSeperator.isHidden = seeAll

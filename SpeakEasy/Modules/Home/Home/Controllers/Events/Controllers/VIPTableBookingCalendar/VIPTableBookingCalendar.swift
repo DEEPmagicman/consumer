@@ -60,6 +60,10 @@ extension VIPTableBookingCalendar: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VIPTableBookingCalenderTVC", for: indexPath) as! VIPTableBookingCalenderTVC
+            //Dummy Data - set calendar associated event
+            if (VenueDetails.hotVenuesData?.upcomingEvents?.count ?? 0 > 0) {
+                cell.arrayAssociatedEvent.append((VenueDetails.hotVenuesData?.upcomingEvents?[0])!)
+            }
             cell.setTableSelectionData(seeAll: false)
             return cell
         }

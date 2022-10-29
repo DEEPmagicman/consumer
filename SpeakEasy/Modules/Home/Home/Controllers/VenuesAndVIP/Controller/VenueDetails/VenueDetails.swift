@@ -50,11 +50,6 @@ class VenueDetails: UIViewController {
     //TEST THIS
     var arrayTopEvents: [TopEventDataSet] = []
     
-//    var arrayTopEvents = [
-//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"),
-//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St. Newyork"),
-//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St. California")]
-    
    static var hotVenuesData: VenuesVIPEventDataSet?
     
     var arrVibes = ["VIP Bottle Service","Strict Dress Code","Premium Bottles","Celebrity DJs",  "EDM", "Fashion Forward","Musical Variety", "Dress to Impress","Tables Recommended"]
@@ -94,8 +89,6 @@ extension VenueDetails{
         setData()
         addObservers(tableView: self.tableViewHours)
         addObservers(tableView: self.tableViewDressCode)
-        
-//        arrayTopEvents.append(TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"))
     }
     private func setData() {
         //self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""

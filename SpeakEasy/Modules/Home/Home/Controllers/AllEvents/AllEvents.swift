@@ -11,6 +11,7 @@ class AllEvents: BaseController {
 
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     
    
     var arrTabBarOptions = [TabBarOption(label: Strings.ALL.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
@@ -46,6 +47,7 @@ class AllEvents: BaseController {
 extension AllEvents {
     private func setUI(){
         self.registerCells()
+        self.lblCity.text = Constants.localizedCity
     }
     private func registerCells(){
         self.homeTabCollectionView.register(UINib(nibName: "TabCVC", bundle: nil), forCellWithReuseIdentifier: "TabCVC")
