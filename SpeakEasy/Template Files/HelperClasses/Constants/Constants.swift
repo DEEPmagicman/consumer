@@ -90,9 +90,9 @@ struct Constants {
     ]
     // Events Array Cleveland
     static var arrayTopEventsCleveland = [
-         TopEventDataSet(imgEventCover: UIImage(named: "deadmau5"), lblPerformerName: "Deadmau5", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "Escape", lblSongArtist: "Deadmau5"),
-         TopEventDataSet(imgEventCover: UIImage(named: "imanbek"), lblPerformerName: "Imanbek", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, September 10", currentLiveEventFires: nil, isLive: false,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "Belly Dancer", lblSongArtist: "Imanbek"),
-         TopEventDataSet(imgEventCover: UIImage(named: "djPaulyD"), lblPerformerName: "DJ Pauly D", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Friday, August 26", currentLiveEventFires: nil, isLive: false,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge"), lblSongName: "Back To Love", lblSongArtist: "DJ Pauly D")
+         TopEventDataSet(imgEventCover: UIImage(named: "deadmau5"), lblPerformerName: "Deadmau5", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "fwdLogoLarge"), lblSongName: "Escape", lblSongArtist: "Deadmau5"),
+         TopEventDataSet(imgEventCover: UIImage(named: "imanbek"), lblPerformerName: "Imanbek", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, September 10", currentLiveEventFires: nil, isLive: false,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "fwdLogoLarge"), lblSongName: "Belly Dancer", lblSongArtist: "Imanbek"),
+         TopEventDataSet(imgEventCover: UIImage(named: "djPaulyD"), lblPerformerName: "DJ Pauly D", lblVenueName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Friday, August 26", currentLiveEventFires: nil, isLive: false,location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "fwdLogoLarge"), lblSongName: "Back To Love", lblSongArtist: "DJ Pauly D")
      ]
     
     
@@ -104,9 +104,9 @@ struct Constants {
     ]
     // Featured Events Array Cleveland
     static var arrayFeaturedEventsCleveland = [
-        TopEventDataSet(imgEventCover: UIImage(named: "duttonRanch"), lblPerformerName: "Ferreck Dawn", lblVenueName: "SPYBAR CHICAGO",imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, June 18",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "SpybarLogoLarge"), lblSongName: "Life", lblSongArtist: "Ferreck Dawn"),
-        TopEventDataSet(imgEventCover: UIImage(named: "jakeDodds"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge"), lblSongName: "Pump", lblSongArtist: "Valentino Khan"),
-        TopEventDataSet(imgEventCover: UIImage(named: "benT"), lblPerformerName: "Valentino Khan", lblVenueName: "Soundbar", imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, July 9",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge"), lblSongName: "Pump", lblSongArtist: "Valentino Khan")
+        TopEventDataSet(imgEventCover: UIImage(named: "duttonRanch"), lblPerformerName: "Dutton Ranch", lblVenueName: "Welcome to the Farm",imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 28",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Country Girl", lblSongArtist: "Luke Bryan"),
+        TopEventDataSet(imgEventCover: UIImage(named: "jakeDodds"), lblPerformerName: "Jake Dodds", lblVenueName: "Welcome to the Farm", imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Saturday, July 9",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "American Night", lblSongArtist: "Jake Dodds"),
+        TopEventDataSet(imgEventCover: UIImage(named: "mikeD"), lblPerformerName: "Mike D", lblVenueName: "The Ivy", imgBrandLogo: UIImage(named: "ivyLogo"), lblEventDate: "Thursday, November 3",location: "1212 W 6th St. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "ivyLogoLarge"), lblSongName: "That's a Bet", lblSongArtist: "God of Texas, Mike D")
     ]
     
     // Upcomming Events Array Chicago
@@ -117,22 +117,22 @@ struct Constants {
     ]
     // Upcomming Events Array Cleveland
     static var arrayUpcomingEventsCleveland = [
-        TopEventDataSet(imgEventCover: UIImage(named: "dalton"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Saturday, July 2",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "FEELING GUD", lblSongArtist: "NGHTMRE"),
-        TopEventDataSet(imgEventCover: UIImage(named: "frankViera"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge"), lblSongName: "2022 Rave", lblSongArtist: "Navic"),
-        TopEventDataSet(imgEventCover: UIImage(named: "mikeD"), lblPerformerName: "Navic", lblVenueName: "Soundbar",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "SoundbarLogoLarge"), lblSongName: "2022 Rave", lblSongArtist: "Navic")
+        TopEventDataSet(imgEventCover: UIImage(named: "dalton"), lblPerformerName: "Dalton & Sheriffs", lblVenueName: "Welcome to the Farm",  imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Saturday, October 15",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Boston", lblSongArtist: "Dalton & the Sheriffs"),
+        TopEventDataSet(imgEventCover: UIImage(named: "frankViera"), lblPerformerName: "Frank Vieira", lblVenueName: "Welcome to the Farm",  imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 21",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Heart Broke", lblSongArtist: "Frank Vieira"),
+        TopEventDataSet(imgEventCover: UIImage(named: "djMike"), lblPerformerName: "DJ Mike Filly", lblVenueName: "Twist Social Club",  imgBrandLogo: UIImage(named: "twistLogo"), lblEventDate: "Saturday, October 29",location: "11633 Clifton Blvd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "twistLogoLarge"), lblSongName: "Filly Mix", lblSongArtist: "DJ Mike Filly")
     ]
     
     // General Admission Array Chicago
     static var arrayGeneralAdmissionChicago = [
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG1"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 1",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel..."),
-        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bounce Thrusdays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "BounceLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel..."),
+        TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG2"), lblPerformerName: "Bounce Thrusdays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. NewYork", imgBrandLogoLarge:  UIImage(named: "BounceLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel..."),
         TopEventDataSet(imgEventCover: UIImage(named: "GeneralAdmissionBG3"), lblPerformerName: "Sundown Sundaze", lblVenueName: "PRYSM Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Sunday, July 3",location: "335 N. Dearborn St. California", imgBrandLogoLarge:  UIImage(named: "PrysmLogoLarge"), lblSongName: "The Business", lblSongArtist: "Tiesto")
     ]
     // General Admission Array Cleveland
     static var arrayGeneralAdmissionCleveland = [
-        TopEventDataSet(imgEventCover: UIImage(named: "gaFwd"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 1",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel..."),
-        TopEventDataSet(imgEventCover: UIImage(named: "gaIvy"), lblPerformerName: "TAO Fridays", lblVenueName: "TAO Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Friday, July 1",location: "632 N. Dearborn St. chicago, IL", imgBrandLogoLarge:  UIImage(named: "TaoLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel..."),
-        TopEventDataSet(imgEventCover: UIImage(named: "gaTwist"), lblPerformerName: "Bonce Thrusdays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, June 7",location: "586 N. Dearborn St. Newyork", imgBrandLogoLarge:  UIImage(named: "BounceLogoLarge"), lblSongName: "Nataaoki", lblSongArtist: "Steve Aoki, Nathaniel...")
+        TopEventDataSet(imgEventCover: UIImage(named: "gaFwd"), lblPerformerName: "FWD Saturdays", lblVenueName: "FWD Day+Nightclub",  imgBrandLogo: UIImage(named: "fwdLogo"), lblEventDate: "Saturday, October 29",location: "1176 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "fwdLogoLarge"), lblSongName: "Escape", lblSongArtist: "Deadmau5"),
+        TopEventDataSet(imgEventCover: UIImage(named: "gaIvy"), lblPerformerName: "Ivy Fridays", lblVenueName: "The Ivy",  imgBrandLogo: UIImage(named: "ivyLogo"), lblEventDate: "Friday, October 28",location: "1212 W 6th St. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "ivyLogoLarge"), lblSongName: "That's a Bet", lblSongArtist: "God of Texas, Mike D"),
+        TopEventDataSet(imgEventCover: UIImage(named: "gaTwist"), lblPerformerName: "Twist Fridays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "twistLogo"), lblEventDate: "Friday, October 28",location: "11633 Clifton Blvd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "twistLogoLarge"), lblSongName: "Filly Mix", lblSongArtist: "DJ Mike Filly")
     ]
     
     // Venue & VIP Array Chicago
@@ -164,9 +164,8 @@ struct Constants {
     
     static var arrayRemainingHotVenueEventsCleveland = [
         
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576"),
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "586 N. Dearborn St. Newyork",phoneNumber: "(224) 888-2345")
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1167 Front Ave. Cleveland, OH",phoneNumber: "(216) 440-3500"),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1054 Old River Rd. Cleveland, OH",phoneNumber: "(216) 399-9079")
     ]
     
     // See All Array Chicago and Cleveland
