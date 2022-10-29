@@ -47,10 +47,13 @@ class VenueDetails: UIViewController {
     var arrTabBarOptions = [TabBarOption(label: Strings.VIP_AND_EVENTS.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
                             TabBarOption(label: Strings.VENUE_DEAILS.text,   index: 1, icon: nil, selectedIcon: nil, isSelected: false)]
     
-    var arrayTopEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St. Newyork"),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St. California")]
+    //TEST THIS
+    var arrayTopEvents: [TopEventDataSet] = []
+    
+//    var arrayTopEvents = [
+//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"),
+//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM Chicago", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St. Newyork"),
+//        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St. California")]
     
    static var hotVenuesData: VenuesVIPEventDataSet?
     
@@ -91,6 +94,8 @@ extension VenueDetails{
         setData()
         addObservers(tableView: self.tableViewHours)
         addObservers(tableView: self.tableViewDressCode)
+        
+//        arrayTopEvents.append(TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO Chicago", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St. chicago, IL"))
     }
     private func setData() {
         //self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
@@ -99,6 +104,7 @@ extension VenueDetails{
         self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
         self.arrGallery[0] = imgEventCover
+        self.arrayTopEvents = VenueDetails.hotVenuesData?.upcomingEvents ?? []
         
         DispatchQueue.main.async {
             self.galleryCollectionView.reloadData()

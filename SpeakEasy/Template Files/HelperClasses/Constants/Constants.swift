@@ -118,6 +118,7 @@ struct Constants {
     // Upcomming Events Array Cleveland
     static var arrayUpcomingEventsCleveland = [
         TopEventDataSet(imgEventCover: UIImage(named: "dalton"), lblPerformerName: "Dalton & Sheriffs", lblVenueName: "Welcome to the Farm",  imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Saturday, October 15",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Boston", lblSongArtist: "Dalton & the Sheriffs"),
+        TopEventDataSet(imgEventCover: UIImage(named: "gameFive"), lblPerformerName: "Game 5 Watch Party", lblVenueName: "Good Night John Boy",  imgBrandLogo: UIImage(named: "johnBoyLogo"), lblEventDate: "Friday, October 28",location: "1167 Front Ave. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "johnBoyLogoLarge"), lblSongName: "Boston", lblSongArtist: "Dalton & the Sheriffs"),
         TopEventDataSet(imgEventCover: UIImage(named: "frankViera"), lblPerformerName: "Frank Vieira", lblVenueName: "Welcome to the Farm",  imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 21",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Heart Broke", lblSongArtist: "Frank Vieira"),
         TopEventDataSet(imgEventCover: UIImage(named: "djMike"), lblPerformerName: "DJ Mike Filly", lblVenueName: "Twist Social Club",  imgBrandLogo: UIImage(named: "twistLogo"), lblEventDate: "Saturday, October 29",location: "11633 Clifton Blvd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "twistLogoLarge"), lblSongName: "Filly Mix", lblSongArtist: "DJ Mike Filly")
     ]
@@ -148,9 +149,9 @@ struct Constants {
     // Venue & VIP Array Cleveland
     static var arrayHotVenueEventsCleveland = [
         
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"fwd"), lblPerformerName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named:"fwdLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1176 Front Ave. Cleveland, OH",phoneNumber: "(216) 990-2300"),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"ivy"), lblPerformerName: "The Ivy", imgBrandLogo: UIImage(named:"ivyLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:30 AM",location: "1212 W 6th St. Cleveland, OH",phoneNumber: "(216) 505-5510"),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"twist"), lblPerformerName: "Twist Social Club", imgBrandLogo: UIImage(named:"twistLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "11633 Clifton Blvd, Cleveland, OH",phoneNumber: "(216) 221-2333")
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"fwd"), lblPerformerName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named:"fwdLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1176 Front Ave. Cleveland, OH",phoneNumber: "(216) 990-2300", upcomingEvents: [arrayTopEventsCleveland[0], arrayTopEventsCleveland[1], arrayTopEventsCleveland[2], arrayGeneralAdmissionCleveland[0]]),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"ivy"), lblPerformerName: "The Ivy", imgBrandLogo: UIImage(named:"ivyLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:30 AM",location: "1212 W 6th St. Cleveland, OH",phoneNumber: "(216) 505-5510", upcomingEvents: [arrayFeaturedEventsCleveland[2], arrayGeneralAdmissionCleveland[1]]),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"twist"), lblPerformerName: "Twist Social Club", imgBrandLogo: UIImage(named:"twistLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "11633 Clifton Blvd, Cleveland, OH",phoneNumber: "(216) 221-2333", upcomingEvents: [arrayUpcomingEventsCleveland[2], arrayGeneralAdmissionCleveland[2]])
     ]
     
     static var arrayRemainingHotVenueEventsChicago = [
@@ -164,8 +165,8 @@ struct Constants {
     
     static var arrayRemainingHotVenueEventsCleveland = [
         
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1167 Front Ave. Cleveland, OH",phoneNumber: "(216) 440-3500"),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1054 Old River Rd. Cleveland, OH",phoneNumber: "(216) 399-9079")
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1167 Front Ave. Cleveland, OH",phoneNumber: "(216) 440-3500", upcomingEvents: [arrayUpcomingEventsCleveland[1]]),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1054 Old River Rd. Cleveland, OH",phoneNumber: "(216) 399-9079", upcomingEvents: [arrayFeaturedEventsCleveland[0], arrayFeaturedEventsCleveland[1], arrayUpcomingEventsCleveland[0], arrayUpcomingEventsCleveland[1]])
     ]
     
     // See All Array Chicago and Cleveland

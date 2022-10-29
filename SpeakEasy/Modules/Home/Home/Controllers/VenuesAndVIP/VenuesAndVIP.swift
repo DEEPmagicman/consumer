@@ -18,6 +18,7 @@ struct VenuesVIPEventDataSet {
     var lblEventClosingTime: String? = ""
     var location: String?
     var phoneNumber: String?
+    var upcomingEvents: [TopEventDataSet]?
 }
 
 class VenuesAndVIP: BaseController {
