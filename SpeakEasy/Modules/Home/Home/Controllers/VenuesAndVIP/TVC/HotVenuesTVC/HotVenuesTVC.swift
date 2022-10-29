@@ -38,7 +38,18 @@ extension HotVenuesTVC{
         }
         else{
             self.isFilter = true
-            self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEvents.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            if Constants.localizedCity == "Chicago" {
+                self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsChicago.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            }else {
+                self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsCleveland.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            }
+            
+            
+            if Constants.localizedCity == "Chicago" {
+                self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsChicago.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            }else {
+                self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsCleveland.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
+            }
         }
         
         self.collectionView.reloadData()
@@ -52,7 +63,11 @@ extension HotVenuesTVC: UICollectionViewDataSource {
         case true:
             return self.arrayFilteredHotVenueEvents.count
         case false:
-            return Constants.arrayHotVenueEvents.count
+            if Constants.localizedCity == "Chicago" {
+                return Constants.arrayHotVenueEventsChicago.count
+            }else {
+                return Constants.arrayHotVenueEventsCleveland.count
+            }
         }
         
     }
@@ -65,7 +80,12 @@ extension HotVenuesTVC: UICollectionViewDataSource {
             return cell
         case false:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HotVenueCVC", for: indexPath) as! HotVenueCVC
-            let data = Constants.arrayHotVenueEvents[indexPath.item]
+            let data: VenuesVIPEventDataSet!
+            if Constants.localizedCity == "Chicago" {
+                data = Constants.arrayHotVenueEventsChicago[indexPath.item]
+            }else {
+                data = Constants.arrayHotVenueEventsCleveland[indexPath.item]
+            }
             cell.setData(data: data)
             return cell
         }

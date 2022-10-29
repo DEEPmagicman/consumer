@@ -14,31 +14,52 @@ struct CitySelection {
     
 class NotificationVC: UIViewController {
 
-    var arrCitySelection = [CitySelection(name: "New York, NY", img: "New York, NY"),
-                            CitySelection(name: "Miami, FL", img: "Miami, FL"),
-                            CitySelection(name: "Las Vegas, NV", img: "Las Vegas, NV"),
-                            CitySelection(name: "Los Angeles, CA", img: "Los Angeles, CA"),
-                            CitySelection(name: "Boston, MA", img: "Boston, MA"),
-                            CitySelection(name: "San Francisco, CA", img: "San Francisco, CA"),
-                            CitySelection(name: "Atlanta, GA", img: "Atlanta, GA"),
-                            CitySelection(name: "Tampa, FL", img: "Tampa, FL"),]
+    var arrCitySelection = [CitySelection(name: "Chicago, IL", img: "New York, NY 1"),
+                                 CitySelection(name: "Cleveland, OH", img: "Miami, FL")]
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var lblCity: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerCell()
+        setUI()
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func setUI() {
+        self.lblCity.text = Constants.localizedCity
+        
+        self.registerCell()
     }
     
     func registerCell() {
         self.tableView.register(UINib(nibName: "NotificationTVC", bundle: nil), forCellReuseIdentifier: "NotificationTVC")
     }
 }
+//MARK: - UITableViewDataSource
+ extension NotificationVC: UITableViewDataSource {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+         return self.arrCitySelection.count
+     }
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+         guard let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTVC", for: indexPath) as? NotificationTVC else { return UITableViewCell() }
+         let data = self.arrCitySelection[indexPath.row]
+         cell.setData(data: data)
+         return cell
+     }
+ }
 //MARK: - UITableViewDelegate
 extension NotificationVC: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let city = self.arrCitySelection[indexPath.row].name.components(separatedBy: ",").first
+        Constants.localizedCity = city ?? ""
+        AppDelegate.shared.changeRootViewController()
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let tableView = self.tableView else {return}
         
@@ -67,17 +88,5 @@ extension NotificationVC: UITableViewDelegate {
         let topCellOpacity = 1.5 - ((tableViewTopPosition - topCellPosition) / cellHeight) * modifier
 
         topCell.contentView.alpha = topCellOpacity
-    }
-}
-//MARK: - UITableViewDataSource
-extension NotificationVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.arrCitySelection.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTVC", for: indexPath) as? NotificationTVC else { return UITableViewCell() }
-        let data = self.arrCitySelection[indexPath.row]
-        cell.setData(data: data)
-        return cell
     }
 }

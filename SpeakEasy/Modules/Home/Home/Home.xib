@@ -18,6 +18,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Home" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
                 <outlet property="homeTabCollectionView" destination="qM3-nr-AfC" id="mLF-t4-tbB"/>
+                <outlet property="lblCity" destination="ddZ-d5-OmT" id="Sdg-Fu-m3D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="Igd-f7-ea3"/>
                 <outlet property="viewPageMenu" destination="cuz-Ix-Gg2" id="LqB-XI-7SN"/>
             </connections>

@@ -11,6 +11,7 @@ class Home: BaseController {
     
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.EVENTS.text, index: 0, icon: UIImage(named: "EventsTab"), selectedIcon: UIImage(named: "EventsTabSelected"), isSelected: true),
                             TabBarOption(label: Strings.VENUE_AND_VIP.text, index: 1, icon: UIImage(named: "VenueAndVIPTab"), selectedIcon: UIImage(named: "VenueAndVIPTabSelected"), isSelected: false),
@@ -44,6 +45,7 @@ class Home: BaseController {
 //MARK: - Helper Methods
 extension Home {
     private func setUI(){
+        self.lblCity.text = Constants.localizedCity
         self.registerCells()
     }
     private func registerCells(){
