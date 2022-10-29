@@ -15,11 +15,11 @@ struct CitySelection {
 class NotificationVC: UIViewController {
 
     var arrCitySelection = [CitySelection(name: "Chicago, IL", img: "New York, NY 1"),
-                                 CitySelection(name: "Cleveland, OH", img: "Miami, FL")]
+                            CitySelection(name: "Cleveland, OH", img: "Miami, FL")]
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var lblCity: UILabel!
-    
+    @IBOutlet weak var citySkyline: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +31,8 @@ class NotificationVC: UIViewController {
     
     func setUI() {
         self.lblCity.text = Constants.localizedCity
+        //Fix this (don't show for now)
+        citySkyline.isHidden = true
         
         self.registerCell()
     }

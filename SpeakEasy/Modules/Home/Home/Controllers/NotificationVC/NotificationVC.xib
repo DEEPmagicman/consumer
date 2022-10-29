@@ -15,6 +15,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NotificationVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
+                <outlet property="citySkyline" destination="zFI-Tv-ijO" id="BkL-ev-Avf"/>
                 <outlet property="lblCity" destination="YDy-jk-gZx" id="4cD-4h-jOu"/>
                 <outlet property="tableView" destination="SvC-nf-IRS" id="gzC-0Z-IGp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

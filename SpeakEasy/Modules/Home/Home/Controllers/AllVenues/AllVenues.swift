@@ -11,6 +11,7 @@ class AllVenues: BaseController {
 
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.FEATURED.text, index: 0, icon: UIImage(named: "featured"), selectedIcon: nil, isSelected: true),
                             TabBarOption(label: Strings.CITY_VIEWS.text, index: 1, icon: UIImage(named: "cityviews"), selectedIcon: nil, isSelected: false),
@@ -49,6 +50,7 @@ class AllVenues: BaseController {
 extension AllVenues {
     private func setUI(){
         self.registerCells()
+        self.lblCity.text = Constants.localizedCity
     }
     private func registerCells(){
         self.homeTabCollectionView.register(UINib(nibName: "TabVenueCVC", bundle: nil), forCellWithReuseIdentifier: "TabVenueCVC")
