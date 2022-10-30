@@ -1,6 +1,7 @@
 
 import Foundation
 import UIKit
+import Charts
 
 struct Global{
     static let LOGGED_IN_USER                = AppStateManager.sharedInstance.loggedInUser
@@ -136,32 +137,109 @@ struct Constants {
         TopEventDataSet(imgEventCover: UIImage(named: "gaTwist"), lblPerformerName: "Twist Fridays", lblVenueName: "Bounce Chicago",  imgBrandLogo: UIImage(named: "twistLogo"), lblEventDate: "Friday, October 28",location: "11633 Clifton Blvd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "twistLogoLarge"), lblSongName: "Filly Mix", lblSongArtist: "DJ Mike Filly")
     ]
     
+    // Venue descriptions
+    static var taoDescription = "TAO Chicago is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. TAO nightclub has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    static var undergroundDescription = "The Underground is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. The Underground has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    static var studioDescription = "Studio Paris is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. Studio Paris has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    static var bounceDescription = "Bounce Sporting Club is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. Bounce Sporting Club has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    static var prysmDescription = "Prysm is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. Prysm has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    static var rocbarDescription = "RocBar is an award-winning temple of nightlife in Chicago, featuring the hottest open format DJs, world-class performers, and A-list celebrities. RocBar has been host to many of the city’s most memorable parties. Every Friday and Saturday incredible DJs headline the club, packing the dance floor."
+    //Cleveland
+    static var fwdDescription = "FWD Nightclub is Cleveland’s premier outdoor club. An experience unlike anything else in the country, nights at FWD are an open air party driven by our roster of world class artists and DJs set to a backdrop of Cleveland’s skyline, barges in the adjacent Cuyahoga river, and rattling of trains on the nearby tracks."
+    static var ivyDescription = "The Ivy is Cleveland’s place to gather and features internationally inspired dining and signature cocktail menu that transitionally caters to the Warehouse District neighborhood and downtown Cleveland residents and professionals."
+    static var twistDescription = "Twist Social Club is a neighborhood bar and night club focused on serving the LGBT community of greater Cleveland."
+    static var johnDescription = "Cleveland's most unique nightlife destination. Funk 1970's era dive bar with dancing, pizza, cool beer, sports, and groovy vibes."
+    static var farmDescription = "Cleveland's Live Music Bar from Chase Rice and Forward Hospitality Group in Flats East bank."
+    
+    // Hours
+    static var taoHours = [
+        HoursDataSet(day: "Thursday", time: "10:00 PM - 3:00 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 PM - Late"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM - Late")
+    ]
+    static var undergroundHours = [
+        HoursDataSet(day: "Wednesday", time: "11:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Thursday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM - 5:00 AM")
+    ]
+    static var studioHours = [
+        HoursDataSet(day: "Saturday", time: "10:00 PM - 3:00 AM")
+    ]
+    static var bounceHours = [
+        HoursDataSet(day: "Monday", time: "4:00 PM - 11:00 PM"),
+        HoursDataSet(day: "Tuesday", time: "4:00 PM - 11:00 PM"),
+        HoursDataSet(day: "Wednesday", time: "4:00 PM - 2:00 AM"),
+        HoursDataSet(day: "Thursday", time: "4:00 PM - 2:00 AM"),
+        HoursDataSet(day: "Friday", time: "4:00 PM - 2:00 AM"),
+        HoursDataSet(day: "Saturday", time: "11:00 AM - 3:00 AM"),
+        HoursDataSet(day: "Sunday", time: "11:00 AM - 2:00 AM")
+    ]
+    static var prysmHours = [
+        HoursDataSet(day: "Monday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Wednesday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM - 5:00 AM"),
+        HoursDataSet(day: "Sunday", time: "10:00 PM - 4:00 AM")
+    ]
+    static var rocbarHours = [
+        HoursDataSet(day: "Tuesday", time: "12:00 AM - 4:00 AM"),
+        HoursDataSet(day: "Thursday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 PM - 4:00 AM"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM - 5:00 AM")
+    ]
+    static var fwdHours = [
+        HoursDataSet(day: "Saturday", time: "9:30 PM - 2:00 AM")
+    ]
+    static var ivyHours = [
+        HoursDataSet(day: "Thursday", time: "3:00 PM - 2:30 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 AM - 2:30 AM"),
+        HoursDataSet(day: "Saturday", time: "10:00 AM - 2:30 AM")
+    ]
+    static var twistHours = [
+        HoursDataSet(day: "Thursday", time: "3:00 PM - 2:30 AM"),
+        HoursDataSet(day: "Friday", time: "10:00 AM - 2:30 AM"),
+        HoursDataSet(day: "Saturday", time: "10:00 AM - 2:30 AM")
+    ]
+    static var johnHours = [
+        HoursDataSet(day: "Thursday", time: "6:00 PM - LATE"),
+        HoursDataSet(day: "Friday", time: "8:30 PM - LATE"),
+        HoursDataSet(day: "Saturday", time: "12:00 PM - LATE")
+    ]
+    static var farmHours = [
+        HoursDataSet(day: "Thursday", time: "4:00 PM - 11:00 PM"),
+        HoursDataSet(day: "Friday", time: "4:00 PM - 2:00 AM"),
+        HoursDataSet(day: "Saturday", time: "12:00 PM - 2:00 AM")
+    ]
+    
+    static var undergroundEvent = TopEventDataSet(imgEventCover: UIImage(named: "undergroundHan"), lblPerformerName: "Mista Han", lblVenueName: "The Underground",  imgBrandLogo: UIImage(named: "HotVenueBrandLogo3"), lblEventDate: "Friday, October 28")
+    static var parisEvent = TopEventDataSet(imgEventCover: UIImage(named: "parisPauly"), lblPerformerName: "DJ Pauly D", lblVenueName: "Studio Paris",  imgBrandLogo: UIImage(named: "HotVenueBrandLogo2"), lblEventDate: "Saturday, October 22")
     // Venue & VIP Array Chicago
     static var arrayHotVenueEventsChicago = [
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO Chicago", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "632 N. Dearborn St. chicago, IL",phoneNumber: "(224) 888-0388", upcomingEvents: [arrayTopEventsChicago[0], arrayFeaturedEventsChicago[2], arrayUpcomingEventsChicago[0], arrayGeneralAdmissionChicago[0]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "586 N. Dearborn St. Newyork",phoneNumber: "(224) 888-2345"),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576"),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG1"), lblPerformerName: "TAO Chicago", imgBrandLogo: UIImage(named:"VenueTao"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "632 N. Dearborn St. chicago, IL",phoneNumber: "(224) 888-0388", upcomingEvents: [arrayTopEventsChicago[0], arrayFeaturedEventsChicago[2], arrayUpcomingEventsChicago[0], arrayGeneralAdmissionChicago[0]], description: taoDescription, hours: taoHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG2"), lblPerformerName: "The Underground", imgBrandLogo: UIImage(named:"HotVenueBrandLogo3"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "586 N. Dearborn St. Newyork",phoneNumber: "(224) 888-2345", upcomingEvents: [undergroundEvent], description: undergroundDescription, hours: undergroundHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenuesBG3"), lblPerformerName: "Studio Paris", imgBrandLogo: UIImage(named:"HotVenueBrandLogo2"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 11:00 PM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576", upcomingEvents: [parisEvent], description: studioDescription, hours: studioHours)
     ]
     
     // Venue & VIP Array Cleveland
     static var arrayHotVenueEventsCleveland = [
         
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"fwd"), lblPerformerName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named:"fwdLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1176 Front Ave. Cleveland, OH",phoneNumber: "(216) 990-2300", upcomingEvents: [arrayTopEventsCleveland[0], arrayTopEventsCleveland[1], arrayTopEventsCleveland[2], arrayGeneralAdmissionCleveland[0]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"ivy"), lblPerformerName: "The Ivy", imgBrandLogo: UIImage(named:"ivyLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:30 AM",location: "1212 W 6th St. Cleveland, OH",phoneNumber: "(216) 505-5510", upcomingEvents: [arrayFeaturedEventsCleveland[2], arrayGeneralAdmissionCleveland[1]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"twist"), lblPerformerName: "Twist Social Club", imgBrandLogo: UIImage(named:"twistLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "11633 Clifton Blvd, Cleveland, OH",phoneNumber: "(216) 221-2333", upcomingEvents: [arrayUpcomingEventsCleveland[2], arrayGeneralAdmissionCleveland[2]])
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"fwd"), lblPerformerName: "FWD Day+Nightclub", imgBrandLogo: UIImage(named:"fwdLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1176 Front Ave. Cleveland, OH",phoneNumber: "(216) 990-2300", upcomingEvents: [arrayTopEventsCleveland[0], arrayTopEventsCleveland[1], arrayTopEventsCleveland[2], arrayGeneralAdmissionCleveland[0]], description: fwdDescription, hours: fwdHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"ivy"), lblPerformerName: "The Ivy", imgBrandLogo: UIImage(named:"ivyLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:30 AM",location: "1212 W 6th St. Cleveland, OH",phoneNumber: "(216) 505-5510", upcomingEvents: [arrayFeaturedEventsCleveland[2], arrayGeneralAdmissionCleveland[1]], description: ivyDescription, hours: ivyHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"twist"), lblPerformerName: "Twist Social Club", imgBrandLogo: UIImage(named:"twistLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 3:00 AM",location: "11633 Clifton Blvd, Cleveland, OH",phoneNumber: "(216) 221-2333", upcomingEvents: [arrayUpcomingEventsCleveland[2], arrayGeneralAdmissionCleveland[2]], description: twistDescription, hours: twistHours)
     ]
     
+    static var rocbarEvent = TopEventDataSet(imgEventCover: UIImage(named: "RocbarNavic"), lblPerformerName: "Maximo x Navic", lblVenueName: "RocBar",  imgBrandLogo: UIImage(named: "HotVenueRemainingLogo3"), lblEventDate: "Friday, October 21")
+    
     static var arrayRemainingHotVenueEventsChicago = [
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576", upcomingEvents: [arrayUpcomingEventsChicago[2], arrayGeneralAdmissionChicago[1]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG2"), lblPerformerName: "PRYSM Chicago", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo2"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "586 N. Dearborn St. Newyork",phoneNumber: "(224) 888-2345", upcomingEvents: [arrayTopEventsChicago[1], arrayGeneralAdmissionChicago[2]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG3"), lblPerformerName: "RocBar", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo3"), isLive: true, isFavourite: false, lblEventFees: "$35", lblEventWaitingTime: "15 mins", lblEventClosingTime: "Closes 3:00 AM",location: "632 N. Dearborn St. chicago, IL",phoneNumber: "(224) 888-0388"),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576", upcomingEvents: [arrayUpcomingEventsChicago[2], arrayGeneralAdmissionChicago[1]], description: bounceDescription, hours: bounceHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG2"), lblPerformerName: "PRYSM Chicago", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo2"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "586 N. Dearborn St. Newyork",phoneNumber: "(224) 888-2345", upcomingEvents: [arrayTopEventsChicago[1], arrayGeneralAdmissionChicago[2]], description: prysmDescription, hours: prysmHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG3"), lblPerformerName: "RocBar", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo3"), isLive: true, isFavourite: false, lblEventFees: "$35", lblEventWaitingTime: "15 mins", lblEventClosingTime: "Closes 3:00 AM",location: "632 N. Dearborn St. chicago, IL",phoneNumber: "(224) 888-0388", upcomingEvents: [rocbarEvent], description: rocbarDescription, hours: rocbarHours)
     ]
     
     static var arrayRemainingHotVenueEventsCleveland = [
-        
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1167 Front Ave. Cleveland, OH",phoneNumber: "(216) 440-3500", upcomingEvents: [arrayUpcomingEventsCleveland[1]]),
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1054 Old River Rd. Cleveland, OH",phoneNumber: "(216) 399-9079", upcomingEvents: [arrayFeaturedEventsCleveland[0], arrayFeaturedEventsCleveland[1], arrayUpcomingEventsCleveland[0], arrayUpcomingEventsCleveland[1]])
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"johnBoy"), lblPerformerName: "Good Night John Boy", imgBrandLogo: UIImage(named:"johnboyLogo"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "1167 Front Ave. Cleveland, OH",phoneNumber: "(216) 440-3500", upcomingEvents: [arrayUpcomingEventsCleveland[1]], description: johnDescription, hours: johnHours),
+        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"welcomeFarm"), lblPerformerName: "Welcome to the Farm", imgBrandLogo: UIImage(named:"welcomeFarmLogo"), isLive: true, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 4:00 AM",location: "1054 Old River Rd. Cleveland, OH",phoneNumber: "(216) 399-9079", upcomingEvents: [arrayFeaturedEventsCleveland[0], arrayFeaturedEventsCleveland[1], arrayUpcomingEventsCleveland[0], arrayUpcomingEventsCleveland[1]], description: farmDescription, hours: farmHours)
     ]
     
     // See All Array Chicago and Cleveland

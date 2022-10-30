@@ -19,6 +19,8 @@ struct VenuesVIPEventDataSet {
     var location: String?
     var phoneNumber: String?
     var upcomingEvents: [TopEventDataSet]?
+    var description: String?
+    var hours: [HoursDataSet]?
 }
 
 class VenuesAndVIP: BaseController {

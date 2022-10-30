@@ -27,6 +27,7 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var venueCollectionView: UICollectionView!
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
+    @IBOutlet weak var lblVenueDescription: UILabelDeviceClass!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var lblTitle: UILabelDeviceClass!
     @IBOutlet weak var imgBrandLogo: RoundedImage!
@@ -35,11 +36,7 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var vibesCollectionView: UICollectionView!
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
-    var arrHours = [
-        HoursDataSet(day: "Thursday", time: "10:00 PM - 3:00 AM"),
-        HoursDataSet(day: "Friday", time: "10:00 PM - Late"),
-        HoursDataSet(day: "Saturday", time: "10:00 PM - Late")
-    ]
+    var arrHours: [HoursDataSet] = []
     var arrDressCode = [DressCodeDataSet(dressCode: "Smart casual"),
                         DressCodeDataSet(dressCode: "No shorts, baseball caps and athletic apparel"),
                         DressCodeDataSet(dressCode: "No large bags")]
@@ -47,7 +44,6 @@ class VenueDetails: UIViewController {
     var arrTabBarOptions = [TabBarOption(label: Strings.VIP_AND_EVENTS.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
                             TabBarOption(label: Strings.VENUE_DEAILS.text,   index: 1, icon: nil, selectedIcon: nil, isSelected: false)]
     
-    //TEST THIS
     var arrayTopEvents: [TopEventDataSet] = []
     
    static var hotVenuesData: VenuesVIPEventDataSet?
@@ -98,7 +94,8 @@ extension VenueDetails{
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
         self.arrGallery[0] = imgEventCover
         self.arrayTopEvents = VenueDetails.hotVenuesData?.upcomingEvents ?? []
-        
+        self.lblVenueDescription.text = VenueDetails.hotVenuesData?.description
+        self.arrHours = VenueDetails.hotVenuesData?.hours ?? []
         DispatchQueue.main.async {
             self.galleryCollectionView.reloadData()
         }

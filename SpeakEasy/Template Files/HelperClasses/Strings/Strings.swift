@@ -357,7 +357,7 @@ enum Strings: String{
     case HEAT_MAP = "Heat Map"
     
     case ALL = "All"
-    case THIS_WEEK = "This week"
+    case THIS_WEEK = "This Week"
     case CUSTOM_DATES = "Custom Dates"
     
     case FEATURED = "Featured"

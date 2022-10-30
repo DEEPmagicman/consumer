@@ -31,6 +31,7 @@
                 <outlet property="galleryCollectionView" destination="22g-by-DN7" id="AoX-ma-Akv"/>
                 <outlet property="imgBrandLogo" destination="4ta-Sd-SMz" id="L6c-N9-wWa"/>
                 <outlet property="lblTitle" destination="ZJs-Qb-hPf" id="vxt-vK-IuI"/>
+                <outlet property="lblVenueDescription" destination="f0M-8p-hdR" id="akb-OL-HJ5"/>
                 <outlet property="onBtnPhotos" destination="tOb-G1-aTP" id="3of-NL-oHp"/>
                 <outlet property="scrollView" destination="WcF-Xd-Tyi" id="Sjo-WD-UyR"/>
                 <outlet property="tableViewDressCode" destination="pHE-s7-iSw" id="42s-qk-MDR"/>
@@ -167,8 +168,8 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CLOSE tIME: 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WLD-7h-Esl">
-                                            <rect key="frame" x="246" y="51" width="150" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CLOSE TIME: 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WLD-7h-Esl">
+                                            <rect key="frame" x="243" y="51" width="153" height="21"/>
                                             <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
