@@ -57,7 +57,7 @@ class BookingsTVC: UITableViewCell {
         }
         
         if data.status == .PurchaseConfirmed || data.status == .TicketPurchasedConfirmed {
-            self.lblStatus.textColor = Global.APP_COLOR_BLUE
+            self.lblStatus.textColor = UIColor(hex: "#007AFF")
         }
         else {
             self.lblStatus.textColor = Global.APP_COLOR_LIGHT_GREY
