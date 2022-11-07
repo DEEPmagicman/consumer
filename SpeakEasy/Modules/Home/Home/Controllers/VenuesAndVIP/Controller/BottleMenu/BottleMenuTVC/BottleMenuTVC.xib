@@ -63,7 +63,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dom Perignon 2009 Vintage       " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t2R-Av-xah" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Armande de Brugnac     " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t2R-Av-xah" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="165" width="390" height="47"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -99,6 +99,13 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="lblDrinkFour" destination="Max-aL-MK4" id="wlp-hm-tks"/>
+                <outlet property="lblDrinkOne" destination="stK-Sg-f76" id="NTl-1R-dez"/>
+                <outlet property="lblDrinkThree" destination="t2R-Av-xah" id="Lv7-hZ-MeM"/>
+                <outlet property="lblDrinkTwo" destination="sSu-gz-g37" id="ajR-Wo-7J2"/>
+                <outlet property="lblType" destination="ZMN-BJ-lab" id="Bhe-cT-kQz"/>
+            </connections>
             <point key="canvasLocation" x="217.39130434782609" y="155.69196428571428"/>
         </tableViewCell>
     </objects>
