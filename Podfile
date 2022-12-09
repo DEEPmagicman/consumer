@@ -24,6 +24,8 @@ target 'SpeakEasy-Consumer' do
   pod 'SCPageControl'
   pod 'GoogleMaps'
   pod "GSImageViewerController"
+  pod "FlagPhoneNumber"
+  pod 'OTPFieldView'
 end
 post_install do |installer|
   installer.pods_project.targets.each do |target|

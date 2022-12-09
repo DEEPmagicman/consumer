@@ -41,9 +41,23 @@ extension AppDelegate {
         case true:
             self.showHome(selectedIndex: 0)
         case false:
-            self.showTutorials()
+            self.showOnboarding()
         }
     }
+    
+    func showOnboarding() {
+//        let controller = StartScreenViewController()
+        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
+
+//        controller.isHeroEnabled = true
+        let tutorialNavigation = UINavigationController(rootViewController: controller)
+        tutorialNavigation.navigationBar.isHidden = true
+        tutorialNavigation.modalTransitionStyle = .crossDissolve
+        tutorialNavigation.modalPresentationStyle = .overCurrentContext
+        self.window?.rootViewController = tutorialNavigation
+
+    }
+    
     func showTutorials(){
         let controller = Tutorials()
         controller.isHeroEnabled = true
