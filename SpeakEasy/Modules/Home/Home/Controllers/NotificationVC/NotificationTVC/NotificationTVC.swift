@@ -11,6 +11,7 @@ class NotificationTVC: UITableViewCell {
 
     @IBOutlet weak var lblCity: UILabelDeviceClass!
     @IBOutlet weak var imgCity: UIImageView!
+    @IBOutlet weak var containtView: UIView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

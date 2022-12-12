@@ -32,7 +32,7 @@ class SetLocationViewController: UIViewController {
     }
     
     @IBAction func onClickSelectCity(_ sender: Any) {
-        
+        Navigate.to.selectCityVc(self)
     }
     
 }

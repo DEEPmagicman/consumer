@@ -42,6 +42,10 @@ class DateOfBirthViewController: UIViewController {
 
 
 extension DateOfBirthViewController: ConfirmPopUpDelegate {
+    func cancelDetail() {
+        
+    }
+    
     func confirmDetail() {
         Navigate.to.SetProfilePicVc(self)
     }

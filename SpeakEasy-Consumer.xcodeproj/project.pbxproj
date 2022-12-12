@@ -66,6 +66,10 @@
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
 		BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */; };
 		BDA001552942F24B0057E834 /* DateOfBirthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */; };
+		BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C272946EA8800595436 /* SelectCityViewController.swift */; };
+		BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */; };
+		BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */; };
+		BDCC5C2E294739A600595436 /* ConnectSocialMediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */; };
 		BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1D4AF29434219003EB5FC /* NotificationPermissionViewController.swift */; };
 		BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1D4B12943464E003EB5FC /* SetLocationViewController.swift */; };
 		BDD1D4B4294362EB003EB5FC /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1D4B3294362EB003EB5FC /* Extension.swift */; };
@@ -519,6 +523,10 @@
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
 		BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfilePictureViewController.swift; sourceTree = "<group>"; };
 		BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOfBirthViewController.swift; sourceTree = "<group>"; };
+		BDCC5C272946EA8800595436 /* SelectCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityViewController.swift; sourceTree = "<group>"; };
+		BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectVibesViewController.swift; sourceTree = "<group>"; };
+		BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFavoriteDrinkViewController.swift; sourceTree = "<group>"; };
+		BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectSocialMediaViewController.swift; sourceTree = "<group>"; };
 		BDD1D4AF29434219003EB5FC /* NotificationPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionViewController.swift; sourceTree = "<group>"; };
 		BDD1D4B12943464E003EB5FC /* SetLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLocationViewController.swift; sourceTree = "<group>"; };
 		BDD1D4B3294362EB003EB5FC /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -1173,6 +1181,10 @@
 				BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */,
 				BDD1D4AF29434219003EB5FC /* NotificationPermissionViewController.swift */,
 				BDD1D4B12943464E003EB5FC /* SetLocationViewController.swift */,
+				BDCC5C272946EA8800595436 /* SelectCityViewController.swift */,
+				BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */,
+				BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */,
+				BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -3603,9 +3615,11 @@
 				E1A9E7F628C579690081FB28 /* FriendsListCVC.swift in Sources */,
 				E167055C28CA442800644BF0 /* SelectedTicketTVC.swift in Sources */,
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,
+				BDCC5C2E294739A600595436 /* ConnectSocialMediaViewController.swift in Sources */,
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
 				E15D6B6828BC39AC0076286C /* SignIn.swift in Sources */,
+				BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */,
 				0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */,
 				E17DC86028C6C16500244C4F /* NFTsonSpeakEasy.swift in Sources */,
 				E166184928BED1810027C6EA /* HeaderViewCustom.swift in Sources */,
@@ -3640,6 +3654,7 @@
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
 				E15D6B6D28BC39AC0076286C /* Tutorials.swift in Sources */,
 				E1A9E7C828C56FD10081FB28 /* ActiveRequestTVC.swift in Sources */,
+				BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */,
 				E1A9E7C728C56FD10081FB28 /* FriendRequest.swift in Sources */,
 				E11F4A9528C800B1008D2E30 /* NFTAssets.swift in Sources */,
 				E1A9E75C28C55D550081FB28 /* VenuesAndVIP.swift in Sources */,
@@ -3801,6 +3816,7 @@
 				9D4A029028CE9E4B009CD670 /* CostSplitSelectionTVC.swift in Sources */,
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
 				CE4867AE286F358800FD277E /* ProjectStructs.swift in Sources */,
+				BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
 				CE4867BF286F358800FD277E /* BaseController.swift in Sources */,
 				E11F4C3828C8383A008D2E30 /* SelectedTicketAndRecipientTVC.swift in Sources */,

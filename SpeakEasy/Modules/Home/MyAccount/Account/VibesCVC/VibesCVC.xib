@@ -71,6 +71,7 @@
             </constraints>
             <size key="customSize" width="183" height="50"/>
             <connections>
+                <outlet property="bgColorView" destination="xDB-JF-Wsr" id="dBn-7G-6dy"/>
                 <outlet property="lblVibes" destination="Vrj-Ig-T6x" id="kxn-ut-vfk"/>
             </connections>
             <point key="canvasLocation" x="228.2608695652174" y="79.6875"/>

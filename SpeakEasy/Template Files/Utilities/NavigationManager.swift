@@ -36,13 +36,14 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String) {
+    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(ConfirmPopUpViewController.self)) as! ConfirmPopUpViewController
         vc.modalPresentationStyle = .overCurrentContext
         vc.confirmPopUpDelegate = sender as? ConfirmPopUpDelegate
         vc.confirmInfoText = text1
         vc.infoDetailtext = text2
         vc.infoNoteText = text3
+        vc.isPrivetOrPublic = isYesOrNoBtn
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
@@ -73,6 +74,26 @@ class Navigate {
     
     func setLocationVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SetLocationViewController.self)) as! SetLocationViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectCityVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectCityViewController.self)) as! SelectCityViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectVibesVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectVibesViewController.self)) as! SelectVibesViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectFavoriteDrinkVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectFavoriteDrinkViewController.self)) as! SelectFavoriteDrinkViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func connectSocialMediaVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(ConnectSocialMediaViewController.self)) as! ConnectSocialMediaViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
 }

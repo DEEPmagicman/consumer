@@ -29,6 +29,10 @@ class EnterNameViewController: UIViewController {
 }
 
 extension EnterNameViewController: ConfirmPopUpDelegate {
+    func cancelDetail() {
+    
+    }
+    
     func confirmDetail() {
         Navigate.to.connectAccountVc(self)
     }

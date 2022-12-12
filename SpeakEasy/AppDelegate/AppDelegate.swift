@@ -42,6 +42,7 @@ extension AppDelegate {
             self.showHome(selectedIndex: 0)
         case false:
             self.showOnboarding()
+//            self.showTutorials()
         }
     }
     
