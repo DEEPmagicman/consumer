@@ -26,8 +26,9 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(VerificationCodeViewController.self)) as! VerificationCodeViewController
+        vc.isFromLogin = isFromLogin
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -94,6 +95,31 @@ class Navigate {
     
     func connectSocialMediaVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(ConnectSocialMediaViewController.self)) as! ConnectSocialMediaViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func signInOptionVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SignInOptionViewController.self)) as! SignInOptionViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func loginWithPhoneNumberVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(LoginWithPhoneViewController.self)) as! LoginWithPhoneViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func loginWithEmailVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(LoginWithEmailViewController.self)) as! LoginWithEmailViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterEmailPassVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(EnterEmailPassViewController.self)) as! EnterEmailPassViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func resetPasswordVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(ResetPasswordViewController.self)) as! ResetPasswordViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
 }

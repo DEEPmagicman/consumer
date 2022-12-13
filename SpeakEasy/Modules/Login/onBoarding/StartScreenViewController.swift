@@ -13,7 +13,7 @@ class StartScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Navigate.to.notificationPermissionVc(self)
+//        Navigate.to.notificationPermissionVc(self)
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
@@ -21,7 +21,7 @@ class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
-        
+        Navigate.to.signInOptionVc(self)
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {

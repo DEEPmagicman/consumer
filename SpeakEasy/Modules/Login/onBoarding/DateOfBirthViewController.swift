@@ -25,7 +25,7 @@ class DateOfBirthViewController: UIViewController {
         
         datePickerView.datePickerMode = .date
         datePickerView.preferredDatePickerStyle = .wheels
-        
+        ageLbl.text = "Age\(datePickerView.date.age)"
     }
     
     @IBAction func datePickerValueChange(_ sender: Any) {

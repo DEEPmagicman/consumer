@@ -61,6 +61,13 @@
 		BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */; };
 		BD532A152941B20100B9E38C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A142941B20100B9E38C /* Constant.swift */; };
 		BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A162941BB9600B9E38C /* EnterNameViewController.swift */; };
+		BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0EA294836C900935275 /* Login2.storyboard */; };
+		BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */; };
+		BD7FA0EF2948409C00935275 /* LoginWithPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */; };
+		BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */; };
+		BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */; };
+		BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */; };
+		BD7FA0F8294892C200935275 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0F7294892C200935275 /* video.mov */; };
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
@@ -518,6 +525,13 @@
 		BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberViewController.swift; sourceTree = "<group>"; };
 		BD532A142941B20100B9E38C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		BD532A162941BB9600B9E38C /* EnterNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNameViewController.swift; sourceTree = "<group>"; };
+		BD7FA0EA294836C900935275 /* Login2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login2.storyboard; sourceTree = "<group>"; };
+		BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
+		BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithPhoneViewController.swift; sourceTree = "<group>"; };
+		BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithEmailViewController.swift; sourceTree = "<group>"; };
+		BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailPassViewController.swift; sourceTree = "<group>"; };
+		BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		BD7FA0F7294892C200935275 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
@@ -1202,6 +1216,27 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		BD7FA0E9294836AB00935275 /* Login2 */ = {
+			isa = PBXGroup;
+			children = (
+				BD7FA0EA294836C900935275 /* Login2.storyboard */,
+				BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */,
+				BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */,
+				BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */,
+				BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */,
+				BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */,
+			);
+			path = Login2;
+			sourceTree = "<group>";
+		};
+		BD7FA0F6294892AA00935275 /* myVideo */ = {
+			isa = PBXGroup;
+			children = (
+				BD7FA0F7294892C200935275 /* video.mov */,
+			);
+			path = myVideo;
+			sourceTree = "<group>";
+		};
 		BEDF67A11CBEC68B40496025 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1346,6 +1381,7 @@
 		CE486744286F358700FD277E /* Template Files */ = {
 			isa = PBXGroup;
 			children = (
+				BD7FA0F6294892AA00935275 /* myVideo */,
 				BD3FB24B2940678800BE7713 /* Utilities */,
 				CE4867E6286F392D00FD277E /* Models */,
 				CE486772286F358700FD277E /* BaseControllers */,
@@ -2335,6 +2371,7 @@
 		E15D6B3F28BC39AB0076286C /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				BD7FA0E9294836AB00935275 /* Login2 */,
 				BD3FB2482940637200BE7713 /* onBoarding */,
 				E15D6B4028BC39AB0076286C /* Splash */,
 				E1A9E79828C56F6D0081FB28 /* LogIn */,
@@ -3396,6 +3433,7 @@
 				E1A9E7C628C56FD10081FB28 /* ContactTVC.xib in Resources */,
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				E1A9E76E28C55D550081FB28 /* HeatMap.xib in Resources */,
+				BD7FA0F8294892C200935275 /* video.mov in Resources */,
 				E167055A28CA442800644BF0 /* PaymentMethodTVC.xib in Resources */,
 				E11F4BA028C8358C008D2E30 /* EventOptionCVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
@@ -3476,6 +3514,7 @@
 				E1A9E7F928C579690081FB28 /* MyAccount.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
 				E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */,
+				BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */,
 				E11F4B2F28C83564008D2E30 /* BookingRequests.xib in Resources */,
 				E16705B728CA6BB500644BF0 /* TicketRecipients.xib in Resources */,
 				E167058528CA6AB800644BF0 /* InviteFromContactCVC.xib in Resources */,
@@ -3782,6 +3821,7 @@
 				E1A9E76428C55D550081FB28 /* NotificationCitySelectionTVC.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
 				CE4867C4286F358800FD277E /* RoundedCorners.swift in Sources */,
+				BD7FA0EF2948409C00935275 /* LoginWithPhoneViewController.swift in Sources */,
 				CAC4140128A478040007BA86 /* UIApplication.swift in Sources */,
 				4A7CC54928E3870400F8BA63 /* SubmitRequestTVC.swift in Sources */,
 				E1A9E74C28C55D550081FB28 /* Home.swift in Sources */,
@@ -3799,6 +3839,7 @@
 				E167058E28CA6AB800644BF0 /* SearchFriendTVC.swift in Sources */,
 				E17DC97028C6D01700244C4F /* MainTVC.swift in Sources */,
 				84248DA328D3D3B400A6E260 /* AllVenues.swift in Sources */,
+				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E17DC85B28C6C16500244C4F /* TabCVC.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
 				E11CE3E528C8DF7F003899C4 /* WeekDays.swift in Sources */,
@@ -3832,6 +3873,7 @@
 				CE4867BB286F358800FD277E /* ProjectEnums.swift in Sources */,
 				BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */,
 				04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */,
+				BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */,
 				CE4867A9286F358800FD277E /* Validation.swift in Sources */,
 				E1A9E80028C579690081FB28 /* MyAccount.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
@@ -3840,6 +3882,7 @@
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				E16705AB28CA6B6E00644BF0 /* NotificationVC.swift in Sources */,
+				BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */,
 				E11F4B8B28C8358C008D2E30 /* HeaderView.swift in Sources */,
 				E11F4A9928C800B1008D2E30 /* Wallet.swift in Sources */,
 				E11F4C0828C835F3008D2E30 /* BookingRequestTVC.swift in Sources */,
@@ -3852,6 +3895,7 @@
 				E1A9E75D28C55D550081FB28 /* VenueTVC.swift in Sources */,
 				E11F4C0A28C835F3008D2E30 /* BookingStatusTVC.swift in Sources */,
 				E1A9E79B28C56F6D0081FB28 /* LogIn.swift in Sources */,
+				BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
 				E16705B928CA6BB500644BF0 /* FriendsCVC.swift in Sources */,
 				E11F4A9328C800B1008D2E30 /* AccessPass.swift in Sources */,

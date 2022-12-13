@@ -16,6 +16,7 @@ class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     
     var otpText = ""
+    var isFromLogin = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,12 +44,17 @@ class VerificationCodeViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if otpText == ""{
-//            showAlert(with: "", message: "enter Otp")
-        }else{
-//            OtpVerification()
+        if isFromLogin {
+            
+        } else {
+            if otpText == ""{
+    //            showAlert(with: "", message: "enter Otp")
+            }else{
+    //            OtpVerification()
+            }
+            Navigate.to.enterNameVc(self)
         }
-        Navigate.to.enterNameVc(self)
+
     }
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {

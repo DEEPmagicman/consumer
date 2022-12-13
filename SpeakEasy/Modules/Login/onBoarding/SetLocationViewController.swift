@@ -43,6 +43,7 @@ extension SetLocationViewController: CLLocationManagerDelegate {
         
         let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
             print("\(cityName)")
+//            Navigate.to.selectCityVc(self)
         }
         print("locations = \(locValue.latitude) \(locValue.longitude)")
     }
