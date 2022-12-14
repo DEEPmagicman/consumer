@@ -25,6 +25,7 @@ class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {
-        
+        let user = UserModel()
+        AppStateManager.sharedInstance.loginUser(user: user)
     }
 }
