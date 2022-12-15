@@ -60,7 +60,7 @@ extension VIPTableBookingCalenderTVC: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegateFlowLayout
 extension VIPTableBookingCalenderTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width / 2.5
+        let width = 150.0//collectionView.frame.width / 2.5
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size
