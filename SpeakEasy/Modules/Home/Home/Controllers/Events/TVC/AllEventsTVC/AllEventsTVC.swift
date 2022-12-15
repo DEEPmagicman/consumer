@@ -124,7 +124,7 @@ extension AllEventsTVC: UICollectionViewDelegate {
 }
 extension AllEventsTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width / 3.0
+        let width = 150.0//collectionView.frame.width / 3.0
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

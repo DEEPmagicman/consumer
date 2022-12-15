@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="M8U-Hj-BYW">
-                        <rect key="frame" x="12" y="0.0" width="308" height="266"/>
+                        <rect key="frame" x="12" y="0.0" width="296" height="260"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="12" id="KdU-PX-GS5">
                             <size key="itemSize" width="128" height="128"/>
@@ -27,7 +27,7 @@
                         </collectionViewFlowLayout>
                     </collectionView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vdL-5H-Qpk">
-                        <rect key="frame" x="160" y="266" width="0.0" height="0.0"/>
+                        <rect key="frame" x="160" y="260" width="0.0" height="0.0"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cPU-jh-VaA">
                                 <rect key="frame" x="-33.5" y="0.0" width="67" height="60"/>
@@ -66,7 +66,7 @@
                         </constraints>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGJ-E9-Ft3">
-                        <rect key="frame" x="126.5" y="266" width="67" height="60"/>
+                        <rect key="frame" x="126.5" y="260" width="67" height="60"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="67" id="KsL-Tj-gOb"/>
                         </constraints>
@@ -82,8 +82,8 @@
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="leading" secondItem="cPU-jh-VaA" secondAttribute="leading" id="98N-XV-lg8"/>
                     <constraint firstAttribute="bottom" secondItem="0Nf-Kg-MdN" secondAttribute="bottom" id="Cmh-HL-VFC"/>
                     <constraint firstItem="M8U-Hj-BYW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="G2b-i7-OAA"/>
-                    <constraint firstItem="0Nf-Kg-MdN" firstAttribute="top" secondItem="vdL-5H-Qpk" secondAttribute="bottom" constant="4" id="Mhf-ch-NHS"/>
-                    <constraint firstAttribute="trailing" secondItem="M8U-Hj-BYW" secondAttribute="trailing" id="REl-SI-SLV"/>
+                    <constraint firstItem="0Nf-Kg-MdN" firstAttribute="top" secondItem="vdL-5H-Qpk" secondAttribute="bottom" constant="10" id="Mhf-ch-NHS"/>
+                    <constraint firstAttribute="trailing" secondItem="M8U-Hj-BYW" secondAttribute="trailing" constant="12" id="REl-SI-SLV"/>
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="bottom" secondItem="cPU-jh-VaA" secondAttribute="bottom" id="Tad-Ot-CzL"/>
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="TiC-d1-PnG"/>
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" id="icg-TH-K96"/>

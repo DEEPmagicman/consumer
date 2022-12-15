@@ -130,10 +130,10 @@ extension Events: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.5
+            let height = 290.0 //tableView.frame.height * 0.5
             return height
         default:
-            let height = tableView.frame.height * 0.34
+            let height = 210.0 //tableView.frame.height * 0.34
             
             if indexPath.section == self.arrayHeaders.count - 1 {
                 return height + 60.0

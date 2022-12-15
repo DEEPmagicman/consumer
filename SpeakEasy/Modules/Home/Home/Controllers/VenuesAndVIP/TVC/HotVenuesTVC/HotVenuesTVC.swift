@@ -93,7 +93,7 @@ extension HotVenuesTVC: UICollectionViewDataSource {
 }
 extension HotVenuesTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width * 0.675
+        let width = 250.0//collectionView.frame.width * 0.675
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

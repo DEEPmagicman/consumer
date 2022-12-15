@@ -57,8 +57,9 @@ extension FeaturedVenue: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.45
-            return height
+//            let height = tableView.frame.height * 0.45
+//            return height
+            return UITableView.automaticDimension
         default:
             return UITableView.automaticDimension
         }

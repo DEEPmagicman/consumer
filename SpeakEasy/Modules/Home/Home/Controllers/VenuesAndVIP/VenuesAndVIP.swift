@@ -72,33 +72,53 @@ extension VenuesAndVIP: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
-            if indexPath.row == 2 {
-                let data: VenuesVIPEventDataSet!
-                if Constants.localizedCity == "Chicago" {
-                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//            if indexPath.row == 2 {
+//                let data: VenuesVIPEventDataSet!
+//                if Constants.localizedCity == "Chicago" {
+//                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//                }else {
+//                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+//                }
+//                cell.setData(data: data)
+//                cell.setData(seeAll: true)
+//                cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
+//            }
+//            else {
+//                let data: VenuesVIPEventDataSet!
+//                if Constants.localizedCity == "Chicago" {
+//                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//                }else {
+//                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+//                }
+//                cell.setData(data: data)
+//                cell.setData(seeAll: false)
+//            }
+            
+            let data: VenuesVIPEventDataSet!
+            if Constants.localizedCity == "Chicago" {
+                data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+                if indexPath.row == Constants.arrayRemainingHotVenueEventsChicago.count - 1 {
+                    cell.setData(seeAll: true)
+                    cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                    cell.setData(seeAll: false)
                 }
-                cell.setData(data: data)
-                cell.setData(seeAll: true)
-                cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
-            }
-            else {
-                let data: VenuesVIPEventDataSet!
-                if Constants.localizedCity == "Chicago" {
-                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+            }else {
+                data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                if indexPath.row == Constants.arrayRemainingHotVenueEventsCleveland.count - 1 {
+                    cell.setData(seeAll: true)
+                    cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                    cell.setData(seeAll: false)
                 }
-                cell.setData(data: data)
-                cell.setData(seeAll: false)
             }
+            cell.setData(data: data)
             return cell
         }
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
         //Fix this
-        //self.pushToAllVenues()
+        self.pushToAllVenues()
     }
 }
 extension VenuesAndVIP: UITableViewDelegate {
@@ -116,7 +136,7 @@ extension VenuesAndVIP: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.575
+            let height = 310.0//tableView.frame.height * 0.575
             return height
         default:
             return UITableView.automaticDimension

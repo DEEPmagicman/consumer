@@ -58,7 +58,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Now!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZPl-40-jVg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="35" width="73.5" height="18.5"/>
+                                        <rect key="frame" x="10" y="35" width="71.5" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -70,10 +70,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="zPY-Wo-FsE">
-                                        <rect key="frame" x="260.5" y="34" width="101.5" height="37.5"/>
+                                        <rect key="frame" x="262.5" y="34" width="99.5" height="37.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Closes 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9N-yX-0Cb" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="101.5" height="18.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="99.5" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
@@ -85,7 +85,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-Os-D1Z" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="60" y="18.5" width="41.5" height="19"/>
+                                                <rect key="frame" x="58" y="18.5" width="41.5" height="19"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" image="ViewVenue"/>
@@ -119,7 +119,6 @@
                         <constraints>
                             <constraint firstItem="4Zr-RQ-QNs" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" constant="12" id="7sK-0j-c7o"/>
                             <constraint firstItem="JeD-I6-xqe" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" id="8ZN-Ss-g6h"/>
-                            <constraint firstAttribute="width" secondItem="4h9-HB-IaF" secondAttribute="height" multiplier="190:121" id="8wP-9q-TQ4"/>
                             <constraint firstItem="JeD-I6-xqe" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="top" id="Fjh-BF-WAy"/>
                             <constraint firstAttribute="bottom" secondItem="JeD-I6-xqe" secondAttribute="bottom" id="GJI-eS-Dvz"/>
                             <constraint firstItem="Tdg-aU-KzL" firstAttribute="centerY" secondItem="4Zr-RQ-QNs" secondAttribute="centerY" id="HnG-hQ-Fv0"/>
@@ -128,6 +127,7 @@
                             <constraint firstAttribute="trailing" secondItem="Tdg-aU-KzL" secondAttribute="trailing" constant="14" id="XPn-rG-hBv"/>
                             <constraint firstItem="RHM-7U-mho" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" id="Xgj-nd-5kO"/>
                             <constraint firstAttribute="trailing" secondItem="RHM-7U-mho" secondAttribute="trailing" id="dD6-Q4-BRn"/>
+                            <constraint firstAttribute="height" constant="242" id="gBV-8e-fFu"/>
                             <constraint firstAttribute="bottom" secondItem="RHM-7U-mho" secondAttribute="bottom" id="kos-ed-AiU"/>
                             <constraint firstItem="4Zr-RQ-QNs" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="top" constant="12" id="wOI-yN-THs"/>
                             <constraint firstItem="RHM-7U-mho" firstAttribute="top" secondItem="bnT-bC-hHe" secondAttribute="bottom" constant="10" id="zhY-VQ-9PD"/>
@@ -151,7 +151,7 @@
                                             <attributedString key="attributedTitle">
                                                 <fragment content="See All">
                                                     <attributes>
-                                                        <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <font key="NSFont" size="15" name="Arial-BoldMT"/>
                                                         <integer key="NSUnderline" value="1"/>
                                                     </attributes>
