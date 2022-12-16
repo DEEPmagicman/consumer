@@ -28,5 +28,6 @@ struct Constant {
         static let over21Info = "By tapping confirm you attest that you are over the age of 21. This information can’t be changed later."
         static let privetOrPublicInfo = "Would you like others to see your account  details?"
         static let changeslaterinfo = "This information can be changed later."
+        static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
     }
 }

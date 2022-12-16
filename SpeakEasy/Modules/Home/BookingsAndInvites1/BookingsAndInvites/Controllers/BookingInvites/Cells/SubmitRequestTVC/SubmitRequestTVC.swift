@@ -13,6 +13,7 @@ class SubmitRequestTVC: UITableViewCell {
     @IBOutlet weak var btnSubmitRequest: UIButtonDeviceClass!
     @IBOutlet weak var viewSubmitRequest: UIView!
     @IBOutlet weak var btnCancelRequest: UIButton!
+    @IBOutlet weak var infoLbl: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -51,7 +52,8 @@ class SubmitRequestTVC: UITableViewCell {
 
         case .BookingConfirmation:
              self.btnSubmitRequest.setTitle("View in Bookings", for: .normal)
-            
+            self.infoLbl.text = Constant.String.sendReceiptText
+            self.infoLbl.highlightBold(["rjohnson@gmail.com"], size: 15, textColor: .white)
              self.viewCancelReques.isHidden = true
              self.btnCancelRequest.isHidden = true
              self.viewSubmitRequest.isHidden = false

@@ -102,7 +102,7 @@ extension InviteFriends: UITableViewDataSource {
             cell.didSelectFriend = { friend in
 //             self.arrOfFriends.removeAll(where: { friend.name == $0.name })
                 
-                let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as! TableBookingInviteFriendsTVC
+                guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? TableBookingInviteFriendsTVC else { return }
                 cell.arrInvitedFriends.append(friend)
                 cell.collectionViewHeightManage()
                 cell.collectionView.reloadSections(IndexSet(integer: 0))
