@@ -47,7 +47,7 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        Navigate.to.SetProfilePicVc(self)
+        Navigate.to.selectGenderVc(self)
     }
     
 }

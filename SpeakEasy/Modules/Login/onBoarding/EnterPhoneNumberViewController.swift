@@ -14,6 +14,8 @@ class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
     
+    var isFromLogin = false
+    
     private var checkFPNField = FPNTextField()
     var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     
@@ -66,7 +68,12 @@ class EnterPhoneNumberViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.enterVerificationCodeVc(self)
+        if isFromLogin {
+            Navigate.to.enterVerificationCodeVc(self,isFromLogin: true)
+            print("*-*login")
+        } else {
+            Navigate.to.enterVerificationCodeVc(self)
+        }
     }
 }
 

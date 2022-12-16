@@ -29,6 +29,6 @@ class AddEmailViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.dateOfBirthVc(self)
+        Navigate.to.createPasswordVc(self)
     }
 }

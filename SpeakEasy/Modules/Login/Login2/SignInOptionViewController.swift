@@ -49,7 +49,8 @@ class SignInOptionViewController: UIViewController {
     }
     
     @IBAction func onClickSignInwithPhoneNum(_ sender: Any) {
-        Navigate.to.loginWithPhoneNumberVc(self)
+//        Navigate.to.loginWithPhoneNumberVc(self)
+        Navigate.to.enterPhoneNumVc(self,isFromLogin: true)
     }
     
     @IBAction func omClickback(_ sender: Any) {

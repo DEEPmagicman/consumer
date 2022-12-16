@@ -29,5 +29,6 @@ struct Constant {
         static let privetOrPublicInfo = "Would you like others to see your account  details?"
         static let changeslaterinfo = "This information can be changed later."
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
+        static let confirm21YearText = "You must be over 21 years old to continue."
     }
 }

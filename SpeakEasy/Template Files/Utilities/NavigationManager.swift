@@ -21,8 +21,9 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterPhoneNumVc(_ sender: UIViewController) {
+    func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(EnterPhoneNumberViewController.self)) as! EnterPhoneNumberViewController
+        vc.isFromLogin = isFromLogin
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -120,6 +121,16 @@ class Navigate {
     
     func resetPasswordVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(ResetPasswordViewController.self)) as! ResetPasswordViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func createPasswordVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(CreatePasswordViewController.self)) as! CreatePasswordViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectGenderVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectGenderViewController.self)) as! SelectGenderViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
 }

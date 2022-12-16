@@ -25,6 +25,16 @@ class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirm21YearText, text2: "", text3: Constant.String.over21Info)
+    }
+}
+
+extension StartScreenViewController: ConfirmPopUpDelegate {
+    func cancelDetail() {
+        
+    }
+    
+    func confirmDetail() {
         let user = UserModel()
         AppStateManager.sharedInstance.loginUser(user: user)
     }
