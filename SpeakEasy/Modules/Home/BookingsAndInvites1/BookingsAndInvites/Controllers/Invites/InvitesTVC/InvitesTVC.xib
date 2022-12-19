@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,22 +25,22 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tLa-G9-kAJ">
-                        <rect key="frame" x="12" y="12" width="390" height="157"/>
+                        <rect key="frame" x="12" y="12" width="431" height="155"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-friends" translatesAutoresizingMaskIntoConstraints="NO" id="M5d-5n-Sbw">
-                                <rect key="frame" x="16" y="10" width="50.5" height="50.5"/>
+                                <rect key="frame" x="16" y="10" width="56" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="M5d-5n-Sbw" secondAttribute="height" multiplier="1:1" id="ptJ-2F-Fwb"/>
                                 </constraints>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-prism" translatesAutoresizingMaskIntoConstraints="NO" id="Ocz-qP-i8F">
-                                <rect key="frame" x="16" y="95.5" width="43.5" height="43.5"/>
+                                <rect key="frame" x="16" y="101" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Ocz-qP-i8F" secondAttribute="height" multiplier="1:1" id="cSp-Nu-U3q"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Paul Stacek" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHE-8e-unz" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="74.5" y="10" width="91.5" height="50.5"/>
+                                <rect key="frame" x="80" y="10" width="91.5" height="56"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -52,7 +52,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIP Table Invite" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zfH-3v-kOJ" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="254.5" y="25" width="119.5" height="21"/>
+                                <rect key="frame" x="295.5" y="27.5" width="119.5" height="21"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -64,7 +64,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, July 8" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbc-qa-CX8" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="306" y="46" width="68" height="20"/>
+                                <rect key="frame" x="347" y="48.5" width="68" height="20"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -76,29 +76,29 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-calendar" translatesAutoresizingMaskIntoConstraints="NO" id="S7c-JO-Rvz">
-                                <rect key="frame" x="279" y="47.5" width="17" height="17"/>
+                                <rect key="frame" x="320" y="50" width="17" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="fpl-7Q-H3N"/>
                                     <constraint firstAttribute="width" secondItem="S7c-JO-Rvz" secondAttribute="height" multiplier="1:1" id="l6V-g3-50d"/>
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="-4" translatesAutoresizingMaskIntoConstraints="NO" id="0B3-u9-Bpk">
-                                <rect key="frame" x="16" y="66.5" width="61" height="23"/>
+                                <rect key="frame" x="16" y="72" width="66" height="23"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Profile1" translatesAutoresizingMaskIntoConstraints="NO" id="DCJ-k0-jhH">
-                                        <rect key="frame" x="0.0" y="0.0" width="23" height="23"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="25.5" height="23"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="23" id="5FQ-pe-xMK"/>
                                         </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Profile2" translatesAutoresizingMaskIntoConstraints="NO" id="z3c-nN-x4x">
-                                        <rect key="frame" x="19" y="0.0" width="23" height="23"/>
+                                        <rect key="frame" x="21.5" y="0.0" width="23" height="23"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="z3c-nN-x4x" secondAttribute="height" multiplier="1:1" id="j2c-oR-ptT"/>
                                         </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Profile3" translatesAutoresizingMaskIntoConstraints="NO" id="bOQ-Af-cUp">
-                                        <rect key="frame" x="38" y="0.0" width="23" height="23"/>
+                                        <rect key="frame" x="40.5" y="0.0" width="25.5" height="23"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="23" id="VlW-7C-9yb"/>
                                         </constraints>
@@ -106,7 +106,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+3 Others" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EgI-AC-T17" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="85" y="69.5" width="60.5" height="17"/>
+                                <rect key="frame" x="90" y="75" width="60.5" height="17"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -118,7 +118,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRYSM Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hs7-Wu-WaH" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="67.5" y="104.5" width="146" height="25.5"/>
+                                <rect key="frame" x="72" y="112.5" width="146" height="25.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -130,7 +130,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="xfF-B3-PSB">
-                                <rect key="frame" x="284" y="93.5" width="90" height="47.5"/>
+                                <rect key="frame" x="325" y="101.5" width="90" height="47.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FREE" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TA-ky-UNe" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="90" height="25.5"/>
@@ -203,9 +203,9 @@
                             <constraint firstItem="EgI-AC-T17" firstAttribute="centerY" secondItem="0B3-u9-Bpk" secondAttribute="centerY" id="W4H-oz-eds"/>
                             <constraint firstItem="xfF-B3-PSB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="hs7-Wu-WaH" secondAttribute="trailing" constant="10" id="Xw1-KB-8cL"/>
                             <constraint firstItem="0B3-u9-Bpk" firstAttribute="leading" secondItem="M5d-5n-Sbw" secondAttribute="leading" id="ZvQ-ZV-74C"/>
+                            <constraint firstAttribute="height" constant="155" id="ams-t5-24v"/>
                             <constraint firstItem="zfH-3v-kOJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eHE-8e-unz" secondAttribute="trailing" constant="10" id="bRo-k1-Qsf"/>
                             <constraint firstItem="EgI-AC-T17" firstAttribute="leading" secondItem="0B3-u9-Bpk" secondAttribute="trailing" constant="8" id="d87-Dz-xsK"/>
-                            <constraint firstAttribute="width" secondItem="tLa-G9-kAJ" secondAttribute="height" multiplier="390:157" id="dcx-Uj-Vjt"/>
                             <constraint firstItem="Ocz-qP-i8F" firstAttribute="leading" secondItem="M5d-5n-Sbw" secondAttribute="leading" id="gsC-6G-hfR"/>
                             <constraint firstAttribute="trailing" secondItem="zfH-3v-kOJ" secondAttribute="trailing" constant="16" id="gwL-Os-of4"/>
                             <constraint firstItem="z3c-nN-x4x" firstAttribute="width" secondItem="tLa-G9-kAJ" secondAttribute="width" multiplier="0.0589744" id="khe-KS-4Lr"/>
@@ -229,7 +229,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="axL-56-EZl">
-                        <rect key="frame" x="12" y="12" width="390" height="157"/>
+                        <rect key="frame" x="12" y="12" width="431" height="155"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     </button>
                 </subviews>

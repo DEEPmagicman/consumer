@@ -52,7 +52,7 @@ class VerificationCodeViewController: UIViewController {
             }else{
     //            OtpVerification()
             }
-            Navigate.to.enterNameVc(self)
+            Navigate.to.welcomeVc(self)
         }
 
     }

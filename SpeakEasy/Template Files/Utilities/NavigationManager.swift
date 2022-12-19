@@ -133,6 +133,16 @@ class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectGenderViewController.self)) as! SelectGenderViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func welcomeVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(WelcomeViewController.self)) as! WelcomeViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func welcomeItroduceVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(WelcomeItroduceViewController.self)) as! WelcomeItroduceViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 

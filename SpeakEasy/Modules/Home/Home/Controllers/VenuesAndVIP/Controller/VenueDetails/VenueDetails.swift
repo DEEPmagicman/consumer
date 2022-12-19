@@ -181,14 +181,18 @@ extension VenueDetails: UICollectionViewDelegateFlowLayout {
             return size
             
         case self.collectionView:
-            let width = collectionView.frame.width * 0.6
-            let height = collectionView.frame.height * 0.96
+            let width = 250.0//collectionView.frame.width * 0.6
+            let height = 290.0//collectionView.frame.height * 0.96
             let size = CGSize(width: width, height: height)
             return size
             
         case self.venueCollectionView:
-            let width = collectionView.frame.width * 0.32
+            let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 15.0)
             let height = collectionView.frame.height
+            
+            let tabOption = self.arrTabBarOptions[indexPath.item].label
+            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
+            
             let size = CGSize(width: width, height: height)
             return size
         case vibesCollectionView:

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -44,7 +44,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3c2-MS-Sal" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="94" y="12.5" width="226" height="35"/>
+                            <rect key="frame" x="99" y="12.5" width="216.5" height="35"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -56,7 +56,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zA2-yV-lch">
-                            <rect key="frame" x="332" y="19" width="16" height="22"/>
+                            <rect key="frame" x="327.5" y="19" width="16" height="22"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" image="Info"/>
                         </button>
@@ -75,10 +75,10 @@
                     <rect key="frame" x="0.0" y="104" width="414" height="29"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="LAn-Yn-ft3">
-                            <rect key="frame" x="40" y="4" width="334.5" height="21"/>
+                            <rect key="frame" x="46" y="4" width="322.5" height="21"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJ7-Po-SAd" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="140.5" height="21"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="134.5" height="21"/>
                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -90,7 +90,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Awaiting Venue Approval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ObA-E5-PPj" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="144.5" y="0.0" width="190" height="21"/>
+                                    <rect key="frame" x="138.5" y="0.0" width="184" height="21"/>
                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="14"/>
                                     <color key="textColor" red="0.78431372549019607" green="0.78431372549019607" blue="0.78431372549019607" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -141,7 +141,7 @@
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="xtl-Zm-Xh8" secondAttribute="bottom" id="3up-pg-4D6"/>
                         <constraint firstItem="xtl-Zm-Xh8" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="6rs-p8-9lW"/>
-                        <constraint firstAttribute="width" secondItem="dFr-14-UHC" secondAttribute="height" multiplier="69:8" id="ZDg-P7-7gD"/>
+                        <constraint firstAttribute="height" constant="48" id="ChR-Iw-tQe"/>
                         <constraint firstItem="yNe-zM-sIp" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="eFb-vc-hD4"/>
                         <constraint firstAttribute="trailing" secondItem="xtl-Zm-Xh8" secondAttribute="trailing" id="pZR-yI-NWf"/>
                         <constraint firstItem="yNe-zM-sIp" firstAttribute="top" secondItem="dFr-14-UHC" secondAttribute="top" id="uEk-XR-OnN"/>
@@ -181,7 +181,7 @@
     <resources>
         <image name="BackArrow" width="26.5" height="19"/>
         <image name="Info" width="16" height="16"/>
-        <image name="WelcomeBackground" width="195" height="433.5"/>
+        <image name="WelcomeBackground" width="2708.5" height="5860"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

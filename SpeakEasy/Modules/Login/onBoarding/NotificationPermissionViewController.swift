@@ -19,6 +19,6 @@ class NotificationPermissionViewController: UIViewController {
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        Navigate.to.setLocationVc(self)
+        Navigate.to.welcomeItroduceVc(self)
     }
 }
