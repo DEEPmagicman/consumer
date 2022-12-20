@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectCityViewController: UIViewController {
+final class SelectCityViewController: UIViewController {
 
     @IBOutlet weak var selectCityInfoLbl: UILabel!
     @IBOutlet weak var selectCityTableView: UITableView!
@@ -45,7 +45,7 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        Navigate.to.selectVibesVc(self)
     }
     
 }

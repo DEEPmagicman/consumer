@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddEmailViewController: UIViewController {
+final class AddEmailViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var radioBtn: UIButton!

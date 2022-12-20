@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectVibesViewController: UIViewController {
+final class SelectVibesViewController: UIViewController {
 
     @IBOutlet weak var vibesCollectionView: UICollectionView!
     @IBOutlet weak var visibleprofileBtn: UIButton!

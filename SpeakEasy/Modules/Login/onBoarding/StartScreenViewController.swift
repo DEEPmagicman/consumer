@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StartScreenViewController: UIViewController {
+final class StartScreenViewController: UIViewController {
     
     
 

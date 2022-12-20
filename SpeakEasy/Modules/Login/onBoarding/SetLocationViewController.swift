@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-class SetLocationViewController: UIViewController {
+final class SetLocationViewController: UIViewController {
     
     let locationManager = CLLocationManager()
 

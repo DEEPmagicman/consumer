@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ConnectAccountViewController: UIViewController {
+final class ConnectAccountViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

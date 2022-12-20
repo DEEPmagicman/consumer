@@ -8,7 +8,7 @@
 import UIKit
 import SwiftUI
 
-class SetProfilePictureViewController: UIViewController {
+final class SetProfilePictureViewController: UIViewController {
 
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var imageView: UIImageView!

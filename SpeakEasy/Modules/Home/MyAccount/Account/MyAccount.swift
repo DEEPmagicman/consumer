@@ -220,7 +220,7 @@ extension MyAccount: UICollectionViewDelegateFlowLayout {
             let size = CGSize(width: width, height: height)
             return size
         case favoriteVenueCollectionView:
-            let width = favoriteVenueCollectionView.frame.width * 0.675
+            let width = 250.0//favoriteVenueCollectionView.frame.width * 0.675
             let height = favoriteVenueCollectionView.frame.height
             let size = CGSize(width: width, height: height)
             return size

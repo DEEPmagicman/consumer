@@ -12,7 +12,7 @@ protocol ConfirmPopUpDelegate {
 
 import UIKit
 
-class ConfirmPopUpViewController: UIViewController {
+final class ConfirmPopUpViewController: UIViewController {
 
     @IBOutlet weak var confirmInFoLbl: UILabel!
     @IBOutlet weak var infoDetailLbl: UILabel!

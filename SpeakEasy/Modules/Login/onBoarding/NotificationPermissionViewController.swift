@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NotificationPermissionViewController: UIViewController {
+final class NotificationPermissionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

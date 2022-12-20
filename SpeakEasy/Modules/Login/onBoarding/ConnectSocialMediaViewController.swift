@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ConnectSocialMediaViewController: UIViewController {
+final class ConnectSocialMediaViewController: UIViewController {
 
     @IBOutlet weak var connectSpotifyBtn: UIButton!
     @IBOutlet weak var connectedSpotifyView: UIView!

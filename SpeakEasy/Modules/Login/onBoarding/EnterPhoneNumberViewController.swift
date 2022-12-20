@@ -8,7 +8,7 @@
 import UIKit
 import FlagPhoneNumber
 
-class EnterPhoneNumberViewController: UIViewController {
+final class EnterPhoneNumberViewController: UIViewController {
     
     @IBOutlet weak var countryCodeTextField: FPNTextField!
     @IBOutlet weak var continueBtn: UIButton!
@@ -81,6 +81,9 @@ extension EnterPhoneNumberViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         checkFPNField.text = textField.text
         checkFPNField.sendActions(for: .editingChanged)
+        phoneNumTextField.delegate = nil
+        phoneNumTextField.text = checkFPNField.text
+        phoneNumTextField.delegate = self
     }
 }
 
@@ -109,10 +112,11 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
     }
     
     func fpnDidValidatePhoneNumber(textField: FPNTextField, isValid: Bool) {
-        phoneNumTextField.placeholder = countryCodeTextField.placeholder
-        countryCodeTextField.placeholder = ""
-        countryCodeTextField.text = ""
-        if textField == checkFPNField {
+        if textField == countryCodeTextField {
+            phoneNumTextField.placeholder = countryCodeTextField.placeholder
+            countryCodeTextField.placeholder = ""
+            countryCodeTextField.text = ""
+        } else if textField == checkFPNField {
             if isValid {
                 print("valid")
 //                self.continueBtn.isUserInteractionEnabled = true

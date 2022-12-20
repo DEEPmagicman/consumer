@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EnterNameViewController: UIViewController {
+final class EnterNameViewController: UIViewController {
 
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
@@ -19,6 +19,10 @@ class EnterNameViewController: UIViewController {
         super.viewDidLoad()
 
         firstNameAndLastNameInfo.highlightBold(["Why?"], size: 15, textColor: Constant.Color.primaryColor)
+        firstNameTextField.delegate = self
+        nikNameTextField.delegate = self
+        self.ContinueBtn.isUserInteractionEnabled = false
+        self.ContinueBtn.alpha = 0.5
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
@@ -37,4 +41,16 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
         Navigate.to.connectAccountVc(self)
     }
     
+}
+
+extension EnterNameViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if firstNameTextField.text != "" && nikNameTextField.text != "" {
+            self.ContinueBtn.isUserInteractionEnabled = true
+            self.ContinueBtn.alpha = 1.0
+        }else {
+            self.ContinueBtn.isUserInteractionEnabled = false
+            self.ContinueBtn.alpha = 0.5
+        }
+    }
 }

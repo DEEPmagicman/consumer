@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectFavoriteDrinkViewController: UIViewController {
+final class SelectFavoriteDrinkViewController: UIViewController {
 
     @IBOutlet weak var favoriteDrinksCollectionView: UICollectionView!
     @IBOutlet weak var continueBtn: UIButton!

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -39,11 +39,11 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AccessPassBackground" translatesAutoresizingMaskIntoConstraints="NO" id="Hes-eY-7BF">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                 </imageView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-en-I4q">
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-en-I4q">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4TE-Zo-kaU">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="409"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="406.5"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="PmT-eo-6av">
                                     <rect key="frame" x="30" y="2" width="135" height="49"/>
@@ -57,7 +57,7 @@
                                     </subviews>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Ky8-9X-hZE">
-                                    <rect key="frame" x="234" y="20.5" width="158" height="12"/>
+                                    <rect key="frame" x="234.5" y="20.5" width="157.5" height="12"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-ship" translatesAutoresizingMaskIntoConstraints="NO" id="n4f-LE-JwD">
                                             <rect key="frame" x="0.0" y="0.0" width="12" height="12"/>
@@ -67,7 +67,7 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open NFT Marketplace" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3A4-tH-vFh" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                            <rect key="frame" x="16" y="0.0" width="126" height="12"/>
+                                            <rect key="frame" x="16" y="0.0" width="125.5" height="12"/>
                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="11"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -79,7 +79,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow-right" translatesAutoresizingMaskIntoConstraints="NO" id="lg0-Hn-E0q">
-                                            <rect key="frame" x="146" y="0.0" width="12" height="12"/>
+                                            <rect key="frame" x="145.5" y="0.0" width="12" height="12"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="12" id="1eV-Tx-pmE"/>
                                                 <constraint firstAttribute="width" secondItem="lg0-Hn-E0q" secondAttribute="height" multiplier="1:1" id="Jie-aZ-smY"/>
@@ -88,7 +88,7 @@
                                     </subviews>
                                 </stackView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hh0-kd-q3d">
-                                    <rect key="frame" x="234" y="14.5" width="158" height="24"/>
+                                    <rect key="frame" x="234.5" y="14.5" width="157.5" height="24"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <connections>
                                         <action selector="onBtnOpenGlobalNFTMarketPlace:" destination="-1" eventType="touchUpInside" id="QyJ-kd-SiY"/>
@@ -154,7 +154,7 @@
                                     </connections>
                                 </button>
                                 <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="2Xw-KI-8dm">
-                                    <rect key="frame" x="16" y="51" width="398" height="335.5"/>
+                                    <rect key="frame" x="16" y="51" width="398" height="333.5"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="2A9-Tn-9dW">
                                         <size key="itemSize" width="128" height="128"/>
@@ -195,10 +195,10 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H5N-Vk-jZM">
-                            <rect key="frame" x="0.0" y="409" width="414" height="409"/>
+                            <rect key="frame" x="0.0" y="411.5" width="414" height="406.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="External NFTs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLl-7B-E1B" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="30" y="2" width="113" height="24"/>
+                                    <rect key="frame" x="30" y="2" width="112" height="24"/>
                                     <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -222,7 +222,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get Started" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnG-ad-Y27" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="161" y="129.5" width="92.5" height="22.5"/>
+                                    <rect key="frame" x="161" y="129.5" width="92" height="22.5"/>
                                     <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
                                     <color key="textColor" red="0.12549019607843137" green="0.50588235294117645" blue="0.88627450980392153" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <nil key="highlightedColor"/>
@@ -234,21 +234,21 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XhQ-1x-u40">
-                                    <rect key="frame" x="161" y="151.5" width="92.5" height="0.5"/>
+                                    <rect key="frame" x="161" y="151.5" width="92" height="0.5"/>
                                     <color key="backgroundColor" red="0.12549019610000001" green="0.50588235290000005" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="0.5" id="RxY-ZO-zOf"/>
                                     </constraints>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YG6-uy-UIp">
-                                    <rect key="frame" x="155" y="119.5" width="104.5" height="42.5"/>
+                                    <rect key="frame" x="155" y="119.5" width="104" height="42.5"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <connections>
                                         <action selector="onBtnGetStart:" destination="-1" eventType="touchUpInside" id="anB-PU-xIP"/>
                                     </connections>
                                 </button>
                                 <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="TPA-wK-BRa">
-                                    <rect key="frame" x="16" y="37" width="398" height="335.5"/>
+                                    <rect key="frame" x="16" y="37" width="398" height="333.5"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kUK-RX-goR">
                                         <size key="itemSize" width="128" height="128"/>

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CreatePasswordViewController: UIViewController {
+final class CreatePasswordViewController: UIViewController {
 
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var showBtn: UIButton!

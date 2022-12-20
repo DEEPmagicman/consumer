@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DateOfBirthViewController: UIViewController {
+final class DateOfBirthViewController: UIViewController {
 
     @IBOutlet weak var why21Lbl: UILabel!
     @IBOutlet weak var datePickerView: UIDatePicker!

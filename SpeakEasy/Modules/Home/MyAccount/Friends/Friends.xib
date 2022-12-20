@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,9 +96,9 @@
                         <constraint firstItem="gAD-dv-2bF" firstAttribute="top" secondItem="wn6-On-Xb0" secondAttribute="bottom" id="Uh9-l5-EtV"/>
                         <constraint firstItem="gAD-dv-2bF" firstAttribute="leading" secondItem="Yae-IE-Vui" secondAttribute="leading" constant="32" id="dfI-kY-XuV"/>
                         <constraint firstAttribute="bottom" secondItem="gAD-dv-2bF" secondAttribute="bottom" id="o90-iw-UdF"/>
+                        <constraint firstAttribute="height" constant="48" id="pos-1E-oOl"/>
                         <constraint firstItem="wn6-On-Xb0" firstAttribute="top" secondItem="Yae-IE-Vui" secondAttribute="top" id="tZl-3z-vlL"/>
                         <constraint firstAttribute="trailing" secondItem="gAD-dv-2bF" secondAttribute="trailing" constant="32" id="vZT-0W-HAe"/>
-                        <constraint firstAttribute="width" secondItem="Yae-IE-Vui" secondAttribute="height" multiplier="69:8" id="zLT-B4-Dvw"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZcQ-w5-dW6">

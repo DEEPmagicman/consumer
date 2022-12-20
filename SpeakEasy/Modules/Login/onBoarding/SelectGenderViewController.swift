@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SelectGenderViewController: UIViewController {
+final class SelectGenderViewController: UIViewController {
 
     @IBOutlet weak var manSelectionView: UIView!
     @IBOutlet weak var womenSelectionView: UIView!

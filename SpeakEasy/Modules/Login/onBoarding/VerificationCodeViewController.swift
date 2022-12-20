@@ -9,7 +9,7 @@ import UIKit
 import OTPFieldView
 import SwiftUI
 
-class VerificationCodeViewController: UIViewController {
+final class VerificationCodeViewController: UIViewController {
 
     @IBOutlet weak var phoneNumLbl: UILabel!
     @IBOutlet weak var otpFieldView: OTPFieldView!
@@ -23,6 +23,9 @@ class VerificationCodeViewController: UIViewController {
         
         otpFieldView.delegate = self
         setOtpView()
+        
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
 
     }
     
@@ -48,11 +51,11 @@ class VerificationCodeViewController: UIViewController {
             
         } else {
             if otpText == ""{
-    //            showAlert(with: "", message: "enter Otp")
+                showAlert(with: "", message: "enter Otp")
             }else{
-    //            OtpVerification()
+//                OtpVerification()
+                Navigate.to.welcomeVc(self)
             }
-            Navigate.to.welcomeVc(self)
         }
 
     }
@@ -68,11 +71,15 @@ class VerificationCodeViewController: UIViewController {
 
 extension VerificationCodeViewController : OTPFieldViewDelegate{
     func shouldBecomeFirstResponderForOTP(otpTextFieldIndex index: Int) -> Bool {
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
         return true
     }
     
     func enteredOTP(otp: String) {
             otpText = otp
+        self.continueBtn.isUserInteractionEnabled = true
+        self.continueBtn.alpha = 1.0
     }
     
     func hasEnteredAllOTP(hasEnteredAll: Bool) -> Bool {
