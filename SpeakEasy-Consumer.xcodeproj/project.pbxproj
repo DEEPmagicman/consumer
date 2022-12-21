@@ -71,8 +71,12 @@
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
+		BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */; };
+		BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */; };
 		BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */; };
 		BDA001552942F24B0057E834 /* DateOfBirthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */; };
+		BDB0AADF2950233E00CD1FDA /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */; };
+		BDB0AAE12950235400CD1FDA /* WelcomeItroduceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */; };
 		BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C272946EA8800595436 /* SelectCityViewController.swift */; };
 		BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */; };
 		BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */; };
@@ -535,8 +539,12 @@
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
+		BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordViewController.swift; sourceTree = "<group>"; };
+		BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenderViewController.swift; sourceTree = "<group>"; };
 		BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfilePictureViewController.swift; sourceTree = "<group>"; };
 		BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOfBirthViewController.swift; sourceTree = "<group>"; };
+		BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeItroduceViewController.swift; sourceTree = "<group>"; };
 		BDCC5C272946EA8800595436 /* SelectCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityViewController.swift; sourceTree = "<group>"; };
 		BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectVibesViewController.swift; sourceTree = "<group>"; };
 		BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFavoriteDrinkViewController.swift; sourceTree = "<group>"; };
@@ -1199,6 +1207,10 @@
 				BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */,
 				BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */,
 				BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */,
+				BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */,
+				BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */,
+				BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */,
+				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -3683,6 +3695,7 @@
 				E1FAD5E428CEA9C4004F70DE /* EditProfileVC.swift in Sources */,
 				0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
+				BDB0AADF2950233E00CD1FDA /* WelcomeViewController.swift in Sources */,
 				E1A9E75328C55D550081FB28 /* BottleMenuTVC.swift in Sources */,
 				E11F4A9728C800B1008D2E30 /* NFTsonSpeakEasy.swift in Sources */,
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
@@ -3773,6 +3786,7 @@
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
 				CE4867BA286F358800FD277E /* UITextField+Extension.swift in Sources */,
 				E1A9E7D128C56FD10081FB28 /* SearchAndAddTVC.swift in Sources */,
+				BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */,
 				E1A9E7C128C56FD10081FB28 /* SearchTVC.swift in Sources */,
 				CE4867A0286F358700FD277E /* DynamicFonts.swift in Sources */,
 				4A83596D28E39F8C004B2AD0 /* BookingInvitesHeaderView.swift in Sources */,
@@ -3817,6 +3831,7 @@
 				4A7CC53A28E37EE500F8BA63 /* BookingDetailTVC.swift in Sources */,
 				E167058828CA6AB800644BF0 /* InviteFriendsHeaderView.swift in Sources */,
 				E1890C4728BD7EDD0000E406 /* StatusAndRewardsTVC.swift in Sources */,
+				BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */,
 				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
 				E1A9E76428C55D550081FB28 /* NotificationCitySelectionTVC.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
@@ -3885,6 +3900,7 @@
 				BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */,
 				E11F4B8B28C8358C008D2E30 /* HeaderView.swift in Sources */,
 				E11F4A9928C800B1008D2E30 /* Wallet.swift in Sources */,
+				BDB0AAE12950235400CD1FDA /* WelcomeItroduceViewController.swift in Sources */,
 				E11F4C0828C835F3008D2E30 /* BookingRequestTVC.swift in Sources */,
 				CAC413F528A478040007BA86 /* DeviceOrientation.swift in Sources */,
 				4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */,
@@ -4096,7 +4112,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer1";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer123";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4134,7 +4150,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer1";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer123";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
