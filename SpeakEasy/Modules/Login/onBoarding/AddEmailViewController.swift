@@ -11,11 +11,15 @@ final class AddEmailViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var radioBtn: UIButton!
+    @IBOutlet weak var continueBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.radioBtn.isSelected = false
+        emailTextField.delegate = self
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
     }
     
     @IBAction func onClickRedioBtn(_ sender: Any) {
@@ -30,5 +34,17 @@ final class AddEmailViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         Navigate.to.createPasswordVc(self)
+    }
+}
+
+extension AddEmailViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if emailTextField.text?.isValidEmail == true {
+            self.continueBtn.isUserInteractionEnabled = true
+            self.continueBtn.alpha = 1.0
+        } else {
+            self.continueBtn.isUserInteractionEnabled = false
+            self.continueBtn.alpha = 0.5
+        }
     }
 }

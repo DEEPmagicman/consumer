@@ -8,22 +8,24 @@
 import UIKit
 import SwiftUI
 
-struct TableAttributes {
-    var tableNumber: String
-    var tableStatus: TableStatusType
-    var tableCapacity: Int
-    var isSelected: Bool
-    var timeSlot: String
-    var minimumSpend: String
-}
-
-struct MainTableCellData {
-    var isSelected: Bool? = false
-    var lblTableNumber : String? = ""
-    var lblNumberOfSeats : String? = ""
-    var lblTimeSlots : String? = ""
-    var lblMinSpend : String? = ""
-}
+//struct TableAttributes {
+//    var tableNumber: String
+//    var tableStatus: TableStatusType
+//    var tableCapacity: Int
+//    var isSelected: Bool
+//    var timeSlot: String
+//    var minimumSpend: String
+//    var leftX: Int
+//    var topY: Int
+//}
+//
+//struct MainTableCellData {
+//    var isSelected: Bool? = false
+//    var lblTableNumber : String? = ""
+//    var lblNumberOfSeats : String? = ""
+//    var lblTimeSlots : String? = ""
+//    var lblMinSpend : String? = ""
+//}
 
 class Main: UIViewController {
     
@@ -51,29 +53,30 @@ class Main: UIViewController {
     @IBOutlet weak var viewTable51: UIView!//21
     @IBOutlet weak var viewTableC1: UIView!//22
     
-    var arrTables = [TableAttributes(tableNumber: "9",  tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "10", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "11", tableStatus: .available, tableCapacity: 4, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "12", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "13", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "14", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "15", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "16", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "17", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "18", tableStatus: .none,      tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "22", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "23", tableStatus: .available, tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "24", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "33", tableStatus: .available, tableCapacity: 5, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "34", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "35", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "36", tableStatus: .none,      tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "37", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "38", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "41", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "42", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "51", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200"),
-                     TableAttributes(tableNumber: "C1", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200")]
+    var arrTables = [TableAttributes(tableNumber: "9",  tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX: 129,topY: 226),
+                     TableAttributes(tableNumber: "10", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 226),
+                     TableAttributes(tableNumber: "11", tableStatus: .available, tableCapacity: 4, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 226),
+                     TableAttributes(tableNumber: "12", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:378,topY: 226),
+                     TableAttributes(tableNumber: "13", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226),
+                     TableAttributes(tableNumber: "14", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 209),
+                     TableAttributes(tableNumber: "15", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 105),
+                     TableAttributes(tableNumber: "16", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 140),
+                     TableAttributes(tableNumber: "17", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:129,topY: 444),
+                     TableAttributes(tableNumber: "18", tableStatus: .none,      tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 444),
+                     TableAttributes(tableNumber: "22", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 444),
+                     TableAttributes(tableNumber: "23", tableStatus: .available, tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:327,topY: 444),
+                     TableAttributes(tableNumber: "24", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 308),
+                     TableAttributes(tableNumber: "33", tableStatus: .available, tableCapacity: 5, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 402),
+                     TableAttributes(tableNumber: "34", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226),
+                     TableAttributes(tableNumber: "35", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 391),
+                     TableAttributes(tableNumber: "36", tableStatus: .none,      tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 267),
+                     TableAttributes(tableNumber: "37", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 329),
+                     TableAttributes(tableNumber: "38", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 391),
+                     TableAttributes(tableNumber: "41", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 498),
+                     TableAttributes(tableNumber: "42", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 498),
+                     TableAttributes(tableNumber: "51", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 564),
+                     TableAttributes(tableNumber: "C1", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 498),
+                     TableAttributes(tableNumber: "C2", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 585)]
     
     var table9  = ViewRewardTable()
     var table10 = ViewRewardTable()

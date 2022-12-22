@@ -15,11 +15,11 @@ final class ConnectAccountViewController: UIViewController {
     }
     
     @IBAction func onClickConnectWithApple(_ sender: Any) {
-        
+        Navigate.to.dateOfBirthVc(self)
     }
     
     @IBAction func onClickConnectWithGoogle(_ sender: Any) {
-        
+        Navigate.to.dateOfBirthVc(self)
     }
     
     @IBAction func onClickSkip(_ sender: Any) {

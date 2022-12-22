@@ -52,6 +52,8 @@
 		9D4A029128CE9E4B009CD670 /* CostSplitSelectionTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */; };
 		ABEDF61CEADAC4A47424B609 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF9CFA2DABFD7C1B8DB234BA /* Pods_SpeakEasy_Consumer.framework */; };
 		BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */; };
+		BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3DB01E2952DBB3005B5987 /* Main1.swift */; };
+		BD3DB0212952DDF1005B5987 /* Main1.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD3DB0202952DDF1005B5987 /* Main1.xib */; };
 		BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD3FB249294063A200BE7713 /* OnBoarding.storyboard */; };
 		BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3FB24C294067D900BE7713 /* NavigationManager.swift */; };
 		BD3FB24F294068B900BE7713 /* StoryboardAndXibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3FB24E294068B900BE7713 /* StoryboardAndXibManager.swift */; };
@@ -520,6 +522,8 @@
 		9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectionTVC.swift; sourceTree = "<group>"; };
 		9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectionTVC.xib; sourceTree = "<group>"; };
 		BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
+		BD3DB01E2952DBB3005B5987 /* Main1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1.swift; sourceTree = "<group>"; };
+		BD3DB0202952DDF1005B5987 /* Main1.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Main1.xib; sourceTree = "<group>"; };
 		BD3FB249294063A200BE7713 /* OnBoarding.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = OnBoarding.storyboard; sourceTree = "<group>"; };
 		BD3FB24C294067D900BE7713 /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
 		BD3FB24E294068B900BE7713 /* StoryboardAndXibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardAndXibManager.swift; sourceTree = "<group>"; };
@@ -2863,6 +2867,8 @@
 				E17DC96528C6D01700244C4F /* MainTVC */,
 				E17DC96128C6D01700244C4F /* Main.xib */,
 				E17DC96828C6D01700244C4F /* Main.swift */,
+				BD3DB01E2952DBB3005B5987 /* Main1.swift */,
+				BD3DB0202952DDF1005B5987 /* Main1.xib */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -3418,6 +3424,7 @@
 				4A83596F28E39F96004B2AD0 /* BookingInvitesHeaderView.xib in Resources */,
 				E11F4C1228C835F3008D2E30 /* BookingInvite.xib in Resources */,
 				4A89D44128D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib in Resources */,
+				BD3DB0212952DDF1005B5987 /* Main1.xib in Resources */,
 				E11F4B3028C83564008D2E30 /* AdditionalGuest.xib in Resources */,
 				E15D6B7028BC39AC0076286C /* Tutorial5CVC.xib in Resources */,
 				E11F4C0E28C835F3008D2E30 /* Archive.zip in Resources */,
@@ -3821,6 +3828,7 @@
 				CE4867E1286F392900FD277E /* UserModel.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				CE4867C3286F358800FD277E /* ButtonStates.swift in Sources */,
+				BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */,
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
 				CE4867BE286F358800FD277E /* CustomLocale.swift in Sources */,
 				BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */,
