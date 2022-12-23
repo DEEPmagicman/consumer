@@ -59,6 +59,22 @@ class EditProfileVC: BaseController {
     @IBOutlet weak var datePublicLineView: UIView!
     @IBOutlet weak var datePrivateView: UIView!
     @IBOutlet weak var datePublicView: UIView!
+    @IBOutlet weak var connectSpotifyBtn: UIButton!
+    @IBOutlet weak var connectedSpotifyView: UIView!
+    @IBOutlet weak var connectInstagramBtn: UIButton!
+    @IBOutlet weak var connectedInstagramView: UIView!
+    @IBOutlet weak var spotifyPrivetView: UIView!
+    @IBOutlet weak var spotifyPrivetLbl: UILabelDeviceClass!
+    @IBOutlet weak var spotifyPrivetLine: UIView!
+    @IBOutlet weak var spotifyPublicView: UIView!
+    @IBOutlet weak var spotifyPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var spotifyPublicLine: UIView!
+    @IBOutlet weak var instagramPrivetView: UIView!
+    @IBOutlet weak var instagramPrivetLbl: UILabelDeviceClass!
+    @IBOutlet weak var instagramPrivetLine: UIView!
+    @IBOutlet weak var instagramPublicView: UIView!
+    @IBOutlet weak var instagramPublicLbl: UILabelDeviceClass!
+    @IBOutlet weak var instagramPublicLine: UIView!
     
     var arrVibes = ["Fridays", "EDM", "Bottle Service","Crowds"]
     var arrFavouriteDrinks = ["Whiskey", "Dom Perignon", "Moscow Mule", "Whiskey Sour", "Martini", "Whiskey Coke"]
@@ -74,6 +90,9 @@ class EditProfileVC: BaseController {
     private var isVibesPublic = true
     private var isFavDrinksPublic = true
     private var isDatePublic = true
+    private var isSpotifyPublic = true
+    private var isInstagrampublic = true
+    private var spotifyConnect = false
     
     let occupationDropDown = DropDown()
 
@@ -96,6 +115,10 @@ class EditProfileVC: BaseController {
     
     private func setUI(){
         self.registerCell()
+        self.connectSpotifyBtn.isHidden = false
+        self.connectedSpotifyView.isHidden = true
+        self.connectInstagramBtn.isHidden = false
+        self.connectedInstagramView.isHidden = true
     }
     
     private func setPublicPrivate() {
@@ -104,6 +127,8 @@ class EditProfileVC: BaseController {
         setPrivatePublicUI(privateLbl: vibesPrivateLbl, publicLbl: vibesPublicLbl, privateLine: vibesPrivateLineView, publicLine: vibesPublicLineView, privateView: vibesPrivateView, publicView: vibesPublicView, isPublic: isVibesPublic)
         setPrivatePublicUI(privateLbl: favDrinksPrivateLbl, publicLbl: favDrinksPublicLbl, privateLine: favDrinksPrivateLineView, publicLine: favDrinksPublicLineView, privateView: favDrinksPrivateView, publicView: favDrinksPublicView, isPublic: isFavDrinksPublic)
         setPrivatePublicUI(privateLbl: datePrivateLbl, publicLbl: datePublicLbl, privateLine: datePrivateLineView, publicLine: datePublicLineView, privateView: datePrivateView, publicView: datePublicView, isPublic: isDatePublic)
+        setPrivatePublicUI(privateLbl: spotifyPrivetLbl, publicLbl: spotifyPublicLbl, privateLine: spotifyPrivetLine, publicLine: spotifyPublicLine, privateView: spotifyPrivetView, publicView: spotifyPublicView, isPublic: isSpotifyPublic)
+        setPrivatePublicUI(privateLbl: instagramPrivetLbl, publicLbl: instagramPublicLbl, privateLine: instagramPrivetLine, publicLine: instagramPublicLine, privateView: instagramPrivetView, publicView: instagramPublicView, isPublic: isInstagrampublic)
     }
     
     private func registerCell() {
@@ -131,6 +156,15 @@ class EditProfileVC: BaseController {
     }
     @IBAction func onBtnSave(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
+    }
+    @IBAction func onClickConnectSpotify(_ sender: Any) {
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
+        self.spotifyConnect = true
+    }
+    
+    @IBAction func onClickConnectInstagram(_ sender: Any) {
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
+        self.spotifyConnect = false
     }
 }
 
@@ -331,8 +365,44 @@ private extension EditProfileVC {
             isDatePublic = false
         case 10:
             isDatePublic = true
+        case 11:
+            isSpotifyPublic = false
+        case 12:
+            isSpotifyPublic = true
+        case 13:
+            isInstagrampublic = false
+        case 14:
+            isInstagrampublic = true
         default:
             break
+        }
+        setPublicPrivate()
+    }
+}
+
+extension EditProfileVC: ConfirmPopUpDelegate {
+    func cancelDetail() {
+        if spotifyConnect {
+            self.connectSpotifyBtn.isHidden = true
+            self.connectedSpotifyView.isHidden = false
+            self.isSpotifyPublic = false
+        } else {
+            self.connectInstagramBtn.isHidden = true
+            self.connectedInstagramView.isHidden = false
+            self.isInstagrampublic = false
+        }
+        setPublicPrivate()
+    }
+    
+    func confirmDetail() {
+        if spotifyConnect {
+            self.connectSpotifyBtn.isHidden = true
+            self.connectedSpotifyView.isHidden = false
+            self.isSpotifyPublic = true
+        } else {
+            self.connectInstagramBtn.isHidden = true
+            self.connectedInstagramView.isHidden = false
+            self.isInstagrampublic = true
         }
         setPublicPrivate()
     }

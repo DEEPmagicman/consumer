@@ -17,15 +17,17 @@ struct TableAttributes {
     var minimumSpend: String
     var leftX: Int
     var topY: Int
+    var size: String
+    var shape: String
 }
 
 struct FixValue {
-    static let smallHeight = 70
-    static let smallWeight = 70
-    static let mediumHeight = 70
-    static let mediumWeight = 80
-    static let largeHeight = 70
-    static let largeWeight = 90
+    static let smallHeight = 60
+    static let smallWeight = 60
+    static let mediumHeight = 60
+    static let mediumWeight = 70
+    static let largeHeight = 60
+    static let largeWeight = 80
     static var scale = 1 // default scale 1 as it is as per data
 }
 
@@ -41,30 +43,30 @@ class Main1: UIViewController {
     var from = ""
     var arrTables = [TableAttributes]()
     
-    var mainTable = [TableAttributes(tableNumber: "1",  tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX: 129,topY: 226),
-                     TableAttributes(tableNumber: "2", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 226),
-                     TableAttributes(tableNumber: "3", tableStatus: .available, tableCapacity: 4, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 226),
-                     TableAttributes(tableNumber: "4", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:378,topY: 226),
-                     TableAttributes(tableNumber: "5", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226),
-                     TableAttributes(tableNumber: "6", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 209),
-                     TableAttributes(tableNumber: "7", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 105),
-                     TableAttributes(tableNumber: "8", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 140),
-                     TableAttributes(tableNumber: "9", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:129,topY: 444),
-                     TableAttributes(tableNumber: "10", tableStatus: .none,      tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 444),
-                     TableAttributes(tableNumber: "11", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 444),
-                     TableAttributes(tableNumber: "12", tableStatus: .available, tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:327,topY: 444),
-                     TableAttributes(tableNumber: "13", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 308),
-                     TableAttributes(tableNumber: "14", tableStatus: .available, tableCapacity: 5, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 402),
-                     TableAttributes(tableNumber: "15", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226),
-                     TableAttributes(tableNumber: "16", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 391),
-                     TableAttributes(tableNumber: "17", tableStatus: .none,      tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 267),
-                     TableAttributes(tableNumber: "18", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 329),
-                     TableAttributes(tableNumber: "19", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 391),
-                     TableAttributes(tableNumber: "20", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 498),
-                     TableAttributes(tableNumber: "21", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 498),
-                     TableAttributes(tableNumber: "22", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 564),
-                     TableAttributes(tableNumber: "23", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 498),
-                     TableAttributes(tableNumber: "24", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 585)]
+    var mainTable = [TableAttributes(tableNumber: "1",  tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX: 129,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "2", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "3", tableStatus: .available, tableCapacity: 4, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "4", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:378,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "5", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "6", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 209,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "7", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 105,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "8", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 140,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "9", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:129,topY: 444,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "10", tableStatus: .none,      tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 444,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "11", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:261,topY: 444,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "12", tableStatus: .available, tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:327,topY: 444,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "13", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 308,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "14", tableStatus: .available, tableCapacity: 5, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:457,topY: 402,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "15", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 226,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "16", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:550,topY: 391,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "17", tableStatus: .none,      tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 267,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "18", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 329,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "19", tableStatus: .available, tableCapacity: 3, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:634,topY: 391,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "20", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:571,topY: 498,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "21", tableStatus: .none,      tableCapacity: 8, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 498,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "22", tableStatus: .available, tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:685,topY: 564,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "23", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 498,size:"small",shape:"square"),
+                     TableAttributes(tableNumber: "24", tableStatus: .available, tableCapacity: 9, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:778,topY: 585,size:"small",shape:"square")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,10 +102,15 @@ extension Main1 {
         if from == "main" {
             self.arrTables = mainTable
         } else if from == "lotus" {
-            self.arrTables = mainTable
+            self.arrTables = mainTable.filter({ tabl in
+                (Int(tabl.tableNumber) ?? 0) % 2 == 0
+            })
         } else {
-            self.arrTables = mainTable
+            self.arrTables = mainTable.filter({ tabl in
+                (Int(tabl.tableNumber) ?? 0) % 2 != 0
+            })
         }
+        tableView.reloadData()
         
         floorScrollView.delegate = self
         floorScrollView.minimumZoomScale = 0.25
@@ -112,47 +119,46 @@ extension Main1 {
         
         floorViewHeight.constant = CGFloat(671.scaledValue) // max y
         floorViewWidth.constant = CGFloat(875.scaledValue) // max x
-        arrTables.forEach { table in
+            for i in 0..<self.arrTables.count {
+                let table = self.arrTables[i]
             if let viewTable = ViewRewardTable.instanceFromNib() as? ViewRewardTable {
                 let leftX = table.leftX.scaledValue
                 let topY = table.topY.scaledValue
                 
-                viewTable.tag = (Int(table.tableNumber) ?? 0) - 1
+                viewTable.tag = i
                 var width = 0
                 var height = 0
-//
-//                switch table.size {
-//                case "small":
-//                    width = FixValue.smallWeight
-//                    height = FixValue.smallHeight
-//                case "medium":
-//                    width = FixValue.mediumWeight
-//                    height = FixValue.mediumHeight
-//                case "large":
-//                    width = FixValue.largeWeight
-//                    height = FixValue.largeHeight
-//                default:
-//                    break
-//                }
+
+                switch table.size {
+                case "small":
+                    width = FixValue.smallWeight
+                    height = FixValue.smallHeight
+                case "medium":
+                    width = FixValue.mediumWeight
+                    height = FixValue.mediumHeight
+                case "large":
+                    width = FixValue.largeWeight
+                    height = FixValue.largeHeight
+                default:
+                    // default table height/width as per figma
+                    height = 62.scaledValue
+                    width = 62.scaledValue
+                    break
+                }
                 
-                // default table height/width as per figma
-                height = 62.scaledValue
-                width = 62.scaledValue
-                
-//                switch table.shape {
-//                case "circle":
-//                    height = width
-//                    viewDemo.seatImg.layer.cornerRadius = CGFloat((height - 20) / 2)
-////                    viewDemo.seatImg.image = AssestImage.circuleTable
-//                case "rectangle":
-////                    viewDemo.seatImg.image = AssestImage.recTable
-//                    break
-//                case "square":
-//                    height = width
-////                    viewDemo.seatImg.image = AssestImage.squareTable
-//                default:
-//                    break
-//                }
+                switch table.shape {
+                case "circle":
+                    height = width
+                    viewTable.viewBackGround.layer.cornerRadius = CGFloat((height - 4) / 2)
+                case "rectangle":
+//                    viewDemo.seatImg.image = AssestImage.recTable
+                    break
+                case "square":
+                    height = width
+//                    viewDemo.seatImg.image = AssestImage.squareTable
+                default:
+                    break
+                }
                 viewTable.setData(data: table)
                 viewTable.frame = CGRect(x: leftX , y: topY , width: width, height: height)
                 self.floorView.addSubview(viewTable)
@@ -218,6 +224,8 @@ extension Main1: UITableViewDelegate {
             }
             self.arrTables[indexPath.row].isSelected = true
             upDateView(index: indexPath.row)
+            
+            self.floorScrollView.setContentOffset(CGPoint(x: arrTables[indexPath.row].leftX - Int(floorScrollView.bounds.width)/2, y: arrTables[indexPath.row].topY - Int(floorScrollView.bounds.height)/2), animated: true)
             
             DispatchQueue.main.async {
                 tableView.reloadData()

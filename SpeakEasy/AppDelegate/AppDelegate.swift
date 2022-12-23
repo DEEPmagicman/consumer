@@ -119,7 +119,9 @@ extension AppDelegate {
         tabBarController.tabBar.isTranslucent = false
         
         tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        self.window?.rootViewController = tabBarController
+        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+        tabBarControllerNavigation.navigationBar.isHidden = true
+        self.window?.rootViewController = tabBarControllerNavigation
 
     }
 }

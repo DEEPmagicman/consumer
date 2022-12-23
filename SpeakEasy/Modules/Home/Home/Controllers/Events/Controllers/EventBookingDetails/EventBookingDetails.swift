@@ -70,7 +70,7 @@ class EventBookingDetails: UIViewController {
         if selectedTabAt == 0 {
             let viewEventTicketsController = ViewEventTickets()
             viewEventTicketsController.topEventData = self.topEventData
-            self.navigationController?.pushViewController(viewEventTicketsController, animated: true)
+            self.navigationController?.navigationController?.pushViewController(viewEventTicketsController, animated: true)
         } else {
             
         }

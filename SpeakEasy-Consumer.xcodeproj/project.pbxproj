@@ -79,6 +79,7 @@
 		BDA001552942F24B0057E834 /* DateOfBirthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */; };
 		BDB0AADF2950233E00CD1FDA /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */; };
 		BDB0AAE12950235400CD1FDA /* WelcomeItroduceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */; };
+		BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */; };
 		BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C272946EA8800595436 /* SelectCityViewController.swift */; };
 		BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */; };
 		BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */; };
@@ -549,6 +550,7 @@
 		BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOfBirthViewController.swift; sourceTree = "<group>"; };
 		BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeItroduceViewController.swift; sourceTree = "<group>"; };
+		BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		BDCC5C272946EA8800595436 /* SelectCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityViewController.swift; sourceTree = "<group>"; };
 		BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectVibesViewController.swift; sourceTree = "<group>"; };
 		BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFavoriteDrinkViewController.swift; sourceTree = "<group>"; };
@@ -1702,6 +1704,7 @@
 			isa = PBXGroup;
 			children = (
 				CE4867DB286F392900FD277E /* UserModel.swift */,
+				BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -3773,6 +3776,7 @@
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
 				E11F4BFB28C835F3008D2E30 /* Bookings.swift in Sources */,
 				E167055928CA442800644BF0 /* PaymentMethodTVC.swift in Sources */,
+				BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */,
 				E13F4CF328D288E100D9C64E /* GalleryCVC.swift in Sources */,
 				E11F4BAE28C8358C008D2E30 /* VIPTableBookingCalenderTVC.swift in Sources */,
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,
