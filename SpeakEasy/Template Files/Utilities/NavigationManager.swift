@@ -27,9 +27,11 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, otp: String, otpRef: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(VerificationCodeViewController.self)) as! VerificationCodeViewController
         vc.isFromLogin = isFromLogin
+        vc.currectOtp = otp
+        vc.otpRef = otpRef
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -114,8 +116,9 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterEmailPassVc(_ sender: UIViewController) {
+    func enterEmailPassVc(_ sender: UIViewController, email: String) {
         let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(EnterEmailPassViewController.self)) as! EnterEmailPassViewController
+        vc.email = email
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

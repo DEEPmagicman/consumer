@@ -26,7 +26,7 @@ class LoginWithPhoneViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.enterVerificationCodeVc(self,isFromLogin: true)
+//        Navigate.to.enterVerificationCodeVc(self,isFromLogin: true)
     }
     
     @IBAction func onClickBack(_ sender: Any) {

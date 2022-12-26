@@ -26,7 +26,7 @@ class LoginWithEmailViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.enterEmailPassVc(self)
+        Navigate.to.enterEmailPassVc(self,email: emailTextField.text ?? "")
     }
     
 }

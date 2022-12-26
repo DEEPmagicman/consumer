@@ -12,6 +12,9 @@ class EnterEmailPassViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var showBtn: UIButton!
     
+    private let onBoardingDelegate = OnBoardingPresenter()
+    var email = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,7 +38,13 @@ class EnterEmailPassViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        
+        self.onBoardingDelegate.loginWithEmailApi(email: self.email, password: passwordTextField.text ?? "") { isSuccess in
+            if isSuccess {
+                
+            } else {
+                
+            }
+        }
     }
     
     @IBAction func onClickForgotPassword(_ sender: Any) {

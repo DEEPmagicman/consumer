@@ -16,7 +16,10 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     
     var otpText = ""
+    var currectOtp = ""
+    var otpRef = ""
     var isFromLogin = false
+    private var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +29,7 @@ final class VerificationCodeViewController: UIViewController {
         
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
+        print("*-*\(currectOtp)")
 
     }
     
@@ -47,25 +51,55 @@ final class VerificationCodeViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if isFromLogin {
-            
+        if otpText == ""{
+                showAlert(with: "", message: "Please Enter Otp")
         } else {
-            if otpText == ""{
-                showAlert(with: "", message: "enter Otp")
-            }else{
-//                OtpVerification()
-                Navigate.to.welcomeVc(self)
-            }
+            otpVerification()
         }
 
     }
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
-        
+        if isFromLogin {
+            self.onBoardingDelegate.resendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+                if isSuccess {
+                    self.otpRef = otpRef
+                    self.currectOtp = otp
+                    print("*-*\(self.currectOtp)")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                }
+                Loader.hide()
+            }
+        } else {
+            
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    private func otpVerification() {
+        if isFromLogin {
+            self.onBoardingDelegate.otpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+                if isSuccess {
+//                    if self.isFromLogin {
+                        let user = UserModel()
+                        AppStateManager.sharedInstance.loginUser(user: user)
+//                    } else {
+//                        Navigate.to.welcomeVc(self)
+//                    }
+                    Loader.hide()
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
+                    Loader.hide()
+                }
+            }
+        } else {
+            //signUp
+        }
+      
     }
 }
 
@@ -84,7 +118,7 @@ extension VerificationCodeViewController : OTPFieldViewDelegate{
     
     func hasEnteredAllOTP(hasEnteredAll: Bool) -> Bool {
         if hasEnteredAll {
-//            OtpVerification()
+            otpVerification()
         }
         return true
     }

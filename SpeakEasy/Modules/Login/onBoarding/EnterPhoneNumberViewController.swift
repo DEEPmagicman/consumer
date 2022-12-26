@@ -15,7 +15,8 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var phoneNumTextField: UITextField!
     
     var isFromLogin = false
-    
+    private var onBoardingDelegate = OnBoardingPresenter()
+    var contryCode = ""
     private var checkFPNField = FPNTextField()
     var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     
@@ -68,12 +69,26 @@ final class EnterPhoneNumberViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
+            let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
-            Navigate.to.enterVerificationCodeVc(self,isFromLogin: true)
-            print("*-*login")
+            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
+                if isSuccess {
+//                    if self.isFromLogin {
+                        Navigate.to.enterVerificationCodeVc(self,isFromLogin: true, otp: otp, otpRef: otpRef)
+//                    } else {
+//                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef)
+//                    }
+                    Loader.hide()
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
+                    Loader.hide()
+                }
+               
+            }
         } else {
-            Navigate.to.enterVerificationCodeVc(self)
+            //signUp
         }
+           
     }
 }
 
@@ -108,6 +123,7 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
             checkFPNField.setFlag(countryCode: countryCode)
             checkFPNField.delegate = self
             checkFPNField.sendActions(for: .editingChanged)
+            self.contryCode = dialCode
         }
     }
     
@@ -119,8 +135,8 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
         } else if textField == checkFPNField {
             if isValid {
                 print("valid")
-//                self.continueBtn.isUserInteractionEnabled = true
-//                self.continueBtn.alpha = 1
+                self.continueBtn.isUserInteractionEnabled = true
+                self.continueBtn.alpha = 1
                 //      textField.getFormattedPhoneNumber(format: .E164),       // Output "+33600000001"
                 //      textField.getFormattedPhoneNumber(format: .International),  // Output "+33 6 00 00 00 01"
                 //      textField.getFormattedPhoneNumber(format: .National),       // Output "06 00 00 00 01"
@@ -128,8 +144,8 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
                 textField.getRawPhoneNumber()                               // Output "600000001"
             } else {
                 print("not")
-//                self.continueBtn.isUserInteractionEnabled = false
-//                self.continueBtn.alpha = 0.5
+                self.continueBtn.isUserInteractionEnabled = false
+                self.continueBtn.alpha = 0.5
             }
         }
     }
