@@ -13,8 +13,11 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var countryCodeTextField: FPNTextField!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
+    @IBOutlet weak var bgImg: UIImageView!
+    @IBOutlet weak var backBtn: UIButton!
     
     var isFromLogin = false
+    var isFromSettings = false
     
     private var checkFPNField = FPNTextField()
     var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
@@ -49,6 +52,17 @@ final class EnterPhoneNumberViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isFromSettings {
+            bgImg.isHidden = true
+            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
+        } else {
+            bgImg.isHidden = false
+            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+        }
+    }
+    
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
         let toolbar: UIToolbar = UIToolbar()
         
@@ -72,7 +86,7 @@ final class EnterPhoneNumberViewController: UIViewController {
             Navigate.to.enterVerificationCodeVc(self,isFromLogin: true)
             print("*-*login")
         } else {
-            Navigate.to.enterVerificationCodeVc(self)
+            Navigate.to.enterVerificationCodeVc(self, isFromSettings: isFromSettings)
         }
     }
 }

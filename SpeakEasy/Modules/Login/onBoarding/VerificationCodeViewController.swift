@@ -14,9 +14,12 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var phoneNumLbl: UILabel!
     @IBOutlet weak var otpFieldView: OTPFieldView!
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var bgImg: UIImageView!
     
     var otpText = ""
     var isFromLogin = false
+    var isFromSettings = false
+    var isForEmail = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,18 @@ final class VerificationCodeViewController: UIViewController {
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isFromSettings {
+            bgImg.isHidden = true
+        } else {
+            bgImg.isHidden = false
+        }
+        if isForEmail {
+            phoneNumLbl.text = "userexample@gmail.com"
+        }
     }
     
     func setOtpView() {
@@ -54,7 +69,14 @@ final class VerificationCodeViewController: UIViewController {
                 showAlert(with: "", message: "enter Otp")
             }else{
 //                OtpVerification()
-                Navigate.to.welcomeVc(self)
+                if isFromSettings {
+                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
+                          self.navigationController?.popToViewController(pInfoVC, animated: false)
+                        }
+                } else {
+                    Navigate.to.welcomeVc(self)
+                }
+                
             }
         }
 

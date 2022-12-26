@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
+		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
+		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
+		0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D08A295978170087D3DB /* DeleteAccountViewController.swift */; };
+		0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */; };
+		0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */; };
+		0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */; };
+		0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
 		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
@@ -475,6 +483,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		0436D08A295978170087D3DB /* DeleteAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountViewController.swift; sourceTree = "<group>"; };
+		0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformationViewController.swift; sourceTree = "<group>"; };
+		0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextFieldWithIcon.swift; sourceTree = "<group>"; };
+		0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+fixCaretPosition.swift"; sourceTree = "<group>"; };
+		0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextField.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
 		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
 		0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteArtistProfileCVC.swift; sourceTree = "<group>"; };
@@ -977,6 +993,28 @@
 				04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */,
 			);
 			path = PublikAttendeesTVC;
+			sourceTree = "<group>";
+		};
+		0436D083295966B40087D3DB /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0436D084295966CF0087D3DB /* Settings.storyboard */,
+				0436D086295966E30087D3DB /* SettingsViewController.swift */,
+				0436D088295978060087D3DB /* NotificationViewController.swift */,
+				0436D08A295978170087D3DB /* DeleteAccountViewController.swift */,
+				0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		0436D090295984650087D3DB /* SkyFloatingLabelTextField */ = {
+			isa = PBXGroup;
+			children = (
+				0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */,
+				0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */,
+				0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */,
+			);
+			path = SkyFloatingLabelTextField;
 			sourceTree = "<group>";
 		};
 		047473FD28FD17190097A523 /* ArtistProfilePopUp */ = {
@@ -1642,6 +1680,7 @@
 				CE486798286F358700FD277E /* FlowLayout */,
 				CE48679A286F358700FD277E /* iCarousel */,
 				CE48679E286F358700FD277E /* CardView */,
+				0436D090295984650087D3DB /* SkyFloatingLabelTextField */,
 			);
 			path = "ThirdParty Libraries";
 			sourceTree = "<group>";
@@ -1721,6 +1760,7 @@
 		CE4867E7286F7DC500FD277E /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				0436D083295966B40087D3DB /* Settings */,
 				E11F4A7A28C800B1008D2E30 /* AccessPass */,
 				E1A9E6D328C55D540081FB28 /* Home */,
 				E17DC84328C6C16500244C4F /* AccessPass */,
@@ -3446,6 +3486,7 @@
 				E11F4BA928C8358C008D2E30 /* VIPTableBookingHeaderView.xib in Resources */,
 				E1A9E74D28C55D550081FB28 /* VenuesAndVIP.xib in Resources */,
 				E11F4A9828C800B1008D2E30 /* NFTsonSpeakEasy.xib in Resources */,
+				0436D085295966CF0087D3DB /* Settings.storyboard in Resources */,
 				CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */,
 				E11F4C0528C835F3008D2E30 /* ReceiverTVC.xib in Resources */,
 				E16705A328CA6B3800644BF0 /* DressCodeTVC.xib in Resources */,
@@ -3755,6 +3796,7 @@
 				E167059328CA6AB800644BF0 /* TableBookingInviteFriendsTVC.swift in Sources */,
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */,
+				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
 				E1A9E7CA28C56FD10081FB28 /* FellowPeopleTVC.swift in Sources */,
 				4A89D44028D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.swift in Sources */,
 				CE4867CE286F358800FD277E /* UserAPIManager.swift in Sources */,
@@ -3778,6 +3820,7 @@
 				E167055928CA442800644BF0 /* PaymentMethodTVC.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */,
 				E13F4CF328D288E100D9C64E /* GalleryCVC.swift in Sources */,
+				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
 				E11F4BAE28C8358C008D2E30 /* VIPTableBookingCalenderTVC.swift in Sources */,
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,
 				E11F4B8F28C8358C008D2E30 /* TopEventCVC.swift in Sources */,
@@ -3831,6 +3874,7 @@
 				CAC413FF28A478040007BA86 /* Double.swift in Sources */,
 				CE4867E1286F392900FD277E /* UserModel.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
+				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
 				CE4867C3286F358800FD277E /* ButtonStates.swift in Sources */,
 				BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */,
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
@@ -3849,10 +3893,12 @@
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
 				CE4867C4286F358800FD277E /* RoundedCorners.swift in Sources */,
 				BD7FA0EF2948409C00935275 /* LoginWithPhoneViewController.swift in Sources */,
+				0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */,
 				CAC4140128A478040007BA86 /* UIApplication.swift in Sources */,
 				4A7CC54928E3870400F8BA63 /* SubmitRequestTVC.swift in Sources */,
 				E1A9E74C28C55D550081FB28 /* Home.swift in Sources */,
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,
+				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
 				CE4867A8286F358800FD277E /* Validator.swift in Sources */,
 				CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */,
 				E1A9E7C428C56FD10081FB28 /* SearchAndAddCVC.swift in Sources */,
@@ -3886,10 +3932,12 @@
 				CE4867AE286F358800FD277E /* ProjectStructs.swift in Sources */,
 				BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
+				0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */,
 				CE4867BF286F358800FD277E /* BaseController.swift in Sources */,
 				E11F4C3828C8383A008D2E30 /* SelectedTicketAndRecipientTVC.swift in Sources */,
 				4A7CC53F28E3832600F8BA63 /* InviteFriendsCostSplitTVC.swift in Sources */,
 				CE4867A3286F358800FD277E /* MOLHSizable.swift in Sources */,
+				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,
 				E167055F28CA442800644BF0 /* ViewEventTicketConfirmCVC.swift in Sources */,
 				84248D9E28D2A4CE00A6E260 /* All.swift in Sources */,
 				E17DC96F28C6D01700244C4F /* MainHeader.swift in Sources */,

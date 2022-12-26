@@ -43,7 +43,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Explore. Book. Go." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSL-2D-GgR">
-                                        <rect key="frame" x="99" y="197" width="216.5" height="34"/>
+                                        <rect key="frame" x="101" y="197" width="212.5" height="34"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="24"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -555,7 +555,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nza-ty-6LU">
-                                        <rect key="frame" x="20" y="52" width="213.5" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="207.5" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="kuP-Qg-q3p"/>
                                         </constraints>
@@ -653,8 +653,11 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backBtn" destination="qN4-w2-z13" id="Gho-Vb-TGa"/>
+                        <outlet property="bgImg" destination="TVp-YD-qyZ" id="Aoo-UP-2MV"/>
                         <outlet property="continueBtn" destination="vmc-Ni-X6X" id="4ua-4G-ecK"/>
                         <outlet property="emailTextField" destination="ZEb-yG-VhB" id="phx-cQ-dNN"/>
+                        <outlet property="emailTopTitle" destination="Nza-ty-6LU" id="Hbs-7z-MHg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KMz-TE-r46" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -879,7 +882,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XmY-EY-y63">
-                                        <rect key="frame" x="20" y="52" width="203" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="200" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="yUV-Qi-tdw"/>
                                         </constraints>

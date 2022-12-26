@@ -14,6 +14,8 @@ struct Constant {
         static let vibesSelectedBgColor = UIColor(hex: "#75309F")
         static let selectedItemTextColor = UIColor(hex: "#F2F2F2")
         static let selectedDrinkColor = UIColor(hex: "#007AFF")
+        static let code7Acolor = UIColor(named: "code7a")
+        static let code2Fcolor = UIColor(named: "code2f")
     }
     
     struct Icon {
@@ -30,5 +32,6 @@ struct Constant {
         static let changeslaterinfo = "This information can be changed later."
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
         static let confirm21YearText = "You must be over 21 years old to continue."
+        static let genderList = ["Male", "Female"]
     }
 }
