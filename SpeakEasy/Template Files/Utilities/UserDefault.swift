@@ -30,20 +30,20 @@ final class UserDefault: NSObject {
     }
     
     var user: Currentuser? {
-//        get {
-//            if let savedUser = UserDefaults.standard.object(forKey: USER) as? Data {
-//                do {
-//                    let loadedUser = try JSONDecoder().decode(Currentuser.self, from: savedUser)
-//                    return loadedUser
-//                } catch { }
-//            }
-//            return nil
-//        } set {
-//            do {
-//                let encoded = try JSONEncoder().encode(newValue)
-//                UserDefaults.standard.set(encoded, forKey: USER)
-//                UserDefaults.standard.synchronize()
-//            } catch { }
-//        }
+        get {
+            if let savedUser = UserDefaults.standard.object(forKey: USER) as? Data {
+                do {
+                    let loadedUser = try JSONDecoder().decode(Currentuser.self, from: savedUser)
+                    return loadedUser
+                } catch { }
+            }
+            return nil
+        } set {
+            do {
+                let encoded = try JSONEncoder().encode(newValue)
+                UserDefaults.standard.set(encoded, forKey: USER)
+                UserDefaults.standard.synchronize()
+            } catch { }
+        }
     }
 }

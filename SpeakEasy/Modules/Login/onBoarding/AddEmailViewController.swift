@@ -33,7 +33,7 @@ final class AddEmailViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.createPasswordVc(self)
+        Navigate.to.createPasswordVc(self,email: emailTextField.text ?? "")
     }
 }
 

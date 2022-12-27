@@ -13,11 +13,12 @@ import IQKeyboardManagerSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        self.application = application
         GMSServices.provideAPIKey(Constants.apiKey)
         
         IQKeyboardManager.shared.enable = true

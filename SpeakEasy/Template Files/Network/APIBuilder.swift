@@ -17,7 +17,7 @@ class APIBuilder {
     private let LoginWithPhone_URl = "/auth/phone-login"
     private let LoginOtpVerify_URL = "/auth/phone-login/otp-verify"
     private let LoginResendOtp_URL = "/auth/phone-login/otp-resend"
-    private let signUpWithPhone_URL = "signup"
+    private let signUpWithPhone_URL = "/signup"
     private let signUpOtpVerify_URL = "/signup/otp-verify"
     private let signUpOtpResend_URL = "/signup/otp-resend"
     private let LoginWithEmail_URL = "/auth/login"

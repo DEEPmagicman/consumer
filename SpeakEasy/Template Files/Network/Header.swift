@@ -17,7 +17,7 @@ class Header {
     static let shared = Header()
     func header(headerContentType:HEADER_CONTENT_TYPE = .json) -> [String:String] {
 
-        return ["Authorization": "\(UserDefault.shared.loginToken ?? "")",
+        return ["Authorization": "Bearer \(UserDefault.shared.loginToken ?? "")",
                 "Content-Type":"\(headerContentType.rawValue)"]
     }
 }

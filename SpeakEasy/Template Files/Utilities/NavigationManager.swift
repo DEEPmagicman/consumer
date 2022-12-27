@@ -127,8 +127,9 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func createPasswordVc(_ sender: UIViewController) {
+    func createPasswordVc(_ sender: UIViewController,email: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(CreatePasswordViewController.self)) as! CreatePasswordViewController
+        vc.email = email
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -61,7 +61,7 @@ final class VerificationCodeViewController: UIViewController {
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
         if isFromLogin {
-            self.onBoardingDelegate.resendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
@@ -72,7 +72,16 @@ final class VerificationCodeViewController: UIViewController {
                 Loader.hide()
             }
         } else {
-            
+            self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+                if isSuccess {
+                    self.otpRef = otpRef
+                    self.currectOtp = otp
+                    print("*-*\(self.currectOtp)")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                }
+                Loader.hide()
+            }
         }
     }
     
@@ -82,14 +91,10 @@ final class VerificationCodeViewController: UIViewController {
     
     private func otpVerification() {
         if isFromLogin {
-            self.onBoardingDelegate.otpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
                 if isSuccess {
-//                    if self.isFromLogin {
                         let user = UserModel()
                         AppStateManager.sharedInstance.loginUser(user: user)
-//                    } else {
-//                        Navigate.to.welcomeVc(self)
-//                    }
                     Loader.hide()
                 } else {
                     Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
@@ -97,7 +102,15 @@ final class VerificationCodeViewController: UIViewController {
                 }
             }
         } else {
-            //signUp
+            self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+                if isSuccess {
+                        Navigate.to.welcomeVc(self)
+                    Loader.hide()
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
+                    Loader.hide()
+                }
+            }
         }
       
     }

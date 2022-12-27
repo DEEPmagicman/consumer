@@ -15,12 +15,15 @@ final class EnterNameViewController: UIViewController {
     @IBOutlet weak var ContinueBtn: UIButton!
     @IBOutlet weak var firstNameAndLastNameInfo: UILabel!
     
+    var onBoardingDelegate = OnBoardingPresenter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         firstNameAndLastNameInfo.highlightBold(["Why?"], size: 15, textColor: Constant.Color.primaryColor)
         firstNameTextField.delegate = self
         nikNameTextField.delegate = self
+        lastNameTextField.delegate = self
         self.ContinueBtn.isUserInteractionEnabled = false
         self.ContinueBtn.alpha = 0.5
     }
@@ -38,14 +41,24 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        Navigate.to.connectAccountVc(self)
+        self.onBoardingDelegate.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "") { isSuccess in
+            Loader.hide()
+            if isSuccess {
+                UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
+                UserDefault.shared.user?.LastName = self.lastNameTextField.text ?? ""
+                UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
+                Navigate.to.connectAccountVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "value not change", message: "")
+            }
+        }
     }
     
 }
 
 extension EnterNameViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if firstNameTextField.text != "" && nikNameTextField.text != "" {
+        if firstNameTextField.text != "" && lastNameTextField.text != "" {
             self.ContinueBtn.isUserInteractionEnabled = true
             self.ContinueBtn.alpha = 1.0
         }else {

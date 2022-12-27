@@ -14,6 +14,8 @@ final class DateOfBirthViewController: UIViewController {
     @IBOutlet weak var ageLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
     
+    var onBoardingDelegate = OnBoardingPresenter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +49,16 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        Navigate.to.selectGenderVc(self)
+        let dob = datePickerView.date.string(format: .YYYYMMDD)
+        self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess in
+            if isSuccess {
+                UserDefault.shared.user?.dateOfBirth = dob
+                Navigate.to.selectGenderVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "Date of Birthday Not Update", message: "")
+            }
+            Loader.hide()
+        }
     }
     
 }

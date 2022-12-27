@@ -15,6 +15,8 @@ final class SelectGenderViewController: UIViewController {
     @IBOutlet weak var womenRedioBtn: UIButton!
     @IBOutlet weak var continueBtn: UIButton!
     
+    var onBoardingDelegate = OnBoardingPresenter()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,6 +37,7 @@ final class SelectGenderViewController: UIViewController {
           self.womenRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
+        UserDefault.shared.user?.gender = "MALE"
     }
     
     @objc func onClickWomanView() {
@@ -42,10 +45,18 @@ final class SelectGenderViewController: UIViewController {
         self.manRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
+        UserDefault.shared.user?.gender = "FEMALE"
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.SetProfilePicVc(self)
+        self.onBoardingDelegate.editUserProfileApi(gender: UserDefault.shared.user?.gender) { isSuccess in
+            if isSuccess {
+                Navigate.to.SetProfilePicVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "Gender Not update", message: "")
+            }
+            Loader.hide()
+        }
     }
 
 }

@@ -73,11 +73,7 @@ final class EnterPhoneNumberViewController: UIViewController {
         if isFromLogin {
             self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
                 if isSuccess {
-//                    if self.isFromLogin {
                         Navigate.to.enterVerificationCodeVc(self,isFromLogin: true, otp: otp, otpRef: otpRef)
-//                    } else {
-//                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef)
-//                    }
                     Loader.hide()
                 } else {
                     Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
@@ -86,7 +82,15 @@ final class EnterPhoneNumberViewController: UIViewController {
                
             }
         } else {
-            //signUp
+            self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
+                if isSuccess {
+                    Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef)
+                    Loader.hide()
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
+                    Loader.hide()
+                }
+            }
         }
            
     }
