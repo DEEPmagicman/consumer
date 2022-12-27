@@ -39,9 +39,10 @@ extension BaseController{
         let controller = EditProfileVC()
         self.navigationController?.pushViewController(controller, animated: true)
     }
-    func pushToBookingInvite(booking: BookingsDataSet?){
+    func pushToBookingInvite(booking: BookingsDataSet?, isFromSettings: Bool = false){
         let controller = BookingInvites()
         controller.booking = booking
+        controller.isFromSettings = isFromSettings
         Utility.main.topViewController()?.navigationController?.pushViewController(controller, animated: true)
     }
     func pushToVIPBookingInvite(){
@@ -52,9 +53,10 @@ extension BaseController{
         let controller = PendingBookingAwait()
         Utility.main.topViewController()?.navigationController?.pushViewController(controller, animated: true)
     }
-    func pushToTicketConfirmation(data: BookingsDataSet?){
+    func pushToTicketConfirmation(data: BookingsDataSet?, isFromSettings: Bool = false){
         let controller = TicketConfirmation()
         controller.screenType = .FromBooking
+        controller.isFromSettings = isFromSettings
         Utility.main.topViewController()?.navigationController?.pushViewController(controller, animated: true)
     }
     func pushToAllEvents(){

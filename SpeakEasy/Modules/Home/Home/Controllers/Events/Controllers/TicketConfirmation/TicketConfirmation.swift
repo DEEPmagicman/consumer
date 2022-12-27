@@ -12,13 +12,16 @@ class TicketConfirmation: UIViewController {
     @IBOutlet weak var strechyTableView: UITableView!
 //    @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var btnViewInBookings: UIButtonDeviceClass!
+    @IBOutlet weak var backBtn: UIButton!
+    @IBOutlet weak var topTitleLbl: UILabelDeviceClass!
+    @IBOutlet weak var shareBtn: UIButton!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
     var screenType: TicketConfirmationType = .FromHome
     var topEventData: TopEventDataSet?
-
+    var isFromSettings = false
     
     
     override func viewDidLoad() {
@@ -29,6 +32,19 @@ class TicketConfirmation: UIViewController {
         self.setupStreachyHeaderViewFrames()
         self.strechyTableView.layoutIfNeeded()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        shareBtn.isHidden = isFromSettings
+        if isFromSettings {
+            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
+            topTitleLbl.text = "Ticket Details"
+        } else {
+            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+            topTitleLbl.text = "Confirmation"
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.updateHeaderView()
@@ -125,12 +141,14 @@ extension TicketConfirmation: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "SelectedTicketAndRecipientTVC", for: indexPath) as? SelectedTicketAndRecipientTVC else { return UITableViewCell() }
+            if isFromSettings { cell.ticketInfo.text = "" }
             return cell
         case 1:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "ViewEventTicketConfirmInvitedPeopleTVC", for: indexPath) as? ViewEventTicketConfirmInvitedPeopleTVC else { return UITableViewCell() }
             return cell
         case 2:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "PaymentMethodTVC", for: indexPath) as? PaymentMethodTVC else { return UITableViewCell() }
+            cell.changeBtn.isHidden = isFromSettings
             return cell
         case 3:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "TransactionSummaryTVC", for: indexPath) as? TransactionSummaryTVC else { return UITableViewCell() }

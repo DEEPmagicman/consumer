@@ -309,13 +309,14 @@
                 <outlet property="lblBookingName" destination="G5E-tP-YRy" id="S3f-DH-jFp"/>
                 <outlet property="lblDate" destination="mXV-BM-QSU" id="9Og-tQ-nCD"/>
                 <outlet property="lblStatus" destination="jk4-yO-m7Y" id="StH-G9-53i"/>
+                <outlet property="statusView" destination="Flp-Ih-Dij" id="xEe-2G-53n"/>
                 <outlet property="viewArtistDetail" destination="VOr-fU-nrg" id="haO-u9-9tj"/>
                 <outlet property="viewCount" destination="OAb-Y1-75m" id="vbI-E1-59F"/>
                 <outlet property="viewOthers" destination="W65-Sm-GFz" id="jot-MM-4JR"/>
                 <outlet property="viewTable" destination="z7Z-eq-aUQ" id="lWg-eS-dme"/>
                 <outlet property="viewTicket" destination="yLZ-Jr-ME8" id="5bM-94-hSg"/>
             </connections>
-            <point key="canvasLocation" x="266.66666666666669" y="149.59239130434784"/>
+            <point key="canvasLocation" x="266.66666666666669" y="149.18478260869566"/>
         </tableViewCell>
     </objects>
     <resources>

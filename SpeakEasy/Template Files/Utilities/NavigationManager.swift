@@ -16,22 +16,30 @@ class Navigate {
     
     }
     
+    func back(_ sender: UIViewController) {
+        sender.navigationController?.popViewController(animated: true)
+    }
+    
     func startScreenViewController(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false) {
+    func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(EnterPhoneNumberViewController.self)) as! EnterPhoneNumberViewController
         vc.isFromLogin = isFromLogin
+        vc.isFromSettings = isFromSettings
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, otp: String, otpRef: String) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(VerificationCodeViewController.self)) as! VerificationCodeViewController
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp
         vc.otpRef = otpRef
+        vc.isFromSettings = isFromSettings
+        vc.isForEmail = isForEmail
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -111,8 +119,9 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func loginWithEmailVc(_ sender: UIViewController) {
+    func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(LoginWithEmailViewController.self)) as! LoginWithEmailViewController
+        vc.isFromSettings = isFromSettings
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -147,6 +156,49 @@ class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(WelcomeItroduceViewController.self)) as! WelcomeItroduceViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func settingsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SettingsViewController.self)) as! SettingsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func notificationVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(NotificationViewController.self)) as! NotificationViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func deleteAccountVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(DeleteAccountViewController.self)) as! DeleteAccountViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func personalInformationVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PersonalInformationViewController.self)) as! PersonalInformationViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func pastPurchasesVisitsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PastPurchasesVisitsViewController.self)) as! PastPurchasesVisitsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func paymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PaymentMethodsViewController.self)) as! PaymentMethodsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addPaymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(AddPaymentMethodsViewController.self)) as! AddPaymentMethodsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addCardInfoVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(AddCardInfoViewController.self)) as! AddCardInfoViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func cardDetailsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(CardDetailsViewController.self)) as! CardDetailsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }
-
-

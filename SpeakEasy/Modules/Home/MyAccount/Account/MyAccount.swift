@@ -98,7 +98,7 @@ class MyAccount: BaseController {
         super.pushToEditProfile()
     }
     @IBAction func onBtnSetting(_ sender: UIButton) {
-        AppStateManager.sharedInstance.logoutUserAndChangeRootView()
+        Navigate.to.settingsVc(self)
     }
 }
 //MARK: - Helper Methods

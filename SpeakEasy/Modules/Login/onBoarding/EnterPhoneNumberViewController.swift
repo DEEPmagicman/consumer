@@ -13,10 +13,14 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var countryCodeTextField: FPNTextField!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
+    @IBOutlet weak var bgImg: UIImageView!
+    @IBOutlet weak var backBtn: UIButton!
     
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
     var contryCode = ""
+    var isFromSettings = false
+    
     private var checkFPNField = FPNTextField()
     var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     
@@ -48,6 +52,17 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         listController.showCountryPhoneCode = true
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isFromSettings {
+            bgImg.isHidden = true
+            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
+        } else {
+            bgImg.isHidden = false
+            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+        }
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -82,13 +97,17 @@ final class EnterPhoneNumberViewController: UIViewController {
                
             }
         } else {
-            self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
-                if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef)
-                    Loader.hide()
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
-                    Loader.hide()
+            if isFromSettings {
+                Navigate.to.enterVerificationCodeVc(self, isFromSettings: isFromSettings)
+            } else {
+                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
+                    if isSuccess {
+                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef)
+                        Loader.hide()
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
+                        Loader.hide()
+                    }
                 }
             }
         }
