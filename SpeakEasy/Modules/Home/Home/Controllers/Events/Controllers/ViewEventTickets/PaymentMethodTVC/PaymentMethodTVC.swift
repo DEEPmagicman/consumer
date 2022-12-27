@@ -9,6 +9,8 @@ import UIKit
 
 class PaymentMethodTVC: UITableViewCell {
 
+    @IBOutlet weak var changeBtn: UIButtonDeviceClass!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -171,4 +171,29 @@ class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PersonalInformationViewController.self)) as! PersonalInformationViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func pastPurchasesVisitsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PastPurchasesVisitsViewController.self)) as! PastPurchasesVisitsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func paymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(PaymentMethodsViewController.self)) as! PaymentMethodsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addPaymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(AddPaymentMethodsViewController.self)) as! AddPaymentMethodsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addCardInfoVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(AddCardInfoViewController.self)) as! AddCardInfoViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func cardDetailsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(CardDetailsViewController.self)) as! CardDetailsViewController
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }

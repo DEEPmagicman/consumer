@@ -19,7 +19,7 @@ class SettingsViewController: UIViewController {
     }
 
     @IBAction func onClickPayment(_ sender: Any) {
-        
+        Navigate.to.paymentMethodsVc(self)
     }
     
     @IBAction func onClickPersonalInfo(_ sender: Any) {
@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickPurchases(_ sender: Any) {
-        
+        Navigate.to.pastPurchasesVisitsVc(self)
     }
     
     @IBAction func onClickNotifications(_ sender: Any) {

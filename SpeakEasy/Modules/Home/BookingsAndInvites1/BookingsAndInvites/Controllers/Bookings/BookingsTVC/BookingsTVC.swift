@@ -20,8 +20,10 @@ class BookingsTVC: UITableViewCell {
     @IBOutlet weak var lblStatus: UILabel!
     @IBOutlet weak var imgArtist: UIImageView!
     @IBOutlet weak var viewCount: UIView!
+    @IBOutlet weak var statusView: UIView!
     
-    func setData(data: BookingsDataSet){
+    func setData(data: BookingsDataSet, isFromSettings: Bool = false){
+        
         self.imgBrand.image = data.brand
         self.lblBookingName.text = data.bookingName
         self.imgArtist.image = data.performerCover
@@ -62,8 +64,8 @@ class BookingsTVC: UITableViewCell {
         else {
             self.lblStatus.textColor = Global.APP_COLOR_LIGHT_GREY
         }
-        
-        
+        statusView.isHidden = isFromSettings
+        viewCount.isHidden = isFromSettings
     }
 }
 

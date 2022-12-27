@@ -15,8 +15,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TicketConfirmation" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
+                <outlet property="backBtn" destination="LbL-kD-E4j" id="EN6-UP-AjU"/>
                 <outlet property="btnViewInBookings" destination="QsQ-An-kmg" id="p5v-yV-p6y"/>
+                <outlet property="shareBtn" destination="18w-HQ-OhM" id="QFz-UR-NMX"/>
                 <outlet property="strechyTableView" destination="gXR-EL-fiq" id="JsO-aN-LW7"/>
+                <outlet property="topTitleLbl" destination="Ahi-FE-2vg" id="vG8-by-oQJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

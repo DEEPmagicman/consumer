@@ -15,6 +15,13 @@
 		0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */; };
 		0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */; };
 		0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */; };
+		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
+		0447306A295AABEE0001F568 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473068295AABEE0001F568 /* PaymentTableViewCell.swift */; };
+		0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04473069295AABEE0001F568 /* PaymentTableViewCell.xib */; };
+		0447306D295AB8A80001F568 /* AddPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */; };
+		0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */; };
+		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
+		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
 		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
@@ -491,6 +498,13 @@
 		0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextFieldWithIcon.swift; sourceTree = "<group>"; };
 		0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+fixCaretPosition.swift"; sourceTree = "<group>"; };
 		0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextField.swift; sourceTree = "<group>"; };
+		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
+		04473068295AABEE0001F568 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
+		04473069295AABEE0001F568 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
+		0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodsViewController.swift; sourceTree = "<group>"; };
+		0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardInfoViewController.swift; sourceTree = "<group>"; };
+		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
+		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
 		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
 		0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteArtistProfileCVC.swift; sourceTree = "<group>"; };
@@ -998,11 +1012,17 @@
 		0436D083295966B40087D3DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				04473067295AABC20001F568 /* PaymentMethodsCell */,
 				0436D084295966CF0087D3DB /* Settings.storyboard */,
 				0436D086295966E30087D3DB /* SettingsViewController.swift */,
 				0436D088295978060087D3DB /* NotificationViewController.swift */,
 				0436D08A295978170087D3DB /* DeleteAccountViewController.swift */,
 				0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */,
+				046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */,
+				04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */,
+				0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */,
+				0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */,
+				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1015,6 +1035,15 @@
 				0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */,
 			);
 			path = SkyFloatingLabelTextField;
+			sourceTree = "<group>";
+		};
+		04473067295AABC20001F568 /* PaymentMethodsCell */ = {
+			isa = PBXGroup;
+			children = (
+				04473068295AABEE0001F568 /* PaymentTableViewCell.swift */,
+				04473069295AABEE0001F568 /* PaymentTableViewCell.xib */,
+			);
+			path = PaymentMethodsCell;
 			sourceTree = "<group>";
 		};
 		047473FD28FD17190097A523 /* ArtistProfilePopUp */ = {
@@ -3573,6 +3602,7 @@
 				E1A9E75228C55D550081FB28 /* BottleMenuTVC.xib in Resources */,
 				E166184A28BED1810027C6EA /* HeaderViewCustom.xib in Resources */,
 				E1A9E76828C55D550081FB28 /* Locations.xib in Resources */,
+				0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */,
 				0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */,
 				E1A9E7F928C579690081FB28 /* MyAccount.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
@@ -3737,6 +3767,7 @@
 				E1A9E79628C560BC0081FB28 /* Search.swift in Sources */,
 				E17DC7F628C6B3B500244C4F /* NoResultFoundTVC.swift in Sources */,
 				E167058B28CA6AB800644BF0 /* InviteFromContactTVC.swift in Sources */,
+				0447306A295AABEE0001F568 /* PaymentTableViewCell.swift in Sources */,
 				E11F4C1128C835F3008D2E30 /* PendingBookingAwait.swift in Sources */,
 				E15D6B6B28BC39AC0076286C /* Tutorial2CVC.swift in Sources */,
 				CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */,
@@ -3766,6 +3797,7 @@
 				E1A9E7CD28C56FD10081FB28 /* FriendsHeaderView.swift in Sources */,
 				BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */,
 				CE4867B5286F358800FD277E /* UIImage+Extension.swift in Sources */,
+				0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */,
 				CE4867CF286F358800FD277E /* AppStateManager.swift in Sources */,
 				E11CE3FA28C97709003899C4 /* ExtendedTabCVC.swift in Sources */,
 				E1A9E76728C55D550081FB28 /* Locations.swift in Sources */,
@@ -3847,10 +3879,12 @@
 				E11F4A9228C800B1008D2E30 /* TabCVC.swift in Sources */,
 				E11F4C3D28C8383A008D2E30 /* TicketConfirmation.swift in Sources */,
 				E1A9E7FB28C579690081FB28 /* FavouriteDrinksCVC.swift in Sources */,
+				04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */,
 				E1A9E76028C55D550081FB28 /* HotVenueCVC.swift in Sources */,
 				E11F4B9B28C8358C008D2E30 /* EventBookingDetails.swift in Sources */,
 				E167059128CA6AB800644BF0 /* FriendTVC.swift in Sources */,
 				4A7CC53428E37ACA00F8BA63 /* BookingAddressTVC.swift in Sources */,
+				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
 				4A7CC54428E385E700F8BA63 /* PaymentsTVC.swift in Sources */,
 				E15D6B6328BC39AC0076286C /* SignUp.swift in Sources */,
@@ -3875,6 +3909,7 @@
 				CE4867E1286F392900FD277E /* UserModel.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
+				0447306D295AB8A80001F568 /* AddPaymentMethodsViewController.swift in Sources */,
 				CE4867C3286F358800FD277E /* ButtonStates.swift in Sources */,
 				BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */,
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
@@ -3961,6 +3996,7 @@
 				E11F4B8B28C8358C008D2E30 /* HeaderView.swift in Sources */,
 				E11F4A9928C800B1008D2E30 /* Wallet.swift in Sources */,
 				BDB0AAE12950235400CD1FDA /* WelcomeItroduceViewController.swift in Sources */,
+				04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */,
 				E11F4C0828C835F3008D2E30 /* BookingRequestTVC.swift in Sources */,
 				CAC413F528A478040007BA86 /* DeviceOrientation.swift in Sources */,
 				4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */,

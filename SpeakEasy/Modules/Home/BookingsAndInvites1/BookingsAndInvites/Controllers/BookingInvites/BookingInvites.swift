@@ -15,11 +15,14 @@ class BookingInvites: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var viewPendingPayment: UIView!
     @IBOutlet weak var viewBookingRequestSent: UIView!
+    @IBOutlet weak var backBtn: UIButton!
+    @IBOutlet weak var topTitleLbl: UILabelDeviceClass!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 414.0
     
     var booking: BookingsDataSet?
+    var isFromSettings = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,18 @@ class BookingInvites: UIViewController {
         self.setupStretchyTableView()
         self.setUI()
         self.tableView.alpha = 0.0
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewPendingPayment.isHidden = isFromSettings
+        if isFromSettings {
+            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
+            topTitleLbl.text = "Visit Details"
+        } else {
+            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+            topTitleLbl.text = "Pending Booking"
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -200,11 +215,16 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentsTVC") as! PaymentsTVC
             return cell
         default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SubmitRequestTVC") as! SubmitRequestTVC
-            cell.btnSubmitRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
-            cell.btnCancelRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
-            cell.setData(data: self.booking ?? BookingsDataSet())
-            return cell
+            if !isFromSettings {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "SubmitRequestTVC") as! SubmitRequestTVC
+                cell.btnSubmitRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
+                cell.btnCancelRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
+                cell.setData(data: self.booking ?? BookingsDataSet())
+                return cell
+            }
+            else {
+                return UITableViewCell()
+            }
         }
     }
     @objc func onBtnSubmitRequest(_ sender: UIButton) {

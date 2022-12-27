@@ -21,6 +21,10 @@ struct Constant {
     struct Icon {
         static let radioClick = UIImage(named: "blueCheck")
         static let radioIcon = UIImage(named: "radioCirculIcon")
+        static let applePay = UIImage(named: "applePay")
+        static let masterCard = UIImage(named: "masterCard")
+        static let check = UIImage(named: "purpul_Check")
+        static let defaultIcon = UIImage(named: "defaultIcon")
     }
     
     struct String {
