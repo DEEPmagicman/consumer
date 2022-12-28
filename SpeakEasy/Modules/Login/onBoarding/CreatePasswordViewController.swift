@@ -12,6 +12,7 @@ final class CreatePasswordViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var showBtn: UIButton!
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var editEmailLbl: UILabel!
     
     var email = ""
     var onBoardingDelegate = OnBoardingPresenter()
@@ -21,19 +22,33 @@ final class CreatePasswordViewController: UIViewController {
         passwordTextField.delegate = self
         self.showBtn.isSelected = true
         self.passwordTextField.isSecureTextEntry = true
+        self.showBtn.setTitle("Show", for: .normal)
         
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
+        
+//        editEmailLbl.highlightBold(["Edit"], size: 15, textColor: Constant.Color.primaryColor)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEditEmail(_:)))
+        self.editEmailLbl.isUserInteractionEnabled = true
+        self.editEmailLbl.addGestureRecognizer(tap)
 
+    }
+    
+    @objc func onClickEditEmail(_ sender: UITapGestureRecognizer) {
+        if sender.didTapAttributedString("Edit", in: editEmailLbl) {
+            navigationController?.popViewController(animated: true)
+        }
     }
     
     @IBAction func onClickShowPassWord(_ sender: Any) {
         if self.showBtn.isSelected {
             self.showBtn.isSelected = false
             self.passwordTextField.isSecureTextEntry = false
+            self.showBtn.setTitle("Hide", for: .normal)
         } else {
             self.showBtn.isSelected = true
             self.passwordTextField.isSecureTextEntry = true
+            self.showBtn.setTitle("Show", for: .normal)
         }
     }
     

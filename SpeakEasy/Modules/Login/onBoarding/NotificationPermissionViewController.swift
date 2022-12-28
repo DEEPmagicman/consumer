@@ -25,7 +25,9 @@ final class NotificationPermissionViewController: UIViewController, UNUserNotifi
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
                 completionHandler: { _, _ in
-                    Navigate.to.welcomeItroduceVc(self)
+                    DispatchQueue.main.async {
+                        Navigate.to.welcomeItroduceVc(self)
+                    }
                 }
             )
         } else {

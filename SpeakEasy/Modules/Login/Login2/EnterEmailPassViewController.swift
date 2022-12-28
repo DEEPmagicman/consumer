@@ -20,6 +20,7 @@ class EnterEmailPassViewController: UIViewController {
         
         self.showBtn.isSelected = true
         self.passwordTextField.isSecureTextEntry = true
+        self.showBtn.setTitle("Show", for: .normal)
 
     }
     
@@ -31,19 +32,23 @@ class EnterEmailPassViewController: UIViewController {
         if self.showBtn.isSelected {
             self.showBtn.isSelected = false
             self.passwordTextField.isSecureTextEntry = false
+            self.showBtn.setTitle("Hide", for: .normal)
         } else {
             self.showBtn.isSelected = true
             self.passwordTextField.isSecureTextEntry = true
+            self.showBtn.setTitle("Show", for: .normal)
         }
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
         self.onBoardingDelegate.loginWithEmailApi(email: self.email, password: passwordTextField.text ?? "") { isSuccess in
             if isSuccess {
-                
+                let user = UserModel()
+                AppStateManager.sharedInstance.loginUser(user: user)
             } else {
-                
+                Alert.showAlertSheet(style: .alert, title: "email not exist", message: "")
             }
+            Loader.hide()
         }
     }
     

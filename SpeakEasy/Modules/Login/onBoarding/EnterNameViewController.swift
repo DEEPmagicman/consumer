@@ -45,7 +45,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
             Loader.hide()
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
-                UserDefault.shared.user?.LastName = self.lastNameTextField.text ?? ""
+                UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""
                 UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
                 Navigate.to.connectAccountVc(self)
             } else {

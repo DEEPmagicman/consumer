@@ -280,7 +280,7 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uI8-dr-PfL" userLabel="Mainview">
-                                        <rect key="frame" x="16" y="133" width="382" height="117.5"/>
+                                        <rect key="frame" x="16" y="127.5" width="382" height="117.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -295,10 +295,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GWB-zi-fQp" userLabel="CountryView">
-                                        <rect key="frame" x="16" y="133" width="382" height="59.5"/>
+                                        <rect key="frame" x="16" y="127.5" width="382" height="59.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country/Region" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hmV-nK-QY8" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="12" y="8" width="79" height="22.5"/>
+                                                <rect key="frame" x="12" y="8" width="70.5" height="26"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="10"/>
                                                 <color key="textColor" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -310,10 +310,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="MFt-sX-hm4">
-                                                <rect key="frame" x="12" y="30.5" width="132.5" height="21"/>
+                                                <rect key="frame" x="12" y="34" width="121.5" height="17.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unites States" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WO5-gs-tP4" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="97.5" height="21"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="90" height="17.5"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -325,7 +325,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(+1)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4wz-UH-aca" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="103.5" y="0.0" width="29" height="21"/>
+                                                        <rect key="frame" x="96" y="0.0" width="25.5" height="17.5"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -381,7 +381,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LsH-N7-ew6" userLabel="PhoneView">
-                                        <rect key="frame" x="16" y="184.5" width="382" height="66"/>
+                                        <rect key="frame" x="16" y="179" width="382" height="66"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone number" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="51c-zx-9XU" customClass="UITextFieldDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                                 <rect key="frame" x="12" y="0.0" width="370" height="66"/>
@@ -410,7 +410,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll call or text you to confirm your number. Standard message and data rates apply." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMF-Zm-YON" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="265.5" width="374" height="36.5"/>
+                                        <rect key="frame" x="20" y="260" width="374" height="30.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -422,7 +422,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XnN-Tr-9Mt">
-                                        <rect key="frame" x="20" y="352" width="374" height="53.5"/>
+                                        <rect key="frame" x="20" y="340.5" width="374" height="53.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ud-qg-bkM" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="53.5"/>
@@ -464,7 +464,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your phone number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xUa-EM-cig" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="63" width="374" height="35"/>
+                                        <rect key="frame" x="20" y="63" width="374" height="29.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -715,34 +715,37 @@
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" textContentType="name"/>
                                             </textField>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JMR-pe-wFV">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JMR-pe-wFV">
                                                 <rect key="frame" x="319" y="19.5" width="45" height="19"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="45" id="DUO-Uz-atK"/>
                                                     <constraint firstAttribute="height" constant="19" id="iJl-Fi-0uB"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal">
-                                                    <attributedString key="attributedTitle">
-                                                        <fragment content="Show">
-                                                            <attributes>
-                                                                <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <font key="NSFont" metaFont="system" size="14"/>
-                                                                <integer key="NSUnderline" value="1"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
+                                                <state key="normal" title="Show">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="onClickShow:" destination="aVh-SV-cEr" eventType="touchUpInside" id="l2m-pz-2aZ"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F2o-7R-TxB">
+                                                <rect key="frame" x="322" y="36.5" width="39" height="1"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="0.75" id="qFK-by-om7"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="JMR-pe-wFV" firstAttribute="leading" secondItem="doo-Hf-ONi" secondAttribute="trailing" constant="15" id="6Xn-QZ-eMb"/>
                                             <constraint firstAttribute="bottom" secondItem="doo-Hf-ONi" secondAttribute="bottom" constant="5" id="85A-iv-M2m"/>
+                                            <constraint firstItem="F2o-7R-TxB" firstAttribute="leading" secondItem="JMR-pe-wFV" secondAttribute="leading" constant="3" id="9c2-t6-qmf"/>
+                                            <constraint firstItem="F2o-7R-TxB" firstAttribute="trailing" secondItem="JMR-pe-wFV" secondAttribute="trailing" constant="-3" id="Bc9-Bb-dLq"/>
                                             <constraint firstItem="JMR-pe-wFV" firstAttribute="centerY" secondItem="Bms-bc-Ppm" secondAttribute="centerY" id="Hig-B1-rYH"/>
+                                            <constraint firstItem="F2o-7R-TxB" firstAttribute="top" secondItem="JMR-pe-wFV" secondAttribute="bottom" constant="-2" id="J63-9B-u3k"/>
                                             <constraint firstAttribute="trailing" secondItem="JMR-pe-wFV" secondAttribute="trailing" constant="10" id="MpL-PT-gfh"/>
                                             <constraint firstItem="doo-Hf-ONi" firstAttribute="top" secondItem="Bms-bc-Ppm" secondAttribute="top" constant="5" id="N9F-V8-yus"/>
                                             <constraint firstItem="doo-Hf-ONi" firstAttribute="leading" secondItem="Bms-bc-Ppm" secondAttribute="leading" constant="10" id="aaV-DG-Zv5"/>
@@ -990,6 +993,7 @@
                     </view>
                     <connections>
                         <outlet property="emailTextField" destination="RxO-cD-GlC" id="W7n-L1-yMv"/>
+                        <outlet property="resendLinkBtn" destination="WxV-Bp-p1X" id="s1c-FQ-5rZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Es-Ws-AnE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

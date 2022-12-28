@@ -32,14 +32,14 @@ class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, otp: String, otpRef: String) {
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "",phoneNum: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(VerificationCodeViewController.self)) as! VerificationCodeViewController
         vc.isFromLogin = isFromLogin
-        vc.currectOtp = otp
-        vc.otpRef = otpRef
+        vc.currectOtp = otp ?? ""
+        vc.otpRef = otpRef ?? ""
         vc.isFromSettings = isFromSettings
         vc.isForEmail = isForEmail
+        vc.phoneNum = phoneNum
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

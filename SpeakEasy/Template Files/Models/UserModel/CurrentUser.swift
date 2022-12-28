@@ -12,7 +12,7 @@ struct Currentuser {
     var id: String
     var uniqueId: String
     var firstName: String
-    var LastName: String
+    var lastName: String
     var nickName: String
     var dateOfBirth: String
     var gender: String
@@ -38,9 +38,9 @@ struct Currentuser {
         case id = "id"
         case uniqueId = "unique_id"
         case firstName = "first_name"
-        case LastName = "Last_name"
+        case lastName = "last_name"
         case nickName = "nick_name"
-        case dateOfBirth = "date_of_birth"
+        case dateOfBirth = "dob"
         case gender = "gender"
         case email = "email"
         case location = "location"
@@ -65,9 +65,9 @@ struct Currentuser {
         self.id = dictionary["id"] as? String ?? ""
         self.uniqueId = dictionary["uniqueId"] as? String ?? ""
         self.firstName = dictionary["firstName"] as? String ?? ""
-        self.LastName = dictionary["LastName"] as? String ?? ""
+        self.lastName = dictionary["lastName"] as? String ?? ""
         self.nickName = dictionary["nickName"] as? String ?? ""
-        self.dateOfBirth = dictionary["dateOfBirth"] as? String ?? ""
+        self.dateOfBirth = dictionary["dob"] as? String ?? ""
         self.gender = dictionary["gender"] as? String ?? ""
         self.email = dictionary["email"] as? String ?? ""
         self.location = dictionary["location"] as? String ?? ""
@@ -95,7 +95,7 @@ extension Currentuser: Decodable, Encodable {
         id = try! values.decode(String.self, forKey: .id)
         uniqueId = try! values.decode(String.self, forKey: .uniqueId)
         firstName = try! values.decode(String.self, forKey: .firstName)
-        LastName = try! values.decode(String.self, forKey: .LastName)
+        lastName = try! values.decode(String.self, forKey: .lastName)
         nickName = try! values.decode(String.self, forKey: .nickName)
         dateOfBirth = try! values.decode(String.self, forKey: .dateOfBirth)
         gender = try! values.decode(String.self, forKey: .gender)
@@ -123,7 +123,7 @@ extension Currentuser: Decodable, Encodable {
         try val.encode(id, forKey: .id)
         try val.encode(uniqueId, forKey: .uniqueId)
         try val.encode(firstName, forKey: .firstName)
-        try val.encode(LastName, forKey: .LastName)
+        try val.encode(lastName, forKey: .lastName)
         try val.encode(nickName, forKey: .nickName)
         try val.encode(dateOfBirth, forKey: .dateOfBirth)
         try val.encode(gender, forKey: .gender)

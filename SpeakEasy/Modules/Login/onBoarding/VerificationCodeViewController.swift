@@ -19,6 +19,7 @@ final class VerificationCodeViewController: UIViewController {
     var otpText = ""
     var currectOtp = ""
     var otpRef = ""
+    var phoneNum = ""
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
     var isFromSettings = false
@@ -43,9 +44,7 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             bgImg.isHidden = false
         }
-        if isForEmail {
-            phoneNumLbl.text = "userexample@gmail.com"
-        }
+            phoneNumLbl.text = phoneNum
     }
     
     func setOtpView() {
@@ -69,19 +68,8 @@ final class VerificationCodeViewController: UIViewController {
         if otpText == ""{
                 showAlert(with: "", message: "Please Enter Otp")
         } else {
-            if otpText == ""{
-                showAlert(with: "", message: "enter Otp")
-            }else{
-//                OtpVerification()
-                if isFromSettings {
-                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
-                          self.navigationController?.popToViewController(pInfoVC, animated: false)
-                        }
-                } else {
-                    Navigate.to.welcomeVc(self)
-                }
-                
-            }
+                otpVerification()
+
         }
 
     }
@@ -99,15 +87,24 @@ final class VerificationCodeViewController: UIViewController {
                 Loader.hide()
             }
         } else {
-            self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
-                if isSuccess {
-                    self.otpRef = otpRef
-                    self.currectOtp = otp
-                    print("*-*\(self.currectOtp)")
+            if isFromSettings {
+                if isForEmail {
+                    
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                    
                 }
-                Loader.hide()
+            } else {
+                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+                    if isSuccess {
+                        self.otpRef = otpRef
+                        self.currectOtp = otp
+                        print("*-*\(self.currectOtp)")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                    }
+                    Loader.hide()
+                }
+
             }
         }
     }
@@ -128,15 +125,29 @@ final class VerificationCodeViewController: UIViewController {
                     Loader.hide()
                 }
             }
+            print("*-*login")
         } else {
-            self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
-                if isSuccess {
-                        Navigate.to.welcomeVc(self)
-                    Loader.hide()
+            if isFromSettings {
+                if isForEmail {
+                    print("*-*email")
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
-                    Loader.hide()
+                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
+                          self.navigationController?.popToViewController(pInfoVC, animated: false)
+                        }
+                    print("*-*settingPhone")
                 }
+               
+            } else {
+                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+                    if isSuccess {
+                            Navigate.to.welcomeVc(self)
+                        Loader.hide()
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
+                        Loader.hide()
+                    }
+                }
+               print("*-*signup")
             }
         }
       

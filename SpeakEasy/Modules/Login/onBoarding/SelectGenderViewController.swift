@@ -48,6 +48,14 @@ final class SelectGenderViewController: UIViewController {
         UserDefault.shared.user?.gender = "FEMALE"
     }
     
+    @IBAction func onClickManBtn(_ sender: Any) {
+        onClickManView()
+    }
+    
+    @IBAction func onClickWomanBtn(_ sender: Any) {
+        onClickWomanView()
+    }
+    
     @IBAction func onClickContinue(_ sender: Any) {
         self.onBoardingDelegate.editUserProfileApi(gender: UserDefault.shared.user?.gender) { isSuccess in
             if isSuccess {

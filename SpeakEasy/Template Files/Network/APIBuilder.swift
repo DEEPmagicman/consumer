@@ -22,6 +22,8 @@ class APIBuilder {
     private let signUpOtpResend_URL = "/signup/otp-resend"
     private let LoginWithEmail_URL = "/auth/login"
     private let userProfile_URl = "/auth/profile"
+    private let uploadPhoto_URL = "/upload/uploadFile"
+    private let resetEmailPassword = "/auth/forgot-password"
     
     func loginWithPhone() -> String {
         return BASE_URL + API_PATH + LoginWithPhone_URl
@@ -39,6 +41,10 @@ class APIBuilder {
         return BASE_URL + API_PATH + LoginWithEmail_URL
     }
     
+    func forgotPassword() -> String {
+        return BASE_URL + API_PATH + resetEmailPassword
+    }
+    
     func userProfile() -> String {
         return BASE_URL + API_PATH + userProfile_URl
     }
@@ -53,5 +59,9 @@ class APIBuilder {
     
     func signUpOtpResend() -> String {
         return BASE_URL + API_PATH + signUpOtpResend_URL
+    }
+    
+    func uploadPhoto() -> String {
+        return BASE_URL + uploadPhoto_URL
     }
 }

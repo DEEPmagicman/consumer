@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class OnBoardingPresenter {
         
@@ -144,6 +145,8 @@ class OnBoardingPresenter {
                 return
             }
             let user = Currentuser(fromDictionary: userDic)
+            UserDefault.shared.user = user
+            print("\(user)")
             complition(true)
 
         } failure: { (error) in
@@ -152,7 +155,25 @@ class OnBoardingPresenter {
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil,nickName:String? = nil,email:String? = nil,password: String? = nil,dob: String? = nil,gender: String? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func forgotPasswordApi(email: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+        Loader.show()
+        let param = ["email": email]
+        AFWrapper.postRequest(APIBuilder.share.forgotPassword(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? NSDictionary
+            else {
+                complition(false)
+                return
+            }
+            complition(true)
+
+        } failure: { (error) in
+            print(error ?? "")
+            complition(false)
+        }
+    }
+    
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil,nickName:String? = nil,email:String? = nil,password: String? = nil,dob: String? = nil,gender: String? = nil,image:String? = nil,city: String? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName {
             param["firstName"] = fName
@@ -175,6 +196,12 @@ class OnBoardingPresenter {
         if let gender = gender {
             param["gender"] = gender
         }
+        if let image = image {
+            param["image"] = image
+        }
+        if let city = city {
+            param["city"] = city
+        }
 
         Loader.show()
         AFWrapper.patchRequest(APIBuilder.share.userProfile(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
@@ -189,6 +216,24 @@ class OnBoardingPresenter {
         } failure: { (error) in
             print(error ?? "")
             complition(false)
+        }
+    }
+    
+    func uploadPhotoApi(image: UIImage, complition: @escaping (_ imgUrl:String, _ isSuccess: Bool) -> Void) {
+        Loader.show()
+        let param = ["file": image] as [String : Any]
+        AFWrapper.multipart(APIBuilder.share.uploadPhoto(), fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String
+            else {
+                complition("", false)
+                return
+            }
+            complition(imgUrl, true)
+
+        } failure: { (error) in
+            complition("", false)
+            print(error ?? "")
         }
     }
 

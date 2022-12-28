@@ -45,7 +45,7 @@ class LoginWithEmailViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if isFromSettings {
-            Navigate.to.enterVerificationCodeVc(self, isFromSettings: true, isForEmail: true)
+            Navigate.to.enterVerificationCodeVc(self, isFromSettings: true, isForEmail: true, phoneNum: self.emailTextField.text ?? "")
         } else {
             Navigate.to.enterEmailPassVc(self,email: emailTextField.text ?? "")
         }

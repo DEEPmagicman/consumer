@@ -68,4 +68,41 @@ class AFWrapper: NSObject {
         
         debugPrint(req)
     }
+    
+    class func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post, success:@escaping (Any?) -> Void, failure:@escaping (Any?) -> Void) {
+        if !Connectivity.isConnectedToInternet {
+          success(nil)
+          failure(nil)
+          return
+        }
+        Alamofire.upload(multipartFormData: { (multipartParam) in
+          for param in params {
+            if param.key == fileParamKey, let data = fileData {
+              multipartParam.append(data, withName: param.key, fileName: fileName, mimeType: ".\((fileName as NSString).pathExtension)")
+            } else {
+              multipartParam.append(Data((param.value as? String ?? "").utf8), withName: param.key)
+            }
+          }
+        }, to: strURL, method: method, headers: headers) { (result) in
+          switch result {
+          case .success(let upload, _, _):
+            let req = upload.responseJSON { (response) in
+              if let responseCode = response.response?.statusCode {
+                if responseCode == 200 {
+                  success(response.result.value)
+                } else if responseCode == 201 {
+                  success(response.result.value)
+                } else {
+                  failure(response.result.value)
+                }
+              } else {
+                failure(response.result.error)
+              }
+            }
+            debugPrint(req)
+          case .failure(let error):
+            failure(error)
+          }
+        }
+      }
 }

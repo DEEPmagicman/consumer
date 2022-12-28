@@ -15,6 +15,9 @@ final class SetProfilePictureViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var cameraBtn: UIButton!
     
+    var onBoardingDelegate = OnBoardingPresenter()
+    var imgUrl = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,7 +28,29 @@ final class SetProfilePictureViewController: UIViewController {
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.notificationPermissionVc(self)
+        self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
+            if isSuccess {
+                self.imgUrl = imgUrl
+                self.onBoardingDelegate.editUserProfileApi(image: imgUrl) { isSuccess in
+                    if isSuccess {
+                        UserDefault.shared.user?.image = imgUrl
+                        Navigate.to.notificationPermissionVc(self)
+                        Loader.hide()
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: "image not update", message: "")
+                        Loader.hide()
+                    }
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "image not upload", message: "")
+                Loader.hide()
+            }
+            
+        }
+    }
+    
+    @IBAction func onClickCamaraBtn(_ sender: Any) {
+        onClickAddPhoto()
     }
     
     @objc func onClickAddPhoto() {

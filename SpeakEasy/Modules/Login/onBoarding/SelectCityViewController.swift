@@ -15,6 +15,8 @@ final class SelectCityViewController: UIViewController {
     
     var arrCityList = [CitySelection(name: "Chicago, IL", img: "New York, NY 1"),
                             CitySelection(name: "Cleveland, OH", img: "Miami, FL"),CitySelection(name: "surat", img: "New York, NY 1"),CitySelection(name: "Baroda", img: "New York, NY 1"),CitySelection(name: "Ahmedabad", img: "Miami, FL")]
+    var selectedCity = ""
+    var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +28,15 @@ final class SelectCityViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.selectVibesVc(self)
+        self.onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { isSuccess in
+            if isSuccess {
+                UserDefault.shared.user?.city = self.selectedCity
+                Navigate.to.selectVibesVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "city not update", message: "")
+            }
+            Loader.hide()
+        }
     }
 }
 
@@ -45,7 +55,8 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.selectVibesVc(self)
+        self.selectedCity = arrCityList[indexPath.row].name
+//        Navigate.to.selectVibesVc(self)
     }
     
 }
