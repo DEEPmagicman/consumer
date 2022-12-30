@@ -37,5 +37,10 @@ struct Constant {
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
         static let confirm21YearText = "You must be over 21 years old to continue."
         static let genderList = ["Male", "Female"]
+        static let InstagramClientId = "1996312040570930"
+        static let InstagramredirectUri = "https://speakeasy.com/auth"
+        static let authorizationCode = "authorization_code"
+        static let InstagramclientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
+        static let internetNotConnect = "internet not connect"
     }
 }

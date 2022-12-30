@@ -26,6 +26,7 @@ struct Currentuser {
     var status: String
     var image: String
     var instagramId: String
+    var instagramTokan: String
     var spotifyId: String
     var isDeleted: Bool
     var lastLogin: String
@@ -52,6 +53,7 @@ struct Currentuser {
         case status = "status"
         case image = "image"
         case instagramId = "instagram_id"
+        case instagramTokan = "instagram_tokan"
         case spotifyId = "spotify_id"
         case isDeleted = "is_deleted"
         case lastLogin = "last_login"
@@ -79,6 +81,7 @@ struct Currentuser {
         self.status = dictionary["status"] as? String ?? ""
         self.image = dictionary["image"] as? String ?? ""
         self.instagramId = dictionary["instagramId"] as? String ?? ""
+        self.instagramTokan = dictionary["instagramTokan"] as? String ?? ""
         self.spotifyId = dictionary["spotifyId"] as? String ?? ""
         self.isDeleted = dictionary["isDeleted"] as? Bool ?? false
         self.lastLogin = dictionary["lastLogin"] as? String ?? ""
@@ -109,6 +112,7 @@ extension Currentuser: Decodable, Encodable {
         status = try! values.decode(String.self, forKey: .status)
         image = try! values.decode(String.self, forKey: .image)
         instagramId = try! values.decode(String.self, forKey: .instagramId)
+        instagramTokan = try! values.decode(String.self, forKey: .instagramTokan)
         spotifyId = try! values.decode(String.self, forKey: .spotifyId)
         isDeleted = try! values.decode(Bool.self, forKey: .isDeleted)
         lastLogin = try! values.decode(String.self, forKey: .lastLogin)
@@ -137,6 +141,7 @@ extension Currentuser: Decodable, Encodable {
         try val.encode(status, forKey: .status)
         try val.encode(image, forKey: .image)
         try val.encode(instagramId, forKey: .instagramId)
+        try val.encode(instagramTokan, forKey: .instagramTokan)
         try val.encode(spotifyId, forKey: .spotifyId)
         try val.encode(isDeleted, forKey: .isDeleted)
         try val.encode(lastLogin, forKey: .lastLogin)

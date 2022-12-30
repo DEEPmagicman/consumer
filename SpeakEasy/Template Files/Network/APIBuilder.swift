@@ -28,6 +28,10 @@ class APIBuilder {
     private let drinkList_URL = "/drink"
     private let socialMediaConnect_URL = "/auth/connect-social"
     
+    static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramredirectUri + "&scope=user_profile,user_media&response_type=code"
+    private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
+    static let getInstagramImages = "https://graph.instagram.com/me/media?fields=id,media_url,media_type&access_token=%@"
+    
     func loginWithPhone() -> String {
         return BASE_URL + API_PATH + LoginWithPhone_URl
     }
@@ -78,5 +82,9 @@ class APIBuilder {
     
     func socialMediaConnection() -> String {
         return BASE_URL + API_PATH + socialMediaConnect_URL
+    }
+    
+    func getInstagramToken() -> String {
+        return INSTAGRAMTOKEN
     }
 }

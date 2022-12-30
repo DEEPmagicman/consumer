@@ -86,6 +86,7 @@
 		BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */; };
 		BD7FA0F8294892C200935275 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0F7294892C200935275 /* video.mov */; };
 		BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B38C295EBC4A005592A7 /* InstagramManager.swift */; };
+		BD80B391295EC1CB005592A7 /* InstagramWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B390295EC1CB005592A7 /* InstagramWebController.swift */; };
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
@@ -581,6 +582,7 @@
 		BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F7294892C200935275 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		BD80B38C295EBC4A005592A7 /* InstagramManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramManager.swift; sourceTree = "<group>"; };
+		BD80B390295EC1CB005592A7 /* InstagramWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramWebController.swift; sourceTree = "<group>"; };
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
@@ -1303,6 +1305,7 @@
 				BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */,
 				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
+				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -4022,6 +4025,7 @@
 				CE4867BF286F358800FD277E /* BaseController.swift in Sources */,
 				E11F4C3828C8383A008D2E30 /* SelectedTicketAndRecipientTVC.swift in Sources */,
 				4A7CC53F28E3832600F8BA63 /* InviteFriendsCostSplitTVC.swift in Sources */,
+				BD80B391295EC1CB005592A7 /* InstagramWebController.swift in Sources */,
 				CE4867A3286F358800FD277E /* MOLHSizable.swift in Sources */,
 				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,
 				E167055F28CA442800644BF0 /* ViewEventTicketConfirmCVC.swift in Sources */,

@@ -201,4 +201,9 @@ class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(CardDetailsViewController.self)) as! CardDetailsViewController
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func instagramWebView(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(InstagramWebController.self)) as! InstagramWebController
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
 }

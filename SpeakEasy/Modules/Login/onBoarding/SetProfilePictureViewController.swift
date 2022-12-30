@@ -67,11 +67,25 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
 //            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
 //            self.showImagePickerController(soureType:.camera)
+            self.fetchInstaPhotos(self)
         }
         let cancelAction =  UIAlertAction(title: "Cancel", style: .cancel, handler: nil )
         
         Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction,cancelAction,instagram], completion: nil)
         
+    }
+    
+    func fetchInstaPhotos(_ fromViewController: UIViewController) {
+        
+        if !Connectivity.isConnectedToInternet {
+            Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
+            return
+        }
+        if let instaToken = UserDefault.shared.user?.instagramTokan {
+            InstagramManager.getInstaImages(token: instaToken)
+        } else {
+            Navigate.to.instagramWebView(self)
+        }
     }
     
     func showImagePickerController(soureType:UIImagePickerController.SourceType){

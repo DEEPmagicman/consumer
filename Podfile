@@ -28,6 +28,7 @@ target 'SpeakEasy-Consumer' do
   pod 'OTPFieldView'
   pod 'SVProgressHUD'
   pod 'GoogleSignIn'
+  pod 'SwiftInstagram', '~> 1.1.2'
 end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
