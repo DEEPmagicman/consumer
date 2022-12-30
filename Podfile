@@ -27,6 +27,7 @@ target 'SpeakEasy-Consumer' do
   pod "FlagPhoneNumber"
   pod 'OTPFieldView'
   pod 'SVProgressHUD'
+  pod 'GoogleSignIn'
 end
 post_install do |installer|
   installer.pods_project.targets.each do |target|

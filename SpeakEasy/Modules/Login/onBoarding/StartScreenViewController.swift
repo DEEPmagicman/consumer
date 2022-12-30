@@ -17,12 +17,7 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
-//        Navigate.to.enterPhoneNumVc(self)
-//        Navigate.to.welcomeVc(self)
-//        Navigate.to.selectGenderVc(self)
-//        Navigate.to.SetProfilePicVc(self)
-        Navigate.to.notificationPermissionVc(self)
-//        Navigate.to.createPasswordVc(self,email: "emailTextField.text" ?? "")
+        Navigate.to.enterPhoneNumVc(self)
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {

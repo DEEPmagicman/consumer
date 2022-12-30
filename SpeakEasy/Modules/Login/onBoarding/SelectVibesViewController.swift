@@ -14,9 +14,10 @@ final class SelectVibesViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     
-    var vibesListArry = ["Fridays", "EDM", "Bottle Service", "Crowds","DJ Boooth"]
-    var demoVibesSelect = [false,false,false,false,false]
-    var vibesCount = 0
+    var vibesListArry = [Vibe]()
+    var vibeListDammy = [Vibe(id:"1",vibeName:"Fridays",status:"ENABLED",isDeleted: false, isSelected: false),Vibe(id:"2",vibeName:"EDM",status:"ENABLED",isDeleted: false, isSelected: false),Vibe(id:"3",vibeName:"Bottle Service",status:"ENABLED",isDeleted: false,isSelected: false),Vibe(id:"4",vibeName:"Crowds",status:"ENABLED",isDeleted: false,isSelected: false),Vibe(id:"5",vibeName:"DJ Boooth",status:"ENABLED",isDeleted: false,isSelected: false)]
+    var vibesCount = [String]()
+    var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,22 @@ final class SelectVibesViewController: UIViewController {
         self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
         self.continueBtn.alpha = 0.5
         self.continueBtn.isUserInteractionEnabled = false
+        
+        self.onBoardingDelegate.getVibesListAPi { vibeList, isSuccess in
+            if isSuccess {
+                for vibe in self.vibeListDammy {
+                    if vibe.status == "ENABLED" && vibe.isDeleted == false {
+                        self.vibesListArry.append(vibe)
+                    }
+                }
+                self.vibesCollectionView.reloadData()
+                print(vibeList)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "vibe not found", message: "")
+            }
+            Loader.hide()
+            
+        }
 
     }
     
@@ -45,7 +62,15 @@ final class SelectVibesViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.selectFavoriteDrinkVc(self)
+        self.onBoardingDelegate.editUserProfileApi(vibeIds: self.vibesCount) { isSuccess in
+            if isSuccess {
+                UserDefault.shared.user?.vibeIds = self.vibesCount
+                Navigate.to.selectFavoriteDrinkVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "vibe not update", message: "")
+            }
+        }
+        Loader.hide()
     }
     
     @IBAction func onClickVisibleProfile(_ sender: Any) {
@@ -67,8 +92,8 @@ extension SelectVibesViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
-        cell.lblVibes.text = vibesListArry[indexPath.row]
-        if self.demoVibesSelect[indexPath.row] {
+        cell.lblVibes.text = vibesListArry[indexPath.row].vibeName
+        if self.vibesListArry[indexPath.row].isSelected {
             cell.bgColorView.backgroundColor = Constant.Color.vibesSelectedBgColor
             cell.lblVibes.textColor = Constant.Color.selectedItemTextColor
         } else {
@@ -83,7 +108,7 @@ extension SelectVibesViewController: UICollectionViewDelegate, UICollectionViewD
 
         let height = 36.0
         
-        let tabOption = self.vibesListArry[indexPath.item]
+        let tabOption = self.vibesListArry[indexPath.item].vibeName
         let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 30.0
         
         let size = CGSize(width: width, height: height)
@@ -92,19 +117,21 @@ extension SelectVibesViewController: UICollectionViewDelegate, UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if demoVibesSelect[indexPath.row] {
-            vibesCount -= 1
+        if vibesListArry[indexPath.row].isSelected {
+            self.vibesCount = vibesCount.filter{ (vibeid) in
+                vibeid != vibesListArry[indexPath.row].id
+            }
         } else {
-            vibesCount += 1
+            vibesCount.append(vibesListArry[indexPath.row].id)
         }
-        if vibesCount >= 4 {
+        if vibesCount.count >= 4 {
             self.continueBtn.alpha = 1
             self.continueBtn.isUserInteractionEnabled = true
         } else {
             self.continueBtn.alpha = 0.5
             self.continueBtn.isUserInteractionEnabled = false
         }
-        self.demoVibesSelect[indexPath.row].toggle()
+        self.vibesListArry[indexPath.row].isSelected.toggle()
         self.vibesCollectionView.reloadData()
     }
 }

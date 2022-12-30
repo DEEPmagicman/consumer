@@ -24,6 +24,9 @@ class APIBuilder {
     private let userProfile_URl = "/auth/profile"
     private let uploadPhoto_URL = "/upload/uploadFile"
     private let resetEmailPassword = "/auth/forgot-password"
+    private let vibesList_URL = "/vibe"
+    private let drinkList_URL = "/drink"
+    private let socialMediaConnect_URL = "/auth/connect-social"
     
     func loginWithPhone() -> String {
         return BASE_URL + API_PATH + LoginWithPhone_URl
@@ -63,5 +66,17 @@ class APIBuilder {
     
     func uploadPhoto() -> String {
         return BASE_URL + uploadPhoto_URL
+    }
+    
+    func vibesList() -> String {
+        return BASE_URL + API_PATH + vibesList_URL
+    }
+    
+    func drinksList() -> String {
+        return BASE_URL + API_PATH + drinkList_URL
+    }
+    
+    func socialMediaConnection() -> String {
+        return BASE_URL + API_PATH + socialMediaConnect_URL
     }
 }

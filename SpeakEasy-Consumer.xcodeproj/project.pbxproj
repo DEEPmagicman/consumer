@@ -85,12 +85,15 @@
 		BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */; };
 		BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */; };
 		BD7FA0F8294892C200935275 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0F7294892C200935275 /* video.mov */; };
+		BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B38C295EBC4A005592A7 /* InstagramManager.swift */; };
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
 		BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */; };
 		BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */; };
 		BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */; };
+		BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */; };
+		BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A8295D52A200C3CBD9 /* Drink.swift */; };
 		BD942F3D29595A3300D52115 /* AFWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD942F3C29595A3300D52115 /* AFWrapper.swift */; };
 		BD942F3F29595C7800D52115 /* APIBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD942F3E29595C7800D52115 /* APIBuilder.swift */; };
 		BD942F4129595E1A00D52115 /* OnBoardingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */; };
@@ -577,12 +580,15 @@
 		BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailPassViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F7294892C200935275 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
+		BD80B38C295EBC4A005592A7 /* InstagramManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramManager.swift; sourceTree = "<group>"; };
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
 		BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordViewController.swift; sourceTree = "<group>"; };
 		BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenderViewController.swift; sourceTree = "<group>"; };
 		BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfilePictureViewController.swift; sourceTree = "<group>"; };
+		BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibe.swift; sourceTree = "<group>"; };
+		BD92D2A8295D52A200C3CBD9 /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
 		BD942F3C29595A3300D52115 /* AFWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFWrapper.swift; sourceTree = "<group>"; };
 		BD942F3E29595C7800D52115 /* APIBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIBuilder.swift; sourceTree = "<group>"; };
 		BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingPresenter.swift; sourceTree = "<group>"; };
@@ -1337,6 +1343,14 @@
 			path = myVideo;
 			sourceTree = "<group>";
 		};
+		BD80B38B295EBC25005592A7 /* InstgramManager */ = {
+			isa = PBXGroup;
+			children = (
+				BD80B38C295EBC4A005592A7 /* InstagramManager.swift */,
+			);
+			path = InstgramManager;
+			sourceTree = "<group>";
+		};
 		BD942F3B29595A0D00D52115 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1672,6 +1686,7 @@
 		CE486782286F358700FD277E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				BD80B38B295EBC25005592A7 /* InstgramManager */,
 				CE486783286F358700FD277E /* APIManagerBase */,
 				CE486785286F358700FD277E /* Route */,
 				CE486787286F358700FD277E /* APIManager */,
@@ -1799,6 +1814,8 @@
 			children = (
 				CE4867DB286F392900FD277E /* UserModel.swift */,
 				BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */,
+				BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */,
+				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -3810,6 +3827,7 @@
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
 				CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */,
 				CE4867BC286F358800FD277E /* Singleton.swift in Sources */,
+				BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */,
 				E11CE3E828C8DFBA003899C4 /* DIYCalendarCell.swift in Sources */,
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
@@ -3920,7 +3938,9 @@
 				84248DA828D3D66200A6E260 /* FeaturedVenue.swift in Sources */,
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
+				BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
+				BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */,
 				E11F4B2E28C83564008D2E30 /* BookingRequests.swift in Sources */,

@@ -13,15 +13,32 @@ final class SelectFavoriteDrinkViewController: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     
-    var drinksListArry = ["Whiskey", "Dom Perignon", "Moscow Mule", "Whiskey Sour", "Martini", "Whiskey Coke"]
-    var drinkSelectedDemoArry = [false,false,false,false,false,false]
+    var drinksListArry = [Drink]()
+    var drinkListDammy = [Drink(id:"1",drinkName:"Whiskey",status:"ENABLED",isDeleted: false, isSelected: false),Drink(id:"2",drinkName:"Dom Perignon",status:"ENABLED",isDeleted: false, isSelected: false),Drink(id:"3",drinkName:"Moscow Mule",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"4",drinkName:"Whiskey Sour",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"5",drinkName:"Martini",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"6",drinkName:"Whiskey Coke",status:"ENABLED",isDeleted: false,isSelected: false)]
+    var selectedDrinks = [String]()
+    var onBoardingDelegate = OnBoardingPresenter()
     
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.favoriteDrinksCollectionView.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
+        
+        self.onBoardingDelegate.getDrinkListAPi { drinkList, isSuccess in
+            if isSuccess {
+                for drink in self.drinkListDammy {
+                    if drink.status == "ENABLED" && drink.isDeleted == false {
+                        self.drinksListArry.append(drink)
+                    }
+                }
+                self.favoriteDrinksCollectionView.reloadData()
+                print(drinkList)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "drink not found", message: "")
+            }
+            Loader.hide()
+            
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,7 +58,15 @@ final class SelectFavoriteDrinkViewController: UIViewController {
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.connectSocialMediaVc(self)
+        self.onBoardingDelegate.editUserProfileApi(drinkIds: self.selectedDrinks) { isSuccess in
+            if isSuccess {
+                UserDefault.shared.user?.drinkIds = self.selectedDrinks
+                Navigate.to.connectSocialMediaVc(self)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "drinks not update", message: "")
+            }
+        }
+        Loader.hide()
     }
     
 }
@@ -53,8 +78,8 @@ extension SelectFavoriteDrinkViewController: UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteDrinksCVC", for: indexPath) as! FavouriteDrinksCVC
-        cell.lblDrinks.text = drinksListArry[indexPath.row]
-        if drinkSelectedDemoArry[indexPath.row] {
+        cell.lblDrinks.text = drinksListArry[indexPath.row].drinkName
+        if drinksListArry[indexPath.row].isSelected {
             cell.backGroundView.backgroundColor = Constant.Color.selectedDrinkColor
             cell.lblDrinks.textColor = Constant.Color.selectedItemTextColor
         } else {
@@ -69,7 +94,7 @@ extension SelectFavoriteDrinkViewController: UICollectionViewDelegate, UICollect
         let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "medium", fontSize: 15.0)
         let height = 40.0
         
-        let tabOption = self.drinksListArry[indexPath.item]
+        let tabOption = self.drinksListArry[indexPath.item].drinkName
         let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
         
         let size = CGSize(width: width, height: height)
@@ -77,7 +102,14 @@ extension SelectFavoriteDrinkViewController: UICollectionViewDelegate, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.drinkSelectedDemoArry[indexPath.row].toggle()
+        if drinksListArry[indexPath.row].isSelected {
+            self.selectedDrinks = selectedDrinks.filter{ (drinkid) in
+                drinkid != drinksListArry[indexPath.row].id
+            }
+        } else {
+            selectedDrinks.append(drinksListArry[indexPath.row].id)
+        }
+        self.drinksListArry[indexPath.row].isSelected.toggle()
         favoriteDrinksCollectionView.reloadData()
     }
     

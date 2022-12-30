@@ -105,4 +105,28 @@ class AFWrapper: NSObject {
           }
         }
       }
+    
+    class func getRequest(_ strURL:String, params : [String : Any]? = nil, headers : [String : String]?, success:@escaping (Any?) -> Void, failure:@escaping (Error?) -> Void) {
+        
+        if !Connectivity.isConnectedToInternet {
+            success(nil)
+            failure(nil)
+            return
+        }
+        
+        let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseJSON { (responseObject) -> Void in
+            
+            if let responseCode = responseObject.response?.statusCode {
+                if responseCode == 200 {
+                    success(responseObject.result.value)
+                } else {
+                    failure(responseObject.result.error)
+                }
+            } else {
+                failure(responseObject.result.error)
+            }
+        }
+        
+        debugPrint(req)
+    }
 }

@@ -173,7 +173,7 @@ class OnBoardingPresenter {
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil,nickName:String? = nil,email:String? = nil,password: String? = nil,dob: String? = nil,gender: String? = nil,image:String? = nil,city: String? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil,nickName:String? = nil,email:String? = nil,password: String? = nil,dob: String? = nil,gender: String? = nil,image:String? = nil,city: String? = nil,vibeIds: [String]? = nil,drinkIds: [String]? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName {
             param["firstName"] = fName
@@ -201,6 +201,12 @@ class OnBoardingPresenter {
         }
         if let city = city {
             param["city"] = city
+        }
+        if let vibeIds = vibeIds {
+            param["vibeIds"] = vibeIds
+        }
+        if let drinkIds = drinkIds {
+            param["drinkIds"] = drinkIds
         }
 
         Loader.show()
@@ -236,5 +242,65 @@ class OnBoardingPresenter {
             print(error ?? "")
         }
     }
+    
+    func getVibesListAPi(complition: @escaping(_ vibeList: [Vibe], _ isSuccess: Bool) -> Void) {
+        Loader.show()
+        AFWrapper.getRequest(APIBuilder.share.vibesList(), params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? [String:Any], let vibesArray = responseDic["list"] as? [[String:Any]]
+                    
+            else {
+                complition([Vibe](), false)
+                return
+            }
+            var vibes = [Vibe]()
+            vibesArray.forEach {
+                vibes.append(Vibe(fromDictionary: $0))
+            }
+            complition(vibes, true)
+        } failure: { (error) in
+            complition([Vibe](), false)
+            print(error ?? "")
+        }
+    }
+    
+    func getDrinkListAPi(complition: @escaping(_ drinkList: [Drink], _ isSuccess: Bool) -> Void) {
+        Loader.show()
+        AFWrapper.getRequest(APIBuilder.share.drinksList(), params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? [String:Any], let drinkArray = responseDic["list"] as? [[String:Any]]
+                    
+            else {
+                complition([Drink](), false)
+                return
+            }
+            var drinks = [Drink]()
+            drinkArray.forEach {
+                drinks.append(Drink(fromDictionary: $0))
+            }
+            complition(drinks, true)
+        } failure: { (error) in
+            complition([Drink](), false)
+            print(error ?? "")
+        }
+    }
+    
+    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+        
+        let param = ["email": email, "socialType": socialType, "socialId":socialId]
+        Loader.show()
+        AFWrapper.patchRequest(APIBuilder.share.socialMediaConnection(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? [String:Any]
+            else {
+                complition(false)
+                return
+            }
+            complition(true)
 
+        } failure: { (error) in
+            print(error ?? "")
+            complition(false)
+        }
+    }
 }
