@@ -10,6 +10,7 @@ import SwiftUI
 
 class InstagramManager {
     
+   static var instagramDelegate: InstagramPhotos?
     
     static func getInstagramToken(code: String) {
         
@@ -97,7 +98,51 @@ class InstagramManager {
                 let nextPageUrl = paging["next"] as? String ?? ""
 //                _ = UserDefault.saveCurrentUser(userData)
             }
-//            mapInstaImages(data: data, index: 0, medias: [])
+            self.mapInstaImages(data: data, index: 0, medias: [])
+        }
+    }
+    
+    static func mapInstaImages(data: NSArray, index: Int, medias: [InstagramMedia]) {
+        guard index < data.count else {
+            self.instagramDelegate?.getInstaImages(media: medias, isLastPage: true)
+//            ?(medias, UserDefault.getCurrentUser().instanextPageURL ?? "" == "")
+            return
+        }
+        let val = data[index] as? [String : String]
+        if val?["media_type"] == "IMAGE" {
+            var media = InstagramMedia.init()
+            media.name = val?["id"] ?? ""
+            media.url = val?["media_url"] ?? ""
+//            media.source = .insta
+            mapInstaImages(data: data, index: index + 1, medias: medias + [media])
+            
+        } else if val?["media_type"] == "CAROUSEL_ALBUM",
+            let id = val?["id"],
+                  let token = UserDefault.shared.user?.instagramTokan {
+            InstagramManager.urlExecute(url: String(format: APIBuilder.getInstagramChilds, id, token)) { respons,isSuccess in
+                if isSuccess {
+                    if let response = respons as? NSDictionary,
+                        let values = response["data"] as? NSArray {
+                        
+                        let childMedias = values.compactMap { (value) -> InstagramMedia? in
+                            if let val = value as? [String : String], val["media_type"] == "IMAGE" {
+                                var media = InstagramMedia.init()
+                                media.name = val["id"] ?? ""
+                                media.url = val["media_url"] ?? ""
+//                                media.source = .insta
+                                return media
+                            }
+                            return nil
+                        }
+                        self.mapInstaImages(data: data, index: index + 1, medias: medias + childMedias)
+                        return
+                    }
+                } else {
+                    self.mapInstaImages(data: data, index: index + 1, medias: medias)
+                }
+            }
+        } else {
+            mapInstaImages(data: data, index: index + 1, medias: medias)
         }
     }
      

@@ -32,6 +32,7 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         countryCodeTextField.delegate = self
         countryCodeTextField.setFlag(countryCode: .IN)
+        self.contryCode = "+91"
         
         listController.setup(repository: countryCodeTextField.countryRepository)
         listController.didSelect = { [weak self] country in

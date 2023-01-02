@@ -151,3 +151,53 @@ extension Currentuser: Decodable, Encodable {
         try val.encode(drinkIds, forKey: .drinkIds)
     }
 }
+
+struct ImageDetail {
+   
+    var key: String
+    var name: String?
+    var description: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case key = "key"
+        case name = "name"
+        case description = "description"
+    }
+    
+    internal init(key: String, name: String, description: String) {
+        self.key = key
+        self.name = name
+        self.description = description
+    }
+    
+    
+    init(fromDictionary dictionary: [String : Any]) {
+        self.key = dictionary["key"] as? String ?? ""
+        self.name = dictionary["name"] as? String ?? ""
+        self.description = dictionary["description"] as? String ?? ""
+    }
+    
+    func toDictionary() -> [String: Any] {
+            var jsonDict = [String: Any]()
+            jsonDict["key"] = key
+            jsonDict["name"] = name
+            jsonDict["description"] = description
+            return jsonDict
+        }
+}
+
+extension ImageDetail: Decodable, Encodable {
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        key = try! values.decode(String.self, forKey: .key)
+        name = try! values.decode(String.self, forKey: .name)
+        description = try! values.decode(String.self, forKey: .description)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var val = encoder.container(keyedBy: CodingKeys.self)
+        try val.encode(key, forKey: .key)
+        try val.encode(name, forKey: .name)
+        try val.encode(description, forKey: .description)
+    }
+}

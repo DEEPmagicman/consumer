@@ -46,6 +46,7 @@ extension InstagramWebController: WKNavigationDelegate {
         if let link = navigationAction.request.url?.description, link.contains("code="),
             let code = link.components(separatedBy: "code=").last?.components(separatedBy: "#_").joined() {
             InstagramManager.getInstagramToken(code: code)
+            navigationController?.dismiss(animated: true)
 //            self.dismiss(animated: true, completion: nil)
             
         }

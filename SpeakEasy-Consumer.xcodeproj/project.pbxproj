@@ -51,6 +51,8 @@
 		4A89D44128D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */; };
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
+		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
+		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
 		84248D9A28D29ABC00A6E260 /* AllEvents.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248D9828D29ABC00A6E260 /* AllEvents.xib */; };
 		84248D9E28D2A4CE00A6E260 /* All.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9C28D2A4CE00A6E260 /* All.swift */; };
@@ -548,6 +550,8 @@
 		5174C9605C79AB1BF779C3FC /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
 		5E83E4DA3AEAC681461B9589 /* Pods-SpeakEasy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy/Pods-SpeakEasy.debug.xcconfig"; sourceTree = "<group>"; };
 		67833F57FAD0B2E3EDCA0419 /* Pods-SpeakEasy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy/Pods-SpeakEasy.release.xcconfig"; sourceTree = "<group>"; };
+		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
+		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
 		84248D9828D29ABC00A6E260 /* AllEvents.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllEvents.xib; sourceTree = "<group>"; };
 		84248D9C28D2A4CE00A6E260 /* All.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = All.swift; sourceTree = "<group>"; };
@@ -1306,6 +1310,7 @@
 				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
+				828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -1819,6 +1824,7 @@
 				BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */,
 				BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */,
 				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
+				828A04932962DA3E004A5F2B /* InstagramMedia.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -3888,6 +3894,7 @@
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
 				04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */,
+				828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CE4867A5286F358800FD277E /* MOLHFont.swift in Sources */,
@@ -4076,6 +4083,7 @@
 				CAC4141528A478050007BA86 /* Fonts.swift in Sources */,
 				CE4867D8286F358800FD277E /* CardView.swift in Sources */,
 				E1A9E75428C55D550081FB28 /* BottleMenu.swift in Sources */,
+				828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */,
 				CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */,
 				CE4867B1286F358800FD277E /* UIColor+Extension.swift in Sources */,
 				E1A9E76328C55D550081FB28 /* NotificationCitySelection.swift in Sources */,
@@ -4258,7 +4266,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4296,7 +4304,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -173,7 +173,7 @@ class OnBoardingPresenter {
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil,nickName:String? = nil,email:String? = nil,password: String? = nil,dob: String? = nil,gender: String? = nil,image:String? = nil,city: String? = nil,vibeIds: [String]? = nil,drinkIds: [String]? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName {
             param["firstName"] = fName
@@ -197,7 +197,7 @@ class OnBoardingPresenter {
             param["gender"] = gender
         }
         if let image = image {
-            param["image"] = image
+            param["image"] = image.toDictionary()
         }
         if let city = city {
             param["city"] = city

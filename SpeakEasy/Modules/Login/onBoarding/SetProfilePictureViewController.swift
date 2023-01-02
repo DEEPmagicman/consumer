@@ -31,7 +31,8 @@ final class SetProfilePictureViewController: UIViewController {
         self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
             if isSuccess {
                 self.imgUrl = imgUrl
-                self.onBoardingDelegate.editUserProfileApi(image: imgUrl) { isSuccess in
+                let imgDetail = ImageDetail(key:"imgUrl",name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
+                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess in
                     if isSuccess {
                         UserDefault.shared.user?.image = imgUrl
                         Navigate.to.notificationPermissionVc(self)
@@ -81,8 +82,9 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
             Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
             return
         }
-        if let instaToken = UserDefault.shared.user?.instagramTokan {
-            InstagramManager.getInstaImages(token: instaToken)
+         let instaToken = UserDefault.shared.user?.instagramTokan
+        if instaToken != "" {
+            InstagramManager.getInstaImages(token: instaToken ?? "")
         } else {
             Navigate.to.instagramWebView(self)
         }
