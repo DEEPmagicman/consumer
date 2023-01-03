@@ -29,7 +29,7 @@ final class EnterNameViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        let name = "Legal name: \(firstNameTextField.text ?? "") \nNickname: \(nikNameTextField.text ?? "")"
+        let name = "Legal name: \(firstNameTextField.text ?? "") \(lastNameTextField.text ?? "") \nNickname: \(nikNameTextField.text ?? "")"
         Navigate.to.presentConfirmPopUp(self,text1: Constant.String.confirmInfo,text2: name,text3: Constant.String.nameNote)
     }
 

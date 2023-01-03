@@ -204,6 +204,13 @@ class Navigate {
     
     func instagramWebView(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(InstagramWebController.self)) as! InstagramWebController
+        vc.instaConnectedDelegate = sender as! InstagramConnectedDelegate
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func selectPhotoVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(SelectPhotosViewController.self)) as! SelectPhotosViewController
+        vc.selectedImgDelegate = sender as! SelectedInstaImgDelegate
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
 }

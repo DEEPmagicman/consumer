@@ -7,6 +7,11 @@
 
 import UIKit
 import SwiftUI
+import SDWebImage
+
+protocol SelectedInstaImgDelegate: AnyObject {
+    func selectedImg(image: String)
+}
 
 final class SetProfilePictureViewController: UIViewController {
 
@@ -25,6 +30,8 @@ final class SetProfilePictureViewController: UIViewController {
         self.profileView.addGestureRecognizer(gesture)
         
         self.imageView.cornerRadius = 75
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
@@ -83,8 +90,8 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
             return
         }
          let instaToken = UserDefault.shared.user?.instagramTokan
-        if instaToken != "" {
-            InstagramManager.getInstaImages(token: instaToken ?? "")
+        if instaToken != "" && instaToken != nil {
+            Navigate.to.selectPhotoVc(self)
         } else {
             Navigate.to.instagramWebView(self)
         }
@@ -103,11 +110,30 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imageView.image = editedImage
             self.cameraBtn.isHidden = true
+            self.continueBtn.isUserInteractionEnabled = true
+            self.continueBtn.alpha = 1
             
         } else if let orignalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageView.image = orignalImage
             self.cameraBtn.isHidden = true
+            self.continueBtn.isUserInteractionEnabled = true
+            self.continueBtn.alpha = 1
         }
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension SetProfilePictureViewController: InstagramConnectedDelegate {
+    func instaConnect() {
+        Navigate.to.selectPhotoVc(self)
+    }
+}
+
+extension SetProfilePictureViewController: SelectedInstaImgDelegate {
+    func selectedImg(image: String) {
+        imageView.sd_setImage(with: URL( string: image), completed: nil)
+        self.cameraBtn.isHidden = true
+        self.continueBtn.isUserInteractionEnabled = true
+        self.continueBtn.alpha = 1
     }
 }

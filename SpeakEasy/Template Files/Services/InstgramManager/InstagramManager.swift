@@ -10,9 +10,11 @@ import SwiftUI
 
 class InstagramManager {
     
-   static var instagramDelegate: InstagramPhotos?
+   static weak var instagramDelegate: InstagramPhotos?
     
-    static func getInstagramToken(code: String) {
+    var onGetInstaPhotos: (([InstagramMedia], Bool) -> ())?
+    
+    static func getInstagramToken(code: String, compelition: @escaping (() -> Void)) {
         
         if !Connectivity.isConnectedToInternet {
             Alert.showAlertSheet(style: .alert, title: "internet not connect", message: "")
@@ -22,7 +24,7 @@ class InstagramManager {
         instagramLogin(code: code){ tokan,isSuccess  in
             if isSuccess {
                 print("*-*\(tokan)")
-//                self.onInstaGramTokenGet?()
+                compelition()
             } else {
                 Alert.showAlertSheet(style: .alert, title: "not get", message: "")
             }
@@ -52,33 +54,26 @@ class InstagramManager {
     }
     
     static func getInstaImages(token: String) {
-//        if let nextPageURL = UserDefault.getCurrentUser().instanextPageURL {
-//            guard nextPageURL != "" else {
-//                return
-//            }
-//            service.urlExecute(url: nextPageURL) { (data) in
-//                switch data {
-//                case .Success(let result):
-//                    if let response = result as? NSDictionary {
-//                        self.instaParsing(response: response)
-//                    }
-//                default:
-//                    break
-//                }
-//            }
-//            return
-//        }
-        
-        self.urlExecute(url: String(format: APIBuilder.getInstagramImages, token)) { respons,isSuccess  in
-//            switch respons {
+        if let nextPageURL = UserDefault.shared.user?.instanextPageURL {
+            guard nextPageURL != "" else {
+                return
+            }
+            self.urlExecute(url: nextPageURL) { respons,isSuccess in
                 if isSuccess {
                     if let response = respons as? NSDictionary {
                         self.instaParsing(response: response)
                     }
                 }
-//            default:
-//                break
-//            }
+            }
+            return
+        }
+        
+        self.urlExecute(url: String(format: APIBuilder.getInstagramImages, token)) { respons,isSuccess  in
+                if isSuccess {
+                    if let response = respons as? NSDictionary {
+                        self.instaParsing(response: response)
+                    }
+                }
         }
     }
     
@@ -94,9 +89,7 @@ class InstagramManager {
     static func instaParsing(response: NSDictionary) {
         if let data = response["data"] as? NSArray {
             if let paging = response["paging"] as? NSDictionary {
-//                var userData = UserDefault.getCurrentUser()
-                let nextPageUrl = paging["next"] as? String ?? ""
-//                _ = UserDefault.saveCurrentUser(userData)
+                UserDefault.shared.user?.instanextPageURL = paging["next"] as? String ?? ""
             }
             self.mapInstaImages(data: data, index: 0, medias: [])
         }
@@ -104,8 +97,7 @@ class InstagramManager {
     
     static func mapInstaImages(data: NSArray, index: Int, medias: [InstagramMedia]) {
         guard index < data.count else {
-            self.instagramDelegate?.getInstaImages(media: medias, isLastPage: true)
-//            ?(medias, UserDefault.getCurrentUser().instanextPageURL ?? "" == "")
+            self.instagramDelegate?.getInstaImages(media: medias, isLastPage: UserDefault.shared.user?.instanextPageURL ?? "" == "")
             return
         }
         let val = data[index] as? [String : String]
@@ -113,7 +105,6 @@ class InstagramManager {
             var media = InstagramMedia.init()
             media.name = val?["id"] ?? ""
             media.url = val?["media_url"] ?? ""
-//            media.source = .insta
             mapInstaImages(data: data, index: index + 1, medias: medias + [media])
             
         } else if val?["media_type"] == "CAROUSEL_ALBUM",
@@ -129,7 +120,6 @@ class InstagramManager {
                                 var media = InstagramMedia.init()
                                 media.name = val["id"] ?? ""
                                 media.url = val["media_url"] ?? ""
-//                                media.source = .insta
                                 return media
                             }
                             return nil

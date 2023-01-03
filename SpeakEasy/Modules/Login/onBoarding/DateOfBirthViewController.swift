@@ -27,6 +27,8 @@ final class DateOfBirthViewController: UIViewController {
         
         datePickerView.datePickerMode = .date
         datePickerView.preferredDatePickerStyle = .wheels
+        let maxDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
+        datePickerView.maximumDate = maxDate
         ageLbl.text = "Age\(datePickerView.date.age)"
     }
     

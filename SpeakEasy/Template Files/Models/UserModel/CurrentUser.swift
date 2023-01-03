@@ -26,7 +26,8 @@ struct Currentuser {
     var status: String
     var image: String
     var instagramId: String
-    var instagramTokan: String
+    var instagramTokan: String?
+    var instanextPageURL: String?
     var spotifyId: String
     var isDeleted: Bool
     var lastLogin: String
@@ -95,31 +96,31 @@ struct Currentuser {
 extension Currentuser: Decodable, Encodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = try! values.decode(String.self, forKey: .id)
-        uniqueId = try! values.decode(String.self, forKey: .uniqueId)
-        firstName = try! values.decode(String.self, forKey: .firstName)
-        lastName = try! values.decode(String.self, forKey: .lastName)
-        nickName = try! values.decode(String.self, forKey: .nickName)
-        dateOfBirth = try! values.decode(String.self, forKey: .dateOfBirth)
-        gender = try! values.decode(String.self, forKey: .gender)
-        email = try! values.decode(String.self, forKey: .email)
-        location = try! values.decode(String.self, forKey: .location)
-        city = try! values.decode(String.self, forKey: .city)
-        receiveMarketing = try! values.decode(Bool.self, forKey: .receiveMarketing)
-        code = try! values.decode(String.self, forKey: .code)
-        phone = try! values.decode(String.self, forKey: .phone)
-        phoneVerified = try! values.decode(Bool.self, forKey: .phoneVerified)
-        status = try! values.decode(String.self, forKey: .status)
-        image = try! values.decode(String.self, forKey: .image)
-        instagramId = try! values.decode(String.self, forKey: .instagramId)
-        instagramTokan = try! values.decode(String.self, forKey: .instagramTokan)
-        spotifyId = try! values.decode(String.self, forKey: .spotifyId)
-        isDeleted = try! values.decode(Bool.self, forKey: .isDeleted)
-        lastLogin = try! values.decode(String.self, forKey: .lastLogin)
-        createdAt = try! values.decode(String.self, forKey: .createdAt)
-        updatedAt = try! values.decode(String.self, forKey: .updatedAt)
-        vibeIds = try! values.decode([String].self, forKey: .vibeIds)
-        drinkIds = try! values.decode([String].self, forKey: .drinkIds)
+        id = (try? values.decode(String.self, forKey: .id)) ?? ""
+        uniqueId = (try? values.decode(String.self, forKey: .uniqueId)) ?? ""
+        firstName = (try? values.decode(String.self, forKey: .firstName)) ?? ""
+        lastName = (try? values.decode(String.self, forKey: .lastName)) ?? ""
+        nickName = (try? values.decode(String.self, forKey: .nickName)) ?? ""
+        dateOfBirth = (try? values.decode(String.self, forKey: .dateOfBirth)) ?? ""
+        gender = (try? values.decode(String.self, forKey: .gender)) ?? ""
+        email = (try? values.decode(String.self, forKey: .email)) ?? ""
+        location = (try? values.decode(String.self, forKey: .location)) ?? ""
+        city = (try? values.decode(String.self, forKey: .city)) ?? ""
+        receiveMarketing = (try? values.decode(Bool.self, forKey: .receiveMarketing)) ?? false
+        code = (try? values.decode(String.self, forKey: .code)) ?? ""
+        phone = (try? values.decode(String.self, forKey: .phone)) ?? ""
+        phoneVerified = (try? values.decode(Bool.self, forKey: .phoneVerified)) ?? false
+        status = (try? values.decode(String.self, forKey: .status)) ?? ""
+        image = (try? values.decode(String.self, forKey: .image)) ?? ""
+        instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
+        instagramTokan = try? values.decode(String.self, forKey: .instagramTokan)
+        spotifyId = (try? values.decode(String.self, forKey: .spotifyId)) ?? ""
+        isDeleted = (try? values.decode(Bool.self, forKey: .isDeleted)) ?? false
+        lastLogin = (try? values.decode(String.self, forKey: .lastLogin)) ?? ""
+        createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
+        updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
+        vibeIds = (try? values.decode([String].self, forKey: .vibeIds)) ?? []
+        drinkIds = (try? values.decode([String].self, forKey: .drinkIds)) ?? []
     }
     
     func encode(to encoder: Encoder) throws {
