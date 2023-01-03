@@ -62,14 +62,14 @@ final class SelectVibesViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.editUserProfileApi(vibeIds: self.vibesCount) { isSuccess in
-            if isSuccess {
-                UserDefault.shared.user?.vibeIds = self.vibesCount
+//        self.onBoardingDelegate.editUserProfileApi(vibeIds: self.vibesCount) { isSuccess in
+//            if isSuccess {
+//                UserDefault.shared.user?.vibeIds = self.vibesCount
                 Navigate.to.selectFavoriteDrinkVc(self)
-            } else {
-                Alert.showAlertSheet(style: .alert, title: "vibe not update", message: "")
-            }
-        }
+//            } else {
+//                Alert.showAlertSheet(style: .alert, title: "vibe not update", message: "")
+//            }
+//        }
         Loader.hide()
     }
     

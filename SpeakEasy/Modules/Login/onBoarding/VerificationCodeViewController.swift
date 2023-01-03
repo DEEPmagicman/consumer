@@ -34,6 +34,8 @@ final class VerificationCodeViewController: UIViewController {
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
         print("*-*\(currectOtp)")
+        Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp)")
+
 
     }
     
