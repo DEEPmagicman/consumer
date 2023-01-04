@@ -18,10 +18,12 @@ final class SelectPhotosViewController: UIViewController {
     
     var instaPhoto = [InstagramMedia]()
     weak var selectedImgDelegate: SelectedInstaImgDelegate?
+    private var isLastPage = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         InstagramManager.instagramDelegate = self
+        UserDefault.shared.user?.instanextPageURL = nil
         InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramTokan ?? "")
     }
 
@@ -38,6 +40,16 @@ extension SelectPhotosViewController: UICollectionViewDelegate, UICollectionView
         cell.imageView?.sd_setImage(with: URL( string: imgUrl), completed: nil)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == instaPhoto.count - 1 {
+            if isLastPage &&  UserDefault.shared.user?.instanextPageURL != nil {
+                UserDefault.shared.user?.instanextPageURL = nil
+            } else {
+                InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramTokan ?? "")
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -62,13 +74,10 @@ extension SelectPhotosViewController: InstagramPhotos {
         } else {
             self.instaPhoto.append(contentsOf: media)
         }
-        self.collectionView.reloadData()
-        self.collectionView.performBatchUpdates(nil)
-        if isLastPage {
-            UserDefault.shared.user?.instanextPageURL = ""
-        } else {
-            InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramTokan ?? "")
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
+        self.isLastPage = isLastPage
     }
     
 }

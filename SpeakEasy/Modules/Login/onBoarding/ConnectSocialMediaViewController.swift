@@ -34,9 +34,15 @@ final class ConnectSocialMediaViewController: UIViewController {
         
         self.connectSpotifyBtn.isHidden = false
         self.connectedSpotifyView.isHidden = true
-        self.connectInstagramBtn.isHidden = false
-        self.connectedInstagramView.isHidden = true
-        self.getStartedBtn.isHidden = true
+        if UserDefault.shared.user?.instagramTokan != "" && UserDefault.shared.user?.instagramTokan != nil {
+            self.connectInstagramBtn.isHidden = true
+            self.connectedInstagramView.isHidden = false
+            self.getStartedBtn.isHidden = false
+        } else {
+            self.connectInstagramBtn.isHidden = false
+            self.connectedInstagramView.isHidden = true
+            self.getStartedBtn.isHidden = true
+        }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickspotifypublicView))
         self.spotifyPublicView.addGestureRecognizer(tap)
@@ -65,8 +71,7 @@ final class ConnectSocialMediaViewController: UIViewController {
     }
     
     @IBAction func onClickConnectWithInstagram(_ sender: Any) {
-        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
-        self.spotifyConnect = false
+        Navigate.to.instagramWebView(self)
     }
     
     func spotifyConnected() {
@@ -144,3 +149,21 @@ extension ConnectSocialMediaViewController: ConfirmPopUpDelegate {
         }
     }
 }
+
+extension ConnectSocialMediaViewController: InstagramConnectedDelegate {
+    func instaConnect() {
+        let tokan = UserDefault.shared.user?.instagramTokan ?? ""
+        InstagramManager.urlExecute(url: String(format: APIBuilder.INSTAGRAMUSERNAME, tokan)) { respons,isSuccess  in
+            if isSuccess {
+                if let response = respons as? NSDictionary {
+                    let data = response["data"] as? NSArray
+                    let val = data?[0] as? [String : String]
+                    UserDefault.shared.user?.instaUserName = val?["username"] ?? ""
+                } else { return }
+                Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@\(UserDefault.shared.user?.instaUserName ?? "@realamitpaul")", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
+                self.spotifyConnect = false
+            }
+        }
+    }
+}
+

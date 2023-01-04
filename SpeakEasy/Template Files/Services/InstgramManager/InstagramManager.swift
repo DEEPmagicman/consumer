@@ -67,13 +67,12 @@ class InstagramManager {
             }
             return
         }
-        
         self.urlExecute(url: String(format: APIBuilder.getInstagramImages, token)) { respons,isSuccess  in
-                if isSuccess {
-                    if let response = respons as? NSDictionary {
-                        self.instaParsing(response: response)
-                    }
+            if isSuccess {
+                if let response = respons as? NSDictionary {
+                    self.instaParsing(response: response)
                 }
+            }
         }
     }
     
@@ -101,6 +100,7 @@ class InstagramManager {
             return
         }
         let val = data[index] as? [String : String]
+        UserDefault.shared.user?.instaUserName = val?["username"] ?? ""
         if val?["media_type"] == "IMAGE" {
             var media = InstagramMedia.init()
             media.name = val?["id"] ?? ""

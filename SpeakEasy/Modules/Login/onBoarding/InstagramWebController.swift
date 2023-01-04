@@ -15,6 +15,7 @@ protocol InstagramConnectedDelegate {
 class InstagramWebController: UIViewController {
 
     @IBOutlet weak var webView: WKWebView!
+    private var isInstaApiCall = false
     
     var instaConnectedDelegate: InstagramConnectedDelegate?
         
@@ -39,6 +40,8 @@ class InstagramWebController: UIViewController {
     }
     
     private func setupWebview() {
+        WebCacheCleaner.clear()
+
         webView.navigationDelegate = self
         webView.load(URLRequest(url: URL(string: APIBuilder.getInstagramCode)!))
     }
@@ -50,11 +53,14 @@ extension InstagramWebController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let link = navigationAction.request.url?.description, link.contains("code="),
             let code = link.components(separatedBy: "code=").last?.components(separatedBy: "#_").joined() {
-            InstagramManager.getInstagramToken(code: code) {
-                self.dismiss(animated: true, completion: nil)
-                self.instaConnectedDelegate?.instaConnect()
+            if isInstaApiCall == false {
+                InstagramManager.getInstagramToken(code: code) {
+                    self.dismiss(animated: true, completion: nil)
+                    self.instaConnectedDelegate?.instaConnect()
+                    self.isInstaApiCall = true
+                }
+
             }
-            
         }
         decisionHandler(.allow)
     }
@@ -68,3 +74,18 @@ extension InstagramWebController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
     }
 }
+
+final class WebCacheCleaner {
+    class func clear() {
+        URLCache.shared.removeAllCachedResponses()
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        print("[WebCacheCleaner] All cookies deleted")
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+                print("[WebCacheCleaner] Record \(record) deleted")
+            }
+        }
+    }
+}
+

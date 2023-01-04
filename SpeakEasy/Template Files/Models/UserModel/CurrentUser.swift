@@ -28,6 +28,7 @@ struct Currentuser {
     var instagramId: String
     var instagramTokan: String?
     var instanextPageURL: String?
+    var instaUserName: String?
     var spotifyId: String
     var isDeleted: Bool
     var lastLogin: String
@@ -55,6 +56,8 @@ struct Currentuser {
         case image = "image"
         case instagramId = "instagram_id"
         case instagramTokan = "instagram_tokan"
+        case instanextPageURL
+        case instaUserName
         case spotifyId = "spotify_id"
         case isDeleted = "is_deleted"
         case lastLogin = "last_login"
@@ -83,6 +86,8 @@ struct Currentuser {
         self.image = dictionary["image"] as? String ?? ""
         self.instagramId = dictionary["instagramId"] as? String ?? ""
         self.instagramTokan = dictionary["instagramTokan"] as? String ?? ""
+        self.instanextPageURL = dictionary["instanextPageURL"] as? String ?? nil
+        self.instaUserName = dictionary["instaUserName"] as? String ?? ""
         self.spotifyId = dictionary["spotifyId"] as? String ?? ""
         self.isDeleted = dictionary["isDeleted"] as? Bool ?? false
         self.lastLogin = dictionary["lastLogin"] as? String ?? ""
@@ -114,6 +119,8 @@ extension Currentuser: Decodable, Encodable {
         image = (try? values.decode(String.self, forKey: .image)) ?? ""
         instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
         instagramTokan = try? values.decode(String.self, forKey: .instagramTokan)
+        instanextPageURL = try? values.decode(String.self, forKey: .instanextPageURL) ?? nil
+        instaUserName = try? values.decode(String.self, forKey: .instaUserName) ?? ""
         spotifyId = (try? values.decode(String.self, forKey: .spotifyId)) ?? ""
         isDeleted = (try? values.decode(Bool.self, forKey: .isDeleted)) ?? false
         lastLogin = (try? values.decode(String.self, forKey: .lastLogin)) ?? ""
@@ -143,6 +150,8 @@ extension Currentuser: Decodable, Encodable {
         try val.encode(image, forKey: .image)
         try val.encode(instagramId, forKey: .instagramId)
         try val.encode(instagramTokan, forKey: .instagramTokan)
+        try val.encode(instanextPageURL, forKey: .instanextPageURL)
+        try val.encode(instaUserName, forKey: .instaUserName)
         try val.encode(spotifyId, forKey: .spotifyId)
         try val.encode(isDeleted, forKey: .isDeleted)
         try val.encode(lastLogin, forKey: .lastLogin)
