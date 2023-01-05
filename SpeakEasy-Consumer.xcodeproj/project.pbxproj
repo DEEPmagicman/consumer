@@ -52,7 +52,6 @@
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
-		824355602965AA01009EE48B /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8243555F2965AA01009EE48B /* SpotifyiOS.framework */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
@@ -1014,7 +1013,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				824355602965AA01009EE48B /* SpotifyiOS.framework in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

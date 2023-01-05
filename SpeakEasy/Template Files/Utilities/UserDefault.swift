@@ -9,7 +9,7 @@ import Foundation
 
 final class UserDefault: NSObject {
     
-    private let tokan = "token"
+    private let token = "token"
     private let USER = "user"
     
     let userDefaults = UserDefaults.standard
@@ -21,11 +21,11 @@ final class UserDefault: NSObject {
         return Static.instance
     }
     
-    var loginToken : String? {
+    var loginToken: String? {
         get {
-            return UserDefaults.standard.value(forKey: tokan) as? String
+            return UserDefaults.standard.value(forKey: token) as? String
         } set {
-            UserDefaults.standard.setValue(newValue, forKey: tokan)
+            UserDefaults.standard.setValue(newValue, forKey: token)
         }
     }
     
@@ -45,5 +45,12 @@ final class UserDefault: NSObject {
                 UserDefaults.standard.synchronize()
             } catch { }
         }
+    }
+    
+    func removeInstaConnection() {
+        user?.instagramId = ""
+        user?.instagramToken = nil
+        user?.instaNextPageURL = nil
+        user?.instaUserName = nil
     }
 }

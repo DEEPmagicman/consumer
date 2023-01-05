@@ -26,8 +26,8 @@ struct Currentuser {
     var status: String
     var image: ImageDetail
     var instagramId: String
-    var instagramTokan: String?
-    var instanextPageURL: String?
+    var instagramToken: String?
+    var instaNextPageURL: String?
     var instaUserName: String?
     var spotifyId: String
     var isDeleted: Bool
@@ -55,8 +55,8 @@ struct Currentuser {
         case status = "status"
         case image = "image"
         case instagramId = "instagram_id"
-        case instagramTokan = "instagram_tokan"
-        case instanextPageURL
+        case instagramToken
+        case instaNextPageURL
         case instaUserName
         case spotifyId = "spotify_id"
         case isDeleted = "is_deleted"
@@ -85,8 +85,8 @@ struct Currentuser {
         self.status = dictionary["status"] as? String ?? ""
         self.image = ImageDetail(fromDictionary: dictionary["image"] as? [String:Any] ?? [:])
         self.instagramId = dictionary["instagramId"] as? String ?? ""
-        self.instagramTokan = dictionary["instagramTokan"] as? String ?? ""
-        self.instanextPageURL = dictionary["instanextPageURL"] as? String ?? nil
+        self.instagramToken = dictionary["instagramToken"] as? String ?? ""
+        self.instaNextPageURL = dictionary["instaNextPageURL"] as? String ?? nil
         self.instaUserName = dictionary["instaUserName"] as? String ?? ""
         self.spotifyId = dictionary["spotifyId"] as? String ?? ""
         self.isDeleted = dictionary["isDeleted"] as? Bool ?? false
@@ -118,8 +118,8 @@ extension Currentuser: Decodable, Encodable {
         status = (try? values.decode(String.self, forKey: .status)) ?? ""
         image = try! values.decode(ImageDetail.self, forKey: .image)
         instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
-        instagramTokan = try? values.decode(String.self, forKey: .instagramTokan)
-        instanextPageURL = try? values.decode(String.self, forKey: .instanextPageURL) ?? nil
+        instagramToken = try? values.decode(String.self, forKey: .instagramToken)
+        instaNextPageURL = try? values.decode(String.self, forKey: .instaNextPageURL) ?? nil
         instaUserName = try? values.decode(String.self, forKey: .instaUserName) ?? ""
         spotifyId = (try? values.decode(String.self, forKey: .spotifyId)) ?? ""
         isDeleted = (try? values.decode(Bool.self, forKey: .isDeleted)) ?? false
@@ -149,8 +149,8 @@ extension Currentuser: Decodable, Encodable {
         try val.encode(status, forKey: .status)
         try val.encode(image, forKey: .image)
         try val.encode(instagramId, forKey: .instagramId)
-        try val.encode(instagramTokan, forKey: .instagramTokan)
-        try val.encode(instanextPageURL, forKey: .instanextPageURL)
+        try val.encode(instagramToken, forKey: .instagramToken)
+        try val.encode(instaNextPageURL, forKey: .instaNextPageURL)
         try val.encode(instaUserName, forKey: .instaUserName)
         try val.encode(spotifyId, forKey: .spotifyId)
         try val.encode(isDeleted, forKey: .isDeleted)

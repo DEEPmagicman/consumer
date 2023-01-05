@@ -50,7 +50,7 @@ final class SetProfilePictureViewController: UIViewController {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
                         } else {
-                            Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                         }
                         Loader.hide()
                     }
@@ -95,7 +95,7 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
             Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
             return
         }
-         let instaToken = UserDefault.shared.user?.instagramTokan
+         let instaToken = UserDefault.shared.user?.instagramToken
         if instaToken != "" && instaToken != nil {
             Navigate.to.selectPhotoVc(self)
         } else {

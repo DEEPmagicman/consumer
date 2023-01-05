@@ -36,7 +36,7 @@ final class SelectCityViewController: UIViewController {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
             Loader.hide()

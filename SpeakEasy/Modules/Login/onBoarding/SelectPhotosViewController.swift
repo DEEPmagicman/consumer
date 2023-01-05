@@ -24,8 +24,8 @@ final class SelectPhotosViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         InstagramManager.instagramDelegate = self
-        UserDefault.shared.user?.instanextPageURL = nil
-        InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramTokan ?? "")
+        UserDefault.shared.user?.instaNextPageURL = nil
+        InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramToken ?? "")
     }
 
 }
@@ -45,10 +45,10 @@ extension SelectPhotosViewController: UICollectionViewDelegate, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == instaPhoto.count - 1 {
-            if isLastPage &&  UserDefault.shared.user?.instanextPageURL != nil {
-                UserDefault.shared.user?.instanextPageURL = nil
+            if isLastPage &&  UserDefault.shared.user?.instaNextPageURL != nil {
+                UserDefault.shared.user?.instaNextPageURL = nil
             } else {
-                InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramTokan ?? "")
+                InstagramManager.getInstaImages(token: UserDefault.shared.user?.instagramToken ?? "")
             }
         }
     }
@@ -70,10 +70,7 @@ extension SelectPhotosViewController: UICollectionViewDelegate, UICollectionView
 
 extension SelectPhotosViewController: InstagramPhotosDelegate {
     func getError(errorMsg: String?) {
-        UserDefault.shared.user?.instagramId = ""
-        UserDefault.shared.user?.instagramTokan = nil
-        UserDefault.shared.user?.instanextPageURL = nil
-        UserDefault.shared.user?.instaUserName = nil
+        UserDefault.shared.removeInstaConnection()
         Utility.main.showAlert(message: errorMsg ?? "Something went wrong. try again later", title: "Error") {
             self.selectedImgDelegate?.loginAgain()
             self.dismiss(animated: true, completion: nil)

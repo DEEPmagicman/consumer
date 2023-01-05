@@ -29,7 +29,7 @@ class APIBuilder {
     private let socialMediaConnect_URL = "/auth/connect-social"
     private let socialLogin = "/auth/social-login"
     
-    static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramredirectUri + "&scope=user_profile,user_media&response_type=code"
+    static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let getInstagramImages = "https://graph.instagram.com/me/media?fields=id,media_url,media_type,username&access_token=%@"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"

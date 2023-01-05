@@ -158,12 +158,12 @@ class EditProfileVC: BaseController {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func onClickConnectSpotify(_ sender: Any) {
-        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changesLaterInfo,isYesOrNoBtn: true)
         self.spotifyConnect = true
     }
     
     @IBAction func onClickConnectInstagram(_ sender: Any) {
-        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changeslaterinfo,isYesOrNoBtn: true)
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@realamitpaul", text3: Constant.String.changesLaterInfo,isYesOrNoBtn: true)
         self.spotifyConnect = false
     }
 }
