@@ -50,11 +50,15 @@ final class ConnectAccountViewController: UIViewController {
             else {
                 return
             }
-            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess in
+            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in
                 if isSuccess {
                     Navigate.to.dateOfBirthVc(self)
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "google account not update", message: "")
+                    if errorMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    }
                 }
                 Loader.hide()
             }

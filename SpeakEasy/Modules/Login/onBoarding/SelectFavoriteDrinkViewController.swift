@@ -58,12 +58,16 @@ final class SelectFavoriteDrinkViewController: UIViewController {
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-//        self.onBoardingDelegate.editUserProfileApi(drinkIds: self.selectedDrinks) { isSuccess in
+//        self.onBoardingDelegate.editUserProfileApi(drinkIds: self.selectedDrinks) { isSuccess,errorMsg  in
 //            if isSuccess {
 //                UserDefault.shared.user?.drinkIds = self.selectedDrinks
                 Navigate.to.connectSocialMediaVc(self)
 //            } else {
-//                Alert.showAlertSheet(style: .alert, title: "drinks not update", message: "")
+//                if errorMsg != nil {
+//                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+//                } else {
+//                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+//                }
 //            }
 //        }
         Loader.hide()

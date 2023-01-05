@@ -24,7 +24,7 @@ struct Currentuser {
     var phone: String
     var phoneVerified: Bool
     var status: String
-    var image: String
+    var image: ImageDetail
     var instagramId: String
     var instagramTokan: String?
     var instanextPageURL: String?
@@ -83,7 +83,7 @@ struct Currentuser {
         self.phone = dictionary["phone"] as? String ?? ""
         self.phoneVerified = dictionary["phoneVerified"] as? Bool ?? false
         self.status = dictionary["status"] as? String ?? ""
-        self.image = dictionary["image"] as? String ?? ""
+        self.image = ImageDetail(fromDictionary: dictionary["image"] as? [String:Any] ?? [:])
         self.instagramId = dictionary["instagramId"] as? String ?? ""
         self.instagramTokan = dictionary["instagramTokan"] as? String ?? ""
         self.instanextPageURL = dictionary["instanextPageURL"] as? String ?? nil
@@ -116,7 +116,7 @@ extension Currentuser: Decodable, Encodable {
         phone = (try? values.decode(String.self, forKey: .phone)) ?? ""
         phoneVerified = (try? values.decode(Bool.self, forKey: .phoneVerified)) ?? false
         status = (try? values.decode(String.self, forKey: .status)) ?? ""
-        image = (try? values.decode(String.self, forKey: .image)) ?? ""
+        image = try! values.decode(ImageDetail.self, forKey: .image)
         instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
         instagramTokan = try? values.decode(String.self, forKey: .instagramTokan)
         instanextPageURL = try? values.decode(String.self, forKey: .instanextPageURL) ?? nil

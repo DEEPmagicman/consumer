@@ -51,6 +51,8 @@
 		4A89D44128D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */; };
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
+		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
+		824355602965AA01009EE48B /* SpotifyiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8243555F2965AA01009EE48B /* SpotifyiOS.framework */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
@@ -67,7 +69,6 @@
 		9D4A028C28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */; };
 		9D4A029028CE9E4B009CD670 /* CostSplitSelectionTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */; };
 		9D4A029128CE9E4B009CD670 /* CostSplitSelectionTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */; };
-		ABEDF61CEADAC4A47424B609 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF9CFA2DABFD7C1B8DB234BA /* Pods_SpeakEasy_Consumer.framework */; };
 		BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */; };
 		BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3DB01E2952DBB3005B5987 /* Main1.swift */; };
 		BD3DB0212952DDF1005B5987 /* Main1.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD3DB0202952DDF1005B5987 /* Main1.xib */; };
@@ -527,7 +528,6 @@
 		04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesProfileCVC.swift; sourceTree = "<group>"; };
 		04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePopUp.swift; sourceTree = "<group>"; };
 		04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserProfilePopUp.xib; sourceTree = "<group>"; };
-		3EE924C9B6C10A031DDBA9F7 /* Pods-SpeakEasy-Consumer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.release.xcconfig"; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingInvites.swift; sourceTree = "<group>"; };
 		4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingInvites.xib; sourceTree = "<group>"; };
@@ -547,9 +547,7 @@
 		4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewEventTicketConfirmInvitedPeopleTVC.xib; sourceTree = "<group>"; };
 		4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCitySelectionHeaderView.swift; sourceTree = "<group>"; };
 		4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationCitySelectionHeaderView.xib; sourceTree = "<group>"; };
-		5174C9605C79AB1BF779C3FC /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
-		5E83E4DA3AEAC681461B9589 /* Pods-SpeakEasy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy/Pods-SpeakEasy.debug.xcconfig"; sourceTree = "<group>"; };
-		67833F57FAD0B2E3EDCA0419 /* Pods-SpeakEasy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy/Pods-SpeakEasy.release.xcconfig"; sourceTree = "<group>"; };
+		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
@@ -562,10 +560,12 @@
 		84248DA728D3D66200A6E260 /* FeaturedVenue.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeaturedVenue.xib; sourceTree = "<group>"; };
 		84248DAC28D3DEE200A6E260 /* TabVenueCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVenueCVC.swift; sourceTree = "<group>"; };
 		84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabVenueCVC.xib; sourceTree = "<group>"; };
+		9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasy_Consumer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectedBookingTVC.swift; sourceTree = "<group>"; };
 		9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectedBookingTVC.xib; sourceTree = "<group>"; };
 		9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectionTVC.swift; sourceTree = "<group>"; };
 		9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectionTVC.xib; sourceTree = "<group>"; };
+		A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.release.xcconfig"; sourceTree = "<group>"; };
 		BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BD3DB01E2952DBB3005B5987 /* Main1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1.swift; sourceTree = "<group>"; };
 		BD3DB0202952DDF1005B5987 /* Main1.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Main1.xib; sourceTree = "<group>"; };
@@ -728,7 +728,7 @@
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
 		CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerViewController.swift; sourceTree = "<group>"; };
 		CEECAA6E288D8B7C007C5F9C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		CF9CFA2DABFD7C1B8DB234BA /* Pods_SpeakEasy_Consumer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasy_Consumer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
 		E11CE3E228C8DF7F003899C4 /* WeekDays.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeekDays.xib; sourceTree = "<group>"; };
 		E11CE3E328C8DF7F003899C4 /* WeekDays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
 		E11CE3E728C8DFBA003899C4 /* DIYCalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DIYCalendarCell.swift; sourceTree = "<group>"; };
@@ -1014,7 +1014,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABEDF61CEADAC4A47424B609 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
+				824355602965AA01009EE48B /* SpotifyiOS.framework in Frameworks */,
+				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1109,7 +1110,8 @@
 		2618555335F8CF7D7AAA33CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CF9CFA2DABFD7C1B8DB234BA /* Pods_SpeakEasy_Consumer.framework */,
+				8243555F2965AA01009EE48B /* SpotifyiOS.framework */,
+				9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1372,10 +1374,8 @@
 		BEDF67A11CBEC68B40496025 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5E83E4DA3AEAC681461B9589 /* Pods-SpeakEasy.debug.xcconfig */,
-				67833F57FAD0B2E3EDCA0419 /* Pods-SpeakEasy.release.xcconfig */,
-				5174C9605C79AB1BF779C3FC /* Pods-SpeakEasy-Consumer.debug.xcconfig */,
-				3EE924C9B6C10A031DDBA9F7 /* Pods-SpeakEasy-Consumer.release.xcconfig */,
+				DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */,
+				A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3477,12 +3477,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE486732286F2CB100FD277E /* Build configuration list for PBXNativeTarget "SpeakEasy-Consumer" */;
 			buildPhases = (
-				87F60A3958EB0DED57CA933F /* [CP] Check Pods Manifest.lock */,
+				ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */,
 				CE48671A286F2CB000FD277E /* Sources */,
 				CE48671B286F2CB000FD277E /* Frameworks */,
 				CE48671C286F2CB000FD277E /* Resources */,
-				F5736DA8429F212C2B207B73 /* [CP] Embed Pods Frameworks */,
-				5DA25F4035D39275DA8BE03D /* [CP] Copy Pods Resources */,
+				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
+				22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3726,7 +3726,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		5DA25F4035D39275DA8BE03D /* [CP] Copy Pods Resources */ = {
+		088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3743,7 +3760,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		87F60A3958EB0DED57CA933F /* [CP] Check Pods Manifest.lock */ = {
+		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3763,23 +3780,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F5736DA8429F212C2B207B73 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -4244,7 +4244,7 @@
 		};
 		CE486733286F2CB100FD277E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5174C9605C79AB1BF779C3FC /* Pods-SpeakEasy-Consumer.debug.xcconfig */;
+			baseConfigurationReference = DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -4254,6 +4254,10 @@
 				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 8G6373A768;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SpeakEasy/Template\\ Files/ThirdParty\\ Libraries",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
@@ -4283,7 +4287,7 @@
 		};
 		CE486734286F2CB100FD277E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3EE924C9B6C10A031DDBA9F7 /* Pods-SpeakEasy-Consumer.release.xcconfig */;
+			baseConfigurationReference = A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -4292,6 +4296,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 8G6373A768;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SpeakEasy/Template\\ Files/ThirdParty\\ Libraries",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";

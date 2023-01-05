@@ -7,12 +7,14 @@
 
 import UIKit
 import AVFoundation
+import GoogleSignIn
 
 class SignInOptionViewController: UIViewController {
 
     @IBOutlet weak var bgImageView: UIImageView!
     
     var player: AVPlayer?
+    var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +43,7 @@ class SignInOptionViewController: UIViewController {
     }
     
     @IBAction func onClickSignInWithGoogle(_ sender: Any) {
-        
+        connectWithGoogle()
     }
     
     @IBAction func onClickSignInwithEmail(_ sender: Any) {
@@ -55,6 +57,38 @@ class SignInOptionViewController: UIViewController {
     
     @IBAction func omClickback(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func connectWithGoogle() {
+        let clientId =  Constant.String.googleClientId
+        
+        let config = GIDConfiguration(clientID: clientId)
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+            
+            if let error = error {
+                Alert.showAlertSheet(style: .alert, title: "user Not found", message: "")
+                print(error)
+                return
+            }
+            guard let email = user?.profile?.email,
+                  let idToken = user?.authentication.idToken
+            else {
+                return
+            }
+            self.onBoardingDelegate.socialMediaLoginAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in
+                if isSuccess {
+                    let user = UserModel()
+                    AppStateManager.sharedInstance.loginUser(user: user)
+                } else {
+                    if errorMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    }
+                }
+                Loader.hide()
+            }
+        }
     }
     
 }

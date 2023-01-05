@@ -41,7 +41,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        self.onBoardingDelegate.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "") { isSuccess in
+        self.onBoardingDelegate.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "") { isSuccess,errorMsg  in
             Loader.hide()
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
@@ -49,7 +49,11 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
                 UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
                 Navigate.to.connectAccountVc(self)
             } else {
-                Alert.showAlertSheet(style: .alert, title: "value not change", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
         }
     }

@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-protocol InstagramPhotos: AnyObject {
+protocol InstagramPhotosDelegate: AnyObject {
     func getInstaImages(media:[InstagramMedia], isLastPage: Bool)
     func getError(errorMsg: String?)
 }
@@ -68,7 +68,7 @@ extension SelectPhotosViewController: UICollectionViewDelegate, UICollectionView
     }
 }
 
-extension SelectPhotosViewController: InstagramPhotos {
+extension SelectPhotosViewController: InstagramPhotosDelegate {
     func getError(errorMsg: String?) {
         UserDefault.shared.user?.instagramId = ""
         UserDefault.shared.user?.instagramTokan = nil

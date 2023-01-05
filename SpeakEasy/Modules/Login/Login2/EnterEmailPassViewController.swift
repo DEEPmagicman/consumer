@@ -41,12 +41,16 @@ class EnterEmailPassViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.loginWithEmailApi(email: self.email, password: passwordTextField.text ?? "") { isSuccess in
+        self.onBoardingDelegate.loginWithEmailApi(email: self.email, password: passwordTextField.text ?? "") { isSuccess,errorMsg  in
             if isSuccess {
                 let user = UserModel()
                 AppStateManager.sharedInstance.loginUser(user: user)
             } else {
-                Alert.showAlertSheet(style: .alert, title: "email not exist", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
             Loader.hide()
         }

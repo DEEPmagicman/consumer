@@ -10,7 +10,7 @@ import UIKit
 
 class OnBoardingPresenter {
         
-    func loginWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool) -> Void) {
+    func loginWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["phone": phonenum, "code": code]
         AFWrapper.postRequest(APIBuilder.share.loginWithPhone(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
@@ -18,42 +18,52 @@ class OnBoardingPresenter {
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
             else {
                 
-                complition("", "", false)
+                complition("", "", false, nil)
                 return
             }
-            complition(otp, otpref, true)
+            complition(otp, otpref, true, nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition("", "", false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition("", "", false)
+            complition("", "", false, nil)
         }
     }
     
-    func loginOtpVerifyApi(otp: Int, otpRef: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func loginOtpVerifyApi(otp: Int, otpRef: String, complition: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         AFWrapper.postRequest(APIBuilder.share.loginotpVerify(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any]
             else {
-                complition(false)
+                complition(false, nil)
                 return
             }
+            let imageDic = userDic["image"] as? [String:Any]
             let loginToken = sessionDic["accessToken"] as? String
             UserDefault.shared.loginToken = loginToken
             let user = Currentuser(fromDictionary: userDic)
             UserDefault.shared.user = user
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
         
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
-            complition(false)
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition(false, errMsg)
+                return
+            }
+            complition(false,nil)
             print(error ?? "")
         }
     }
     
-    func loginResendOtpApi(otpref: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool) -> Void) {
+    func loginResendOtpApi(otpref: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.share.loginresendOtp(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
@@ -61,18 +71,22 @@ class OnBoardingPresenter {
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
             else {
                 
-                complition("", "", false)
+                complition("", "", false,nil)
                 return
             }
-            complition(otp, otpref, true)
+            complition(otp, otpref, true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition("","",false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition("", "", false)
+            complition("", "", false,nil)
         }
     }
     
-    func signUpWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool) -> Void) {
+    func signUpWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["phone": phonenum, "code": code]
         AFWrapper.postRequest(APIBuilder.share.signUpWithPhone(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
@@ -80,42 +94,52 @@ class OnBoardingPresenter {
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
             else {
                 
-                complition("", "", false)
+                complition("", "", false, nil)
                 return
             }
-            complition(otp, otpref, true)
+            complition(otp, otpref, true, nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition("", "", false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition("", "", false)
+            complition("", "", false, nil)
         }
     }
     
-    func signUpOtpVerifyApi(otp: Int, otpRef: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func signUpOtpVerifyApi(otp: Int, otpRef: String, complition: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         AFWrapper.postRequest(APIBuilder.share.signUpOtpVerify(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any]
             else {
-                complition(false)
+                complition(false,nil)
                 return
             }
             let loginToken = sessionDic["accessToken"] as? String
+            let imageDic = userDic["image"] as? [String:Any]
             UserDefault.shared.loginToken = loginToken
             let user = Currentuser(fromDictionary: userDic)
             UserDefault.shared.user = user
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
         
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
-            complition(false)
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition(false, errMsg)
+                return
+            }
+            complition(false,nil)
             print(error ?? "")
         }
     }
     
-    func signUpResendOtpApi(otpref: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool) -> Void) {
+    func signUpResendOtpApi(otpref: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.share.signUpOtpResend(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
@@ -123,57 +147,73 @@ class OnBoardingPresenter {
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
             else {
                 
-                complition("", "", false)
+                complition("", "", false,nil)
                 return
             }
-            complition(otp, otpref, true)
+            complition(otp, otpref, true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition("","",false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition("", "", false)
+            complition("", "", false,nil)
         }
     }
     
-    func loginWithEmailApi(email: String, password: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func loginWithEmailApi(email: String, password: String, complition: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         Loader.show()
         let param = ["email": email, "password": password]
         AFWrapper.postRequest(APIBuilder.share.loginWithEmail(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any]
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any]
             else {
-                complition(false)
+                complition(false,nil)
                 return
             }
+            let imageDic = userDic["image"] as? [String:Any]
             let user = Currentuser(fromDictionary: userDic)
+            let loginToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.loginToken = loginToken
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             UserDefault.shared.user = user
             print("\(user)")
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition(false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition(false)
+            complition(false,nil)
         }
     }
     
-    func forgotPasswordApi(email: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func forgotPasswordApi(email: String, complition: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         Loader.show()
         let param = ["email": email]
         AFWrapper.postRequest(APIBuilder.share.forgotPassword(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
             guard let responseDic = response as? NSDictionary
             else {
-                complition(false)
+                complition(false,nil)
                 return
             }
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
+                complition(false, errMsg)
+                return
+            }
             print(error ?? "")
-            complition(false)
+            complition(false,nil)
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, complition: @escaping (_ isSuccess: Bool,_ errorMsg:String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName {
             param["firstName"] = fName
@@ -214,14 +254,18 @@ class OnBoardingPresenter {
             
             guard let responseDic = response as? [String:Any]
             else {
-                complition(false)
+                complition(false,nil)
                 return
             }
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
+                complition(false,errMsg)
+                return
+            }
             print(error ?? "")
-            complition(false)
+            complition(false,nil)
         }
     }
     
@@ -285,7 +329,7 @@ class OnBoardingPresenter {
         }
     }
     
-    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, complition: @escaping (_ isSuccess: Bool) -> Void) {
+    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, complition: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         
         let param = ["email": email, "socialType": socialType, "socialId":socialId]
         Loader.show()
@@ -293,14 +337,48 @@ class OnBoardingPresenter {
             
             guard let responseDic = response as? [String:Any]
             else {
-                complition(false)
+                complition(false,nil)
                 return
             }
-            complition(true)
+            complition(true,nil)
 
         } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
+                complition(false,errMsg)
+                return
+            }
             print(error ?? "")
-            complition(false)
+            complition(false,nil)
+        }
+    }
+    
+    func socialMediaLoginAPi(email: String,socialType: String,socialId: String, complition: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+        
+        let param = ["email": email, "socialType": socialType, "socialId":socialId]
+        Loader.show()
+        AFWrapper.postRequest(APIBuilder.share.socialMedialLogin(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? [String:Any], let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any]
+            else {
+                complition(false,nil)
+                return
+            }
+            let imageDic = userDic["image"] as? [String:Any]
+            let loginToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.loginToken = loginToken
+            let user = Currentuser(fromDictionary: userDic)
+            UserDefault.shared.user = user
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
+            print("\(user)")
+            complition(true,nil)
+
+        } failure: { (error) in
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
+                complition(false,errMsg)
+                return
+            }
+            print(error ?? "")
+            complition(false,nil)
         }
     }
 }

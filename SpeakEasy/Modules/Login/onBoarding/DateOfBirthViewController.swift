@@ -52,12 +52,16 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
     
     func confirmDetail() {
         let dob = datePickerView.date.string(format: .YYYYMMDD)
-        self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess in
+        self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess,errorMsg  in
             if isSuccess {
                 UserDefault.shared.user?.dateOfBirth = dob
                 Navigate.to.selectGenderVc(self)
             } else {
-                Alert.showAlertSheet(style: .alert, title: "Date of Birthday Not Update", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
             Loader.hide()
         }

@@ -27,6 +27,7 @@ class APIBuilder {
     private let vibesList_URL = "/vibe"
     private let drinkList_URL = "/drink"
     private let socialMediaConnect_URL = "/auth/connect-social"
+    private let socialLogin = "/auth/social-login"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramredirectUri + "&scope=user_profile,user_media&response_type=code"
     private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
@@ -84,6 +85,10 @@ class APIBuilder {
     
     func socialMediaConnection() -> String {
         return BASE_URL + API_PATH + socialMediaConnect_URL
+    }
+    
+    func socialMedialLogin() -> String {
+        return BASE_URL + API_PATH + socialLogin
     }
     
     func getInstagramToken() -> String {

@@ -87,12 +87,16 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
             let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
-            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
+            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self,isFromLogin: true, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
                     Loader.hide()
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
+                    if errorMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    }
                     Loader.hide()
                 }
                
@@ -101,13 +105,17 @@ final class EnterPhoneNumberViewController: UIViewController {
             if isFromSettings {
                 Navigate.to.enterVerificationCodeVc(self, isFromSettings: isFromSettings,phoneNum: self.phoneNumTextField.text ?? "")
             } else {
-                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess in
+                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
                         Loader.hide()
                     } else {
-                        Alert.showAlertSheet(style: .alert, title: "invalid phone Number", message: "")
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                        }
                         Loader.hide()
                     }
                 }

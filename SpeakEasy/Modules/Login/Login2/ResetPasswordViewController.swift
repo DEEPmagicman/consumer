@@ -28,7 +28,7 @@ class ResetPasswordViewController: UIViewController {
     }
     
     @IBAction func onClickSendResetLink(_ sender: Any) {
-        self.onBoardingDelegate.forgotPasswordApi(email: self.emailTextField.text ?? "") { isSuccess in
+        self.onBoardingDelegate.forgotPasswordApi(email: self.emailTextField.text ?? "") { isSuccess,errorMsg  in
             if isSuccess {
                 let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                     UIAlertAction in
@@ -39,7 +39,11 @@ class ResetPasswordViewController: UIViewController {
                 }
                 Alert.showAlertSheet(style: .alert, title: "link send successFully", message: "",actions: [okAction])
             } else {
-                Alert.showAlertSheet(style: .alert, title: "link not send", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
             Loader.hide()
         }

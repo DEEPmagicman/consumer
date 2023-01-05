@@ -10,7 +10,7 @@ import SwiftUI
 
 class InstagramManager {
     
-   static weak var instagramDelegate: InstagramPhotos?
+   static weak var instagramDelegate: InstagramPhotosDelegate?
     
     var onGetInstaPhotos: (([InstagramMedia], Bool) -> ())?
     
@@ -63,6 +63,8 @@ class InstagramManager {
                     if let response = respons as? [String: Any] {
                         self.instaParsing(response: response)
                     }
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: "No More Image", message: "")
                 }
             }
             return
@@ -72,6 +74,8 @@ class InstagramManager {
                 if let response = respons as? [String: Any] {
                     self.instaParsing(response: response)
                 }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "No image Found", message: "")
             }
         }
     }

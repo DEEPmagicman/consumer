@@ -39,14 +39,19 @@ final class SetProfilePictureViewController: UIViewController {
         self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
             if isSuccess {
                 self.imgUrl = imgUrl
-                let imgDetail = ImageDetail(key:"imgUrl",name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
-                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess in
+                let imgDetail = ImageDetail(key:imgUrl,name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
+                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess,errorMsg  in
                     if isSuccess {
-                        UserDefault.shared.user?.image = imgUrl
+                        
+                        UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
                         Loader.hide()
                     } else {
-                        Alert.showAlertSheet(style: .alert, title: "image not update", message: "")
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                        }
                         Loader.hide()
                     }
                 }

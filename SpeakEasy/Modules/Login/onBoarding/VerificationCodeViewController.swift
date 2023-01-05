@@ -78,13 +78,17 @@ final class VerificationCodeViewController: UIViewController {
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
         if isFromLogin {
-            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess,errorMsg  in
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
                     print("*-*\(self.currectOtp)")
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                    if errorMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    }
                 }
                 Loader.hide()
             }
@@ -96,13 +100,17 @@ final class VerificationCodeViewController: UIViewController {
                     
                 }
             } else {
-                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess in
+                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess,errorMsg  in
                     if isSuccess {
                         self.otpRef = otpRef
                         self.currectOtp = otp
                         print("*-*\(self.currectOtp)")
                     } else {
-                        Alert.showAlertSheet(style: .alert, title: "Otp not send", message: "")
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                        }
                     }
                     Loader.hide()
                 }
@@ -117,13 +125,17 @@ final class VerificationCodeViewController: UIViewController {
     
     private func otpVerification() {
         if isFromLogin {
-            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
                 if isSuccess {
                         let user = UserModel()
                         AppStateManager.sharedInstance.loginUser(user: user)
                     Loader.hide()
                 } else {
-                    Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
+                    if errorMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                    }
                     Loader.hide()
                 }
             }
@@ -140,12 +152,16 @@ final class VerificationCodeViewController: UIViewController {
                 }
                
             } else {
-                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess in
+                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
                     if isSuccess {
                             Navigate.to.welcomeVc(self)
                         Loader.hide()
                     } else {
-                        Alert.showAlertSheet(style: .alert, title: "invalid otp", message: "")
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                        }
                         Loader.hide()
                     }
                 }

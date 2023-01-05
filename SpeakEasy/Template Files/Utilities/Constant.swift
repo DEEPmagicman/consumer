@@ -42,5 +42,7 @@ struct Constant {
         static let authorizationCode = "authorization_code"
         static let InstagramclientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
         static let internetNotConnect = "internet not connect"
+        static let somthingWrong = "Somthing Went Wrong"
+        static let googleClientId = "971202288158-r8r0iep0ignr8nub82bijdfu488b1lqc.apps.googleusercontent.com"
     }
 }

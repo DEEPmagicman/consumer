@@ -57,11 +57,15 @@ final class SelectGenderViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.editUserProfileApi(gender: UserDefault.shared.user?.gender) { isSuccess in
+        self.onBoardingDelegate.editUserProfileApi(gender: UserDefault.shared.user?.gender) { isSuccess,errorMsg  in
             if isSuccess {
                 Navigate.to.SetProfilePicVc(self)
             } else {
-                Alert.showAlertSheet(style: .alert, title: "Gender Not update", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
             Loader.hide()
         }

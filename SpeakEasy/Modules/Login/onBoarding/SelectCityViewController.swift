@@ -28,12 +28,16 @@ final class SelectCityViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { isSuccess in
+        self.onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { isSuccess,errorMsg  in
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
                 Navigate.to.selectVibesVc(self)
             } else {
-                Alert.showAlertSheet(style: .alert, title: "city not update", message: "")
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
+                }
             }
             Loader.hide()
         }
