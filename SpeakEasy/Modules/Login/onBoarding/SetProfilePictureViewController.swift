@@ -11,6 +11,7 @@ import SDWebImage
 
 protocol SelectedInstaImgDelegate: AnyObject {
     func selectedImg(image: String)
+    func loginAgain()
 }
 
 final class SetProfilePictureViewController: UIViewController {
@@ -135,5 +136,11 @@ extension SetProfilePictureViewController: SelectedInstaImgDelegate {
         self.cameraBtn.isHidden = true
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
+    }
+    
+    func loginAgain() {
+        DispatchQueue.main.async {
+            Navigate.to.instagramWebView(self)
+        }
     }
 }

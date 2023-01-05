@@ -60,7 +60,7 @@ class InstagramManager {
             }
             self.urlExecute(url: nextPageURL) { respons,isSuccess in
                 if isSuccess {
-                    if let response = respons as? NSDictionary {
+                    if let response = respons as? [String: Any] {
                         self.instaParsing(response: response)
                     }
                 }
@@ -69,7 +69,7 @@ class InstagramManager {
         }
         self.urlExecute(url: String(format: APIBuilder.getInstagramImages, token)) { respons,isSuccess  in
             if isSuccess {
-                if let response = respons as? NSDictionary {
+                if let response = respons as? [String: Any] {
                     self.instaParsing(response: response)
                 }
             }
@@ -81,20 +81,25 @@ class InstagramManager {
         AFWrapper.getRequest(url, params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
             completion(response, true)
         } failure: { (error) in
-            completion( "", false)
+            if let err = (error as? NSError)?.userInfo as? [String: Any], let instaErr = err["error"] as? [String: Any], let errCode = instaErr["code"] as? Int, errCode == 190 {
+                print("")
+                instagramDelegate?.getError(errorMsg: "Session has expired, please login again")
+                return
+            }
+            completion("", false)
         }
     }
     
-    static func instaParsing(response: NSDictionary) {
-        if let data = response["data"] as? NSArray {
-            if let paging = response["paging"] as? NSDictionary {
+    static func instaParsing(response: [String: Any]) {
+        if let data = response["data"] as? [[String: Any]] {
+            if let paging = response["paging"] as? [String: Any] {
                 UserDefault.shared.user?.instanextPageURL = paging["next"] as? String ?? ""
             }
             self.mapInstaImages(data: data, index: 0, medias: [])
         }
     }
     
-    static func mapInstaImages(data: NSArray, index: Int, medias: [InstagramMedia]) {
+    static func mapInstaImages(data: [[String: Any]], index: Int, medias: [InstagramMedia]) {
         guard index < data.count else {
             self.instagramDelegate?.getInstaImages(media: medias, isLastPage: UserDefault.shared.user?.instanextPageURL ?? "" == "")
             return

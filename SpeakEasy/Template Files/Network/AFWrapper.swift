@@ -117,8 +117,10 @@ class AFWrapper: NSObject {
         let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseJSON { (responseObject) -> Void in
             
             if let responseCode = responseObject.response?.statusCode {
-                if responseCode == 200 {
+                if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
+                } else if responseObject.result.value != nil {
+                    failure(NSError(domain: "", code: 0, userInfo: (responseObject.result.value as? [String : Any]) ?? [:]))
                 } else {
                     failure(responseObject.result.error)
                 }

@@ -10,6 +10,7 @@ import SDWebImage
 
 protocol InstagramPhotos: AnyObject {
     func getInstaImages(media:[InstagramMedia], isLastPage: Bool)
+    func getError(errorMsg: String?)
 }
 
 final class SelectPhotosViewController: UIViewController {
@@ -68,6 +69,17 @@ extension SelectPhotosViewController: UICollectionViewDelegate, UICollectionView
 }
 
 extension SelectPhotosViewController: InstagramPhotos {
+    func getError(errorMsg: String?) {
+        UserDefault.shared.user?.instagramId = ""
+        UserDefault.shared.user?.instagramTokan = nil
+        UserDefault.shared.user?.instanextPageURL = nil
+        UserDefault.shared.user?.instaUserName = nil
+        Utility.main.showAlert(message: errorMsg ?? "Something went wrong. try again later", title: "Error") {
+            self.selectedImgDelegate?.loginAgain()
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func getInstaImages(media: [InstagramMedia], isLastPage: Bool) {
         if instaPhoto.count == 0 {
             self.instaPhoto = media
