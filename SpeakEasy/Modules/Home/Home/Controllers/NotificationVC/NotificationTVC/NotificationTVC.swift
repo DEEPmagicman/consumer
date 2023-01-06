@@ -27,4 +27,10 @@ class NotificationTVC: UITableViewCell {
         self.lblCity.text = data.name
         self.imgCity.image = UIImage(named: data.img)
     }
+    
+    func setDataCity(data: City) {
+        self.lblCity.text = data.name
+        self.imgCity.image = UIImage(named: "New York, NY 1")
+    }
+
 }

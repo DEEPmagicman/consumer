@@ -35,7 +35,8 @@ class AFWrapper: NSObject {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
                 } else if responseObject.result.value != nil {
-                    failure(NSError(domain: "", code: 0, userInfo: (responseObject.result.value as? [String : Any]) ?? [:]))
+                    let errorResponse = errorHandling(responseObject.result.value)
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                 } else {
                     failure(responseObject.result.error)
                 }
@@ -61,7 +62,8 @@ class AFWrapper: NSObject {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
                 } else if responseObject.result.value != nil {
-                    failure(NSError(domain: "", code: 0, userInfo: (responseObject.result.value as? [String : Any]) ?? [:]))
+                    let errorResponse = errorHandling(responseObject.result.value)
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                 } else {
                     failure(responseObject.result.error)
                 }
@@ -124,7 +126,8 @@ class AFWrapper: NSObject {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
                 } else if responseObject.result.value != nil {
-                    failure(NSError(domain: "", code: 0, userInfo: (responseObject.result.value as? [String : Any]) ?? [:]))
+                    let errorResponse = errorHandling(responseObject.result.value)
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                 } else {
                     failure(responseObject.result.error)
                 }
@@ -134,5 +137,18 @@ class AFWrapper: NSObject {
         }
         
         debugPrint(req)
+    }
+    
+    class func errorHandling(_ response: Any) -> (Bool, String) {
+        if let response = response as? [String: Any], let errMsg = response["message"] {
+            if let stringErr = errMsg as? String {
+                return (true, stringErr)
+            } else if let arrayErr = errMsg as? [String], let stringErr = arrayErr.first {
+                return (true, stringErr)
+            }
+            return (false, "")
+        } else {
+            return (false, "")
+        }
     }
 }

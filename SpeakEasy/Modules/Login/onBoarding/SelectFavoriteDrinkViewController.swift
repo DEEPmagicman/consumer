@@ -14,31 +14,16 @@ final class SelectFavoriteDrinkViewController: UIViewController {
     @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     
     var drinksListArry = [Drink]()
-    var drinkListDammy = [Drink(id:"1",drinkName:"Whiskey",status:"ENABLED",isDeleted: false, isSelected: false),Drink(id:"2",drinkName:"Dom Perignon",status:"ENABLED",isDeleted: false, isSelected: false),Drink(id:"3",drinkName:"Moscow Mule",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"4",drinkName:"Whiskey Sour",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"5",drinkName:"Martini",status:"ENABLED",isDeleted: false,isSelected: false),Drink(id:"6",drinkName:"Whiskey Coke",status:"ENABLED",isDeleted: false,isSelected: false)]
     var selectedDrinks = [String]()
     var onBoardingDelegate = OnBoardingPresenter()
-    
+    var from = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.favoriteDrinksCollectionView.register(UINib(nibName: "FavouriteDrinksCVC", bundle: nil), forCellWithReuseIdentifier: "FavouriteDrinksCVC")
         
-        self.onBoardingDelegate.getDrinkListAPi { drinkList, isSuccess in
-            if isSuccess {
-                for drink in self.drinkListDammy {
-                    if drink.status == "ENABLED" && drink.isDeleted == false {
-                        self.drinksListArry.append(drink)
-                    }
-                }
-                self.favoriteDrinksCollectionView.reloadData()
-                print(drinkList)
-            } else {
-                Alert.showAlertSheet(style: .alert, title: "drink not found", message: "")
-            }
-            Loader.hide()
-            
-        }
+       fatchAllDrinks()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,23 +38,45 @@ final class SelectFavoriteDrinkViewController: UIViewController {
         self.favoriteDrinksCollectionView.removeObserver(self, forKeyPath: "contentSize")
     }
     
+    private func fatchAllDrinks() {
+        self.onBoardingDelegate.getDrinkListAPi(from: from) { drinkList,hasMore , isSuccess  in
+            if isSuccess {
+                for drink in drinkList {
+                    if drink.status == "ENABLED" && drink.isDeleted == false {
+                        self.drinksListArry.append(drink)
+                    }
+                }
+                if hasMore {
+                    self.from = drinkList.count
+                    self.fatchAllDrinks()
+                    return
+                }
+                self.favoriteDrinksCollectionView.reloadData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "drink not found", message: "")
+            }
+            Loader.hide()
+            
+        }
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         self.collectionViewHeight.constant = self.favoriteDrinksCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-//        self.onBoardingDelegate.editUserProfileApi(drinkIds: self.selectedDrinks) { isSuccess,errorMsg  in
-//            if isSuccess {
-//                UserDefault.shared.user?.drinkIds = self.selectedDrinks
+        self.onBoardingDelegate.editUserProfileApi(drinkIds: self.selectedDrinks) { isSuccess,errorMsg  in
+            if isSuccess {
+                UserDefault.shared.user?.drinkIds = self.selectedDrinks
                 Navigate.to.connectSocialMediaVc(self)
-//            } else {
-//                if errorMsg != nil {
-//                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
-//                } else {
-//                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
-//                }
-//            }
-//        }
+            } else {
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
         Loader.hide()
     }
     

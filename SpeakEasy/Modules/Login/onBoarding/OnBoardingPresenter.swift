@@ -24,8 +24,8 @@ class OnBoardingPresenter {
             complition(otp, otpref, true, nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition("", "", false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition("", "", false, err.domain)
                 return
             }
             print(error ?? "")
@@ -54,8 +54,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition(false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             complition(false,nil)
@@ -77,8 +77,8 @@ class OnBoardingPresenter {
             complition(otp, otpref, true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition("","",false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition("", "", false, err.domain)
                 return
             }
             print(error ?? "")
@@ -100,8 +100,8 @@ class OnBoardingPresenter {
             complition(otp, otpref, true, nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition("", "", false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition("", "", false, err.domain)
                 return
             }
             print(error ?? "")
@@ -130,8 +130,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition(false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             complition(false,nil)
@@ -153,8 +153,8 @@ class OnBoardingPresenter {
             complition(otp, otpref, true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition("","",false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition("", "", false, err.domain)
                 return
             }
             print(error ?? "")
@@ -182,8 +182,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition(false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             print(error ?? "")
@@ -204,8 +204,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsg = err["message"] as? String {
-                complition(false, errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             print(error ?? "")
@@ -260,8 +260,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
-                complition(false,errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             print(error ?? "")
@@ -287,44 +287,46 @@ class OnBoardingPresenter {
         }
     }
     
-    func getVibesListAPi(complition: @escaping(_ vibeList: [Vibe], _ isSuccess: Bool) -> Void) {
+    func getVibesListAPi(from:Int? = 0, complition: @escaping(_ vibeList: [Vibe],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.share.vibesList(), params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
+        let param = ["skip": from]
+        AFWrapper.getRequest(APIBuilder.share.vibesList(), params: param as [String : Any], headers: Header.shared.header(headerContentType: .json)) { (response) in
             
-            guard let responseDic = response as? [String:Any], let vibesArray = responseDic["list"] as? [[String:Any]]
+            guard let responseDic = response as? [String:Any], let vibesArray = responseDic["list"] as? [[String:Any]], let more = responseDic["hasMany"] as? Bool
                     
             else {
-                complition([Vibe](), false)
+                complition([Vibe](), false, false)
                 return
             }
             var vibes = [Vibe]()
             vibesArray.forEach {
                 vibes.append(Vibe(fromDictionary: $0))
             }
-            complition(vibes, true)
+            complition(vibes, more, true)
         } failure: { (error) in
-            complition([Vibe](), false)
+            complition([Vibe](), false, false)
             print(error ?? "")
         }
     }
     
-    func getDrinkListAPi(complition: @escaping(_ drinkList: [Drink], _ isSuccess: Bool) -> Void) {
+    func getDrinkListAPi(from:Int? = 0, complition: @escaping(_ drinkList: [Drink],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.share.drinksList(), params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
+        let param = ["skip": from]
+        AFWrapper.getRequest(APIBuilder.share.drinksList(), params: param as [String : Any], headers: Header.shared.header(headerContentType: .json)) { (response) in
             
-            guard let responseDic = response as? [String:Any], let drinkArray = responseDic["list"] as? [[String:Any]]
+            guard let responseDic = response as? [String:Any], let drinkArray = responseDic["list"] as? [[String:Any]], let more = responseDic["hasMany"] as? Bool
                     
             else {
-                complition([Drink](), false)
+                complition([Drink](), false, false)
                 return
             }
             var drinks = [Drink]()
             drinkArray.forEach {
                 drinks.append(Drink(fromDictionary: $0))
             }
-            complition(drinks, true)
+            complition(drinks, more, true)
         } failure: { (error) in
-            complition([Drink](), false)
+            complition([Drink](), false, false)
             print(error ?? "")
         }
     }
@@ -343,8 +345,8 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
-                complition(false,errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             print(error ?? "")
@@ -373,12 +375,42 @@ class OnBoardingPresenter {
             complition(true,nil)
 
         } failure: { (error) in
-            if let err = (error as? NSError)?.userInfo as? [String: Any], let errMsgArry = err["message"] as? [String],let errMsg = errMsgArry.first  {
-                complition(false,errMsg)
+            if let err = (error as? NSError), err.code == 0 {
+                complition(false, err.domain)
                 return
             }
             print(error ?? "")
             complition(false,nil)
+        }
+    }
+    
+    func getCityListAPi(from:Int? = 0,searchText: String? = "", complition: @escaping(_ cityList: [City],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
+        if from == 0 {
+            Loader.show()
+        }
+        var param: [String:Any] = [:]
+           param["skip"] = from
+           param["search_column"] = "name"
+           param["countryCode"] = "US"
+        if searchText != "" {
+            param["search"] = searchText
+        }
+        AFWrapper.getRequest(APIBuilder.share.getCityList(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
+            
+            guard let responseDic = response as? [String:Any], let cityArray = responseDic["list"] as? [[String:Any]], let more = responseDic["hasMany"] as? Bool
+                    
+            else {
+                complition([City](), false, false)
+                return
+            }
+            var citys = [City]()
+            cityArray.forEach {
+                citys.append(City(fromDictionary: $0))
+            }
+            complition(citys, more, true)
+        } failure: { (error) in
+            complition([City](), false, false)
+            print(error ?? "")
         }
     }
 }

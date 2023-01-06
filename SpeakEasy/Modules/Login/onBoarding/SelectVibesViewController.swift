@@ -15,9 +15,9 @@ final class SelectVibesViewController: UIViewController {
     @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     
     var vibesListArry = [Vibe]()
-    var vibeListDammy = [Vibe(id:"1",vibeName:"Fridays",status:"ENABLED",isDeleted: false, isSelected: false),Vibe(id:"2",vibeName:"EDM",status:"ENABLED",isDeleted: false, isSelected: false),Vibe(id:"3",vibeName:"Bottle Service",status:"ENABLED",isDeleted: false,isSelected: false),Vibe(id:"4",vibeName:"Crowds",status:"ENABLED",isDeleted: false,isSelected: false),Vibe(id:"5",vibeName:"DJ Boooth",status:"ENABLED",isDeleted: false,isSelected: false)]
     var vibesCount = [String]()
     var onBoardingDelegate = OnBoardingPresenter()
+    var from = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,22 +26,7 @@ final class SelectVibesViewController: UIViewController {
         self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
         self.continueBtn.alpha = 0.5
         self.continueBtn.isUserInteractionEnabled = false
-        
-        self.onBoardingDelegate.getVibesListAPi { vibeList, isSuccess in
-            if isSuccess {
-                for vibe in self.vibeListDammy {
-                    if vibe.status == "ENABLED" && vibe.isDeleted == false {
-                        self.vibesListArry.append(vibe)
-                    }
-                }
-                self.vibesCollectionView.reloadData()
-                print(vibeList)
-            } else {
-                Alert.showAlertSheet(style: .alert, title: "vibe not found", message: "")
-            }
-            Loader.hide()
-            
-        }
+        fetchAllVibes()
 
     }
     
@@ -57,23 +42,44 @@ final class SelectVibesViewController: UIViewController {
         self.vibesCollectionView.removeObserver(self, forKeyPath: "contentSize")
     }
     
+    private func fetchAllVibes() {
+        self.onBoardingDelegate.getVibesListAPi(from: from) { vibeList,hasMore, isSuccess  in
+            if isSuccess {
+                for vibe in vibeList {
+                    if vibe.status == "ENABLED" && vibe.isDeleted == false {
+                        self.vibesListArry.append(vibe)
+                    }
+                }
+                if hasMore {
+                    self.from = vibeList.count
+                    self.fetchAllVibes()
+                    return
+                }
+                self.vibesCollectionView.reloadData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "vibe not found", message: "")
+            }
+            Loader.hide()
+        }
+    }
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         self.collectionViewHeight.constant = self.vibesCollectionView.collectionViewLayout.collectionViewContentSize.height
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-//        self.onBoardingDelegate.editUserProfileApi(vibeIds: self.vibesCount) { isSuccess,errorMsg  in
-//            if isSuccess {
-//                UserDefault.shared.user?.vibeIds = self.vibesCount
+        self.onBoardingDelegate.editUserProfileApi(vibeIds: self.vibesCount) { isSuccess,errorMsg  in
+            if isSuccess {
+                UserDefault.shared.user?.vibeIds = self.vibesCount
                 Navigate.to.selectFavoriteDrinkVc(self)
-//            } else {
-//                if errorMsg != nil {
-//                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
-//                } else {
-//                    Alert.showAlertSheet(style: .alert, title: Constant.String.somthingWrong, message: "")
-//                }
-//            }
-//        }
+            } else {
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
         Loader.hide()
     }
     

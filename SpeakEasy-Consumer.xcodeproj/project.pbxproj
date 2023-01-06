@@ -54,6 +54,7 @@
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
+		82E7F5B429681F8F007FC573 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F5B329681F8F007FC573 /* City.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
 		84248D9A28D29ABC00A6E260 /* AllEvents.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248D9828D29ABC00A6E260 /* AllEvents.xib */; };
 		84248D9E28D2A4CE00A6E260 /* All.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9C28D2A4CE00A6E260 /* All.swift */; };
@@ -549,6 +550,7 @@
 		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
+		82E7F5B329681F8F007FC573 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
 		84248D9828D29ABC00A6E260 /* AllEvents.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllEvents.xib; sourceTree = "<group>"; };
 		84248D9C28D2A4CE00A6E260 /* All.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = All.swift; sourceTree = "<group>"; };
@@ -1823,6 +1825,7 @@
 				BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */,
 				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
 				828A04932962DA3E004A5F2B /* InstagramMedia.swift */,
+				82E7F5B329681F8F007FC573 /* City.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -3915,6 +3918,7 @@
 				E1A9E74A28C55D550081FB28 /* HomeTabCVC.swift in Sources */,
 				E11F4BA128C8358C008D2E30 /* EventOptionCVC.swift in Sources */,
 				CE4867C1286F358800FD277E /* CustomLoader.swift in Sources */,
+				82E7F5B429681F8F007FC573 /* City.swift in Sources */,
 				E11F4C0428C835F3008D2E30 /* SenderTVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* NotificationTVC.swift in Sources */,
 				E11F4B3228C83564008D2E30 /* AdditionalGuestsTVC.swift in Sources */,
