@@ -52,6 +52,10 @@
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
+		820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */; };
+		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
+		820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */; };
+		820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
 		82E7F5B429681F8F007FC573 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F5B329681F8F007FC573 /* City.swift */; };
@@ -547,6 +551,10 @@
 		4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewEventTicketConfirmInvitedPeopleTVC.xib; sourceTree = "<group>"; };
 		4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCitySelectionHeaderView.swift; sourceTree = "<group>"; };
 		4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationCitySelectionHeaderView.xib; sourceTree = "<group>"; };
+		820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsViewController.swift; sourceTree = "<group>"; };
+		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
+		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
+		820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsCell.xib; sourceTree = "<group>"; };
 		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
@@ -1209,6 +1217,15 @@
 				4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */,
 			);
 			path = NotificationCitySelectionHeaderView;
+			sourceTree = "<group>";
+		};
+		820EEDB6296BF73E00B9E015 /* TableBookingDetailsCell */ = {
+			isa = PBXGroup;
+			children = (
+				820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */,
+				820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */,
+			);
+			path = TableBookingDetailsCell;
 			sourceTree = "<group>";
 		};
 		84248D9628D29AA200A6E260 /* AllEvents */ = {
@@ -2018,6 +2035,9 @@
 			children = (
 				E11F4B0B28C83564008D2E30 /* BookingRequests.swift */,
 				E11F4B0C28C83564008D2E30 /* BookingRequests.xib */,
+				820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */,
+				820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */,
+				820EEDB6296BF73E00B9E015 /* TableBookingDetailsCell */,
 			);
 			path = BookingRequests;
 			sourceTree = "<group>";
@@ -3658,6 +3678,7 @@
 				0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */,
 				0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */,
 				E1A9E7F928C579690081FB28 /* MyAccount.xib in Resources */,
+				820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
 				E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */,
 				BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */,
@@ -3699,6 +3720,7 @@
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
 				E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */,
+				820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */,
 				04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */,
 				E17DC97128C6D01700244C4F /* MainTVC.xib in Resources */,
 				E11F4C0C28C835F3008D2E30 /* ChatHeadTVC.xib in Resources */,
@@ -3853,6 +3875,7 @@
 				BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */,
 				CE4867B5286F358800FD277E /* UIImage+Extension.swift in Sources */,
 				0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */,
+				820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */,
 				CE4867CF286F358800FD277E /* AppStateManager.swift in Sources */,
 				E11CE3FA28C97709003899C4 /* ExtendedTabCVC.swift in Sources */,
 				E1A9E76728C55D550081FB28 /* Locations.swift in Sources */,
@@ -4051,6 +4074,7 @@
 				CE4867A9286F358800FD277E /* Validation.swift in Sources */,
 				E1A9E80028C579690081FB28 /* MyAccount.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
+				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
 				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,

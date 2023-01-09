@@ -79,7 +79,8 @@ class Main1: UIViewController {
     }
     
     @IBAction func onBtnProceed(_ sender: UIButtonDeviceClass) {
-        Utility.main.topViewController()?.navigationController?.pushViewController(BookingRequests(), animated: true)
+//        Utility.main.topViewController()?.navigationController?.pushViewController(BookingRequests(), animated: true)
+        Utility.main.topViewController()?.navigationController?.pushViewController(TableBookingDetailsViewController(), animated: true)
     }
 }
 //MARK: - Helper Methods

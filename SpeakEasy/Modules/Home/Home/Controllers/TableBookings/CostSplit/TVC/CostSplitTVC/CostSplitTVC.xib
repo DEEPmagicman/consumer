@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,13 +29,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="376" height="87"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-friends" translatesAutoresizingMaskIntoConstraints="NO" id="DLi-6H-DT4">
-                                <rect key="frame" x="12" y="8" width="60" height="60"/>
+                                <rect key="frame" x="12" y="8" width="56" height="56"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="DLi-6H-DT4" secondAttribute="height" multiplier="1:1" id="ixr-5X-a7r"/>
+                                    <constraint firstAttribute="width" constant="56" id="MK8-DE-do7"/>
+                                    <constraint firstAttribute="height" constant="56" id="hbA-Ih-VNg"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="you" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xQM-SR-4ji" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="92" y="29" width="24.5" height="18.5"/>
+                                <rect key="frame" x="88" y="27" width="24.5" height="18.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -46,14 +48,14 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9T-HG-pgw">
-                                <rect key="frame" x="262.5" y="46.5" width="30" height="1"/>
+                                <rect key="frame" x="262.5" y="44.5" width="30" height="1"/>
                                 <color key="backgroundColor" red="0.45882352941176469" green="0.45098039215686275" blue="0.45098039215686275" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="Oea-eg-e8P"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="qSK-ro-dP1">
-                                <rect key="frame" x="262.5" y="29" width="93.5" height="18.5"/>
+                                <rect key="frame" x="262.5" y="27" width="93.5" height="18.5"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$20" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="l08-Q6-sr9">
                                         <rect key="frame" x="0.0" y="0.0" width="30" height="18.5"/>
@@ -80,14 +82,13 @@
                             <constraint firstItem="DLi-6H-DT4" firstAttribute="top" secondItem="mmA-mi-UvM" secondAttribute="top" constant="8" id="9Uc-R6-jWw"/>
                             <constraint firstItem="l08-Q6-sr9" firstAttribute="width" secondItem="mmA-mi-UvM" secondAttribute="width" multiplier="0.08" id="O7b-Bz-8HB"/>
                             <constraint firstItem="d9T-HG-pgw" firstAttribute="bottom" secondItem="l08-Q6-sr9" secondAttribute="bottom" id="TR0-FC-xif"/>
-                            <constraint firstItem="DLi-6H-DT4" firstAttribute="width" secondItem="mmA-mi-UvM" secondAttribute="width" multiplier="0.159574" id="Tfr-DM-7oy"/>
                             <constraint firstItem="qSK-ro-dP1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xQM-SR-4ji" secondAttribute="trailing" constant="20" id="cJ8-ZU-4Vc"/>
                             <constraint firstItem="d9T-HG-pgw" firstAttribute="trailing" secondItem="l08-Q6-sr9" secondAttribute="trailing" id="kud-q9-ygE"/>
                             <constraint firstAttribute="trailing" secondItem="qSK-ro-dP1" secondAttribute="trailing" constant="20" id="mUc-xM-Km5"/>
                             <constraint firstItem="xQM-SR-4ji" firstAttribute="centerY" secondItem="DLi-6H-DT4" secondAttribute="centerY" id="oCw-5H-s0L"/>
                             <constraint firstItem="d9T-HG-pgw" firstAttribute="leading" secondItem="l08-Q6-sr9" secondAttribute="leading" id="qCI-jA-B6q"/>
                             <constraint firstItem="DLi-6H-DT4" firstAttribute="leading" secondItem="mmA-mi-UvM" secondAttribute="leading" constant="12" id="rcE-NO-kIU"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DLi-6H-DT4" secondAttribute="bottom" constant="12" id="yAq-PP-42g"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DLi-6H-DT4" secondAttribute="bottom" constant="8" id="yAq-PP-42g"/>
                             <constraint firstItem="qSK-ro-dP1" firstAttribute="centerY" secondItem="DLi-6H-DT4" secondAttribute="centerY" id="zKw-DT-vWg"/>
                         </constraints>
                     </view>
