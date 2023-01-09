@@ -19,7 +19,7 @@ class SignInOptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        playBackgoundVideo()
+//        playBackgoundVideo()
     }
     
     private func playBackgoundVideo() {

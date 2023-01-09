@@ -116,7 +116,7 @@ extension Currentuser: Decodable, Encodable {
         phone = (try? values.decode(String.self, forKey: .phone)) ?? ""
         phoneVerified = (try? values.decode(Bool.self, forKey: .phoneVerified)) ?? false
         status = (try? values.decode(String.self, forKey: .status)) ?? ""
-        image = try! values.decode(ImageDetail.self, forKey: .image)
+        image = (try? values.decode(ImageDetail.self, forKey: .image)) ?? ImageDetail(fromDictionary: [:])
         instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
         instagramToken = try? values.decode(String.self, forKey: .instagramToken)
         instaNextPageURL = try? values.decode(String.self, forKey: .instaNextPageURL) ?? nil
@@ -199,9 +199,9 @@ struct ImageDetail {
 extension ImageDetail: Decodable, Encodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        key = try! values.decode(String.self, forKey: .key)
-        name = try! values.decode(String.self, forKey: .name)
-        description = try! values.decode(String.self, forKey: .description)
+        key = (try? values.decode(String.self, forKey: .key)) ?? ""
+        name = (try? values.decode(String.self, forKey: .name)) ?? ""
+        description = (try? values.decode(String.self, forKey: .description)) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
