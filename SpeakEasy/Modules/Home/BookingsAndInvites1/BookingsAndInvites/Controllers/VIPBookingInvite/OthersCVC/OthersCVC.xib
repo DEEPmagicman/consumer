@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,8 +29,8 @@
                             <constraint firstAttribute="width" constant="56" id="gVm-wS-EgL"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="28"/>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
@@ -63,9 +64,9 @@
                         </subviews>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verified-tick" translatesAutoresizingMaskIntoConstraints="NO" id="Nk8-TN-xGf">
-                        <rect key="frame" x="43" y="43" width="11" height="11"/>
+                        <rect key="frame" x="39.666666666666664" y="37.666666666666664" width="16.333333333333336" height="16.333333333333336"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="11" id="7CZ-Cd-w4x"/>
+                            <constraint firstAttribute="height" constant="16.5" id="7CZ-Cd-w4x"/>
                             <constraint firstAttribute="width" secondItem="Nk8-TN-xGf" secondAttribute="height" multiplier="1:1" id="UWa-Aq-bir"/>
                         </constraints>
                     </imageView>
@@ -76,7 +77,7 @@
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="top" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="8" id="06t-lk-FYo"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="top" secondItem="ZTg-uK-7eu" secondAttribute="top" id="2L4-jz-i9W"/>
                 <constraint firstItem="Nk8-TN-xGf" firstAttribute="bottom" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="-2" id="8SB-lQ-xns"/>
-                <constraint firstItem="Nk8-TN-xGf" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" constant="-2" id="Err-vM-Jht"/>
+                <constraint firstItem="Nk8-TN-xGf" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" id="Err-vM-Jht"/>
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="gsv-7O-Bag"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="nlA-pv-T2P"/>
             </constraints>

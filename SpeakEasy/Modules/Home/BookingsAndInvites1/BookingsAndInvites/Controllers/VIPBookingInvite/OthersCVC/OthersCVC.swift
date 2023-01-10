@@ -29,4 +29,17 @@ class OthersCVC: UICollectionViewCell {
             self.imgVerified.isHidden = true
         }
     }
+    
+    func setFriendData(data: InviteFriendsModel? = nil, isGuest: Bool) {
+        if isGuest {
+            self.imgUser.image = Constant.Icon.maleIdentify
+            self.lblUser.text = "Guest"
+            self.lblPercentage.text = "FREE"
+        } else {
+            self.imgUser.image = UIImage(named: data?.img ?? "")
+            self.lblUser.text = data?.name
+            self.lblPercentage.text = "10%"
+        }
+        self.imgVerified.isHidden = true
+    }
 }

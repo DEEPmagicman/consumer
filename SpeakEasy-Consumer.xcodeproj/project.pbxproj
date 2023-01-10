@@ -58,6 +58,10 @@
 		820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
+		82994A8D296D29CB008CA778 /* InviteFriendsPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82994A8C296D29CB008CA778 /* InviteFriendsPopUp.xib */; };
+		82994A8F296D29F5008CA778 /* InviteFriendsPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */; };
+		82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */; };
+		82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */; };
 		82E7F5B429681F8F007FC573 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F5B329681F8F007FC573 /* City.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
 		84248D9A28D29ABC00A6E260 /* AllEvents.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248D9828D29ABC00A6E260 /* AllEvents.xib */; };
@@ -558,6 +562,10 @@
 		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
+		82994A8C296D29CB008CA778 /* InviteFriendsPopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InviteFriendsPopUp.xib; sourceTree = "<group>"; };
+		82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsPopUp.swift; sourceTree = "<group>"; };
+		82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
+		82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendListTableViewCell.xib; sourceTree = "<group>"; };
 		82E7F5B329681F8F007FC573 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
 		84248D9828D29ABC00A6E260 /* AllEvents.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllEvents.xib; sourceTree = "<group>"; };
@@ -1226,6 +1234,24 @@
 				820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */,
 			);
 			path = TableBookingDetailsCell;
+			sourceTree = "<group>";
+		};
+		82994A8B296D2961008CA778 /* InviteFriendsPopUp */ = {
+			isa = PBXGroup;
+			children = (
+				82994A8C296D29CB008CA778 /* InviteFriendsPopUp.xib */,
+				82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */,
+			);
+			path = InviteFriendsPopUp;
+			sourceTree = "<group>";
+		};
+		82994A90296D3B55008CA778 /* FriendListTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */,
+				82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */,
+			);
+			path = FriendListTableCell;
 			sourceTree = "<group>";
 		};
 		84248D9628D29AA200A6E260 /* AllEvents */ = {
@@ -2037,6 +2063,8 @@
 				E11F4B0C28C83564008D2E30 /* BookingRequests.xib */,
 				820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */,
 				820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */,
+				82994A8B296D2961008CA778 /* InviteFriendsPopUp */,
+				82994A90296D3B55008CA778 /* FriendListTableCell */,
 				820EEDB6296BF73E00B9E015 /* TableBookingDetailsCell */,
 			);
 			path = BookingRequests;
@@ -3684,6 +3712,7 @@
 				BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */,
 				E11F4B2F28C83564008D2E30 /* BookingRequests.xib in Resources */,
 				E16705B728CA6BB500644BF0 /* TicketRecipients.xib in Resources */,
+				82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */,
 				E167058528CA6AB800644BF0 /* InviteFromContactCVC.xib in Resources */,
 				E1FAD5E528CEA9C4004F70DE /* ImportantDatesTVC.xib in Resources */,
 				E11F4BF828C835F3008D2E30 /* BookingsCVC.xib in Resources */,
@@ -3719,6 +3748,7 @@
 				E11F4BA428C8358C008D2E30 /* VIPTableBookingTVC.xib in Resources */,
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
+				82994A8D296D29CB008CA778 /* InviteFriendsPopUp.xib in Resources */,
 				E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */,
 				820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */,
 				04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */,
@@ -3885,6 +3915,7 @@
 				CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */,
 				CE4867C2286F358800FD277E /* CollectionViewFlowLayout.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
+				82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */,
 				CE4867CD286F358800FD277E /* APIManager.swift in Sources */,
 				E166184B28BED1810027C6EA /* RewardDetails.swift in Sources */,
 				E11F4BFA28C835F3008D2E30 /* BookingsAndInvites.swift in Sources */,
@@ -3964,6 +3995,7 @@
 				E1A9E76028C55D550081FB28 /* HotVenueCVC.swift in Sources */,
 				E11F4B9B28C8358C008D2E30 /* EventBookingDetails.swift in Sources */,
 				E167059128CA6AB800644BF0 /* FriendTVC.swift in Sources */,
+				82994A8F296D29F5008CA778 /* InviteFriendsPopUp.swift in Sources */,
 				4A7CC53428E37ACA00F8BA63 /* BookingAddressTVC.swift in Sources */,
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,

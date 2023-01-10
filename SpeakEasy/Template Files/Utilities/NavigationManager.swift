@@ -213,4 +213,14 @@ class Navigate {
         vc.selectedImgDelegate = sender as! SelectedInstaImgDelegate
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
+    
+    func inviteFriendPopUp(_ sender: UIViewController, invitedFrdList: [InviteFriendsModel], selectedGuest: Int) {
+        let vc = InviteFriendsPopUp()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.invitedFrdDelegate = sender as? InvitedFriendDelegate
+        vc.selectedFriend = invitedFrdList
+        vc.guest = selectedGuest
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
 }

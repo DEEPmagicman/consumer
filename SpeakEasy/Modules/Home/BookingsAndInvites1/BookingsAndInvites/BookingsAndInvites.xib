@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -36,7 +37,7 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="60"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bookings &amp; Invites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vd9-Qv-pVd" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="85" y="12.5" width="244.5" height="35"/>
+                            <rect key="frame" x="89" y="12.5" width="236.5" height="35"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -55,12 +56,12 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="flu-x2-qw1">
-                    <rect key="frame" x="20" y="104" width="374" height="48"/>
+                    <rect key="frame" x="0.0" y="104" width="414" height="48"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="19z-qG-LRB">
-                            <rect key="frame" x="0.0" y="0.0" width="374" height="48"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="XH6-SL-msh">
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="XH6-SL-msh">
                                 <size key="itemSize" width="128" height="128"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -72,7 +73,7 @@
                             </connections>
                         </collectionView>
                     </subviews>
-                    <color key="backgroundColor" red="0.24705882352941178" green="0.24705882352941178" blue="0.24705882352941178" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="Jtu-qo-gQ5"/>
                         <constraint firstAttribute="bottom" secondItem="19z-qG-LRB" secondAttribute="bottom" id="MPC-La-tty"/>
@@ -81,19 +82,13 @@
                         <constraint firstItem="19z-qG-LRB" firstAttribute="top" secondItem="flu-x2-qw1" secondAttribute="top" id="yj4-wh-Ap8"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="24"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                            <real key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                             <color key="value" red="0.24705882352941178" green="0.24705882352941178" blue="0.24705882352941178" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upcoming" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atj-Pr-p6T" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                    <rect key="frame" x="14" y="172" width="95.5" height="26"/>
+                    <rect key="frame" x="14" y="172" width="96.5" height="26"/>
                     <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -123,9 +118,9 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="aZA-jJ-HCI" secondAttribute="trailing" id="dGR-DF-0vU"/>
                 <constraint firstItem="flu-x2-qw1" firstAttribute="top" secondItem="aZA-jJ-HCI" secondAttribute="bottom" id="eWu-dj-Vh5"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="717-hj-4SY" secondAttribute="trailing" id="jqY-XI-vF6"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="flu-x2-qw1" secondAttribute="trailing" constant="20" id="mIu-gd-yKZ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="flu-x2-qw1" secondAttribute="trailing" id="mIu-gd-yKZ"/>
                 <constraint firstItem="4bj-cf-Mt7" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="n5C-xK-Avt"/>
-                <constraint firstItem="flu-x2-qw1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="oHf-nW-E5t"/>
+                <constraint firstItem="flu-x2-qw1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="oHf-nW-E5t"/>
                 <constraint firstItem="4bj-cf-Mt7" firstAttribute="top" secondItem="Atj-Pr-p6T" secondAttribute="bottom" constant="8" id="qFh-vD-0YJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4bj-cf-Mt7" secondAttribute="trailing" id="wtj-Dd-Ogw"/>
             </constraints>

@@ -219,7 +219,7 @@ extension EventBookingDetails: UITableViewDataSource {
     }
     @objc func onBtnBookVIPTable(){
         // fixthis
-        Utility.main.topViewController()?.navigationController?.pushViewController(TableSelection(), animated: true)
+        Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(TableSelection(), animated: true)
     }
 }
 //MARK: - UITableViewDataSource

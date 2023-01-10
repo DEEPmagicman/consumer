@@ -97,7 +97,7 @@ extension BookingsAndInvites: UICollectionViewDataSource {
 }
 extension BookingsAndInvites: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width/2.07
+        let width = collectionView.frame.width/2.0
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TableBookingDetailsCell: UITableViewCell {
+final class TableBookingDetailsCell: UITableViewCell {
 
     @IBOutlet weak var bottleMenuBtn: UIButtonDeviceClass!
     @IBOutlet weak var viewInviteFrdCollection: UIView!
@@ -29,15 +29,34 @@ class TableBookingDetailsCell: UITableViewCell {
     @IBOutlet weak var equalSplitInfoLbl: UILabel!
     @IBOutlet weak var customSplitLbl: UILabel!
     @IBOutlet weak var customSplitInfoLbl: UILabel!
+    @IBOutlet weak var editFriendListBtn: UIButton!
+    
+    var arrOthersInvite = [OthersInvites(image: UIImage(named: "user1-others"), name: "You", percentage: "50%", isVerified: false), OthersInvites(image: UIImage(named: "user2-others"), name: "Henry", percentage: "0%", isVerified: true), OthersInvites(image: UIImage(named: "user3-others"), name: "Abby", percentage: "0%", isVerified: true), OthersInvites(image: UIImage(named: "user4-others"), name: "Madison", percentage: "0%", isVerified: false)]
+    
+    var arrOfFriends = [
+        InviteFriendsModel(name: "Henry", img: "henry"),
+        InviteFriendsModel(name: "Paul", img: "paul"),
+        InviteFriendsModel(name: "Abby", img: "abby"),
+        InviteFriendsModel(name: "Madison", img: "madison"),
+        InviteFriendsModel(name: "Ben", img: "Friend")
+    ]
+    var invitedFrd = [InviteFriendsModel]()
+    var guest = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()
-       
-    }
+        
+        if self.invitedFrd.count + self.guest == 0 {
+            self.searchFrdView.isHidden = false
+            self.viewInviteFrdCollection.isHidden = true
+        } else {
+            self.searchFrdView.isHidden = true
+            self.viewInviteFrdCollection.isHidden = false
+        }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
+        self.inviteFrdCollectionView.delegate = self
+        self.inviteFrdCollectionView.dataSource = self
+        self.inviteFrdCollectionView.register(UINib(nibName: "OthersCVC", bundle: nil), forCellWithReuseIdentifier: "OthersCVC")
     }
     
     func setGuestdata(noOfMale: Int,noOfFemale: Int) {
@@ -77,6 +96,45 @@ class TableBookingDetailsCell: UITableViewCell {
             self.customSplitLbl.textColor = .white
             self.customSplitInfoLbl.textColor = .white
         }
+        
+        if self.invitedFrd.count + self.guest == 0 {
+            self.searchFrdView.isHidden = false
+            self.viewInviteFrdCollection.isHidden = true
+        } else {
+            self.searchFrdView.isHidden = true
+            self.viewInviteFrdCollection.isHidden = false
+        }
     }
     
 }
+
+extension TableBookingDetailsCell: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return invitedFrd.count + guest
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OthersCVC", for: indexPath) as! OthersCVC
+        if indexPath.row < invitedFrd.count {
+            cell.setFriendData(data: invitedFrd[indexPath.row], isGuest: false)
+        } else {
+            cell.setFriendData(isGuest: true)
+        }
+        return cell
+    }
+}
+
+extension TableBookingDetailsCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellSize: CGSize = CGSize(width: 66, height: 100)
+        return cellSize
+    }
+}
+
+//extension TableBookingDetailsCell: InvitedFriendDelegate {
+//    func invitedFrd(frdArray: [InviteFriendsModel]) {
+//        self.invitedFrd = frdArray
+//        self.inviteFrdCollectionView.reloadData()
+//       
+//    }
+//}

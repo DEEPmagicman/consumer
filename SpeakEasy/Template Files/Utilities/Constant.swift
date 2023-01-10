@@ -25,9 +25,14 @@ struct Constant {
         static let masterCard = UIImage(named: "masterCard")
         static let check = UIImage(named: "purpul_Check")
         static let defaultIcon = UIImage(named: "defaultIcon")
+        static let maleIdentify = UIImage(named: "maleIdentify_Ic")
+        static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
     }
     
     struct String {
+        static let googleClientId = "971202288158-r8r0iep0ignr8nub82bijdfu488b1lqc.apps.googleusercontent.com"
+        static let InstagramClientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
+        static let InstagramClientId = "1996312040570930"
         static let confirmInfo = "Please confirm your information"
         static let nameNote = "Providing a different name than the one on your ID might result in the venue denying entry."
         static let confirmBirthDate = "Please confirm date of birth"
@@ -37,12 +42,10 @@ struct Constant {
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
         static let confirm21YearText = "You must be over 21 years old to continue."
         static let genderList = ["Male", "Female"]
-        static let InstagramClientId = "1996312040570930"
         static let InstagramDirectUri = "https://speakeasy.com/auth"
         static let authorizationCode = "authorization_code"
-        static let InstagramClientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
         static let internetNotConnect = "internet not connect"
         static let somethingWrong = "Something Went Wrong"
-        static let googleClientId = "971202288158-r8r0iep0ignr8nub82bijdfu488b1lqc.apps.googleusercontent.com"
+        static let max5FrdString = "you Can Invite Max 5 Friend"
     }
 }
