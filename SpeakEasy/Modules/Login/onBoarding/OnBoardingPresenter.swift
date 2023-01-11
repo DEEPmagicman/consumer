@@ -12,7 +12,7 @@ class OnBoardingPresenter {
         
     func loginWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
-        let param = ["phone": phonenum, "code": code]
+        let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.share.loginWithPhone(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
@@ -88,7 +88,7 @@ class OnBoardingPresenter {
     
     func signUpWithPhoneApi(phonenum: String, code: String, complition: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
-        let param = ["phone": phonenum, "code": code]
+        let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.share.signUpWithPhone(), params: param, headers: Header.shared.header(headerContentType: .json)) { (response) in
             
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
