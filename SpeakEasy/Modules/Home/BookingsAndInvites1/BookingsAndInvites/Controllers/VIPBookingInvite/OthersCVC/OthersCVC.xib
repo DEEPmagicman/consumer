@@ -34,6 +34,13 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
+                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frdpaymentVerify_Ic" translatesAutoresizingMaskIntoConstraints="NO" id="wVs-bZ-wrm">
+                        <rect key="frame" x="36" y="0.0" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="3Kg-ck-CXZ"/>
+                            <constraint firstAttribute="width" secondItem="wVs-bZ-wrm" secondAttribute="height" multiplier="1:1" id="zYJ-Kb-4l5"/>
+                        </constraints>
+                    </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Sv2-pt-ebF">
                         <rect key="frame" x="17" y="64" width="22" height="28"/>
                         <subviews>
@@ -52,7 +59,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzH-11-iZg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                 <rect key="frame" x="1" y="14" width="20.333333333333332" height="14"/>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
-                                <color key="textColor" red="0.92941176469999998" green="0.72549019609999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -77,7 +84,10 @@
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="top" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="8" id="06t-lk-FYo"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="top" secondItem="ZTg-uK-7eu" secondAttribute="top" id="2L4-jz-i9W"/>
                 <constraint firstItem="Nk8-TN-xGf" firstAttribute="bottom" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="-2" id="8SB-lQ-xns"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="top" secondItem="6qg-6t-oWS" secondAttribute="top" id="DrB-cU-G6B"/>
                 <constraint firstItem="Nk8-TN-xGf" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" id="Err-vM-Jht"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="width" secondItem="wVs-bZ-wrm" secondAttribute="height" multiplier="1:1" id="eQE-kN-QLI"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" id="gr7-rK-Vfd"/>
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="gsv-7O-Bag"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="nlA-pv-T2P"/>
             </constraints>
@@ -87,11 +97,13 @@
                 <outlet property="imgVerified" destination="Nk8-TN-xGf" id="kEy-Xu-I4i"/>
                 <outlet property="lblPercentage" destination="pzH-11-iZg" id="1fE-qS-X4G"/>
                 <outlet property="lblUser" destination="hUB-49-3kk" id="pmI-5O-hRE"/>
+                <outlet property="paymentConfirmImg" destination="wVs-bZ-wrm" id="mQ0-Jp-6Lm"/>
             </connections>
             <point key="canvasLocation" x="202.17391304347828" y="99.107142857142847"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="frdpaymentVerify_Ic" width="20" height="20"/>
         <image name="ic-friends" width="56" height="56"/>
         <image name="verified-tick" width="11" height="11"/>
     </resources>

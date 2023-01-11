@@ -34,13 +34,13 @@ class BookingInvites: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewPendingPayment.isHidden = isFromSettings
         if isFromSettings {
+            viewPendingPayment.isHidden = isFromSettings
             backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
             topTitleLbl.text = "Visit Details"
-        } else {
-            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
-            topTitleLbl.text = "Pending Booking"
+//        } else {
+//            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+//            topTitleLbl.text = "Pending Booking"
         }
     }
     
@@ -72,6 +72,8 @@ extension BookingInvites {
         self.tableView.register(UINib(nibName: "InviteFriendsCostSplitTVC", bundle: nil), forCellReuseIdentifier: "InviteFriendsCostSplitTVC")
         self.tableView.register(UINib(nibName: "PaymentsTVC", bundle: nil), forCellReuseIdentifier: "PaymentsTVC")
         self.tableView.register(UINib(nibName: "SubmitRequestTVC", bundle: nil), forCellReuseIdentifier: "SubmitRequestTVC")
+        self.tableView.register(UINib(nibName: "TransactionSummaryTVC", bundle: nil), forCellReuseIdentifier: "TransactionSummaryTVC")
+        self.tableView.register(UINib(nibName: "PaymentTableViewCell", bundle: nil), forCellReuseIdentifier: "PaymentTableViewCell")
     }
     
     private func setupStretchyTableView(){
@@ -117,10 +119,11 @@ extension BookingInvites {
             self.btnBack.isHidden = false
             self.btnCross.isHidden = true
         case .BookingConfirmation:
-            self.lblTitle.text = "Confirmation"
+//            self.lblTitle.text = "Confirmation"
+            self.lblTitle.text = "Pending Booking"
             
-            self.viewPendingPayment.isHidden = true
-            self.viewBookingRequestSent.isHidden = false
+            self.viewPendingPayment.isHidden = false
+            self.viewBookingRequestSent.isHidden = true
             
             self.btnBack.isHidden = true
             self.btnCross.isHidden = false
@@ -194,7 +197,11 @@ extension BookingInvites {
 extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation {
+            return 5
+        } else {
+            return 4
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -207,13 +214,44 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
             
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "BookingDetailTVC") as! BookingDetailTVC
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+                cell.userNoteLbl.text = "Additional requests"
+                cell.have6BottelNote.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            }
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "InviteFriendsCostSplitTVC") as! InviteFriendsCostSplitTVC
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+                cell.status = self.booking?.status
+                cell.costSpliteView.isHidden = true
+                cell.headerLbl.text = "Guests & Cost Split (5)"
+            }
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentsTVC") as! PaymentsTVC
-            return cell
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+                 let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionSummaryTVC", for: indexPath) as! TransactionSummaryTVC
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentsTVC") as! PaymentsTVC
+                return cell
+            }
+        case 3:
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell") as! PaymentTableViewCell
+                cell.setUi(isSetting: false)
+                return cell
+            } else {
+                if !isFromSettings {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "SubmitRequestTVC") as! SubmitRequestTVC
+                    cell.btnSubmitRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
+                    cell.btnCancelRequest.addTarget(nil, action: #selector(self.onBtnSubmitRequest(_:)), for: .touchUpInside)
+                    cell.setData(data: self.booking ?? BookingsDataSet())
+                    return cell
+                }
+                else {
+                    return UITableViewCell()
+                }
+            }
         default:
             if !isFromSettings {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SubmitRequestTVC") as! SubmitRequestTVC

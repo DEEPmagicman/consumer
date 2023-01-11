@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,21 +18,21 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TransactionSummaryTVC" rowHeight="243" id="KGk-i7-Jjw" customClass="TransactionSummaryTVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="489" height="243"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="TransactionSummaryTVC" rowHeight="223" id="KGk-i7-Jjw" customClass="TransactionSummaryTVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="489" height="223"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="489" height="243"/>
+                <rect key="frame" x="0.0" y="0.0" width="489" height="223"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ep-sb-ALE">
-                        <rect key="frame" x="0.0" y="0.0" width="489" height="243"/>
+                        <rect key="frame" x="0.0" y="0.0" width="489" height="223"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="i2w-0a-Fy4">
-                                <rect key="frame" x="4" y="4" width="481" height="166"/>
+                                <rect key="frame" x="4" y="4" width="481" height="133"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qy6-4b-p2U">
-                                        <rect key="frame" x="0.0" y="0.0" width="481" height="166"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="481" height="133"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transaction Summary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQc-aw-tHy" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                                 <rect key="frame" x="12" y="2" width="215.5" height="24"/>
@@ -49,13 +50,13 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="nT3-xl-gcZ">
-                                                <rect key="frame" x="20" y="38" width="441" height="120"/>
+                                                <rect key="frame" x="12" y="38" width="457" height="87"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="iOz-xQ-BEE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="441" height="54"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="457" height="37.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Male GA - Tier 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ilw-0V-Xvk" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="300.5" height="54"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="311" height="37.5"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -67,7 +68,7 @@
                                                                 </userDefinedRuntimeAttributes>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 70.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MPS-w5-LNv" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="300.5" y="0.0" width="140.5" height="54"/>
+                                                                <rect key="frame" x="311" y="0.0" width="146" height="37.5"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -81,10 +82,10 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="cel-4O-Eaa">
-                                                        <rect key="frame" x="0.0" y="60" width="441" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="43.5" width="457" height="0.0"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Male GA - Tier 2  x 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bsu-kg-O5l" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="313" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="324.5" height="0.0"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -96,7 +97,7 @@
                                                                 </userDefinedRuntimeAttributes>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 140.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ctv-2H-UA4" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="313" y="0.0" width="128" height="0.0"/>
+                                                                <rect key="frame" x="324.5" y="0.0" width="132.5" height="0.0"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -110,10 +111,10 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="uFb-Iq-jsP">
-                                                        <rect key="frame" x="0.0" y="60" width="441" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="43.5" width="457" height="0.0"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Female GA  x 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Oq-SF-xen" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="286" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="296.5" height="0.0"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -125,7 +126,7 @@
                                                                 </userDefinedRuntimeAttributes>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 210.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bXm-ix-iCW" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="286" y="0.0" width="155" height="0.0"/>
+                                                                <rect key="frame" x="296.5" y="0.0" width="160.5" height="0.0"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -139,10 +140,10 @@
                                                         </subviews>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="RY6-mV-2iQ">
-                                                        <rect key="frame" x="0.0" y="66" width="441" height="54"/>
+                                                        <rect key="frame" x="0.0" y="49.5" width="457" height="37.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Illinois Sales Tax (10%)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xhm-Oj-PDL" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="347.5" height="54"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="360.5" height="37.5"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -154,7 +155,7 @@
                                                                 </userDefinedRuntimeAttributes>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 7.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kCp-kO-CnT" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                                <rect key="frame" x="347.5" y="0.0" width="93.5" height="54"/>
+                                                                <rect key="frame" x="360.5" y="0.0" width="96.5" height="37.5"/>
                                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                                 <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -172,18 +173,25 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="nT3-xl-gcZ" secondAttribute="trailing" constant="20" id="04d-dU-jcw"/>
+                                            <constraint firstAttribute="trailing" secondItem="nT3-xl-gcZ" secondAttribute="trailing" constant="12" id="04d-dU-jcw"/>
                                             <constraint firstItem="zQc-aw-tHy" firstAttribute="top" secondItem="qy6-4b-p2U" secondAttribute="top" constant="2" id="1bS-ES-uzQ"/>
                                             <constraint firstItem="zQc-aw-tHy" firstAttribute="leading" secondItem="qy6-4b-p2U" secondAttribute="leading" constant="12" id="9Bm-ey-gMX"/>
                                             <constraint firstAttribute="bottom" secondItem="nT3-xl-gcZ" secondAttribute="bottom" constant="8" id="jfx-fm-DxW"/>
-                                            <constraint firstItem="nT3-xl-gcZ" firstAttribute="leading" secondItem="qy6-4b-p2U" secondAttribute="leading" constant="20" id="mAM-ae-ijM"/>
+                                            <constraint firstItem="nT3-xl-gcZ" firstAttribute="leading" secondItem="qy6-4b-p2U" secondAttribute="leading" constant="12" id="mAM-ae-ijM"/>
                                             <constraint firstItem="nT3-xl-gcZ" firstAttribute="top" secondItem="zQc-aw-tHy" secondAttribute="bottom" constant="12" id="uwo-Cp-8nz"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3f-nH-mw7">
+                                <rect key="frame" x="9" y="136.5" width="471" height="0.5"/>
+                                <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="dpD-fR-JWc"/>
+                                </constraints>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7PL-tT-w3B">
-                                <rect key="frame" x="20" y="174" width="449" height="25.5"/>
+                                <rect key="frame" x="20" y="141" width="449" height="25.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kX-W9-M57" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="100" height="25.5"/>
@@ -214,15 +222,28 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tNS-0O-zjz">
+                                <rect key="frame" x="0.0" y="181.5" width="489" height="0.5"/>
+                                <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="vNd-Sm-uLf"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.054901950060000003" green="0.054901950060000003" blue="0.054901950060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="7PL-tT-w3B" firstAttribute="leading" secondItem="9ep-sb-ALE" secondAttribute="leading" constant="20" id="8BY-go-QcJ"/>
+                            <constraint firstItem="tNS-0O-zjz" firstAttribute="top" secondItem="7PL-tT-w3B" secondAttribute="bottom" constant="15" id="9UC-Kb-TPM"/>
+                            <constraint firstItem="i3f-nH-mw7" firstAttribute="bottom" secondItem="i2w-0a-Fy4" secondAttribute="bottom" id="A7o-kt-6kH"/>
                             <constraint firstItem="i2w-0a-Fy4" firstAttribute="top" secondItem="9ep-sb-ALE" secondAttribute="top" constant="4" id="DYz-DW-BH2"/>
                             <constraint firstAttribute="trailing" secondItem="7PL-tT-w3B" secondAttribute="trailing" constant="20" id="Glp-Ks-3HF"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="7PL-tT-w3B" secondAttribute="bottom" constant="18" id="LYN-hW-wdF"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="tNS-0O-zjz" secondAttribute="bottom" id="Xh3-vz-VCL"/>
+                            <constraint firstAttribute="trailing" secondItem="tNS-0O-zjz" secondAttribute="trailing" id="aQg-4N-LF8"/>
                             <constraint firstItem="7PL-tT-w3B" firstAttribute="top" secondItem="i2w-0a-Fy4" secondAttribute="bottom" constant="4" id="cIF-Yy-Ts2"/>
                             <constraint firstItem="i2w-0a-Fy4" firstAttribute="leading" secondItem="9ep-sb-ALE" secondAttribute="leading" constant="4" id="eKL-1e-QHy"/>
+                            <constraint firstItem="i3f-nH-mw7" firstAttribute="trailing" secondItem="i2w-0a-Fy4" secondAttribute="trailing" constant="-5" id="pqM-yy-23N"/>
+                            <constraint firstItem="tNS-0O-zjz" firstAttribute="leading" secondItem="9ep-sb-ALE" secondAttribute="leading" id="rfB-Ig-zfk"/>
+                            <constraint firstItem="i3f-nH-mw7" firstAttribute="leading" secondItem="i2w-0a-Fy4" secondAttribute="leading" constant="5" id="tJO-PX-eTU"/>
                             <constraint firstAttribute="trailing" secondItem="i2w-0a-Fy4" secondAttribute="trailing" constant="4" id="y4A-N2-HUK"/>
                         </constraints>
                     </view>
@@ -235,7 +256,7 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
-            <point key="canvasLocation" x="258.69565217391306" y="140.29017857142856"/>
+            <point key="canvasLocation" x="258.69565217391306" y="132.92410714285714"/>
         </tableViewCell>
     </objects>
 </document>

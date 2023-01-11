@@ -33,6 +33,12 @@ class InviteFriendsPopUp: UIViewController {
 
         self.invitedFrdCollectionView.register(UINib(nibName: "InviteFriendsCVC", bundle: nil), forCellWithReuseIdentifier: "InviteFriendsCVC")
         self.inviteFriendTableView.register(UINib(nibName: "FriendListTableViewCell", bundle: nil), forCellReuseIdentifier: "FriendListTableViewCell")
+                
+        for i in selectedFriend {
+            self.arrOfFriends = self.arrOfFriends.filter { frd in
+                frd.name != i.name
+            }
+        }
     }
     
     @IBAction func onClickCancel(_ sender: Any) {
@@ -63,7 +69,7 @@ extension InviteFriendsPopUp: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     @objc func removeFriend(_ sender: UIButton) {
-//        self.arrOfFriends.append(selectedFriend[sender.tag])
+        self.arrOfFriends.append(selectedFriend[sender.tag])
         self.selectedFriend.remove(at: sender.tag)
         self.invitedFrdCollectionView.reloadData()
         self.inviteFriendTableView.reloadData()
@@ -89,7 +95,7 @@ extension InviteFriendsPopUp: UITableViewDelegate, UITableViewDataSource {
     @objc func addFriend(_ sender: UITapGestureRecognizer) {
         if (self.selectedFriend.count + self.guest) < 5 {
             self.selectedFriend.append(arrOfFriends[sender.view!.tag])
-//            self.arrOfFriends.remove(at: sender.view!.tag)
+            self.arrOfFriends.remove(at: sender.view!.tag)
             self.invitedFrdCollectionView.reloadData()
             self.inviteFriendTableView.reloadData()
         } else {

@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import GoogleSignIn
+import AuthenticationServices
 
 class SignInOptionViewController: UIViewController {
 
@@ -39,7 +40,7 @@ class SignInOptionViewController: UIViewController {
     }
     
     @IBAction func onClickSignInWithApple(_ sender: Any) {
-        
+        connectWithApple()
     }
     
     @IBAction func onClickSignInWithGoogle(_ sender: Any) {
@@ -91,4 +92,31 @@ class SignInOptionViewController: UIViewController {
         }
     }
     
+    private func connectWithApple() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.performRequests()
+    }
+    
+}
+
+extension SignInOptionViewController: ASAuthorizationControllerDelegate{
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
+    let userIdentifier = appleIDCredential.user
+    let fullName = appleIDCredential.fullName
+    let email = appleIDCredential.email
+    print("User id is \(userIdentifier) \n Full Name is \(String(describing: fullName)) \n Email id is \(String(describing: email))") }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // Handle error.
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
 }

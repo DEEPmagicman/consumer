@@ -13,6 +13,7 @@ class OthersCVC: UICollectionViewCell {
     @IBOutlet weak var imgVerified: UIImageView!
     @IBOutlet weak var lblUser: UILabelDeviceClass!
     @IBOutlet weak var lblPercentage: UILabelDeviceClass!
+    @IBOutlet weak var paymentConfirmImg: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

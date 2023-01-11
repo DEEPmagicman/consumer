@@ -10,6 +10,10 @@ import UIKit
 class InviteFriendsCostSplitTVC: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var costSpliteView: UIView!
+    @IBOutlet weak var headerLbl: UILabelDeviceClass!
+    
+    var status: BookingStatusType?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,6 +33,7 @@ class InviteFriendsCostSplitTVC: UITableViewCell {
     }
     private func registerCells() {
         self.collectionView.register(UINib(nibName: "FriendsListCVC", bundle: nil), forCellWithReuseIdentifier: "FriendsListCVC")
+        self.collectionView.register(UINib(nibName: "OthersCVC", bundle: nil), forCellWithReuseIdentifier: "OthersCVC")
     }
 }
 
@@ -39,8 +44,19 @@ extension InviteFriendsCostSplitTVC: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FriendsListCVC", for: indexPath) as! FriendsListCVC
-        return cell
+        if self.status == .SubmitRequest || self.status == .BookingConfirmation {
+           let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OthersCVC", for: indexPath) as! OthersCVC
+            cell.imgVerified.isHidden = true
+            if self.status == .BookingConfirmation {
+                cell.paymentConfirmImg.isHidden = false
+            } else {
+                cell.paymentConfirmImg.isHidden = true
+            }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FriendsListCVC", for: indexPath) as! FriendsListCVC
+            return cell
+        }
         
     }
 }

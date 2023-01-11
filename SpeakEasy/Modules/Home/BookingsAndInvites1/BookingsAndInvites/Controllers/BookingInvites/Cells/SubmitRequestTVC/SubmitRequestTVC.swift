@@ -44,18 +44,19 @@ class SubmitRequestTVC: UITableViewCell {
              self.btnSubmitRequest.isHidden = false
 
         case .SubmitRequest:
-
+            self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
              self.viewCancelReques.isHidden = true
              self.btnCancelRequest.isHidden = true
              self.viewSubmitRequest.isHidden = false
              self.btnSubmitRequest.isHidden = false
+            self.viewSubmitRequest.backgroundColor = Constant.Color.submiteRequestBtnColor
 
         case .BookingConfirmation:
              self.btnSubmitRequest.setTitle("View in Bookings", for: .normal)
-            self.infoLbl.text = Constant.String.sendReceiptText
-            self.infoLbl.highlightBold(["rjohnson@gmail.com"], size: 15, textColor: .white)
-             self.viewCancelReques.isHidden = true
-             self.btnCancelRequest.isHidden = true
+//            self.infoLbl.text = Constant.String.sendReceiptText
+            self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
+             self.viewCancelReques.isHidden = false
+             self.btnCancelRequest.isHidden = false
              self.viewSubmitRequest.isHidden = false
              self.btnSubmitRequest.isHidden = false
 

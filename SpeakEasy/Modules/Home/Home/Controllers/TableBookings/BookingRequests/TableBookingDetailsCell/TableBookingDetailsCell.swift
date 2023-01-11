@@ -130,11 +130,3 @@ extension TableBookingDetailsCell: UICollectionViewDelegateFlowLayout {
         return cellSize
     }
 }
-
-//extension TableBookingDetailsCell: InvitedFriendDelegate {
-//    func invitedFrd(frdArray: [InviteFriendsModel]) {
-//        self.invitedFrd = frdArray
-//        self.inviteFrdCollectionView.reloadData()
-//       
-//    }
-//}

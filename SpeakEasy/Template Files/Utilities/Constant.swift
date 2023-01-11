@@ -16,6 +16,7 @@ struct Constant {
         static let selectedDrinkColor = UIColor(hex: "#007AFF")
         static let code7Acolor = UIColor(named: "code7a")
         static let code2Fcolor = UIColor(named: "code2f")
+        static let submiteRequestBtnColor = UIColor(hex: "#0B78FF")
     }
     
     struct Icon {
@@ -30,7 +31,7 @@ struct Constant {
     }
     
     struct String {
-        static let googleClientId = "971202288158-r8r0iep0ignr8nub82bijdfu488b1lqc.apps.googleusercontent.com"
+        static let googleClientId = "971202288158-um452992qi8inc5dgsui8fi97cbpid7o.apps.googleusercontent.com"
         static let InstagramClientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
         static let InstagramClientId = "1996312040570930"
         static let confirmInfo = "Please confirm your information"

@@ -254,8 +254,8 @@ enum BookingStatusType: String {
     case AwaitingApproval = "Awaiting Payment"
     case TicketPurchasedConfirmed = "Ticket purchased confirmed"
     case AwaitingVenueApproval = "Awaiting Approval"
-    case SubmitRequest = "Submit Request"
-    case BookingConfirmation = "Booking Confirmation"
+    case SubmitRequest = "Submit Request"// request submite tab
+    case BookingConfirmation = "Booking Confirmation"// after submite request ( wait for friends payment mode)
 }
 enum TicketRecipientsType {
     case MaleGeneral
