@@ -312,10 +312,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="MFt-sX-hm4">
-                                                <rect key="frame" x="12" y="30.5" width="136" height="21"/>
+                                                <rect key="frame" x="12" y="30.5" width="132.5" height="21"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unites States" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WO5-gs-tP4" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="97" height="21"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="97.5" height="21"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -327,7 +327,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(+1)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4wz-UH-aca" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="103" y="0.0" width="33" height="21"/>
+                                                        <rect key="frame" x="103.5" y="0.0" width="29" height="21"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>

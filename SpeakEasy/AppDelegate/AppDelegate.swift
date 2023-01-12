@@ -22,8 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSServices.provideAPIKey(Constants.apiKey)
         
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.disabledToolbarClasses = []
-        IQKeyboardManager.shared.enableAutoToolbar = false
         
         self.window = UIWindow(frame:UIScreen.main.bounds)
         self.launchApplication()

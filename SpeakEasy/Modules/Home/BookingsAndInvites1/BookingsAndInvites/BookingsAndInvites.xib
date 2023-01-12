@@ -87,7 +87,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upcoming" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atj-Pr-p6T" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upcoming" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Atj-Pr-p6T" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                     <rect key="frame" x="14" y="172" width="96.5" height="26"/>
                     <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -100,7 +100,7 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bj-cf-Mt7">
-                    <rect key="frame" x="0.0" y="206" width="414" height="656"/>
+                    <rect key="frame" x="0.0" y="167" width="414" height="695"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
@@ -113,6 +113,7 @@
                 <constraint firstItem="Atj-Pr-p6T" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="14" id="EzO-hM-zf1"/>
                 <constraint firstItem="717-hj-4SY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="MpW-fO-GEM"/>
                 <constraint firstItem="717-hj-4SY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Ray-ex-tRK"/>
+                <constraint firstItem="4bj-cf-Mt7" firstAttribute="top" secondItem="flu-x2-qw1" secondAttribute="bottom" constant="15" id="Vtu-96-4aJ"/>
                 <constraint firstItem="aZA-jJ-HCI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Wsz-bX-WmM"/>
                 <constraint firstItem="Atj-Pr-p6T" firstAttribute="top" secondItem="flu-x2-qw1" secondAttribute="bottom" constant="20" id="cDx-TO-kKL"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="aZA-jJ-HCI" secondAttribute="trailing" id="dGR-DF-0vU"/>
@@ -121,7 +122,6 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="flu-x2-qw1" secondAttribute="trailing" id="mIu-gd-yKZ"/>
                 <constraint firstItem="4bj-cf-Mt7" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="n5C-xK-Avt"/>
                 <constraint firstItem="flu-x2-qw1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="oHf-nW-E5t"/>
-                <constraint firstItem="4bj-cf-Mt7" firstAttribute="top" secondItem="Atj-Pr-p6T" secondAttribute="bottom" constant="8" id="qFh-vD-0YJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4bj-cf-Mt7" secondAttribute="trailing" id="wtj-Dd-Ogw"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="67.633928571428569"/>

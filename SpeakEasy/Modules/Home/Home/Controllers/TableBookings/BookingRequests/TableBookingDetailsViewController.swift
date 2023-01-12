@@ -148,6 +148,7 @@ extension TableBookingDetailsViewController: UITableViewDelegate, UITableViewDat
             cell.femaleGuestMinusBtn.addTarget(self, action: #selector(minusFemale(_:)), for: .touchUpInside)
             cell.malePlusBtn.addTarget(self, action: #selector(addMale(_:)), for: .touchUpInside)
             cell.maleMinusBtn.addTarget(self, action: #selector(minusMale(_:)), for: .touchUpInside)
+            cell.bottleMenuBtn.addTarget(self, action: #selector(onClickBottleMenu(_:)), for: .touchUpInside)
             cell.invitedFrd = frdList
             cell.guest = noOfMale + noOfFemale
             cell.setGuestdata(noOfMale: self.noOfMale, noOfFemale: self.noOfFemale)
@@ -235,6 +236,10 @@ extension TableBookingDetailsViewController: UITableViewDelegate, UITableViewDat
     @objc func onClickCustomSplite(_ sender: UITapGestureRecognizer) {
         self.selectedCostSplitType = .customSplite
         self.bookingTableView.reloadData()
+    }
+    
+    @objc func onClickBottleMenu(_ sende: UIButton) {
+        Utility.main.topViewController()?.navigationController?.pushViewController(BottleMenu(), animated: true)
     }
     
     @objc func onBtnCancelRequest(_ sender: UIButton) {

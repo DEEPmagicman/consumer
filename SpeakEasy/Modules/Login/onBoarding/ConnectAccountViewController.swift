@@ -35,7 +35,7 @@ final class ConnectAccountViewController: UIViewController {
     }
     
     func connectWithGoogle() {
-         let clientId =  "971202288158-r8r0iep0ignr8nub82bijdfu488b1lqc.apps.googleusercontent.com"
+         let clientId = Constant.String.googleClientId
         
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
