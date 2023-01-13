@@ -54,7 +54,7 @@ final class TableBookingDetailsViewController: BaseController {
     }
 
     @IBAction func onBtnProcess(_ sender: Any) {
-        let bookingInvites = BookingInvites()
+        let bookingInvites = PendingBookingAwait()
         let booking = BookingsDataSet(brand: UIImage(named: "ic-prism"), bookingName: "PRYSM Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .SubmitRequest)
         bookingInvites.booking = booking
 

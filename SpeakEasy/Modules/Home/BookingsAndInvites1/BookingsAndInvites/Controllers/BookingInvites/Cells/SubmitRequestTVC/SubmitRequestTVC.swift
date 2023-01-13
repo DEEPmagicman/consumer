@@ -37,9 +37,10 @@ class SubmitRequestTVC: UITableViewCell {
              self.btnSubmitRequest.isHidden = true
             
         case .AwaitingVenueApproval:
-            
-             self.viewCancelReques.isHidden = true
-             self.btnCancelRequest.isHidden = true
+            self.btnSubmitRequest.setTitle("View in Bookings", for: .normal)
+           self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
+             self.viewCancelReques.isHidden = false
+             self.btnCancelRequest.isHidden = false
              self.viewSubmitRequest.isHidden = false
              self.btnSubmitRequest.isHidden = false
 

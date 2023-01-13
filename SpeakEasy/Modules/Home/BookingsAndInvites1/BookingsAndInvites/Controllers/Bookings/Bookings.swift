@@ -13,7 +13,7 @@ class Bookings: BaseController {
     
     var arrBookings = [
                        BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-artist"), isTicket: true, date: "Thursday, June 30", status: .PurchaseConfirmed),
-                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .AwaitingApproval),
+                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .BookingConfirmation),
                        BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-artist"), isTicket: true, date: "Thursday, June 30", status: .PurchaseConfirmed),
                        BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .AwaitingVenueApproval)]
     
@@ -46,12 +46,12 @@ extension Bookings: UITableViewDelegate, UITableViewDataSource {
     
     @objc func onBtnBooking(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
-        
+        /* To Do handle switch case status vise*/
         switch sender.tag {
         case 0,2:
             super.pushToTicketConfirmation(data: data)
         case 1:
-            super.pushToBookingInvite(booking: data)
+            super.pushToPendingBookingAwait(data: data)
         case 3:
             super.pushToPendingBookingAwait(data: data)
         default:

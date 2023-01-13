@@ -58,6 +58,10 @@
 		820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */; };
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
+		828F38312971567000DEE305 /* VipBookingInviteNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828F38302971567000DEE305 /* VipBookingInviteNew.swift */; };
+		828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */ = {isa = PBXBuildFile; fileRef = 828F38322971569C00DEE305 /* VipBookingInviteNew.xib */; };
+		828F38372971604A00DEE305 /* SubmitInviteTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828F38352971604A00DEE305 /* SubmitInviteTVC.swift */; };
+		828F38382971604A00DEE305 /* SubmitInviteTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 828F38362971604A00DEE305 /* SubmitInviteTVC.xib */; };
 		82994A8D296D29CB008CA778 /* InviteFriendsPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82994A8C296D29CB008CA778 /* InviteFriendsPopUp.xib */; };
 		82994A8F296D29F5008CA778 /* InviteFriendsPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */; };
 		82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */; };
@@ -562,6 +566,10 @@
 		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
+		828F38302971567000DEE305 /* VipBookingInviteNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VipBookingInviteNew.swift; sourceTree = "<group>"; };
+		828F38322971569C00DEE305 /* VipBookingInviteNew.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VipBookingInviteNew.xib; sourceTree = "<group>"; };
+		828F38352971604A00DEE305 /* SubmitInviteTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitInviteTVC.swift; sourceTree = "<group>"; };
+		828F38362971604A00DEE305 /* SubmitInviteTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubmitInviteTVC.xib; sourceTree = "<group>"; };
 		82994A8C296D29CB008CA778 /* InviteFriendsPopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InviteFriendsPopUp.xib; sourceTree = "<group>"; };
 		82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsPopUp.swift; sourceTree = "<group>"; };
 		82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
@@ -1234,6 +1242,15 @@
 				820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */,
 			);
 			path = TableBookingDetailsCell;
+			sourceTree = "<group>";
+		};
+		828F38342971600D00DEE305 /* SubmitInviteTVC */ = {
+			isa = PBXGroup;
+			children = (
+				828F38352971604A00DEE305 /* SubmitInviteTVC.swift */,
+				828F38362971604A00DEE305 /* SubmitInviteTVC.xib */,
+			);
+			path = SubmitInviteTVC;
 			sourceTree = "<group>";
 		};
 		82994A8B296D2961008CA778 /* InviteFriendsPopUp */ = {
@@ -3096,9 +3113,12 @@
 		E1962FF628C3E596001A40AB /* VIPBookingInvite */ = {
 			isa = PBXGroup;
 			children = (
+				828F38342971600D00DEE305 /* SubmitInviteTVC */,
 				E1962FF728C3E596001A40AB /* OthersCVC */,
 				E1962FFA28C3E596001A40AB /* VIPBookingInvite.swift */,
 				E1962FFB28C3E596001A40AB /* VIPBookingInvite.xib */,
+				828F38302971567000DEE305 /* VipBookingInviteNew.swift */,
+				828F38322971569C00DEE305 /* VipBookingInviteNew.xib */,
 			);
 			path = VIPBookingInvite;
 			sourceTree = "<group>";
@@ -3631,6 +3651,7 @@
 				E11F4BA028C8358C008D2E30 /* EventOptionCVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
 				E166184828BED1810027C6EA /* RewardDetails.xib in Resources */,
+				828F38382971604A00DEE305 /* SubmitInviteTVC.xib in Resources */,
 				E11F4B9228C8358C008D2E30 /* EventCVC.xib in Resources */,
 				E17DC96B28C6D01700244C4F /* MainTableTVC.xib in Resources */,
 				E167055E28CA442800644BF0 /* ViewEventTicketConfirmTVC.xib in Resources */,
@@ -3726,6 +3747,7 @@
 				E1A9E74E28C55D550081FB28 /* VenuePhotoGallery.xib in Resources */,
 				E167056228CA442800644BF0 /* ViewEventHeader.xib in Resources */,
 				E1A9E79728C560BC0081FB28 /* Search.xib in Resources */,
+				828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */,
 				E11F4A9628C800B1008D2E30 /* NFTAssets.xib in Resources */,
 				E11F4A9128C800B1008D2E30 /* TabCVC.xib in Resources */,
 				E1A9E75028C55D550081FB28 /* PhotoGalleryCVC.xib in Resources */,
@@ -3902,6 +3924,7 @@
 				E167059428CA6AB800644BF0 /* InviteFriends.swift in Sources */,
 				E15D6B6F28BC39AC0076286C /* Tutorial5CVC.swift in Sources */,
 				E1A9E7CD28C56FD10081FB28 /* FriendsHeaderView.swift in Sources */,
+				828F38312971567000DEE305 /* VipBookingInviteNew.swift in Sources */,
 				BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */,
 				CE4867B5286F358800FD277E /* UIImage+Extension.swift in Sources */,
 				0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */,
@@ -3969,6 +3992,7 @@
 				E11F4B8F28C8358C008D2E30 /* TopEventCVC.swift in Sources */,
 				E167058628CA6AB800644BF0 /* InviteFromContactCVC.swift in Sources */,
 				CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */,
+				828F38372971604A00DEE305 /* SubmitInviteTVC.swift in Sources */,
 				E1A9E74A28C55D550081FB28 /* HomeTabCVC.swift in Sources */,
 				E11F4BA128C8358C008D2E30 /* EventOptionCVC.swift in Sources */,
 				CE4867C1286F358800FD277E /* CustomLoader.swift in Sources */,

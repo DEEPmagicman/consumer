@@ -11,6 +11,10 @@ class PendingBookingAwait: BaseController {
     
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
+    @IBOutlet weak var pendingBookingStatusView: UIView!
+    @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var viewPageTop: NSLayoutConstraint!
+    @IBOutlet weak var viewCollectionAndLine: UIView!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.BOOKING_DETAILS.text, index: 0, icon: UIImage(named: ""), selectedIcon: UIImage(named: ""), isSelected: true),
                             TabBarOption(label: Strings.MESSAGES.text, index: 1, icon: UIImage(named: ""), selectedIcon: UIImage(named: ""), isSelected: false)]
@@ -18,6 +22,8 @@ class PendingBookingAwait: BaseController {
     var selectedIndex = 0
     var pageMenu: CAPSPageMenu?
     var pageMenuControllers = [UIViewController]()
+    var booking: BookingsDataSet?
+    var isFromSettings = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +43,18 @@ class PendingBookingAwait: BaseController {
 extension PendingBookingAwait {
     private func setUI(){
         self.registerCells()
+        
+        self.pendingBookingStatusView.isHidden = true
+        self.headerView.isHidden = true
+        
+        guard let status = self.booking?.status else { return }
+        switch status {
+        case .PurchaseConfirmed, .AwaitingApproval, .TicketPurchasedConfirmed, .SubmitRequest, .BookingConfirmation:
+            self.viewCollectionAndLine.isHidden = true
+        case .AwaitingVenueApproval:
+            self.viewCollectionAndLine.isHidden = false
+        }
+                
     }
     private func registerCells(){
         self.homeTabCollectionView.register(UINib(nibName: "BookingTabCVCCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BookingTabCVCCollectionViewCell")
@@ -45,7 +63,11 @@ extension PendingBookingAwait {
 extension PendingBookingAwait {
     private func setPageMenu(){
         if self.pageMenu == nil {
-            let bookingDetails = self.getNavigationContainer(controller: BookingDetails())
+            let con = BookingInvites()
+            con.booking = booking
+            con.isFromSettings = self.isFromSettings
+            let bookingDetails = self.getNavigationContainer(controller: con)
+//            let bookingDetails = self.getNavigationContainer(controller: BookingDetails())
             let messages = self.getNavigationContainer(controller: Messages())
             
             self.pageMenuControllers.append(bookingDetails)
@@ -107,6 +129,15 @@ extension PendingBookingAwait: UICollectionViewDelegateFlowLayout {
 }
 extension PendingBookingAwait: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            self.viewPageTop.constant = 0
+            self.pendingBookingStatusView.isHidden = true
+            self.headerView.isHidden = true
+        } else {
+            self.viewPageTop.constant = 185
+            self.pendingBookingStatusView.isHidden = false
+            self.headerView.isHidden = false
+        }
         if self.selectedIndex != indexPath.item {
             for index in 0..<self.arrTabBarOptions.count {
                 self.arrTabBarOptions[index].isSelected = false

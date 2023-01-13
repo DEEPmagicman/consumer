@@ -35,7 +35,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="481" height="133"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transaction Summary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQc-aw-tHy" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="12" y="2" width="215.5" height="24"/>
+                                                <rect key="frame" x="12" y="2" width="209" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="5yq-eJ-DRT"/>
                                                 </constraints>
@@ -185,7 +185,7 @@
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3f-nH-mw7">
                                 <rect key="frame" x="9" y="136.5" width="471" height="0.5"/>
-                                <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="0.75" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="dpD-fR-JWc"/>
                                 </constraints>
@@ -256,6 +256,11 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="headerLbl" destination="zQc-aw-tHy" id="pHh-VM-TN1"/>
+                <outlet property="totalLbl" destination="0kX-W9-M57" id="q8W-pf-Nq3"/>
+                <outlet property="totalPriceLbl" destination="26U-5y-hSz" id="gVC-DW-U8G"/>
+            </connections>
             <point key="canvasLocation" x="258.69565217391306" y="132.92410714285714"/>
         </tableViewCell>
     </objects>

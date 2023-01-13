@@ -14,6 +14,7 @@ class InviteFriendsCostSplitTVC: UITableViewCell {
     @IBOutlet weak var headerLbl: UILabelDeviceClass!
     
     var status: BookingStatusType?
+    var isFromInvite = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,10 +45,10 @@ extension InviteFriendsCostSplitTVC: UICollectionViewDelegate, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if self.status == .SubmitRequest || self.status == .BookingConfirmation {
+        if self.status == .SubmitRequest || self.status == .BookingConfirmation || self.status == .AwaitingVenueApproval || isFromInvite == true{
            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OthersCVC", for: indexPath) as! OthersCVC
             cell.imgVerified.isHidden = true
-            if self.status == .BookingConfirmation {
+            if self.status == .BookingConfirmation || self.status == .AwaitingVenueApproval || isFromInvite{
                 cell.paymentConfirmImg.isHidden = false
             } else {
                 cell.paymentConfirmImg.isHidden = true

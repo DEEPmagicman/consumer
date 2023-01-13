@@ -17,6 +17,7 @@ class BookingInvites: UIViewController {
     @IBOutlet weak var viewBookingRequestSent: UIView!
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var topTitleLbl: UILabelDeviceClass!
+    @IBOutlet weak var statusLbl: UILabelDeviceClass!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 414.0
@@ -56,7 +57,7 @@ class BookingInvites: UIViewController {
     }
 
     @IBAction func onBtnBack(_ sender: UIButton) {
-        self.navigationController?.popViewController(animated: true)
+        Utility.main.topViewController()?.navigationController?.popViewController(animated: true)
     }
     @IBAction func onBtnCross(_ sender: UIButton) {
         AppDelegate.shared.showHome(selectedIndex: 1)
@@ -101,14 +102,14 @@ extension BookingInvites {
 
             
         case .AwaitingVenueApproval:
-            self.lblTitle.text = "Booking Invite"
-            
-            self.viewPendingPayment.isHidden = true
+//            self.lblTitle.text = "Booking Invite"
+            self.lblTitle.text = "Pending Booking"
+            self.viewPendingPayment.isHidden = false
             self.viewBookingRequestSent.isHidden = true
 
-            
-            self.btnBack.isHidden = false
-            self.btnCross.isHidden = true
+            self.statusLbl.text = "Booking Status: Awaiting Venue Approval"
+            self.btnBack.isHidden = true
+            self.btnCross.isHidden = false
 
         case .SubmitRequest:
              self.lblTitle.text = "Submit Request"
@@ -197,7 +198,7 @@ extension BookingInvites {
 extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation {
+        if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval{
             return 5
         } else {
             return 4
@@ -214,21 +215,21 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
             
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "BookingDetailTVC") as! BookingDetailTVC
-            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval {
                 cell.userNoteLbl.text = "Additional requests"
                 cell.have6BottelNote.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
             }
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "InviteFriendsCostSplitTVC") as! InviteFriendsCostSplitTVC
-            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval {
                 cell.status = self.booking?.status
                 cell.costSpliteView.isHidden = true
                 cell.headerLbl.text = "Guests & Cost Split (5)"
             }
             return cell
         case 2:
-            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval {
                  let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionSummaryTVC", for: indexPath) as! TransactionSummaryTVC
                 return cell
             } else {
@@ -236,7 +237,7 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
                 return cell
             }
         case 3:
-            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation  {
+            if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell") as! PaymentTableViewCell
                 cell.setUi(isSetting: false)
                 return cell
@@ -277,9 +278,10 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
         case .TicketPurchasedConfirmed:
             self.navigationController?.popToRootViewController(animated: true)
         case .AwaitingVenueApproval:
-            self.navigationController?.popToRootViewController(animated: true)
+//            self.navigationController?.popToRootViewController(animated: true)
+            print("AwaitingVenueApproval")
         case .SubmitRequest:
-            let bookingInvites = BookingInvites()
+            let bookingInvites = PendingBookingAwait()
             let booking = BookingsDataSet(brand: UIImage(named: "ic-prism"), bookingName: "PRYSM Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .BookingConfirmation)
             bookingInvites.booking = booking
             

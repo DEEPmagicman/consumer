@@ -62,7 +62,7 @@ class CostSplit: BaseController {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func onBtnProceed(_ sender: RoundedButton) {
-        let bookingInvites = BookingInvites()
+        let bookingInvites = PendingBookingAwait()
         let booking = BookingsDataSet(brand: UIImage(named: "ic-prism"), bookingName: "PRYSM Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .SubmitRequest)
         bookingInvites.booking = booking
 
