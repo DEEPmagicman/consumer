@@ -7,96 +7,93 @@
 
 import Foundation
 
-class APIBuilder {
+struct APIBuilder {
     
-    static let share = APIBuilder()
-    
-    let BASE_URL = "https://speakeasy-stag.cmdev.cc"
-    let API_PATH = "/consumer"
-    
-    private let LoginWithPhone_URl = "/auth/phone-login"
-    private let LoginOtpVerify_URL = "/auth/phone-login/otp-verify"
-    private let LoginResendOtp_URL = "/auth/phone-login/otp-resend"
-    private let signUpWithPhone_URL = "/signup"
-    private let signUpOtpVerify_URL = "/signup/otp-verify"
-    private let signUpOtpResend_URL = "/signup/otp-resend"
-    private let LoginWithEmail_URL = "/auth/login"
-    private let userProfile_URl = "/auth/profile"
-    private let uploadPhoto_URL = "/upload/uploadFile"
-    private let resetEmailPassword = "/auth/forgot-password"
-    private let vibesList_URL = "/vibe"
-    private let drinkList_URL = "/drink"
-    private let socialMediaConnect_URL = "/auth/connect-social"
-    private let socialLogin = "/auth/social-login"
-    private let cityList = "/common-data/city"
+    static private let baseURL = "https://speakeasy-stag.cmdev.cc"
+    static private let route = "/consumer"
+    static private let loginWithPhone = "/auth/phone-login"
+    static private let loginOTPVerify = "/auth/phone-login/otp-verify"
+    static private let loginResendOTP = "/auth/phone-login/otp-resend"
+    static private let signUpWithPhone = "/signup"
+    static private let signUpOTPVerify = "/signup/otp-verify"
+    static private let signUpOTPResend = "/signup/otp-resend"
+    static private let loginWithEmail = "/auth/login"
+    static private let userProfile = "/auth/profile"
+    static private let uploadPhoto = "/upload/uploadFile"
+    static private let resetEmailPassword = "/auth/forgot-password"
+    static private let vibesList = "/vibe"
+    static private let drinkList = "/drink"
+    static private let socialMediaConnect = "/auth/connect-social"
+    static private let socialLogin = "/auth/social-login"
+    static private let cityList = "/common-data/city"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
-    private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
+    static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let getInstagramImages = "https://graph.instagram.com/me/media?fields=id,media_url,media_type,username&access_token=%@"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"
     static let getInstagramChilds = "https://graph.instagram.com/%@/children?fields=id,media_url,media_type&access_token=%@"
     
-    func loginWithPhone() -> String {
-        return BASE_URL + API_PATH + LoginWithPhone_URl
+    static var loginWithPhoneURL: String {
+        baseURL + route + loginWithPhone
     }
     
-    func loginotpVerify() -> String {
-        return BASE_URL + API_PATH + LoginOtpVerify_URL
+    static var loginOTPVerifyURL: String {
+        baseURL + route + loginOTPVerify
     }
     
-    func loginresendOtp() -> String {
-        return BASE_URL + API_PATH + LoginResendOtp_URL
+    static var loginResendOTPURL: String {
+        baseURL + route + loginResendOTP
     }
     
-    func loginWithEmail() -> String {
-        return BASE_URL + API_PATH + LoginWithEmail_URL
+    static var loginWithEmailURL: String {
+        baseURL + route + loginWithEmail
     }
     
-    func forgotPassword() -> String {
-        return BASE_URL + API_PATH + resetEmailPassword
+    static var forgotPasswordURL: String {
+        baseURL + route + resetEmailPassword
     }
     
-    func userProfile() -> String {
-        return BASE_URL + API_PATH + userProfile_URl
+    static var userProfileURL: String {
+        baseURL + route + userProfile
     }
     
-    func signUpWithPhone() -> String {
-        return BASE_URL + API_PATH + signUpWithPhone_URL
+    static var signUpWithPhoneURL: String {
+        baseURL + route + signUpWithPhone
     }
     
-    func signUpOtpVerify() -> String {
-        return BASE_URL + API_PATH + signUpOtpVerify_URL
+    static var signUpOTPVerifyURL: String {
+        baseURL + route + signUpOTPVerify
     }
     
-    func signUpOtpResend() -> String {
-        return BASE_URL + API_PATH + signUpOtpResend_URL
+    static var signUpOTPResendURL: String {
+        baseURL + route + signUpOTPResend
     }
     
-    func uploadPhoto() -> String {
-        return BASE_URL + uploadPhoto_URL
+    static var uploadPhotoURL: String {
+        baseURL + uploadPhoto
     }
     
-    func vibesList() -> String {
-        return BASE_URL + API_PATH + vibesList_URL
+    static var vibesListURL: String {
+        baseURL + route + vibesList
     }
     
-    func drinksList() -> String {
-        return BASE_URL + API_PATH + drinkList_URL
+    static var drinksListURL: String {
+        baseURL + route + drinkList
     }
     
-    func socialMediaConnection() -> String {
-        return BASE_URL + API_PATH + socialMediaConnect_URL
+    static var socialMediaConnectURL: String {
+        baseURL + route + socialMediaConnect
     }
     
-    func socialMedialLogin() -> String {
-        return BASE_URL + API_PATH + socialLogin
+    static var socialLoginURL: String {
+        baseURL + route + socialLogin
     }
     
-    func getInstagramToken() -> String {
-        return INSTAGRAMTOKEN
+    static var getInstagramToken: String {
+        INSTAGRAMTOKEN
     }
     
-    func getCityList() -> String {
-        return BASE_URL + cityList
+    static var getCityListURL: String {
+        baseURL + cityList
     }
 }

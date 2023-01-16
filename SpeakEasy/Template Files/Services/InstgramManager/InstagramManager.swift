@@ -37,7 +37,7 @@ final class InstagramManager {
                      "grant_type" : Constant.String.authorizationCode,
                      "redirect_uri" : Constant.String.InstagramDirectUri,
                      "code" : code]
-        AFWrapper.postRequest(APIBuilder.share.getInstagramToken(), params: param, headers: Header.shared.header(headerContentType: .xwwwformUrlencoded), isJsonEncoding: false) { (result) in
+        AFWrapper.postRequest(APIBuilder.getInstagramToken, params: param, headers: Header.header(.xWwwFormUrlEncoded), isJsonEncoding: false) { (result) in
             if let data = result as? NSDictionary, let id = data["user_id"] as? Int, let token = data["access_token"] as? String {
                 UserDefault.shared.user?.instagramId = id.description
                 UserDefault.shared.user?.instagramToken = token
@@ -80,7 +80,7 @@ final class InstagramManager {
     
     static func urlExecute(url: String, completion: @escaping (_ response: Any, _ isSuccess: Bool) -> Void) {
         
-        AFWrapper.getRequest(url, params: nil, headers: Header.shared.header(headerContentType: .json)) { (response) in
+        AFWrapper.getRequest(url, params: nil, headers: Header.header()) { (response) in
             completion(response, true)
         } failure: { (error) in
             if let err = (error as? NSError)?.userInfo as? [String: Any], let instaErr = err["error"] as? [String: Any], let errCode = instaErr["code"] as? Int, errCode == 190 {

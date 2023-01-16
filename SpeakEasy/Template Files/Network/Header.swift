@@ -7,17 +7,16 @@
 
 import Foundation
 
-enum HEADER_CONTENT_TYPE: String {
+enum HeaderContentType: String {
     case json = "application/json"
-    case xwwwformUrlencoded = "application/x-www-form-urlencoded"
+    case xWwwFormUrlEncoded = "application/x-www-form-urlencoded"
     case multipartFormData = "multipart/form-data"
 }
 
-class Header {
-    static let shared = Header()
-    func header(headerContentType:HEADER_CONTENT_TYPE = .json) -> [String:String] {
+struct Header {
 
-        return ["Authorization": "Bearer \(UserDefault.shared.loginToken ?? "")",
-                "Content-Type":"\(headerContentType.rawValue)"]
+    static func header(_ headerContentType: HeaderContentType = .json) -> [String: String] {
+        ["Authorization": "Bearer \(UserDefault.shared.loginToken ?? "")",
+         "Content-Type": "\(headerContentType.rawValue)"]
     }
 }
