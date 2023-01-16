@@ -7,61 +7,60 @@
 
 import UIKit
 
-class Home: BaseController {
+final class Home: BaseController {
     
-    @IBOutlet weak var homeTabCollectionView: UICollectionView!
-    @IBOutlet weak var viewPageMenu: UIView!
-    @IBOutlet weak var lblCity: UILabelDeviceClass!
+    @IBOutlet private weak var homeTabCollectionView: UICollectionView!
+    @IBOutlet private weak var viewPageMenu: UIView!
+    @IBOutlet private weak var lblCity: UILabelDeviceClass!
     
-    var arrTabBarOptions = [TabBarOption(label: Strings.EVENTS.text, index: 0, icon: UIImage(named: "EventsTab"), selectedIcon: UIImage(named: "EventsTabSelected"), isSelected: true),
+    private var arrTabBarOptions = [TabBarOption(label: Strings.EVENTS.text, index: 0, icon: UIImage(named: "EventsTab"), selectedIcon: UIImage(named: "EventsTabSelected"), isSelected: true),
                             TabBarOption(label: Strings.VENUE_AND_VIP.text, index: 1, icon: UIImage(named: "VenueAndVIPTab"), selectedIcon: UIImage(named: "VenueAndVIPTabSelected"), isSelected: false),
                             TabBarOption(label: Strings.HEAT_MAP.text, index: 2, icon: UIImage(named: "HeatMapTab"), selectedIcon: UIImage(named: "HeatMapTabSelected"), isSelected: false)]
     
-    var selectedIndex = 0
-    var pageMenu: CAPSPageMenu?
-    var pageMenuControllers = [UIViewController]()
+    private var selectedIndex = 0
+    private var pageMenu: CAPSPageMenu?
+    private var pageMenuControllers = [UIViewController]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUI()
-        
-        // Do any additional setup after loading the view.
+        setUI()
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.setPageMenu()
+        setPageMenu()
     }
     
-    @IBAction func onBtnChangeLocation(_ sender: UIButton) {
-        self.navigationController?.pushViewController(NotificationVC(), animated: true)
+    @IBAction private func onBtnChangeLocation(_ sender: UIButton) {
+        navigationController?.pushViewController(NotificationVC(), animated: true)
     }
-    @IBAction func onBtnSearch(_ sender: UIButton) {
-        self.navigationController?.pushViewController(Search(), animated: true)
+    @IBAction private func onBtnSearch(_ sender: UIButton) {
+        navigationController?.pushViewController(Search(), animated: true)
     }
-    @IBAction func onBtnNotifications(_ sender: UIButton) {
-        self.navigationController?.pushViewController(NotificationCitySelection(), animated: true)
+    @IBAction private func onBtnNotifications(_ sender: UIButton) {
+        navigationController?.pushViewController(NotificationCitySelection(), animated: true)
     }
 }
 //MARK: - Helper Methods
-extension Home {
-    private func setUI(){
-        self.lblCity.text = Constants.localizedCity
-        self.registerCells()
+private extension Home {
+     func setUI() {
+        lblCity.text = Constants.localizedCity
+        registerCells()
     }
-    private func registerCells(){
-        self.homeTabCollectionView.register(UINib(nibName: "HomeTabCVC", bundle: nil), forCellWithReuseIdentifier: "HomeTabCVC")
+    
+    func registerCells() {
+        homeTabCollectionView.register(UINib(nibName: "HomeTabCVC", bundle: nil), forCellWithReuseIdentifier: "HomeTabCVC")
     }
-}
-extension Home {
-    private func setPageMenu(){
-        if self.pageMenu == nil {
-            let events = self.getNavigationContainer(controller: Events())
-            let venues = self.getNavigationContainer(controller: VenuesAndVIP())
-            let heatMap = self.getNavigationContainer(controller: HeatMap())
+
+    func setPageMenu() {
+        if pageMenu == nil {
+            let events = getNavigationContainer(controller: Events())
+            let venues = getNavigationContainer(controller: VenuesAndVIP())
+            let heatMap = getNavigationContainer(controller: HeatMap())
             
-            self.pageMenuControllers.append(events)
-            self.pageMenuControllers.append(venues)
-            self.pageMenuControllers.append(heatMap)
+            pageMenuControllers.append(events)
+            pageMenuControllers.append(venues)
+            pageMenuControllers.append(heatMap)
             
             let parameters: [CAPSPageMenuOption] = [
                 .menuItemSeparatorWidth(0),
@@ -70,12 +69,12 @@ extension Home {
                 .bottomMenuHairlineColor(.clear),
                 .scrollAnimationDurationOnMenuItemTap(0)
             ]
-            self.pageMenu = CAPSPageMenu(viewControllers: self.pageMenuControllers, frame: CGRect(x: 0.0, y: 0.0, width: self.viewPageMenu.frame.width, height: self.viewPageMenu.frame.height), pageMenuOptions: parameters)
+            pageMenu = CAPSPageMenu(viewControllers: pageMenuControllers, frame: CGRect(x: 0.0, y: 0.0, width: viewPageMenu.frame.width, height: viewPageMenu.frame.height), pageMenuOptions: parameters)
             
-            guard let pageMenu = self.pageMenu else {return}
+            guard let pageMenu = self.pageMenu else { return }
             pageMenu.controllerScrollView.isScrollEnabled = false
             
-            self.viewPageMenu.addSubview(pageMenu.view)
+            viewPageMenu.addSubview(pageMenu.view)
         }
     }
 }
@@ -90,17 +89,17 @@ extension Home {
 extension Home: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
-        case self.homeTabCollectionView:
-            return self.arrTabBarOptions.count
+        case homeTabCollectionView:
+            return arrTabBarOptions.count
         default:
             return 0
         }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView {
-        case self.homeTabCollectionView:
+        case homeTabCollectionView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeTabCVC", for: indexPath) as! HomeTabCVC
-            let data = self.arrTabBarOptions[indexPath.item]
+            let data = arrTabBarOptions[indexPath.item]
             cell.setData(data: data)
             return cell
         default:
@@ -118,19 +117,17 @@ extension Home: UICollectionViewDelegateFlowLayout {
 }
 extension Home: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        
         switch collectionView {
-        case self.homeTabCollectionView:
-            if self.selectedIndex != indexPath.item {
-                for index in 0..<self.arrTabBarOptions.count {
-                    self.arrTabBarOptions[index].isSelected = false
+        case homeTabCollectionView:
+            if selectedIndex != indexPath.item {
+                for index in 0..<arrTabBarOptions.count {
+                    arrTabBarOptions[index].isSelected = false
                 }
-                self.arrTabBarOptions[indexPath.item].isSelected = true
-                self.selectedIndex = indexPath.item
+                arrTabBarOptions[indexPath.item].isSelected = true
+                selectedIndex = indexPath.item
                 collectionView.reloadData()
                 
-                self.pageMenu?.moveToPage(self.selectedIndex)
+                pageMenu?.moveToPage(selectedIndex)
             }
             
         default:

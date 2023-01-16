@@ -26,6 +26,8 @@ struct APIBuilder {
     static private let socialMediaConnect = "/auth/connect-social"
     static private let socialLogin = "/auth/social-login"
     static private let cityList = "/common-data/city"
+    static private let venue = "/venue"
+    static private let event = "/event"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
@@ -95,5 +97,13 @@ struct APIBuilder {
     
     static var getCityListURL: String {
         baseURL + cityList
+    }
+    
+    static var venueURL: String {
+        baseURL + route + venue
+    }
+    
+    static var eventURL: String {
+        baseURL + route + event
     }
 }

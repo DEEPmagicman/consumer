@@ -32,6 +32,14 @@
 		04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */; };
 		04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */; };
 		04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */; };
+		297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297AB3EE2975608D0086259F /* VenuePresenter.swift */; };
+		2986835B2975658300CB827B /* Venue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835A2975658300CB827B /* Venue.swift */; };
+		2986835D297565A800CB827B /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835C297565A800CB827B /* Logo.swift */; };
+		2986835F297565C500CB827B /* VenueAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835E297565C500CB827B /* VenueAttachment.swift */; };
+		29868361297565E400CB827B /* VenueHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29868360297565E400CB827B /* VenueHours.swift */; };
+		29868363297567DF00CB827B /* EventPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29868362297567DF00CB827B /* EventPresenter.swift */; };
+		2986836629756E8600CB827B /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
+		2986836829756EA600CB827B /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */; };
 		4A7CC53028E377C200F8BA63 /* BookingInvites.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */; };
@@ -540,6 +548,14 @@
 		04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesProfileCVC.swift; sourceTree = "<group>"; };
 		04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePopUp.swift; sourceTree = "<group>"; };
 		04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserProfilePopUp.xib; sourceTree = "<group>"; };
+		297AB3EE2975608D0086259F /* VenuePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenuePresenter.swift; sourceTree = "<group>"; };
+		2986835A2975658300CB827B /* Venue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Venue.swift; sourceTree = "<group>"; };
+		2986835C297565A800CB827B /* Logo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logo.swift; sourceTree = "<group>"; };
+		2986835E297565C500CB827B /* VenueAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueAttachment.swift; sourceTree = "<group>"; };
+		29868360297565E400CB827B /* VenueHours.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueHours.swift; sourceTree = "<group>"; };
+		29868362297567DF00CB827B /* EventPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPresenter.swift; sourceTree = "<group>"; };
+		2986836529756E8600CB827B /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		2986836729756EA600CB827B /* Flyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flyer.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingInvites.swift; sourceTree = "<group>"; };
 		4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingInvites.xib; sourceTree = "<group>"; };
@@ -1140,6 +1156,35 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		297AB3ED297560650086259F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				297AB3EE2975608D0086259F /* VenuePresenter.swift */,
+				29868362297567DF00CB827B /* EventPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		298683592975657200CB827B /* VenueModels */ = {
+			isa = PBXGroup;
+			children = (
+				2986835A2975658300CB827B /* Venue.swift */,
+				2986835C297565A800CB827B /* Logo.swift */,
+				2986835E297565C500CB827B /* VenueAttachment.swift */,
+				29868360297565E400CB827B /* VenueHours.swift */,
+			);
+			path = VenueModels;
+			sourceTree = "<group>";
+		};
+		29868364297567FB00CB827B /* EventModels */ = {
+			isa = PBXGroup;
+			children = (
+				2986836529756E8600CB827B /* Event.swift */,
+				2986836729756EA600CB827B /* Flyer.swift */,
+			);
+			path = EventModels;
+			sourceTree = "<group>";
+		};
 		4A7CC52C28E3777E00F8BA63 /* BookingInvites */ = {
 			isa = PBXGroup;
 			children = (
@@ -1539,6 +1584,7 @@
 				CE486744286F358700FD277E /* Template Files */,
 				CE486736286F2CE300FD277E /* Assets */,
 				CE486737286F2D4B00FD277E /* Modules */,
+				297AB3ED297560650086259F /* Presenter */,
 				CE48672F286F2CB100FD277E /* Info.plist */,
 			);
 			path = SpeakEasy;
@@ -1893,6 +1939,8 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				29868364297567FB00CB827B /* EventModels */,
+				298683592975657200CB827B /* VenueModels */,
 				CE486755286F358700FD277E /* Validation.swift */,
 				CE4867D9286F392900FD277E /* UserModel */,
 			);
@@ -3886,6 +3934,7 @@
 				CAC4140328A478040007BA86 /* TimeInterval.swift in Sources */,
 				E1A9E76228C55D550081FB28 /* HotVenuesTVC.swift in Sources */,
 				E167058C28CA6AB800644BF0 /* SelectedBookingTVC.swift in Sources */,
+				29868361297565E400CB827B /* VenueHours.swift in Sources */,
 				BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */,
 				E11F4BA828C8358C008D2E30 /* VIPTableBookingCalendar.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
@@ -3952,6 +4001,7 @@
 				E11CE3EC28C8EC30003899C4 /* ViewRewardTable.swift in Sources */,
 				CAC4141928A478050007BA86 /* DatePickerColors.swift in Sources */,
 				E17DC85C28C6C16500244C4F /* AccessPass.swift in Sources */,
+				29868363297567DF00CB827B /* EventPresenter.swift in Sources */,
 				CE4867D4286F358800FD277E /* MICountryPicker.swift in Sources */,
 				CE4867CB286F358800FD277E /* APIManagerBase.swift in Sources */,
 				CE4867D7286F358800FD277E /* iCarousel.m in Sources */,
@@ -3974,6 +4024,7 @@
 				04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */,
 				828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
+				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CE4867A5286F358800FD277E /* MOLHFont.swift in Sources */,
 				E11F4BFD28C835F3008D2E30 /* BookingsTVC.swift in Sources */,
@@ -3982,6 +4033,7 @@
 				E167055828CA442800644BF0 /* ViewEventTickets.swift in Sources */,
 				E1A9E7F428C579690081FB28 /* FavouriteArtistCVC.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
+				2986835B2975658300CB827B /* Venue.swift in Sources */,
 				E11F4BFB28C835F3008D2E30 /* Bookings.swift in Sources */,
 				E167055928CA442800644BF0 /* PaymentMethodTVC.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */,
@@ -4073,6 +4125,7 @@
 				CAC4140128A478040007BA86 /* UIApplication.swift in Sources */,
 				4A7CC54928E3870400F8BA63 /* SubmitRequestTVC.swift in Sources */,
 				E1A9E74C28C55D550081FB28 /* Home.swift in Sources */,
+				2986835D297565A800CB827B /* Logo.swift in Sources */,
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,
 				BD942F452959623E00D52115 /* Header.swift in Sources */,
 				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
@@ -4129,6 +4182,7 @@
 				BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */,
 				CE4867A9286F358800FD277E /* Validation.swift in Sources */,
 				E1A9E80028C579690081FB28 /* MyAccount.swift in Sources */,
+				2986835F297565C500CB827B /* VenueAttachment.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
@@ -4154,6 +4208,7 @@
 				BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
 				E16705B928CA6BB500644BF0 /* FriendsCVC.swift in Sources */,
+				2986836829756EA600CB827B /* Flyer.swift in Sources */,
 				E11F4A9328C800B1008D2E30 /* AccessPass.swift in Sources */,
 				CE4867A2286F358700FD277E /* MOLH.swift in Sources */,
 				CAC4141228A478050007BA86 /* DaysCollectionViewCell.swift in Sources */,
@@ -4167,6 +4222,7 @@
 				E1A9E75428C55D550081FB28 /* BottleMenu.swift in Sources */,
 				828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */,
 				CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */,
+				2986836629756E8600CB827B /* Event.swift in Sources */,
 				CE4867B1286F358800FD277E /* UIColor+Extension.swift in Sources */,
 				E1A9E76328C55D550081FB28 /* NotificationCitySelection.swift in Sources */,
 				E11F4C1328C835F3008D2E30 /* BookingInvite.swift in Sources */,
