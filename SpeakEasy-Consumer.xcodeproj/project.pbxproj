@@ -4398,11 +4398,11 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
+				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To get events near you";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To set your profile/license images";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "app need to access your photo library for uploading profile pictures.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -4440,11 +4440,11 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "To set your profile/license images";
+				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To get events near you";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To set your profile/license images";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "app need to access your photo library for uploading profile pictures.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;

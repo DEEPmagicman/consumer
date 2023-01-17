@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,7 +26,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRYSM Chicago" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-2f-E7N" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                    <rect key="frame" x="16" y="250" width="208" height="38"/>
+                    <rect key="frame" x="16" y="186" width="201" height="38"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="38" id="3qX-6W-Zc8"/>
                     </constraints>
@@ -89,9 +90,8 @@
                 <constraint firstItem="d3O-2f-E7N" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="GJR-AZ-p5o"/>
                 <constraint firstItem="776-IN-w6A" firstAttribute="leading" secondItem="hPP-di-3XM" secondAttribute="leading" id="Iz9-2w-6J5"/>
                 <constraint firstAttribute="bottom" secondItem="m0e-bZ-FMQ" secondAttribute="bottom" id="LUF-Ti-aFI"/>
-                <constraint firstItem="vFG-hn-X9Y" firstAttribute="top" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="16" id="M6x-mh-BMD"/>
+                <constraint firstItem="vFG-hn-X9Y" firstAttribute="top" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="10" id="M6x-mh-BMD"/>
                 <constraint firstItem="m0e-ic-xoi" firstAttribute="top" secondItem="vFG-hn-X9Y" secondAttribute="bottom" constant="12" id="PBD-gJ-6Ly"/>
-                <constraint firstAttribute="bottom" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="12" id="Tuf-XB-1LW"/>
                 <constraint firstItem="d3O-2f-E7N" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="leading" id="Yvr-rq-Jt2"/>
                 <constraint firstItem="vFG-hn-X9Y" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="trailing" constant="12" id="agE-zA-a08"/>
                 <constraint firstItem="vFG-hn-X9Y" firstAttribute="centerY" secondItem="776-IN-w6A" secondAttribute="centerY" id="epe-uT-PHZ"/>
@@ -104,10 +104,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <variation key="default">
                 <mask key="subviews">
-                    <exclude reference="776-IN-w6A"/>
-                    <exclude reference="vFG-hn-X9Y"/>
-                    <exclude reference="m0e-ic-xoi"/>
-                    <exclude reference="hPP-di-3XM"/>
+                    <exclude reference="SMm-Xg-lZP"/>
                 </mask>
             </variation>
             <connections>

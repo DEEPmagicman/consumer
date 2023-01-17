@@ -12,7 +12,7 @@ class RewardDetails: UIViewController {
     @IBOutlet weak var strechyTableView: UITableView!
 
     var headerView: UIView!
-    var kTableHeaderHeight: CGFloat = 300.0
+    var kTableHeaderHeight: CGFloat = 400.0
     var isShowEvent = false
     var isFree = false
     private let freeTicket = "FREE TICKET:"
@@ -43,6 +43,11 @@ class RewardDetails: UIViewController {
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    @IBAction func onClickDecline(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     @IBAction func onBtnProceedToBookings(_ sender: UIButton) {
         self.navigationController?.pushViewController(TableSelection(), animated: true)
 //        AppDelegate.shared.showHome(selectedIndex: 1)
@@ -105,10 +110,10 @@ extension RewardDetails: UITableViewDataSource {
         cell.lblRewardName.text = rewardData?.rewardName
         
         cell.rewardNote.text = rewardData?.rewardNote
-        cell.guestView.isHidden = !rewardData!.isTable
+        cell.guestView.isHidden = true//!rewardData!.isTable
         cell.EventCollectionView.isHidden = !rewardData!.hasEventBanner
         cell.discountLbl.text = isFree ? freeTicket : minOff
-        cell.discountLbl.textColor = isFree ? UIColor(red: 245/255, green: 129/255, blue: 254/255, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
+        cell.discountLbl.textColor = isFree ? UIColor(red: 204/255, green: 0, blue: 1, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
         return cell
     }
 }
