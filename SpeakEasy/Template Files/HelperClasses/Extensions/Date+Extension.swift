@@ -33,7 +33,7 @@ extension Date {
 
 enum DateFormat:String {
     case MMddyyyy = "MM/dd/yyyy"
-    case MMMDDYYYY = "MMM dd, yyyy"
+    case MMMMDDYYYY = "MMMM dd, yyyy"
     case yyyyMMddTHHmmssSSSz = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
     case YYYYMMDD = "yyyy-MM-dd"
 }

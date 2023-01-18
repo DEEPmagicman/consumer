@@ -9,11 +9,14 @@ import UIKit
 
 final class StartScreenViewController: UIViewController {
     
+    @IBOutlet weak var byTappingInfoLbl: UILabel!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
 //        Navigate.to.notificationPermissionVc(self)
+        
+        self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {

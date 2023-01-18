@@ -49,4 +49,10 @@ struct Constant {
         static let somethingWrong = "Something Went Wrong"
         static let max5FrdString = "you Can Invite Max 5 Friend"
     }
+    
+    struct Font {
+        static func boldText(size: CGFloat) -> UIFont {
+            return UIFont(name: "Poppins-Bold", size: size)!
+        }
+    }
 }

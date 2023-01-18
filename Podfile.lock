@@ -32,6 +32,7 @@ PODS:
   - GTMSessionFetcher/Core (2.3.0)
   - Hero (1.6.2)
   - IQKeyboardManagerSwift (6.5.10)
+  - JWTDecode (3.0.0)
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
@@ -75,6 +76,7 @@ DEPENDENCIES:
   - GSImageViewerController
   - Hero
   - IQKeyboardManagerSwift
+  - JWTDecode
   - NVActivityIndicatorView (= 4.7.0)
   - ObjectMapper
   - "ObjectMapper+Realm"
@@ -104,6 +106,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - Hero
     - IQKeyboardManagerSwift
+    - JWTDecode
     - NVActivityIndicatorView
     - ObjectMapper
     - "ObjectMapper+Realm"
@@ -134,6 +137,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   IQKeyboardManagerSwift: 52962c76ab33532f15ad9f3ff4e5715eda5335bb
+  JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   "ObjectMapper+Realm": 0f8d0ac5b0e87ba63d2d0bea76a111b4eae98b9a
@@ -149,6 +153,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 1ad2021359066c062f9733b4936cad57861d4380
+PODFILE CHECKSUM: cbe65c511880501e6e04915dde4eb79c1c99a16a
 
 COCOAPODS: 1.11.3

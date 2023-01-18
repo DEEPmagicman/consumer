@@ -29,6 +29,7 @@ target 'SpeakEasy-Consumer' do
   pod 'SVProgressHUD'
   pod 'GoogleSignIn'
   pod 'SwiftInstagram', '~> 1.1.2'
+  pod 'JWTDecode'
 end
 post_install do |installer|
   installer.pods_project.targets.each do |target|

@@ -15,6 +15,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var phoneNumTextField: UITextField!
     @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var backBtn: UIButton!
+    @IBOutlet weak var contrySelectionView: UIView!
     
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
@@ -53,6 +54,10 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         listController.showCountryPhoneCode = true
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickContrySelect))
+        self.contrySelectionView.addGestureRecognizer(tap)
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,6 +83,10 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     @objc func dismissCountries() {
         listController.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onClickContrySelect() {
+        self.fpnDisplayCountryList()
     }
     
     @IBAction func onClickBack(_ sender: Any) {

@@ -9,10 +9,12 @@ import UIKit
 import AVFoundation
 import GoogleSignIn
 import AuthenticationServices
+import JWTDecode
 
 class SignInOptionViewController: UIViewController {
 
     @IBOutlet weak var bgImageView: UIImageView!
+    @IBOutlet weak var byTappingInfoLbl: UILabel!
     
     var player: AVPlayer?
     var onBoardingDelegate = OnBoardingPresenter()
@@ -21,6 +23,7 @@ class SignInOptionViewController: UIViewController {
         super.viewDidLoad()
        
 //        playBackgoundVideo()
+        self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
     }
     
     private func playBackgoundVideo() {
@@ -67,7 +70,7 @@ class SignInOptionViewController: UIViewController {
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
             
             if let error = error {
-                Alert.showAlertSheet(style: .alert, title: "user Not found", message: "")
+//                Alert.showAlertSheet(style: .alert, title: "user Not found", message: "")
                 print(error)
                 return
             }
@@ -109,7 +112,33 @@ extension SignInOptionViewController: ASAuthorizationControllerDelegate{
     let userIdentifier = appleIDCredential.user
     let fullName = appleIDCredential.fullName
     let email = appleIDCredential.email
-    print("User id is \(userIdentifier) \n Full Name is \(String(describing: fullName)) \n Email id is \(String(describing: email))") }
+    print("User id is \(userIdentifier) \n Full Name is \(String(describing: fullName)) \n Email id is \(String(describing: email))")
+        if let identityTokenData = appleIDCredential.identityToken,
+            let identityTokenString = String(data: identityTokenData, encoding: .utf8) {
+            print("Identity Token \(identityTokenString)")
+            do {
+               let jwt = try decode(jwt: identityTokenString)
+               let decodedBody = jwt.body as Dictionary<String, Any>
+                self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString) { isSuccess,errorMsg  in
+                    if isSuccess {
+                        let user = UserModel()
+                        AppStateManager.sharedInstance.loginUser(user: user)
+                    } else {
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                        }
+                    }
+                    Loader.hide()
+                }
+               print(decodedBody)
+               print("Decoded email: "+(decodedBody["email"] as? String ?? "n/a")   )
+            } catch {
+               print("decoding failed")
+            }
+        }
+    }
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

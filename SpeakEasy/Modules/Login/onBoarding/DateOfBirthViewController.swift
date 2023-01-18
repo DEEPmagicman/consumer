@@ -29,15 +29,15 @@ final class DateOfBirthViewController: UIViewController {
         datePickerView.preferredDatePickerStyle = .wheels
         let maxDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
         datePickerView.maximumDate = maxDate
-        ageLbl.text = "Age\(datePickerView.date.age)"
+        ageLbl.text = "Age \(datePickerView.date.age)"
     }
     
     @IBAction func datePickerValueChange(_ sender: Any) {
-        ageLbl.text = "Age\(datePickerView.date.age)"
+        ageLbl.text = "Age \(datePickerView.date.age)"
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string(format: .MMMDDYYYY))"
+        let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string(format: .MMMMDDYYYY))"
         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmBirthDate, text2: birthdate, text3: Constant.String.over21Info)
     }
     

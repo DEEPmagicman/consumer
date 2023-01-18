@@ -54,14 +54,14 @@ extension UILabel {
         let mutableAttributedString = NSMutableAttributedString.init(string: labelText)
         text.forEach {
             var range = isCaseInsensitive ? (labelText as NSString).range(of: $0, options: .caseInsensitive) : (labelText as NSString).range(of: $0)
-//            mutableAttributedString.addAttribute(NSAttributedString.Key.font, value: Constant.Font.sourceSansProBold(size), range: range)
+            mutableAttributedString.addAttribute(NSAttributedString.Key.font, value: Constant.Font.boldText(size: size), range: range)
             mutableAttributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: textColor as Any, range: range)
             if addUnderLine {
                 mutableAttributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
             }
             while range.upperBound < labelText.count {
                 range = (labelText as NSString).range(of: $0, range: NSRange(location: range.upperBound, length: labelText.count - range.upperBound))
-//                mutableAttributedString.addAttribute(NSAttributedString.Key.font, value: Constant.Font.sourceSansProBold(size), range: range)
+                mutableAttributedString.addAttribute(NSAttributedString.Key.font, value: Constant.Font.boldText(size: size), range: range)
                 mutableAttributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: textColor as Any, range: range)
                 if addUnderLine {
                     mutableAttributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
