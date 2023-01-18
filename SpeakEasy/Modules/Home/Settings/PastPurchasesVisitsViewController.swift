@@ -56,17 +56,17 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
     
     @objc func onBtnConfirmBooking(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
-        BaseController().pushToTicketConfirmation(data: data, isFromSettings: true)
+        Navigate.to.ticketConfirmation(self, data: data, isFromSettings: true)
     }
     @objc func onBtnBookingInvites(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
         if data.status == .AwaitingApproval {
-            BaseController().pushToBookingInvite(booking: data, isFromSettings: true)
+            Navigate.to.bookingInvite(self, booking: data, isFromSettings: true)
         }
     }
     @objc func onBtnPendingBookingAwait(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
-        BaseController().pushToPendingBookingAwait(data: data)
+        Navigate.to.pendingBookingAwait(self, data: data)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

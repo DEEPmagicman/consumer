@@ -38,7 +38,7 @@ extension StartScreenViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        let user = UserModel()
-        AppStateManager.sharedInstance.loginUser(user: user)
+        UserDefault.shared.isLoggedIn = true
+        AppDelegate.shared.changeRootViewController()
     }
 }

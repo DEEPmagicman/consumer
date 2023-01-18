@@ -81,8 +81,7 @@ class SignInOptionViewController: UIViewController {
             }
             self.onBoardingDelegate.socialMediaLoginAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in
                 if isSuccess {
-                    let user = UserModel()
-                    AppStateManager.sharedInstance.loginUser(user: user)
+                    AppDelegate.shared.changeRootViewController()
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -121,8 +120,7 @@ extension SignInOptionViewController: ASAuthorizationControllerDelegate{
                let decodedBody = jwt.body as Dictionary<String, Any>
                 self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString) { isSuccess,errorMsg  in
                     if isSuccess {
-                        let user = UserModel()
-                        AppStateManager.sharedInstance.loginUser(user: user)
+                        AppDelegate.shared.changeRootViewController()
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

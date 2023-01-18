@@ -4,9 +4,6 @@ import UIKit
 import Charts
 
 struct Global{
-    static let LOGGED_IN_USER                = AppStateManager.sharedInstance.loggedInUser
-    static var APP_MANAGER                   = AppStateManager.sharedInstance
-    static var APP_REALM                     = APP_MANAGER.realm
     static let APP_COLOR                     = UIColor(red:29/255, green:29/255, blue:29/255, alpha:1.0)
     static let APP_COLOR_DISABLE             = UIColor(red:193/255, green:98/255, blue:115/255, alpha:1.0)
     static let APP_COLOR_DISABLE_TEXT        = UIColor(red:205/255, green:119/255, blue:128/255, alpha:1.0)

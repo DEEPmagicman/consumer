@@ -9,8 +9,11 @@ import Foundation
 
 final class UserDefault: NSObject {
     
-    private let token = "token"
-    private let USER = "user"
+    enum UserDefaultKey: String {
+        case accessTokenKey = "accessToken"
+        case userKey = "user"
+        case isLoggedInKey = "isLoggedIn"
+    }
     
     let userDefaults = UserDefaults.standard
     
@@ -21,17 +24,17 @@ final class UserDefault: NSObject {
         return Static.instance
     }
     
-    var loginToken: String? {
+    var accessToken: String? {
         get {
-            return UserDefaults.standard.value(forKey: token) as? String
+            return UserDefaults.standard.value(forKey: UserDefaultKey.accessTokenKey.rawValue) as? String
         } set {
-            UserDefaults.standard.setValue(newValue, forKey: token)
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.accessTokenKey.rawValue)
         }
     }
     
     var user: Currentuser? {
         get {
-            if let savedUser = UserDefaults.standard.object(forKey: USER) as? Data {
+            if let savedUser = UserDefaults.standard.object(forKey: UserDefaultKey.userKey.rawValue) as? Data {
                 do {
                     let loadedUser = try JSONDecoder().decode(Currentuser.self, from: savedUser)
                     return loadedUser
@@ -41,9 +44,17 @@ final class UserDefault: NSObject {
         } set {
             do {
                 let encoded = try JSONEncoder().encode(newValue)
-                UserDefaults.standard.set(encoded, forKey: USER)
+                UserDefaults.standard.set(encoded, forKey: UserDefaultKey.userKey.rawValue)
                 UserDefaults.standard.synchronize()
             } catch { }
+        }
+    }
+    
+    var isLoggedIn: Bool? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.isLoggedInKey.rawValue) as? Bool
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isLoggedInKey.rawValue)
         }
     }
     

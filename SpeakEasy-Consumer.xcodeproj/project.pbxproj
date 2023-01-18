@@ -215,11 +215,6 @@
 		CE4867C2286F358800FD277E /* CollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486778286F358700FD277E /* CollectionViewFlowLayout.swift */; };
 		CE4867C3286F358800FD277E /* ButtonStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486779286F358700FD277E /* ButtonStates.swift */; };
 		CE4867C4286F358800FD277E /* RoundedCorners.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48677A286F358700FD277E /* RoundedCorners.swift */; };
-		CE4867CB286F358800FD277E /* APIManagerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486784286F358700FD277E /* APIManagerBase.swift */; };
-		CE4867CC286F358800FD277E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486786286F358700FD277E /* Route.swift */; };
-		CE4867CD286F358800FD277E /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486788286F358700FD277E /* APIManager.swift */; };
-		CE4867CE286F358800FD277E /* UserAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48678A286F358700FD277E /* UserAPIManager.swift */; };
-		CE4867CF286F358800FD277E /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48678C286F358700FD277E /* AppStateManager.swift */; };
 		CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48678F286F358700FD277E /* CMSteppedProgressBar.m */; };
 		CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486790286F358700FD277E /* CAPSPageMenu.swift */; };
 		CE4867D2286F358800FD277E /* GifAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486793286F358700FD277E /* GifAnimation.swift */; };
@@ -229,7 +224,6 @@
 		CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486799286F358700FD277E /* FlowLayout.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
 		CE4867D8286F358800FD277E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48679F286F358700FD277E /* CardView.swift */; };
-		CE4867E1286F392900FD277E /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4867DB286F392900FD277E /* UserModel.swift */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
@@ -736,11 +730,6 @@
 		CE486778286F358700FD277E /* CollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		CE486779286F358700FD277E /* ButtonStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonStates.swift; sourceTree = "<group>"; };
 		CE48677A286F358700FD277E /* RoundedCorners.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCorners.swift; sourceTree = "<group>"; };
-		CE486784286F358700FD277E /* APIManagerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManagerBase.swift; sourceTree = "<group>"; };
-		CE486786286F358700FD277E /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
-		CE486788286F358700FD277E /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		CE48678A286F358700FD277E /* UserAPIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAPIManager.swift; sourceTree = "<group>"; };
-		CE48678C286F358700FD277E /* AppStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
 		CE48678F286F358700FD277E /* CMSteppedProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMSteppedProgressBar.m; sourceTree = "<group>"; };
 		CE486790286F358700FD277E /* CAPSPageMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CAPSPageMenu.swift; sourceTree = "<group>"; };
 		CE486791286F358700FD277E /* CMSteppedProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMSteppedProgressBar.h; sourceTree = "<group>"; };
@@ -753,7 +742,6 @@
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CE48679F286F358700FD277E /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		CE4867DB286F392900FD277E /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -1801,53 +1789,8 @@
 			isa = PBXGroup;
 			children = (
 				BD80B38B295EBC25005592A7 /* InstgramManager */,
-				CE486783286F358700FD277E /* APIManagerBase */,
-				CE486785286F358700FD277E /* Route */,
-				CE486787286F358700FD277E /* APIManager */,
-				CE486789286F358700FD277E /* APIModules */,
-				CE48678B286F358700FD277E /* AppStateManager */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		CE486783286F358700FD277E /* APIManagerBase */ = {
-			isa = PBXGroup;
-			children = (
-				CE486784286F358700FD277E /* APIManagerBase.swift */,
-			);
-			path = APIManagerBase;
-			sourceTree = "<group>";
-		};
-		CE486785286F358700FD277E /* Route */ = {
-			isa = PBXGroup;
-			children = (
-				CE486786286F358700FD277E /* Route.swift */,
-			);
-			path = Route;
-			sourceTree = "<group>";
-		};
-		CE486787286F358700FD277E /* APIManager */ = {
-			isa = PBXGroup;
-			children = (
-				CE486788286F358700FD277E /* APIManager.swift */,
-			);
-			path = APIManager;
-			sourceTree = "<group>";
-		};
-		CE486789286F358700FD277E /* APIModules */ = {
-			isa = PBXGroup;
-			children = (
-				CE48678A286F358700FD277E /* UserAPIManager.swift */,
-			);
-			path = APIModules;
-			sourceTree = "<group>";
-		};
-		CE48678B286F358700FD277E /* AppStateManager */ = {
-			isa = PBXGroup;
-			children = (
-				CE48678C286F358700FD277E /* AppStateManager.swift */,
-			);
-			path = AppStateManager;
 			sourceTree = "<group>";
 		};
 		CE48678D286F358700FD277E /* ThirdParty Libraries */ = {
@@ -1926,7 +1869,6 @@
 		CE4867D9286F392900FD277E /* UserModel */ = {
 			isa = PBXGroup;
 			children = (
-				CE4867DB286F392900FD277E /* UserModel.swift */,
 				BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */,
 				BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */,
 				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
@@ -3978,7 +3920,6 @@
 				CE4867B5286F358800FD277E /* UIImage+Extension.swift in Sources */,
 				0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */,
 				820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */,
-				CE4867CF286F358800FD277E /* AppStateManager.swift in Sources */,
 				E11CE3FA28C97709003899C4 /* ExtendedTabCVC.swift in Sources */,
 				E1A9E76728C55D550081FB28 /* Locations.swift in Sources */,
 				E1A9E7D528C56FD10081FB28 /* ManageFriendTVC.swift in Sources */,
@@ -3988,7 +3929,6 @@
 				CE4867C2286F358800FD277E /* CollectionViewFlowLayout.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
 				82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */,
-				CE4867CD286F358800FD277E /* APIManager.swift in Sources */,
 				E166184B28BED1810027C6EA /* RewardDetails.swift in Sources */,
 				E11F4BFA28C835F3008D2E30 /* BookingsAndInvites.swift in Sources */,
 				E17DC97228C6D01700244C4F /* Main.swift in Sources */,
@@ -4003,7 +3943,6 @@
 				E17DC85C28C6C16500244C4F /* AccessPass.swift in Sources */,
 				29868363297567DF00CB827B /* EventPresenter.swift in Sources */,
 				CE4867D4286F358800FD277E /* MICountryPicker.swift in Sources */,
-				CE4867CB286F358800FD277E /* APIManagerBase.swift in Sources */,
 				CE4867D7286F358800FD277E /* iCarousel.m in Sources */,
 				CE4867A4286F358800FD277E /* MOLHFontLocalizableViews.swift in Sources */,
 				E16705A228CA6B3800644BF0 /* DressCodeTVC.swift in Sources */,
@@ -4014,7 +3953,6 @@
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
 				E1A9E7CA28C56FD10081FB28 /* FellowPeopleTVC.swift in Sources */,
 				4A89D44028D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.swift in Sources */,
-				CE4867CE286F358800FD277E /* UserAPIManager.swift in Sources */,
 				CE4867B7286F358800FD277E /* String+Extension.swift in Sources */,
 				84248DAE28D3DEE200A6E260 /* TabVenueCVC.swift in Sources */,
 				E11F4B9428C8358C008D2E30 /* AllEventsTVC.swift in Sources */,
@@ -4098,7 +4036,6 @@
 				E166184628BED1810027C6EA /* RewardDetailsStretchyTVC.swift in Sources */,
 				BD942F4129595E1A00D52115 /* OnBoardingPresenter.swift in Sources */,
 				CAC413FF28A478040007BA86 /* Double.swift in Sources */,
-				CE4867E1286F392900FD277E /* UserModel.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
 				0447306D295AB8A80001F568 /* AddPaymentMethodsViewController.swift in Sources */,
@@ -4135,7 +4072,6 @@
 				E15D6B7228BC39AC0076286C /* Tutorial1CVC.swift in Sources */,
 				CE4867B6286F358800FD277E /* UIViewController+Extension.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
-				CE4867CC286F358800FD277E /* Route.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
 				E167059E28CA6B3700644BF0 /* VenueDetails.swift in Sources */,
 				CE4867A1286F358700FD277E /* MOLHLanguage.swift in Sources */,

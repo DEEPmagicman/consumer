@@ -8,6 +8,9 @@
 import Foundation
 import Alamofire
 
+typealias DefaultAPISuccessClosure = (Any?) -> Void
+typealias DefaultAPIFailureClosure = (Error?) -> Void
+
 struct Connectivity {
     static let sharedInstance = NetworkReachabilityManager()!
     static var isConnectedToInternet: Bool {
@@ -19,8 +22,10 @@ final class AFWrapper: NSObject {
     
     private override init() {}
     
-    static func postRequest(_ strURL:String, params: [String : Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, success: @escaping (Any?) -> Void, failure: @escaping (Error?) -> Void) {
-        
+    static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true,
+                            success: @escaping DefaultAPISuccessClosure,
+                            failure: @escaping DefaultAPIFailureClosure) {
+
         if !Connectivity.isConnectedToInternet {
             success(nil)
             failure(nil)
@@ -46,8 +51,10 @@ final class AFWrapper: NSObject {
         debugPrint(req)
     }
     
-    static func patchRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping (Any?) -> Void, failure: @escaping (Error?) -> Void) {
-        
+    static func patchRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?,
+                             success: @escaping DefaultAPISuccessClosure,
+                             failure: @escaping DefaultAPIFailureClosure) {
+
         if !Connectivity.isConnectedToInternet {
             success(nil)
             failure(nil)
@@ -73,7 +80,10 @@ final class AFWrapper: NSObject {
         debugPrint(req)
     }
     
-    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post, success: @escaping (Any?) -> Void, failure: @escaping (Any?) -> Void) {
+    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
+                          success: @escaping DefaultAPISuccessClosure,
+                          failure: @escaping DefaultAPIFailureClosure) {
+
         if !Connectivity.isConnectedToInternet {
             success(nil)
             failure(nil)
@@ -97,7 +107,7 @@ final class AFWrapper: NSObject {
                         } else if responseCode == 201 {
                             success(response.result.value)
                         } else {
-                            failure(response.result.value)
+                            failure(response.result.error)
                         }
                     } else {
                         failure(response.result.error)
@@ -110,7 +120,9 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func getRequest(_ strURL:String, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping (Any?) -> Void, failure: @escaping (Error?) -> Void) {
+    static func getRequest(_ strURL:String, params: [String: Any]? = nil, headers: [String: String]?,
+                           success: @escaping DefaultAPISuccessClosure,
+                           failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)

@@ -41,9 +41,9 @@ extension Invites: UITableViewDelegate, UITableViewDataSource {
     }
     @objc func onBtnBookingInvites(_ sender: UIButton) {
         if arrDataSet[sender.tag] == "FREE" {
-            super.pushToVIPBookingInviteNew(isFree: true)
+            Navigate.to.VIPBookingInviteNew(self, isFree: true)
         } else {
-            super.pushToVIPBookingInviteNew(isFree: false)
+            Navigate.to.VIPBookingInviteNew(self, isFree: false)
         }
     }
     

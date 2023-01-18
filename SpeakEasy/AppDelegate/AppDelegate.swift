@@ -17,14 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         self.application = application
         GMSServices.provideAPIKey(Constants.apiKey)
         
         IQKeyboardManager.shared.enable = true
         
-        self.window = UIWindow(frame:UIScreen.main.bounds)
-        self.launchApplication()
+        window = UIWindow(frame:UIScreen.main.bounds)
+        launchApplication()
         return true
     }
 }
@@ -36,18 +35,16 @@ extension AppDelegate {
         self.window?.makeKeyAndVisible()
     }
     func changeRootViewController(){
-        switch AppStateManager.sharedInstance.isUserLoggedIn() {
-        case true:
+        if UserDefault.shared.isLoggedIn == true {
             self.showHome(selectedIndex: 0)
-        case false:
+        } else {
             self.showOnboarding()
-//            self.showTutorials()
         }
     }
     
     func showOnboarding() {
 //        let controller = StartScreenViewController()
-        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.shared.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
+        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
 
 //        controller.isHeroEnabled = true
         let tutorialNavigation = UINavigationController(rootViewController: controller)

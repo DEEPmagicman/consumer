@@ -118,7 +118,7 @@ extension VenuesAndVIP: UITableViewDataSource {
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
         //Fix this
-        self.pushToAllVenues()
+        Navigate.to.allVenues(self)
     }
 }
 extension VenuesAndVIP: UITableViewDelegate {

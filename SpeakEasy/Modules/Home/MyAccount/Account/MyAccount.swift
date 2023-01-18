@@ -95,7 +95,7 @@ class MyAccount: BaseController {
         self.navigationController?.pushViewController(Friends(), animated: true)
     }
     @IBAction func onBtnEdit(_ sender: UIButton) {
-        super.pushToEditProfile()
+        Navigate.to.editProfile(self)
     }
     @IBAction func onBtnSetting(_ sender: UIButton) {
         Navigate.to.settingsVc(self)

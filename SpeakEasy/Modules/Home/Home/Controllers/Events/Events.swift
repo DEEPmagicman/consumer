@@ -95,7 +95,7 @@ extension Events: UITableViewDataSource {
         }
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
-        self.pushToAllEvents()
+        Navigate.to.allEvents(self)
     }
     
     func pushToEventBookingDetails(indexPath: IndexPath,index: Int) {

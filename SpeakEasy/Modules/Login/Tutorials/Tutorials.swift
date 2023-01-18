@@ -8,6 +8,7 @@
 import UIKit
 import SCPageControl
 
+// TODO: remove old vc (with SCPageControl pod)
 class Tutorials: BaseController {
     
     @IBOutlet weak var collectionView: UICollectionView!

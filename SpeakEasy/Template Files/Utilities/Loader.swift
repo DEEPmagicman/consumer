@@ -8,11 +8,8 @@
 import Foundation
 import SVProgressHUD
 
-class Loader {
-    
-    private init() {
-    }
-    
+struct Loader {
+
     static var isVisible:Bool {
         get {
             return SVProgressHUD.isVisible()
@@ -29,13 +26,15 @@ class Loader {
     }
     
     static func show() {
-        self.config()
+        config()
         SVProgressHUD.show()
+        UIApplication.shared.beginIgnoringInteractionEvents()
     }
     
     static func show(progress:Double) {
         self.config()
         SVProgressHUD.showProgress(Float(progress))
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
     
     static func hide() {

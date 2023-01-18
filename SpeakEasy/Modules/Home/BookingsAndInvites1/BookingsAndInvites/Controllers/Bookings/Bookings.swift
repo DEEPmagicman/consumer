@@ -49,28 +49,28 @@ extension Bookings: UITableViewDelegate, UITableViewDataSource {
         /* To Do handle switch case status vise*/
         switch sender.tag {
         case 0,2:
-            super.pushToTicketConfirmation(data: data)
+            Navigate.to.ticketConfirmation(self, data: data)
         case 1:
-            super.pushToPendingBookingAwait(data: data)
+            Navigate.to.pendingBookingAwait(self, data: data)
         case 3:
-            super.pushToPendingBookingAwait(data: data)
+            Navigate.to.pendingBookingAwait(self, data: data)
         default:
             break
         }
     }
     @objc func onBtnConfirmBooking(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
-        super.pushToTicketConfirmation(data: data)
+        Navigate.to.ticketConfirmation(self, data: data)
     }
     @objc func onBtnBookingInvites(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
         if data.status == .AwaitingApproval {
-            super.pushToBookingInvite(booking: data)
+            Navigate.to.bookingInvite(self, booking: data)
         }
     }
     @objc func onBtnPendingBookingAwait(_ sender: UIButton) {
         let data = self.arrBookings[sender.tag]
-        super.pushToPendingBookingAwait(data: data)
+        Navigate.to.pendingBookingAwait(self, data: data)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

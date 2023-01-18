@@ -7,10 +7,6 @@ target 'SpeakEasy-Consumer' do
 
   # Pods for SpeakEasy
   pod 'Alamofire', '4.9.1'
-  pod 'SwiftyJSON'
-  pod 'RealmSwift'
-  pod 'ObjectMapper'
-  pod 'ObjectMapper+Realm'
   pod 'SDWebImage'
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'

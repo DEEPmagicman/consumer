@@ -16,7 +16,7 @@ enum HeaderContentType: String {
 struct Header {
 
     static func header(_ headerContentType: HeaderContentType = .json) -> [String: String] {
-        ["Authorization": "Bearer \(UserDefault.shared.loginToken ?? "")",
+        ["Authorization": "Bearer \(UserDefault.shared.accessToken ?? "")",
          "Content-Type": "\(headerContentType.rawValue)"]
     }
 }

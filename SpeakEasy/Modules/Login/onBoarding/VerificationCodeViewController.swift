@@ -127,8 +127,7 @@ final class VerificationCodeViewController: UIViewController {
         if isFromLogin {
             self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
                 if isSuccess {
-                        let user = UserModel()
-                        AppStateManager.sharedInstance.loginUser(user: user)
+                    AppDelegate.shared.changeRootViewController()
                     Loader.hide()
                 } else {
                     if errorMsg != nil {

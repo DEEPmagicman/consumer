@@ -114,3 +114,12 @@ extension UITapGestureRecognizer {
     }
   }
 }
+
+extension UIStoryboard {
+    func instantiateVC<T: UIViewController>(_ id: T.Type) -> T {
+        guard let controller = self.instantiateViewController(withIdentifier: String(describing: id)) as? T else {
+            fatalError("could not cast UIViewController")
+        }
+        return controller
+    }
+}

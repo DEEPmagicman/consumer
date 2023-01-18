@@ -43,8 +43,8 @@ final class OnBoardingPresenter {
                 return
             }
             let imageDic = userDic["image"] as? [String:Any]
-            let loginToken = sessionDic["accessToken"] as? String
-            UserDefault.shared.loginToken = loginToken
+            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.isLoggedIn = true
             let user = Currentuser(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
@@ -117,9 +117,9 @@ final class OnBoardingPresenter {
                 completion(false, nil)
                 return
             }
-            let loginToken = sessionDic["accessToken"] as? String
             let imageDic = userDic["image"] as? [String:Any]
-            UserDefault.shared.loginToken = loginToken
+            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.isLoggedIn = true
             let user = Currentuser(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
@@ -172,8 +172,8 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String:Any]
             let user = Currentuser(fromDictionary: userDic)
-            let loginToken = sessionDic["accessToken"] as? String
-            UserDefault.shared.loginToken = loginToken
+            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.isLoggedIn = true
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             UserDefault.shared.user = user
             print("\(user)")
@@ -364,8 +364,8 @@ final class OnBoardingPresenter {
                 return
             }
             let imageDic = userDic["image"] as? [String:Any]
-            let loginToken = sessionDic["accessToken"] as? String
-            UserDefault.shared.loginToken = loginToken
+            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.isLoggedIn = true
             let user = Currentuser(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])

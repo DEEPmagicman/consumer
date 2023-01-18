@@ -7,16 +7,8 @@
 
 import Foundation
 
-class IdentifierHelper {
-    
-    static let shared = IdentifierHelper()
-    
-    private init() {
-        
+struct IdentifierHelper {
+    static func getIdentifier(_ className: AnyClass) -> String {
+        String(describing: className.self)
     }
-    
-    func getIdentifier(_ className:AnyClass) -> String {
-        return String(describing: className.self)
-    }
-
 }

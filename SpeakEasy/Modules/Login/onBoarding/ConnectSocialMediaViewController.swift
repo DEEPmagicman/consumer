@@ -56,13 +56,13 @@ final class ConnectSocialMediaViewController: UIViewController {
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        let user = UserModel()
-        AppStateManager.sharedInstance.loginUser(user: user)
+        UserDefault.shared.isLoggedIn = true
+        AppDelegate.shared.changeRootViewController()
     }
     
     @IBAction func onClickGetStarted(_ sender: Any) {
-        let user = UserModel()
-        AppStateManager.sharedInstance.loginUser(user: user)
+        UserDefault.shared.isLoggedIn = true
+        AppDelegate.shared.changeRootViewController()
     }
     
     @IBAction func onClickConnectWithSpotify(_ sender: Any) {

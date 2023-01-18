@@ -43,8 +43,7 @@ class EnterEmailPassViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         self.onBoardingDelegate.loginWithEmailApi(email: self.email, password: passwordTextField.text ?? "") { isSuccess,errorMsg  in
             if isSuccess {
-                let user = UserModel()
-                AppStateManager.sharedInstance.loginUser(user: user)
+                AppDelegate.shared.changeRootViewController()
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
