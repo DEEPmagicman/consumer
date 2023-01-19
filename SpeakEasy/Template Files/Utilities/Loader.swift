@@ -34,10 +34,11 @@ struct Loader {
     static func show(progress:Double) {
         self.config()
         SVProgressHUD.showProgress(Float(progress))
-        UIApplication.shared.endIgnoringInteractionEvents()
+        UIApplication.shared.beginIgnoringInteractionEvents()
     }
     
     static func hide() {
         SVProgressHUD.dismiss()
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
 }

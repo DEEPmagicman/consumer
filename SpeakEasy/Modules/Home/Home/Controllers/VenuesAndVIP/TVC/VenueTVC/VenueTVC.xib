@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -58,7 +59,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Now!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZPl-40-jVg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="35" width="71.5" height="18.5"/>
+                                        <rect key="frame" x="10" y="35" width="73.5" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -70,10 +71,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="zPY-Wo-FsE">
-                                        <rect key="frame" x="262.5" y="34" width="99.5" height="37.5"/>
+                                        <rect key="frame" x="260.5" y="34" width="101.5" height="37.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Closes 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9N-yX-0Cb" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="99.5" height="18.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="101.5" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
@@ -85,7 +86,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-Os-D1Z" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="58" y="18.5" width="41.5" height="19"/>
+                                                <rect key="frame" x="60" y="18.5" width="41.5" height="19"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" image="ViewVenue"/>
@@ -116,6 +117,7 @@
                                 <color key="currentPageIndicatorTintColor" red="0.56078431370000004" green="0.56078431370000004" blue="0.56078431370000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </pageControl>
                         </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="4Zr-RQ-QNs" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" constant="12" id="7sK-0j-c7o"/>
                             <constraint firstItem="JeD-I6-xqe" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" id="8ZN-Ss-g6h"/>
@@ -171,6 +173,7 @@
                         </subviews>
                     </stackView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="keB-wo-JfO" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="0eo-f4-MD6"/>
                     <constraint firstAttribute="bottom" secondItem="keB-wo-JfO" secondAttribute="bottom" id="dpY-mx-1HR"/>
