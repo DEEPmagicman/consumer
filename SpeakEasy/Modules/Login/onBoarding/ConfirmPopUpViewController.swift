@@ -24,6 +24,7 @@ final class ConfirmPopUpViewController: UIViewController {
     var infoDetailtext = ""
     var infoNoteText = ""
     var isPrivetOrPublic = false
+    var isFromLoginGuest = false
     
     var confirmPopUpDelegate: ConfirmPopUpDelegate?
     
@@ -37,6 +38,8 @@ final class ConfirmPopUpViewController: UIViewController {
         if isPrivetOrPublic {
             self.editBtn.setTitle("No", for: .normal)
             self.confirmBtn.setTitle("Yes", for: .normal)
+        } else if isFromLoginGuest {
+            self.editBtn.setTitle("Back", for: .normal)
         }
     
     }

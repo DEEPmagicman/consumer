@@ -26,18 +26,11 @@ final class CreatePasswordViewController: UIViewController {
         
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
-        
-//        editEmailLbl.highlightBold(["Edit"], size: 15, textColor: Constant.Color.primaryColor)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEditEmail(_:)))
-        self.editEmailLbl.isUserInteractionEnabled = true
-        self.editEmailLbl.addGestureRecognizer(tap)
 
     }
     
-    @objc func onClickEditEmail(_ sender: UITapGestureRecognizer) {
-        if sender.didTapAttributedString("Edit", in: editEmailLbl) {
-            navigationController?.popViewController(animated: true)
-        }
+    @IBAction func onClickBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func onClickShowPassWord(_ sender: Any) {

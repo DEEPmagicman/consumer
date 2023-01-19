@@ -28,7 +28,7 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {
-        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirm21YearText, text2: "", text3: Constant.String.over21Info)
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirm21YearText, text2: "", text3: Constant.String.over21Info, isFromLoginasGuest: true)
     }
 }
 

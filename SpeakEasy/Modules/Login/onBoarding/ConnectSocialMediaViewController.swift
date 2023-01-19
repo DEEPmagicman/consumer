@@ -88,30 +88,42 @@ final class ConnectSocialMediaViewController: UIViewController {
     
     @objc func onClickspotifyPrivetView () {
         self.spotifyPrivetLbl.textColor = .white
+        self.spotifyPrivetLbl.isShadowed = true
+        self.spotifyPublicLbl.isShadowed = false
         self.spotifyPrivetLine.isHidden = false
-        self.spotifyPublicLbl.textColor = UIColor(hex: "#4F4F4F")
+        self.spotifyPublicLbl.textColor = Global.APP_COLOR_DARK_GREY
         self.spotifyPublicLine.isHidden = true
+        self.spotifyPrivetLbl.layoutSubviews()
+        self.spotifyPublicLbl.layoutSubviews()
     }
     
     @objc func onClickspotifypublicView () {
-        self.spotifyPrivetLbl.textColor = UIColor(hex: "#4F4F4F")
+        self.spotifyPrivetLbl.textColor = Global.APP_COLOR_DARK_GREY
         self.spotifyPrivetLine.isHidden = true
         self.spotifyPublicLbl.textColor = .white
         self.spotifyPublicLine.isHidden = false
+        self.spotifyPrivetLbl.isShadowed = false
+        self.spotifyPublicLbl.isShadowed = true
+        self.spotifyPrivetLbl.layoutSubviews()
+        self.spotifyPublicLbl.layoutSubviews()
     }
     
     @objc func onClickInstagramPrivet() {
         self.instagramPrivetLbl.textColor = .white
         self.instagramPrivetLine.isHidden = false
-        self.instagramPublicLbl.textColor = UIColor(hex: "#4F4F4F")
+        self.instagramPublicLbl.textColor = Global.APP_COLOR_DARK_GREY
         self.instagramPublicLine.isHidden = true
+        self.instagramPrivetLbl.isShadowed = true
+        self.instagramPublicLbl.isShadowed = false
     }
     
     @objc func onClickInstagramPublic() {
-        self.instagramPrivetLbl.textColor = UIColor(hex: "#4F4F4F")
+        self.instagramPrivetLbl.textColor = Global.APP_COLOR_DARK_GREY
         self.instagramPrivetLine.isHidden = true
         self.instagramPublicLbl.textColor = .white
         self.instagramPublicLine.isHidden = false
+        self.instagramPrivetLbl.isShadowed = false
+        self.instagramPublicLbl.isShadowed = true
     }
     
 }
@@ -120,32 +132,20 @@ extension ConnectSocialMediaViewController: ConfirmPopUpDelegate {
     func cancelDetail() {
         if spotifyConnect {
             self.spotifyConnected()
-            self.spotifyPrivetLbl.textColor = .white
-            self.spotifyPrivetLine.isHidden = false
-            self.spotifyPublicLbl.textColor = UIColor(hex: "#4F4F4F")
-            self.spotifyPublicLine.isHidden = true
+            self.onClickspotifyPrivetView()
         } else {
             self.instagramConnected()
-            self.instagramPrivetLbl.textColor = .white
-            self.instagramPrivetLine.isHidden = false
-            self.instagramPublicLbl.textColor = UIColor(hex: "#4F4F4F")
-            self.instagramPublicLine.isHidden = true
+            self.onClickInstagramPrivet()
         }
     }
     
     func confirmDetail() {
         if spotifyConnect {
             self.spotifyConnected()
-            self.spotifyPrivetLbl.textColor = UIColor(hex: "#4F4F4F")
-            self.spotifyPrivetLine.isHidden = true
-            self.spotifyPublicLbl.textColor = .white
-            self.spotifyPublicLine.isHidden = false
+            self.onClickspotifypublicView()
         } else {
             self.instagramConnected()
-            self.instagramPrivetLbl.textColor = UIColor(hex: "#4F4F4F")
-            self.instagramPrivetLine.isHidden = true
-            self.instagramPublicLbl.textColor = .white
-            self.instagramPublicLine.isHidden = false
+            self.onClickInstagramPublic()
         }
     }
 }

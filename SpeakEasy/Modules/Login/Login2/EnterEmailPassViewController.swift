@@ -11,6 +11,7 @@ class EnterEmailPassViewController: UIViewController {
 
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var showBtn: UIButton!
+    @IBOutlet weak var continueBtn: UIButton!
     
     private let onBoardingDelegate = OnBoardingPresenter()
     var email = ""
@@ -21,6 +22,9 @@ class EnterEmailPassViewController: UIViewController {
         self.showBtn.isSelected = true
         self.passwordTextField.isSecureTextEntry = true
         self.showBtn.setTitle("Show", for: .normal)
+        self.passwordTextField.delegate = self
+        self.continueBtn.isUserInteractionEnabled = false
+        self.continueBtn.alpha = 0.5
 
     }
     
@@ -59,3 +63,16 @@ class EnterEmailPassViewController: UIViewController {
         Navigate.to.resetPasswordVc(self)
     }
 }
+
+extension EnterEmailPassViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if passwordTextField.text?.count ?? 0 >= 6 {
+            self.continueBtn.isUserInteractionEnabled = true
+            self.continueBtn.alpha = 1.0
+        } else {
+            self.continueBtn.isUserInteractionEnabled = false
+            self.continueBtn.alpha = 0.5
+        }
+    }
+}
+
