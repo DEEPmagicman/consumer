@@ -44,6 +44,9 @@ class EventBookingDetails: UIViewController {
         self.strechyTableView.alpha = 0
         self.setupStreachyHeaderViewFrames()
         self.strechyTableView.layoutIfNeeded()
+        
+        self.btnProceed.isUserInteractionEnabled = false
+        self.btnProceed.alpha = 0.5
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -197,7 +200,9 @@ extension EventBookingDetails: UITableViewDataSource {
             }
         }
         else {
-            return UITableViewCell()
+            let cell = UITableViewCell()
+            cell.backgroundColor = .clear
+            return cell
         }
     }
     @objc func onBtnMinusQuantity(_ sender: UIButton){
@@ -205,6 +210,8 @@ extension EventBookingDetails: UITableViewDataSource {
         if count == 1 {
             self.arrEventBooking[sender.tag].ticketCount -= 1
         }
+        self.btnProceed.isUserInteractionEnabled = false
+        self.btnProceed.alpha = 0.5
         self.strechyTableView.reloadData()
     }
     @objc func onBtnPlusQuantity(_ sender: UIButton){
@@ -215,6 +222,8 @@ extension EventBookingDetails: UITableViewDataSource {
             }
             self.arrEventBooking[sender.tag].ticketCount += 1
         }
+        self.btnProceed.isUserInteractionEnabled = true
+        self.btnProceed.alpha = 1.0
         self.strechyTableView.reloadData()
     }
     @objc func onBtnBookVIPTable(){

@@ -48,9 +48,11 @@ final class TableBookingDetailsCell: UITableViewCell {
         
         if self.invitedFrd.count + self.guest == 0 {
             self.searchFrdView.isHidden = false
+            self.editFriendListBtn.isHidden = true
             self.viewInviteFrdCollection.isHidden = true
         } else {
             self.searchFrdView.isHidden = true
+            self.editFriendListBtn.isHidden = false
             self.viewInviteFrdCollection.isHidden = false
         }
 
@@ -99,9 +101,11 @@ final class TableBookingDetailsCell: UITableViewCell {
         
         if self.invitedFrd.count + self.guest == 0 {
             self.searchFrdView.isHidden = false
+            self.editFriendListBtn.isHidden = true
             self.viewInviteFrdCollection.isHidden = true
         } else {
             self.searchFrdView.isHidden = true
+            self.editFriendListBtn.isHidden = false
             self.viewInviteFrdCollection.isHidden = false
         }
     }

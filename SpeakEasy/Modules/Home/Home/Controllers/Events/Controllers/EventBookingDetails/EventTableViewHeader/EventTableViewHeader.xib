@@ -33,7 +33,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="390" height="487"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bKB-XV-a16">
-                    <rect key="frame" x="0.0" y="338.33333333333331" width="390" height="148.66666666666669"/>
+                    <rect key="frame" x="0.0" y="342.33333333333331" width="390" height="144.66666666666669"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="nataKong" translatesAutoresizingMaskIntoConstraints="NO" id="AUp-AL-zcB">
                             <rect key="frame" x="19" y="12" width="54" height="54"/>
@@ -79,7 +79,7 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steve Aoki, Nathaniel..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JMm-1C-fu3" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="105" y="45" width="159" height="14"/>
+                            <rect key="frame" x="105.00000000000001" y="45" width="158.33333333333337" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="14" id="Z7T-xj-n1b"/>
                             </constraints>
@@ -94,10 +94,10 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="c5x-Ku-e68">
-                            <rect key="frame" x="16" y="74" width="358" height="8"/>
+                            <rect key="frame" x="16" y="70" width="358" height="8"/>
                             <subviews>
                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJC-7c-utt" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="4" width="1695.6666666666667" height="0.0"/>
+                                    <rect key="frame" x="0.0" y="4" width="1698" height="0.0"/>
                                     <string key="text">Join Tao Chicago for a performance by renowned DJ, Steve Aoki. At Tao we encourage smart, casual–elegant attire. We do not allow shorts, baseball caps, athletic apparel, tank tops, baggy clothing, exposed chains or flip flops. </string>
                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -117,7 +117,7 @@
                             </constraints>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tao Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p2Y-pj-JDX" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="19" y="84" width="154" height="32.333333333333343"/>
+                            <rect key="frame" x="19" y="80" width="154" height="32.333333333333343"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="23"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -129,7 +129,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="632 N. Dearborn St. Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fgo-7R-vhK" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="19" y="120.33333333333336" width="200.33333333333334" height="18.333333333333329"/>
+                            <rect key="frame" x="19" y="116.33333333333337" width="198.33333333333334" height="18.333333333333343"/>
                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                             <color key="textColor" red="0.71372549019607845" green="0.71372549019607845" blue="0.71372549019607845" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -141,7 +141,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1q-jQ-loy" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="265" y="12" width="113" height="31"/>
+                            <rect key="frame" x="267" y="12" width="111" height="31"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -160,7 +160,7 @@
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YGy-sF-9Eg" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="260" y="12" width="118" height="31"/>
+                            <rect key="frame" x="262" y="12" width="116" height="31"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                             <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -179,7 +179,7 @@
                             </connections>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogoLarge" translatesAutoresizingMaskIntoConstraints="NO" id="20a-4U-GSE">
-                            <rect key="frame" x="302" y="75.666666666666686" width="61" height="61"/>
+                            <rect key="frame" x="302" y="71.666666666666686" width="61" height="61"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.74783052356037871" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -197,7 +197,7 @@
                         <constraint firstItem="c5x-Ku-e68" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="16" id="M2c-m8-p9O"/>
                         <constraint firstItem="Fgo-7R-vhK" firstAttribute="top" secondItem="p2Y-pj-JDX" secondAttribute="bottom" constant="4" id="OPk-8c-ZvS"/>
                         <constraint firstAttribute="bottom" secondItem="Fgo-7R-vhK" secondAttribute="bottom" constant="10" id="OYH-6k-l4X"/>
-                        <constraint firstItem="c5x-Ku-e68" firstAttribute="top" secondItem="AUp-AL-zcB" secondAttribute="bottom" constant="8" id="Tcy-AK-rUu"/>
+                        <constraint firstItem="c5x-Ku-e68" firstAttribute="top" secondItem="AUp-AL-zcB" secondAttribute="bottom" constant="4" id="Tcy-AK-rUu"/>
                         <constraint firstItem="AUp-AL-zcB" firstAttribute="leading" secondItem="bKB-XV-a16" secondAttribute="leading" constant="19" id="Z4p-pB-XH1"/>
                         <constraint firstAttribute="trailing" secondItem="YGy-sF-9Eg" secondAttribute="trailing" constant="12" id="ZXB-YD-VIc"/>
                         <constraint firstItem="p2Y-pj-JDX" firstAttribute="top" relation="greaterThanOrEqual" secondItem="JMm-1C-fu3" secondAttribute="bottom" constant="8" id="azG-Jo-QFC"/>

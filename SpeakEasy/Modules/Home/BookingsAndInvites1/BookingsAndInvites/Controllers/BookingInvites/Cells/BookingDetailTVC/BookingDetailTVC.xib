@@ -32,7 +32,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="479"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Nh-sU-USZ" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="20" y="24" width="145" height="25.5"/>
+                                <rect key="frame" x="20" y="7" width="141.5" height="25.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -44,10 +44,10 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eIc-KU-Cul">
-                                <rect key="frame" x="20" y="62.5" width="374" height="236"/>
+                                <rect key="frame" x="20" y="32.5" width="374" height="232"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uhb-vW-GtN">
-                                        <rect key="frame" x="12" y="12" width="350" height="212"/>
+                                        <rect key="frame" x="12" y="10" width="350" height="212"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6Me-xu-74F">
                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="20"/>
@@ -270,10 +270,10 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="uhb-vW-GtN" firstAttribute="top" secondItem="eIc-KU-Cul" secondAttribute="top" constant="12" id="eh6-yw-8hm"/>
+                                    <constraint firstItem="uhb-vW-GtN" firstAttribute="top" secondItem="eIc-KU-Cul" secondAttribute="top" constant="10" id="eh6-yw-8hm"/>
                                     <constraint firstItem="uhb-vW-GtN" firstAttribute="leading" secondItem="eIc-KU-Cul" secondAttribute="leading" constant="12" id="jax-SZ-WZL"/>
                                     <constraint firstAttribute="trailing" secondItem="uhb-vW-GtN" secondAttribute="trailing" constant="12" id="n2L-ce-Q4F"/>
-                                    <constraint firstAttribute="bottom" secondItem="uhb-vW-GtN" secondAttribute="bottom" constant="12" id="zVN-lk-JHT"/>
+                                    <constraint firstAttribute="bottom" secondItem="uhb-vW-GtN" secondAttribute="bottom" constant="10" id="zVN-lk-JHT"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -285,7 +285,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZBP-O1-Adj">
-                                <rect key="frame" x="20" y="308.5" width="374" height="108"/>
+                                <rect key="frame" x="20" y="264.5" width="374" height="108"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L9O-bJ-VCW">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="0.5"/>
@@ -295,7 +295,7 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Notes and Requests" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k0W-oY-cYG" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="10.5" width="233" height="25.5"/>
+                                        <rect key="frame" x="0.0" y="10.5" width="227" height="25.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -328,7 +328,7 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h8Y-lw-klw">
-                                <rect key="frame" x="0.0" y="416.5" width="414" height="0.5"/>
+                                <rect key="frame" x="0.0" y="372.5" width="414" height="0.5"/>
                                 <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="mjB-ed-cnB"/>
@@ -338,12 +338,12 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="h8Y-lw-klw" secondAttribute="bottom" id="Ad9-f8-K4S"/>
-                            <constraint firstItem="7Nh-sU-USZ" firstAttribute="top" secondItem="WG6-de-zIZ" secondAttribute="top" constant="24" id="T3i-PZ-c2e"/>
-                            <constraint firstItem="ZBP-O1-Adj" firstAttribute="top" secondItem="eIc-KU-Cul" secondAttribute="bottom" constant="10" id="VSg-Rp-BD2"/>
+                            <constraint firstItem="7Nh-sU-USZ" firstAttribute="top" secondItem="WG6-de-zIZ" secondAttribute="top" constant="7" id="T3i-PZ-c2e"/>
+                            <constraint firstItem="ZBP-O1-Adj" firstAttribute="top" secondItem="eIc-KU-Cul" secondAttribute="bottom" id="VSg-Rp-BD2"/>
                             <constraint firstItem="h8Y-lw-klw" firstAttribute="top" secondItem="ZBP-O1-Adj" secondAttribute="bottom" id="ZCu-FY-vr4"/>
                             <constraint firstItem="h8Y-lw-klw" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" id="b4K-eP-RpJ"/>
                             <constraint firstAttribute="trailing" secondItem="eIc-KU-Cul" secondAttribute="trailing" constant="20" id="c10-ja-Req"/>
-                            <constraint firstItem="eIc-KU-Cul" firstAttribute="top" secondItem="7Nh-sU-USZ" secondAttribute="bottom" constant="13" id="cap-xS-f9g"/>
+                            <constraint firstItem="eIc-KU-Cul" firstAttribute="top" secondItem="7Nh-sU-USZ" secondAttribute="bottom" id="cap-xS-f9g"/>
                             <constraint firstItem="ZBP-O1-Adj" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" constant="20" id="d6v-1j-R3W"/>
                             <constraint firstItem="eIc-KU-Cul" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" constant="20" id="ktr-fX-yx3"/>
                             <constraint firstAttribute="trailing" secondItem="ZBP-O1-Adj" secondAttribute="trailing" constant="20" id="nhc-fP-e2W"/>

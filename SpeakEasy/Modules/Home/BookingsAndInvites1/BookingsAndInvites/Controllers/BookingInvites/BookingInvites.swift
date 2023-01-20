@@ -231,6 +231,10 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
         case 2:
             if self.booking?.status == .SubmitRequest || self.booking?.status == .BookingConfirmation || self.booking?.status == .AwaitingVenueApproval {
                  let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionSummaryTVC", for: indexPath) as! TransactionSummaryTVC
+                cell.stack2View.isHidden = false
+                cell.text1Lbl.text = "Commited spend ($2,000 x 50%)"
+                cell.text2Lbl.text = "Sales tax (5%)"
+                cell.text3Lbl.text = "Transaction fee (3%)"
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentsTVC") as! PaymentsTVC

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -104,16 +105,26 @@
                                     </view>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgN-Oq-qHI">
+                                <rect key="frame" x="0.0" y="255" width="449" height="1"/>
+                                <color key="backgroundColor" red="0.48235297199999999" green="0.47843140360000003" blue="0.48627454040000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="Lr2-Po-E7d"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="hgN-Oq-qHI" secondAttribute="trailing" id="18K-9H-zzy"/>
                             <constraint firstItem="QWM-an-TvP" firstAttribute="leading" secondItem="cPJ-wT-AAh" secondAttribute="leading" id="1zo-B8-6Xz"/>
                             <constraint firstItem="zjd-Gq-eUR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QWM-an-TvP" secondAttribute="trailing" constant="2" id="3xK-x5-mWT"/>
                             <constraint firstAttribute="bottom" secondItem="mZx-T1-urb" secondAttribute="bottom" id="9aO-Ju-VXj"/>
                             <constraint firstItem="mZx-T1-urb" firstAttribute="leading" secondItem="cPJ-wT-AAh" secondAttribute="leading" id="BMg-t5-t7u"/>
                             <constraint firstItem="mZx-T1-urb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6Iz-rQ-EfP" secondAttribute="bottom" constant="12" id="GJl-xR-wnU"/>
                             <constraint firstAttribute="trailing" secondItem="zjd-Gq-eUR" secondAttribute="trailing" id="I8H-BG-ejL"/>
+                            <constraint firstAttribute="bottom" secondItem="hgN-Oq-qHI" secondAttribute="bottom" id="RLl-L6-P6N"/>
                             <constraint firstAttribute="trailing" secondItem="6Iz-rQ-EfP" secondAttribute="trailing" constant="16" id="T8v-IY-vEd"/>
+                            <constraint firstItem="hgN-Oq-qHI" firstAttribute="leading" secondItem="cPJ-wT-AAh" secondAttribute="leading" id="WPv-8o-9lr"/>
                             <constraint firstItem="zjd-Gq-eUR" firstAttribute="centerY" secondItem="QWM-an-TvP" secondAttribute="centerY" id="Yrl-bK-kBn"/>
                             <constraint firstItem="6Iz-rQ-EfP" firstAttribute="top" secondItem="QWM-an-TvP" secondAttribute="bottom" constant="6" id="ZUW-HV-kuq"/>
                             <constraint firstAttribute="trailing" secondItem="mZx-T1-urb" secondAttribute="trailing" id="bC4-Hg-J41"/>

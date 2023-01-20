@@ -107,7 +107,6 @@
 		BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */; };
 		BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */; };
 		BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */; };
-		BD7FA0F8294892C200935275 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0F7294892C200935275 /* video.mov */; };
 		BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B38C295EBC4A005592A7 /* InstagramManager.swift */; };
 		BD80B391295EC1CB005592A7 /* InstagramWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B390295EC1CB005592A7 /* InstagramWebController.swift */; };
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
@@ -573,6 +572,7 @@
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
 		820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsCell.xib; sourceTree = "<group>"; };
+		82178449297A7A31007B80C9 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = video.mp4; path = ../../../../../../Downloads/video.mp4; sourceTree = "<group>"; };
 		8243555F2965AA01009EE48B /* SpotifyiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpotifyiOS.framework; path = "../../../Downloads/ios-sdk-1.2-2.2/SpotifyiOS.framework"; sourceTree = "<group>"; };
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
@@ -619,7 +619,6 @@
 		BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithEmailViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailPassViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
-		BD7FA0F7294892C200935275 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		BD80B38C295EBC4A005592A7 /* InstagramManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramManager.swift; sourceTree = "<group>"; };
 		BD80B390295EC1CB005592A7 /* InstagramWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramWebController.swift; sourceTree = "<group>"; };
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
@@ -1441,7 +1440,7 @@
 		BD7FA0F6294892AA00935275 /* myVideo */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0F7294892C200935275 /* video.mov */,
+				82178449297A7A31007B80C9 /* video.mp4 */,
 			);
 			path = myVideo;
 			sourceTree = "<group>";
@@ -3636,7 +3635,6 @@
 				E1A9E7C628C56FD10081FB28 /* ContactTVC.xib in Resources */,
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				E1A9E76E28C55D550081FB28 /* HeatMap.xib in Resources */,
-				BD7FA0F8294892C200935275 /* video.mov in Resources */,
 				E167055A28CA442800644BF0 /* PaymentMethodTVC.xib in Resources */,
 				E11F4BA028C8358C008D2E30 /* EventOptionCVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,

@@ -41,8 +41,8 @@ class SubmitRequestTVC: UITableViewCell {
            self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
              self.viewCancelReques.isHidden = false
              self.btnCancelRequest.isHidden = false
-             self.viewSubmitRequest.isHidden = false
-             self.btnSubmitRequest.isHidden = false
+             self.viewSubmitRequest.isHidden = true
+             self.btnSubmitRequest.isHidden = true
 
         case .SubmitRequest:
             self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
@@ -58,8 +58,8 @@ class SubmitRequestTVC: UITableViewCell {
             self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
              self.viewCancelReques.isHidden = false
              self.btnCancelRequest.isHidden = false
-             self.viewSubmitRequest.isHidden = false
-             self.btnSubmitRequest.isHidden = false
+             self.viewSubmitRequest.isHidden = true
+             self.btnSubmitRequest.isHidden = true
 
         }
     }

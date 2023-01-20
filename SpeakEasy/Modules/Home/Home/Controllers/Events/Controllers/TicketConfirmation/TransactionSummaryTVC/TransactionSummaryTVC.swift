@@ -12,6 +12,13 @@ class TransactionSummaryTVC: UITableViewCell {
     @IBOutlet weak var headerLbl: UILabelDeviceClass!
     @IBOutlet weak var totalLbl: UILabelDeviceClass!
     @IBOutlet weak var totalPriceLbl: UILabelDeviceClass!
+    @IBOutlet weak var stack2View: UIStackView!
+    @IBOutlet weak var text1Lbl: UILabelDeviceClass!
+    @IBOutlet weak var text1price: UILabelDeviceClass!
+    @IBOutlet weak var text2Lbl: UILabelDeviceClass!
+    @IBOutlet weak var text2Price: UILabelDeviceClass!
+    @IBOutlet weak var text3Lbl: UILabelDeviceClass!
+    @IBOutlet weak var text3Price: UILabelDeviceClass!
     
     override func awakeFromNib() {
         super.awakeFromNib()
