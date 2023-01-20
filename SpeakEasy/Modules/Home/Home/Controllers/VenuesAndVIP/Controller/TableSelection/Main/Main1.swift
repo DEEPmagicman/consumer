@@ -28,7 +28,7 @@ struct FixValue {
     static let mediumWeight = 70
     static let largeHeight = 60
     static let largeWeight = 80
-    static var scale = 1 // default scale 1 as it is as per data
+    static var scale = 1.0 // default scale 1 as it is as per data
 }
 
 class Main1: UIViewController {
@@ -39,6 +39,7 @@ class Main1: UIViewController {
     @IBOutlet weak var floorScrollView: UIScrollView!
     @IBOutlet weak var scrollInsideView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var proceedBtn: UIButtonDeviceClass!
     
     var from = ""
     var arrTables = [TableAttributes]()
@@ -116,15 +117,15 @@ extension Main1 {
         floorScrollView.delegate = self
         floorScrollView.minimumZoomScale = 0.25
         floorScrollView.maximumZoomScale = 5.0
-        FixValue.scale = 1
+        FixValue.scale = 1.0
         
         floorViewHeight.constant = CGFloat(671.scaledValue) // max y
         floorViewWidth.constant = CGFloat(875.scaledValue) // max x
             for i in 0..<self.arrTables.count {
                 let table = self.arrTables[i]
             if let viewTable = ViewRewardTable.instanceFromNib() as? ViewRewardTable {
-                let leftX = table.leftX.scaledValue
-                let topY = table.topY.scaledValue
+                let leftX = Double(table.leftX).scaledValue
+                let topY = Double(table.topY).scaledValue
                 
                 viewTable.tag = i
                 var width = 0
@@ -142,8 +143,8 @@ extension Main1 {
                     height = FixValue.largeHeight
                 default:
                     // default table height/width as per figma
-                    height = 62.scaledValue
-                    width = 62.scaledValue
+                    height = Int((62.0).scaledValue)
+                    width = Int((62.0).scaledValue)
                     break
                 }
                 
@@ -161,7 +162,7 @@ extension Main1 {
                     break
                 }
                 viewTable.setData(data: table)
-                viewTable.frame = CGRect(x: leftX , y: topY , width: width, height: height)
+                viewTable.frame = CGRect(x: Int(leftX), y: Int(topY), width: width, height: height)
                 self.floorView.addSubview(viewTable)
                 
                 let tap = UITapGestureRecognizer(target: self, action: #selector(self.didSelectTablAt(_:)))
@@ -169,6 +170,7 @@ extension Main1 {
                 viewTable.addGestureRecognizer(tap)
             }
         }
+        floorScrollView.zoom(to: CGRect(x: 0, y: 0, width: CGFloat(875.scaledValue), height: 269), animated: false)
     }
         
     func upDateView(index: Int) {
@@ -197,6 +199,8 @@ extension Main1 {
         }
         
         self.tableView.reloadData()
+        proceedBtn.isUserInteractionEnabled = true
+        proceedBtn.alpha = 1
         self.tableView.scrollToRow(at: IndexPath(row: tag, section: 0), at: .middle, animated: true)
     }
 }

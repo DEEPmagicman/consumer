@@ -56,6 +56,7 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell", for: indexPath) as! PaymentTableViewCell
         cell.selectionStyle = .none
+        cell.setUi(isSetting: true)
         if paymentArray[indexPath.row] == "Apple Pay" {
             cell.paymentIcon.image = Constant.Icon.applePay
         } else {

@@ -22,12 +22,12 @@ class SignInOptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-//        playBackgoundVideo()
+        playBackgoundVideo()
         self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
     }
     
     private func playBackgoundVideo() {
-        if let filePath = Bundle.main.path(forResource: "video", ofType:"mov") {
+        if let filePath = Bundle.main.path(forResource: "video", ofType:"mp4") {
             let filePathUrl = NSURL.fileURL(withPath: filePath)
             player = AVPlayer(url: filePathUrl)
             let playerLayer = AVPlayerLayer(player: player)
