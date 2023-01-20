@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04348226297A9337008989E6 /* video.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04348225297A9135008989E6 /* video.mp4 */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
 		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
 		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
@@ -107,7 +108,6 @@
 		BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */; };
 		BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */; };
 		BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */; };
-		BD7FA0F8294892C200935275 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0F7294892C200935275 /* video.mov */; };
 		BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B38C295EBC4A005592A7 /* InstagramManager.swift */; };
 		BD80B391295EC1CB005592A7 /* InstagramWebController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD80B390295EC1CB005592A7 /* InstagramWebController.swift */; };
 		BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */; };
@@ -517,6 +517,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04348225297A9135008989E6 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video.mp4; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -619,7 +620,6 @@
 		BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithEmailViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailPassViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
-		BD7FA0F7294892C200935275 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		BD80B38C295EBC4A005592A7 /* InstagramManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramManager.swift; sourceTree = "<group>"; };
 		BD80B390295EC1CB005592A7 /* InstagramWebController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramWebController.swift; sourceTree = "<group>"; };
 		BD829BD72941E69300298271 /* ConfirmPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPopUpViewController.swift; sourceTree = "<group>"; };
@@ -1441,7 +1441,7 @@
 		BD7FA0F6294892AA00935275 /* myVideo */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0F7294892C200935275 /* video.mov */,
+				04348225297A9135008989E6 /* video.mp4 */,
 			);
 			path = myVideo;
 			sourceTree = "<group>";
@@ -3591,6 +3591,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04348226297A9337008989E6 /* video.mp4 in Resources */,
 				E1A9E7D628C56FD10081FB28 /* ManageFriends.xib in Resources */,
 				E1A9E7C328C56FD10081FB28 /* SearchAndAddCVC.xib in Resources */,
 				4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */,
@@ -3636,7 +3637,6 @@
 				E1A9E7C628C56FD10081FB28 /* ContactTVC.xib in Resources */,
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				E1A9E76E28C55D550081FB28 /* HeatMap.xib in Resources */,
-				BD7FA0F8294892C200935275 /* video.mov in Resources */,
 				E167055A28CA442800644BF0 /* PaymentMethodTVC.xib in Resources */,
 				E11F4BA028C8358C008D2E30 /* EventOptionCVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,

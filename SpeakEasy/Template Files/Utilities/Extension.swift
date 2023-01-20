@@ -54,10 +54,10 @@ extension String {
     }
 }
 
-extension Int {
+extension Double {
     // For reducing value as per scale down value
-    var scaledValue: Int {
-        self / FixValue.scale
+    var scaledValue: Double {
+        self / Double(FixValue.scale)
     }
 }
 

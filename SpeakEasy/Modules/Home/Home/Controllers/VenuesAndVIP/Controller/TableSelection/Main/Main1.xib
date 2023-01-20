@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,6 +19,7 @@
                 <outlet property="floorView" destination="KV8-N3-yOG" id="jPe-MJ-xES"/>
                 <outlet property="floorViewHeight" destination="bkw-Wg-iY4" id="kdg-30-dvP"/>
                 <outlet property="floorViewWidth" destination="E05-ub-YKQ" id="kIw-FG-WlE"/>
+                <outlet property="proceedBtn" destination="vox-hh-G17" id="Ppv-cx-GIm"/>
                 <outlet property="scrollInsideView" destination="sAO-DV-pyF" id="QeS-kG-Wip"/>
                 <outlet property="tableView" destination="yQH-MO-Ief" id="r98-Xh-6Li"/>
                 <outlet property="view" destination="7tH-gm-LwT" id="1sB-9e-q8u"/>
@@ -83,7 +85,7 @@
                                 <outlet property="delegate" destination="-1" id="j4E-2G-HhU"/>
                             </connections>
                         </tableView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vox-hh-G17" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                        <button opaque="NO" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vox-hh-G17" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                             <rect key="frame" x="16" y="756" width="382" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="ql9-e0-Jqh"/>
