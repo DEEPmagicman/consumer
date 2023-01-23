@@ -32,7 +32,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="479"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Nh-sU-USZ" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="20" y="7" width="141.5" height="25.5"/>
+                                <rect key="frame" x="20" y="7" width="145" height="25.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -284,18 +284,25 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZBP-O1-Adj">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YDa-bb-crh">
+                                <rect key="frame" x="0.0" y="264.5" width="414" height="0.5"/>
+                                <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="DIX-JE-A4g"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ZBP-O1-Adj">
                                 <rect key="frame" x="20" y="264.5" width="374" height="108"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L9O-bJ-VCW">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="0.5"/>
-                                        <color key="backgroundColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="0.5" id="tNo-la-oyM"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Notes and Requests" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k0W-oY-cYG" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="10.5" width="227" height="25.5"/>
+                                        <rect key="frame" x="0.0" y="10.5" width="374" height="25.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -307,7 +314,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please have 6 bottles of Dom P Vintage 2012 ready with sparkles." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="POH-M8-6dA" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="46" width="334.5" height="42"/>
+                                        <rect key="frame" x="0.0" y="46" width="374" height="42"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -319,7 +326,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d2g-eT-cJm">
-                                        <rect key="frame" x="0.0" y="98" width="240" height="10"/>
+                                        <rect key="frame" x="0.0" y="98" width="374" height="10"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="10" id="UTq-F9-h72"/>
@@ -342,13 +349,16 @@
                             <constraint firstItem="ZBP-O1-Adj" firstAttribute="top" secondItem="eIc-KU-Cul" secondAttribute="bottom" id="VSg-Rp-BD2"/>
                             <constraint firstItem="h8Y-lw-klw" firstAttribute="top" secondItem="ZBP-O1-Adj" secondAttribute="bottom" id="ZCu-FY-vr4"/>
                             <constraint firstItem="h8Y-lw-klw" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" id="b4K-eP-RpJ"/>
+                            <constraint firstItem="YDa-bb-crh" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" id="bjH-Z7-OWG"/>
                             <constraint firstAttribute="trailing" secondItem="eIc-KU-Cul" secondAttribute="trailing" constant="20" id="c10-ja-Req"/>
                             <constraint firstItem="eIc-KU-Cul" firstAttribute="top" secondItem="7Nh-sU-USZ" secondAttribute="bottom" id="cap-xS-f9g"/>
                             <constraint firstItem="ZBP-O1-Adj" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" constant="20" id="d6v-1j-R3W"/>
                             <constraint firstItem="eIc-KU-Cul" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" constant="20" id="ktr-fX-yx3"/>
                             <constraint firstAttribute="trailing" secondItem="ZBP-O1-Adj" secondAttribute="trailing" constant="20" id="nhc-fP-e2W"/>
+                            <constraint firstItem="YDa-bb-crh" firstAttribute="top" secondItem="ZBP-O1-Adj" secondAttribute="top" id="qxi-Zw-Mxs"/>
                             <constraint firstAttribute="trailing" secondItem="h8Y-lw-klw" secondAttribute="trailing" id="xNX-0V-uow"/>
                             <constraint firstItem="7Nh-sU-USZ" firstAttribute="leading" secondItem="WG6-de-zIZ" secondAttribute="leading" constant="20" id="xob-0p-qUS"/>
+                            <constraint firstAttribute="trailing" secondItem="YDa-bb-crh" secondAttribute="trailing" id="yw7-xe-bOC"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -363,7 +373,9 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="extraSpaceView" destination="d2g-eT-cJm" id="Y7d-jT-SCU"/>
+                <outlet property="extraSpacetop" destination="L9O-bJ-VCW" id="sF7-EA-AcX"/>
                 <outlet property="have6BottelNote" destination="POH-M8-6dA" id="SiJ-e2-K4a"/>
+                <outlet property="middleLineView" destination="YDa-bb-crh" id="so1-lp-MVk"/>
                 <outlet property="userNoteLbl" destination="k0W-oY-cYG" id="qlp-5N-jep"/>
             </connections>
             <point key="canvasLocation" x="66.666666666666671" y="182.47767857142856"/>

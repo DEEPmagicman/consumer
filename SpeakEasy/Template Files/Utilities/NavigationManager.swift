@@ -158,7 +158,7 @@ final class Navigate {
     
     func settingsVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(SettingsViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
+        fullscreenPush(vc: vc)
     }
     
     func notificationVc(_ sender: UIViewController) {
@@ -225,7 +225,7 @@ final class Navigate {
     
     func editProfile(_ sender: UIViewController) {
         let vc = EditProfileVC()
-        sender.navigationController?.pushViewController(vc, animated: true)
+        fullscreenPush(vc: vc)
     }
     
     func bookingInvite(_ sender: UIViewController, booking: BookingsDataSet?, isFromSettings: Bool = false) {
@@ -238,20 +238,23 @@ final class Navigate {
     func VIPBookingInviteNew(_ sender: UIViewController, isFree: Bool) {
         let vc = VipBookingInviteNew()
         vc.itsFree = isFree
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+        fullscreenPush(vc: vc)
     }
     
-    func pendingBookingAwait(_ sender: UIViewController, data: BookingsDataSet?) {
+    func pendingBookingAwait(_ sender: UIViewController, data: BookingsDataSet?, fromBooking: Bool = false) {
         let vc = PendingBookingAwait()
         vc.booking = data
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+        vc.fromBookingInvite = fromBooking
+        fullscreenPush(vc: vc)
     }
     
     func ticketConfirmation(_ sender: UIViewController, data: BookingsDataSet?, isFromSettings: Bool = false) {
+      let data = TopEventDataSet(imgEventCover: UIImage(named: "duttonRanch"), lblPerformerName: "Dutton Ranch", lblVenueName: "Welcome to the Farm",imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 28",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Country Girl", lblSongArtist: "Luke Bryan")
         let vc = TicketConfirmation()
         vc.screenType = .FromBooking
         vc.isFromSettings = isFromSettings
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+        vc.topEventData = data
+        fullscreenPush(vc: vc)
     }
     
     func allEvents(_ sender: UIViewController) {
@@ -262,5 +265,13 @@ final class Navigate {
     func allVenues(_ sender: UIViewController) {
         let vc = AllVenues()
         Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func fullscreenPush(vc: UIViewController) {
+        if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
+            Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

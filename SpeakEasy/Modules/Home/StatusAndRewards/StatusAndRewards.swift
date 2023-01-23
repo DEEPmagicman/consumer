@@ -46,7 +46,7 @@ extension StatusAndRewards: UITableViewDelegate {
         vc.rewardData = arrStatusAndRewardDataSet[indexPath.row]
         vc.isShowEvent = arrStatusAndRewardDataSet[indexPath.row].rewardDescription == "FREE"
         vc.isFree = arrStatusAndRewardDataSet[indexPath.row].rewardDescription == "FREE"
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.navigationController?.pushViewController(vc, animated: true)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

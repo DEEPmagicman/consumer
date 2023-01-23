@@ -51,9 +51,9 @@ extension Bookings: UITableViewDelegate, UITableViewDataSource {
         case 0,2:
             Navigate.to.ticketConfirmation(self, data: data)
         case 1:
-            Navigate.to.pendingBookingAwait(self, data: data)
+            Navigate.to.pendingBookingAwait(self, data: data,fromBooking: true)
         case 3:
-            Navigate.to.pendingBookingAwait(self, data: data)
+            Navigate.to.pendingBookingAwait(self, data: data,fromBooking: true)
         default:
             break
         }

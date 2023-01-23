@@ -69,7 +69,7 @@ class VenueDetails: UIViewController {
         Utility.main.openMap(lat: 41.893600, lng: -87.629820)
     }
     @IBAction func onBtnBookVIPTable(_ sender: UIButtonDeviceClass) {
-        Utility.main.topViewController()?.navigationController?.pushViewController(VIPTableBookingCalendar(), animated: true)
+        Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(VIPTableBookingCalendar(), animated: true)
     }
     @IBAction func onBtnViewBottleMenu(_ sender: UIButtonDeviceClass) {
         self.navigationController?.pushViewController(BottleMenu(), animated: true)

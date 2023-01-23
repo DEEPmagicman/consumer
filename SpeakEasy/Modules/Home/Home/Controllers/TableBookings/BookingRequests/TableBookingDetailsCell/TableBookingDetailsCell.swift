@@ -30,6 +30,7 @@ final class TableBookingDetailsCell: UITableViewCell {
     @IBOutlet weak var customSplitLbl: UILabel!
     @IBOutlet weak var customSplitInfoLbl: UILabel!
     @IBOutlet weak var editFriendListBtn: UIButton!
+    @IBOutlet weak var upYourSpandtextField: UITextFieldDeviceClass!
     
     var arrOthersInvite = [OthersInvites(image: UIImage(named: "user1-others"), name: "You", percentage: "50%", isVerified: false), OthersInvites(image: UIImage(named: "user2-others"), name: "Henry", percentage: "0%", isVerified: true), OthersInvites(image: UIImage(named: "user3-others"), name: "Abby", percentage: "0%", isVerified: true), OthersInvites(image: UIImage(named: "user4-others"), name: "Madison", percentage: "0%", isVerified: false)]
     
@@ -55,7 +56,7 @@ final class TableBookingDetailsCell: UITableViewCell {
             self.editFriendListBtn.isHidden = false
             self.viewInviteFrdCollection.isHidden = false
         }
-
+        self.upYourSpandtextField.delegate = self
         self.inviteFrdCollectionView.delegate = self
         self.inviteFrdCollectionView.dataSource = self
         self.inviteFrdCollectionView.register(UINib(nibName: "OthersCVC", bundle: nil), forCellWithReuseIdentifier: "OthersCVC")
@@ -133,4 +134,21 @@ extension TableBookingDetailsCell: UICollectionViewDelegateFlowLayout {
         let cellSize: CGSize = CGSize(width: 66, height: 100)
         return cellSize
     }
+}
+
+extension TableBookingDetailsCell: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.tag == 11 {
+          let allowedCharacterSet = CharacterSet.init(charactersIn: "0123456789")
+          let inputText = (textField.text ?? "").replacingOccurrences(of: "$", with: "").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: ".", with: "")
+          if !Validation.shared.validateDouble(inputText+string){
+            return false
+          }
+          let textCharacterSet = CharacterSet.init(charactersIn: inputText + string)
+          if !allowedCharacterSet.isSuperset(of: textCharacterSet) {
+            return false
+          }
+        }
+        return true
+      }
 }

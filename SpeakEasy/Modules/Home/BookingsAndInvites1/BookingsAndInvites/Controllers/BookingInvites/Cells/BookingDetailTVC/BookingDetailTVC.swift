@@ -12,6 +12,9 @@ class BookingDetailTVC: UITableViewCell {
     @IBOutlet weak var userNoteLbl: UILabelDeviceClass!
     @IBOutlet weak var have6BottelNote: UILabelDeviceClass!
     @IBOutlet weak var extraSpaceView: UIView!
+    @IBOutlet weak var middleLineView: UIView!
+    @IBOutlet weak var extraSpacetop: UIView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -25,6 +28,8 @@ class BookingDetailTVC: UITableViewCell {
         self.userNoteLbl.isHidden = true
         self.have6BottelNote.isHidden = true
         self.extraSpaceView.isHidden = true
+        self.middleLineView.isHidden = true
+        self.extraSpacetop.isHidden = true
     }
     
 }

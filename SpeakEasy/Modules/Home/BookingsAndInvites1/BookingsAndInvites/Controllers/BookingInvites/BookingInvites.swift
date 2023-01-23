@@ -24,6 +24,7 @@ class BookingInvites: UIViewController {
     
     var booking: BookingsDataSet?
     var isFromSettings = false
+    var fromBookingAndInvite = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,8 +109,13 @@ extension BookingInvites {
             self.viewBookingRequestSent.isHidden = true
 
             self.statusLbl.text = "Booking Status: Awaiting Venue Approval"
-            self.btnBack.isHidden = true
-            self.btnCross.isHidden = false
+            if fromBookingAndInvite {
+                self.btnBack.isHidden = false
+                self.btnCross.isHidden = true
+            } else {
+                self.btnBack.isHidden = true
+                self.btnCross.isHidden = false
+            }
 
         case .SubmitRequest:
              self.lblTitle.text = "Submit Request"
@@ -126,8 +132,18 @@ extension BookingInvites {
             self.viewPendingPayment.isHidden = false
             self.viewBookingRequestSent.isHidden = true
             
-            self.btnBack.isHidden = true
-            self.btnCross.isHidden = false
+            if fromBookingAndInvite {
+                self.btnBack.isHidden = false
+                self.btnCross.isHidden = true
+            } else if isFromSettings {
+                btnBack.isHidden = false
+                btnCross.isHidden = true
+                btnBack.setImage(UIImage(named: "ic-close"), for: .normal)
+                topTitleLbl.text = "Visit Details"
+            } else {
+                self.btnBack.isHidden = true
+                self.btnCross.isHidden = false
+            }
 
         }
         

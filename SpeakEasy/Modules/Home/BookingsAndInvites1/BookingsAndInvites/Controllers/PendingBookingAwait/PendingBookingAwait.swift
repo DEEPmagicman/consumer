@@ -24,6 +24,7 @@ class PendingBookingAwait: BaseController {
     var pageMenuControllers = [UIViewController]()
     var booking: BookingsDataSet?
     var isFromSettings = false
+    var fromBookingInvite = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,6 +67,7 @@ extension PendingBookingAwait {
             let con = BookingInvites()
             con.booking = booking
             con.isFromSettings = self.isFromSettings
+            con.fromBookingAndInvite = self.fromBookingInvite
             let bookingDetails = self.getNavigationContainer(controller: con)
 //            let bookingDetails = self.getNavigationContainer(controller: BookingDetails())
             let messages = self.getNavigationContainer(controller: Messages())

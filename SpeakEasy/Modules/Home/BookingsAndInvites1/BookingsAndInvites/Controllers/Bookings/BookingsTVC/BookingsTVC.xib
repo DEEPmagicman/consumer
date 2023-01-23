@@ -80,10 +80,10 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uMO-be-3mf">
-                                <rect key="frame" x="16" y="70.333333333333329" width="156.33333333333334" height="70.999999999999986"/>
+                                <rect key="frame" x="16" y="70.333333333333329" width="156.66666666666666" height="70.999999999999986"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="VOr-fU-nrg">
-                                        <rect key="frame" x="0.0" y="0.0" width="156.33333333333334" height="21"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="156.66666666666666" height="21"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-mic" translatesAutoresizingMaskIntoConstraints="NO" id="1al-HT-h62">
                                                 <rect key="frame" x="0.0" y="4.6666666666666714" width="17" height="12"/>
@@ -92,7 +92,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steve Aoki" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZWW-n9-UyY" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="21" y="0.0" width="135.33333333333334" height="21"/>
+                                                <rect key="frame" x="21" y="0.0" width="135.66666666666666" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -106,7 +106,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="z7Z-eq-aUQ">
-                                        <rect key="frame" x="0.0" y="23" width="156.33333333333334" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="23" width="156.66666666666666" height="0.0"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-table" translatesAutoresizingMaskIntoConstraints="NO" id="Y05-BA-X6v">
                                                 <rect key="frame" x="0.0" y="0.0" width="17" height="0.0"/>
@@ -115,7 +115,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VIP Table" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nND-An-LoB" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="21" y="0.0" width="135.33333333333334" height="0.0"/>
+                                                <rect key="frame" x="21" y="0.0" width="135.66666666666666" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -129,7 +129,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="W65-Sm-GFz">
-                                        <rect key="frame" x="0.0" y="23" width="156.33333333333334" height="23"/>
+                                        <rect key="frame" x="0.0" y="23" width="156.66666666666666" height="23"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-user" translatesAutoresizingMaskIntoConstraints="NO" id="VRn-Qp-VVa">
                                                 <rect key="frame" x="0.0" y="0.0" width="17" height="23"/>
@@ -164,7 +164,7 @@
                                                 </subviews>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+3 Others" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Lb-NG-JaA" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="94" y="0.0" width="62.333333333333343" height="23"/>
+                                                <rect key="frame" x="94" y="0.0" width="62.666666666666657" height="23"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -178,7 +178,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yLZ-Jr-ME8">
-                                        <rect key="frame" x="0.0" y="25" width="156.33333333333334" height="21"/>
+                                        <rect key="frame" x="0.0" y="25" width="156.66666666666666" height="21"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-ticket" translatesAutoresizingMaskIntoConstraints="NO" id="guV-9R-i1E">
                                                 <rect key="frame" x="0.0" y="4" width="17" height="13"/>
@@ -187,7 +187,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GA + Skip Line" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AJ8-sa-4nR" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="21" y="0.0" width="135.33333333333334" height="21"/>
+                                                <rect key="frame" x="21" y="0.0" width="135.66666666666666" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -201,7 +201,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="1TW-OM-9jJ">
-                                        <rect key="frame" x="0.0" y="50.000000000000014" width="156.33333333333334" height="21"/>
+                                        <rect key="frame" x="0.0" y="50.000000000000014" width="156.66666666666666" height="21"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-calendar" translatesAutoresizingMaskIntoConstraints="NO" id="VPy-o6-GXb">
                                                 <rect key="frame" x="0.0" y="2" width="17" height="17"/>
@@ -210,7 +210,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thursday, June 30" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mXV-BM-QSU" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="21" y="0.0" width="135.33333333333334" height="21"/>
+                                                <rect key="frame" x="21" y="0.0" width="135.66666666666666" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -316,6 +316,7 @@
                 <outlet property="imgArtist" destination="2PM-0M-ndg" id="nRg-aV-wYK"/>
                 <outlet property="imgBrand" destination="CJ5-79-R7M" id="J9W-0v-XCu"/>
                 <outlet property="lblBookingName" destination="G5E-tP-YRy" id="S3f-DH-jFp"/>
+                <outlet property="lblCount" destination="ejE-GL-WGB" id="4SZ-3W-iR3"/>
                 <outlet property="lblDate" destination="mXV-BM-QSU" id="9Og-tQ-nCD"/>
                 <outlet property="lblStatus" destination="jk4-yO-m7Y" id="StH-G9-53i"/>
                 <outlet property="statusView" destination="Flp-Ih-Dij" id="xEe-2G-53n"/>
