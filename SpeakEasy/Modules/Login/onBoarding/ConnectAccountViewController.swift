@@ -71,6 +71,7 @@ final class ConnectAccountViewController: UIViewController {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
+        request.nonce = UUID().uuidString
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.performRequests()
@@ -88,7 +89,7 @@ extension ConnectAccountViewController: ASAuthorizationControllerDelegate{
             do {
                let jwt = try decode(jwt: identityTokenString)
                let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString) { isSuccess,errorMsg  in
+                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { isSuccess,errorMsg  in
                     if isSuccess {
                         Navigate.to.dateOfBirthVc(self)
                     } else {

@@ -37,7 +37,7 @@ final class DateOfBirthViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string(format: .MMMMDDYYYY))"
+        let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string())"
         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmBirthDate, text2: birthdate, text3: Constant.String.over21Info)
     }
     

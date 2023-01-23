@@ -9,9 +9,15 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
+    @IBOutlet weak var logoutBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if UserDefault.shared.isGuest == true {
+            logoutBtn.setAttributedTitle(NSAttributedString(string: "Log In", attributes: [
+                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue
+                ]), for: .normal)
+        }
     }
     
     @IBAction func onClickCancel(_ sender: Any) {
@@ -59,6 +65,7 @@ class SettingsViewController: UIViewController {
     
     @IBAction func onClickLogOut(_ sender: Any) {
         UserDefault.shared.isLoggedIn = false
+        UserDefault.shared.isGuest = false
         AppDelegate.shared.changeRootViewController()
     }
 }

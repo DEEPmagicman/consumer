@@ -39,14 +39,17 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
+        UserDefault.shared.isGuest = false
         Navigate.to.enterPhoneNumVc(self)
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
+        UserDefault.shared.isGuest = false
         Navigate.to.signInOptionVc(self)
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {
+        UserDefault.shared.isGuest = true
         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirm21YearText, text2: "", text3: Constant.String.over21Info, isFromLoginasGuest: true)
     }
 }
