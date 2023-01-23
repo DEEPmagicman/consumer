@@ -329,9 +329,13 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
-        
-        let param = ["email": email, "socialType": socialType, "socialId":socialId]
+    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+     
+        var param = ["email": email, "socialType": socialType, "socialId":socialId]
+        if socialType == SocialType.apple.rawValue {
+            param["nonce"] = nonce
+        }
+
         Loader.show()
         AFWrapper.patchRequest(APIBuilder.socialMediaConnectURL, params: param, headers: Header.header()) { (response) in
             
@@ -352,9 +356,13 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaLoginAPi(email: String,socialType: String, socialId: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+    func socialMediaLoginAPi(email: String,socialType: String, socialId: String, nonce: String? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         
-        let param = ["email": email, "socialType": socialType, "socialId":socialId]
+        var param = ["email": email, "socialType": socialType, "socialId":socialId]
+        if socialType == SocialType.apple.rawValue {
+            param["nonce"] = nonce
+        }
+        
         Loader.show()
         AFWrapper.postRequest(APIBuilder.socialLoginURL, params: param, headers: Header.header()) { (response) in
             
