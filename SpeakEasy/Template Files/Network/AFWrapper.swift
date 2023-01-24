@@ -37,6 +37,8 @@ final class AFWrapper: NSObject {
             if let responseCode = responseObject.response?.statusCode {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
+                } else if responseCode == 401 {
+                    forceLogout()
                 } else if responseObject.result.value != nil {
                     let errorResponse = errorHandling(responseObject.result.value)
                     failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -66,6 +68,8 @@ final class AFWrapper: NSObject {
             if let responseCode = responseObject.response?.statusCode {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
+                } else if responseCode == 401 {
+                    forceLogout()
                 } else if responseObject.result.value != nil {
                     let errorResponse = errorHandling(responseObject.result.value)
                     failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -106,6 +110,8 @@ final class AFWrapper: NSObject {
                             success(response.result.value)
                         } else if responseCode == 201 {
                             success(response.result.value)
+                        } else if responseCode == 401 {
+                            forceLogout()
                         } else {
                             failure(response.result.error)
                         }
@@ -135,6 +141,8 @@ final class AFWrapper: NSObject {
             if let responseCode = responseObject.response?.statusCode {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
+                } else if responseCode == 401 {
+                    forceLogout()
                 } else if responseObject.result.value != nil {
                     let errorResponse = errorHandling(responseObject.result.value)
                     failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -159,6 +167,14 @@ final class AFWrapper: NSObject {
             return (false, "")
         } else {
             return (false, "")
+        }
+    }
+    
+    static func forceLogout() {
+        CustomLoader.sharedInstance.stopAnimation()
+        Utility.main.showAlert(message: Constant.String.sessionTimeOut, title: "") {
+            UserDefault.shared.emptyData()
+            AppDelegate.shared.changeRootViewController()
         }
     }
 }

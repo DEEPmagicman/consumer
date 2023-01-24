@@ -64,8 +64,7 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickLogOut(_ sender: Any) {
-        UserDefault.shared.isLoggedIn = false
-        UserDefault.shared.isGuest = false
+        UserDefault.shared.emptyData()
         AppDelegate.shared.changeRootViewController()
     }
 }

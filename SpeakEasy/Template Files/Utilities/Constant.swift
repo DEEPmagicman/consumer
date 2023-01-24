@@ -48,6 +48,7 @@ struct Constant {
         static let internetNotConnect = "internet not connect"
         static let somethingWrong = "Something Went Wrong"
         static let max5FrdString = "you Can Invite Max 5 Friend"
+        static let sessionTimeOut = "Your current session is expire, \n Please login again."
     }
     
     struct Font {

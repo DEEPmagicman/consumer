@@ -43,6 +43,7 @@ class Main1: UIViewController {
     
     var from = ""
     var arrTables = [TableAttributes]()
+    var scrollViewZoomScale = 1.0
     
     var mainTable = [TableAttributes(tableNumber: "1",  tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX: 129,topY: 226,size:"small",shape:"square"),
                      TableAttributes(tableNumber: "2", tableStatus: .none,      tableCapacity: 2, isSelected: false, timeSlot: "10PM - 12AM", minimumSpend: "$1200",leftX:195,topY: 226,size:"small",shape:"square"),
@@ -229,8 +230,15 @@ extension Main1: UITableViewDelegate {
             }
             self.arrTables[indexPath.row].isSelected = true
             upDateView(index: indexPath.row)
+            floorScrollView.zoomScale = scrollViewZoomScale
+            if scrollViewZoomScale >= 0.70 {
+                self.floorScrollView.setContentOffset(CGPoint(x: Int(Double(arrTables[indexPath.row].leftX - 20)*scrollViewZoomScale), y: Int(Double(arrTables[indexPath.row].topY - 20)*scrollViewZoomScale)), animated: true)
+            } else {
+                floorScrollView.zoom(to: CGRect(x: 0, y: 0, width: CGFloat(875.scaledValue), height: 269), animated: false)
+            }
             
-            self.floorScrollView.setContentOffset(CGPoint(x: arrTables[indexPath.row].leftX - Int(floorScrollView.bounds.width)/2, y: arrTables[indexPath.row].topY - Int(floorScrollView.bounds.height)/2), animated: true)
+            proceedBtn.isUserInteractionEnabled = true
+            proceedBtn.alpha = 1
             
             DispatchQueue.main.async {
                 tableView.reloadData()
@@ -251,5 +259,8 @@ extension Main1: UITableViewDelegate {
 extension Main1: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return scrollInsideView
+    }
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        scrollViewZoomScale = scale
     }
 }
