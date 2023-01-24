@@ -73,4 +73,11 @@ final class UserDefault: NSObject {
         user?.instaNextPageURL = nil
         user?.instaUserName = nil
     }
+    
+    func emptyData() {
+        accessToken = nil
+        user = nil
+        isLoggedIn = false
+        isGuest = false
+    }
 }
