@@ -9,7 +9,7 @@ import Foundation
 
 struct Venue: Codable {
 
-    var logo: Logo
+    var logo: Logo?
     var venueAttachment: [VenueAttachment]
     var venueHours: [VenueHours]
     var id: String

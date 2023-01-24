@@ -43,8 +43,8 @@
                                             <constraint firstAttribute="height" constant="145" id="NaF-Ba-aPL"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Explore. Book. Go." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSL-2D-GgR">
-                                        <rect key="frame" x="99" y="192" width="216.5" height="34"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSL-2D-GgR">
+                                        <rect key="frame" x="88" y="192" width="238.5" height="34"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="24"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -162,7 +162,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="m9j-54-p7e" firstAttribute="leading" secondItem="oxS-Ze-3w5" secondAttribute="leading" constant="20" id="3cL-bD-w0u"/>
-                                    <constraint firstItem="UV2-fH-BFq" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lSL-2D-GgR" secondAttribute="bottom" constant="15" id="6Ef-K8-2dT"/>
+                                    <constraint firstItem="UV2-fH-BFq" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lSL-2D-GgR" secondAttribute="bottom" constant="5" id="6Ef-K8-2dT"/>
                                     <constraint firstAttribute="trailing" secondItem="Zie-20-pap" secondAttribute="trailing" constant="20" id="8wM-cG-tl1"/>
                                     <constraint firstItem="IIY-8o-JY1" firstAttribute="top" secondItem="oxS-Ze-3w5" secondAttribute="top" constant="72" id="93j-wg-Pno"/>
                                     <constraint firstAttribute="trailing" secondItem="19s-p8-giF" secondAttribute="trailing" constant="20" id="DmU-GM-uWC"/>
@@ -269,10 +269,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="MFt-sX-hm4">
-                                                <rect key="frame" x="12" y="30.5" width="136" height="21"/>
+                                                <rect key="frame" x="12" y="30.5" width="132.5" height="21"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unites States" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WO5-gs-tP4" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="97" height="21"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="97.5" height="21"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -284,7 +284,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(+1)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4wz-UH-aca" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="103" y="0.0" width="33" height="21"/>
+                                                        <rect key="frame" x="103.5" y="0.0" width="29" height="21"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -515,7 +515,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nza-ty-6LU">
-                                        <rect key="frame" x="20" y="52" width="213.5" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="207.5" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="kuP-Qg-q3p"/>
                                         </constraints>
@@ -846,7 +846,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XmY-EY-y63">
-                                        <rect key="frame" x="20" y="52" width="203" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="200" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="yUV-Qi-tdw"/>
                                         </constraints>

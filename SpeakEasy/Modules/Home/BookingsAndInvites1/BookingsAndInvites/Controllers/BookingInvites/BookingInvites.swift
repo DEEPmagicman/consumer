@@ -18,6 +18,9 @@ class BookingInvites: UIViewController {
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var topTitleLbl: UILabelDeviceClass!
     @IBOutlet weak var statusLbl: UILabelDeviceClass!
+    @IBOutlet weak var statuslblSteckview: UIStackView!
+    @IBOutlet weak var titleView: UIView!
+    @IBOutlet weak var fadeView: UIView!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 414.0
@@ -40,6 +43,9 @@ class BookingInvites: UIViewController {
             viewPendingPayment.isHidden = isFromSettings
             backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
             topTitleLbl.text = "Visit Details"
+            titleView.isHidden = false
+            fadeView.isHidden = false
+            statuslblSteckview.isHidden = false
 //        } else {
 //            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
 //            topTitleLbl.text = "Pending Booking"
@@ -96,7 +102,9 @@ extension BookingInvites {
             
             self.viewPendingPayment.isHidden = false
             self.viewBookingRequestSent.isHidden = true
-
+            titleView.isHidden = false
+            fadeView.isHidden = false
+            statuslblSteckview.isHidden = false
             
              self.btnBack.isHidden = false
              self.btnCross.isHidden = true
@@ -116,6 +124,9 @@ extension BookingInvites {
                 self.btnBack.isHidden = true
                 self.btnCross.isHidden = false
             }
+            titleView.isHidden = true
+            fadeView.isHidden = true
+            statuslblSteckview.isHidden = true
 
         case .SubmitRequest:
              self.lblTitle.text = "Submit Request"
@@ -125,13 +136,18 @@ extension BookingInvites {
 
             self.btnBack.isHidden = false
             self.btnCross.isHidden = true
+            titleView.isHidden = false
+            fadeView.isHidden = false
+            statuslblSteckview.isHidden = false
         case .BookingConfirmation:
 //            self.lblTitle.text = "Confirmation"
             self.lblTitle.text = "Pending Booking"
             
             self.viewPendingPayment.isHidden = false
             self.viewBookingRequestSent.isHidden = true
-            
+            titleView.isHidden = false
+            fadeView.isHidden = false
+            statuslblSteckview.isHidden = false
             if fromBookingAndInvite {
                 self.btnBack.isHidden = false
                 self.btnCross.isHidden = true

@@ -26,6 +26,9 @@ class Events: BaseController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let eventDelegate = EventPresenter()
+    var eventList = [Event]()
+    
     var arrayHeaders = [HeaderOption(label: Strings.TOP_EVENTS.text, icon: UIImage(named: "EventsTabSelected")),
                         HeaderOption(label: Strings.FEATURED_EVENTS.text, icon: nil),
                         HeaderOption(label: Strings.UPCOMING.text, icon: nil),
@@ -35,6 +38,18 @@ class Events: BaseController {
         super.viewDidLoad()
         self.setUI()
         // Do any additional setup after loading the view.
+        self.eventDelegate.getEvents { isSuccess, errMsg, eventList in
+            if isSuccess {
+                print(eventList)
+                self.eventList = eventList
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
     }
 }
 extension Events {

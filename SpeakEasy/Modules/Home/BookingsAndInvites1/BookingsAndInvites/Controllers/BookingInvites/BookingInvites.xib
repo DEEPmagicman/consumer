@@ -25,9 +25,12 @@
                 <outlet property="backBtn" destination="jef-t7-OXF" id="auh-N9-F2P"/>
                 <outlet property="btnBack" destination="jef-t7-OXF" id="yu1-FF-qDG"/>
                 <outlet property="btnCross" destination="0Oh-Oh-UoB" id="Qnq-AO-7HJ"/>
+                <outlet property="fadeView" destination="Ytr-eE-q7f" id="gP6-C9-aAO"/>
                 <outlet property="lblTitle" destination="mai-aN-bH1" id="Vcl-bA-1uv"/>
                 <outlet property="statusLbl" destination="DTg-aO-vKH" id="52L-vb-Ae6"/>
+                <outlet property="statuslblSteckview" destination="z5C-EQ-D4H" id="fGy-gg-dVy"/>
                 <outlet property="tableView" destination="jOk-Md-eOO" id="gRf-6L-ELz"/>
+                <outlet property="titleView" destination="uJn-YN-WAy" id="diP-Zo-cCg"/>
                 <outlet property="topTitleLbl" destination="mai-aN-bH1" id="JpA-BN-w1c"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewBookingRequestSent" destination="LKr-YA-dzZ" id="ubk-QT-qQB"/>

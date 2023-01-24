@@ -28,10 +28,25 @@ class VenuesAndVIP: BaseController {
     @IBOutlet weak var tableView: UITableView!
     
     var arrayHeaders = [HeaderOption(label: Strings.HOT_VENUES.text, icon: UIImage(named: "EventsTabSelected"))]
+    var venueDelegate = VenuePresenter()
+    var venueList = [Venue]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        
+        self.venueDelegate.getVenues { isSuccess, errMsg, venueList in
+            if isSuccess {
+                print(venueList)
+                self.venueList = venueList
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
     }
 }
 extension VenuesAndVIP {

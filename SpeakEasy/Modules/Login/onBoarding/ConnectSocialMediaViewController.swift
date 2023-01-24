@@ -26,6 +26,7 @@ final class ConnectSocialMediaViewController: UIViewController {
     @IBOutlet weak var instagramPrivetLine: UIView!
     @IBOutlet weak var instagramPublicLbl: UILabelDeviceClass!
     @IBOutlet weak var instagramPublicLine: UIView!
+    @IBOutlet weak var skipBtn: UIButton!
     
     var spotifyConnect = false
     
@@ -53,16 +54,15 @@ final class ConnectSocialMediaViewController: UIViewController {
         let tap3 = UITapGestureRecognizer(target: self, action: #selector(onClickInstagramPublic))
         self.instagramPublicView.addGestureRecognizer(tap3)
 
+        self.skipBtn.isHidden = false
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        UserDefault.shared.isLoggedIn = true
-        AppDelegate.shared.changeRootViewController()
+        Navigate.to.tutorialVc(self)
     }
     
     @IBAction func onClickGetStarted(_ sender: Any) {
-        UserDefault.shared.isLoggedIn = true
-        AppDelegate.shared.changeRootViewController()
+        Navigate.to.tutorialVc(self)
     }
     
     @IBAction func onClickConnectWithSpotify(_ sender: Any) {
@@ -137,6 +137,7 @@ extension ConnectSocialMediaViewController: ConfirmPopUpDelegate {
             self.instagramConnected()
             self.onClickInstagramPrivet()
         }
+        self.skipBtn.isHidden = true
     }
     
     func confirmDetail() {
@@ -147,6 +148,7 @@ extension ConnectSocialMediaViewController: ConfirmPopUpDelegate {
             self.instagramConnected()
             self.onClickInstagramPublic()
         }
+        self.skipBtn.isHidden = true
     }
 }
 

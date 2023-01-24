@@ -8,7 +8,7 @@
 import Foundation
 
 final class VenuePresenter {
-    static func getVenues(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [Venue]) -> Void) {
+     func getVenues(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [Venue]) -> Void) {
 
         AFWrapper.getRequest(APIBuilder.venueURL, headers: Header.header()) { (response) in
             

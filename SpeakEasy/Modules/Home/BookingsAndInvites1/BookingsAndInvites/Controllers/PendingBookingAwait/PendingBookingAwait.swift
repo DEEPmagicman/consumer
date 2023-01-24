@@ -15,6 +15,9 @@ class PendingBookingAwait: BaseController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var viewPageTop: NSLayoutConstraint!
     @IBOutlet weak var viewCollectionAndLine: UIView!
+    @IBOutlet weak var topBgColorView: UIView!
+    @IBOutlet weak var pendingBookingLbl: UILabelDeviceClass!
+    @IBOutlet weak var statusLbl: UILabelDeviceClass!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.BOOKING_DETAILS.text, index: 0, icon: UIImage(named: ""), selectedIcon: UIImage(named: ""), isSelected: true),
                             TabBarOption(label: Strings.MESSAGES.text, index: 1, icon: UIImage(named: ""), selectedIcon: UIImage(named: ""), isSelected: false)]
@@ -45,15 +48,20 @@ extension PendingBookingAwait {
     private func setUI(){
         self.registerCells()
         
-        self.pendingBookingStatusView.isHidden = true
-        self.headerView.isHidden = true
+        
         
         guard let status = self.booking?.status else { return }
         switch status {
         case .PurchaseConfirmed, .AwaitingApproval, .TicketPurchasedConfirmed, .SubmitRequest, .BookingConfirmation:
             self.viewCollectionAndLine.isHidden = true
+            self.pendingBookingStatusView.isHidden = true
+            self.headerView.isHidden = true
+            self.topBgColorView.isHidden = true
         case .AwaitingVenueApproval:
             self.viewCollectionAndLine.isHidden = false
+            self.pendingBookingStatusView.isHidden = false
+            self.headerView.isHidden = false
+            self.topBgColorView.isHidden = false
         }
                 
     }
@@ -133,12 +141,12 @@ extension PendingBookingAwait: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             self.viewPageTop.constant = 0
-            self.pendingBookingStatusView.isHidden = true
-            self.headerView.isHidden = true
+            self.pendingBookingLbl.textColor = UIColor(hex: "#F581FE")
+            self.statusLbl.textColor = UIColor(hex: "#F581FE")
         } else {
             self.viewPageTop.constant = 185
-            self.pendingBookingStatusView.isHidden = false
-            self.headerView.isHidden = false
+            self.pendingBookingLbl.textColor = UIColor(hex: "#FFFFFF")
+            self.statusLbl.textColor = UIColor(hex: "#C8C8C8")
         }
         if self.selectedIndex != indexPath.item {
             for index in 0..<self.arrTabBarOptions.count {

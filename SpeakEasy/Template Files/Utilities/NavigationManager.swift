@@ -267,6 +267,11 @@ final class Navigate {
         Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func tutorialVc(_ sender: UIViewController) {
+        let vc = Tutorials()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullscreenPush(vc: UIViewController) {
         if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)

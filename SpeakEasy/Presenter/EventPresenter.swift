@@ -8,7 +8,7 @@
 import Foundation
 
 final class EventPresenter {
-    static func getEvents(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
+     func getEvents(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
 
         AFWrapper.getRequest(APIBuilder.eventURL, headers: Header.header()) { (response) in
             
@@ -21,7 +21,7 @@ final class EventPresenter {
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
                 let eventList = try decoder.decode([Event].self, from: data)
                 completion(true, nil, eventList)
-            } catch {
+            } catch let error {
                 completion(false, "internal error", [])
             }
 

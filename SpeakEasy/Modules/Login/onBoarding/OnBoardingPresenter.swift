@@ -213,22 +213,22 @@ final class OnBoardingPresenter {
     
     func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg:String?) -> Void) {
         var param: [String: Any] = [:]
-        if let fName = fName {
+        if let fName = fName, fName != "" {
             param["firstName"] = fName
         }
-        if let lname = lName {
+        if let lname = lName, lname != "" {
             param["lastName"] = lname
         }
-        if let nickName = nickName {
+        if let nickName = nickName, nickName != "" {
             param["nickName"] = nickName
         }
-        if let email = email {
+        if let email = email, email != "" {
             param["email"] = email
         }
-        if let password = password {
+        if let password = password, password != "" {
             param["password"] = password
         }
-        if let dob = dob {
+        if let dob = dob, dob != "" {
             param["dob"] = dob
         }
         if let gender = gender {
