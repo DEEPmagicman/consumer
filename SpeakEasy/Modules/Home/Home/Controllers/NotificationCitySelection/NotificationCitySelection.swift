@@ -13,6 +13,7 @@ class NotificationCitySelection: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerCell()
+        tableViewReward.setupPadding()
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -50,7 +51,5 @@ extension NotificationCitySelection: UITableViewDelegate {
         return header
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 32
-    }
+    
 }

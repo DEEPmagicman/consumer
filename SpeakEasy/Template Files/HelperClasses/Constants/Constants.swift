@@ -79,6 +79,7 @@ struct Constants {
     // Global Array
     // Set Cleveland by default
     static var localizedCity = "Cleveland"
+    static var localizedMap = "Miami, FL"
     
    // Events Array Chicago
    static var arrayTopEventsChicago = [

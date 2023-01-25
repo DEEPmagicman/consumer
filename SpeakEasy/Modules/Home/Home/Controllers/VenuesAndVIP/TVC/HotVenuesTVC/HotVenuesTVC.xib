@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="mfJ-Db-wZD">
-                        <rect key="frame" x="12" y="0.0" width="308" height="155"/>
+                        <rect key="frame" x="12" y="0.0" width="308" height="157"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GpN-Qt-DQX">
                             <size key="itemSize" width="128" height="128"/>
@@ -27,7 +28,7 @@
                         </collectionViewFlowLayout>
                     </collectionView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qPo-ix-ild">
-                        <rect key="frame" x="12" y="175" width="296" height="1"/>
+                        <rect key="frame" x="12" y="187" width="296" height="1"/>
                         <color key="backgroundColor" red="0.19999992850000001" green="0.1999999881" blue="0.1999999881" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="wUA-tm-56N"/>
@@ -35,13 +36,13 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="qPo-ix-ild" secondAttribute="bottom" constant="12" id="3IC-QP-zZF"/>
+                    <constraint firstAttribute="bottom" secondItem="qPo-ix-ild" secondAttribute="bottom" id="3IC-QP-zZF"/>
                     <constraint firstItem="mfJ-Db-wZD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="4nC-88-q14"/>
                     <constraint firstItem="qPo-ix-ild" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="T85-oH-S8K"/>
                     <constraint firstAttribute="trailing" secondItem="qPo-ix-ild" secondAttribute="trailing" constant="12" id="Uk0-jr-j79"/>
                     <constraint firstItem="mfJ-Db-wZD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="Wz0-cz-1Fm"/>
                     <constraint firstAttribute="trailing" secondItem="mfJ-Db-wZD" secondAttribute="trailing" id="jFf-VE-1Bu"/>
-                    <constraint firstItem="qPo-ix-ild" firstAttribute="top" secondItem="mfJ-Db-wZD" secondAttribute="bottom" constant="20" id="vHG-VQ-J4D"/>
+                    <constraint firstItem="qPo-ix-ild" firstAttribute="top" secondItem="mfJ-Db-wZD" secondAttribute="bottom" constant="30" id="vHG-VQ-J4D"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

@@ -362,7 +362,7 @@ enum Strings: String{
     
     case FEATURED = "Featured"
     case CITY_VIEWS = "City Views"
-    case ROOFTOP = "Roof Tops"
+    case ROOFTOP = "Rooftop"
     case WATERFRONT = "Waterfront"
     case STEAKHOUSE = "Steakhouse"
     
@@ -387,7 +387,7 @@ enum Strings: String{
     case MESSAGES = "Messages"
     
     case TICKETS = "Tickets"
-    case VIP_TABLE_BOOKING = "VIP Tables"
+    case VIP_TABLE_BOOKING = "VIP Table Booking"
     case PUBLIK_ATTENDEES = "Public Attendees"
     case PREFERENCES = "Preferences"
     case MEMBERSGIP_NFT = "Memberships & NFT"

@@ -25,22 +25,20 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVN-hF-1CZ">
                         <rect key="frame" x="0.0" y="0.0" width="618" height="60"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="p4J-su-aUQ">
-                                <rect key="frame" x="20" y="22.5" width="15" height="15"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LocationPin" translatesAutoresizingMaskIntoConstraints="NO" id="p4J-su-aUQ">
+                                <rect key="frame" x="14" y="17" width="19" height="26"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="p4J-su-aUQ" secondAttribute="height" multiplier="1:1" id="Igw-kN-Qs3"/>
+                                    <constraint firstAttribute="height" constant="26" id="ADW-YN-gDA"/>
+                                    <constraint firstAttribute="width" constant="19" id="kd9-ti-qig"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York, NY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cv7-9h-vOk" customClass="UILabelDeviceClass">
-                                <rect key="frame" x="45" y="19" width="105" height="22.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York, NY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cv7-9h-vOk" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                <rect key="frame" x="37" y="19" width="105" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                        <real key="value" value="16"/>
-                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isShadowed" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="New York, NY 1" translatesAutoresizingMaskIntoConstraints="NO" id="fgz-qd-0Zq">
@@ -53,10 +51,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="fgz-qd-0Zq" secondAttribute="trailing" constant="12" id="2v8-Tk-9gU"/>
-                            <constraint firstItem="p4J-su-aUQ" firstAttribute="height" secondItem="HVN-hF-1CZ" secondAttribute="height" multiplier="0.25" id="32a-pA-cgA"/>
-                            <constraint firstItem="p4J-su-aUQ" firstAttribute="leading" secondItem="HVN-hF-1CZ" secondAttribute="leading" constant="20" id="3mu-lg-js9"/>
+                            <constraint firstItem="p4J-su-aUQ" firstAttribute="leading" secondItem="HVN-hF-1CZ" secondAttribute="leading" constant="14" id="3mu-lg-js9"/>
                             <constraint firstItem="fgz-qd-0Zq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cv7-9h-vOk" secondAttribute="trailing" constant="12" id="6t4-Bm-25l"/>
-                            <constraint firstItem="cv7-9h-vOk" firstAttribute="leading" secondItem="p4J-su-aUQ" secondAttribute="trailing" constant="10" id="IQK-IE-P3Q"/>
+                            <constraint firstAttribute="height" constant="60" id="D0P-pl-p3m"/>
+                            <constraint firstItem="cv7-9h-vOk" firstAttribute="leading" secondItem="p4J-su-aUQ" secondAttribute="trailing" constant="4" id="IQK-IE-P3Q"/>
                             <constraint firstAttribute="bottom" secondItem="fgz-qd-0Zq" secondAttribute="bottom" constant="12" id="Iza-bE-t0N"/>
                             <constraint firstItem="cv7-9h-vOk" firstAttribute="centerY" secondItem="HVN-hF-1CZ" secondAttribute="centerY" id="YX3-Wk-yEo"/>
                             <constraint firstItem="p4J-su-aUQ" firstAttribute="centerY" secondItem="HVN-hF-1CZ" secondAttribute="centerY" id="mrQ-hA-GQr"/>
@@ -80,8 +78,8 @@
                     <constraint firstItem="HVN-hF-1CZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="zj4-m1-dbg"/>
                 </constraints>
                 <userDefinedRuntimeAttributes>
-                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                        <real key="value" value="1"/>
+                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </userDefinedRuntimeAttribute>
                 </userDefinedRuntimeAttributes>
             </tableViewCellContentView>
@@ -90,13 +88,13 @@
             <connections>
                 <outlet property="containtView" destination="HVN-hF-1CZ" id="0g4-Li-ED9"/>
                 <outlet property="imgCity" destination="fgz-qd-0Zq" id="3Zd-CN-fcS"/>
-                <outlet property="lblCity" destination="cv7-9h-vOk" id="50x-I9-OIz"/>
+                <outlet property="lblCity" destination="cv7-9h-vOk" id="sYl-tx-yml"/>
             </connections>
             <point key="canvasLocation" x="194.20289855072465" y="85.379464285714278"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="LocationPin" width="16.5" height="22"/>
         <image name="New York, NY 1" width="137" height="83"/>
-        <image name="Vector" width="10" height="15"/>
     </resources>
 </document>

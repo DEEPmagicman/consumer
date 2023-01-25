@@ -18,7 +18,7 @@ class NotificationVC: UIViewController {
                             CitySelection(name: "Cleveland, OH", img: "Miami, FL")]
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var lblCity: UILabel!
+    @IBOutlet weak var lblCity: UILabelDeviceClass!
     @IBOutlet weak var citySkyline: UIImageView!
     
     override func viewDidLoad() {
@@ -30,9 +30,13 @@ class NotificationVC: UIViewController {
     }
     
     func setUI() {
+        tableView.setupPadding()
         self.lblCity.text = Constants.localizedCity
+        self.citySkyline.image = UIImage(named: Constants.localizedMap)
+        
+        
         //Fix this (don't show for now)
-        citySkyline.isHidden = true
+//        citySkyline.isHidden = true
         
         self.registerCell()
     }
@@ -48,6 +52,7 @@ class NotificationVC: UIViewController {
      }
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          guard let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTVC", for: indexPath) as? NotificationTVC else { return UITableViewCell() }
+         cell.selectionStyle = .none
          let data = self.arrCitySelection[indexPath.row]
          cell.setData(data: data)
          return cell
@@ -58,7 +63,9 @@ extension NotificationVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let city = self.arrCitySelection[indexPath.row].name.components(separatedBy: ",").first
+        let cityMap = self.arrCitySelection[indexPath.row].img
         Constants.localizedCity = city ?? ""
+        Constants.localizedMap = cityMap
         AppDelegate.shared.changeRootViewController()
     }
     

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -63,7 +64,7 @@
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="FiS-Cb-UwW">
-                    <rect key="frame" x="0.0" y="104" width="414" height="758"/>
+                    <rect key="frame" x="0.0" y="124" width="414" height="738"/>
                     <color key="backgroundColor" red="0.054901950060000003" green="0.054901950060000003" blue="0.054901950060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="Bvm-xZ-vNt"/>
@@ -83,7 +84,7 @@
                 <constraint firstItem="BZr-XP-W9X" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="jEu-gC-beX"/>
                 <constraint firstItem="FiS-Cb-UwW" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="kaS-Fw-48q"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ovx-k8-fII" secondAttribute="trailing" id="pnt-Yq-ljw"/>
-                <constraint firstItem="FiS-Cb-UwW" firstAttribute="top" secondItem="BZr-XP-W9X" secondAttribute="bottom" id="tet-HC-g7D"/>
+                <constraint firstItem="FiS-Cb-UwW" firstAttribute="top" secondItem="BZr-XP-W9X" secondAttribute="bottom" constant="20" id="tet-HC-g7D"/>
                 <constraint firstItem="ovx-k8-fII" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="wBy-Ce-be8"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="73.660714285714278"/>
@@ -91,6 +92,6 @@
     </objects>
     <resources>
         <image name="BackArrow" width="26.5" height="19"/>
-        <image name="WelcomeBackground" width="195" height="433.5"/>
+        <image name="WelcomeBackground" width="2708.5" height="5860"/>
     </resources>
 </document>

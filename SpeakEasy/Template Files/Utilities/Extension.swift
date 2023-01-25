@@ -123,3 +123,40 @@ extension UIStoryboard {
         return controller
     }
 }
+
+extension UIImageView {
+    func shadow(offset: CGSize, opacity: Float = 0.25, color: UIColor = .black, radius: CGFloat = 1) {
+        self.layer.shadowColor = color.cgColor
+        self.layer.shadowOffset = offset
+        self.layer.shadowOpacity = opacity
+        self.layer.shadowRadius = radius
+        self.layer.masksToBounds = false
+    }
+}
+
+extension UITableView {
+    func setupPadding() {
+        if #available(iOS 15.0, *) {
+            self.sectionHeaderTopPadding = 0
+        }
+    }
+    
+    func groupStyleHeader() {
+        var frame = CGRect.zero
+        frame.size.height = .leastNormalMagnitude
+        self.tableHeaderView = UIView(frame: frame)
+        self.sectionHeaderHeight = 0
+    }
+    
+    func groupStyleFooter() {
+        var frame = CGRect.zero
+        frame.size.height = .leastNormalMagnitude
+        self.tableFooterView = UIView(frame: frame)
+        self.sectionFooterHeight = 0
+    }
+
+    func groupStyleSpacing() {
+        groupStyleHeader()
+        groupStyleFooter()
+    }
+}

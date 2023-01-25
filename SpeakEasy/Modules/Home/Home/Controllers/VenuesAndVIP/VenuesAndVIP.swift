@@ -34,7 +34,10 @@ class VenuesAndVIP: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
-        
+        var frame = CGRect.zero
+        frame.size.height = .leastNormalMagnitude
+        tableView.tableHeaderView = UIView(frame: frame)
+        tableView.sectionHeaderHeight = 0
         self.venueDelegate.getVenues { isSuccess, errMsg, venueList in
             if isSuccess {
                 print(venueList)

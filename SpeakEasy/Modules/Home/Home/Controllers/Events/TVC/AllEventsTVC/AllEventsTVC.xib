@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,7 +34,7 @@
                                 <rect key="frame" x="-33.5" y="0.0" width="67" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Can-9M-UFK">
-                                        <rect key="frame" x="0.0" y="0.0" width="67" height="44"/>
+                                        <rect key="frame" x="0.0" y="16" width="67" height="44"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal">
                                             <attributedString key="attributedTitle">
@@ -51,9 +52,9 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Can-9M-UFK" secondAttribute="trailing" id="05H-34-X1c"/>
                                     <constraint firstItem="Can-9M-UFK" firstAttribute="leading" secondItem="cPU-jh-VaA" secondAttribute="leading" id="BEb-L2-bzp"/>
-                                    <constraint firstAttribute="bottom" secondItem="Can-9M-UFK" secondAttribute="bottom" constant="16" id="aYD-Rb-YhX"/>
+                                    <constraint firstAttribute="bottom" secondItem="Can-9M-UFK" secondAttribute="bottom" id="aYD-Rb-YhX"/>
                                     <constraint firstAttribute="height" constant="60" id="pat-Ps-jGQ"/>
-                                    <constraint firstItem="Can-9M-UFK" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" id="x2z-mo-obZ"/>
+                                    <constraint firstItem="Can-9M-UFK" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" constant="16" id="x2z-mo-obZ"/>
                                 </constraints>
                             </view>
                         </subviews>

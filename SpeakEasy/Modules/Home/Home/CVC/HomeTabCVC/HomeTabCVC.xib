@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,17 +23,17 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I4l-wv-OcF">
-                        <rect key="frame" x="46" y="15" width="63.5" height="20"/>
+                        <rect key="frame" x="44" y="15" width="67" height="26"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EGG-QF-ZbJ">
-                                <rect key="frame" x="0.0" y="0.0" width="22" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="22" id="I1a-Mx-fV9"/>
-                                    <constraint firstAttribute="height" constant="20" id="gNz-y0-J0x"/>
+                                    <constraint firstAttribute="width" constant="26" id="I1a-Mx-fV9"/>
+                                    <constraint firstAttribute="height" constant="26" id="gNz-y0-J0x"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90Q-Vr-U3v" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="22" y="0.0" width="41.5" height="20"/>
+                                <rect key="frame" x="26" y="0.0" width="41" height="26"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                 <color key="textColor" red="0.46666663889999999" green="0.46666663889999999" blue="0.46666663889999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
@@ -45,11 +46,11 @@
                             </label>
                         </subviews>
                     </stackView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EventsTabSelected" translatesAutoresizingMaskIntoConstraints="NO" id="aMC-mg-xhw">
-                        <rect key="frame" x="40" y="7" width="34" height="36"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EventsTabSelected" translatesAutoresizingMaskIntoConstraints="NO" id="aMC-mg-xhw">
+                        <rect key="frame" x="40" y="10" width="34" height="36"/>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HFl-Oy-YDA">
-                        <rect key="frame" x="46" y="48" width="63.5" height="2"/>
+                        <rect key="frame" x="44" y="48" width="67" height="2"/>
                         <color key="backgroundColor" red="0.90200722219999996" green="0.5272627473" blue="0.96867173910000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="2" id="CjJ-V4-OoO"/>
@@ -61,7 +62,7 @@
             <constraints>
                 <constraint firstItem="HFl-Oy-YDA" firstAttribute="trailing" secondItem="I4l-wv-OcF" secondAttribute="trailing" id="EvR-vz-FHc"/>
                 <constraint firstAttribute="bottom" secondItem="HFl-Oy-YDA" secondAttribute="bottom" id="FqL-0e-ys8"/>
-                <constraint firstItem="I4l-wv-OcF" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="JLm-MI-Tqj"/>
+                <constraint firstItem="I4l-wv-OcF" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" constant="3" id="JLm-MI-Tqj"/>
                 <constraint firstItem="HFl-Oy-YDA" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="N28-LI-Pqq"/>
                 <constraint firstItem="aMC-mg-xhw" firstAttribute="centerY" secondItem="EGG-QF-ZbJ" secondAttribute="centerY" id="ZGD-dK-Tu0"/>
                 <constraint firstItem="HFl-Oy-YDA" firstAttribute="leading" secondItem="I4l-wv-OcF" secondAttribute="leading" id="fUy-zo-73W"/>

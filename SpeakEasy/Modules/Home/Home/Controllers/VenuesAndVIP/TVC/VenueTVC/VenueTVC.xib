@@ -47,7 +47,7 @@
                                 <rect key="frame" x="0.0" y="160.5" width="380" height="81.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bounce Sporting Club" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLH-QI-IlL" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="4" width="214.5" height="27"/>
+                                        <rect key="frame" x="10" y="4" width="209.5" height="27"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="19"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -59,7 +59,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Now!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZPl-40-jVg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="35" width="73.5" height="18.5"/>
+                                        <rect key="frame" x="10" y="35" width="71.5" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -71,10 +71,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="zPY-Wo-FsE">
-                                        <rect key="frame" x="260.5" y="34" width="101.5" height="37.5"/>
+                                        <rect key="frame" x="262.5" y="34" width="99.5" height="37.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Closes 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9N-yX-0Cb" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="101.5" height="18.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="99.5" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <nil key="highlightedColor"/>
@@ -86,7 +86,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-Os-D1Z" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="60" y="18.5" width="41.5" height="19"/>
+                                                <rect key="frame" x="58" y="18.5" width="41.5" height="19"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" image="ViewVenue"/>
@@ -141,13 +141,13 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="keB-wo-JfO">
-                        <rect key="frame" x="202" y="250" width="0.0" height="81"/>
+                        <rect key="frame" x="202" y="258" width="0.0" height="73"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UhV-9D-cDh">
-                                <rect key="frame" x="0.0" y="81" width="240" height="60"/>
+                                <rect key="frame" x="0.0" y="73" width="240" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xFz-kP-n1h">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
+                                        <rect key="frame" x="0.0" y="14" width="240" height="44"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal">
                                             <attributedString key="attributedTitle">
@@ -163,11 +163,11 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="xFz-kP-n1h" firstAttribute="top" secondItem="UhV-9D-cDh" secondAttribute="top" id="3eb-Zo-ycP"/>
+                                    <constraint firstItem="xFz-kP-n1h" firstAttribute="top" secondItem="UhV-9D-cDh" secondAttribute="top" constant="14" id="3eb-Zo-ycP"/>
                                     <constraint firstAttribute="trailing" secondItem="xFz-kP-n1h" secondAttribute="trailing" id="8J0-Ew-xQy"/>
                                     <constraint firstItem="xFz-kP-n1h" firstAttribute="leading" secondItem="UhV-9D-cDh" secondAttribute="leading" id="ayD-Mw-tpb"/>
                                     <constraint firstAttribute="height" constant="60" id="bBP-nh-LOH"/>
-                                    <constraint firstAttribute="bottom" secondItem="xFz-kP-n1h" secondAttribute="bottom" constant="16" id="zVH-xA-sfx"/>
+                                    <constraint firstAttribute="bottom" secondItem="xFz-kP-n1h" secondAttribute="bottom" constant="2" id="zVH-xA-sfx"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -177,7 +177,7 @@
                 <constraints>
                     <constraint firstItem="keB-wo-JfO" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="0eo-f4-MD6"/>
                     <constraint firstAttribute="bottom" secondItem="keB-wo-JfO" secondAttribute="bottom" id="dpY-mx-1HR"/>
-                    <constraint firstItem="keB-wo-JfO" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="bottom" constant="8" id="esZ-ek-D8J"/>
+                    <constraint firstItem="keB-wo-JfO" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="bottom" constant="16" id="esZ-ek-D8J"/>
                     <constraint firstAttribute="trailing" secondItem="4h9-HB-IaF" secondAttribute="trailing" constant="12" id="ipK-pk-B5U"/>
                     <constraint firstItem="4h9-HB-IaF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="nlo-wY-xFm"/>
                     <constraint firstItem="4h9-HB-IaF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="q2e-vy-M1B"/>

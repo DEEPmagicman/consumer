@@ -218,12 +218,12 @@ extension ConnectSocialMediaViewController: InstagramConnectedDelegate {
 }
 
 extension ConnectSocialMediaViewController: WKNavigationDelegate {
-
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         RequestForCallbackURL(request: navigationAction.request)
         decisionHandler(.allow)
     }
-
+    
     func RequestForCallbackURL(request: URLRequest) {
         // Get the access token string after the '#access_token=' and before '&token_type='
         let requestURLString = (request.url?.absoluteString)! as String
@@ -241,39 +241,43 @@ extension ConnectSocialMediaViewController: WKNavigationDelegate {
     }
     
     func handleAuth(spotifyAccessToken: String) {
-            fetchSpotifyProfile(accessToken: spotifyAccessToken)
-            // Close Spotify Auth ViewController after getting Access Token
-            self.dismiss(animated: true, completion: nil)
-        }
-
-        func fetchSpotifyProfile(accessToken: String) {
-            let tokenURLFull = APIBuilder.spotifyURL
-            let verify: NSURL = NSURL(string: tokenURLFull)!
-            let request: NSMutableURLRequest = NSMutableURLRequest(url: verify as URL)
-            request.addValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
-            let task = URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
-                if error == nil {
+        fetchSpotifyProfile(accessToken: spotifyAccessToken)
+        // Close Spotify Auth ViewController after getting Access Token
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func fetchSpotifyProfile(accessToken: String) {
+        let tokenURLFull = APIBuilder.spotifyURL
+        let verify: NSURL = NSURL(string: tokenURLFull)!
+        let request: NSMutableURLRequest = NSMutableURLRequest(url: verify as URL)
+        request.addValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
+            if error == nil {
+                do {
                     let result = try! JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [AnyHashable: Any]
-                    
                     let spotifyId: String! = (result?["id"] as! String)
                     let spotifyDisplayName: String! = (result?["display_name"] as! String)
-                    //Spotify Email
-//                    let spotifyEmail: String! = (result?["email"] as! String)
-                    //Spotify Profile Avatar URL
-//                    let spotifyAvatarURL: String!
-//                    let spotifyProfilePicArray = result?["images"] as? [AnyObject]
-//                    if (spotifyProfilePicArray?.count)! > 0 {
-//                        spotifyAvatarURL = spotifyProfilePicArray![0]["url"] as? String
-//                    } else {
-//                        spotifyAvatarURL = "Not exists"
-//                    }
                     DispatchQueue.main.async {
                         UserDefault.shared.user?.spotifyId = spotifyId
                         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: spotifyDisplayName ?? "@realamitpaul", text3: Constant.String.changesLaterInfo,isYesOrNoBtn: true)
                         self.spotifyConnect = true
                     }
+                } catch {
+                    print("error")
+                    return
                 }
+                    //Spotify Email
+                    //                    let spotifyEmail: String! = (result?["email"] as! String)
+                    //Spotify Profile Avatar URL
+                    //                    let spotifyAvatarURL: String!
+                    //                    let spotifyProfilePicArray = result?["images"] as? [AnyObject]
+                    //                    if (spotifyProfilePicArray?.count)! > 0 {
+                    //                        spotifyAvatarURL = spotifyProfilePicArray![0]["url"] as? String
+                    //                    } else {
+                    //                        spotifyAvatarURL = "Not exists"
+                    //                    }
             }
-            task.resume()
         }
+        task.resume()
+    }
 }

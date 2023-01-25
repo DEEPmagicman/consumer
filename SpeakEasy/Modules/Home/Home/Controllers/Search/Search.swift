@@ -132,10 +132,12 @@ extension Search: UITableViewDataSource {
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "AllEventsTVC", for: indexPath) as! AllEventsTVC
             cell.tag = 0
+            cell.viewSeperator.isHidden = true
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "NoResultFoundTVC", for: indexPath) as! NoResultFoundTVC
             let searchedFor = self.tfSeach.text ?? ""
+            tableView.contentInset = UIEdgeInsets(top: -40, left: 0, bottom: 0, right: 0)
             cell.setData(hasVenues: self.hasVenues, hasEvents: self.hasEvents, searchedFor: searchedFor)
             return cell
         }

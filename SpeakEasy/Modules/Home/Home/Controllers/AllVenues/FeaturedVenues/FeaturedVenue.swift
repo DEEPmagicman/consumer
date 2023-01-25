@@ -47,6 +47,7 @@ extension FeaturedVenue: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
         let data = self.arrayRemainingHotVenueEvents[indexPath.row]
+        cell.selectionStyle = .none
         cell.setData(data: data)
         cell.setData(seeAll: false)
         return cell

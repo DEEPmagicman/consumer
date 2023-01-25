@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +32,7 @@
                         <rect key="frame" x="12" y="0.0" width="491" height="141"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TAO Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mtk-w4-B45" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="12" y="12" width="121.5" height="46.5"/>
+                                <rect key="frame" x="12" y="11" width="119.5" height="48.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -55,7 +56,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cover Charge Complete: $55" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qrj-OC-XMC" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="12" y="66.5" width="192" height="18.5"/>
+                                <rect key="frame" x="12" y="62.5" width="192" height="18.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -66,8 +67,8 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="booking ID: 121135" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3t-A2-y7L" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="12" y="101" width="88.5" height="14"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking ID: 121135" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3t-A2-y7L" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                <rect key="frame" x="12" y="91" width="87" height="14"/>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -79,7 +80,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View in Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0P-tx-JXw" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="374" y="110.5" width="101" height="18.5"/>
+                                <rect key="frame" x="374" y="89" width="101" height="18.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -88,18 +89,18 @@
                         <color key="backgroundColor" red="0.10588235294117647" green="0.10588235294117647" blue="0.10588235294117647" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="mtk-w4-B45" firstAttribute="leading" secondItem="JGK-gJ-0vR" secondAttribute="leading" constant="12" id="2Cx-fk-6wK"/>
-                            <constraint firstItem="d3t-A2-y7L" firstAttribute="top" secondItem="qrj-OC-XMC" secondAttribute="bottom" constant="16" id="61n-DQ-Ci8"/>
+                            <constraint firstItem="d3t-A2-y7L" firstAttribute="top" secondItem="qrj-OC-XMC" secondAttribute="bottom" constant="10" id="61n-DQ-Ci8"/>
                             <constraint firstItem="mtk-w4-B45" firstAttribute="centerY" secondItem="JGK-gJ-0vR" secondAttribute="centerY" multiplier="0.5" id="6Yz-Fx-J2b"/>
                             <constraint firstItem="G01-cW-Lqw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mtk-w4-B45" secondAttribute="trailing" constant="12" id="Brc-ei-J3s"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="d3t-A2-y7L" secondAttribute="bottom" constant="12" id="Dcf-B0-U2A"/>
+                            <constraint firstItem="d0P-tx-JXw" firstAttribute="centerY" secondItem="d3t-A2-y7L" secondAttribute="centerY" id="DBV-ne-0cn"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="d3t-A2-y7L" secondAttribute="bottom" constant="6" id="Dcf-B0-U2A"/>
                             <constraint firstItem="qrj-OC-XMC" firstAttribute="leading" secondItem="JGK-gJ-0vR" secondAttribute="leading" constant="12" id="OWK-aE-wUb"/>
                             <constraint firstItem="d3t-A2-y7L" firstAttribute="leading" secondItem="JGK-gJ-0vR" secondAttribute="leading" constant="12" id="OXg-af-EP4"/>
                             <constraint firstAttribute="trailing" secondItem="G01-cW-Lqw" secondAttribute="trailing" constant="16" id="RqM-20-aOU"/>
-                            <constraint firstItem="qrj-OC-XMC" firstAttribute="top" secondItem="mtk-w4-B45" secondAttribute="bottom" constant="8" id="XbR-Uo-xM9"/>
+                            <constraint firstItem="qrj-OC-XMC" firstAttribute="top" secondItem="mtk-w4-B45" secondAttribute="bottom" constant="3" id="XbR-Uo-xM9"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qrj-OC-XMC" secondAttribute="trailing" constant="12" id="Y0s-RU-YTS"/>
                             <constraint firstAttribute="trailing" secondItem="d0P-tx-JXw" secondAttribute="trailing" constant="16" id="b4q-Hh-WOL"/>
-                            <constraint firstAttribute="bottom" secondItem="d0P-tx-JXw" secondAttribute="bottom" constant="12" id="eXj-Y7-N07"/>
-                            <constraint firstItem="mtk-w4-B45" firstAttribute="top" secondItem="JGK-gJ-0vR" secondAttribute="top" constant="12" id="ecH-gg-gFc"/>
+                            <constraint firstItem="mtk-w4-B45" firstAttribute="top" secondItem="JGK-gJ-0vR" secondAttribute="top" constant="11" id="ecH-gg-gFc"/>
                             <constraint firstItem="G01-cW-Lqw" firstAttribute="centerY" secondItem="mtk-w4-B45" secondAttribute="centerY" id="ngt-xB-1EW"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>

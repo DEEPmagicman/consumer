@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -35,8 +36,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Pg-55-8SY">
                     <rect key="frame" x="0.0" y="44" width="414" height="60"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Venues" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9k-i9-Ekc" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="137" y="12.5" width="140" height="35"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Venues" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9k-i9-Ekc" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="157.5" y="12.5" width="99" height="35"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -75,7 +76,7 @@
                             <rect key="frame" x="19" y="10" width="16.5" height="22"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qkk-Ei-9cn" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="39.5" y="11" width="79" height="20"/>
+                            <rect key="frame" x="39.5" y="11" width="77.5" height="20"/>
                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -88,7 +89,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ngv-hF-BFE">
-                            <rect key="frame" x="19" y="11" width="99.5" height="20"/>
+                            <rect key="frame" x="19" y="11" width="98" height="20"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" title=""/>
                             <connections>
@@ -126,7 +127,7 @@
                     <rect key="frame" x="0.0" y="148" width="414" height="60"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="1LX-tN-aor">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="59.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="HSk-yG-9Do">
                                 <size key="itemSize" width="128" height="128"/>
@@ -139,28 +140,18 @@
                                 <outlet property="delegate" destination="-1" id="opm-vO-gZI"/>
                             </connections>
                         </collectionView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xqz-rR-3WL">
-                            <rect key="frame" x="0.0" y="59.5" width="414" height="0.5"/>
-                            <color key="backgroundColor" red="0.2039148808" green="0.19608268139999999" blue="0.19607818129999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="0.5" id="2ss-Ot-uDG"/>
-                            </constraints>
-                        </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.054901950060000003" green="0.054901950060000003" blue="0.054901950060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="1LX-tN-aor" firstAttribute="top" secondItem="vuV-sY-stM" secondAttribute="top" id="0j4-HM-OZi"/>
                         <constraint firstItem="1LX-tN-aor" firstAttribute="leading" secondItem="vuV-sY-stM" secondAttribute="leading" id="3ru-vP-Mit"/>
                         <constraint firstAttribute="height" constant="60" id="7hx-at-pmb"/>
-                        <constraint firstAttribute="bottom" secondItem="xqz-rR-3WL" secondAttribute="bottom" id="H7h-dQ-0Vu"/>
-                        <constraint firstItem="xqz-rR-3WL" firstAttribute="top" secondItem="1LX-tN-aor" secondAttribute="bottom" id="LqA-dg-XWy"/>
+                        <constraint firstAttribute="bottom" secondItem="1LX-tN-aor" secondAttribute="bottom" id="d2b-2k-7mG"/>
                         <constraint firstAttribute="trailing" secondItem="1LX-tN-aor" secondAttribute="trailing" id="m18-m3-mPe"/>
-                        <constraint firstAttribute="trailing" secondItem="xqz-rR-3WL" secondAttribute="trailing" id="qL7-iw-G0Z"/>
-                        <constraint firstItem="xqz-rR-3WL" firstAttribute="leading" secondItem="vuV-sY-stM" secondAttribute="leading" id="xkW-mq-C3k"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mvu-Ca-JeZ">
-                    <rect key="frame" x="0.0" y="218" width="414" height="644"/>
+                    <rect key="frame" x="0.0" y="238" width="414" height="624"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
@@ -172,7 +163,7 @@
                 <constraint firstItem="vuV-sY-stM" firstAttribute="top" secondItem="6Ud-Zi-Iwx" secondAttribute="bottom" constant="12" id="6vA-Q7-zXS"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="mbh-QH-4tn" secondAttribute="bottom" constant="-34" id="AkY-FW-o1N"/>
                 <constraint firstItem="1Pg-55-8SY" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="EIk-sC-wAv"/>
-                <constraint firstItem="Mvu-Ca-JeZ" firstAttribute="top" secondItem="vuV-sY-stM" secondAttribute="bottom" constant="10" id="Erh-yR-4vM"/>
+                <constraint firstItem="Mvu-Ca-JeZ" firstAttribute="top" secondItem="vuV-sY-stM" secondAttribute="bottom" constant="30" id="Erh-yR-4vM"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="vuV-sY-stM" secondAttribute="trailing" id="Ir7-LY-SRJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="leading" secondItem="mbh-QH-4tn" secondAttribute="leading" id="JfX-5h-iQk"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Mvu-Ca-JeZ" secondAttribute="bottom" id="LQl-kG-sgm"/>
