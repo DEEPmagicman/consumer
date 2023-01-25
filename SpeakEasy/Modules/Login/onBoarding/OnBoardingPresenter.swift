@@ -211,7 +211,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg:String?) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName:String? = nil, email:String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil,instagramToken: String? = nil,spotifyToken: String? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg:String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName, fName != "" {
             param["firstName"] = fName
@@ -245,6 +245,12 @@ final class OnBoardingPresenter {
         }
         if let drinkIds = drinkIds {
             param["drinkIds"] = drinkIds
+        }
+        if let instagramToken = instagramToken {
+            param["instagramToken"] = instagramToken
+        }
+        if let spotifyToken = spotifyToken {
+            param["spotifyToken"] = spotifyToken
         }
 
         Loader.show()

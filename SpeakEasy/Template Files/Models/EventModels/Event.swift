@@ -17,7 +17,7 @@ struct Event: Codable {
     var date: String
     var eventType: String
     var time: String
-    var artistId: String
+    var artistId: String?
     var isRecurring: Bool
     var version: String
     var eventStatus: String

@@ -28,6 +28,7 @@ class Events: BaseController {
     
     let eventDelegate = EventPresenter()
     var eventList = [Event]()
+    var from = 0
     
     var arrayHeaders = [HeaderOption(label: Strings.TOP_EVENTS.text, icon: UIImage(named: "EventsTabSelected")),
                         HeaderOption(label: Strings.FEATURED_EVENTS.text, icon: nil),
@@ -37,11 +38,22 @@ class Events: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        fetchAllEvent()
         // Do any additional setup after loading the view.
-        self.eventDelegate.getEvents { isSuccess, errMsg, eventList in
+    }
+    
+    private func fetchAllEvent() {
+        self.eventDelegate.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
             if isSuccess {
-                print(eventList)
-                self.eventList = eventList
+                for event in eventList {
+                    self.eventList.append(event)
+                }
+                if hasMore {
+                    self.from = self.eventList.count
+                    self.fetchAllEvent()
+                    return
+                }
+                print(self.eventList)
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -49,7 +61,9 @@ class Events: BaseController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            Loader.hide()
         }
+
     }
 }
 extension Events {

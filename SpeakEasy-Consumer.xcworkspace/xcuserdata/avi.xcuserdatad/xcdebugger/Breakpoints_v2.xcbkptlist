@@ -352,8 +352,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -448,10 +448,10 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "onClickConnectWithSpotify(_:)"
-            landmarkType = "7">
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "ConnectSocialMediaViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -576,9 +576,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "263"
-            endingLineNumber = "263"
-            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:completion:)"
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:instagramToken:spotifyToken:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -592,9 +592,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267"
-            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:completion:)"
+            startingLineNumber = "273"
+            endingLineNumber = "273"
+            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:instagramToken:spotifyToken:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -640,8 +640,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "296"
-            endingLineNumber = "296"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -656,8 +656,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "295"
-            endingLineNumber = "295"
+            startingLineNumber = "301"
+            endingLineNumber = "301"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -672,8 +672,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "298"
-            endingLineNumber = "298"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -688,8 +688,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -736,8 +736,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "293"
-            endingLineNumber = "293"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -800,8 +800,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "307"
-            endingLineNumber = "307"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
             landmarkName = "getVibesListAPi(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -816,9 +816,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
-            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:completion:)"
+            startingLineNumber = "258"
+            endingLineNumber = "258"
+            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:instagramToken:spotifyToken:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -832,9 +832,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
-            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:completion:)"
+            startingLineNumber = "266"
+            endingLineNumber = "266"
+            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:instagramToken:spotifyToken:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1324,8 +1324,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "116"
-            endingLineNumber = "116"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "authorizationController(controller:didCompleteWithAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1340,8 +1340,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
             landmarkName = "SignInOptionViewController"
             landmarkType = "21">
          </BreakpointContent>
@@ -1466,8 +1466,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "authorizationController(controller:didCompleteWithAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1482,8 +1482,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
             landmarkName = "authorizationController(controller:didCompleteWithAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1498,8 +1498,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "authorizationController(controller:didCompleteWithAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1514,9 +1514,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "instaConnect()"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "spotifyAuthVC()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1530,9 +1530,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "158"
-            endingLineNumber = "158"
-            landmarkName = "instaConnect()"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "spotifyAuthVC()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1562,8 +1562,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
             landmarkName = "onClickspotifypublicView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1578,25 +1578,9 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/ConnectSocialMediaViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
             landmarkName = "onClickspotifyPrivetView()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5ECFC686-F9EA-4A6E-8554-E97AB82EED11"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/Login/onBoarding/StartScreenViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
-            landmarkName = "playBackgoundVideo()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1626,8 +1610,8 @@
             filePath = "SpeakEasy/Modules/Login/Login2/SignInOptionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "authorizationController(controller:didCompleteWithAuthorization:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1786,8 +1770,8 @@
             filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
             landmarkName = "pushToEventBookingDetails(indexPath:index:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1804,7 +1788,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "216"
             endingLineNumber = "216"
-            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:completion:)"
+            landmarkName = "editUserProfileApi(fName:lName:nickName:email:password:dob:gender:image:city:vibeIds:drinkIds:instagramToken:spotifyToken:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1818,8 +1802,8 @@
             filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1828,31 +1812,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "3A8B7C79-132D-4BC8-89AD-774793476A19"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeakEasy/Presenter/EventPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "getEvents(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "AAF068B7-2CED-46D4-A351-8F7C335E035A"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Presenter/EventPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "13"
-            endingLineNumber = "13"
-            landmarkName = "getEvents(completion:)"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "getEvents(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1860,15 +1828,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "5AAE0E9F-150A-4CF8-B134-710119671EDE"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeakEasy/Presenter/EventPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
-            landmarkName = "getEvents(completion:)"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "getEvents(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1882,9 +1850,9 @@
             filePath = "SpeakEasy/Presenter/EventPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "getEvents(completion:)"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "getEvents(from:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1965,6 +1933,102 @@
             startingLineNumber = "22"
             endingLineNumber = "22"
             landmarkName = "getVenues(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DB004E9B-0892-4949-9F53-7F687D6ECBD5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Presenter/EventPresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "getEvents(from:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38DB42A2-9A2F-4447-9726-07252B5C5D20"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/Login/onBoarding/StartScreenViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "StartScreenViewController"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5734FAF4-7D64-48F4-99D4-E44225DF7D96"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "fetchAllEvent()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B20024D2-B1BD-407B-A2DF-D166E3052BCA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "fetchAllEvent()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "86CB0B63-78B5-4520-84EF-005B4F738B2E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "51"
+            endingLineNumber = "51"
+            landmarkName = "fetchAllEvent()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0FC37DD2-E62D-484C-8795-FDC5A05EE20A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Events.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "fetchAllEvent()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
