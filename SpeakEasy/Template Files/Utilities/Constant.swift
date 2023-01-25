@@ -34,6 +34,7 @@ struct Constant {
         static let googleClientId = "971202288158-9gap4p13k19hgr5r257doeqidhdu736o.apps.googleusercontent.com"
         static let InstagramClientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
         static let InstagramClientId = "1996312040570930"
+        static let spotifyClientId = "7fe9739926f84543abb666bf8aeef274"
         static let confirmInfo = "Please confirm your information"
         static let nameNote = "Providing a different name than the one on your ID might result in the venue denying entry."
         static let confirmBirthDate = "Please confirm date of birth"
@@ -44,6 +45,7 @@ struct Constant {
         static let confirm21YearText = "You must be over 21 years old to continue."
         static let genderList = ["Male", "Female"]
         static let InstagramDirectUri = "https://speakeasy.com/auth"
+        static let spotifyDirectUri = "https://speakeasy.com/sauth"
         static let authorizationCode = "authorization_code"
         static let internetNotConnect = "internet not connect"
         static let somethingWrong = "Something Went Wrong"
