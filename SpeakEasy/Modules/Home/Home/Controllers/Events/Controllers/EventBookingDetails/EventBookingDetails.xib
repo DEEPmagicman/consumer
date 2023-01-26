@@ -35,7 +35,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kJF-xW-h0d">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="782"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="FTX-UW-fzk"/>
@@ -64,7 +64,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Steve Aoki" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AEf-Ia-c6I" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="128.5" y="7" width="157" height="27"/>
+                            <rect key="frame" x="131.5" y="7" width="151" height="27"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="27" id="sl6-wZ-M1B"/>
                             </constraints>
@@ -168,7 +168,7 @@
                 <constraint firstItem="52X-a9-piV" firstAttribute="bottom" secondItem="Ffg-RE-qow" secondAttribute="bottom" id="5HO-34-dYB"/>
                 <constraint firstItem="6y2-Vv-9PU" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="87s-MJ-byg"/>
                 <constraint firstItem="6y2-Vv-9PU" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="CrI-1D-HKH"/>
-                <constraint firstItem="6y2-Vv-9PU" firstAttribute="top" secondItem="kJF-xW-h0d" secondAttribute="bottom" id="Daa-7J-B27"/>
+                <constraint firstAttribute="bottom" secondItem="kJF-xW-h0d" secondAttribute="bottom" id="Daa-7J-B27"/>
                 <constraint firstItem="52X-a9-piV" firstAttribute="leading" secondItem="Ffg-RE-qow" secondAttribute="leading" id="JbN-ez-9Pd"/>
                 <constraint firstItem="Ffg-RE-qow" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="Ono-7K-Ulc"/>
                 <constraint firstItem="Ffg-RE-qow" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="c8e-CD-H6s"/>

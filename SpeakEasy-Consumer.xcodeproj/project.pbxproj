@@ -33,6 +33,13 @@
 		04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */; };
 		04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */; };
 		04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */; };
+		2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
+		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
+		2966E32F2980F85E00B5E103 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32E2980F85E00B5E103 /* ViewController.swift */; };
+		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
+		2966E3342980F86000B5E103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
+		2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3352980F86000B5E103 /* LaunchScreen.storyboard */; };
+		2966E33C2980F86000B5E103 /* SpeakEasyClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297AB3EE2975608D0086259F /* VenuePresenter.swift */; };
 		2986835B2975658300CB827B /* Venue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835A2975658300CB827B /* Venue.swift */; };
 		2986835D297565A800CB827B /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835C297565A800CB827B /* Logo.swift */; };
@@ -41,6 +48,13 @@
 		29868363297567DF00CB827B /* EventPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29868362297567DF00CB827B /* EventPresenter.swift */; };
 		2986836629756E8600CB827B /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		2986836829756EA600CB827B /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
+		29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */; };
+		29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */; };
+		29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
+		29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */; };
+		29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */; };
+		29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */; };
+		29DF44FF2981417500A83DC1 /* EnterPhoneNumberClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */; };
 		4A7CC53028E377C200F8BA63 /* BookingInvites.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */; };
@@ -60,6 +74,7 @@
 		4A89D44128D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */; };
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
+		6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
 		820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */; };
 		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
@@ -523,6 +538,30 @@
 		E1FAD5E628CEA9C4004F70DE /* ImportantDatesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FAD5E228CEA9C4004F70DE /* ImportantDatesTVC.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2966E33A2980F86000B5E103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE486716286F2CB000FD277E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2966E3272980F85E00B5E103;
+			remoteInfo = SpeakEasyClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2966E33D2980F86000B5E103 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				2966E33C2980F86000B5E103 /* SpeakEasyClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		04348225297A9135008989E6 /* video.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = video.mp4; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -550,6 +589,16 @@
 		04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesProfileCVC.swift; sourceTree = "<group>"; };
 		04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePopUp.swift; sourceTree = "<group>"; };
 		04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserProfilePopUp.xib; sourceTree = "<group>"; };
+		21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasyClip.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip.release.xcconfig"; sourceTree = "<group>"; };
+		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2966E32C2980F85E00B5E103 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2966E32E2980F85E00B5E103 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2966E3312980F85E00B5E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2966E3332980F86000B5E103 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2966E3362980F86000B5E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2966E3382980F86000B5E103 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasyClip.entitlements; sourceTree = "<group>"; };
 		297AB3EE2975608D0086259F /* VenuePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenuePresenter.swift; sourceTree = "<group>"; };
 		2986835A2975658300CB827B /* Venue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Venue.swift; sourceTree = "<group>"; };
 		2986835C297565A800CB827B /* Logo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logo.swift; sourceTree = "<group>"; };
@@ -558,6 +607,10 @@
 		29868362297567DF00CB827B /* EventPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPresenter.swift; sourceTree = "<group>"; };
 		2986836529756E8600CB827B /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		2986836729756EA600CB827B /* Flyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flyer.swift; sourceTree = "<group>"; };
+		29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutClipVC.swift; sourceTree = "<group>"; };
+		29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeClipVC.swift; sourceTree = "<group>"; };
+		29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketClipVC.swift; sourceTree = "<group>"; };
+		29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberClipVC.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingInvites.swift; sourceTree = "<group>"; };
 		4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingInvites.xib; sourceTree = "<group>"; };
@@ -614,6 +667,7 @@
 		9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectedBookingTVC.xib; sourceTree = "<group>"; };
 		9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectionTVC.swift; sourceTree = "<group>"; };
 		9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectionTVC.xib; sourceTree = "<group>"; };
+		A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasyClip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.release.xcconfig"; sourceTree = "<group>"; };
 		BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BD3DB01E2952DBB3005B5987 /* Main1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1.swift; sourceTree = "<group>"; };
@@ -770,6 +824,7 @@
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
 		CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerViewController.swift; sourceTree = "<group>"; };
 		CEECAA6E288D8B7C007C5F9C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasyClip.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip.debug.xcconfig"; sourceTree = "<group>"; };
 		DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
 		E11CE3E228C8DF7F003899C4 /* WeekDays.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeekDays.xib; sourceTree = "<group>"; };
 		E11CE3E328C8DF7F003899C4 /* WeekDays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
@@ -1052,6 +1107,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2966E3252980F85E00B5E103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE48671B286F2CB000FD277E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1152,8 +1215,28 @@
 			isa = PBXGroup;
 			children = (
 				9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */,
+				A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2966E3292980F85E00B5E103 /* SpeakEasyClip */ = {
+			isa = PBXGroup;
+			children = (
+				2966E32A2980F85E00B5E103 /* AppDelegate.swift */,
+				2966E32C2980F85E00B5E103 /* SceneDelegate.swift */,
+				2966E32E2980F85E00B5E103 /* ViewController.swift */,
+				2966E3302980F85E00B5E103 /* Main.storyboard */,
+				2966E3332980F86000B5E103 /* Assets.xcassets */,
+				2966E3352980F86000B5E103 /* LaunchScreen.storyboard */,
+				2966E3382980F86000B5E103 /* Info.plist */,
+				2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */,
+				29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */,
+				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
+				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
+				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
+			);
+			path = SpeakEasyClip;
 			sourceTree = "<group>";
 		};
 		297AB3ED297560650086259F /* Presenter */ = {
@@ -1511,6 +1594,8 @@
 			children = (
 				DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */,
 				A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */,
+				D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */,
+				21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1592,6 +1677,7 @@
 			isa = PBXGroup;
 			children = (
 				CE486720286F2CB000FD277E /* SpeakEasy */,
+				2966E3292980F85E00B5E103 /* SpeakEasyClip */,
 				CE48671F286F2CB000FD277E /* Products */,
 				BEDF67A11CBEC68B40496025 /* Pods */,
 				2618555335F8CF7D7AAA33CF /* Frameworks */,
@@ -1602,6 +1688,7 @@
 			isa = PBXGroup;
 			children = (
 				CE48671E286F2CB000FD277E /* SpeakEasy-Consumer.app */,
+				2966E3282980F85E00B5E103 /* SpeakEasyClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3575,6 +3662,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2966E3272980F85E00B5E103 /* SpeakEasyClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2966E3402980F86000B5E103 /* Build configuration list for PBXNativeTarget "SpeakEasyClip" */;
+			buildPhases = (
+				34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */,
+				2966E3242980F85E00B5E103 /* Sources */,
+				2966E3252980F85E00B5E103 /* Frameworks */,
+				2966E3262980F85E00B5E103 /* Resources */,
+				F5A9C1FBB2A1DF37C2D57E28 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpeakEasyClip;
+			productName = SpeakEasyClip;
+			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
 		CE48671D286F2CB000FD277E /* SpeakEasy-Consumer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE486732286F2CB100FD277E /* Build configuration list for PBXNativeTarget "SpeakEasy-Consumer" */;
@@ -3585,10 +3691,12 @@
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */,
+				2966E33D2980F86000B5E103 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2966E33B2980F86000B5E103 /* PBXTargetDependency */,
 			);
 			name = "SpeakEasy-Consumer";
 			productName = SpeakEasy;
@@ -3602,9 +3710,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					2966E3272980F85E00B5E103 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
 					CE48671D286F2CB000FD277E = {
 						CreatedOnToolsVersion = 13.3;
 					};
@@ -3625,11 +3736,25 @@
 			projectRoot = "";
 			targets = (
 				CE48671D286F2CB000FD277E /* SpeakEasy-Consumer */,
+				2966E3272980F85E00B5E103 /* SpeakEasyClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2966E3262980F85E00B5E103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
+				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
+				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
+				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
+				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
+				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE48671C286F2CB000FD277E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3871,6 +3996,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SpeakEasyClip-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3893,9 +4040,40 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F5A9C1FBB2A1DF37C2D57E28 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2966E3242980F85E00B5E103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2966E32F2980F85E00B5E103 /* ViewController.swift in Sources */,
+				2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */,
+				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
+				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
+				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
+				29DF44FF2981417500A83DC1 /* EnterPhoneNumberClipVC.swift in Sources */,
+				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE48671A286F2CB000FD277E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4223,7 +4401,31 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2966E33B2980F86000B5E103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2966E3272980F85E00B5E103 /* SpeakEasyClip */;
+			targetProxy = 2966E33A2980F86000B5E103 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		2966E3302980F85E00B5E103 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2966E3312980F85E00B5E103 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2966E3352980F86000B5E103 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2966E3362980F86000B5E103 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		CAC413D828A478040007BA86 /* DayCollectionViewCell.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4252,6 +4454,72 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2966E33E2980F86000B5E103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 36;
+				DEVELOPMENT_TEAM = 843432T6P5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy-Consumer";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2966E33F2980F86000B5E103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 36;
+				DEVELOPMENT_TEAM = 843432T6P5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy-Consumer";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CE486730286F2CB100FD277E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4376,6 +4644,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
@@ -4412,7 +4681,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -4420,6 +4689,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
@@ -4455,13 +4725,22 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2966E3402980F86000B5E103 /* Build configuration list for PBXNativeTarget "SpeakEasyClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2966E33E2980F86000B5E103 /* Debug */,
+				2966E33F2980F86000B5E103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE486719286F2CB000FD277E /* Build configuration list for PBXProject "SpeakEasy-Consumer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

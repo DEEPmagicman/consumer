@@ -27,6 +27,16 @@ target 'SpeakEasy-Consumer' do
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
 end
+
+target 'SpeakEasyClip' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for SpeakEasyClip
+  pod "FlagPhoneNumber"
+  pod 'IQKeyboardManagerSwift'
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
