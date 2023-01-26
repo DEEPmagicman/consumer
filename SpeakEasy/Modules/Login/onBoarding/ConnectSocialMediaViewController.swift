@@ -31,6 +31,7 @@ final class ConnectSocialMediaViewController: UIViewController {
     
     var spotifyConnect = false
     var webView = WKWebView()
+    var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -212,6 +213,18 @@ extension ConnectSocialMediaViewController: InstagramConnectedDelegate {
                 } else { return }
                 Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: "@\(UserDefault.shared.user?.instaUserName ?? "@realamitpaul")", text3: Constant.String.changesLaterInfo,isYesOrNoBtn: true)
                 self.spotifyConnect = false
+                self.onBoardingDelegate.editUserProfileApi(instagramToken: tokan) { isSuccess, errorMsg in
+                    if isSuccess {
+                        print(tokan)
+                    } else {
+                        if errorMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                        }
+                    }
+                    Loader.hide()
+                }
             }
         }
     }
@@ -261,6 +274,19 @@ extension ConnectSocialMediaViewController: WKNavigationDelegate {
                         UserDefault.shared.user?.spotifyId = spotifyId
                         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.privetOrPublicInfo, text2: spotifyDisplayName ?? "@realamitpaul", text3: Constant.String.changesLaterInfo,isYesOrNoBtn: true)
                         self.spotifyConnect = true
+                        self.onBoardingDelegate.editUserProfileApi(spotifyToken: accessToken) { isSuccess, errorMsg in
+                            if isSuccess {
+                                print(accessToken)
+                            } else {
+                                if errorMsg != nil {
+                                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                                } else {
+                                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                                }
+                            }
+                            Loader.hide()
+                        }
+
                     }
                 } catch {
                     print("error")
