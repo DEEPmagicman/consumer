@@ -16,9 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate{ //}, NSApplicationDelegat
         return true
     }
     
-    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
-        false
-    }
+//    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
+//        false
+//    }
     
     func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
         false

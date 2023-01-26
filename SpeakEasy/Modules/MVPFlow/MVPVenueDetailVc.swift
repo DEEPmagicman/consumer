@@ -22,7 +22,7 @@ class MVPVenueDetailVc: UIViewController {
         super.viewDidLoad()
 
         self.ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
-        self.tableViewHeight.constant = 100*4
+        self.tableViewHeight.constant = 100*2
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -33,7 +33,7 @@ class MVPVenueDetailVc: UIViewController {
 
 extension MVPVenueDetailVc: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 2
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
