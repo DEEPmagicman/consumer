@@ -149,6 +149,9 @@
                     <connections>
                         <outlet property="bgImageView" destination="9tD-nG-EF2" id="1CH-Xs-p9O"/>
                         <outlet property="byTappingInfoLbl" destination="bpR-ej-5Om" id="J48-yp-jiH"/>
+                        <outlet property="continueAsGuestBtn" destination="nGv-Og-2h1" id="sah-bL-s3R"/>
+                        <outlet property="createAccountBtn" destination="qmP-gV-33m" id="MW0-OR-RhQ"/>
+                        <outlet property="signInBtn" destination="YjS-cn-k93" id="Nub-ry-1MK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

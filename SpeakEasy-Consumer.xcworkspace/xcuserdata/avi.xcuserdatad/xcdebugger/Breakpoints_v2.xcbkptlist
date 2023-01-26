@@ -1754,8 +1754,8 @@
             filePath = "SpeakEasy/Template Files/Utilities/NavigationManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "ticketConfirmation(_:data:isFromSettings:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1962,8 +1962,8 @@
             filePath = "SpeakEasy/Modules/Login/onBoarding/StartScreenViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "StartScreenViewController"
             landmarkType = "3">
          </BreakpointContent>

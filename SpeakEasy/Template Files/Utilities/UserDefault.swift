@@ -14,6 +14,7 @@ final class UserDefault: NSObject {
         case userKey = "user"
         case isLoggedInKey = "isLoggedIn"
         case isGuest = "isGuest"
+        case isMvp = "isMvp"
     }
     
     let userDefaults = UserDefaults.standard
@@ -64,6 +65,14 @@ final class UserDefault: NSObject {
             return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
+        }
+    }
+    
+    var isMvp: Bool? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.isMvp.rawValue) as? Bool
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isMvp.rawValue)
         }
     }
     

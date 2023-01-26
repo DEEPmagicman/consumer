@@ -156,6 +156,16 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func MVPVenueListViewController(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func MVPVenueDetailViewController(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func settingsVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(SettingsViewController.self)
         fullscreenPush(vc: vc)

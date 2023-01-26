@@ -12,6 +12,9 @@ final class StartScreenViewController: UIViewController {
     
     @IBOutlet weak var byTappingInfoLbl: UILabel!
     @IBOutlet weak var bgImageView: UIImageView!
+    @IBOutlet weak var createAccountBtn: UIButton!
+    @IBOutlet weak var signInBtn: UIButton!
+    @IBOutlet weak var continueAsGuestBtn: UIButton!
     var player: AVPlayer?
 
     override func viewDidLoad() {
@@ -30,6 +33,14 @@ final class StartScreenViewController: UIViewController {
         
         playBackgoundVideo()
         self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
+        
+        if UserDefault.shared.isMvp ?? false {
+            self.signInBtn.isHidden = true
+            self.continueAsGuestBtn.isHidden = true
+            self.createAccountBtn.setTitle("Continue as Guest", for: .normal)
+            self.createAccountBtn.backgroundColor = UIColor(hex: "#0B78FF")
+            self.byTappingInfoLbl.isHidden = true
+        }
     }
     
     deinit {
@@ -61,8 +72,12 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
-        UserDefault.shared.isGuest = false
-        Navigate.to.enterPhoneNumVc(self)
+        if UserDefault.shared.isMvp ?? false {
+            Navigate.to.MVPVenueListViewController(self)
+        } else {
+            UserDefault.shared.isGuest = false
+            Navigate.to.enterPhoneNumVc(self)
+        }
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
