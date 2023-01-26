@@ -35,6 +35,7 @@ target 'SpeakEasyClip' do
   # Pods for SpeakEasyClip
   pod "FlagPhoneNumber"
   pod 'IQKeyboardManagerSwift'
+  pod 'DropDown'
 end
 
 post_install do |installer|

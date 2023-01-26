@@ -7,18 +7,22 @@
 
 import UIKit
 import FlagPhoneNumber
+import DropDown
 
 final class EnterPhoneNumberClipVC: UIViewController {
     
-    @IBOutlet weak var countryCodeTextField: FPNTextField!
-    @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var phoneNumTextField: UITextField!
-    @IBOutlet weak var countrySelectionView: UIView!
-    @IBOutlet weak var continueBtnBottom: NSLayoutConstraint!
+    @IBOutlet private weak var countryCodeTextField: FPNTextField!
+    @IBOutlet private weak var continueBtn: UIButton!
+    @IBOutlet private weak var phoneNumTextField: UITextField!
+    @IBOutlet private weak var countrySelectionView: UIView!
+    @IBOutlet private weak var continueBtnBottom: NSLayoutConstraint!
+    @IBOutlet private weak var ticketNumberView: UIView!
+    @IBOutlet private weak var ticketNumberLbl: UILabel!
     
     private var checkFPNField = FPNTextField()
     private var countryCode = ""
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
+    private let numberDropDown = DropDown()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +59,9 @@ final class EnterPhoneNumberClipVC: UIViewController {
         countrySelectionView.addGestureRecognizer(tap)
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
+        
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickDropDown))
+        ticketNumberView.addGestureRecognizer(tap1)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -66,6 +73,30 @@ final class EnterPhoneNumberClipVC: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func onClickDropDown() {
+        ticketNumberSelection()
+        numberDropDown.show()
+    }
+    
+    private func ticketNumberSelection() {
+        numberDropDown.anchorView = ticketNumberView
+        numberDropDown.bottomOffset = CGPoint(x: 0, y: ticketNumberView.bounds.height - 8)
+        numberDropDown.cellHeight = 40
+        numberDropDown.selectionBackgroundColor = .clear
+        numberDropDown.cornerRadius = 10
+        numberDropDown.textColor = .white
+        numberDropDown.shadowOpacity = 0
+        numberDropDown.backgroundColor = .darkGray
+        numberDropDown.dataSource = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+        numberDropDown.width = ticketNumberView.bounds.width
+        numberDropDown.customCellConfiguration = { (index: Index, item: String, cell: DropDownCell) in
+            cell.optionLabel.textAlignment = .center
+        }
+        numberDropDown.selectionAction = { [weak self] _, item in
+            self?.ticketNumberLbl.text = item
+        }
     }
     
     @objc private func keyboardWillShow(notification: Notification) {
@@ -114,7 +145,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
         phoneNumTextField.resignFirstResponder()
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
             vc.phoneNo = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
-            vc.totalTicket = 3
+            vc.totalTicket = Int(ticketNumberLbl.text ?? "") ?? 1
             vc.ticketPrice = 90
             navigationController?.pushViewController(vc, animated: true)
         }
