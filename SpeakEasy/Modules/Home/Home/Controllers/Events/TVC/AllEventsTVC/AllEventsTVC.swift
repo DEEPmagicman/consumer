@@ -23,6 +23,7 @@ class AllEventsTVC: UITableViewCell {
     var searchText = ""
     var isFilter = false
     var hasEvents: ((Bool)->Void)?
+    var hasEvent = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,6 +61,7 @@ extension AllEventsTVC{
         self.collectionView.reloadData()
         
         self.hasEvents?(!self.arrayFilteredFeaturedEvents.isEmpty)
+        self.hasEvent = !self.arrayFilteredFeaturedEvents.isEmpty
     }
 }
 extension AllEventsTVC: UICollectionViewDataSource {

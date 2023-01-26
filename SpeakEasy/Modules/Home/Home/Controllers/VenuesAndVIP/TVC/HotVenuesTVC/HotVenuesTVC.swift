@@ -18,6 +18,7 @@ class HotVenuesTVC: UITableViewCell {
     var searchText = ""
     var isFilter = false
     var hasVenues: ((Bool)->Void)?
+    var hasVenue = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -53,8 +54,8 @@ extension HotVenuesTVC{
         }
         
         self.collectionView.reloadData()
-        
         self.hasVenues?(!self.arrayFilteredHotVenueEvents.isEmpty)
+        hasVenue = !self.arrayFilteredHotVenueEvents.isEmpty
     }
 }
 extension HotVenuesTVC: UICollectionViewDataSource {
