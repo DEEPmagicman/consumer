@@ -127,10 +127,10 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kSW-gH-Xbz">
-                            <rect key="frame" x="92" y="26" width="230.5" height="21"/>
+                            <rect key="frame" x="92" y="26" width="230" height="21"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Event Ticket Sales are" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A4v-7o-QCb" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="183" height="21"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="182.5" height="21"/>
                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -142,7 +142,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" FINAL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J7B-Xp-muG" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="183" y="0.0" width="47.5" height="21"/>
+                                    <rect key="frame" x="182.5" y="0.0" width="47.5" height="21"/>
                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="15"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -195,7 +195,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="366" height="54"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Male GA - Tier 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bQx-pv-MNI" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="248.5" height="54"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="249.5" height="54"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -207,7 +207,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 70.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z9R-HB-eaF" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="248.5" y="0.0" width="117.5" height="54"/>
+                                                            <rect key="frame" x="249.5" y="0.0" width="116.5" height="54"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -224,7 +224,7 @@
                                                     <rect key="frame" x="0.0" y="60" width="366" height="0.0"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Male GA - Tier 2  x 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0iL-Hd-FHY" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="258" height="0.0"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="259.5" height="0.0"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -236,7 +236,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 140.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qw-cw-01r" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="258" y="0.0" width="108" height="0.0"/>
+                                                            <rect key="frame" x="259.5" y="0.0" width="106.5" height="0.0"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -253,7 +253,7 @@
                                                     <rect key="frame" x="0.0" y="60" width="366" height="0.0"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Female GA  x 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mov-G0-p7n" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="236" height="0.0"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="237.5" height="0.0"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -265,7 +265,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 210.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yx5-FF-c8g" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                            <rect key="frame" x="236" y="0.0" width="130" height="0.0"/>
+                                                            <rect key="frame" x="237.5" y="0.0" width="128.5" height="0.0"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -383,7 +383,7 @@
                     </constraints>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" title="Buy Tickets"/>
+                    <state key="normal" title="Buy Ticket"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
                             <real key="value" value="17"/>

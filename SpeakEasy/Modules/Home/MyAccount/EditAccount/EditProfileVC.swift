@@ -287,6 +287,17 @@ extension EditProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         }
         
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        switch collectionView {
+        case vibesCollectionView:
+            return 5
+        case favouriteDrinkCollectionView:
+            return 5
+        default:
+            return 0
+        }
+    }
 }
 extension EditProfileVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

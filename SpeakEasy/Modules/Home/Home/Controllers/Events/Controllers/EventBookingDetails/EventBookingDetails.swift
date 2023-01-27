@@ -35,6 +35,7 @@ class EventBookingDetails: UIViewController {
     
     var topEventData: TopEventDataSet?
     var attendeeData: AttendeeProfile?
+    var totalTicket = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,7 @@ class EventBookingDetails: UIViewController {
         self.strechyTableView.layoutIfNeeded()
         
         self.btnProceed.isUserInteractionEnabled = false
-        self.btnProceed.alpha = 0.5
+        self.viewProceed.isHidden = true
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -165,7 +166,15 @@ extension EventBookingDetails: UITableViewDataSource {
             cell.selectedTabAt = { index in
                 self.selectedTabAt = index
                 DispatchQueue.main.async {
-                    self.viewProceed.isHidden = !(self.selectedTabAt == 0)
+                    if self.selectedTabAt == 0 {
+                        if self.totalTicket == 0 {
+                            self.viewProceed.isHidden = true
+                        } else {
+                            self.viewProceed.isHidden = false
+                        }
+                    } else {
+                        self.viewProceed.isHidden = true
+                    }
                     self.strechyTableView.reloadData()
                     
                     self.updateHeaderView()
@@ -209,9 +218,9 @@ extension EventBookingDetails: UITableViewDataSource {
         let count = self.arrEventBooking[sender.tag].ticketCount
         if count == 1 {
             self.arrEventBooking[sender.tag].ticketCount -= 1
+            self.totalTicket -= 1
         }
-        self.btnProceed.isUserInteractionEnabled = false
-        self.btnProceed.alpha = 0.5
+        self.viewProceed.isHidden = true
         self.strechyTableView.reloadData()
     }
     @objc func onBtnPlusQuantity(_ sender: UIButton){
@@ -221,9 +230,9 @@ extension EventBookingDetails: UITableViewDataSource {
                 self.arrEventBooking[index].ticketCount = 0
             }
             self.arrEventBooking[sender.tag].ticketCount += 1
+            self.totalTicket += 1
         }
-        self.btnProceed.isUserInteractionEnabled = true
-        self.btnProceed.alpha = 1.0
+        self.viewProceed.isHidden = false
         self.strechyTableView.reloadData()
     }
     @objc func onBtnBookVIPTable(){
@@ -235,7 +244,11 @@ extension EventBookingDetails: UITableViewDataSource {
 extension EventBookingDetails: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 && self.selectedTabAt == 0 {
-            return self.viewProceed.frame.height
+            if self.viewProceed.isHidden == true {
+                return 0
+            } else {
+                return self.viewProceed.frame.height
+            }
         } else if indexPath.section == 2 && self.selectedTabAt == 2 {
             return self.viewProceed.frame.height
         }

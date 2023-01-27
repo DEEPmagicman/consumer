@@ -358,7 +358,7 @@ enum Strings: String{
     
     case ALL = "All"
     case THIS_WEEK = "This Week"
-    case CUSTOM_DATES = "Custom Dates"
+    case CUSTOM_DATES = "Custom Date"
     
     case FEATURED = "Featured"
     case CITY_VIEWS = "City Views"

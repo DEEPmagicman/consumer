@@ -307,7 +307,7 @@
                                             </constraints>
                                         </view>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="aYg-gW-fV2">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="46"/>
+                                            <rect key="frame" x="10" y="0.0" width="404" height="46"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="p48-bv-8TR">
                                                 <size key="itemSize" width="128" height="128"/>
@@ -330,7 +330,7 @@
                                         <constraint firstAttribute="width" secondItem="qZc-w0-a5K" secondAttribute="height" multiplier="69:8" id="HVm-OC-KDV"/>
                                         <constraint firstItem="bvZ-0M-nvu" firstAttribute="top" secondItem="aYg-gW-fV2" secondAttribute="bottom" id="RUK-Dc-k6B"/>
                                         <constraint firstItem="aYg-gW-fV2" firstAttribute="top" secondItem="qZc-w0-a5K" secondAttribute="top" id="dVk-C0-XLa"/>
-                                        <constraint firstItem="aYg-gW-fV2" firstAttribute="leading" secondItem="qZc-w0-a5K" secondAttribute="leading" id="yJB-dT-iDt"/>
+                                        <constraint firstItem="aYg-gW-fV2" firstAttribute="leading" secondItem="qZc-w0-a5K" secondAttribute="leading" constant="10" id="yJB-dT-iDt"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oZL-IC-aGJ">
