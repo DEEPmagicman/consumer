@@ -41,6 +41,8 @@
 		2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3352980F86000B5E103 /* LaunchScreen.storyboard */; };
 		2966E33C2980F86000B5E103 /* SpeakEasyClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297AB3EE2975608D0086259F /* VenuePresenter.swift */; };
+		297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
+		297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		2986835B2975658300CB827B /* Venue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835A2975658300CB827B /* Venue.swift */; };
 		2986835D297565A800CB827B /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835C297565A800CB827B /* Logo.swift */; };
 		2986835F297565C500CB827B /* VenueAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986835E297565C500CB827B /* VenueAttachment.swift */; };
@@ -600,6 +602,8 @@
 		2966E3382980F86000B5E103 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasyClip.entitlements; sourceTree = "<group>"; };
 		297AB3EE2975608D0086259F /* VenuePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenuePresenter.swift; sourceTree = "<group>"; };
+		297E37362983B16200139947 /* TicketTypeTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketTypeTVC.swift; sourceTree = "<group>"; };
+		297E37372983B16200139947 /* TicketTypeTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketTypeTVC.xib; sourceTree = "<group>"; };
 		2986835A2975658300CB827B /* Venue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Venue.swift; sourceTree = "<group>"; };
 		2986835C297565A800CB827B /* Logo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logo.swift; sourceTree = "<group>"; };
 		2986835E297565C500CB827B /* VenueAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueAttachment.swift; sourceTree = "<group>"; };
@@ -1223,6 +1227,7 @@
 		2966E3292980F85E00B5E103 /* SpeakEasyClip */ = {
 			isa = PBXGroup;
 			children = (
+				297E37352983B13A00139947 /* TVC */,
 				2966E32A2980F85E00B5E103 /* AppDelegate.swift */,
 				2966E32C2980F85E00B5E103 /* SceneDelegate.swift */,
 				2966E32E2980F85E00B5E103 /* ViewController.swift */,
@@ -1246,6 +1251,15 @@
 				29868362297567DF00CB827B /* EventPresenter.swift */,
 			);
 			path = Presenter;
+			sourceTree = "<group>";
+		};
+		297E37352983B13A00139947 /* TVC */ = {
+			isa = PBXGroup;
+			children = (
+				297E37362983B16200139947 /* TicketTypeTVC.swift */,
+				297E37372983B16200139947 /* TicketTypeTVC.xib */,
+			);
+			path = TVC;
 			sourceTree = "<group>";
 		};
 		298683592975657200CB827B /* VenueModels */ = {
@@ -3751,6 +3765,7 @@
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
+				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4065,6 +4080,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2966E32F2980F85E00B5E103 /* ViewController.swift in Sources */,
+				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,

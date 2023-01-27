@@ -11,6 +11,8 @@ import DropDown
 
 final class EnterPhoneNumberClipVC: UIViewController {
     
+    @IBOutlet private weak var ticketTypeLbl: UILabel!
+    @IBOutlet private weak var ticketPriceLbl: UILabel!
     @IBOutlet private weak var countryCodeTextField: FPNTextField!
     @IBOutlet private weak var continueBtn: UIButton!
     @IBOutlet private weak var phoneNumTextField: UITextField!
@@ -23,6 +25,8 @@ final class EnterPhoneNumberClipVC: UIViewController {
     private var countryCode = ""
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private let numberDropDown = DropDown()
+    var ticketPrice = 0
+    var isGeneralAdmission = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +37,8 @@ final class EnterPhoneNumberClipVC: UIViewController {
         checkFPNField.delegate = self
         
         countryCodeTextField.delegate = self
-        countryCodeTextField.setFlag(countryCode: .IN)
-        countryCode = "+91"
+        countryCodeTextField.setFlag(countryCode: .US)
+        countryCode = "+1"
         
         listController.setup(repository: countryCodeTextField.countryRepository)
         listController.didSelect = { [weak self] country in
@@ -54,6 +58,9 @@ final class EnterPhoneNumberClipVC: UIViewController {
         countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
         
         listController.showCountryPhoneCode = true
+        
+        ticketTypeLbl.text = isGeneralAdmission ? "General Admission" : "VIP Skip the Line"
+        ticketPriceLbl.text = "$\(ticketPrice)"
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
         countrySelectionView.addGestureRecognizer(tap)
@@ -146,7 +153,8 @@ final class EnterPhoneNumberClipVC: UIViewController {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
             vc.phoneNo = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
             vc.totalTicket = Int(ticketNumberLbl.text ?? "") ?? 1
-            vc.ticketPrice = 90
+            vc.ticketPrice = ticketPrice
+            vc.isGeneralAdmission = isGeneralAdmission
             navigationController?.pushViewController(vc, animated: true)
         }
     }

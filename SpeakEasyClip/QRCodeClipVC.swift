@@ -22,10 +22,12 @@ final class QRCodeClipVC: UIViewController {
     var isGeneralAdmission = false
     var totalTicket = 1
     var currentTicketNo = 1
+    var ticketPrice = 90
 
     override func viewDidLoad() {
         super.viewDidLoad()
         ticketDetailLbl.text = isGeneralAdmission ? "When in’s your turn present the above QR code to be scanned in." : "Walk up to front of line and present the above QR code to be scanned in."
+        ticketPriceLbl.text = "$\(ticketPrice)"
         changeTicket()
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickNextTicket))
         nextTicketView.addGestureRecognizer(tap)
@@ -48,13 +50,13 @@ final class QRCodeClipVC: UIViewController {
                 previousTicketView.isHidden = false
                 previousTicketNoLbl.text = "Ticket \(currentTicketNo - 1)"
             }
-            ticketTitleLbl.text = "VIP Skip the Line (\(currentTicketNo))"
+            ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line") (\(currentTicketNo))"
             // TODO: change QR image from here (for currentTicketNo)
         } else {
             multipleTicketStackHeight.constant = 0
             nextTicketView.isHidden = true
             previousTicketView.isHidden = true
-            ticketTitleLbl.text = "VIP Skip the Line"
+            ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
         }
         
     }

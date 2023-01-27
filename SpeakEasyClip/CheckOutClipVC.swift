@@ -15,15 +15,18 @@ final class CheckOutClipVC: UIViewController {
     @IBOutlet private weak var ticketPriceLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!
     @IBOutlet private weak var payBtn: PKPaymentButton!
+    @IBOutlet private weak var ticketQuantityLbl: UILabel!
     
     var phoneNo = ""
     var totalTicket = 1
     var ticketPrice = 90
+    var isGeneralAdmission = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         phoneNoLbl.text = phoneNo
-        ticketTitleLbl.text = "\(totalTicket)x VIP Skip the Line"
+        ticketQuantityLbl.text = "\(totalTicket)x"
+        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
         ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
         payBtn.addTarget(self, action: #selector(onClickPay), for: .touchUpInside)
@@ -55,6 +58,8 @@ final class CheckOutClipVC: UIViewController {
 //        }
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
             vc.totalTicket = totalTicket
+            vc.isGeneralAdmission = isGeneralAdmission
+            vc.ticketPrice = ticketPrice
             navigationController?.pushViewController(vc, animated: true)
         }
     }
