@@ -46,7 +46,6 @@ class EventBookingDetails: UIViewController {
         self.setupStreachyHeaderViewFrames()
         self.strechyTableView.layoutIfNeeded()
         
-        self.btnProceed.isUserInteractionEnabled = false
         self.viewProceed.isHidden = true
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -219,8 +218,8 @@ extension EventBookingDetails: UITableViewDataSource {
         if count == 1 {
             self.arrEventBooking[sender.tag].ticketCount -= 1
             self.totalTicket -= 1
+            self.viewProceed.isHidden = true
         }
-        self.viewProceed.isHidden = true
         self.strechyTableView.reloadData()
     }
     @objc func onBtnPlusQuantity(_ sender: UIButton){
@@ -231,8 +230,8 @@ extension EventBookingDetails: UITableViewDataSource {
             }
             self.arrEventBooking[sender.tag].ticketCount += 1
             self.totalTicket += 1
+            self.viewProceed.isHidden = false
         }
-        self.viewProceed.isHidden = false
         self.strechyTableView.reloadData()
     }
     @objc func onBtnBookVIPTable(){

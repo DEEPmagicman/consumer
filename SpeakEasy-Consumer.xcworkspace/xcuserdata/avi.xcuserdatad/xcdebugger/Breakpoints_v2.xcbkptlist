@@ -2042,8 +2042,8 @@
             filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Controllers/EventBookingDetails/EventBookingDetails.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "248"
-            endingLineNumber = "248"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "tableView(_:heightForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -2058,8 +2058,8 @@
             filePath = "SpeakEasy/Modules/Home/Home/Controllers/Events/Controllers/EventBookingDetails/EventBookingDetails.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "250"
-            endingLineNumber = "250"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "tableView(_:heightForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
