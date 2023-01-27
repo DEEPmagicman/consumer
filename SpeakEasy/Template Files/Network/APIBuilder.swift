@@ -28,6 +28,7 @@ struct APIBuilder {
     static private let cityList = "/common-data/city"
     static private let venue = "/venue"
     static private let event = "/event"
+    static private let bottleList = "/manager/venue-bottle-category"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -112,5 +113,9 @@ struct APIBuilder {
     
     static var eventURL: String {
         baseURL + route + event
+    }
+    
+    static var bottleListURL: String {
+        baseURL + bottleList
     }
 }

@@ -61,7 +61,7 @@ class ViewEventTickets: UIViewController {
         self.viewFirstText.isHidden = !toggel
         self.lblSecondText.isHidden = toggel
 //        self.lblFirstTextPlus.isHidden = !toggel
-        let title = toggel ? "Buy Tickets" : "Buy Tickets"
+        let title = toggel ? "Buy Ticket" : "Buy Ticket"
         self.btnBuyTickets.setTitle(title, for: .normal)
     }
     

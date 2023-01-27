@@ -158,6 +158,7 @@ final class Navigate {
     
     func MVPVenueListViewController(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        sender.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

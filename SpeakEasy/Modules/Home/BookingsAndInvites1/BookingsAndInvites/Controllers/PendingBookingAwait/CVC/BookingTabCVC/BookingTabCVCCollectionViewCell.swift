@@ -48,7 +48,8 @@ class BookingTabCVCCollectionViewCell: UICollectionViewCell {
         case false:
             self.lblOption.textColor = Global.APP_COLOR_DARK_GREY
         }
-        
+        self.lblOption.isShadowed = data.isSelected
+        self.lblOption.layoutSubviews()
         self.viewSelectedTab.isHidden = !data.isSelected
     }
 

@@ -17,14 +17,44 @@ struct DrinkGroup {
 
 class BottleMenu: UIViewController {
     
+    var venueDelegate = VenuePresenter()
     var arrDrinks = [DrinkGroup(drinkType: "Champagne", drinkOne: "Moet Nectar Rose", drinkTwo: "Dom Perignon", drinkThree: "Veuve Brut", drinkFour: "Poema"), DrinkGroup(drinkType: "Vodka", drinkOne: "Titos", drinkTwo: "Grey Goose", drinkThree: "Absolut", drinkFour: "Finlandia"), DrinkGroup(drinkType: "Tequila", drinkOne: "Casamigos", drinkTwo: "Patron Anejo", drinkThree: "Don Julio Blanco", drinkFour: "Don Julio 1942 Magnum"), DrinkGroup(drinkType: "Whiskey", drinkOne: "Jim Beam", drinkTwo: "Jack Daniels", drinkThree: "Crown Royal", drinkFour: "Makers Mark")]
+    var drinkList = [BottleCategory]()
+    var from = 0
 
     @IBOutlet weak var tableViewBottleMenue: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
+        fetchBottleList()
     }
+    
+    private func fetchBottleList() {
+        self.venueDelegate.getBottleList(venueId: "63bd6cd8dda4dda0a79343f4") { isSuccess, errMsg, bottleList, hasMore in
+            if isSuccess {
+                for drink in bottleList {
+                    self.drinkList.append(drink)
+                }
+                if hasMore {
+                    self.from = self.drinkList.count
+                    self.fetchBottleList()
+                    return
+                }
+                self.tableViewBottleMenue.reloadData()
+                print(self.drinkList)
+
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+    }
+    
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -34,28 +64,44 @@ class BottleMenu: UIViewController {
 extension BottleMenu {
     private func setUI() {
         registerCell()
+        self.tableViewBottleMenue.setupPadding()
+        self.tableViewBottleMenue.groupStyleSpacing()
     }
     private func registerCell() {
         self.tableViewBottleMenue.register(UINib(nibName: "BottleMenuTVC", bundle: nil), forCellReuseIdentifier: "BottleMenuTVC")
+        self.tableViewBottleMenue.register(UINib(nibName: "BottleCategoryHeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: "BottleCategoryHeaderView")
     }
-}
-//MARK: - UITableViewDelegate
-extension BottleMenu: UITableViewDelegate {
-    
 }
 //MARK: - UITableViewDataSource
 extension BottleMenu: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.drinkList.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrDrinks.count
+        return self.drinkList[section].bottleMenu?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableViewBottleMenue.dequeueReusableCell(withIdentifier: "BottleMenuTVC", for: indexPath) as? BottleMenuTVC else { return UITableViewCell() }
-        cell.lblType.text = arrDrinks[indexPath.row].drinkType
-        cell.lblDrinkOne.text = arrDrinks[indexPath.row].drinkOne
-        cell.lblDrinkTwo.text = arrDrinks[indexPath.row].drinkTwo
-        cell.lblDrinkThree.text = arrDrinks[indexPath.row].drinkThree
-        cell.lblDrinkFour.text = arrDrinks[indexPath.row].drinkFour
-//        cell.setDat(data: true)
+        cell.lblType.text = self.drinkList[indexPath.section].bottleMenu?[indexPath.row].drinkName
         return cell
+    }
+}
+
+extension BottleMenu: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "BottleCategoryHeaderView") as? BottleCategoryHeaderView
+        let data = self.drinkList[section].name
+        header?.categoryLbl.text = data
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            return 25
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 10
     }
 }
