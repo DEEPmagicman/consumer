@@ -90,9 +90,9 @@
 		828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04932962DA3E004A5F2B /* InstagramMedia.swift */; };
 		828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */; };
 		828E9A972983CF01000F2736 /* BottleCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828E9A962983CF01000F2736 /* BottleCategory.swift */; };
-		828E9A9A2983CF73000F2736 /* BottleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828E9A992983CF72000F2736 /* BottleList.swift */; };
 		828E9A9D2983E0BF000F2736 /* BottleCategoryHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 828E9A9C2983E0BF000F2736 /* BottleCategoryHeaderView.xib */; };
 		828E9A9F2983E0CC000F2736 /* BottleCategoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828E9A9E2983E0CC000F2736 /* BottleCategoryHeaderView.swift */; };
+		828E9AA12983F768000F2736 /* BottleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828E9AA02983F768000F2736 /* BottleList.swift */; };
 		828F38312971567000DEE305 /* VipBookingInviteNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828F38302971567000DEE305 /* VipBookingInviteNew.swift */; };
 		828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */ = {isa = PBXBuildFile; fileRef = 828F38322971569C00DEE305 /* VipBookingInviteNew.xib */; };
 		828F38372971604A00DEE305 /* SubmitInviteTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 828F38352971604A00DEE305 /* SubmitInviteTVC.swift */; };
@@ -648,9 +648,9 @@
 		828A04932962DA3E004A5F2B /* InstagramMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramMedia.swift; sourceTree = "<group>"; };
 		828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotosViewController.swift; sourceTree = "<group>"; };
 		828E9A962983CF01000F2736 /* BottleCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCategory.swift; sourceTree = "<group>"; };
-		828E9A992983CF72000F2736 /* BottleList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BottleList.swift; path = ../../../../../../../Desktop/BottleList.swift; sourceTree = "<group>"; };
 		828E9A9C2983E0BF000F2736 /* BottleCategoryHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottleCategoryHeaderView.xib; sourceTree = "<group>"; };
 		828E9A9E2983E0CC000F2736 /* BottleCategoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleCategoryHeaderView.swift; sourceTree = "<group>"; };
+		828E9AA02983F768000F2736 /* BottleList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottleList.swift; sourceTree = "<group>"; };
 		828F38302971567000DEE305 /* VipBookingInviteNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VipBookingInviteNew.swift; sourceTree = "<group>"; };
 		828F38322971569C00DEE305 /* VipBookingInviteNew.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VipBookingInviteNew.xib; sourceTree = "<group>"; };
 		828F38352971604A00DEE305 /* SubmitInviteTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitInviteTVC.swift; sourceTree = "<group>"; };
@@ -1414,7 +1414,7 @@
 			isa = PBXGroup;
 			children = (
 				828E9A962983CF01000F2736 /* BottleCategory.swift */,
-				828E9A992983CF72000F2736 /* BottleList.swift */,
+				828E9AA02983F768000F2736 /* BottleList.swift */,
 			);
 			path = BottleMenuList;
 			sourceTree = "<group>";
@@ -4282,6 +4282,7 @@
 				4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */,
 				E11F4B2E28C83564008D2E30 /* BookingRequests.swift in Sources */,
 				E11F4BA328C8358C008D2E30 /* VIPTableBookingTVC.swift in Sources */,
+				828E9AA12983F768000F2736 /* BottleList.swift in Sources */,
 				E11F4B8C28C8358C008D2E30 /* Events.swift in Sources */,
 				CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */,
 				E1A9E7F728C579690081FB28 /* ImportantDatesCVC.swift in Sources */,
@@ -4406,7 +4407,6 @@
 				2986836829756EA600CB827B /* Flyer.swift in Sources */,
 				E11F4A9328C800B1008D2E30 /* AccessPass.swift in Sources */,
 				CE4867A2286F358700FD277E /* MOLH.swift in Sources */,
-				828E9A9A2983CF73000F2736 /* BottleList.swift in Sources */,
 				CAC4141228A478050007BA86 /* DaysCollectionViewCell.swift in Sources */,
 				E11F4C0D28C835F3008D2E30 /* ChatHeadTVC.swift in Sources */,
 				BD3FB2512940690D00BE7713 /* IdentifierHelper.swift in Sources */,
