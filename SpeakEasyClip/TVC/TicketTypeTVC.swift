@@ -13,8 +13,4 @@ final class TicketTypeTVC: UITableViewCell {
     @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var ticketPriceLbl: UILabel!
     @IBOutlet weak var lineView: UIView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }

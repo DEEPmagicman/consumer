@@ -35,7 +35,6 @@
 		04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */; };
 		2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
-		2966E32F2980F85E00B5E103 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32E2980F85E00B5E103 /* ViewController.swift */; };
 		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
 		2966E3342980F86000B5E103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3352980F86000B5E103 /* LaunchScreen.storyboard */; };
@@ -595,7 +594,6 @@
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2966E32C2980F85E00B5E103 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2966E32E2980F85E00B5E103 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2966E3312980F85E00B5E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2966E3332980F86000B5E103 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2966E3362980F86000B5E103 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1230,16 +1228,15 @@
 				297E37352983B13A00139947 /* TVC */,
 				2966E32A2980F85E00B5E103 /* AppDelegate.swift */,
 				2966E32C2980F85E00B5E103 /* SceneDelegate.swift */,
-				2966E32E2980F85E00B5E103 /* ViewController.swift */,
 				2966E3302980F85E00B5E103 /* Main.storyboard */,
 				2966E3332980F86000B5E103 /* Assets.xcassets */,
 				2966E3352980F86000B5E103 /* LaunchScreen.storyboard */,
 				2966E3382980F86000B5E103 /* Info.plist */,
 				2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */,
+				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
 				29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */,
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
-				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
 			);
 			path = SpeakEasyClip;
 			sourceTree = "<group>";
@@ -4079,7 +4076,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2966E32F2980F85E00B5E103 /* ViewController.swift in Sources */,
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,

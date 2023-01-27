@@ -32,7 +32,7 @@ final class CheckOutClipVC: UIViewController {
         payBtn.addTarget(self, action: #selector(onClickPay), for: .touchUpInside)
     }
     
-    @IBAction func onClickBack(_ sender: Any) {
+    @IBAction private func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
