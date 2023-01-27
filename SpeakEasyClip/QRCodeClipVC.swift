@@ -14,6 +14,7 @@ final class QRCodeClipVC: UIViewController {
     @IBOutlet private weak var ticketTitleLbl: UILabel!
     @IBOutlet private weak var ticketPriceLbl: UILabel!
     @IBOutlet private weak var ticketQuantityLbl: UILabel!
+    @IBOutlet private weak var QRImg: UIImageView!
     
     var isGeneralAdmission = false
     var totalTicket = 1
@@ -30,5 +31,19 @@ final class QRCodeClipVC: UIViewController {
         }
         ticketPriceLbl.text = "$\(ticketPrice)"
         ticketQuantityLbl.text = "\(totalTicket)x"
+        QRImg.image = generateQRCode(from: "Total Ticket:\(totalTicket), Ticket Price: \(ticketPrice), \(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")")
+    }
+    
+    func generateQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: String.Encoding.ascii)
+        if let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            let transform = CGAffineTransform(scaleX: 3, y: 3)
+
+            if let output = filter.outputImage?.transformed(by: transform) {
+                return UIImage(ciImage: output)
+            }
+        }
+        return nil
     }
 }

@@ -102,16 +102,16 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Exz-fy-1Py">
-                                                <rect key="frame" x="16" y="342" width="141" height="36"/>
+                                                <rect key="frame" x="16" y="342" width="144.5" height="36"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Ticket" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYZ-Jq-wvX">
-                                                        <rect key="frame" x="0.0" y="2.5" width="141" height="31"/>
+                                                        <rect key="frame" x="0.0" y="2.5" width="144.5" height="31"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7mz-aC-wng">
-                                                        <rect key="frame" x="0.0" y="31.5" width="141" height="2"/>
+                                                        <rect key="frame" x="0.0" y="31.5" width="144.5" height="2"/>
                                                         <color key="backgroundColor" name="ColorBlue"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="2" id="rqg-zw-98J"/>
@@ -177,7 +177,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mv5-pj-HP3">
-                                        <rect key="frame" x="137.5" y="46" width="139" height="20"/>
+                                        <rect key="frame" x="136.5" y="46" width="141.5" height="20"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -243,7 +243,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKa-CD-dyJ">
-                                        <rect key="frame" x="123" y="1" width="168" height="35"/>
+                                        <rect key="frame" x="121.5" y="1" width="171.5" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -497,7 +497,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sjr-8Q-gwD">
-                                        <rect key="frame" x="145.5" y="0.0" width="123" height="35"/>
+                                        <rect key="frame" x="145" y="0.0" width="124.5" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -578,7 +578,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7J0-ia-XF5">
-                                        <rect key="frame" x="0.0" y="62.5" width="42.5" height="21"/>
+                                        <rect key="frame" x="0.0" y="62.5" width="44" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -863,6 +863,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="QRImg" destination="E1u-Zf-xRZ" id="9vV-WC-cvl"/>
                         <outlet property="ticketDetailLbl" destination="4PC-e4-IM9" id="p1U-FS-BPK"/>
                         <outlet property="ticketPriceLbl" destination="mcj-BT-slA" id="dtp-jA-Ebf"/>
                         <outlet property="ticketQuantityLbl" destination="ZgY-Vh-chC" id="moD-wG-QtR"/>
@@ -880,7 +881,7 @@
         <image name="demoVenueImg" width="390" height="327"/>
         <image name="demoVenueLogo" width="60" height="67"/>
         <image name="downArr" width="29" height="29"/>
-        <image name="speakEasy" width="172" height="85"/>
+        <image name="speakEasy" width="90" height="49"/>
         <namedColor name="ColorBlue">
             <color red="0.0040000001899898052" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
