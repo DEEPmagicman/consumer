@@ -15,9 +15,12 @@ class PersonalInformationViewController: UIViewController {
     @IBOutlet weak var nickName: SkyFloatingLabelTextField!
     @IBOutlet weak var gender: SkyFloatingLabelTextField!
     @IBOutlet weak var genderBtn: UIButton!
+    @IBOutlet weak var dateOfBirthLbl: UILabel!
+    @IBOutlet weak var emailLbl: UILabel!
+    @IBOutlet weak var phoneNumberLbl: UILabel!
     
     let genderDropDown = DropDown()
-    
+    var editInfoDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,10 +33,13 @@ class PersonalInformationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        firstName.text = "Tamas"
-        lastName.text = "An"
-        nickName.text = "Tomi"
-        gender.text = "Male"
+        firstName.text = UserDefault.shared.user?.firstName ?? "Tamas"
+        lastName.text = UserDefault.shared.user?.lastName ?? "An"
+        nickName.text = UserDefault.shared.user?.nickName ?? "Tomi"
+        gender.text = UserDefault.shared.user?.gender ?? "MALE"
+        dateOfBirthLbl.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY)
+        emailLbl.text = UserDefault.shared.user?.email
+        phoneNumberLbl.text = UserDefault.shared.user?.phone
     }
 
     private func textFieldSetUP(_ textField: SkyFloatingLabelTextField) {
@@ -46,7 +52,22 @@ class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickSave(_ sender: Any) {
-        Navigate.to.back(self)
+        self.editInfoDelegate.editUserProfileApi(fName: firstName.text ?? "", lName: lastName.text ?? "", nickName: nickName.text ?? "",gender: self.gender.text) { isSuccess,errorMsg  in
+            Loader.hide()
+            if isSuccess {
+                UserDefault.shared.user?.firstName = self.firstName.text ?? ""
+                UserDefault.shared.user?.lastName = self.lastName.text ?? ""
+                UserDefault.shared.user?.nickName = self.nickName.text ?? ""
+                UserDefault.shared.user?.gender = self.gender.text ?? ""
+                Navigate.to.back(self)
+            } else {
+                if errorMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
     }
     
     @IBAction func onClickEmail(_ sender: Any) {

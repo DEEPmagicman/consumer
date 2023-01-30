@@ -24,6 +24,7 @@ final class VerificationCodeViewController: UIViewController {
     private var onBoardingDelegate = OnBoardingPresenter()
     var isFromSettings = false
     var isForEmail = false
+    var settingDelegate = SettingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,7 +96,20 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    
+                    self.settingDelegate.changeEmailResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess, errMsg in
+                        if isSuccess {
+                            self.otpRef = otpRef
+                            self.currectOtp = otp
+                            print("*-*\(self.currectOtp)")
+                        } else {
+                            if errMsg != nil {
+                                Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                            } else {
+                                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                            }
+                        }
+                        Loader.hide()
+                    }
                 } else {
                     
                 }
@@ -142,6 +156,22 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
+                    self.settingDelegate.changeEmailVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess, errMsg in
+                        if isSuccess {
+                            for controller in self.navigationController!.viewControllers{
+                                if controller.isKind(of: PersonalInformationViewController.self) {
+                                    self.navigationController?.popToViewController(controller, animated: true) }
+                            }
+
+                        } else {
+                            if errMsg != nil {
+                                Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                            } else {
+                                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                            }
+                        }
+                        Loader.hide()
+                    }
                     print("*-*email")
                 } else {
                     if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {

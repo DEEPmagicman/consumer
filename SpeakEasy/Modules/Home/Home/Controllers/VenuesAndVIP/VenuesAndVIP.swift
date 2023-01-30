@@ -30,6 +30,7 @@ class VenuesAndVIP: BaseController {
     var arrayHeaders = [HeaderOption(label: Strings.HOT_VENUES.text, icon: UIImage(named: "EventsTabSelected"))]
     var venueDelegate = VenuePresenter()
     var venueList = [Venue]()
+    var from = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,10 +39,21 @@ class VenuesAndVIP: BaseController {
         frame.size.height = .leastNormalMagnitude
         tableView.tableHeaderView = UIView(frame: frame)
         tableView.sectionHeaderHeight = 0
-        self.venueDelegate.getVenues { isSuccess, errMsg, venueList in
+        fetchAllVenue()
+    }
+    
+    private func fetchAllVenue() {
+        self.venueDelegate.getVenues(from: self.from) { isSuccess, errMsg, venueList, hasMore in
             if isSuccess {
-                print(venueList)
-                self.venueList = venueList
+                for venue in venueList {
+                    self.venueList.append(venue)
+                }
+                if hasMore {
+                    self.from = self.venueList.count
+                    self.fetchAllVenue()
+                    return
+                }
+                print(self.venueList)
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -49,7 +61,9 @@ class VenuesAndVIP: BaseController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            Loader.hide()
         }
+
     }
 }
 extension VenuesAndVIP {

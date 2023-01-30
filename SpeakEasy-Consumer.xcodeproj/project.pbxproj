@@ -81,6 +81,7 @@
 		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
 		820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */; };
 		820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */; };
+		824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F86EC2987D52600A9F1FD /* SettingPresenter.swift */; };
 		82847A792982485B00611DC4 /* MVPFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82847A782982485B00611DC4 /* MVPFlow.storyboard */; };
 		82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */; };
 		82847A7F29824B2B00611DC4 /* venueTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7D29824B2B00611DC4 /* venueTableCell.swift */; };
@@ -640,6 +641,7 @@
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
 		820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsCell.xib; sourceTree = "<group>"; };
+		824F86EC2987D52600A9F1FD /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
 		82847A782982485B00611DC4 /* MVPFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MVPFlow.storyboard; sourceTree = "<group>"; };
 		82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueListVc.swift; sourceTree = "<group>"; };
 		82847A7D29824B2B00611DC4 /* venueTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = venueTableCell.swift; sourceTree = "<group>"; };
@@ -1162,6 +1164,7 @@
 				0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */,
 				0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */,
 				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
+				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4126,6 +4129,7 @@
 				E11F4C1428C835F3008D2E30 /* Invites.swift in Sources */,
 				CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */,
 				E11F4BAB28C8358C008D2E30 /* BookingCalenderTVC.swift in Sources */,
+				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
 				E1A9E7F628C579690081FB28 /* FriendsListCVC.swift in Sources */,
 				E167055C28CA442800644BF0 /* SelectedTicketTVC.swift in Sources */,
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,
