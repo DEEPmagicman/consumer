@@ -103,6 +103,7 @@
 		82994A8F296D29F5008CA778 /* InviteFriendsPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */; };
 		82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */; };
 		82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */; };
+		829FB89D2988F64500E89019 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */; };
 		82E7F5B429681F8F007FC573 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F5B329681F8F007FC573 /* City.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
 		84248D9A28D29ABC00A6E260 /* AllEvents.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248D9828D29ABC00A6E260 /* AllEvents.xib */; };
@@ -663,6 +664,7 @@
 		82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsPopUp.swift; sourceTree = "<group>"; };
 		82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
 		82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendListTableViewCell.xib; sourceTree = "<group>"; };
+		829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		82E7F5B329681F8F007FC573 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
 		84248D9828D29ABC00A6E260 /* AllEvents.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllEvents.xib; sourceTree = "<group>"; };
@@ -1165,6 +1167,7 @@
 				0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */,
 				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
 				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
+				829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4355,6 +4358,7 @@
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E17DC85B28C6C16500244C4F /* TabCVC.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
+				829FB89D2988F64500E89019 /* ChangePasswordViewController.swift in Sources */,
 				E11CE3E528C8DF7F003899C4 /* WeekDays.swift in Sources */,
 				E1A9E75128C55D550081FB28 /* VenuePhotoGallery.swift in Sources */,
 				4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */,

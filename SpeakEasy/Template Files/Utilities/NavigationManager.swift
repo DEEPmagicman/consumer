@@ -141,6 +141,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func changePasswordVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(ChangePasswordViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func selectGenderVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectGenderViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)

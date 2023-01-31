@@ -37,10 +37,10 @@ final class VenuePresenter {
     
     func getBottleList(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [BottleCategory], _ hasMore: Bool) -> Void) {
         Loader.show()
-//        let param = ["venue": venueId]
-        AFWrapper.getRequest(APIBuilder.bottleListURL,params: nil, headers: Header.header()) { (response) in
+        AFWrapper.getRequest(APIBuilder.bottleListURL(venueId),params: nil, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
+            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool
+            else {
                 completion(false, nil, [],false)
                 return
             }

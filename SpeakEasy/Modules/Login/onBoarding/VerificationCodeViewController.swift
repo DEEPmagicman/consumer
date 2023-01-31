@@ -96,7 +96,7 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    self.settingDelegate.changeEmailResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess, errMsg in
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
@@ -111,7 +111,20 @@ final class VerificationCodeViewController: UIViewController {
                         Loader.hide()
                     }
                 } else {
-                    
+                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef,isForPhone: true) { otp, otpRef, isSuccess, errMsg in
+                        if isSuccess {
+                            self.otpRef = otpRef
+                            self.currectOtp = otp
+                            print("*-*\(self.currectOtp)")
+                        } else {
+                            if errMsg != nil {
+                                Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                            } else {
+                                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                            }
+                        }
+                        Loader.hide()
+                    }
                 }
             } else {
                 self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess,errorMsg  in
@@ -156,7 +169,7 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    self.settingDelegate.changeEmailVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess, errMsg in
                         if isSuccess {
                             for controller in self.navigationController!.viewControllers{
                                 if controller.isKind(of: PersonalInformationViewController.self) {
@@ -174,9 +187,25 @@ final class VerificationCodeViewController: UIViewController {
                     }
                     print("*-*email")
                 } else {
-                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
-                          self.navigationController?.popToViewController(pInfoVC, animated: false)
+//                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
+//                          self.navigationController?.popToViewController(pInfoVC, animated: false)
+//                        }
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef,isForPhone: true) { isSuccess, errMsg in
+                        if isSuccess {
+                            for controller in self.navigationController!.viewControllers{
+                                if controller.isKind(of: PersonalInformationViewController.self) {
+                                    self.navigationController?.popToViewController(controller, animated: true) }
+                            }
+
+                        } else {
+                            if errMsg != nil {
+                                Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                            } else {
+                                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                            }
                         }
+                        Loader.hide()
+                    }
                     print("*-*settingPhone")
                 }
                

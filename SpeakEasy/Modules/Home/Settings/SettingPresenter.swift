@@ -31,10 +31,16 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changeEmailPhoneVerifyApi(otp: Int, otpRef: String,isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
-        AFWrapper.postRequest(APIBuilder.changeEmailOtpVerifyURL, params: param, headers: Header.header()) { (response) in
+        var url = ""
+        if isForPhone  {
+            url = APIBuilder.changePhoneOtpVerifyURL
+        } else {
+            url = APIBuilder.changeEmailOtpVerifyURL
+        }
+        AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic as? [String:Any]
             else {
@@ -59,10 +65,16 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailResendOtpApi(otpref: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changeEmailPhoneResendOtpApi(otpref: String,isForPhone: Bool = false, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
-        AFWrapper.postRequest(APIBuilder.changeEmailResendOtpURL, params: param, headers: Header.header()) { (response) in
+        var url = ""
+        if isForPhone {
+            url = APIBuilder.changePhoneResendOtpURL
+        } else {
+            url = APIBuilder.changeEmailResendOtpURL
+        }
+        AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
             else {
@@ -78,6 +90,51 @@ final class SettingPresenter {
             }
             print(error ?? "")
             completion("", "", false, nil)
+        }
+    }
+    
+    func changePhoneNumberApi(phone: String,code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        Loader.show()
+        let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
+        AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
+            else {
+                completion("", "", false, nil)
+                return
+            }
+            completion(otp, otpref, true, nil)
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion("", "", false, err.domain)
+                return
+            }
+            print(error ?? "")
+            completion("", "", false, nil)
+        }
+    }
+    
+    func changePasswordApi(oldPass: String, newPass: String, confirmPass: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+     
+        let param = ["currentPassword": oldPass, "newPassword": newPass, "confirmPassword": confirmPass]
+        Loader.show()
+        AFWrapper.patchRequest(APIBuilder.changePasswordURL, params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String:Any]
+            else {
+                completion(false, nil)
+                return
+            }
+            completion(true, nil)
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            print(error ?? "")
+            completion(false, nil)
         }
     }
 }

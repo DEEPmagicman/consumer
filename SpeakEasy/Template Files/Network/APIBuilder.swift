@@ -28,11 +28,15 @@ struct APIBuilder {
     static private let cityList = "/common-data/city"
     static private let venue = "/venue"
     static private let event = "/event"
-    static private let bottleList = "/manager/venue-bottle-category"
+    static private let bottleList = "/venueBottleCategory"
     static private let whoAmI = "/auth/who-am-i"
     static private let changeEmail = "/auth/change-email"
     static private let changeEmailOtpVerify = "/auth/change-email/otp-verify"
     static private let changeEmailResendOtp = "/auth/change-email/otp-resend"
+    static private let changePhoneNum = "/auth/change-phone"
+    static private let changePhoneNumOtpVerify = "/auth/change-phone/otp-verify"
+    static private let changePhoneNumResendOtp = "/auth/change-phone/otp-resend"
+    static private let changePassword = "/auth/change-password"
     static let include = "?include=%@"
 
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
@@ -120,8 +124,12 @@ struct APIBuilder {
         baseURL + route + event
     }
     
-    static var bottleListURL: String {
-        baseURL + bottleList
+    static func eventDetailURL(_ id: String) -> String {
+        baseURL + route + event + "/\(id)"
+    }
+    
+    static func bottleListURL(_ id: String) -> String {
+        baseURL + route + bottleList + "/\(id)"
     }
     
     static var whoAmIURL: String {
@@ -138,5 +146,21 @@ struct APIBuilder {
     
     static var changeEmailResendOtpURL: String {
         baseURL + route + changeEmailResendOtp
+    }
+    
+    static var changePhoneNumURL: String {
+        baseURL + route + changePhoneNum
+    }
+    
+    static var changePhoneOtpVerifyURL: String {
+        baseURL + route + changePhoneNumOtpVerify
+    }
+    
+    static var changePhoneResendOtpURL: String {
+        baseURL + route + changePhoneNumResendOtp
+    }
+    
+    static var changePasswordURL: String {
+        baseURL + route + changePassword
     }
 }

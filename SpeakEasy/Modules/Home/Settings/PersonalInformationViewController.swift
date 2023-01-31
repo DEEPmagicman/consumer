@@ -79,7 +79,7 @@ class PersonalInformationViewController: UIViewController {
      }
            
     @IBAction func onClickPassword(_ sender: Any) {
-        Navigate.to.resetPasswordVc(self)
+        Navigate.to.changePasswordVc(self)
     }
     
     @IBAction func onClickGenderDropdown(_ sender: Any) {
