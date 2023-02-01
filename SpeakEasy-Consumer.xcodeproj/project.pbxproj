@@ -81,6 +81,7 @@
 		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
 		820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */; };
 		820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */; };
+		824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F86EC2987D52600A9F1FD /* SettingPresenter.swift */; };
 		82847A792982485B00611DC4 /* MVPFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82847A782982485B00611DC4 /* MVPFlow.storyboard */; };
 		82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */; };
 		82847A7F29824B2B00611DC4 /* venueTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7D29824B2B00611DC4 /* venueTableCell.swift */; };
@@ -102,6 +103,7 @@
 		82994A8F296D29F5008CA778 /* InviteFriendsPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */; };
 		82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */; };
 		82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */; };
+		829FB89D2988F64500E89019 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */; };
 		82E7F5B429681F8F007FC573 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F5B329681F8F007FC573 /* City.swift */; };
 		84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248D9728D29ABC00A6E260 /* AllEvents.swift */; };
 		84248D9A28D29ABC00A6E260 /* AllEvents.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248D9828D29ABC00A6E260 /* AllEvents.xib */; };
@@ -640,6 +642,7 @@
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
 		820EEDB8296BF78400B9E015 /* TableBookingDetailsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsCell.xib; sourceTree = "<group>"; };
+		824F86EC2987D52600A9F1FD /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
 		82847A782982485B00611DC4 /* MVPFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MVPFlow.storyboard; sourceTree = "<group>"; };
 		82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueListVc.swift; sourceTree = "<group>"; };
 		82847A7D29824B2B00611DC4 /* venueTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = venueTableCell.swift; sourceTree = "<group>"; };
@@ -661,6 +664,7 @@
 		82994A8E296D29F5008CA778 /* InviteFriendsPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteFriendsPopUp.swift; sourceTree = "<group>"; };
 		82994A91296D3B9D008CA778 /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
 		82994A92296D3B9D008CA778 /* FriendListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendListTableViewCell.xib; sourceTree = "<group>"; };
+		829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		82E7F5B329681F8F007FC573 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		84248D9728D29ABC00A6E260 /* AllEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllEvents.swift; sourceTree = "<group>"; };
 		84248D9828D29ABC00A6E260 /* AllEvents.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllEvents.xib; sourceTree = "<group>"; };
@@ -1162,6 +1166,8 @@
 				0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */,
 				0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */,
 				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
+				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
+				829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4126,6 +4132,7 @@
 				E11F4C1428C835F3008D2E30 /* Invites.swift in Sources */,
 				CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */,
 				E11F4BAB28C8358C008D2E30 /* BookingCalenderTVC.swift in Sources */,
+				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
 				E1A9E7F628C579690081FB28 /* FriendsListCVC.swift in Sources */,
 				E167055C28CA442800644BF0 /* SelectedTicketTVC.swift in Sources */,
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,
@@ -4351,6 +4358,7 @@
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E17DC85B28C6C16500244C4F /* TabCVC.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
+				829FB89D2988F64500E89019 /* ChangePasswordViewController.swift in Sources */,
 				E11CE3E528C8DF7F003899C4 /* WeekDays.swift in Sources */,
 				E1A9E75128C55D550081FB28 /* VenuePhotoGallery.swift in Sources */,
 				4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */,

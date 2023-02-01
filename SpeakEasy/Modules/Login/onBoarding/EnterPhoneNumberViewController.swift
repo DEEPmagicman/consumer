@@ -19,6 +19,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
+    private var settingDelegate = SettingPresenter()
     var contryCode = ""
     var isFromSettings = false
     
@@ -112,7 +113,18 @@ final class EnterPhoneNumberViewController: UIViewController {
             }
         } else {
             if isFromSettings {
-                Navigate.to.enterVerificationCodeVc(self, isFromSettings: isFromSettings,phoneNum: self.phoneNumTextField.text ?? "")
+                self.settingDelegate.changePhoneNumberApi(phone: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess, errMsg in
+                    if isSuccess {
+                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
+                    } else {
+                        if errMsg != nil {
+                            Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                        } else {
+                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                        }
+                    }
+                    Loader.hide()
+                }
             } else {
                 self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
                     if isSuccess {

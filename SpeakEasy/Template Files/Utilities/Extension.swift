@@ -52,6 +52,19 @@ extension String {
         let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
         return testEmail.evaluate(with: self)
     }
+    
+    func convertDateFormat(from:DateFormat, to:DateFormat) -> String {
+        let olDateFormatter = DateFormatter()
+        olDateFormatter.dateFormat = from.rawValue
+        olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        guard let oldDate = olDateFormatter.date(from: self) else {return "No date Found" }
+        
+        let convertDateFormatter = DateFormatter()
+        convertDateFormatter.dateFormat = to.rawValue
+        convertDateFormatter.timeZone = .current
+        return convertDateFormatter.string(from: oldDate)
+    }
+
 }
 
 extension Double {

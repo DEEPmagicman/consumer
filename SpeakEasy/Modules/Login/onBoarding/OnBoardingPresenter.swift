@@ -425,4 +425,28 @@ final class OnBoardingPresenter {
             print(error ?? "")
         }
     }
+    
+    func getCurrentUserDetail(completion: @escaping(_ isSuccess: Bool) -> Void) {
+            Loader.show()
+        AFWrapper.getRequest(APIBuilder.whoAmIURL, params: nil, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any]
+                    
+            else {
+                completion(false)
+                return
+            }
+            let imageDic = userDic["image"] as? [String:Any]
+            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            let user = Currentuser(fromDictionary: userDic)
+            UserDefault.shared.user = user
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
+            print("\(user)")
+            
+            completion(true)
+        } failure: { (error) in
+            completion(false)
+            print(error ?? "")
+        }
+    }
 }
