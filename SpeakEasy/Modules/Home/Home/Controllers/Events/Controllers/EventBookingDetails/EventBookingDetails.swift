@@ -36,6 +36,8 @@ class EventBookingDetails: UIViewController {
     var topEventData: TopEventDataSet?
     var attendeeData: AttendeeProfile?
     var totalTicket = 0
+    var eventDetailDelegate = EventPresenter()
+    var eventDetail = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +49,20 @@ class EventBookingDetails: UIViewController {
         self.strechyTableView.layoutIfNeeded()
         
         self.viewProceed.isHidden = true
+        
+        self.eventDetailDelegate.getEventDetail(eventId: "63cf626b7ebaa3943317b9f9") { isSuccess, errMsg, eventDetails in
+            if isSuccess {
+                self.eventDetail = eventDetails
+                print(self.eventDetail)
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

@@ -35,30 +35,30 @@ final class EventPresenter {
         }
     }
     
-    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
+    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
         Loader.show()
 //        let param = ["skip": from]
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId),params: nil, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
-                completion(false, nil, [],false)
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, [])
                 return
             }
             do {
                 let decoder = JSONDecoder()
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let eventList = try decoder.decode([Event].self, from: data)
-                completion(true, nil, eventList,hasMore)
+                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
+                let eventList = try decoder.decode(Event.self, from: data)
+                completion(true, nil, [eventList])
             } catch {
-                completion(false, "internal error", [],false)
+                completion(false, "internal error", [])
             }
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
-                completion(false, err.domain, [],false)
+                completion(false, err.domain, [])
                 return
             }
-            completion(false, nil, [],false)
+            completion(false, nil, [])
         }
     }
 }

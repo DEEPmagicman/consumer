@@ -32,6 +32,8 @@ struct Event: Codable {
     var createdAt: String
     var updatedAt: String
     var floorPlanId: String
+    var eventTicket: [EventTicket]?
+    var venue: Venue?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -58,5 +60,7 @@ struct Event: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(floorPlanId, forKey: .floorPlanId)
+        try container.encode(eventTicket, forKey: .eventTicket)
+        try container.encode(venue, forKey: .venue)
     }
 }
