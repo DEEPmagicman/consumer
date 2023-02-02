@@ -37,10 +37,12 @@ class EventBookingDetails: UIViewController {
     var attendeeData: AttendeeProfile?
     var totalTicket = 0
     var eventDetailDelegate = EventPresenter()
-    var eventDetail = [Event]()
+    var eventId = "63cf626b7ebaa3943317b9f9"
+    var eventDetail: Event?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.fetchEventDetail()
         self.setUI()
         self.setData()
         self.loadHeaderView()
@@ -49,20 +51,6 @@ class EventBookingDetails: UIViewController {
         self.strechyTableView.layoutIfNeeded()
         
         self.viewProceed.isHidden = true
-        
-        self.eventDetailDelegate.getEventDetail(eventId: "63cf626b7ebaa3943317b9f9") { isSuccess, errMsg, eventDetails in
-            if isSuccess {
-                self.eventDetail = eventDetails
-                print(self.eventDetail)
-            } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
-            }
-            Loader.hide()
-        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -74,6 +62,28 @@ class EventBookingDetails: UIViewController {
             
         }
     }
+    
+    private func fetchEventDetail() {
+        self.eventDetailDelegate.getEventDetail(eventId: self.eventId) { isSuccess, errMsg, eventDetails in
+            if isSuccess {
+                self.eventDetail = eventDetails
+//                self.loadHeaderView()
+                print(self.eventDetail)
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+    }
+    
+    private func setUpUI() {
+        
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateHeaderView()
     }
@@ -114,6 +124,8 @@ extension EventBookingDetails {
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
             let tableHeaderView  = EventTableViewHeader.instanceFromNib() as! EventTableViewHeader
+            guard let eventDetail = self.eventDetail else {return}
+            tableHeaderView.setDataNew(data: eventDetail)
             guard let data = self.topEventData else {return}
             tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView

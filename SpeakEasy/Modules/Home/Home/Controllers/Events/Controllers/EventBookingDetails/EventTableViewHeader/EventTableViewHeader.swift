@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 class EventTableViewHeader: UIView {
     
@@ -51,5 +52,17 @@ class EventTableViewHeader: UIView {
         self.lblVenueName.text = data.lblVenueName ?? ""
         self.lblSongArtists.text = data.lblSongArtist ?? ""
         self.lblLocation.text = data.location ?? ""
+    }
+    
+    func setDataNew(data: Event) {
+        let imgUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.flyer?.key ?? "")"
+        let logoUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.venue?.logo?.key ?? "")"
+        self.imgEventCover.sd_setImage(with: URL( string: imgUrl), completed: nil)
+        self.imgBrandLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
+        self.lblDescription.text = data.description
+//        self.lblSongName.text = data.lblSongName ?? ""
+//        self.lblVenueName.text = data.lblVenueName ?? ""
+//        self.lblSongArtists.text = data.lblSongArtist ?? ""
+//        self.lblLocation.text = data.location ?? ""
     }
 }

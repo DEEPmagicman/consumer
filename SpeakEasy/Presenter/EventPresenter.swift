@@ -35,30 +35,30 @@ final class EventPresenter {
         }
     }
     
-    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
+    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: Event?) -> Void) {
         Loader.show()
 //        let param = ["skip": from]
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId),params: nil, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil, [])
+                completion(false, nil, nil)
                 return
             }
             do {
                 let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
                 let eventList = try decoder.decode(Event.self, from: data)
-                completion(true, nil, [eventList])
+                completion(true, nil, eventList)
             } catch {
-                completion(false, "internal error", [])
+                completion(false, "internal error", nil)
             }
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
-                completion(false, err.domain, [])
+                completion(false, err.domain, nil)
                 return
             }
-            completion(false, nil, [])
+            completion(false, nil, nil)
         }
     }
 }

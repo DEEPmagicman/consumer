@@ -22,7 +22,7 @@ final class AFWrapper: NSObject {
     
     private override init() {}
     
-    static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true,
+    static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, shouldForceLogout: Bool = true,
                             success: @escaping DefaultAPISuccessClosure,
                             failure: @escaping DefaultAPIFailureClosure) {
 
@@ -37,7 +37,7 @@ final class AFWrapper: NSObject {
             if let responseCode = responseObject.response?.statusCode {
                 if responseCode == 200 || responseCode == 201 {
                     success(responseObject.result.value)
-                } else if responseCode == 401 {
+                } else if shouldForceLogout && responseCode == 401 {
                     forceLogout()
                 } else if responseObject.result.value != nil {
                     let errorResponse = errorHandling(responseObject.result.value)
@@ -172,6 +172,7 @@ final class AFWrapper: NSObject {
     
     static func forceLogout() {
         CustomLoader.sharedInstance.stopAnimation()
+        Loader.hide()
         Utility.main.showAlert(message: Constant.String.sessionTimeOut, title: "") {
             UserDefault.shared.emptyData()
             AppDelegate.shared.changeRootViewController()

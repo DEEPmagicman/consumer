@@ -288,6 +288,12 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func eventDetail(_ sender: UIViewController, eventId: String){
+        let vc = EventBookingDetails()
+        vc.eventId = eventId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullscreenPush(vc: UIViewController) {
         if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)

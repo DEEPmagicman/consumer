@@ -31,7 +31,7 @@ class BottleMenu: UIViewController {
     }
     
     private func fetchBottleList() {
-        self.venueDelegate.getBottleList(venueId: "63bd6cd8dda4dda0a79343f4") { isSuccess, errMsg, bottleList, hasMore in
+        self.venueDelegate.getBottleList(venueId: "63d8b439a46f9d979e7a0c1b") { isSuccess, errMsg, bottleList, hasMore in
             if isSuccess {
                 for drink in bottleList {
                     self.drinkList.append(drink)
