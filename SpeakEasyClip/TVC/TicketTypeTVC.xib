@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,33 +28,27 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tWk-iG-Idm">
                         <rect key="frame" x="0.0" y="11" width="496" height="86"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General Admission" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M0d-ys-JFT">
-                                <rect key="frame" x="0.0" y="0.0" width="416.5" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="-" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M0d-ys-JFT">
+                                <rect key="frame" x="0.0" y="0.0" width="9" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="o5C-D4-hIH"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
+                                <color key="textColor" red="0.47450980392156861" green="0.47450980392156861" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="$" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-7b-lRP">
+                                <rect key="frame" x="476" y="-7.5" width="17" height="36.5"/>
+                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="26"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provides general admission to the venue. Admission subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tef-Nr-WTK">
-                                <rect key="frame" x="0.0" y="31" width="438" height="42"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="749" text="Provides general admission to the venue. subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tef-Nr-WTK">
+                                <rect key="frame" x="0.0" y="31" width="476" height="42"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="$50" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-7b-lRP">
-                                <rect key="frame" x="426.5" y="0.0" width="29.5" height="21"/>
-                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZBV-Mv-lSa">
-                                <rect key="frame" x="488" y="35" width="8" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="ZBV-Mv-lSa" secondAttribute="height" multiplier="1:2" id="XW5-lZ-7H8"/>
-                                    <constraint firstAttribute="width" constant="8" id="kbq-ek-T9b"/>
-                                </constraints>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="RightArrow"/>
-                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fow-63-gOb">
                                 <rect key="frame" x="0.0" y="85" width="496" height="1"/>
                                 <color key="backgroundColor" red="0.2470588235" green="0.2470588235" blue="0.2470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -67,13 +61,11 @@
                         <constraints>
                             <constraint firstItem="zDK-7b-lRP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M0d-ys-JFT" secondAttribute="trailing" constant="10" id="14s-1n-mfF"/>
                             <constraint firstItem="Fow-63-gOb" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" id="1H4-Fh-PAd"/>
-                            <constraint firstItem="ZBV-Mv-lSa" firstAttribute="leading" secondItem="tef-Nr-WTK" secondAttribute="trailing" constant="50" id="5Be-ld-TR2"/>
-                            <constraint firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="trailing" constant="40" id="Eub-Mf-3ZL"/>
+                            <constraint firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="trailing" constant="3" id="Eub-Mf-3ZL"/>
                             <constraint firstItem="Fow-63-gOb" firstAttribute="top" secondItem="tef-Nr-WTK" secondAttribute="bottom" constant="12" id="HCm-cs-2VY"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="top" secondItem="tWk-iG-Idm" secondAttribute="top" id="Hwq-eW-V68"/>
                             <constraint firstAttribute="trailing" secondItem="Fow-63-gOb" secondAttribute="trailing" id="S5s-RP-f9D"/>
-                            <constraint firstAttribute="trailing" secondItem="ZBV-Mv-lSa" secondAttribute="trailing" id="dja-i3-N0x"/>
-                            <constraint firstItem="ZBV-Mv-lSa" firstAttribute="centerY" secondItem="tWk-iG-Idm" secondAttribute="centerY" id="ijz-Ms-Wmv"/>
+                            <constraint firstItem="tef-Nr-WTK" firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="leading" id="ai8-lT-G3f"/>
                             <constraint firstItem="zDK-7b-lRP" firstAttribute="centerY" secondItem="M0d-ys-JFT" secondAttribute="centerY" id="sgp-KC-0mR"/>
                             <constraint firstAttribute="bottom" secondItem="Fow-63-gOb" secondAttribute="bottom" id="v8a-kX-ixp"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" id="waa-ez-gey"/>
@@ -100,7 +92,4 @@
             <point key="canvasLocation" x="208.69565217391306" y="111.49553571428571"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="RightArrow" width="13.5" height="25"/>
-    </resources>
 </document>

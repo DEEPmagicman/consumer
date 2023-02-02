@@ -258,6 +258,7 @@
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
 		CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */; };
 		CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */; };
+		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CEA9474F288CABA600D7BB91 /* AWBezierConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */; };
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
@@ -3796,6 +3797,7 @@
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
+				CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */,
 				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
 			);
