@@ -546,7 +546,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sjr-8Q-gwD">
-                                        <rect key="frame" x="145.5" y="0.0" width="123" height="35"/>
+                                        <rect key="frame" x="145" y="0.0" width="124.5" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -627,7 +627,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7J0-ia-XF5">
-                                        <rect key="frame" x="0.0" y="62.5" width="42.5" height="21"/>
+                                        <rect key="frame" x="0.0" y="62.5" width="44" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -714,9 +714,6 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UEd-0J-9fj" customClass="PKPaymentButton">
                                         <rect key="frame" x="0.0" y="0.0" width="368" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="0aQ-sc-KaR"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal">
@@ -731,13 +728,35 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ZS-Bx-OTH">
+                                        <rect key="frame" x="0.0" y="0.0" width="368" height="50"/>
+                                        <color key="backgroundColor" name="ColorBlue"/>
+                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="17"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Credit Card Checkout">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onClickContinue:" destination="GfZ-tX-ZY8" eventType="touchUpInside" id="EQM-37-3n4"/>
+                                            <action selector="onClickCreditCardPay:" destination="EcQ-cc-phh" eventType="touchUpInside" id="52C-GW-fbA"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Abd-ci-Xeh"/>
+                                    <constraint firstAttribute="bottom" secondItem="6ZS-Bx-OTH" secondAttribute="bottom" id="CD0-fE-Vbd"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="top" secondItem="P4C-o4-HY7" secondAttribute="top" id="J50-48-MH5"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="centerX" secondItem="P4C-o4-HY7" secondAttribute="centerX" id="L53-sd-rf2"/>
+                                    <constraint firstItem="6ZS-Bx-OTH" firstAttribute="leading" secondItem="P4C-o4-HY7" secondAttribute="leading" id="O3z-Fs-Xfl"/>
+                                    <constraint firstAttribute="trailing" secondItem="6ZS-Bx-OTH" secondAttribute="trailing" id="RTF-gN-ttB"/>
                                     <constraint firstAttribute="bottom" secondItem="UEd-0J-9fj" secondAttribute="bottom" id="dE3-1d-Jm6"/>
+                                    <constraint firstItem="6ZS-Bx-OTH" firstAttribute="top" secondItem="P4C-o4-HY7" secondAttribute="top" id="gXP-Vd-ehv"/>
                                     <constraint firstAttribute="trailing" secondItem="UEd-0J-9fj" secondAttribute="trailing" id="hu3-VK-v8H"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="leading" secondItem="P4C-o4-HY7" secondAttribute="leading" id="kjq-PE-V11"/>
                                 </constraints>
@@ -769,7 +788,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="payBtn" destination="UEd-0J-9fj" id="40Z-os-vVp"/>
+                        <outlet property="applePayBtn" destination="UEd-0J-9fj" id="j5B-DV-RQg"/>
+                        <outlet property="creditCardPayBtn" destination="6ZS-Bx-OTH" id="7Oz-d1-aax"/>
                         <outlet property="phoneNoLbl" destination="T7P-73-nn3" id="RRJ-9r-YQa"/>
                         <outlet property="ticketPriceLbl" destination="9TE-cz-CT3" id="PD2-HL-o2u"/>
                         <outlet property="ticketQuantityLbl" destination="tzy-mF-A6A" id="DRL-Ny-uce"/>
