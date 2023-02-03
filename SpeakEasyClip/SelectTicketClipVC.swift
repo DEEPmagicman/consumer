@@ -15,8 +15,10 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet private weak var liveCloseLbl: UILabel!
     @IBOutlet private weak var ticketTypeTableView: UITableView!
     @IBOutlet private weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var eventLocationLbl: UILabel!
     
     var isLive = true
+    var venueDetail: ClipVenue?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,45 @@ final class SelectTicketClipVC: UIViewController {
             liveCloseLbl.text = "CLOSED"
             liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
         }
+        getEventTicket()
+    }
+    
+    private func getEventTicket() {
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63db9cbc27d61c05f21b9df0") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return}
+            print(json)
+            let decoder = JSONDecoder()
+            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {return}
+            self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+            self.setUpUI()
+            DispatchQueue.main.async {
+                self.ticketTypeTableView.reloadData()
+            }
+        }.resume()
+        
+    }
+    
+    private func setUpUI() {
+        let imgStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueDetail?.venueAttachment.first?.key ?? "")"
+        let logoStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueDetail?.logo?.key ?? "")"
+        guard let imgUrl = URL(string: imgStr) else { return }
+        guard let logoUrl = URL(string: logoStr) else { return }
+        do {
+            let imgData = try Data(contentsOf: imgUrl)
+            let logoData = try Data(contentsOf: logoUrl)
+            DispatchQueue.main.async {
+                self.venueBgImg.image = UIImage(data: imgData)
+                self.logoImg.image = UIImage(data: logoData)
+            }
+        } catch {}
+        DispatchQueue.main.async {
+            self.venueTitleNameLbl.text = self.venueDetail?.name
+            self.eventLocationLbl.text = self.venueDetail?.address
+        }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -38,21 +79,19 @@ final class SelectTicketClipVC: UIViewController {
 
 extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        return self.venueDetail?.appClipTicket.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
-        if indexPath.row == 0 {
-            cell.ticketTypeLbl.text = "General Admission"
-            cell.infoLbl.text = "General Admission ticket. Entry subject to doorman discretion."
-            cell.ticketPriceLbl.text = "$50"
-            cell.lineView.isHidden = false
-        } else {
-            cell.ticketTypeLbl.text = "VIP Skip the Line"
-            cell.infoLbl.text = "Don’t wait - enter immediately with a Skip Line ticket. Entry subject to doorman discretion"
-            cell.ticketPriceLbl.text = "$90"
+
+        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket[indexPath.row].name
+        cell.infoLbl.text = self.venueDetail?.appClipTicket[indexPath.row].description
+        cell.ticketPriceLbl.text = "\(self.venueDetail?.appClipTicket[indexPath.row].price ?? 0)"
+        if indexPath.row == self.venueDetail?.appClipTicket.count {
             cell.lineView.isHidden = true
+        } else {
+            cell.lineView.isHidden = false
         }
         if isLive {
             cell.ticketPriceLbl.textColor = .white
