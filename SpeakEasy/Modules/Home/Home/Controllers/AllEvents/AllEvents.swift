@@ -120,7 +120,8 @@ extension AllEvents: UICollectionViewDataSource {
                 cell.imgEventCover.sd_setImage(with: URL( string: imgUrl), completed: nil)
                 cell.lblPerformerName.text = data.title
                 cell.lblVenueName.text = data.eventType
-                cell.lblEventDate.text = data.date
+                let date = data.date.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
+                cell.lblEventDate.text = date
                 //            cell.setData(data: data)
                 return cell
             }

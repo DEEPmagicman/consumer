@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -126,8 +126,11 @@
                 <outlet property="btnMinusQuantity" destination="QDe-iR-KOG" id="dmt-JO-y6h"/>
                 <outlet property="btnPlusQuantity" destination="MbA-Nu-dss" id="pox-lq-9Nm"/>
                 <outlet property="lblCount" destination="MvZ-J9-7ki" id="vyW-OS-qTB"/>
+                <outlet property="ticketDescriptionLbl" destination="BJF-xS-ZJ6" id="bP4-jU-g8a"/>
+                <outlet property="ticketPriceLbl" destination="NLn-sn-fFG" id="hHy-eH-hul"/>
+                <outlet property="ticketTypeLbl" destination="dW3-1O-Tzl" id="R9L-l9-o9B"/>
             </connections>
-            <point key="canvasLocation" x="278.26086956521743" y="125.22321428571428"/>
+            <point key="canvasLocation" x="261" y="103"/>
         </tableViewCell>
     </objects>
     <resources>

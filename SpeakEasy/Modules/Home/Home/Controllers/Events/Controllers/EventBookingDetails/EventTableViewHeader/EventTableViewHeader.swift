@@ -61,8 +61,8 @@ class EventTableViewHeader: UIView {
         self.imgBrandLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.lblDescription.text = data.description
 //        self.lblSongName.text = data.lblSongName ?? ""
-//        self.lblVenueName.text = data.lblVenueName ?? ""
+        self.lblVenueName.text = data.venue?.name ?? ""
 //        self.lblSongArtists.text = data.lblSongArtist ?? ""
-//        self.lblLocation.text = data.location ?? ""
+        self.lblLocation.text = data.venue?.address ?? ""
     }
 }

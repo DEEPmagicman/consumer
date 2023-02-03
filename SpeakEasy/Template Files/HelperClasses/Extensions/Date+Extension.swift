@@ -36,5 +36,6 @@ enum DateFormat:String {
     case MMMMDDYYYY = "MMMM dd, yyyy"
     case yyyyMMddTHHmmssSSSz = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
     case YYYYMMDD = "yyyy-MM-dd"
+    case EEEEMMMD = "EEEE, MMM d"
 }
 

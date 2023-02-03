@@ -19,6 +19,7 @@ struct EventTicket: Codable {
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
+    var selectedTicketCount: Int? = 0
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

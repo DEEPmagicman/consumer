@@ -29,46 +29,32 @@ class EventBookingDetails: UIViewController {
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
     
-    var arrEventBooking = [EventBooking(ticketCount: 0),
-                           EventBooking(ticketCount: 0),
-                           EventBooking(ticketCount: 0)]
-    
     var topEventData: TopEventDataSet?
     var attendeeData: AttendeeProfile?
     var totalTicket = 0
     var eventDetailDelegate = EventPresenter()
-    var eventId = "63cf626b7ebaa3943317b9f9"
+    var eventId = "63db9445b3a07c728c4e0032"
     var eventDetail: Event?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.fetchEventDetail()
         self.setUI()
-        self.setData()
-        self.loadHeaderView()
-        self.strechyTableView.alpha = 0
-        self.setupStreachyHeaderViewFrames()
-        self.strechyTableView.layoutIfNeeded()
-        
         self.viewProceed.isHidden = true
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.updateHeaderView()
-        
-        UIView.animate(withDuration: 0.02, delay: 0, options: .curveEaseOut) {
-            self.strechyTableView.alpha = 1.0
-        } completion: { _ in
-            
-        }
     }
     
     private func fetchEventDetail() {
-        self.eventDetailDelegate.getEventDetail(eventId: self.eventId) { isSuccess, errMsg, eventDetails in
+        self.eventDetailDelegate.getEventDetail(eventId: self.eventId) { [weak self] isSuccess, errMsg, eventDetails in
+            guard let self = self else { return }
             if isSuccess {
                 self.eventDetail = eventDetails
-//                self.loadHeaderView()
+                self.loadHeaderView()
+                self.strechyTableView.alpha = 1
+                self.setupStreachyHeaderViewFrames()
+                self.strechyTableView.layoutIfNeeded()
+                self.setUpUI()
                 print(self.eventDetail)
+                self.strechyTableView.reloadData()
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -81,7 +67,11 @@ class EventBookingDetails: UIViewController {
     }
     
     private func setUpUI() {
-        
+        lblArtistName.text = self.eventDetail?.title
+        let date = self.eventDetail?.date.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
+        let dd = self.eventDetail?.date.toDate(withFormat: .YYYYMMDD)
+        lblEventDate.text = date
+        print(dd ?? Date())
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -111,10 +101,7 @@ extension EventBookingDetails {
     private func setUI(){
         self.registerCell()
     }
-    private func setData() {
-        self.lblArtistName.text = topEventData?.lblPerformerName ?? ""
-        self.lblEventDate.text = topEventData?.lblEventDate ?? ""
-    }
+
     private func registerCell() {
         self.strechyTableView.register(UINib(nibName: "ViewEventTicketTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketTVC")
         self.strechyTableView.register(UINib(nibName: "EventBookingSelectionTVC", bundle: nil), forCellReuseIdentifier: "EventBookingSelectionTVC")
@@ -126,8 +113,6 @@ extension EventBookingDetails {
             let tableHeaderView  = EventTableViewHeader.instanceFromNib() as! EventTableViewHeader
             guard let eventDetail = self.eventDetail else {return}
             tableHeaderView.setDataNew(data: eventDetail)
-            guard let data = self.topEventData else {return}
-            tableHeaderView.setData(data: data)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }
@@ -168,7 +153,7 @@ extension EventBookingDetails: UITableViewDataSource {
         }
         else if section == 1 {
             if selectedTabAt == 0 {
-               return self.arrEventBooking.count
+                return self.eventDetail?.eventTicket?.count ?? 0
             } else if selectedTabAt == 1 {
                 return 1
             } else {
@@ -218,8 +203,7 @@ extension EventBookingDetails: UITableViewDataSource {
                 
                 cell.btnMinusQuantity.addTarget(self, action: #selector(self.onBtnMinusQuantity(_:)), for: .touchUpInside)
                 cell.btnPlusQuantity.addTarget(self, action: #selector(self.onBtnPlusQuantity(_:)), for: .touchUpInside)
-                
-                let data = self.arrEventBooking[indexPath.row]
+                guard let data = self.eventDetail?.eventTicket?[indexPath.row] else { return UITableViewCell()}
                 cell.setData(data: data)
                 return cell
             }else if selectedTabAt == 1 {
@@ -242,21 +226,21 @@ extension EventBookingDetails: UITableViewDataSource {
         }
     }
     @objc func onBtnMinusQuantity(_ sender: UIButton){
-        let count = self.arrEventBooking[sender.tag].ticketCount
+        let count = self.eventDetail?.eventTicket?[sender.tag].selectedTicketCount ?? 0
         if count == 1 {
-            self.arrEventBooking[sender.tag].ticketCount -= 1
+            self.eventDetail?.eventTicket?[sender.tag].selectedTicketCount! -= 1
             self.totalTicket -= 1
             self.viewProceed.isHidden = true
         }
         self.strechyTableView.reloadData()
     }
     @objc func onBtnPlusQuantity(_ sender: UIButton){
-        let count = self.arrEventBooking[sender.tag].ticketCount
+        let count = self.eventDetail?.eventTicket?[sender.tag].selectedTicketCount ?? 0
         if count == 0 {
-            for index in 0..<self.arrEventBooking.count {
-                self.arrEventBooking[index].ticketCount = 0
+            for index in 0..<(self.eventDetail?.eventTicket?.count ?? 0) {
+                self.eventDetail?.eventTicket?[index].selectedTicketCount = 0
             }
-            self.arrEventBooking[sender.tag].ticketCount += 1
+            self.eventDetail?.eventTicket?[sender.tag].selectedTicketCount! += 1
             self.totalTicket += 1
             self.viewProceed.isHidden = false
         }
