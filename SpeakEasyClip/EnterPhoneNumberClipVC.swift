@@ -62,6 +62,9 @@ final class EnterPhoneNumberClipVC: UIViewController {
         ticketTypeLbl.text = isGeneralAdmission ? "General Admission" : "VIP Skip the Line"
         ticketPriceLbl.text = "$\(ticketPrice)"
         
+        ticketNumberView.layer.borderColor = UIColor(red: 63/255, green: 63/255, blue: 63/255, alpha: 1).cgColor
+        ticketNumberView.layer.borderWidth = 1
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
         countrySelectionView.addGestureRecognizer(tap)
         continueBtn.isUserInteractionEnabled = false
