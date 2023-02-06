@@ -16,6 +16,7 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet private weak var ticketTypeTableView: UITableView!
     @IBOutlet private weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var eventLocationLbl: UILabel!
+    @IBOutlet weak var venueInfoLbl: UILabel!
     
     var isLive = true
     var venueDetail: ClipVenue?
@@ -24,20 +25,15 @@ final class SelectTicketClipVC: UIViewController {
         super.viewDidLoad()
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
-        if isLive {
-            liveCloseLbl.text = "LIVE"
-            liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
-        } else {
-            liveCloseLbl.text = "CLOSED"
-            liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-        }
         getEventTicket()
+        venueInfoLbl.highlightBold(["only","in-person","live and subject to change."], size: 15, textColor: .white, underLineText: "only")
     }
     
     private func getEventTicket() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63db9cbc27d61c05f21b9df0") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63dbab0a27d61c05f21b9e11") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        AppClipLoader.showLoader(self.view)
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return}
@@ -48,6 +44,7 @@ final class SelectTicketClipVC: UIViewController {
             self.setUpUI()
             DispatchQueue.main.async {
                 self.ticketTypeTableView.reloadData()
+                AppClipLoader.hideLoader()
             }
         }.resume()
         
@@ -69,6 +66,13 @@ final class SelectTicketClipVC: UIViewController {
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.eventLocationLbl.text = self.venueDetail?.address
+            if self.venueDetail?.bookingStatus == "OPEN" {
+                self.liveCloseLbl.text = "LIVE"
+                self.liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
+            } else {
+                self.liveCloseLbl.text = "CLOSED"
+                self.liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+            }
         }
     }
     
@@ -88,12 +92,12 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket[indexPath.row].name
         cell.infoLbl.text = self.venueDetail?.appClipTicket[indexPath.row].description
         cell.ticketPriceLbl.text = "\(self.venueDetail?.appClipTicket[indexPath.row].price ?? 0)"
-        if indexPath.row == self.venueDetail?.appClipTicket.count {
+        if indexPath.row == (self.venueDetail?.appClipTicket.count ?? 0) - 1{
             cell.lineView.isHidden = true
         } else {
             cell.lineView.isHidden = false
         }
-        if isLive {
+        if self.venueDetail?.bookingStatus == "OPEN" {
             cell.ticketPriceLbl.textColor = .white
         } else {
             cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)

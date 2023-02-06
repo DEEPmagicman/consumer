@@ -206,6 +206,9 @@
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
+		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
+		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
+		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
 		CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486721286F2CB000FD277E /* AppDelegate.swift */; };
 		CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE48672A286F2CB100FD277E /* Assets.xcassets */; };
 		CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */; };
@@ -773,6 +776,8 @@
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
+		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
 		CE48671E286F2CB000FD277E /* SpeakEasy-Consumer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpeakEasy-Consumer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE486721286F2CB000FD277E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE48672A286F2CB100FD277E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1257,6 +1262,7 @@
 				29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */,
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
+				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
 			);
 			path = SpeakEasyClip;
 			sourceTree = "<group>";
@@ -1412,6 +1418,7 @@
 				82847A782982485B00611DC4 /* MVPFlow.storyboard */,
 				82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */,
 				82847A8129827AC500611DC4 /* MVPVenueDetailVc.swift */,
+				CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */,
 			);
 			path = MVPFlow;
 			sourceTree = "<group>";
@@ -4132,6 +4139,7 @@
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
+				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				29DF44FF2981417500A83DC1 /* EnterPhoneNumberClipVC.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
@@ -4359,6 +4367,7 @@
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,
 				BD942F452959623E00D52115 /* Header.swift in Sources */,
 				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
+				CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */,
 				CE4867A8286F358800FD277E /* Validator.swift in Sources */,
 				828E9A972983CF01000F2736 /* BottleCategory.swift in Sources */,
 				CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */,
@@ -4455,6 +4464,7 @@
 				CE4867D8286F358800FD277E /* CardView.swift in Sources */,
 				E1A9E75428C55D550081FB28 /* BottleMenu.swift in Sources */,
 				828A04942962DA3E004A5F2B /* InstagramMedia.swift in Sources */,
+				CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */,
 				CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */,
 				2986836629756E8600CB827B /* Event.swift in Sources */,
 				CE4867B1286F358800FD277E /* UIColor+Extension.swift in Sources */,

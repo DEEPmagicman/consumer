@@ -19,6 +19,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var applePayBtn: PKPaymentButton!
     @IBOutlet private weak var creditCardPayBtn: UIButton!
     @IBOutlet private weak var ticketQuantityLbl: UILabel!
+    @IBOutlet weak var dressCodeInfoLbl: UILabel!
     
     var phoneNo = ""
     var totalTicket = 1
@@ -29,6 +30,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
         phoneNoLbl.text = phoneNo
         ticketQuantityLbl.text = "\(totalTicket)x"
         ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
