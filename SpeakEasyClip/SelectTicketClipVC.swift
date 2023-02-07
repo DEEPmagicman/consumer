@@ -30,7 +30,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63dbab0a27d61c05f21b9e11") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63e1f19debc94a9944ef52ed") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         AppClipLoader.showLoader(self.view)
@@ -99,8 +99,12 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         }
         if self.venueDetail?.bookingStatus == "OPEN" {
             cell.ticketPriceLbl.textColor = .white
+            cell.ticketTypeLbl.textColor = .white
+            cell.sideArrow.isHidden = false
         } else {
             cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+            cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+            cell.sideArrow.isHidden = true
         }
         cell.selectionStyle = .none
         cell.layoutIfNeeded()
