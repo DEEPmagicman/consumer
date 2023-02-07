@@ -30,5 +30,7 @@
 			</array>
 		</dict>
 	</dict>
+    <key>NSCameraUsageDescription</key>
+    <string>To Insert card from image</string>
 </dict>
 </plist>

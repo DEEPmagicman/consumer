@@ -26,7 +26,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var ticketPrice = 1
     var isGeneralAdmission = false
     private var paymentSheet: PaymentSheet?
-//    let backendCheckoutUrl = URL(string: "Your backend endpoint")! // Your backend endpoint
+    private var paymentIntent = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +40,54 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if StripeAPI.deviceSupportsApplePay() {
             applePayBtn.isHidden = false
             creditCardPayBtn.isHidden = true
+            applePayBtn.alpha = 0.5
+            applePayBtn.isUserInteractionEnabled = false
         } else {
             applePayBtn.isHidden = true
             creditCardPayBtn.isHidden = false
+            creditCardPayBtn.alpha = 0.5
+            creditCardPayBtn.isUserInteractionEnabled = false
         }
+        addPaymentApi()
+    }
+    
+    private func addPaymentApi() {
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        let param = ["cart":
+                        [
+                            ["name": (isGeneralAdmission ? "General Admission" : "VIP Skip the Line"),
+                             "price": self.ticketPrice,
+                             "quantity": self.totalTicket
+                            ]
+                        ]
+        ] as [String: Any]
+        let bodyData = try? JSONSerialization.data(
+            withJSONObject: param,
+            options: [.prettyPrinted]
+        )
+        request.addValue("*/*", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpBody = bodyData
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
+                  let customerId = json["customer"] as? String,
+                  let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
+                  let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                  let self = self else {
+                // Handle error
+                return
+            }
+            self.paymentIntent = paymentIntentClientSecret
+            self.setUpPaymentBottemSheet()
+        })
+        task.resume()
+    }
+    
+    private func setUpPaymentBottemSheet() {
         STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
@@ -52,7 +96,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
-        paymentSheet = PaymentSheet(paymentIntentClientSecret: "pi_1DsvUh2eZvKYlo2CODPxUVui_secret_GOreV7KvU7RtPxq6XwgY5dolb", configuration: configuration)
+        paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
+        DispatchQueue.main.async {
+            self.creditCardPayBtn.alpha = 1
+            self.creditCardPayBtn.isUserInteractionEnabled = true
+            self.applePayBtn.alpha = 1
+            self.applePayBtn.isUserInteractionEnabled = true
+        }
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
@@ -65,11 +115,20 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                print("Your order is confirmed")
+                if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+                    vc.totalTicket = self.totalTicket
+                    vc.isGeneralAdmission = self.isGeneralAdmission
+                    vc.ticketPrice = self.ticketPrice
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
             case .canceled:
-                print("Canceled!")
-            case .failed(let error):
-                print("Payment failed: \(error)")
+                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            case .failed:
+                let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -88,7 +147,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         // Initialize an STPApplePayContext instance
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
             // Present Apple Pay payment sheet
-            applePayContext.presentApplePay(on: self)
+            applePayContext.presentApplePay()
         } else {
             // There is a problem with your Apple Pay configuration
         }
@@ -97,30 +156,30 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
 extension CheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
-        //        let clientSecret = ... // Retrieve the PaymentIntent client secret from your backend (see Server-side step above)
+        let clientSecret = paymentIntent
         // Call the completion block with the client secret or an error
-//        completion(clientSecret, error);
+        completion(clientSecret, nil);
     }
 
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            // Payment succeeded, show a receipt view
-            break
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+                vc.totalTicket = totalTicket
+                vc.isGeneralAdmission = isGeneralAdmission
+                vc.ticketPrice = ticketPrice
+                navigationController?.pushViewController(vc, animated: true)
+            }
         case .error:
-            // Payment failed, show the error
-            break
+            let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         case .userCancellation:
-            // User canceled the payment
-            break
+            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         @unknown default:
             fatalError()
-        }
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
-            vc.totalTicket = totalTicket
-            vc.isGeneralAdmission = isGeneralAdmission
-            vc.ticketPrice = ticketPrice
-            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
