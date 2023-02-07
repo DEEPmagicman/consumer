@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>appClips:amitsurani.com</string>
+		<string>appclips:amitsurani.com</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
