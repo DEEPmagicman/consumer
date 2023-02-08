@@ -37,9 +37,15 @@ final class SelectTicketClipVC: UIViewController {
         AppClipLoader.showLoader(self.view)
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return AppClipLoader.hideLoader()}
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                return
+            }
             let decoder = JSONDecoder()
-            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {return AppClipLoader.hideLoader()}
+            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+                AppClipLoader.hideLoader()
+                return
+            }
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
             self.setUpUI()
             DispatchQueue.main.async {
@@ -119,6 +125,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             vc.ticketPrice = indexPath.row == 0 ? 50 : 90
             vc.isGeneralAdmission = indexPath.row == 0
             vc.venueName = self.venueDetail?.name ?? ""
+            vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""
             navigationController?.pushViewController(vc, animated: true)
         }
     }

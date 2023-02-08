@@ -28,6 +28,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
     var ticketPrice = 0
     var isGeneralAdmission = false
     var venueName = ""
+    var appClipTicketId = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -154,13 +155,54 @@ final class EnterPhoneNumberClipVC: UIViewController {
     
     @IBAction private func onClickContinue(_ sender: Any) {
         phoneNumTextField.resignFirstResponder()
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
-            vc.phoneNo = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
-            vc.totalTicket = Int(ticketNumberLbl.text ?? "") ?? 1
-            vc.ticketPrice = ticketPrice
-            vc.isGeneralAdmission = isGeneralAdmission
-            vc.venueName = self.venueName
-            navigationController?.pushViewController(vc, animated: true)
+        createBooking()
+    }
+    
+    func createBooking() {
+        AppClipLoader.showLoader(self.view)
+        let parameters = "{\n  \"phone\": \"\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")\",\n  \"appclipTicketId\": \"\(appClipTicketId)\",\n  \"ticketQuantity\": \(Int(ticketNumberLbl.text ?? "") ?? 1)\n}"
+        let postData = parameters.data(using: .utf8)
+        
+        guard let userURL = URL(string: "https://speakeasy-stag.cmdev.cc/appclip-user") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                return
+            }
+            if let bookingId = json["id"] as? String {
+                self.navigate(bookingId: bookingId)
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+                self.navigate(bookingId: bookingId)
+            } else {
+                AppClipLoader.hideLoader()
+            }
+        }
+        task.resume()
+    }
+    
+    func navigate(bookingId: String) {
+        DispatchQueue.main.async {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
+                AppClipLoader.hideLoader()
+                vc.phoneNo = self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
+                vc.totalTicket = Int(self.ticketNumberLbl.text ?? "") ?? 1
+                vc.ticketPrice = self.ticketPrice
+                vc.isGeneralAdmission = self.isGeneralAdmission
+                vc.venueName = self.venueName
+                vc.bookingId = bookingId
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     var venueName = ""
+    var bookingId = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +55,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func addPaymentApi() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let param = ["cart":
@@ -78,7 +79,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any],
                   let customerId = json["customer"] as? String,
                   let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                  let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                  let paymentIntentClientSecret = json["clientSecret"] as? String,
                   let self = self else {
                 // Handle error
                 return
@@ -155,6 +156,18 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             // There is a problem with your Apple Pay configuration
         }
     }
+    
+    func success() {
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)/SUCCESS") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("*/*", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
+            print("")
+        })
+        task.resume()
+    }
 }
 
 extension CheckOutClipVC {
@@ -167,11 +180,13 @@ extension CheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
+            
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
                 vc.totalTicket = totalTicket
                 vc.isGeneralAdmission = isGeneralAdmission
                 vc.ticketPrice = ticketPrice
-                vc.venueName = self.venueName
+                vc.venueName = venueName
+                vc.bookingId = bookingId
                 navigationController?.pushViewController(vc, animated: true)
             }
         case .error:

@@ -43,7 +43,9 @@ struct AppClipLoader {
         indicator.startAnimating()
       }
       static func hideLoader() {
-        indicator.stopAnimating()
-        indicator.removeFromSuperview()
+          DispatchQueue.main.async {
+              indicator.stopAnimating()
+              indicator.removeFromSuperview()
+          }
       }
 }
