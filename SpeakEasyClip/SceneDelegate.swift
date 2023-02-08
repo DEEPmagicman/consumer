@@ -10,9 +10,19 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var venueId = ""
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
+        if let activity = connectionOptions.userActivities.filter({ $0.activityType == NSUserActivityTypeBrowsingWeb }).first {
+            if let incomingURL = activity.webpageURL {
+                guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems, let venue = queryItems.first(where: { $0.name == "v" })?.value else {
+                    return
+                }
+                venueId = venue
+                UserDefaults.standard.setValue(venue, forKey: "venueId")
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

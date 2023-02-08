@@ -20,17 +20,19 @@ final class SelectTicketClipVC: UIViewController {
     
     var isLive = true
     var venueDetail: ClipVenue?
+    private var venueId = "VEN-BLLDGP"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
+        venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         getEventTicket()
         venueInfoLbl.highlightBold(["only","in-person","live and subject to change."], size: 15, textColor: .white, underLineText: "only")
     }
     
     private func getEventTicket() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63e1f19debc94a9944ef52ed") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         AppClipLoader.showLoader(self.view)
