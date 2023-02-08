@@ -58,7 +58,7 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y5y-d5-rM7" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="327"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoVenueImg" translatesAutoresizingMaskIntoConstraints="NO" id="Zum-n8-nNr">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zum-n8-nNr">
                                                         <rect key="frame" x="0.0" y="0.0" width="414" height="327"/>
                                                     </imageView>
                                                 </subviews>
@@ -74,7 +74,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zeP-Wl-7u7" userLabel="LiveDetailsView">
                                                 <rect key="frame" x="0.0" y="240" width="414" height="87"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TAO Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9l9-eq-lJt">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9l9-eq-lJt">
                                                         <rect key="frame" x="16" y="10" width="382" height="38"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="38" id="QGf-Fe-iCs"/>
@@ -91,20 +91,20 @@
                                                             <constraint firstAttribute="width" constant="13" id="a31-1l-C7J"/>
                                                         </constraints>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="632 N. Dearborn Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iWZ-Xi-fMQ">
-                                                        <rect key="frame" x="34" y="48" width="206.5" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iWZ-Xi-fMQ">
+                                                        <rect key="frame" x="34" y="48" width="9" height="21"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ux-PS-JFn">
-                                                        <rect key="frame" x="34" y="66" width="206.5" height="1"/>
+                                                        <rect key="frame" x="34" y="66" width="9" height="1"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="1" id="Gky-mh-hAz"/>
                                                         </constraints>
                                                     </view>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoVenueLogo" translatesAutoresizingMaskIntoConstraints="NO" id="FOC-gl-0iC">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FOC-gl-0iC">
                                                         <rect key="frame" x="342" y="20" width="60" height="67"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="67" id="F6f-Kd-Zea"/>
@@ -131,16 +131,16 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Exz-fy-1Py">
-                                                <rect key="frame" x="16" y="342" width="141.5" height="36"/>
+                                                <rect key="frame" x="16" y="342" width="144.5" height="36"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Entry Tickets" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYZ-Jq-wvX">
-                                                        <rect key="frame" x="0.0" y="2.5" width="141.5" height="31"/>
+                                                        <rect key="frame" x="0.0" y="2.5" width="144.5" height="31"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7mz-aC-wng">
-                                                        <rect key="frame" x="0.0" y="31.5" width="141.5" height="2"/>
+                                                        <rect key="frame" x="0.0" y="31.5" width="144.5" height="2"/>
                                                         <color key="backgroundColor" name="ColorBlue"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="2" id="rqg-zw-98J"/>
@@ -225,7 +225,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mv5-pj-HP3">
-                                        <rect key="frame" x="137.5" y="46" width="139" height="20"/>
+                                        <rect key="frame" x="136.5" y="46" width="141.5" height="20"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -294,7 +294,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKa-CD-dyJ">
-                                        <rect key="frame" x="163" y="1" width="88" height="35"/>
+                                        <rect key="frame" x="162.5" y="1" width="89" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -308,14 +308,14 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="VIP Skip the Line" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9c-uv-lPY">
-                                                <rect key="frame" x="0.0" y="35.5" width="119" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e9c-uv-lPY">
+                                                <rect key="frame" x="0.0" y="35.5" width="9" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$90" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6XT-zq-n3f">
-                                                <rect key="frame" x="263.5" y="35.5" width="29" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6XT-zq-n3f">
+                                                <rect key="frame" x="282.5" y="35.5" width="10" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -548,7 +548,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sjr-8Q-gwD">
-                                        <rect key="frame" x="145.5" y="0.0" width="123" height="35"/>
+                                        <rect key="frame" x="145" y="0.0" width="124.5" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -571,7 +571,7 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="773-595-7080" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7P-73-nn3">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T7P-73-nn3">
                                         <rect key="frame" x="0.0" y="35.5" width="382" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -616,26 +616,26 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="VIP Skip the Line" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RrB-NQ-06S">
-                                        <rect key="frame" x="21" y="35.5" width="119" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RrB-NQ-06S">
+                                        <rect key="frame" x="21" y="35.5" width="9" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$270" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TE-cz-CT3">
-                                        <rect key="frame" x="346" y="35.5" width="36" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TE-cz-CT3">
+                                        <rect key="frame" x="372" y="35.5" width="10" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7J0-ia-XF5">
-                                        <rect key="frame" x="0.0" y="62.5" width="42.5" height="21"/>
+                                        <rect key="frame" x="0.0" y="62.5" width="44" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="$270" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9ee-05-Ajp">
-                                        <rect key="frame" x="345.5" y="62.5" width="36.5" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9ee-05-Ajp">
+                                        <rect key="frame" x="372" y="62.5" width="10" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -821,7 +821,7 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yRG-cf-HZM">
-                                <rect key="frame" x="137.5" y="123" width="139" height="20"/>
+                                <rect key="frame" x="136.5" y="123" width="141.5" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="a2e-hR-pQu"/>
                                 </constraints>
@@ -833,16 +833,16 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                 <rect key="frame" x="0.0" y="143" width="414" height="719"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3m-aI-7uy">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="559"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="539.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to TAO Chicago!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sIX-x0-vQd">
-                                                <rect key="frame" x="60.5" y="18" width="293" height="31"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sIX-x0-vQd">
+                                                <rect key="frame" x="135.5" y="18" width="143.5" height="31"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lhh-vy-tgN">
-                                                <rect key="frame" x="60.5" y="47" width="293" height="2"/>
+                                                <rect key="frame" x="135.5" y="47" width="143.5" height="2"/>
                                                 <color key="backgroundColor" name="ColorBlue"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="2" id="sJn-sO-Jqf"/>
@@ -854,32 +854,32 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                                     <constraint firstAttribute="width" secondItem="E1u-Zf-xRZ" secondAttribute="height" multiplier="1:1" id="ehq-Z7-6at"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Walk up to front of line and present the above QR code to be scanned in." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4PC-e4-IM9">
-                                                <rect key="frame" x="16" y="423" width="382" height="39.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4PC-e4-IM9">
+                                                <rect key="frame" x="16" y="423" width="382" height="20"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="14"/>
                                                 <color key="textColor" name="ColorGray"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IiH-tZ-zav">
-                                                <rect key="frame" x="16" y="482.5" width="382" height="25.5"/>
+                                                <rect key="frame" x="16" y="463" width="382" height="25.5"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3x" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZgY-Vh-chC">
-                                                <rect key="frame" x="16" y="518" width="17" height="21"/>
+                                                <rect key="frame" x="16" y="498.5" width="17" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="VIP Skip the Line" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2yG-6E-qgZ">
-                                                <rect key="frame" x="37" y="518" width="119" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2yG-6E-qgZ">
+                                                <rect key="frame" x="37" y="498.5" width="9" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$90" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcj-BT-slA">
-                                                <rect key="frame" x="345" y="518" width="29" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcj-BT-slA">
+                                                <rect key="frame" x="364" y="498.5" width="10" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -952,8 +952,6 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
     </scenes>
     <resources>
         <image name="BackArrow" width="26.5" height="19"/>
-        <image name="demoVenueImg" width="390" height="327"/>
-        <image name="demoVenueLogo" width="60" height="67"/>
         <image name="downArr" width="29" height="29"/>
         <image name="locationLogo" width="12.5" height="15"/>
         <image name="speakEasy" width="90" height="49"/>

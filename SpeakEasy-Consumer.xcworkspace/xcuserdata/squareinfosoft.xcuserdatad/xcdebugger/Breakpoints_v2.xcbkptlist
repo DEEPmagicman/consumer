@@ -7,63 +7,79 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F2514FEB-8E4A-4601-9643-B7FC29CF8DFF"
+            uuid = "13A423BC-38A7-4118-AEC5-90FC5950EEF0"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpeakEasyClip/SelectTicketClipVC.swift"
+            filePath = "SpeakEasyClip/CheckOutClipVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
-            landmarkName = "setUpUI()"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "setUpPaymentBottemSheet()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8E2EFDF4-4845-40BC-909C-08987CB922FA"
-            shouldBeEnabled = "Yes"
+            uuid = "5839308E-0CE6-478E-8F18-C06DCAB54695"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasyClip/CheckOutClipVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "setUpPaymentBottemSheet()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "45CD4CE1-7807-433B-B9A2-0E5A5DEFE509"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeakEasyClip/SelectTicketClipVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "setUpUI()"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "getEventTicket()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "8E2EFDF4-4845-40BC-909C-08987CB922FA - db5df9c8d2b4e81b"
+                  uuid = "45CD4CE1-7807-433B-B9A2-0E5A5DEFE509 - 83de57238a558653"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "SpeakEasyClip.SelectTicketClipVC.setUpUI() -&gt; ()"
+                  symbolName = "SpeakEasyClip.SelectTicketClipVC.getEventTicket() -&gt; ()"
                   moduleName = "SpeakEasyClip"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasyClip/SelectTicketClipVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "59"
-                  endingLineNumber = "59"
-                  offsetFromSymbolStart = "1990">
+                  startingLineNumber = "49"
+                  endingLineNumber = "49"
+                  offsetFromSymbolStart = "1032">
                </Location>
                <Location
-                  uuid = "8E2EFDF4-4845-40BC-909C-08987CB922FA - db5df9c8d2b4e81b"
+                  uuid = "45CD4CE1-7807-433B-B9A2-0E5A5DEFE509 - acec9c571966c6db"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "SpeakEasyClip.SelectTicketClipVC.setUpUI() -&gt; ()"
+                  symbolName = "closure #1 @Sendable (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in SpeakEasyClip.SelectTicketClipVC.getEventTicket() -&gt; ()"
                   moduleName = "SpeakEasyClip"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasyClip/SelectTicketClipVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "59"
-                  endingLineNumber = "59"
-                  offsetFromSymbolStart = "3370">
+                  startingLineNumber = "49"
+                  endingLineNumber = "49"
+                  offsetFromSymbolStart = "5157">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -71,48 +87,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "102EE8FB-CB8E-40D4-A91A-192F1644B548"
-            shouldBeEnabled = "No"
+            uuid = "60996B96-71C5-4ABE-ADE5-EA4BB0BC2A03"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeakEasyClip/SelectTicketClipVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "getEventTicket()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A4DDDD55-D84A-45AC-86E3-DBF3FDBEC8E8"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasyClip/SelectTicketClipVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "setUpUI()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "940221D2-0AF7-4EA1-82C9-45C54CD69185"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasyClip/SelectTicketClipVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

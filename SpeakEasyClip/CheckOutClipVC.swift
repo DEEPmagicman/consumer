@@ -27,9 +27,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var isGeneralAdmission = false
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
+    var venueName = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        dressCodeInfoLbl.text = "*All entries subject to doorman discretion*  At \(self.venueName), we encourage smart, casual-elegant attire."
         dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
         phoneNoLbl.text = phoneNo
         ticketQuantityLbl.text = "\(totalTicket)x"
@@ -119,6 +121,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     vc.totalTicket = self.totalTicket
                     vc.isGeneralAdmission = self.isGeneralAdmission
                     vc.ticketPrice = self.ticketPrice
+                    vc.venueName = self.venueName
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             case .canceled:
@@ -168,6 +171,7 @@ extension CheckOutClipVC {
                 vc.totalTicket = totalTicket
                 vc.isGeneralAdmission = isGeneralAdmission
                 vc.ticketPrice = ticketPrice
+                vc.venueName = self.venueName
                 navigationController?.pushViewController(vc, animated: true)
             }
         case .error:

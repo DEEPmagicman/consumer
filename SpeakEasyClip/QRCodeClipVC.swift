@@ -19,6 +19,7 @@ final class QRCodeClipVC: UIViewController {
     var isGeneralAdmission = false
     var totalTicket = 1
     var ticketPrice = 90
+    var venueName = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +33,7 @@ final class QRCodeClipVC: UIViewController {
         ticketPriceLbl.text = "$\(ticketPrice)"
         ticketQuantityLbl.text = "\(totalTicket)x"
         QRImg.image = generateQRCode(from: "Total Ticket:\(totalTicket), Ticket Price: \(ticketPrice), \(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")")
+        venueLbl.text = "Welcome to \(self.venueName)!"
     }
     
     func generateQRCode(from string: String) -> UIImage? {

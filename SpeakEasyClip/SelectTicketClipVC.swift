@@ -30,14 +30,13 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/63e1f19debc94a9944ef52ed") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/VEN-BLLDGP") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         AppClipLoader.showLoader(self.view)
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return}
-            print(json)
             let decoder = JSONDecoder()
             guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {return}
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
@@ -83,7 +82,7 @@ final class SelectTicketClipVC: UIViewController {
 
 extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.venueDetail?.appClipTicket.count ?? 0
+        venueDetail?.appClipTicket.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -91,7 +90,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
         cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket[indexPath.row].name
         cell.infoLbl.text = self.venueDetail?.appClipTicket[indexPath.row].description
-        cell.ticketPriceLbl.text = "\(self.venueDetail?.appClipTicket[indexPath.row].price ?? 0)"
+        cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket[indexPath.row].price ?? 0)"
         if indexPath.row == (self.venueDetail?.appClipTicket.count ?? 0) - 1{
             cell.lineView.isHidden = true
         } else {
@@ -112,9 +111,11 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if self.venueDetail?.bookingStatus != "OPEN" { return }
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "EnterPhoneNumberClipVC")) as? EnterPhoneNumberClipVC {
             vc.ticketPrice = indexPath.row == 0 ? 50 : 90
             vc.isGeneralAdmission = indexPath.row == 0
+            vc.venueName = self.venueDetail?.name ?? ""
             navigationController?.pushViewController(vc, animated: true)
         }
     }

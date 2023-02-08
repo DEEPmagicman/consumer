@@ -27,6 +27,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
     private let numberDropDown = DropDown()
     var ticketPrice = 0
     var isGeneralAdmission = false
+    var venueName = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,6 +159,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
             vc.totalTicket = Int(ticketNumberLbl.text ?? "") ?? 1
             vc.ticketPrice = ticketPrice
             vc.isGeneralAdmission = isGeneralAdmission
+            vc.venueName = self.venueName
             navigationController?.pushViewController(vc, animated: true)
         }
     }
