@@ -33,4 +33,31 @@ final class MVPPresenter {
             completion(false, nil, nil)
         }
     }
+    
+    func getVenueListForMvp(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue],_ hasMore: Bool) -> Void) {
+        let param = ["skip": from]
+        Loader.show()
+        AFWrapper.getRequest(APIBuilder.mvpVenueListUrl,params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
+                completion(false, nil, [], false)
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
+                let venueList = try decoder.decode([ClipVenue].self, from: data)
+                completion(true, nil, venueList,hasMore)
+            } catch {
+                completion(false, "internal error", [],false)
+            }
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain, [],false)
+                return
+            }
+            completion(false, nil, [],false)
+        }
+    }
 }

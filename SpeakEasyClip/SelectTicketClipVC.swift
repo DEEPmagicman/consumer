@@ -28,7 +28,6 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         getEventTicket()
-        venueInfoLbl.highlightBold(["only","in-person","live and subject to change."], size: 15, textColor: .white, underLineText: "only")
     }
     
     private func getEventTicket() {
@@ -38,9 +37,9 @@ final class SelectTicketClipVC: UIViewController {
         AppClipLoader.showLoader(self.view)
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return}
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {return AppClipLoader.hideLoader()}
             let decoder = JSONDecoder()
-            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {return}
+            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {return AppClipLoader.hideLoader()}
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
             self.setUpUI()
             DispatchQueue.main.async {
@@ -67,6 +66,8 @@ final class SelectTicketClipVC: UIViewController {
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.eventLocationLbl.text = self.venueDetail?.address
+            self.venueInfoLbl.text = "Entry tickets can only be purchased in-person at \(self.venueDetail?.name ?? "") by App Clip scan. Prices shown here are live and subject to change."
+            self.venueInfoLbl.highlightBold(["only","in-person","live and subject to change."], size: 15, textColor: .white, underLineText: "only")
             if self.venueDetail?.bookingStatus == "OPEN" {
                 self.liveCloseLbl.text = "LIVE"
                 self.liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
@@ -84,16 +85,16 @@ final class SelectTicketClipVC: UIViewController {
 
 extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        venueDetail?.appClipTicket.count ?? 0
+        venueDetail?.appClipTicket?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
 
-        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket[indexPath.row].name
-        cell.infoLbl.text = self.venueDetail?.appClipTicket[indexPath.row].description
-        cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket[indexPath.row].price ?? 0)"
-        if indexPath.row == (self.venueDetail?.appClipTicket.count ?? 0) - 1{
+        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name
+        cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
+        cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
+        if indexPath.row == (self.venueDetail?.appClipTicket?.count ?? 0) - 1{
             cell.lineView.isHidden = true
         } else {
             cell.lineView.isHidden = false

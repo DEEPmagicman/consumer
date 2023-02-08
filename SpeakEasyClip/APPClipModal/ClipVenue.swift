@@ -17,18 +17,19 @@ struct ClipVenue: Codable {
     var name: String
     var address: String
     var city: String
-    var pinCode: String//
+    var pinCode: String
     var code: String
     var phone: String
-    var website: String//
+    var website: String
     var description: String
-    var status: String//
+    var status: String
     var bookingStatus: String
     var venueVibes: [String]
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
-    var appClipTicket: [AppClipTicket]
+    var bookingWaiting: String?
+    var appClipTicket: [AppClipTicket]?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -51,7 +52,7 @@ struct ClipVenue: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
-//        try container.encode(appClipTicket, forKey: .appClipTicket)
+        try container.encode(bookingWaiting, forKey: .bookingWaiting)
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class venueTableCell: UITableViewCell {
 
@@ -24,10 +25,20 @@ class venueTableCell: UITableViewCell {
 
     }
     
-    func setData(data: VenuesVIPEventDataSet) {
-        self.venueEventImg.image = data.imgEventCover
-        self.eventNameLbl.text = data.lblPerformerName
-        self.logoImg.image = data.imgBrandLogo
+    func setData(data: ClipVenue) {
+        let imgUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.venueAttachment.first?.key ?? "")"
+        let logoUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.logo?.key ?? "")"
+        self.venueEventImg.sd_setImage(with: URL( string: imgUrl), completed: nil)
+        self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
+        self.eventNameLbl.text = data.name
+        self.waitTimeLbl.text = data.bookingWaiting
+        if data.bookingStatus == "OPEN" {
+            self.liveLbl.text = "LIVE"
+            self.liveLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
+        } else {
+            self.liveLbl.text = "CLOSED"
+            self.liveLbl.textColor = UIColor(red: 114/255, green: 114/255, blue: 114/255, alpha: 1)
+        }
     }
 
     

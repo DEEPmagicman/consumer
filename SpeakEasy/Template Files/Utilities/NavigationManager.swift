@@ -167,8 +167,9 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPVenueDetailViewController(_ sender: UIViewController) {
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+        vc.venueId = venueId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

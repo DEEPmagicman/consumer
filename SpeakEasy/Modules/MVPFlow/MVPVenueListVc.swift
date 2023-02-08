@@ -12,29 +12,63 @@ class MVPVenueListVc: UIViewController {
     @IBOutlet weak var cityNameLbl: UILabelDeviceClass!
     @IBOutlet weak var venueListTableView: UITableView!
         
-     var venuelist = [
-        VenuesVIPEventDataSet(imgEventCover: UIImage(named:"HotVenueRemainingBG1"), lblPerformerName: "Bounce Sporting Club", imgBrandLogo: UIImage(named:"HotVenueRemainingLogo1"), isLive: false, isFavourite: false, lblEventFees: "$55", lblEventWaitingTime: "10 mins", lblEventClosingTime: "Closes 2:00 AM",location: "335 N. Dearborn St. California",phoneNumber: "(224) 888-576", upcomingEvents: [TopEventDataSet](), description: "bounceDescription", hours: [HoursDataSet(day: "Monday", time: "4:00 PM - 11:00 PM")])]
+    var venueList = [ClipVenue]()
+    var from = 0
+    var venueListDelegate = MVPPresenter()
+    var hasMore = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
+        fetchAllvenueForMvp()
+    }
+    
+    private func fetchAllvenueForMvp() {
+        venueListDelegate.getVenueListForMvp(from: from) { isSuccess, errMsg, venueList, hasMore in
+            if isSuccess {
+                for venue in venueList {
+                    self.venueList.append(venue)
+                }
+                if hasMore {
+                    self.from = self.venueList.count
+                    self.fetchAllvenueForMvp()
+                }
+                self.hasMore = hasMore
+                self.venueListTableView.reloadData()
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
     }
     
 }
 
 extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.venuelist.count
+        return self.venueList.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
-               let data = self.venuelist[indexPath.row]
+               let data = self.venueList[indexPath.row]
             cell.setData(data: data)
             return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.MVPVenueDetailViewController(self)
+        Navigate.to.MVPVenueDetailViewController(self,venueId: self.venueList[indexPath.row].uniqueId)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == venueList.count - 1 {
+            if self.hasMore {
+                self.fetchAllvenueForMvp()
+            }
+        }
     }
 }

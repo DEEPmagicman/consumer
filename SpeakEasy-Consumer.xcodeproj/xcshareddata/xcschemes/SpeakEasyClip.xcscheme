@@ -53,7 +53,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://swiftyLemonade.example.com/order?lat=33.8644&amp;lon=-118.2611"
+            value = "https://swiftyLemonade.example.com?v=VEN-7137"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
