@@ -49,6 +49,13 @@
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sideArr" translatesAutoresizingMaskIntoConstraints="NO" id="OZf-Wf-qtB">
+                                <rect key="frame" x="488" y="45" width="7" height="14"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="7" id="3pu-Jc-rrN"/>
+                                    <constraint firstAttribute="height" constant="14.4" id="s9N-uR-doD"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fow-63-gOb">
                                 <rect key="frame" x="0.0" y="85" width="496" height="1"/>
                                 <color key="backgroundColor" red="0.2470588235" green="0.2470588235" blue="0.2470588235" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -61,11 +68,13 @@
                         <constraints>
                             <constraint firstItem="zDK-7b-lRP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M0d-ys-JFT" secondAttribute="trailing" constant="10" id="14s-1n-mfF"/>
                             <constraint firstItem="Fow-63-gOb" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" id="1H4-Fh-PAd"/>
+                            <constraint firstAttribute="trailing" secondItem="OZf-Wf-qtB" secondAttribute="trailing" constant="1" id="CYn-mh-iql"/>
                             <constraint firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="trailing" constant="3" id="Eub-Mf-3ZL"/>
                             <constraint firstItem="Fow-63-gOb" firstAttribute="top" secondItem="tef-Nr-WTK" secondAttribute="bottom" constant="12" id="HCm-cs-2VY"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="top" secondItem="tWk-iG-Idm" secondAttribute="top" id="Hwq-eW-V68"/>
                             <constraint firstAttribute="trailing" secondItem="Fow-63-gOb" secondAttribute="trailing" id="S5s-RP-f9D"/>
                             <constraint firstItem="tef-Nr-WTK" firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="leading" id="ai8-lT-G3f"/>
+                            <constraint firstItem="OZf-Wf-qtB" firstAttribute="centerY" secondItem="tef-Nr-WTK" secondAttribute="centerY" id="epf-fg-Lvq"/>
                             <constraint firstItem="zDK-7b-lRP" firstAttribute="centerY" secondItem="M0d-ys-JFT" secondAttribute="centerY" id="sgp-KC-0mR"/>
                             <constraint firstAttribute="bottom" secondItem="Fow-63-gOb" secondAttribute="bottom" id="v8a-kX-ixp"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" id="waa-ez-gey"/>
@@ -86,10 +95,14 @@
             <connections>
                 <outlet property="infoLbl" destination="tef-Nr-WTK" id="TeG-lp-MxU"/>
                 <outlet property="lineView" destination="Fow-63-gOb" id="GLb-Q5-MNa"/>
+                <outlet property="sideArrow" destination="OZf-Wf-qtB" id="QvJ-3Y-57B"/>
                 <outlet property="ticketPriceLbl" destination="zDK-7b-lRP" id="nAn-jJ-Uue"/>
                 <outlet property="ticketTypeLbl" destination="M0d-ys-JFT" id="DlV-j8-IfE"/>
             </connections>
             <point key="canvasLocation" x="208.69565217391306" y="111.49553571428571"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="sideArr" width="9.5" height="16.5"/>
+    </resources>
 </document>
