@@ -8,7 +8,7 @@
 import UIKit
 import PassKit
 import StripeApplePay
-import StripePaymentSheet
+//import StripePaymentSheet
 
 final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
@@ -25,7 +25,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var totalTicket = 1
     var ticketPrice = 1
     var isGeneralAdmission = false
-    private var paymentSheet: PaymentSheet?
+//    private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     var venueName = ""
     var bookingId = ""
@@ -91,17 +91,17 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setUpPaymentBottemSheet() {
-        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
-        // MARK: Create a PaymentSheet instance
-        var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "General Admission, Inc."
-        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        // methods that complete payment after a delay, like SEPA Debit and Sofort.
-        configuration.allowsDelayedPaymentMethods = true
-        paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
+//        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
+//        // MARK: Create a PaymentSheet instance
+//        var configuration = PaymentSheet.Configuration()
+//        configuration.merchantDisplayName = "General Admission, Inc."
+//        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
+//        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+//        // methods that complete payment after a delay, like SEPA Debit and Sofort.
+//        configuration.allowsDelayedPaymentMethods = true
+//        paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
         DispatchQueue.main.async {
-            self.creditCardPayBtn.alpha = 1
+            self.creditCardPayBtn.alpha = 0.5
             self.creditCardPayBtn.isUserInteractionEnabled = true
             self.applePayBtn.alpha = 1
             self.applePayBtn.isUserInteractionEnabled = true
@@ -114,27 +114,27 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
     @IBAction private func onClickCreditCardPay(_ sender: Any) {
         // MARK: Start the checkout process
-        paymentSheet?.present(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
-                    vc.totalTicket = self.totalTicket
-                    vc.isGeneralAdmission = self.isGeneralAdmission
-                    vc.ticketPrice = self.ticketPrice
-                    vc.venueName = self.venueName
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
-            case .canceled:
-                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            case .failed:
-                let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }
+//        paymentSheet?.present(from: self) { paymentResult in
+//            // MARK: Handle the payment result
+//            switch paymentResult {
+//            case .completed:
+//                if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+//                    vc.totalTicket = self.totalTicket
+//                    vc.isGeneralAdmission = self.isGeneralAdmission
+//                    vc.ticketPrice = self.ticketPrice
+//                    vc.venueName = self.venueName
+//                    self.navigationController?.pushViewController(vc, animated: true)
+//                }
+//            case .canceled:
+//                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//            case .failed:
+//                let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//            }
+//        }
     }
     
     @objc private func applePayButtonTapped() {
@@ -145,7 +145,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         paymentRequest.paymentSummaryItems = [
             // The final line should represent your company;
             // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-            PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice)),
+            PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
         ]
         paymentRequest.requiredBillingContactFields = []
         // Initialize an STPApplePayContext instance
@@ -158,7 +158,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func success() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)/SUCCESS") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)/status?status=SUCCESS") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("*/*", forHTTPHeaderField: "accept")
@@ -180,7 +180,7 @@ extension CheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            
+            success()
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
                 vc.totalTicket = totalTicket
                 vc.isGeneralAdmission = isGeneralAdmission

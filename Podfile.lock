@@ -50,22 +50,6 @@ PODS:
   - StripeApplePay (23.3.3):
     - StripeCore (= 23.3.3)
   - StripeCore (23.3.3)
-  - StripePayments (23.3.3):
-    - StripeCore (= 23.3.3)
-    - StripePayments/Stripe3DS2 (= 23.3.3)
-  - StripePayments/Stripe3DS2 (23.3.3):
-    - StripeCore (= 23.3.3)
-  - StripePaymentSheet (23.3.3):
-    - StripeApplePay (= 23.3.3)
-    - StripeCore (= 23.3.3)
-    - StripePayments (= 23.3.3)
-    - StripePaymentsUI (= 23.3.3)
-  - StripePaymentsUI (23.3.3):
-    - StripeCore (= 23.3.3)
-    - StripePayments (= 23.3.3)
-    - StripeUICore (= 23.3.3)
-  - StripeUICore (23.3.3):
-    - StripeCore (= 23.3.3)
   - SVProgressHUD (2.2.5)
   - SwiftAlgorithms (1.0.0)
   - SwiftInstagram (1.1.2):
@@ -92,7 +76,6 @@ DEPENDENCIES:
   - SCPageControl
   - SDWebImage
   - StripeApplePay
-  - StripePaymentSheet
   - SVProgressHUD
   - SwiftInstagram (~> 1.1.2)
   - "UITextView+Placeholder"
@@ -121,10 +104,6 @@ SPEC REPOS:
     - SDWebImage
     - StripeApplePay
     - StripeCore
-    - StripePayments
-    - StripePaymentSheet
-    - StripePaymentsUI
-    - StripeUICore
     - SVProgressHUD
     - SwiftAlgorithms
     - SwiftInstagram
@@ -153,15 +132,11 @@ SPEC CHECKSUMS:
   SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
   StripeApplePay: b288df6ea5237bec30ff00b8e12b9465684813e6
   StripeCore: 05ca3061651987b6aeb52028a8de087ad015d555
-  StripePayments: 63a4c0b41148c83c4197e8ff9f0295dd0829660b
-  StripePaymentSheet: f5e74b3c1fdd9d6ecd0e1075c1ad48d3b574cd26
-  StripePaymentsUI: f9c8a63faf4858f66e2302a717ebb7c928197f53
-  StripeUICore: 784efbcb5ed1e3dc69e4179e1a8feb247d792d81
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: e7b37651755120343b10d4632d8b506ebed917d5
+PODFILE CHECKSUM: 81aab57e4f4f278bfff6a1f0ff4f6258863d867d
 
 COCOAPODS: 1.11.3
