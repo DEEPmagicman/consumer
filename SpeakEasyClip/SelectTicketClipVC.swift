@@ -28,7 +28,6 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         getEventTicket()
-        UIImage(named: "", in: Bundle.FlagIcons, compatibleWith: nil)
     }
     
     private func getEventTicket() {
@@ -98,7 +97,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
 
-        cell.ticketTypeLbl.text = indexPath.row == 0 ? "General Admission" : "VIP Skip the Line" // self.venueDetail?.appClipTicket?[indexPath.row].name
+        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
         cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
         cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
         if indexPath.row == (self.venueDetail?.appClipTicket?.count ?? 0) - 1{
@@ -106,7 +105,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.lineView.isHidden = false
         }
-        if self.venueDetail?.bookingStatus == "OPEN" {
+        if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
             cell.sideArrow.isHidden = false
@@ -122,8 +121,9 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.venueDetail?.bookingStatus != "OPEN" { return }
+        if self.venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "EnterPhoneNumberClipVC")) as? EnterPhoneNumberClipVC {
-            vc.ticketPrice = indexPath.row == 0 ? 50 : 90
+            vc.ticketPrice = self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0
             vc.isGeneralAdmission = indexPath.row == 0
             vc.venueName = self.venueDetail?.name ?? ""
             vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""

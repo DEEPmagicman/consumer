@@ -53,7 +53,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1ou-BI-1s0">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="745"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="682"/>
                                         <subviews>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y5y-d5-rM7" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="327"/>
@@ -175,9 +175,8 @@
                                                     <outlet property="delegate" destination="vJI-2C-9G1" id="yd6-m3-jz0"/>
                                                 </connections>
                                             </tableView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5t-Ni-gJE">
-                                                <rect key="frame" x="16" y="662" width="382" height="63"/>
-                                                <string key="text">Entry tickets can only be purchased in-person at TAO Chicago by App Clip scan. Prices shown here are live and subject to change.</string>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5t-Ni-gJE">
+                                                <rect key="frame" x="16" y="662" width="382" height="0.0"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -294,7 +293,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKa-CD-dyJ">
-                                        <rect key="frame" x="162.5" y="1" width="89" height="35"/>
+                                        <rect key="frame" x="163" y="1" width="88" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -674,7 +673,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NbT-p8-Lc1">
-                                <rect key="frame" x="16" y="311" width="382" height="119.5"/>
+                                <rect key="frame" x="16" y="311" width="382" height="35.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dress Code &amp; Disclaimer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lAT-Bv-5B1">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="25.5"/>
@@ -688,11 +687,8 @@
                                         <color key="textColor" name="ColorGray"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c1q-ce-cOm">
-                                        <rect key="frame" x="0.0" y="35.5" width="382" height="84"/>
-                                        <string key="text">*All entries subject to doorman discretion*
-At TAO Chicago, we encourage smart, casual-elegant attire. 
-</string>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c1q-ce-cOm">
+                                        <rect key="frame" x="0.0" y="35.5" width="382" height="0.0"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" name="ColorGray"/>
                                         <nil key="highlightedColor"/>
@@ -731,35 +727,13 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </button>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ZS-Bx-OTH">
-                                        <rect key="frame" x="0.0" y="0.0" width="368" height="50"/>
-                                        <color key="backgroundColor" name="ColorBlue"/>
-                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="17"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="Credit Card Checkout">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <integer key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="onClickContinue:" destination="GfZ-tX-ZY8" eventType="touchUpInside" id="EQM-37-3n4"/>
-                                            <action selector="onClickCreditCardPay:" destination="EcQ-cc-phh" eventType="touchUpInside" id="52C-GW-fbA"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Abd-ci-Xeh"/>
-                                    <constraint firstAttribute="bottom" secondItem="6ZS-Bx-OTH" secondAttribute="bottom" id="CD0-fE-Vbd"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="top" secondItem="P4C-o4-HY7" secondAttribute="top" id="J50-48-MH5"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="centerX" secondItem="P4C-o4-HY7" secondAttribute="centerX" id="L53-sd-rf2"/>
-                                    <constraint firstItem="6ZS-Bx-OTH" firstAttribute="leading" secondItem="P4C-o4-HY7" secondAttribute="leading" id="O3z-Fs-Xfl"/>
-                                    <constraint firstAttribute="trailing" secondItem="6ZS-Bx-OTH" secondAttribute="trailing" id="RTF-gN-ttB"/>
                                     <constraint firstAttribute="bottom" secondItem="UEd-0J-9fj" secondAttribute="bottom" id="dE3-1d-Jm6"/>
-                                    <constraint firstItem="6ZS-Bx-OTH" firstAttribute="top" secondItem="P4C-o4-HY7" secondAttribute="top" id="gXP-Vd-ehv"/>
                                     <constraint firstAttribute="trailing" secondItem="UEd-0J-9fj" secondAttribute="trailing" id="hu3-VK-v8H"/>
                                     <constraint firstItem="UEd-0J-9fj" firstAttribute="leading" secondItem="P4C-o4-HY7" secondAttribute="leading" id="kjq-PE-V11"/>
                                 </constraints>
@@ -769,6 +743,12 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXd-bf-xJc">
+                                <rect key="frame" x="23" y="735" width="368" height="0.0"/>
+                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="EHX-ta-pYx"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -776,10 +756,12 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                             <constraint firstItem="ax6-S7-t06" firstAttribute="top" secondItem="EHX-ta-pYx" secondAttribute="top" id="2lJ-8i-fLa"/>
                             <constraint firstItem="8sF-Fg-ZzT" firstAttribute="centerX" secondItem="aU6-R5-QLe" secondAttribute="centerX" id="4zi-IC-WUg"/>
                             <constraint firstItem="P4C-o4-HY7" firstAttribute="centerX" secondItem="aU6-R5-QLe" secondAttribute="centerX" id="6Vq-iB-NrK"/>
+                            <constraint firstItem="hXd-bf-xJc" firstAttribute="top" secondItem="P4C-o4-HY7" secondAttribute="top" id="8Sq-l6-elw"/>
                             <constraint firstItem="8sF-Fg-ZzT" firstAttribute="top" secondItem="2Iu-An-GBg" secondAttribute="bottom" constant="15" id="9z2-1R-BIp"/>
                             <constraint firstItem="NbT-p8-Lc1" firstAttribute="centerX" secondItem="aU6-R5-QLe" secondAttribute="centerX" id="BmO-O8-vow"/>
                             <constraint firstItem="P4C-o4-HY7" firstAttribute="leading" secondItem="EHX-ta-pYx" secondAttribute="leading" constant="23" id="FKJ-gt-WJV"/>
                             <constraint firstItem="2Iu-An-GBg" firstAttribute="centerX" secondItem="aU6-R5-QLe" secondAttribute="centerX" id="Qgt-xz-0Ir"/>
+                            <constraint firstItem="hXd-bf-xJc" firstAttribute="trailing" secondItem="P4C-o4-HY7" secondAttribute="trailing" id="Vn9-O5-xZR"/>
                             <constraint firstItem="8sF-Fg-ZzT" firstAttribute="leading" secondItem="EHX-ta-pYx" secondAttribute="leading" constant="16" id="YtX-cP-c4g"/>
                             <constraint firstItem="2Iu-An-GBg" firstAttribute="top" secondItem="ax6-S7-t06" secondAttribute="bottom" constant="28" id="byp-G4-vdw"/>
                             <constraint firstItem="ax6-S7-t06" firstAttribute="leading" secondItem="EHX-ta-pYx" secondAttribute="leading" id="dtr-gP-tbe"/>
@@ -787,13 +769,14 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                             <constraint firstAttribute="trailing" secondItem="ax6-S7-t06" secondAttribute="trailing" id="kcN-OA-LHP"/>
                             <constraint firstItem="EHX-ta-pYx" firstAttribute="bottom" secondItem="P4C-o4-HY7" secondAttribute="bottom" constant="77" id="ox6-fO-Rx3"/>
                             <constraint firstItem="NbT-p8-Lc1" firstAttribute="leading" secondItem="EHX-ta-pYx" secondAttribute="leading" constant="16" id="pde-uC-JSJ"/>
+                            <constraint firstItem="hXd-bf-xJc" firstAttribute="leading" secondItem="P4C-o4-HY7" secondAttribute="leading" id="s3U-bJ-fAb"/>
                             <constraint firstItem="NbT-p8-Lc1" firstAttribute="top" secondItem="8sF-Fg-ZzT" secondAttribute="bottom" constant="15" id="zhg-9b-Q3y"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="applePayBtn" destination="UEd-0J-9fj" id="j5B-DV-RQg"/>
-                        <outlet property="creditCardPayBtn" destination="6ZS-Bx-OTH" id="7Oz-d1-aax"/>
                         <outlet property="dressCodeInfoLbl" destination="c1q-ce-cOm" id="3P2-Dl-w7P"/>
+                        <outlet property="errorLbl" destination="hXd-bf-xJc" id="3Dd-hX-Kgt"/>
                         <outlet property="phoneNoLbl" destination="T7P-73-nn3" id="RRJ-9r-YQa"/>
                         <outlet property="ticketPriceLbl" destination="9TE-cz-CT3" id="PD2-HL-o2u"/>
                         <outlet property="ticketQuantityLbl" destination="tzy-mF-A6A" id="DRL-Ny-uce"/>
@@ -821,7 +804,7 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yRG-cf-HZM">
-                                <rect key="frame" x="136.5" y="123" width="141.5" height="20"/>
+                                <rect key="frame" x="137.5" y="123" width="139" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="a2e-hR-pQu"/>
                                 </constraints>
@@ -836,13 +819,13 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="539.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sIX-x0-vQd">
-                                                <rect key="frame" x="135.5" y="18" width="143.5" height="31"/>
+                                                <rect key="frame" x="137.5" y="18" width="139.5" height="31"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lhh-vy-tgN">
-                                                <rect key="frame" x="135.5" y="47" width="143.5" height="2"/>
+                                                <rect key="frame" x="137.5" y="47" width="139.5" height="2"/>
                                                 <color key="backgroundColor" name="ColorBlue"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="2" id="sJn-sO-Jqf"/>
