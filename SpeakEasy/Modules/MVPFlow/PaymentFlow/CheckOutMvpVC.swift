@@ -41,17 +41,17 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
-//        if StripeAPI.deviceSupportsApplePay() {
-//            applePayBtn.isHidden = false
-//            creditCardPayBtn.isHidden = true
-//            applePayBtn.alpha = 0.5
-//            applePayBtn.isUserInteractionEnabled = false
-//        } else {
+        if StripeAPI.deviceSupportsApplePay() {
+            applePayBtn.isHidden = false
+            creditCardPayBtn.isHidden = true
+            applePayBtn.alpha = 0.5
+            applePayBtn.isUserInteractionEnabled = false
+        } else {
             applePayBtn.isHidden = true
             creditCardPayBtn.isHidden = false
             creditCardPayBtn.alpha = 0.5
             creditCardPayBtn.isUserInteractionEnabled = false
-//        }
+        }
         addPaymentApi()
     }
         
@@ -100,8 +100,9 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.success()
-                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+                self.paymentStatus {
+                    Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+                }
             case .canceled:
                 let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
@@ -134,10 +135,12 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    func success() {
+    func paymentStatus(completion: @escaping (()-> Void)) {
+        Loader.show()
         mvpDelegate.successPeyment(bookingId: bookingId) { isSuccess, errMsg in
+            Loader.hide()
             if isSuccess {
-                print("isSuccess")
+                completion()
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -159,8 +162,9 @@ extension CheckOutMvpVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            success()
-            Navigate.to.qrCodeMvpVC(self, totalTicket: totalTicket, ticketPrice: ticketPrice, isGeneral: isGeneralAdmission, venueName: venueName, bookingId: bookingId)
+            paymentStatus {
+                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+            }
         case .error:
             let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
