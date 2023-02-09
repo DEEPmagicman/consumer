@@ -173,6 +173,36 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
+        vc.ticketPrice = ticketPrice
+        vc.isGeneralAdmission = isGeneral
+        vc.venueName = venueName
+        vc.appClipTicketId = ticketId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func checkOutMvpVC(_ sender: UIViewController, phoneNum: String,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
+        vc.phoneNo = phoneNum
+        vc.totalTicket = totalTicket
+        vc.ticketPrice = ticketPrice
+        vc.isGeneralAdmission = isGeneral
+        vc.venueName = venueName
+        vc.bookingId = bookingId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(QRCodeMvpVC.self)
+        vc.totalTicket = totalTicket
+        vc.isGeneralAdmission = isGeneral
+        vc.ticketPrice = ticketPrice
+        vc.venueName = venueName
+        vc.bookingId = bookingId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func settingsVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(SettingsViewController.self)
         fullscreenPush(vc: vc)

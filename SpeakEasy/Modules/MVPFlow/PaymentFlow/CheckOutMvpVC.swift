@@ -1,0 +1,177 @@
+//
+//  CheckOutMvpVC.swift
+//  SpeakEasy-Consumer
+//
+//  Created by Square Infosoft on 09/02/23.
+//
+
+import UIKit
+import PassKit
+import StripeApplePay
+import StripePaymentSheet
+
+final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
+
+    @IBOutlet private weak var phoneNoLbl: UILabel!
+    @IBOutlet private weak var ticketTitleLbl: UILabel!
+    @IBOutlet private weak var ticketPriceLbl: UILabel!
+    @IBOutlet private weak var totalPriceLbl: UILabel!
+    @IBOutlet private weak var applePayBtn: PKPaymentButton!
+    @IBOutlet private weak var creditCardPayBtn: UIButton!
+    @IBOutlet private weak var ticketQuantityLbl: UILabel!
+    @IBOutlet weak var dressCodeInfoLbl: UILabel!
+    
+    var phoneNo = ""
+    var totalTicket = 1
+    var ticketPrice = 1
+    var isGeneralAdmission = false
+    private var paymentSheet: PaymentSheet?
+    private var paymentIntent = ""
+    var venueName = ""
+    var bookingId = ""
+    var mvpDelegate = MVPPresenter()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        dressCodeInfoLbl.text = "*All entries subject to doorman discretion*  At \(self.venueName), we encourage smart, casual-elegant attire."
+        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
+        phoneNoLbl.text = phoneNo
+        ticketQuantityLbl.text = "\(totalTicket)x"
+        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
+        ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
+        totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
+        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
+//        if StripeAPI.deviceSupportsApplePay() {
+//            applePayBtn.isHidden = false
+//            creditCardPayBtn.isHidden = true
+//            applePayBtn.alpha = 0.5
+//            applePayBtn.isUserInteractionEnabled = false
+//        } else {
+            applePayBtn.isHidden = true
+            creditCardPayBtn.isHidden = false
+            creditCardPayBtn.alpha = 0.5
+            creditCardPayBtn.isUserInteractionEnabled = false
+//        }
+        addPaymentApi()
+    }
+        
+    private func addPaymentApi() {
+        mvpDelegate.addPaymentApiForMvp(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret in
+            if isSuccess {
+                guard let clientSecret = clientSecret else { Loader.hide(); return }
+                self.paymentIntent = clientSecret
+                self.setUpPaymentBottemSheet()
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+    }
+    
+    private func setUpPaymentBottemSheet() {
+        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
+        // MARK: Create a PaymentSheet instance
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "General Admission, Inc."
+        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
+        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+        // methods that complete payment after a delay, like SEPA Debit and Sofort.
+        configuration.allowsDelayedPaymentMethods = true
+        paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
+        DispatchQueue.main.async {
+            self.creditCardPayBtn.alpha = 1
+            self.creditCardPayBtn.isUserInteractionEnabled = true
+            self.applePayBtn.alpha = 1
+            self.applePayBtn.isUserInteractionEnabled = true
+        }
+    }
+    
+    @IBAction func onClickBack(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction private func onClickCreditCardPay(_ sender: Any) {
+        // MARK: Start the checkout process
+        paymentSheet?.present(from: self) { paymentResult in
+            // MARK: Handle the payment result
+            switch paymentResult {
+            case .completed:
+                self.success()
+                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+            case .canceled:
+                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            case .failed:
+                let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @objc private func applePayButtonTapped() {
+        let merchantIdentifier = "merchant.com.speakeasy"
+        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+
+        // Configure the line items on the payment request
+        paymentRequest.paymentSummaryItems = [
+            // The final line should represent your company;
+            // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
+            PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
+        ]
+        paymentRequest.requiredBillingContactFields = []
+        // Initialize an STPApplePayContext instance
+        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
+            // Present Apple Pay payment sheet
+            applePayContext.presentApplePay()
+        } else {
+            // There is a problem with your Apple Pay configuration
+        }
+    }
+    
+    func success() {
+        mvpDelegate.successPeyment(bookingId: bookingId) { isSuccess, errMsg in
+            if isSuccess {
+                print("isSuccess")
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
+    }
+}
+
+extension CheckOutMvpVC {
+    func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
+        let clientSecret = paymentIntent
+        // Call the completion block with the client secret or an error
+        completion(clientSecret, nil);
+    }
+
+    func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
+        switch status {
+        case .success:
+            success()
+            Navigate.to.qrCodeMvpVC(self, totalTicket: totalTicket, ticketPrice: ticketPrice, isGeneral: isGeneralAdmission, venueName: venueName, bookingId: bookingId)
+        case .error:
+            let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        case .userCancellation:
+            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+

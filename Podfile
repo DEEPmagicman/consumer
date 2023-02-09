@@ -26,6 +26,8 @@ target 'SpeakEasy-Consumer' do
   pod 'GoogleSignIn'
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
+  pod 'StripeApplePay'
+  pod 'StripePaymentSheet'
 end
 
 target 'SpeakEasyClip' do

@@ -13,5 +13,6 @@ struct StoryboardAndXibManager {
         static let login2 = UIStoryboard(name: "Login2", bundle: nil)
         static let settings = UIStoryboard(name: "Settings", bundle: nil)
         static let mvp = UIStoryboard(name: "MVPFlow", bundle: nil)
+        static let peymentForMvp = UIStoryboard(name: "PeymentFlow", bundle: nil)
     }
 }

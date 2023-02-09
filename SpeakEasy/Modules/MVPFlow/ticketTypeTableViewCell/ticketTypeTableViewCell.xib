@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,7 +29,7 @@
                         <rect key="frame" x="0.0" y="11" width="496" height="212"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General Admission" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-bV-Bk6" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="16" y="0.0" width="400.5" height="21"/>
+                                <rect key="frame" x="16" y="0.0" width="379" height="21"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -41,7 +41,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provides general admission to the venue. Admission subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKK-ir-Xwf" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="16" y="31" width="464" height="42"/>
+                                <rect key="frame" x="16" y="31" width="430" height="42"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -53,8 +53,8 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="$50" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tAa-Ha-WLH" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="426.5" y="0.0" width="29.5" height="21"/>
-                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
+                                <rect key="frame" x="405" y="-7.5" width="51" height="36.5"/>
+                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="26"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
@@ -64,6 +64,13 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sideArr" translatesAutoresizingMaskIntoConstraints="NO" id="0rq-sf-Wm7">
+                                <rect key="frame" x="481.5" y="39.5" width="13.5" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="9Bt-Ko-7RV"/>
+                                    <constraint firstAttribute="width" constant="13.5" id="Fae-sK-ehp"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UuF-8i-IxH">
                                 <rect key="frame" x="16" y="85" width="464" height="1"/>
                                 <color key="backgroundColor" red="0.24705882352941178" green="0.24705882352941178" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -81,10 +88,12 @@
                             <constraint firstItem="YKK-ir-Xwf" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="16" id="bzx-gO-4EC"/>
                             <constraint firstAttribute="trailing" secondItem="UuF-8i-IxH" secondAttribute="trailing" constant="16" id="fDH-Sn-JCA"/>
                             <constraint firstItem="VgT-bV-Bk6" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="16" id="gn3-b0-x9Z"/>
-                            <constraint firstAttribute="trailing" secondItem="YKK-ir-Xwf" secondAttribute="trailing" constant="16" id="hz5-st-Dl1"/>
+                            <constraint firstAttribute="trailing" secondItem="YKK-ir-Xwf" secondAttribute="trailing" constant="50" id="hz5-st-Dl1"/>
+                            <constraint firstAttribute="trailing" secondItem="0rq-sf-Wm7" secondAttribute="trailing" constant="1" id="ipo-HD-d1v"/>
                             <constraint firstItem="UuF-8i-IxH" firstAttribute="top" secondItem="YKK-ir-Xwf" secondAttribute="bottom" constant="12" id="n9a-A4-oYo"/>
                             <constraint firstAttribute="trailing" secondItem="tAa-Ha-WLH" secondAttribute="trailing" constant="40" id="px7-NK-LrJ"/>
                             <constraint firstItem="VgT-bV-Bk6" firstAttribute="top" secondItem="av2-NG-UWF" secondAttribute="top" id="ubj-1m-tUR"/>
+                            <constraint firstItem="0rq-sf-Wm7" firstAttribute="centerY" secondItem="YKK-ir-Xwf" secondAttribute="centerY" id="vwd-gq-viN"/>
                             <constraint firstItem="tAa-Ha-WLH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="VgT-bV-Bk6" secondAttribute="trailing" constant="10" id="z5k-CY-ONH"/>
                         </constraints>
                     </view>
@@ -107,4 +116,7 @@
             <point key="canvasLocation" x="208.69565217391306" y="111.49553571428571"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="sideArr" width="9.5" height="16.5"/>
+    </resources>
 </document>

@@ -182,8 +182,6 @@ final class EnterPhoneNumberClipVC: UIViewController {
             }
             if let bookingId = json["id"] as? String {
                 self.navigate(bookingId: bookingId)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
-                self.navigate(bookingId: bookingId)
             } else {
                 AppClipLoader.hideLoader()
             }

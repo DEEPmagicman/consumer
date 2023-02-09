@@ -106,7 +106,7 @@ struct AppClipTicket: Codable {
     var venueId: String?
     var name: String
     var price: Int
-    var status: String
+    var status: String?
     var description: String
     var isDeleted: Bool
     var createdAt: String
