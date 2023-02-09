@@ -60,4 +60,86 @@ final class MVPPresenter {
             completion(false, nil, [],false)
         }
     }
+    
+    func createbookingForMvp(phone: String,ticketId: String,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ id: String?) -> Void) {
+        let param = ["phone": phone,
+                     "appclipTicketId":ticketId,
+                     "ticketQuantity": totalTicket] as [String : Any]
+        Loader.show()
+        AFWrapper.postRequest(APIBuilder.createBookingMvpUrl,params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil,"")
+                return
+            }
+            do {
+                let id = responseDic["id"] as? String
+                completion(true, nil, id)
+            } catch {
+                completion(false, "internal error","")
+            }
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain,"")
+                return
+            }
+            completion(false, nil,"")
+        }
+    }
+    
+    func addPaymentApiForMvp(bookingId: String,name: String,price: Int,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ clientSecret: String?) -> Void) {
+        let param = ["cart":
+                        [
+                            ["name": name,
+                             "price": price,
+                             "quantity": totalTicket
+                            ]
+                        ]
+        ] as [String: Any]
+        Loader.show()
+        AFWrapper.postRequest(APIBuilder.addPaymentUrl(bookingId),params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil,"")
+                return
+            }
+            do {
+                let customerId = responseDic["customer"] as? String
+                let customerEphemeralKeySecret = responseDic["ephemeralKey"] as? String
+                let paymentIntentClientSecret = responseDic["clientSecret"] as? String
+                completion(true, nil, paymentIntentClientSecret)
+            } catch {
+                completion(false, "internal error","")
+            }
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain,"")
+                return
+            }
+            completion(false, nil,"")
+        }
+    }
+    
+    func successPeyment(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        AFWrapper.postRequest(APIBuilder.successPeymentUrl(bookingId),params: nil, headers: Header.header()) { (response) in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil)
+                return
+            }
+            do {
+                completion(true, nil)
+            } catch {
+                completion(false, "internal error")
+            }
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            completion(false, nil)
+        }
+    }
 }

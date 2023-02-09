@@ -198,7 +198,7 @@
                                                 <rect key="frame" x="0.0" y="229" width="414" height="98"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TAO Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gfU-HC-wcQ" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                        <rect key="frame" x="16" y="10" width="166.5" height="38"/>
+                                                        <rect key="frame" x="16" y="10" width="171.5" height="38"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="38" id="Nmk-CU-Xyb"/>
                                                         </constraints>
@@ -339,8 +339,8 @@
                                                     <constraint firstAttribute="trailing" secondItem="JK1-3e-vll" secondAttribute="trailing" id="sDc-3y-IzR"/>
                                                 </constraints>
                                             </view>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="s0c-8q-s4k">
-                                                <rect key="frame" x="0.0" y="388" width="414" height="250"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="s0c-8q-s4k">
+                                                <rect key="frame" x="16" y="388" width="382" height="250"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="250" id="tvZ-kQ-dN4"/>
@@ -364,10 +364,10 @@
                                             <constraint firstItem="1oe-Fl-e1f" firstAttribute="leading" secondItem="wB8-sH-IIa" secondAttribute="leading" constant="16" id="4tL-Lv-KT1"/>
                                             <constraint firstAttribute="bottom" secondItem="nyt-1g-cfM" secondAttribute="bottom" constant="30" id="7ag-56-AgB"/>
                                             <constraint firstItem="nyt-1g-cfM" firstAttribute="top" secondItem="s0c-8q-s4k" secondAttribute="bottom" constant="20" id="WhG-nf-XLn"/>
-                                            <constraint firstAttribute="trailing" secondItem="s0c-8q-s4k" secondAttribute="trailing" id="ZPb-cL-yIy"/>
+                                            <constraint firstAttribute="trailing" secondItem="s0c-8q-s4k" secondAttribute="trailing" constant="16" id="ZPb-cL-yIy"/>
                                             <constraint firstItem="s0c-8q-s4k" firstAttribute="top" secondItem="1oe-Fl-e1f" secondAttribute="bottom" constant="10" id="mJj-ua-dqo"/>
                                             <constraint firstAttribute="trailing" secondItem="rv7-BS-ZEF" secondAttribute="trailing" id="okQ-ke-2Oo"/>
-                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="leading" secondItem="wB8-sH-IIa" secondAttribute="leading" id="qaq-OP-7tv"/>
+                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="leading" secondItem="wB8-sH-IIa" secondAttribute="leading" constant="16" id="qaq-OP-7tv"/>
                                             <constraint firstItem="Wnz-Pk-zcu" firstAttribute="leading" secondItem="wB8-sH-IIa" secondAttribute="leading" id="sYn-1Q-jRX"/>
                                             <constraint firstItem="Wnz-Pk-zcu" firstAttribute="top" secondItem="wB8-sH-IIa" secondAttribute="top" id="sew-vN-kQ6"/>
                                             <constraint firstItem="rv7-BS-ZEF" firstAttribute="bottom" secondItem="Wnz-Pk-zcu" secondAttribute="bottom" id="uQC-jB-Lzl"/>
