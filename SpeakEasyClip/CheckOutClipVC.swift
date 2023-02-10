@@ -30,6 +30,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var ticketPrice = 1
     var isGeneralAdmission = false
     private var paymentIntent = ""
+    var paymentHistoryId = ""
     var venueName = ""
     var bookingId = ""
     var isIntendCreated = false
@@ -101,12 +102,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
             AppClipLoader.hideLoader()
             guard let self = self else { return }
-            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any], let paymentIntentClientSecret = json["clientSecret"] as? String else {
+            guard let data = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any], let paymentIntentClientSecret = json["clientSecret"] as? String, let paymentHistoryId = json["paymentHistoryId"] as? String else {
                 self.alertPopup("Alert", "Payment Initialisation issue")
                 return
             }
             self.isIntendCreated = true
             self.paymentIntent = paymentIntentClientSecret
+            self.paymentHistoryId = paymentHistoryId
             self.setUpPaymentBtn()
         })
         task.resume()
@@ -157,7 +159,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func paymentStatus(_ status: PaymentStatus, completion: @escaping (()-> Void)) {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)/status?status=\(status.rawValue)") else { return }
+        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("*/*", forHTTPHeaderField: "accept")

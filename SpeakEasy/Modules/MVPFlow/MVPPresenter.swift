@@ -89,7 +89,7 @@ final class MVPPresenter {
         }
     }
     
-    func addPaymentApiForMvp(bookingId: String,name: String,price: Int,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ clientSecret: String?) -> Void) {
+    func addPaymentApiForMvp(bookingId: String,name: String,price: Int,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ clientSecret: String?,_ paymentHistoryId: String) -> Void) {
         let param = ["cart":
                         [
                             ["name": name,
@@ -102,39 +102,31 @@ final class MVPPresenter {
         AFWrapper.postRequest(APIBuilder.addPaymentUrl(bookingId),params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil,"")
+                completion(false, nil, "", "")
                 return
             }
-            do {
-                let customerId = responseDic["customer"] as? String
-                let customerEphemeralKeySecret = responseDic["ephemeralKey"] as? String
-                let paymentIntentClientSecret = responseDic["clientSecret"] as? String
-                completion(true, nil, paymentIntentClientSecret)
-            } catch {
-                completion(false, "internal error","")
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String {
+                completion(true, nil, paymentIntentClientSecret, paymentHistoryId)
+            } else {
+                completion(false, "internal error", "", "")
             }
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
-                completion(false, err.domain,"")
+                completion(false, err.domain, "", "")
                 return
             }
-            completion(false, nil,"")
+            completion(false, nil, "", "")
         }
     }
     
-    func successPeyment(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.postRequest(APIBuilder.successPeymentUrl(bookingId),params: nil, headers: Header.header()) { (response) in
+    func successPeyment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        AFWrapper.postRequest(APIBuilder.successPeymentUrl(paymentHistoryId, bookingId),params: nil, headers: Header.header()) { (response) in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return
             }
-            do {
-                completion(true, nil)
-            } catch {
-                completion(false, "internal error")
-            }
-
+            completion(true, nil)
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
                 completion(false, err.domain)

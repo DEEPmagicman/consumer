@@ -185,7 +185,7 @@ struct APIBuilder {
         baseURL + route + addPayment + id
     }
     
-    static func successPeymentUrl(_ id: String) -> String {
-        baseURL + route + addPayment + id + mvpPeymentStatus
+    static func successPeymentUrl(_ paymentHistoryId: String, _ id: String) -> String {
+        baseURL + route + addPayment + paymentHistoryId + "/" + id + mvpPeymentStatus
     }
 }
