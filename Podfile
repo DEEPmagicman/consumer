@@ -39,7 +39,6 @@ target 'SpeakEasyClip' do
   pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
   pod 'StripeApplePay'
-#  pod 'StripePaymentSheet'
 end
 
 post_install do |installer|

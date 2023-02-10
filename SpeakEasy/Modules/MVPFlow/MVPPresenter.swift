@@ -72,11 +72,12 @@ final class MVPPresenter {
                 completion(false, nil,"")
                 return
             }
-            do {
-                let id = responseDic["id"] as? String
+            if let id = responseDic["id"] as? String {
                 completion(true, nil, id)
-            } catch {
-                completion(false, "internal error","")
+            } else if let booking = responseDic["booking"] as? [String: Any], let id = booking["id"] as? String {
+                completion(true, nil, id)
+            } else {
+                completion(false, "Alert", "Booking failed")
             }
 
         } failure: { (error) in

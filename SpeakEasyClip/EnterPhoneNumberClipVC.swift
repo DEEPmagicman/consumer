@@ -171,19 +171,25 @@ final class EnterPhoneNumberClipVC: UIViewController {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
                 return
             }
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                 AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
                 return
             }
             if let bookingId = json["id"] as? String {
                 self.navigate(bookingId: bookingId)
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+                self.navigate(bookingId: bookingId)
             } else {
                 AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Booking failed")
             }
         }
         task.resume()

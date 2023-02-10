@@ -151,14 +151,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         })
         task.resume()
     }
-    
-    func alertPopup(_ title: String, _ message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-        DispatchQueue.main.async {
-            self.present(alert, animated: true, completion: nil)
-        }
-    }
 }
 
 extension CheckOutClipVC {
