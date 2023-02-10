@@ -75,7 +75,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setUpPaymentBottemSheet() {
-        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
+        STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "General Admission, Inc."

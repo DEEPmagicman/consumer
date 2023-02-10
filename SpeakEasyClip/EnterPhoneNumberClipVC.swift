@@ -163,7 +163,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
         let parameters = "{\n  \"phone\": \"\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")\",\n  \"appclipTicketId\": \"\(appClipTicketId)\",\n  \"ticketQuantity\": \(Int(ticketNumberLbl.text ?? "") ?? 1)\n}"
         let postData = parameters.data(using: .utf8)
         
-        guard let userURL = URL(string: "https://speakeasy-stag.cmdev.cc/appclip-user") else { return }
+        guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

@@ -82,7 +82,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func addPaymentApi() {
         if isIntendCreated { return }
         AppClipLoader.showLoader(view)
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(bookingId)") else { return }
+        guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let param = ["cart":
@@ -161,7 +161,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func paymentStatus(_ status: PaymentStatus, completion: @escaping (()-> Void)) {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
+        guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("*/*", forHTTPHeaderField: "accept")

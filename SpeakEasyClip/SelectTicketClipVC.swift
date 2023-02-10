@@ -31,7 +31,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket() {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/\(venueId)") else { return }
+        guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         AppClipLoader.showLoader(self.view)
