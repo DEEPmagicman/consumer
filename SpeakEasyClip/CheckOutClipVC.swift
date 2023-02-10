@@ -71,6 +71,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             applePayBtn.isUserInteractionEnabled = false
         } else if isApplePayNotSupported == false {
             alertForWallet()
+            applePayBtn.alpha = 0.5
+            applePayBtn.isUserInteractionEnabled = false
         } else {
             applePayBtn.isHidden = true
             errorLbl.isHidden = false
@@ -126,7 +128,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func alertForWallet() {
-        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         let setUpAction = UIAlertAction(title: "Go to Apple Wallet", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
