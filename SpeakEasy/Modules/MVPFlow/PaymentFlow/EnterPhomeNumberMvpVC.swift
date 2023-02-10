@@ -163,7 +163,11 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     func createBooking() {
         self.mvpDelegate.createbookingForMvp(phone: phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "", ticketId: appClipTicketId, totalTicket: (Int(ticketNumberLbl.text ?? "") ?? 1)) { isSuccess, errMsg, id in
             if isSuccess {
-                guard let id = id else { Loader.hide(); return }
+                guard let id = id else {
+                    Loader.hide()
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                    return
+                }
                 self.navigate(bookingId: id)
             } else {
                 if errMsg != nil {

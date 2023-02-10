@@ -173,6 +173,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func MVPSettingVC(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(SettingMvpVC.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
         vc.ticketPrice = ticketPrice

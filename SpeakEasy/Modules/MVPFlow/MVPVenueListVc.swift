@@ -24,6 +24,10 @@ class MVPVenueListVc: UIViewController {
         fetchAllvenueForMvp()
     }
     
+    @IBAction func onClickSetting(_ sender: Any) {
+        Navigate.to.MVPSettingVC(self)
+    }
+    
     private func fetchAllvenueForMvp() {
         venueListDelegate.getVenueListForMvp(from: from) { isSuccess, errMsg, venueList, hasMore in
             if isSuccess {

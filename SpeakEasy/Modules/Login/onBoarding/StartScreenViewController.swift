@@ -31,15 +31,17 @@ final class StartScreenViewController: UIViewController {
 
            NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
         
-        playBackgoundVideo()
-        self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
         
         if UserDefault.shared.isMvp ?? false {
             self.signInBtn.isHidden = true
             self.continueAsGuestBtn.isHidden = true
             self.createAccountBtn.setTitle("Continue as Guest", for: .normal)
             self.createAccountBtn.backgroundColor = UIColor(hex: "#0B78FF")
-            self.byTappingInfoLbl.isHidden = true
+            self.byTappingInfoLbl.text = "By tapping ‘CONTINUE AS GUEST’, you attest that you are over the age of 21. This information cannot be changed later."
+            self.bgImageView.image = UIImage(named: "mvpBg-img")
+        } else {
+            self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
+            playBackgoundVideo()
         }
     }
     

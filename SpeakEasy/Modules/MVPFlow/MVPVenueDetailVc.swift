@@ -18,6 +18,7 @@ class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var ticketTypeTableView: UITableView!
     @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var liveLbl: UILabel!
     
     var mvpDelegate = MVPPresenter()
     var venueId = "63dbab0a27d61c05f21b9e11"
@@ -57,6 +58,13 @@ class MVPVenueDetailVc: UIViewController {
         locationLbl.text = self.venueDetails?.address
         infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.   Prices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
         infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
+        if self.venueDetails?.bookingStatus == "OPEN" {
+            self.liveLbl.text = "LIVE"
+            self.liveLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
+        } else {
+            self.liveLbl.text = "CLOSED"
+            self.liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {

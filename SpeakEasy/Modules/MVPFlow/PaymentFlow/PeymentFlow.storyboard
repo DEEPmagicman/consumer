@@ -47,7 +47,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RQc-GY-cin">
-                                        <rect key="frame" x="152.66666666666666" y="1" width="87.666666666666657" height="35"/>
+                                        <rect key="frame" x="152" y="1" width="89" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -300,8 +300,8 @@
                                             <action selector="onClickBack:" destination="3Nt-ST-B22" eventType="touchUpInside" id="OY1-Jy-hfQ"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8r-ne-xLp">
-                                        <rect key="frame" x="135" y="0.0" width="123" height="35"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check Out" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8r-ne-xLp">
+                                        <rect key="frame" x="128.66666666666669" y="0.0" width="135.66666666666669" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -382,7 +382,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUC-Fa-gyT">
-                                        <rect key="frame" x="0.0" y="62.333333333333343" width="42.333333333333336" height="21"/>
+                                        <rect key="frame" x="0.0" y="62.333333333333343" width="44" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -573,7 +573,7 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RA7-8g-Nlo">
-                                <rect key="frame" x="127" y="134" width="139" height="20"/>
+                                <rect key="frame" x="126.00000000000001" y="134" width="141.33333333333337" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="epq-gb-Awd"/>
                                 </constraints>
@@ -600,13 +600,13 @@ At TAO Chicago, we encourage smart, casual-elegant attire.
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="518.33333333333337"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CkE-64-mX9">
-                                                <rect key="frame" x="127" y="18" width="139" height="31"/>
+                                                <rect key="frame" x="125.00000000000001" y="18" width="143.33333333333337" height="31"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GuN-9M-Ntp">
-                                                <rect key="frame" x="127" y="47" width="139" height="2"/>
+                                                <rect key="frame" x="125.00000000000001" y="47" width="143.33333333333337" height="2"/>
                                                 <color key="backgroundColor" name="ColorBlue"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="2" id="Mit-mY-qxp"/>

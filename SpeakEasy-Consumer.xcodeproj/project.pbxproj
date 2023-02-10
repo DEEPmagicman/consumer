@@ -275,6 +275,7 @@
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
 		CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */; };
+		CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */; };
 		CEECAA70288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */; };
 		CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */; };
 		CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */; };
@@ -854,6 +855,7 @@
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
 		CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWCenterTextLayer.swift; sourceTree = "<group>"; };
 		CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChartExtensions.swift; sourceTree = "<group>"; };
+		CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMvpVC.swift; sourceTree = "<group>"; };
 		CEECAA68288D8B7C007C5F9C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerCell.swift; sourceTree = "<group>"; };
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
@@ -1431,6 +1433,7 @@
 				82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */,
 				82847A8129827AC500611DC4 /* MVPVenueDetailVc.swift */,
 				CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */,
+				CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */,
 			);
 			path = MVPFlow;
 			sourceTree = "<group>";
@@ -4471,6 +4474,7 @@
 				4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */,
 				E167058428CA6AB800644BF0 /* FriendCVC.swift in Sources */,
 				CAC4140F28A478050007BA86 /* FrameHelper.swift in Sources */,
+				CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */,
 				CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */,
 				BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */,
 				CE4867B8286F358800FD277E /* Dictionary+Extension.swift in Sources */,
@@ -4574,7 +4578,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4608,7 +4612,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4762,7 +4766,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4807,7 +4811,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 52;
+				CURRENT_PROJECT_VERSION = 58;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
