@@ -32,27 +32,27 @@ class SettingMvpVC: UIViewController {
     }
     
     @objc func onClickCustomerSuppert() {
-        guard let url = URL(string: "https://www.hackingwithswift.com") else { return }
+        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
          UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @objc func onClickPrivacyPolicy() {
-        guard let url = URL(string: "Google.com") else { return }
+        guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
          UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @objc func onClickTermsConditions() {
-        guard let url = URL(string: "google.com") else { return }
+        guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
          UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
 
 extension Bundle {
-  var releaseVersionNumber: String {
-    return infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-  }
-  var buildVersionNumber: String {
-    return infoDictionary?["CFBundleVersion"] as? String ?? ""
-  }
-}
+    var releaseVersionNumber: String {
+        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
 
+    var buildVersionNumber: String {
+        infoDictionary?["CFBundleVersion"] as? String ?? ""
+    }
+}
