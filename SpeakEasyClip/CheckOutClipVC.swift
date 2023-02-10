@@ -33,6 +33,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var venueName = ""
     var bookingId = ""
     var isIntendCreated = false
+    var isApplePayNotSupported = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +45,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
-        let paymentNetworks = [PKPaymentNetwork.amex, PKPaymentNetwork.masterCard,  PKPaymentNetwork.visa]
-        if PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: paymentNetworks) {
+        if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
             NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
         } else {
+            isApplePayNotSupported = true
             errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
         }
         checkApplePay()
@@ -67,6 +68,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             errorLbl.isHidden = true
             applePayBtn.alpha = 0.5
             applePayBtn.isUserInteractionEnabled = false
+        } else if isApplePayNotSupported == false {
+            alertForWallet()
         } else {
             applePayBtn.isHidden = true
             errorLbl.isHidden = false
@@ -118,6 +121,19 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     @IBAction private func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func alertForWallet() {
+        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let setUpAction = UIAlertAction(title: "Go to Apple Wallet", style: .default) { (_) in
+            if let url = URL(string: "wallet://") {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(setUpAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     @objc private func applePayButtonTapped() {
