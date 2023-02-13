@@ -33,7 +33,6 @@
 		04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */; };
 		04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */; };
 		04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */; };
-		2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
 		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
 		2966E3342980F86000B5E103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
@@ -266,6 +265,9 @@
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
 		CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */; };
 		CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */; };
+		CE858069299A2089001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
+		CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
+		CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
 		CE94707329951ED4007102A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
@@ -850,6 +852,7 @@
 		CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Light.ttf"; sourceTree = "<group>"; };
 		CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
@@ -1794,6 +1797,7 @@
 			isa = PBXGroup;
 			children = (
 				CE486721286F2CB000FD277E /* AppDelegate.swift */,
+				CE858068299A2089001F6E56 /* FlagKit.xcassets */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -3841,6 +3845,7 @@
 			files = (
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
+				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
@@ -3968,6 +3973,7 @@
 				82847A792982485B00611DC4 /* MVPFlow.storyboard in Resources */,
 				84248DAF28D3DEE200A6E260 /* TabVenueCVC.xib in Resources */,
 				E1A9E75F28C55D550081FB28 /* HotVenuesTVC.xib in Resources */,
+				CE858069299A2089001F6E56 /* FlagKit.xcassets in Resources */,
 				E1A9E7FC28C579690081FB28 /* VibesCVC.xib in Resources */,
 				E11F4B9C28C8358C008D2E30 /* ViewEventTicketTVC.xib in Resources */,
 				E11F4BFE28C835F3008D2E30 /* BookingsTVC.xib in Resources */,
@@ -4164,9 +4170,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
-				2966E32B2980F85E00B5E103 /* AppDelegate.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
+				CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
@@ -4578,7 +4584,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4612,7 +4618,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4766,7 +4772,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4811,7 +4817,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

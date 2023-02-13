@@ -25,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame:UIScreen.main.bounds)
         launchApplication()
-        UIImage(named: "IN", in: Bundle.FlagIcons, compatibleWith: nil)
+//        UIImage(named: "IN", in: Bundle.FlagIcons, compatibleWith: nil)
+        Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
     }
 }

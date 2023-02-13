@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE48671D286F2CB000FD277E"
-               BuildableName = "SpeakEasy-Consumer.app"
+               BuildableName = "Speakeasy.app"
                BlueprintName = "SpeakEasy-Consumer"
                ReferencedContainer = "container:SpeakEasy-Consumer.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE48671D286F2CB000FD277E"
-            BuildableName = "SpeakEasy-Consumer.app"
+            BuildableName = "Speakeasy.app"
             BlueprintName = "SpeakEasy-Consumer"
             ReferencedContainer = "container:SpeakEasy-Consumer.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE48671D286F2CB000FD277E"
-            BuildableName = "SpeakEasy-Consumer.app"
+            BuildableName = "Speakeasy.app"
             BlueprintName = "SpeakEasy-Consumer"
             ReferencedContainer = "container:SpeakEasy-Consumer.xcodeproj">
          </BuildableReference>
