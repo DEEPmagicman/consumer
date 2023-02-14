@@ -16,11 +16,23 @@ class MVPVenueListVc: UIViewController {
     var from = 0
     var venueListDelegate = MVPPresenter()
     var hasMore = false
+    var refresh = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
+        fetchAllvenueForMvp()
+        
+        refresh.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        venueListTableView.addSubview(refresh)
+    }
+    
+    @objc func refresh(_ sender: AnyObject) {
+       print("refresh")
+        self.from = 0
+        self.hasMore = false
+        self.venueList.removeAll()
         fetchAllvenueForMvp()
     }
     
@@ -36,10 +48,10 @@ class MVPVenueListVc: UIViewController {
                 }
                 if hasMore {
                     self.from = self.venueList.count
-                    self.fetchAllvenueForMvp()
                 }
                 self.hasMore = hasMore
                 self.venueListTableView.reloadData()
+                self.refresh.endRefreshing()
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")

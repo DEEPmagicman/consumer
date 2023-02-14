@@ -104,7 +104,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.venueDetails?.bookingStatus != "OPEN" { return }
         if self.venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        Navigate.to.enterPhoneNumForMvpViewController(self, ticketPrice: self.venueDetails?.appClipTicket?[indexPath.row].price ?? 0, isGeneral: indexPath.row == 0, venueName: self.venueDetails?.name ?? "", ticketId: self.venueDetails?.appClipTicket?[indexPath.row].id ?? "")
+        Navigate.to.enterPhoneNumForMvpViewController(self, ticketPrice: self.venueDetails?.appClipTicket?[indexPath.row].price ?? 0, isGeneral: self.venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET", venueName: self.venueDetails?.name ?? "", ticketId: self.venueDetails?.appClipTicket?[indexPath.row].id ?? "")
     }
 }
 

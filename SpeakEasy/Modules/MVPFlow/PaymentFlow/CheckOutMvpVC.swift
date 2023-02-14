@@ -31,6 +31,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var venueName = ""
     var bookingId = ""
     var mvpDelegate = MVPPresenter()
+    var isApplePayNotSupported = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,18 +43,46 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
+        creditCardPayBtn.isHidden = false
+        creditCardPayBtn.alpha = 0.5
+        creditCardPayBtn.isUserInteractionEnabled = false
+        applePayBtn.alpha = 0.5
+        applePayBtn.isUserInteractionEnabled = false
+        if PKPaymentAuthorizationViewController.canMakePayments() {
+            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
+        } else {
+            isApplePayNotSupported = true
+        }
+        checkApplePay()
+        addPaymentApi()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func checkApplePay() {
         if StripeAPI.deviceSupportsApplePay() {
             applePayBtn.isHidden = false
-            creditCardPayBtn.isHidden = true
-            applePayBtn.alpha = 0.5
-            applePayBtn.isUserInteractionEnabled = false
+        } else if isApplePayNotSupported == false {
+            applePayBtn.isHidden = false
         } else {
             applePayBtn.isHidden = true
-            creditCardPayBtn.isHidden = false
-            creditCardPayBtn.alpha = 0.5
-            creditCardPayBtn.isUserInteractionEnabled = false
         }
-        addPaymentApi()
+    }
+    
+    func alertForWallet() {
+        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let setUpAction = UIAlertAction(title: "Go to Apple Wallet", style: .default) { (_) in
+            if let url = URL(string: "wallet://") {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(setUpAction)
+        present(alertController, animated: true, completion: nil)
     }
         
     private func addPaymentApi() {
@@ -78,7 +107,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "General Admission, Inc."
+        configuration.merchantDisplayName = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
         //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
@@ -118,6 +147,10 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func applePayButtonTapped() {
+        if StripeAPI.deviceSupportsApplePay() == false {
+            alertForWallet()
+            return
+        }
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
 
