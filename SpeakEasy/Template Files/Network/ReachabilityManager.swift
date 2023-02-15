@@ -25,12 +25,15 @@ final class ReachabilityManager: NSObject {
             case .notReachable:
                 print("Network became unreachable")
                 self.reachabilityStatus = .notReachable
+                WebSocketWrapper.shared.disConnect()
             case .reachableViaWiFi:
                 print("Network reachable through WiFi")
                 self.reachabilityStatus = .reachableViaWiFi
+                WebSocketWrapper.shared.setUpWebSocket()
             case .reachableViaWWAN:
                 print("Network reachable through Cellular Data")
                 self.reachabilityStatus = .reachableViaWWAN
+                WebSocketWrapper.shared.setUpWebSocket()
             @unknown default:
                 break
             }
