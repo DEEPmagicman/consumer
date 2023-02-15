@@ -31,7 +31,6 @@ final class WebSocketWrapper: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.didBecomeActiveNotification, object: nil)
-        connect()
     }
     
     @objc func connect() {
@@ -40,7 +39,7 @@ final class WebSocketWrapper: NSObject {
             var request = URLRequest(url: socketUrl)
             request.timeoutInterval = 5
             socket = WebSocket(request: request)
-            socket?.delegate = WebSocketWrapper.shared
+            socket?.delegate = self
             socket?.connect()
         }
     }
@@ -101,6 +100,7 @@ extension WebSocketWrapper: WebSocketDelegate {
         case .ping(let data):
             break
         case .error(let error):
+            print(error?.localizedDescription)
             break
         case .viabilityChanged(let bool):
             break
