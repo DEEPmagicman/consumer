@@ -259,6 +259,8 @@
 		CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486799286F358700FD277E /* FlowLayout.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
 		CE4867D8286F358800FD277E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48679F286F358700FD277E /* CardView.swift */; };
+		CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
+		CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
@@ -845,6 +847,7 @@
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CE48679F286F358700FD277E /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
@@ -1660,6 +1663,7 @@
 				BD942F3C29595A3300D52115 /* AFWrapper.swift */,
 				BD942F3E29595C7800D52115 /* APIBuilder.swift */,
 				BD942F442959623E00D52115 /* Header.swift */,
+				CE565472299CA9A3009CE55C /* ReachabilityManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -4173,6 +4177,7 @@
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */,
+				CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
@@ -4233,6 +4238,7 @@
 				E11F4A9728C800B1008D2E30 /* NFTsonSpeakEasy.swift in Sources */,
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
 				CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */,
+				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
 				CE4867BC286F358800FD277E /* Singleton.swift in Sources */,
 				BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */,
 				E11CE3E828C8DFBA003899C4 /* DIYCalendarCell.swift in Sources */,

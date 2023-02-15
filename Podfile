@@ -28,6 +28,8 @@ target 'SpeakEasy-Consumer' do
   pod 'JWTDecode'
   pod 'StripeApplePay'
   pod 'StripePaymentSheet'
+  pod 'ReachabilitySwift', '~> 3'
+  pod 'Starscream', '~> 4.0.0'
 end
 
 target 'SpeakEasyClip' do
@@ -39,6 +41,8 @@ target 'SpeakEasyClip' do
   pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
   pod 'StripeApplePay'
+  pod 'ReachabilitySwift', '~> 3'
+  pod 'Starscream', '~> 4.0.0'
 end
 
 post_install do |installer|
