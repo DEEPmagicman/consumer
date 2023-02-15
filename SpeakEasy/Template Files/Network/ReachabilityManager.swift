@@ -8,12 +8,12 @@
 import Foundation
 import ReachabilitySwift
 
-class ReachabilityManager: NSObject {
+final class ReachabilityManager: NSObject {
 
     static let shared = ReachabilityManager()
 
     var isNetworkAvailable: Bool {
-        return reachabilityStatus != .notReachable
+        reachabilityStatus != .notReachable
     }
     var reachabilityStatus: Reachability.NetworkStatus = .notReachable
     let reachability = Reachability()!
@@ -24,15 +24,15 @@ class ReachabilityManager: NSObject {
             switch reachability.currentReachabilityStatus {
             case .notReachable:
                 print("Network became unreachable")
-                reachabilityStatus = .notReachable
+                self.reachabilityStatus = .notReachable
             case .reachableViaWiFi:
                 print("Network reachable through WiFi")
-                reachabilityStatus = .reachableViaWiFi
+                self.reachabilityStatus = .reachableViaWiFi
             case .reachableViaWWAN:
                 print("Network reachable through Cellular Data")
-                reachabilityStatus = .reachableViaWWAN
-                @unknown default:
-                    break
+                self.reachabilityStatus = .reachableViaWWAN
+            @unknown default:
+                break
             }
         }
     }
