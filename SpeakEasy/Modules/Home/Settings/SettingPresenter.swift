@@ -36,9 +36,9 @@ final class SettingPresenter {
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         var url = ""
         if isForPhone  {
-            url = APIBuilder.changePhoneOtpVerifyURL
+            url = APIBuilder.changePhoneOTPVerifyURL
         } else {
-            url = APIBuilder.changeEmailOtpVerifyURL
+            url = APIBuilder.changeEmailOTPVerifyURL
         }
         AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             
@@ -70,9 +70,9 @@ final class SettingPresenter {
         let param = ["otpRef": otpref]
         var url = ""
         if isForPhone {
-            url = APIBuilder.changePhoneResendOtpURL
+            url = APIBuilder.changePhoneResendOTPURL
         } else {
-            url = APIBuilder.changeEmailResendOtpURL
+            url = APIBuilder.changeEmailResendOTPURL
         }
         AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             

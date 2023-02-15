@@ -21,16 +21,15 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     @IBOutlet weak var ticketNumberView: UIView!
     @IBOutlet weak var ticketNumberLbl: UILabel!
     
-    
     private var checkFPNField = FPNTextField()
     private var countryCode = ""
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private let numberDropDown = DropDown()
+    private var mvpDelegate = MVPPresenter()
     var ticketPrice = 0
     var isGeneralAdmission = false
     var venueName = ""
     var appClipTicketId = ""
-    var mvpDelegate = MVPPresenter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,7 +160,11 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     }
         
     func createBooking() {
-        self.mvpDelegate.createbookingForMvp(phone: phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "", ticketId: appClipTicketId, totalTicket: (Int(ticketNumberLbl.text ?? "") ?? 1)) { isSuccess, errMsg, id in
+        mvpDelegate.createBookingForMVP(phone: phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "", ticketId: appClipTicketId, totalTicket: (Int(ticketNumberLbl.text ?? "") ?? 1)) { [weak self] isSuccess, errMsg, id in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
             if isSuccess {
                 guard let id = id else {
                     Loader.hide()

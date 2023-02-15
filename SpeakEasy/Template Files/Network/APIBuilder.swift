@@ -11,38 +11,34 @@ struct APIBuilder {
     
     static private let baseURL = "https://api.speakeasygo.com"
     static private let route = "/consumer"
-    static private let loginWithPhone = "/auth/phone-login"
-    static private let loginOTPVerify = "/auth/phone-login/otp-verify"
-    static private let loginResendOTP = "/auth/phone-login/otp-resend"
-    static private let signUpWithPhone = "/signup"
-    static private let signUpOTPVerify = "/signup/otp-verify"
-    static private let signUpOTPResend = "/signup/otp-resend"
-    static private let loginWithEmail = "/auth/login"
-    static private let userProfile = "/auth/profile"
-    static private let uploadPhoto = "/upload/uploadFile"
-    static private let resetEmailPassword = "/auth/forgot-password"
-    static private let vibesList = "/vibe"
-    static private let drinkList = "/drink"
-    static private let socialMediaConnect = "/auth/connect-social"
-    static private let socialLogin = "/auth/social-login"
-    static private let cityList = "/common-data/city"
+    static private let auth = "/auth"
+    static private let phoneLogin = "/phone-login"
+    static private let signup = "/signup"
+    static private let OTPVerify = "/otp-verify"
+    static private let OTPResend = "/otp-resend"
+    static private let login = "/login"
+    static private let profile = "/profile"
+    static private let upload = "/upload"
+    static private let uploadFile = "/uploadFile"
+    static private let forgotPassword = "/forgot-password"
+    static private let vibe = "/vibe"
+    static private let drink = "/drink"
+    static private let connectSocial = "/connect-social"
+    static private let socialLogin = "/social-login"
+    static private let city = "/common-data/city"
     static private let venue = "/venue"
     static private let event = "/event"
-    static private let bottleList = "/venueBottleCategory"
-    static private let whoAmI = "/auth/who-am-i"
-    static private let changeEmail = "/auth/change-email"
-    static private let changeEmailOtpVerify = "/auth/change-email/otp-verify"
-    static private let changeEmailResendOtp = "/auth/change-email/otp-resend"
-    static private let changePhoneNum = "/auth/change-phone"
-    static private let changePhoneNumOtpVerify = "/auth/change-phone/otp-verify"
-    static private let changePhoneNumResendOtp = "/auth/change-phone/otp-resend"
-    static private let changePassword = "/auth/change-password"
-    static let includeEventDetails = "?include=venue&include=eventTicket"
-    static let mvpVenueDetail = "/appclip/"
-    static let mvpVenueList = "/venue/appClipVenue"
-    static let createBooking = "/appclip-user"
-    static let addPayment = "/payment/"
-    static let mvpPeymentStatus = "/status?status=SUCCESS"
+    static private let venueBottleCategory = "/venueBottleCategory"
+    static private let whoAmI = "/who-am-i"
+    static private let changeEmail = "/change-email"
+    static private let changePhone = "/change-phone"
+    static private let changePassword = "/change-password"
+    static private let includeEventDetails = "?include=venue&include=eventTicket"
+    static private let appClip = "/appclip/"
+    static private let appClipVenue = "/appClipVenue"
+    static private let appClipUser = "/appclip-user"
+    static private let payment = "/payment"
+    static private let statusSuccess = "/status?status=SUCCESS"
 
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -58,59 +54,59 @@ struct APIBuilder {
     static let spotifyURL = "https://api.spotify.com/v1/me"
     
     static var loginWithPhoneURL: String {
-        baseURL + route + loginWithPhone
+        baseURL + route + auth + phoneLogin
     }
     
     static var loginOTPVerifyURL: String {
-        baseURL + route + loginOTPVerify
+        baseURL + route + auth + phoneLogin + OTPVerify
     }
     
     static var loginResendOTPURL: String {
-        baseURL + route + loginResendOTP
+        baseURL + route + auth + phoneLogin + OTPResend
     }
     
     static var loginWithEmailURL: String {
-        baseURL + route + loginWithEmail
+        baseURL + route + auth + login
     }
     
     static var forgotPasswordURL: String {
-        baseURL + route + resetEmailPassword
+        baseURL + route + auth + forgotPassword
     }
     
     static var userProfileURL: String {
-        baseURL + route + userProfile
+        baseURL + route + auth + profile
     }
     
     static var signUpWithPhoneURL: String {
-        baseURL + route + signUpWithPhone
+        baseURL + route + signup
     }
     
     static var signUpOTPVerifyURL: String {
-        baseURL + route + signUpOTPVerify
+        baseURL + route + signup + OTPVerify
     }
     
     static var signUpOTPResendURL: String {
-        baseURL + route + signUpOTPResend
+        baseURL + route + signup + OTPResend
     }
     
     static var uploadPhotoURL: String {
-        baseURL + uploadPhoto
+        baseURL + upload + uploadFile
     }
     
     static var vibesListURL: String {
-        baseURL + route + vibesList
+        baseURL + route + vibe
     }
     
     static var drinksListURL: String {
-        baseURL + route + drinkList
+        baseURL + route + drink
     }
     
     static var socialMediaConnectURL: String {
-        baseURL + route + socialMediaConnect
+        baseURL + route + auth + connectSocial
     }
     
     static var socialLoginURL: String {
-        baseURL + route + socialLogin
+        baseURL + route + auth + socialLogin
     }
     
     static var getInstagramToken: String {
@@ -118,7 +114,7 @@ struct APIBuilder {
     }
     
     static var getCityListURL: String {
-        baseURL + cityList
+        baseURL + city
     }
     
     static var venueURL: String {
@@ -134,58 +130,58 @@ struct APIBuilder {
     }
     
     static func bottleListURL(_ id: String) -> String {
-        baseURL + route + bottleList + "/\(id)"
+        baseURL + route + venueBottleCategory + "/\(id)"
     }
     
     static var whoAmIURL: String {
-        baseURL + route + whoAmI
+        baseURL + route + auth + whoAmI
     }
     
     static var changeEmailURL: String {
-        baseURL + route + changeEmail
+        baseURL + route + auth + changeEmail
     }
     
-    static var changeEmailOtpVerifyURL: String {
-        baseURL + route + changeEmailOtpVerify
+    static var changeEmailOTPVerifyURL: String {
+        baseURL + route + auth + changeEmail + OTPVerify
     }
     
-    static var changeEmailResendOtpURL: String {
-        baseURL + route + changeEmailResendOtp
+    static var changeEmailResendOTPURL: String {
+        baseURL + route + auth + changeEmail + OTPResend
     }
     
     static var changePhoneNumURL: String {
-        baseURL + route + changePhoneNum
+        baseURL + route + auth + changePhone
     }
     
-    static var changePhoneOtpVerifyURL: String {
-        baseURL + route + changePhoneNumOtpVerify
+    static var changePhoneOTPVerifyURL: String {
+        baseURL + route + auth + changePhone + OTPVerify
     }
     
-    static var changePhoneResendOtpURL: String {
-        baseURL + route + changePhoneNumResendOtp
+    static var changePhoneResendOTPURL: String {
+        baseURL + route + auth + changePhone + OTPResend
     }
     
     static var changePasswordURL: String {
-        baseURL + route + changePassword
+        baseURL + route + auth + changePassword
     }
     
-    static func mvpVenueDetailUrl (_ id: String) -> String{
-        baseURL + mvpVenueDetail + id
+    static func MVPVenueDetailURL(_ id: String) -> String{
+        baseURL + appClip + id
     }
     
-    static var mvpVenueListUrl: String {
-        baseURL + route + mvpVenueList
+    static var MVPVenueListURL: String {
+        baseURL + route + venue + appClipVenue
     }
     
-    static var createBookingMvpUrl: String {
-        baseURL + createBooking
+    static var createBookingMVPURL: String {
+        baseURL + appClipUser
     }
     
-    static func addPaymentUrl(_ id: String) -> String {
-        baseURL + route + addPayment + id
+    static func addPaymentURL(_ id: String) -> String {
+        baseURL + route + payment + "/\(id)"
     }
     
-    static func successPeymentUrl(_ paymentHistoryId: String, _ id: String) -> String {
-        baseURL + route + addPayment + paymentHistoryId + "/" + id + mvpPeymentStatus
+    static func successPaymentURL(_ paymentHistoryId: String, _ id: String) -> String {
+        baseURL + route + payment + paymentHistoryId + "/" + id + statusSuccess
     }
 }

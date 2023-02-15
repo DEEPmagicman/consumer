@@ -86,7 +86,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
         
     private func addPaymentApi() {
-        mvpDelegate.addPaymentApiForMvp(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret, paymentHistoryId in
+        mvpDelegate.addPaymentApiForMVP(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret, paymentHistoryId in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
@@ -172,7 +172,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     
     func paymentStatus(completion: @escaping (()-> Void)) {
         Loader.show()
-        mvpDelegate.successPeyment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
+        mvpDelegate.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()

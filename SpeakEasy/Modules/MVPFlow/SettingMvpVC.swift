@@ -7,52 +7,42 @@
 
 import UIKit
 
-class SettingMvpVC: UIViewController {
+final class SettingMvpVC: UIViewController {
 
-    @IBOutlet weak var customerSuportView: UIView!
-    @IBOutlet weak var privacyPolicyView: UIView!
-    @IBOutlet weak var termsConditonView: UIView!
-    @IBOutlet weak var versionLbl: UILabel!
+    @IBOutlet private weak var customerSuportView: UIView!
+    @IBOutlet private weak var privacyPolicyView: UIView!
+    @IBOutlet private weak var termsConditonView: UIView!
+    @IBOutlet private weak var versionLbl: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickCustomerSuppert))
-        self.customerSuportView.addGestureRecognizer(tap1)
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickCustomerSupport))
+        customerSuportView.addGestureRecognizer(tap1)
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(onClickPrivacyPolicy))
-        self.privacyPolicyView.addGestureRecognizer(tap2)
+        privacyPolicyView.addGestureRecognizer(tap2)
         let tap3 = UITapGestureRecognizer(target: self, action: #selector(onClickTermsConditions))
-        self.termsConditonView.addGestureRecognizer(tap3)
+        termsConditonView.addGestureRecognizer(tap3)
         
         versionLbl.text = "Version \(Bundle.main.releaseVersionNumber) (\(Bundle.main.buildVersionNumber))"
     }
 
-    @IBAction func onClickBack(_ sender: Any) {
+    @IBAction private func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc func onClickCustomerSuppert() {
+    @objc private func onClickCustomerSupport() {
         guard let url = URL(string: "https://speakeasygo.com/support") else { return }
-         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
-    @objc func onClickPrivacyPolicy() {
+    @objc private func onClickPrivacyPolicy() {
         guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
-         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
-    @objc func onClickTermsConditions() {
+    @objc private func onClickTermsConditions() {
         guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
-         UIApplication.shared.open(url, options: [:], completionHandler: nil)
-    }
-}
-
-extension Bundle {
-    var releaseVersionNumber: String {
-        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-    }
-
-    var buildVersionNumber: String {
-        infoDictionary?["CFBundleVersion"] as? String ?? ""
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }

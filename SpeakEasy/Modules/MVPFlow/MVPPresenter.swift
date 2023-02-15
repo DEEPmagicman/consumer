@@ -8,9 +8,9 @@
 import Foundation
 
 final class MVPPresenter {
-    func getVenuesDetailForaMvp(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
+    func getVenuesDetailForaMVP(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.mvpVenueDetailUrl(venueId),params: nil, headers: Header.header()) { (response) in
+        AFWrapper.getRequest(APIBuilder.MVPVenueDetailURL(venueId),params: nil, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
@@ -34,10 +34,10 @@ final class MVPPresenter {
         }
     }
     
-    func getVenueListForMvp(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue],_ hasMore: Bool) -> Void) {
+    func getVenueListForMVP(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue],_ hasMore: Bool) -> Void) {
         let param = ["skip": from]
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.mvpVenueListUrl,params: param, headers: Header.header()) { (response) in
+        AFWrapper.getRequest(APIBuilder.MVPVenueListURL,params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -61,12 +61,12 @@ final class MVPPresenter {
         }
     }
     
-    func createbookingForMvp(phone: String,ticketId: String,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ id: String?) -> Void) {
+    func createBookingForMVP(phone: String,ticketId: String,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ id: String?) -> Void) {
         let param = ["phone": phone,
                      "appclipTicketId":ticketId,
                      "ticketQuantity": totalTicket] as [String : Any]
         Loader.show()
-        AFWrapper.postRequest(APIBuilder.createBookingMvpUrl,params: param, headers: Header.header()) { (response) in
+        AFWrapper.postRequest(APIBuilder.createBookingMVPURL,params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil,"")
@@ -89,7 +89,7 @@ final class MVPPresenter {
         }
     }
     
-    func addPaymentApiForMvp(bookingId: String,name: String,price: Int,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ clientSecret: String?,_ paymentHistoryId: String) -> Void) {
+    func addPaymentApiForMVP(bookingId: String,name: String,price: Int,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ clientSecret: String?,_ paymentHistoryId: String) -> Void) {
         let param = ["cart":
                         [
                             ["name": name,
@@ -99,7 +99,7 @@ final class MVPPresenter {
                         ]
         ] as [String: Any]
         Loader.show()
-        AFWrapper.postRequest(APIBuilder.addPaymentUrl(bookingId),params: param, headers: Header.header()) { (response) in
+        AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId),params: param, headers: Header.header()) { (response) in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, "", "")
@@ -120,8 +120,8 @@ final class MVPPresenter {
         }
     }
     
-    func successPeyment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.postRequest(APIBuilder.successPeymentUrl(paymentHistoryId, bookingId),params: nil, headers: Header.header()) { (response) in
+    func successPayment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId),params: nil, headers: Header.header()) { (response) in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return
