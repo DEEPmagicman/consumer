@@ -20,7 +20,7 @@ final class SelectTicketClipVC: UIViewController {
     
     var isLive = true
     var venueDetail: ClipVenue?
-    private var venueId = "VEN-BLLDGP"
+    private var venueId = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +53,6 @@ final class SelectTicketClipVC: UIViewController {
                 AppClipLoader.hideLoader()
             }
         }.resume()
-        
     }
     
     private func setUpUI() {

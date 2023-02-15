@@ -263,6 +263,7 @@
 		CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
+		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
@@ -272,7 +273,6 @@
 		CE858069299A2089001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
 		CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
-		CE94707329951ED4007102A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
@@ -4007,6 +4007,7 @@
 				82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */,
 				E167058528CA6AB800644BF0 /* InviteFromContactCVC.xib in Resources */,
 				E1FAD5E528CEA9C4004F70DE /* ImportantDatesTVC.xib in Resources */,
+				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
 				E11F4BF828C835F3008D2E30 /* BookingsCVC.xib in Resources */,
 				E11F4B8A28C8358C008D2E30 /* HeaderView.xib in Resources */,
 				E1889D2828BBA59000E1625A /* StatusAndRewards.xib in Resources */,
@@ -4043,7 +4044,6 @@
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
 				82994A8D296D29CB008CA778 /* InviteFriendsPopUp.xib in Resources */,
-				CE94707329951ED4007102A6 /* Assets.xcassets in Resources */,
 				E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */,
 				820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */,
 				04FDAF8A28F9451A007129CC /* UserProfilePopUp.xib in Resources */,

@@ -143,17 +143,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @objc private func applePayButtonTapped() {
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
-
-        // Configure the line items on the payment request
         paymentRequest.paymentSummaryItems = [
-            // The final line should represent your company;
-            // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
             PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
         ]
         paymentRequest.requiredBillingContactFields = []
-        // Initialize an STPApplePayContext instance
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
-            // Present Apple Pay payment sheet
             applePayContext.presentApplePay()
         } else {
             alertPopup("Alert", "Problem with your Apple Pay configuration")

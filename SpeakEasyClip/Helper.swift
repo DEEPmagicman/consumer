@@ -28,7 +28,7 @@ extension UILabel {
                 }
             }
         }
-        self.attributedText = mutableAttributedString
+        attributedText = mutableAttributedString
     }
 }
 

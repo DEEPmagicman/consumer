@@ -222,7 +222,6 @@ extension EnterPhoneNumberClipVC: UITextFieldDelegate {
 }
 
 extension EnterPhoneNumberClipVC: FPNTextFieldDelegate {
-    
     func fpnDisplayCountryList() {
         let navigationViewController = UINavigationController(rootViewController: listController)
         listController.title = "Countries"
