@@ -48,6 +48,8 @@ PODS:
   - SDWebImage (5.14.2):
     - SDWebImage/Core (= 5.14.2)
   - SDWebImage/Core (5.14.2)
+  - Socket.IO-Client-Swift (16.0.1):
+    - Starscream (~> 4.0)
   - Starscream (4.0.4)
   - StripeApplePay (23.3.3):
     - StripeCore (= 23.3.3)
@@ -94,7 +96,7 @@ DEPENDENCIES:
   - ReachabilitySwift (~> 3)
   - SCPageControl
   - SDWebImage
-  - Starscream (~> 4.0.0)
+  - Socket.IO-Client-Swift
   - StripeApplePay
   - StripePaymentSheet
   - SVProgressHUD
@@ -124,6 +126,7 @@ SPEC REPOS:
     - ReachabilitySwift
     - SCPageControl
     - SDWebImage
+    - Socket.IO-Client-Swift
     - Starscream
     - StripeApplePay
     - StripeCore
@@ -158,6 +161,7 @@ SPEC CHECKSUMS:
   ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
   SCPageControl: 8a8dfbba7d7d8c66487a317cb4c4578a7e4af27a
   SDWebImage: b9a731e1d6307f44ca703b3976d18c24ca561e84
+  Socket.IO-Client-Swift: c116d6dc9fd6be9c259bacfe143f8725bce7d79e
   Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   StripeApplePay: b288df6ea5237bec30ff00b8e12b9465684813e6
   StripeCore: 05ca3061651987b6aeb52028a8de087ad015d555
@@ -170,6 +174,6 @@ SPEC CHECKSUMS:
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 0243833bb71cde18b023a61dc7941c6d7a9b9dd1
+PODFILE CHECKSUM: 86679a10d30fd4f67d47391f281c88fe14eb6a00
 
 COCOAPODS: 1.11.3
