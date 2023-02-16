@@ -9,7 +9,7 @@ import Foundation
 import SocketIO
 
 protocol webSocketCallBackDelegate: AnyObject {
-    func didValueChange()
+    func didValueChange(venueId: String, uniqueId: String)
 }
 
 final class WebSocketWrapper: NSObject {
@@ -37,15 +37,10 @@ final class WebSocketWrapper: NSObject {
     
     private func addEventListener() {
         socket?.on("venueListEvent") { data, ack in
-            print("data update")
-        }
-
-        socket?.on("bookingUpdateEvent") { data, ack in
-            print("data update")
-        }
-
-        socket?.on("checkInEvent") { data, ack in
-            print("data update")
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didValueChange(venueId: venueId, uniqueId: uniqueId) }
         }
         
         socket?.on(clientEvent: .connect) {data, ack in

@@ -27,6 +27,7 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
+        WebSocketWrapper.shared.delegate.append(self)
         getEventTicket()
     }
     
@@ -127,6 +128,14 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             vc.venueName = self.venueDetail?.name ?? ""
             vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""
             navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}
+
+extension SelectTicketClipVC: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if uniqueId == self.venueId {
+            getEventTicket()
         }
     }
 }
