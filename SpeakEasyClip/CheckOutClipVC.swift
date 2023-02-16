@@ -35,9 +35,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var bookingId = ""
     var isIntendCreated = false
     var isApplePayNotSupported = false
+    private var isPaymentInitiated = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        WebSocketWrapper.shared.delegate.append(self)
         dressCodeInfoLbl.text = "*All entries subject to doorman discretion*  At \(venueName), we encourage smart, casual-elegant attire."
         dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
         phoneNoLbl.text = phoneNo
@@ -141,6 +143,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func applePayButtonTapped() {
+        isPaymentInitiated = true
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
         paymentRequest.paymentSummaryItems = [
@@ -196,6 +199,18 @@ extension CheckOutClipVC {
             alertPopup("Alert", "Payment interrupted")
         @unknown default:
             fatalError()
+        }
+    }
+}
+
+extension CheckOutClipVC: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if isPaymentInitiated { return }
+        if uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+            alertPopup("Update", "Venue your trying to booking, updated it's price") {
+                self.navigationController?.popToRootViewController(animated: true)
+//                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
 }

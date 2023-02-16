@@ -32,7 +32,7 @@ final class EnterPhoneNumberClipVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        WebSocketWrapper.shared.delegate.append(self)
         countryCodeTextField.textColor = .white
         
         phoneNumTextField.delegate = self
@@ -255,6 +255,16 @@ extension EnterPhoneNumberClipVC: FPNTextFieldDelegate {
             } else {
                 continueBtn.isUserInteractionEnabled = false
                 continueBtn.alpha = 0.5
+            }
+        }
+    }
+}
+
+extension EnterPhoneNumberClipVC: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+            alertPopup("Update", "Venue your trying to booking, updated it's price") {
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
