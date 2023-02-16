@@ -9,7 +9,6 @@ import Foundation
 
 final class MVPPresenter {
     func getVenuesDetailForaMVP(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
-        Loader.show()
         AFWrapper.getRequest(APIBuilder.MVPVenueDetailURL(venueId),params: nil, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
@@ -36,7 +35,6 @@ final class MVPPresenter {
     
     func getVenueListForMVP(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue],_ hasMore: Bool) -> Void) {
         let param = ["skip": from]
-        Loader.show()
         AFWrapper.getRequest(APIBuilder.MVPVenueListURL,params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {

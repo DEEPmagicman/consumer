@@ -17,6 +17,7 @@ final class MVPVenueListVc: UIViewController {
     private var venueListDelegate = MVPPresenter()
     private var hasMore = false
     private var refresh = UIRefreshControl()
+    var isWebSocket = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,9 @@ final class MVPVenueListVc: UIViewController {
     }
     
     private func fetchAllVenueForMVP() {
+        if isWebSocket == false {
+            Loader.show()
+        }
         venueListDelegate.getVenueListForMVP(from: from) { [weak self] isSuccess, errMsg, venueList, hasMore in
             guard let self = self else {
                 Loader.hide()
@@ -93,7 +97,8 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension MVPVenueListVc: webSocketCallBackDelegate {
-    func didValueChange() {
+    func didValueChange(venueId: String, uniqueId: String) {
+        self.isWebSocket = true
         from = 0
         hasMore = false
         venueList.removeAll()

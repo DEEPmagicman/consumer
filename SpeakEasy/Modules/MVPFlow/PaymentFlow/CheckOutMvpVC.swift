@@ -31,10 +31,12 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var venueName = ""
     var bookingId = ""
     var mvpDelegate = MVPPresenter()
+    var venueId = ""
     var isApplePayNotSupported = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        WebSocketWrapper.shared.delegate.append(self)
         dressCodeInfoLbl.text = "*All entries subject to doorman discretion*  At \(self.venueName), we encourage smart, casual-elegant attire."
         dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
         phoneNoLbl.text = phoneNo
@@ -212,5 +214,27 @@ extension CheckOutMvpVC {
             fatalError()
         }
     }
+}
+
+extension CheckOutMvpVC: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if self.venueId == uniqueId {
+            Alert.showAlertSheet(style: .alert, title: "update", message: "") {
+                print("")
+            }
+        }
+    }
+}
+
+extension UIViewController {
+  func alertPopup(_ title: String, _ message: String, completion: (() -> Void)? = nil) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "ok", style: .default) { _ in
+      completion?()
+    })
+    DispatchQueue.main.async {
+      self.present(alert, animated: true, completion: nil)
+    }
+  }
 }
 

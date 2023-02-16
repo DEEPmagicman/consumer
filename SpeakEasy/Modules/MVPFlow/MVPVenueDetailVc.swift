@@ -23,16 +23,21 @@ final class MVPVenueDetailVc: UIViewController {
     var venueId = ""
     private var mvpDelegate = MVPPresenter()
     private var venueDetails: ClipVenue?
+    var isWebSocket = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
+        WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
     }
     
     func getVenueDetail() {
+        if isWebSocket == false {
+            Loader.show()
+        }
         mvpDelegate.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
@@ -111,7 +116,15 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if venueDetails?.bookingStatus != "OPEN" { return }
         if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        Navigate.to.enterPhoneNumForMvpViewController(self, ticketPrice: venueDetails?.appClipTicket?[indexPath.row].price ?? 0, isGeneral: venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", ticketId: venueDetails?.appClipTicket?[indexPath.row].id ?? "")
+        Navigate.to.enterPhoneNumForMvpViewController(self, ticketPrice: venueDetails?.appClipTicket?[indexPath.row].price ?? 0, isGeneral: venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", ticketId: venueDetails?.appClipTicket?[indexPath.row].id ?? "", venueId: self.venueId)
     }
 }
 
+extension MVPVenueDetailVc: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if self.venueId == uniqueId {
+            self.isWebSocket = true
+            getVenueDetail()
+        }
+    }
+}

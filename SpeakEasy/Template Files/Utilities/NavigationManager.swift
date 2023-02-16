@@ -178,16 +178,17 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String) {
+    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String, venueId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
         vc.ticketPrice = ticketPrice
         vc.isGeneralAdmission = isGeneral
         vc.venueName = venueName
         vc.appClipTicketId = ticketId
+        vc.venueId = venueId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func checkOutMvpVC(_ sender: UIViewController, phoneNum: String,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String) {
+    func checkOutMvpVC(_ sender: UIViewController, phoneNum: String,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String, venueId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
         vc.phoneNo = phoneNum
         vc.totalTicket = totalTicket
@@ -195,6 +196,7 @@ final class Navigate {
         vc.isGeneralAdmission = isGeneral
         vc.venueName = venueName
         vc.bookingId = bookingId
+        vc.venueId = venueId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

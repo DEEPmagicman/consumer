@@ -30,10 +30,11 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     var isGeneralAdmission = false
     var venueName = ""
     var appClipTicketId = ""
+    var venueId = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        WebSocketWrapper.shared.delegate.append(self)
         countryCodeTextField.textColor = .white
         
         phoneNumTextField.delegate = self
@@ -185,7 +186,7 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     
     func navigate(bookingId: String) {
         DispatchQueue.main.async {
-            Navigate.to.checkOutMvpVC(self, phoneNum: self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? "", totalTicket: Int(self.ticketNumberLbl.text ?? "") ?? 1, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: bookingId)
+            Navigate.to.checkOutMvpVC(self, phoneNum: self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? "", totalTicket: Int(self.ticketNumberLbl.text ?? "") ?? 1, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: bookingId, venueId: self.venueId)
         }
     }
 }
@@ -233,6 +234,14 @@ extension EnterPhomeNumberMvpVC: FPNTextFieldDelegate {
                 continueBtn.isUserInteractionEnabled = false
                 continueBtn.alpha = 0.5
             }
+        }
+    }
+}
+
+extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String) {
+        if self.venueId == uniqueId {
+            Alert.showAlertSheet(style: .alert, title: "update", message: "")
         }
     }
 }
