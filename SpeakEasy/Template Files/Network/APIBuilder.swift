@@ -182,6 +182,6 @@ struct APIBuilder {
     }
     
     static func successPaymentURL(_ paymentHistoryId: String, _ id: String) -> String {
-        baseURL + route + payment + paymentHistoryId + "/" + id + statusSuccess
+        baseURL + route + payment + "/" + paymentHistoryId + "/" + id + statusSuccess
     }
 }

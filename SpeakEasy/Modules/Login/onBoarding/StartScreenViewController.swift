@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AVFoundation
+//import AVFoundation
 
 final class StartScreenViewController: UIViewController {
     
@@ -15,21 +15,21 @@ final class StartScreenViewController: UIViewController {
     @IBOutlet weak var createAccountBtn: UIButton!
     @IBOutlet weak var signInBtn: UIButton!
     @IBOutlet weak var continueAsGuestBtn: UIButton!
-    var player: AVPlayer?
+//    var player: AVPlayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // background event
-           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.didEnterBackgroundNotification, object: nil)
-
-           // foreground event
-           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.willEnterForegroundNotification, object: nil)
-
-          // add these 2 notifications to prevent freeze on long Home button press and back
-           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.willResignActiveNotification, object: nil)
-
-           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
+//           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.didEnterBackgroundNotification, object: nil)
+//
+//           // foreground event
+//           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.willEnterForegroundNotification, object: nil)
+//
+//          // add these 2 notifications to prevent freeze on long Home button press and back
+//           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.willResignActiveNotification, object: nil)
+//
+//           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         
         if UserDefault.shared.isMvp ?? false {
@@ -42,7 +42,7 @@ final class StartScreenViewController: UIViewController {
             ReachabilityManager.shared.startMonitoring()
         } else {
             self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
-            playBackgoundVideo()
+//            playBackgoundVideo()
         }
     }
     
@@ -50,29 +50,29 @@ final class StartScreenViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func setPlayerLayerToNil(){
-        player?.pause()
-    }
+//    @objc func setPlayerLayerToNil(){
+//        player?.pause()
+//    }
+//
+//    @objc func reinitializePlayerLayer(){
+//        player?.play()
+//    }
     
-    @objc func reinitializePlayerLayer(){
-        player?.play()
-    }
-    
-    private func playBackgoundVideo() {
-        if let filePath = Bundle.main.path(forResource: "video", ofType:"mp4") {
-            let filePathUrl = NSURL.fileURL(withPath: filePath)
-            player = AVPlayer(url: filePathUrl)
-            let playerLayer = AVPlayerLayer(player: player)
-            playerLayer.frame = self.bgImageView.bounds
-            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: nil) { [weak self] (_) in
-                self?.player?.seek(to: CMTime.zero)
-                self?.player?.play()
-            }
-            self.bgImageView.layer.addSublayer(playerLayer)
-            player?.play()
-        }
-    }
+//    private func playBackgoundVideo() {
+//        if let filePath = Bundle.main.path(forResource: "video", ofType:"mp4") {
+//            let filePathUrl = NSURL.fileURL(withPath: filePath)
+//            player = AVPlayer(url: filePathUrl)
+//            let playerLayer = AVPlayerLayer(player: player)
+//            playerLayer.frame = self.bgImageView.bounds
+//            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+//            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: nil) { [weak self] (_) in
+//                self?.player?.seek(to: CMTime.zero)
+//                self?.player?.play()
+//            }
+//            self.bgImageView.layer.addSublayer(playerLayer)
+//            player?.play()
+//        }
+//    }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
         if UserDefault.shared.isMvp ?? false {

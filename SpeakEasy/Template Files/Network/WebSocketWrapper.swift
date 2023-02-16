@@ -17,7 +17,7 @@ final class WebSocketWrapper: NSObject {
     static let shared = WebSocketWrapper()
 
     private var socket: WebSocket?
-    private let webSocketURL = "209.182.236.135:1563"
+    private let webSocketURL = "ws://146.190.123.18:1563"
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
     var delegate: [webSocketCallBackDelegate] = []
@@ -28,9 +28,10 @@ final class WebSocketWrapper: NSObject {
     
     func setUpWebSocket() {
         NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.willResignActiveNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.willEnterForegroundNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.didBecomeActiveNotification, object: nil)
+        connect()
     }
     
     @objc func connect() {
