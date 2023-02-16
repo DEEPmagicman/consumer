@@ -187,6 +187,9 @@ final class EnterPhoneNumberClipVC: UIViewController {
                 self.navigate(bookingId: bookingId)
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.navigate(bookingId: bookingId)
+            } else if let error = json["error"] as? String, let message = json["message"] as? String {
+                AppClipLoader.hideLoader()
+                self.alertPopup(error, message)
             } else {
                 AppClipLoader.hideLoader()
                 self.alertPopup("Alert", "Booking failed")

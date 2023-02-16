@@ -107,7 +107,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
+        configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
         //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
@@ -158,7 +158,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         paymentRequest.paymentSummaryItems = [
             // The final line should represent your company;
             // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-            PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
         ]
         paymentRequest.requiredBillingContactFields = []
         // Initialize an STPApplePayContext instance

@@ -144,7 +144,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
         paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: ticketPrice * totalTicket))
         ]
         paymentRequest.requiredBillingContactFields = []
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
