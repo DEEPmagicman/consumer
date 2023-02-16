@@ -25,6 +25,7 @@ final class MVPVenueListVc: UIViewController {
         
         refresh.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         venueListTableView.addSubview(refresh)
+        WebSocketWrapper.shared.delegate.append(self)
     }
     
     @objc private func refresh(_ sender: AnyObject) {
@@ -88,5 +89,14 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
                 fetchAllVenueForMVP()
             }
         }
+    }
+}
+
+extension MVPVenueListVc: webSocketCallBackDelegate {
+    func didValueChange() {
+        from = 0
+        hasMore = false
+        venueList.removeAll()
+        self.fetchAllVenueForMVP()
     }
 }

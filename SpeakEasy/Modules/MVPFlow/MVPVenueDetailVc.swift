@@ -29,6 +29,10 @@ final class MVPVenueDetailVc: UIViewController {
 
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
+        getVenueDetail()
+    }
+    
+    func getVenueDetail() {
         mvpDelegate.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
