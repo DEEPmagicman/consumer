@@ -10,7 +10,7 @@ import Foundation
 final class MVPPresenter {
     func getVenuesDetailForaMVP(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.MVPVenueDetailURL(venueId),params: nil, headers: Header.header()) { (response) in
+        AFWrapper.getRequest(APIBuilder.MVPVenueDetailURL(venueId),params: nil, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
@@ -25,8 +25,8 @@ final class MVPPresenter {
                 completion(false, "internal error", nil)
             }
 
-        } failure: { (error) in
-            if let err = (error as? NSError), err.code == 0 {
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
                 completion(false, err.domain, nil)
                 return
             }
@@ -37,7 +37,7 @@ final class MVPPresenter {
     func getVenueListForMVP(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue],_ hasMore: Bool) -> Void) {
         let param = ["skip": from]
         Loader.show()
-        AFWrapper.getRequest(APIBuilder.MVPVenueListURL,params: param, headers: Header.header()) { (response) in
+        AFWrapper.getRequest(APIBuilder.MVPVenueListURL,params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -47,13 +47,13 @@ final class MVPPresenter {
                 let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
                 let venueList = try decoder.decode([ClipVenue].self, from: data)
-                completion(true, nil, venueList,hasMore)
+                completion(true, nil, venueList, hasMore)
             } catch {
-                completion(false, "internal error", [],false)
+                completion(false, "internal error", [], false)
             }
 
-        } failure: { (error) in
-            if let err = (error as? NSError), err.code == 0 {
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
                 completion(false, err.domain, [],false)
                 return
             }
@@ -66,7 +66,7 @@ final class MVPPresenter {
                      "appclipTicketId":ticketId,
                      "ticketQuantity": totalTicket] as [String : Any]
         Loader.show()
-        AFWrapper.postRequest(APIBuilder.createBookingMVPURL,params: param, headers: Header.header()) { (response) in
+        AFWrapper.postRequest(APIBuilder.createBookingMVPURL,params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil,"")
@@ -80,8 +80,8 @@ final class MVPPresenter {
                 completion(false, "Alert", "Booking failed")
             }
 
-        } failure: { (error) in
-            if let err = (error as? NSError), err.code == 0 {
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
                 completion(false, err.domain,"")
                 return
             }
@@ -99,7 +99,7 @@ final class MVPPresenter {
                         ]
         ] as [String: Any]
         Loader.show()
-        AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId),params: param, headers: Header.header()) { (response) in
+        AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId),params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, "", "")
@@ -111,8 +111,8 @@ final class MVPPresenter {
                 completion(false, "internal error", "", "")
             }
 
-        } failure: { (error) in
-            if let err = (error as? NSError), err.code == 0 {
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
                 completion(false, err.domain, "", "")
                 return
             }
@@ -121,13 +121,13 @@ final class MVPPresenter {
     }
     
     func successPayment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId),params: nil, headers: Header.header()) { (response) in
+        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId),params: nil, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return
             }
             completion(true, nil)
-        } failure: { (error) in
+        } failure: { error in
             if let err = (error as? NSError), err.code == 0 {
                 completion(false, err.domain)
                 return

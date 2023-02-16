@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 final class SettingPresenter {
     func changeEmailApi(email: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
@@ -121,8 +120,7 @@ final class SettingPresenter {
         Loader.show()
         AFWrapper.patchRequest(APIBuilder.changePasswordURL, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String:Any]
-            else {
+            guard let responseDic = response as? [String:Any] else {
                 completion(false, nil)
                 return
             }
