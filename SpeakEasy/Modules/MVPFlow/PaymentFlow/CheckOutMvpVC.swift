@@ -33,6 +33,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var mvpDelegate = MVPPresenter()
     var venueId = ""
     var isApplePayNotSupported = false
+    var isPaymentInitiated = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,6 +130,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     
     @IBAction private func onClickCreditCardPay(_ sender: Any) {
         // MARK: Start the checkout process
+        isPaymentInitiated = true
         paymentSheet?.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
@@ -137,10 +139,12 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
                     Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
                 }
             case .canceled:
+                self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             case .failed:
+                self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
@@ -153,6 +157,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
             alertForWallet()
             return
         }
+        isPaymentInitiated = true
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
 
@@ -203,10 +208,12 @@ extension CheckOutMvpVC {
                 Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
             }
         case .error:
+            self.isPaymentInitiated = false
             let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         case .userCancellation:
+            self.isPaymentInitiated = false
             let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
@@ -218,23 +225,18 @@ extension CheckOutMvpVC {
 
 extension CheckOutMvpVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
-        if self.venueId == uniqueId {
-            Alert.showAlertSheet(style: .alert, title: "update", message: "") {
-                print("")
+        if isPaymentInitiated { return }
+        if self.navigationController?.viewControllers.last is CheckOutMvpVC && self.venueId == uniqueId {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
             }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
         }
     }
-}
-
-extension UIViewController {
-  func alertPopup(_ title: String, _ message: String, completion: (() -> Void)? = nil) {
-    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "ok", style: .default) { _ in
-      completion?()
-    })
-    DispatchQueue.main.async {
-      self.present(alert, animated: true, completion: nil)
-    }
-  }
 }
 

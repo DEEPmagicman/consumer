@@ -23,7 +23,6 @@ final class MVPVenueDetailVc: UIViewController {
     var venueId = ""
     private var mvpDelegate = MVPPresenter()
     private var venueDetails: ClipVenue?
-    var isWebSocket = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,8 +33,8 @@ final class MVPVenueDetailVc: UIViewController {
         getVenueDetail()
     }
     
-    func getVenueDetail() {
-        if isWebSocket == false {
+    func getVenueDetail(withLoader: Bool = true) {
+        if withLoader {
             Loader.show()
         }
         mvpDelegate.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
@@ -123,8 +122,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
 extension MVPVenueDetailVc: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
         if self.venueId == uniqueId {
-            self.isWebSocket = true
-            getVenueDetail()
+            getVenueDetail(withLoader: false)
         }
     }
 }

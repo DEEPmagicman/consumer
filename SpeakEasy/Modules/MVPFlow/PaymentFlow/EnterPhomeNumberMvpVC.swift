@@ -240,8 +240,16 @@ extension EnterPhomeNumberMvpVC: FPNTextFieldDelegate {
 
 extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
-        if self.venueId == uniqueId {
-            Alert.showAlertSheet(style: .alert, title: "update", message: "")
+        if self.navigationController?.viewControllers.last is EnterPhomeNumberMvpVC && self.venueId == uniqueId {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
         }
     }
 }
