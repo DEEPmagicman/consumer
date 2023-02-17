@@ -25,6 +25,7 @@ class MVPStartScreenVC: UIViewController {
     
 
     @IBAction func onClickContinueasGuest(_ sender: Any) {
+        UserDefault.shared.hasVisitedStartingPage = true
         Navigate.to.MVPVenueListViewController(self)
     }
     
@@ -56,14 +57,6 @@ extension MVPStartScreenVC: UICollectionViewDataSource, UICollectionViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.pageControllerView.scroll_did(scrollView)
-    }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        let pageWidth = scrollView.frame.size.width
-//        let currentPage = Int((scrollView.contentOffset.x + pageWidth / 2) / pageWidth)
-//        self.pagesCount = currentPage
-//        DispatchQueue.main.async {
-//            self.setCurrentPageBottom(currentPage: currentPage)
-//        }
     }
 }
 

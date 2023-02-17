@@ -39,7 +39,6 @@ final class StartScreenViewController: UIViewController {
             self.createAccountBtn.backgroundColor = UIColor(hex: "#0B78FF")
             self.byTappingInfoLbl.text = "By tapping ‘CONTINUE AS GUEST’, you attest that you are over the age of 21. This information cannot be changed later."
             self.bgImageView.image = UIImage(named: "mvpBg-img")
-            ReachabilityManager.shared.startMonitoring()
         } else {
             self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 15, textColor: .white, addUnderLine: true)
 //            playBackgoundVideo()
@@ -76,7 +75,6 @@ final class StartScreenViewController: UIViewController {
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
         if UserDefault.shared.isMvp ?? false {
-            UserDefault.shared.hasVisitedStartingPage = true
             Navigate.to.MVPVenueListViewController(self)
         } else {
             UserDefault.shared.isGuest = false

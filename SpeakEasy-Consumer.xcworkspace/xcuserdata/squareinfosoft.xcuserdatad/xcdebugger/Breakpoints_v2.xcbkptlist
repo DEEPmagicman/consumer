@@ -80,7 +80,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "115"
             endingLineNumber = "115"
-            landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -292,7 +292,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "04102E3F-EBAB-4D16-B30C-558D402B07BF - a35c6e391e57ba82"
+                  uuid = "C12DE0F7-E95B-45D8-9D95-234EBD71D7B7 - a35c6e391e57ba82"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -307,7 +307,7 @@
                   offsetFromSymbolStart = "2544">
                </Location>
                <Location
-                  uuid = "04102E3F-EBAB-4D16-B30C-558D402B07BF - 86c603de310b9999"
+                  uuid = "C12DE0F7-E95B-45D8-9D95-234EBD71D7B7 - 86c603de310b9999"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"

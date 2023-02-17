@@ -35,10 +35,9 @@ class venueTableCell: UITableViewCell {
         self.waitTimeLbl.text = data.bookingWaiting
         data.appClipTicket?.forEach({ ganral in
             if ganral.name == "GENERALTICKET" {
-                self.coverLbl.text = "\(ganral.price)"
+                self.coverLbl.text = "$\(ganral.price)"
             }
         })
-        self.coverLbl.text = "\(data.appClipTicket?.first?.price ?? 0)"
         if data.bookingStatus == "OPEN" {
             self.liveLbl.text = "LIVE"
             self.liveLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)

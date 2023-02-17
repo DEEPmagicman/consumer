@@ -55,6 +55,18 @@ extension AppDelegate {
     
     func showOnboarding() {
 //        let controller = StartScreenViewController()
+        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
+
+//        controller.isHeroEnabled = true
+        let tutorialNavigation = UINavigationController(rootViewController: controller)
+        tutorialNavigation.navigationBar.isHidden = true
+        tutorialNavigation.modalTransitionStyle = .crossDissolve
+        tutorialNavigation.modalPresentationStyle = .overCurrentContext
+        self.window?.rootViewController = tutorialNavigation
+    }
+    
+    func showMVP() {
+        ReachabilityManager.shared.startMonitoring()
         if UserDefault.shared.hasVisitedStartingPage {
             let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
             let navigation = UINavigationController(rootViewController: vc)
@@ -64,18 +76,6 @@ extension AppDelegate {
             self.window?.rootViewController = navigation
             return
         }
-        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
-
-//        controller.isHeroEnabled = true
-        let tutorialNavigation = UINavigationController(rootViewController: controller)
-        tutorialNavigation.navigationBar.isHidden = true
-        tutorialNavigation.modalTransitionStyle = .crossDissolve
-        tutorialNavigation.modalPresentationStyle = .overCurrentContext
-        self.window?.rootViewController = tutorialNavigation
-
-    }
-    
-    func showMVP() {
         let controller = StoryboardAndXibManager.StoryBoard.mvp.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
         let navigation = UINavigationController(rootViewController: controller)
         navigation.navigationBar.isHidden = true
