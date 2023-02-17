@@ -34,26 +34,28 @@ extension UILabel {
 
 struct AppClipLoader {
     static private var indicator = UIActivityIndicatorView(style: .medium)
-     static func showLoader(_ view: UIView) {
+    static func showLoader(_ view: UIView) {
         indicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         indicator.center = view.center
         indicator.color = .white
         view.addSubview(indicator)
         view.bringSubviewToFront(indicator)
         indicator.startAnimating()
-      }
-      static func hideLoader() {
-          DispatchQueue.main.async {
-              indicator.stopAnimating()
-              indicator.removeFromSuperview()
-          }
-      }
+    }
+    static func hideLoader() {
+        DispatchQueue.main.async {
+            indicator.stopAnimating()
+            indicator.removeFromSuperview()
+        }
+    }
 }
 
 extension UIViewController {
-    func alertPopup(_ title: String, _ message: String) {
+    func alertPopup(_ title: String, _ message: String, completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "ok", style: .default) { _ in
+            completion?()
+        })
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
