@@ -76,6 +76,7 @@ final class StartScreenViewController: UIViewController {
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
         if UserDefault.shared.isMvp ?? false {
+            UserDefault.shared.hasVisitedStartingPage = true
             Navigate.to.MVPVenueListViewController(self)
         } else {
             UserDefault.shared.isGuest = false
