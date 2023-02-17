@@ -249,10 +249,10 @@ extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            if isPriceUpdated {
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
-            } else if isVenueStatusUpdate {
+            if isVenueStatusUpdate {
                 Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking is closed",actions: [okAction])
+            } else if isPriceUpdated {
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
             }
         }
     }

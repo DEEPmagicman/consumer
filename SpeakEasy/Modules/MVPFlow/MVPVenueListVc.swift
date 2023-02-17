@@ -100,6 +100,7 @@ extension MVPVenueListVc: webSocketCallBackDelegate {
         from = 0
         hasMore = false
         venueList.removeAll()
+        venueListTableView.reloadData()
         self.fetchAllVenueForMVP(withLoader: false)
     }
 }
