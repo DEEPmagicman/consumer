@@ -239,7 +239,7 @@ extension EnterPhomeNumberMvpVC: FPNTextFieldDelegate {
 }
 
 extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String) {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.navigationController?.viewControllers.last is EnterPhomeNumberMvpVC && self.venueId == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 UIAlertAction in
@@ -249,7 +249,11 @@ extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
+            if isPriceUpdated {
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
+            } else if isVenueStatusUpdate {
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking is closed",actions: [okAction])
+            }
         }
     }
 }

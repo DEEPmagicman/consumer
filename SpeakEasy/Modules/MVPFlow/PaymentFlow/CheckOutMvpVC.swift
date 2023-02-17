@@ -224,7 +224,7 @@ extension CheckOutMvpVC {
 }
 
 extension CheckOutMvpVC: webSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String) {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
         if self.navigationController?.viewControllers.last is CheckOutMvpVC && self.venueId == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
@@ -235,7 +235,11 @@ extension CheckOutMvpVC: webSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
+            if isPriceUpdated {
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
+            } else if isVenueStatusUpdate {
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking is closed",actions: [okAction])
+            }
         }
     }
 }

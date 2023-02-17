@@ -120,7 +120,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension MVPVenueDetailVc: webSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String) {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.venueId == uniqueId {
             getVenueDetail(withLoader: false)
         }

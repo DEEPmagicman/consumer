@@ -96,10 +96,10 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension MVPVenueListVc: webSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String) {
-            from = 0
-            hasMore = false
-            venueList.removeAll()
-            self.fetchAllVenueForMVP(withLoader: false)
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
+        from = 0
+        hasMore = false
+        venueList.removeAll()
+        self.fetchAllVenueForMVP(withLoader: false)
     }
 }

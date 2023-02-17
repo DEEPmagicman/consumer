@@ -9,7 +9,7 @@ import Foundation
 import SocketIO
 
 protocol webSocketCallBackDelegate: AnyObject {
-    func didValueChange(venueId: String, uniqueId: String)
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool)
 }
 
 final class WebSocketWrapper: NSObject {
@@ -37,10 +37,10 @@ final class WebSocketWrapper: NSObject {
     
     private func addEventListener() {
         socket?.on("venueListEvent") { data, ack in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String else {
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String, let isWaitingTime = content["isWaitingTime"] as? Bool, let isVenueStatus = content["isVenueStatus"] as? Bool, let isPriceUpdate = content["isPriceUpdate"] as? Bool else {
                 return
             }
-            self.delegate.forEach { $0.didValueChange(venueId: venueId, uniqueId: uniqueId) }
+            self.delegate.forEach { $0.didValueChange(venueId: venueId, uniqueId: uniqueId, isPriceUpdated: isPriceUpdate, isVenueStatusUpdate: isVenueStatus, isWaitTimeUpdated: isWaitingTime) }
         }
         
         socket?.on(clientEvent: .connect) {data, ack in
