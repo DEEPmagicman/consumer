@@ -209,12 +209,12 @@ extension CheckOutClipVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
         if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
-            if isPriceUpdated {
-                alertPopup("Update", "Venue your trying to booking, updated it's price") {
+            if isVenueStatusUpdate {
+                alertPopup("Update", "Venue your trying to booking is closed") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
-            } else if isVenueStatusUpdate {
-                alertPopup("Update", "Venue your trying to booking is closed") {
+            } else if isPriceUpdated {
+                alertPopup("Update", "Venue your trying to booking, updated it's price") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             }
