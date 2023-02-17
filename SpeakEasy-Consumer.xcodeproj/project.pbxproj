@@ -281,6 +281,7 @@
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
 		CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */; };
+		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */; };
 		CEECAA70288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */; };
 		CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */; };
@@ -864,6 +865,7 @@
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
 		CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWCenterTextLayer.swift; sourceTree = "<group>"; };
 		CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChartExtensions.swift; sourceTree = "<group>"; };
+		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMvpVC.swift; sourceTree = "<group>"; };
 		CEECAA68288D8B7C007C5F9C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerCell.swift; sourceTree = "<group>"; };
@@ -1619,6 +1621,7 @@
 		BD3FB24B2940678800BE7713 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				CEE0B518299F94E5004F0DA2 /* Toast.swift */,
 				BD3FB24C294067D900BE7713 /* NavigationManager.swift */,
 				BD3FB24E294068B900BE7713 /* StoryboardAndXibManager.swift */,
 				BD3FB2502940690D00BE7713 /* IdentifierHelper.swift */,
@@ -4220,6 +4223,7 @@
 				E167058C28CA6AB800644BF0 /* SelectedBookingTVC.swift in Sources */,
 				29868361297565E400CB827B /* VenueHours.swift in Sources */,
 				BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */,
+				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				E11F4BA828C8358C008D2E30 /* VIPTableBookingCalendar.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
 				E1FAD5E628CEA9C4004F70DE /* ImportantDatesTVC.swift in Sources */,

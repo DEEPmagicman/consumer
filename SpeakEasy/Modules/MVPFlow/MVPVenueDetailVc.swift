@@ -53,6 +53,9 @@ final class MVPVenueDetailVc: UIViewController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            if withLoader == false {
+                Alert.showToast("Venue detail updated")
+            }
             Loader.hide()
         }
     }
