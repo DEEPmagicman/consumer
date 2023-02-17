@@ -521,5 +521,11 @@ class Alert {
             topVC.present(alert, animated: true, completion: completion)
         }
     }
+    
+    static func showToast(_ message: String) {
+        if let vcc = UIApplication.shared.keyWindow?.rootViewController {
+            vcc.view.makeToast(message)
+        }
+    }
 }
 

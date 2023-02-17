@@ -25,9 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame:UIScreen.main.bounds)
         launchApplication()
-//        UIImage(named: "IN", in: Bundle.FlagIcons, compatibleWith: nil)
         Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
+    }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
+    {
+        .portrait
     }
 }
 //MARK: - Application flow
@@ -51,6 +55,15 @@ extension AppDelegate {
     
     func showOnboarding() {
 //        let controller = StartScreenViewController()
+        if UserDefault.shared.hasVisitedStartingPage {
+            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+            let navigation = UINavigationController(rootViewController: vc)
+            navigation.navigationBar.isHidden = true
+            navigation.modalTransitionStyle = .crossDissolve
+            navigation.modalPresentationStyle = .overCurrentContext
+            self.window?.rootViewController = navigation
+            return
+        }
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
 
 //        controller.isHeroEnabled = true
