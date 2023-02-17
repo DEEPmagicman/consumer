@@ -174,7 +174,7 @@ extension CheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
         let clientSecret = paymentIntent
         // Call the completion block with the client secret or an error
-        completion(clientSecret, nil);
+        completion(clientSecret, nil)
     }
 
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
@@ -194,8 +194,10 @@ extension CheckOutClipVC {
                 }
             }
         case .error:
+            isPaymentInitiated = false
             alertPopup("Alert", "Payment field")
         case .userCancellation:
+            isPaymentInitiated = false
             alertPopup("Alert", "Payment interrupted")
         @unknown default:
             fatalError()
@@ -206,10 +208,9 @@ extension CheckOutClipVC {
 extension CheckOutClipVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
         if isPaymentInitiated { return }
-        if uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+        if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
             alertPopup("Update", "Venue your trying to booking, updated it's price") {
                 self.navigationController?.popToRootViewController(animated: true)
-//                self.navigationController?.popViewController(animated: true)
             }
         }
     }

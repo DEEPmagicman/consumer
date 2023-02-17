@@ -262,7 +262,7 @@ extension EnterPhoneNumberClipVC: FPNTextFieldDelegate {
 
 extension EnterPhoneNumberClipVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
-        if uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+        if navigationController?.viewControllers.last is EnterPhoneNumberClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
             alertPopup("Update", "Venue your trying to booking, updated it's price") {
                 self.navigationController?.popViewController(animated: true)
             }

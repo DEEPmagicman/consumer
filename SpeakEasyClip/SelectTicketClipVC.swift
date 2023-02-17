@@ -24,10 +24,10 @@ final class SelectTicketClipVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
-        WebSocketWrapper.shared.delegate.append(self)
         getEventTicket()
     }
     
@@ -35,7 +35,9 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        AppClipLoader.showLoader(self.view)
+        if withLoader {
+            AppClipLoader.showLoader(self.view)            
+        }
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
@@ -135,7 +137,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 extension SelectTicketClipVC: webSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String) {
         if uniqueId == self.venueId {
-            getEventTicket()
+            getEventTicket(withLoader: false)
         }
     }
 }
