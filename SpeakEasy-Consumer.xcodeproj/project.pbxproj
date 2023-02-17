@@ -273,6 +273,7 @@
 		CE858069299A2089001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
 		CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
+		CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB895299F60200083059B /* MVPStartScreenVC.swift */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
@@ -401,8 +402,8 @@
 		E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B5428BC39AB0076286C /* Tutorials.xib */; };
 		E15D6B6F28BC39AC0076286C /* Tutorial5CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B5628BC39AB0076286C /* Tutorial5CVC.swift */; };
 		E15D6B7028BC39AC0076286C /* Tutorial5CVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B5728BC39AB0076286C /* Tutorial5CVC.xib */; };
-		E15D6B7128BC39AC0076286C /* Tutorial1CVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B5928BC39AB0076286C /* Tutorial1CVC.xib */; };
-		E15D6B7228BC39AC0076286C /* Tutorial1CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B5A28BC39AB0076286C /* Tutorial1CVC.swift */; };
+		E15D6B7128BC39AC0076286C /* MVPSplashCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B5928BC39AB0076286C /* MVPSplashCVC.xib */; };
+		E15D6B7228BC39AC0076286C /* MVPSplashCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B5A28BC39AB0076286C /* MVPSplashCVC.swift */; };
 		E15D6B7328BC39AC0076286C /* Tutorial4CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B5C28BC39AB0076286C /* Tutorial4CVC.swift */; };
 		E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B5D28BC39AB0076286C /* Tutorial4CVC.xib */; };
 		E166184628BED1810027C6EA /* RewardDetailsStretchyTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E166183F28BED1810027C6EA /* RewardDetailsStretchyTVC.swift */; };
@@ -859,6 +860,7 @@
 		CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
+		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
@@ -988,8 +990,8 @@
 		E15D6B5428BC39AB0076286C /* Tutorials.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tutorials.xib; sourceTree = "<group>"; };
 		E15D6B5628BC39AB0076286C /* Tutorial5CVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial5CVC.swift; sourceTree = "<group>"; };
 		E15D6B5728BC39AB0076286C /* Tutorial5CVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tutorial5CVC.xib; sourceTree = "<group>"; };
-		E15D6B5928BC39AB0076286C /* Tutorial1CVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tutorial1CVC.xib; sourceTree = "<group>"; };
-		E15D6B5A28BC39AB0076286C /* Tutorial1CVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial1CVC.swift; sourceTree = "<group>"; };
+		E15D6B5928BC39AB0076286C /* MVPSplashCVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MVPSplashCVC.xib; sourceTree = "<group>"; };
+		E15D6B5A28BC39AB0076286C /* MVPSplashCVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPSplashCVC.swift; sourceTree = "<group>"; };
 		E15D6B5C28BC39AB0076286C /* Tutorial4CVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial4CVC.swift; sourceTree = "<group>"; };
 		E15D6B5D28BC39AB0076286C /* Tutorial4CVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tutorial4CVC.xib; sourceTree = "<group>"; };
 		E166183F28BED1810027C6EA /* RewardDetailsStretchyTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewardDetailsStretchyTVC.swift; sourceTree = "<group>"; };
@@ -1438,11 +1440,13 @@
 				CE0E87472994C5E600F2B2E9 /* PaymentFlow */,
 				82847A8329828B4000611DC4 /* ticketTypeTableViewCell */,
 				82847A7C29824A9000611DC4 /* VenueTableCell */,
+				E15D6B5828BC39AB0076286C /* MVPSplashCVC */,
 				82847A782982485B00611DC4 /* MVPFlow.storyboard */,
 				82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */,
 				82847A8129827AC500611DC4 /* MVPVenueDetailVc.swift */,
 				CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */,
 				CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */,
+				CE8AB895299F60200083059B /* MVPStartScreenVC.swift */,
 			);
 			path = MVPFlow;
 			sourceTree = "<group>";
@@ -2847,7 +2851,6 @@
 				E15D6B5328BC39AB0076286C /* Tutorials.swift */,
 				E15D6B5428BC39AB0076286C /* Tutorials.xib */,
 				E15D6B5528BC39AB0076286C /* Tutorial5CVC */,
-				E15D6B5828BC39AB0076286C /* Tutorial1CVC */,
 				E15D6B5B28BC39AB0076286C /* Tutorial4CVC */,
 			);
 			path = Tutorials;
@@ -2880,13 +2883,13 @@
 			path = Tutorial5CVC;
 			sourceTree = "<group>";
 		};
-		E15D6B5828BC39AB0076286C /* Tutorial1CVC */ = {
+		E15D6B5828BC39AB0076286C /* MVPSplashCVC */ = {
 			isa = PBXGroup;
 			children = (
-				E15D6B5928BC39AB0076286C /* Tutorial1CVC.xib */,
-				E15D6B5A28BC39AB0076286C /* Tutorial1CVC.swift */,
+				E15D6B5928BC39AB0076286C /* MVPSplashCVC.xib */,
+				E15D6B5A28BC39AB0076286C /* MVPSplashCVC.swift */,
 			);
-			path = Tutorial1CVC;
+			path = MVPSplashCVC;
 			sourceTree = "<group>";
 		};
 		E15D6B5B28BC39AB0076286C /* Tutorial4CVC */ = {
@@ -3930,7 +3933,7 @@
 				CE4867A6286F358800FD277E /* Localizable.strings in Resources */,
 				E167058328CA6AB800644BF0 /* FriendCVC.xib in Resources */,
 				CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */,
-				E15D6B7128BC39AC0076286C /* Tutorial1CVC.xib in Resources */,
+				E15D6B7128BC39AC0076286C /* MVPSplashCVC.xib in Resources */,
 				E167059F28CA6B3700644BF0 /* HoursTVC.xib in Resources */,
 				E17DC96A28C6D01700244C4F /* TableSelection.xib in Resources */,
 				E11F4B9328C8358C008D2E30 /* AllEventsTVC.xib in Resources */,
@@ -4360,6 +4363,7 @@
 				4A7CC53428E37ACA00F8BA63 /* BookingAddressTVC.swift in Sources */,
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
+				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				4A7CC54428E385E700F8BA63 /* PaymentsTVC.swift in Sources */,
 				E15D6B6328BC39AC0076286C /* SignUp.swift in Sources */,
 				E1A9E7D328C56FD10081FB28 /* Friends.swift in Sources */,
@@ -4420,7 +4424,7 @@
 				828E9A972983CF01000F2736 /* BottleCategory.swift in Sources */,
 				CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */,
 				E1A9E7C428C56FD10081FB28 /* SearchAndAddCVC.swift in Sources */,
-				E15D6B7228BC39AC0076286C /* Tutorial1CVC.swift in Sources */,
+				E15D6B7228BC39AC0076286C /* MVPSplashCVC.swift in Sources */,
 				CE4867B6286F358800FD277E /* UIViewController+Extension.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,

@@ -13,6 +13,7 @@ class venueTableCell: UITableViewCell {
     @IBOutlet weak var venueEventImg: UIImageView!
     @IBOutlet weak var liveLbl: UILabelDeviceClass!
     @IBOutlet weak var logoImg: UIImageView!
+    @IBOutlet weak var coverLbl: UILabelDeviceClass!
     @IBOutlet weak var eventNameLbl: UILabelDeviceClass!
     @IBOutlet weak var waitTimeLbl: UILabelDeviceClass!
     override func awakeFromNib() {
@@ -32,6 +33,12 @@ class venueTableCell: UITableViewCell {
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
         self.waitTimeLbl.text = data.bookingWaiting
+        data.appClipTicket?.forEach({ ganral in
+            if ganral.name == "GENERALTICKET" {
+                self.coverLbl.text = "\(ganral.price)"
+            }
+        })
+        self.coverLbl.text = "\(data.appClipTicket?.first?.price ?? 0)"
         if data.bookingStatus == "OPEN" {
             self.liveLbl.text = "LIVE"
             self.liveLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)

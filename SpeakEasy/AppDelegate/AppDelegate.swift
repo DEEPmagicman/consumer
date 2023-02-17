@@ -38,6 +38,10 @@ extension AppDelegate {
         self.window?.makeKeyAndVisible()
     }
     func changeRootViewController(){
+        if UserDefault.shared.isMvp == true {
+            self.showMVP()
+            return
+        }
         if UserDefault.shared.isLoggedIn == true {
             self.showHome(selectedIndex: 0)
         } else {
@@ -57,6 +61,17 @@ extension AppDelegate {
         self.window?.rootViewController = tutorialNavigation
 
     }
+    
+    func showMVP() {
+        let controller = StoryboardAndXibManager.StoryBoard.mvp.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
+        let navigation = UINavigationController(rootViewController: controller)
+        navigation.navigationBar.isHidden = true
+        navigation.modalTransitionStyle = .crossDissolve
+        navigation.modalPresentationStyle = .overCurrentContext
+        self.window?.rootViewController = navigation
+
+    }
+
     
     func showTutorials(){
         let controller = Tutorials()

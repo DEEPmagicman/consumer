@@ -35,7 +35,7 @@ struct APIBuilder {
     static private let changePassword = "/change-password"
     static private let includeEventDetails = "?include=venue&include=eventTicket"
     static private let appClip = "/appclip/"
-    static private let appClipVenue = "/appClipVenue"
+    static private let appClipVenue = "/appClipVenue?include=appClipTicket"
     static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
