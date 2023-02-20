@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private var venueId = ""
+    private var isAppClipSet = false
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
@@ -23,10 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if let venue = queryItems.first(where: { $0.name == "v" })?.value {
             venueId = venue
+            setAppClipNavigation()
             return true
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
             venueId = venue
+            setAppClipNavigation()
             return true
         }
         return true
@@ -81,7 +84,7 @@ extension AppDelegate {
         self.window?.rootViewController = tutorialNavigation
     }
     
-    func showMVP() {
+    private func setAppClipNavigation() {
         ReachabilityManager.shared.startMonitoring()
         if venueId != "" {
             let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
@@ -92,8 +95,13 @@ extension AppDelegate {
             navigation.modalTransitionStyle = .crossDissolve
             navigation.modalPresentationStyle = .overCurrentContext
             self.window?.rootViewController = navigation
-            return
+            isAppClipSet = true
         }
+    }
+    
+    func showMVP() {
+        ReachabilityManager.shared.startMonitoring()
+        if isAppClipSet { return }
         if UserDefault.shared.hasVisitedStartingPage {
             let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
             let navigation = UINavigationController(rootViewController: vc)
@@ -109,7 +117,6 @@ extension AppDelegate {
         navigation.modalTransitionStyle = .crossDissolve
         navigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = navigation
-
     }
 
     func showLogin(){

@@ -233,6 +233,10 @@ extension CheckOutMvpVC: WebSocketCallBackDelegate {
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
                     self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueDetailVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
             if isVenueStatusUpdate {
