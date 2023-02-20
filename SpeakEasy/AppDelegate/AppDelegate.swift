@@ -15,6 +15,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    private var venueId = ""
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems, let venue = queryItems.first(where: { $0.name == "v" })?.value else {
+            return true
+        }
+        venueId = venue
+        return true
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UserDefault.shared.isMvp = true
@@ -67,6 +76,17 @@ extension AppDelegate {
     
     func showMVP() {
         ReachabilityManager.shared.startMonitoring()
+        if venueId != "" {
+            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+            vc.venueId = venueId
+            vc.isFromAppClip = true
+            let navigation = UINavigationController(rootViewController: vc)
+            navigation.navigationBar.isHidden = true
+            navigation.modalTransitionStyle = .crossDissolve
+            navigation.modalPresentationStyle = .overCurrentContext
+            self.window?.rootViewController = navigation
+            return
+        }
         if UserDefault.shared.hasVisitedStartingPage {
             let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
             let navigation = UINavigationController(rootViewController: vc)
@@ -85,20 +105,6 @@ extension AppDelegate {
 
     }
 
-    
-    func showTutorials(){
-        let controller = Tutorials()
-        controller.isHeroEnabled = true
-        let tutorialNavigation = UINavigationController(rootViewController: controller)
-        tutorialNavigation.navigationBar.isHidden = true
-        tutorialNavigation.modalTransitionStyle = .crossDissolve
-        tutorialNavigation.modalPresentationStyle = .overCurrentContext
-        self.window?.rootViewController = tutorialNavigation
-
-        
-//        UIView.transition(with: self.window!, duration: 0.5, options: .transitionFlipFromLeft, animations: {
-//        }, completion: nil)
-    }
     func showLogin(){
         let controller = LogIn()
         controller.isHeroEnabled = true

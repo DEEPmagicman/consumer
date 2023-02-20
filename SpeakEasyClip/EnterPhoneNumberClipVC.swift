@@ -260,7 +260,7 @@ extension EnterPhoneNumberClipVC: FPNTextFieldDelegate {
     }
 }
 
-extension EnterPhoneNumberClipVC: webSocketCallBackDelegate {
+extension EnterPhoneNumberClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if navigationController?.viewControllers.last is EnterPhoneNumberClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
             if isVenueStatusUpdate {

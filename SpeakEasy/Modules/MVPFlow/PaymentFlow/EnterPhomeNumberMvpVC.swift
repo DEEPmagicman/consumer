@@ -238,7 +238,7 @@ extension EnterPhomeNumberMvpVC: FPNTextFieldDelegate {
     }
 }
 
-extension EnterPhomeNumberMvpVC: webSocketCallBackDelegate {
+extension EnterPhomeNumberMvpVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.navigationController?.viewControllers.last is EnterPhomeNumberMvpVC && self.venueId == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {

@@ -134,7 +134,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension SelectTicketClipVC: webSocketCallBackDelegate {
+extension SelectTicketClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if uniqueId == self.venueId {
             getEventTicket(withLoader: false)

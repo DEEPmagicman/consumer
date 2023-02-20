@@ -8,7 +8,7 @@
 import Foundation
 import SocketIO
 
-protocol webSocketCallBackDelegate: AnyObject {
+protocol WebSocketCallBackDelegate: AnyObject {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool)
 }
 
@@ -21,7 +21,7 @@ final class WebSocketWrapper: NSObject {
     private let webSocketURL = "ws://157.230.234.51:1563"
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
-    var delegate: [webSocketCallBackDelegate] = []
+    var delegate: [WebSocketCallBackDelegate] = []
     
     private var isAbleToConnect: Bool {
         ReachabilityManager.shared.isNetworkAvailable == true
@@ -43,7 +43,7 @@ final class WebSocketWrapper: NSObject {
             self.delegate.forEach { $0.didValueChange(venueId: venueId, uniqueId: uniqueId, isPriceUpdated: isPriceUpdate, isVenueStatusUpdate: isVenueStatus, isWaitTimeUpdated: isWaitingTime) }
         }
         
-        socket?.on(clientEvent: .connect) {data, ack in
+        socket?.on(clientEvent: .connect) { _, _ in
             self.isSocketConnected = true
         }
         

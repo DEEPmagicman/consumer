@@ -205,7 +205,7 @@ extension CheckOutClipVC {
     }
 }
 
-extension CheckOutClipVC: webSocketCallBackDelegate {
+extension CheckOutClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
         if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {

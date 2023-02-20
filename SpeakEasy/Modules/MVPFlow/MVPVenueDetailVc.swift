@@ -10,6 +10,7 @@ import SDWebImage
 
 final class MVPVenueDetailVc: UIViewController {
 
+    @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var venueBgImg: UIImageView!
     @IBOutlet weak var venueTitleNameLbl: UILabelDeviceClass!
     @IBOutlet weak var locationLbl: UILabel!
@@ -21,12 +22,13 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var liveLbl: UILabel!
     
     var venueId = ""
+    var isFromAppClip = false
     private var mvpDelegate = MVPPresenter()
     private var venueDetails: ClipVenue?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        backBtn.isHidden = isFromAppClip
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         WebSocketWrapper.shared.delegate.append(self)
@@ -122,7 +124,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension MVPVenueDetailVc: webSocketCallBackDelegate {
+extension MVPVenueDetailVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.venueId == uniqueId {
             getVenueDetail(withLoader: false)
