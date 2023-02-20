@@ -809,7 +809,6 @@
 		CE48674A286F358700FD277E /* MOLHSizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOLHSizable.swift; sourceTree = "<group>"; };
 		CE48674B286F358700FD277E /* MOLHFontLocalizableViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOLHFontLocalizableViews.swift; sourceTree = "<group>"; };
 		CE48674C286F358700FD277E /* MOLHFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MOLHFont.swift; sourceTree = "<group>"; };
-		CE486750286F358700FD277E /* ur */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ur; path = ur.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE486751286F358700FD277E /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		CE486752286F358700FD277E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE486754286F358700FD277E /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
@@ -3839,7 +3838,6 @@
 			knownRegions = (
 				en,
 				Base,
-				ur,
 			);
 			mainGroup = CE486715286F2CB000FD277E;
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
@@ -4585,7 +4583,6 @@
 		CE48674F286F358700FD277E /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				CE486750286F358700FD277E /* ur */,
 				CE486752286F358700FD277E /* en */,
 			);
 			name = Localizable.strings;
