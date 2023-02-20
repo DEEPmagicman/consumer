@@ -51,11 +51,7 @@ final class QRCodeMvpVC: UIViewController {
     }
     
     @IBAction func onClickClose(_ sender: Any) {
-        for controller in self.navigationController!.viewControllers {
-            if controller.isKind(of: MVPVenueListVc.self) {
-                self.navigationController?.popToViewController(controller, animated: true)
-            }
-        }
+        navigationController?.popViewController(animated: true)
     }
 }
 

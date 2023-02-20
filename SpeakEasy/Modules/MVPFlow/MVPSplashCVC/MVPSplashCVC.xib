@@ -35,8 +35,8 @@
                                     <constraint firstAttribute="height" constant="180" id="Bcs-XZ-fsY"/>
                                 </constraints>
                             </imageView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="MUY-ov-q3W">
-                                <rect key="frame" x="20" y="387" width="374" height="67"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="MUY-ov-q3W">
+                                <rect key="frame" x="20" y="387" width="374" height="77"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Top Venues &amp; Events" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o6u-6H-sgM" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="31"/>
@@ -51,7 +51,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buy entry to your favorite nightclubs, bars, &amp; events" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zPP-XN-3a4" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="36" width="374" height="31"/>
+                                        <rect key="frame" x="0.0" y="46" width="374" height="31"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
