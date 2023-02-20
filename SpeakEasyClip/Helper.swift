@@ -5,7 +5,6 @@
 //  Created by Square Infosoft on 06/02/23.
 //
 
-import Foundation
 import UIKit
 
 extension UILabel {

@@ -73,7 +73,7 @@ final class MVPVenueDetailVc: UIViewController {
         logoImg.sd_setImage(with: URL(string: logoStr),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
-        infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.   Prices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
+        infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.\nPrices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
         infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = "LIVE"
