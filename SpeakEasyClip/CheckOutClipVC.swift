@@ -189,7 +189,9 @@ extension CheckOutClipVC {
                         vc.ticketPrice = self.ticketPrice
                         vc.venueName = self.venueName
                         vc.bookingId = self.bookingId
-                        self.navigationController?.pushViewController(vc, animated: true)
+                        if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                            self.navigationController?.viewControllers = [selectVC, vc]
+                        }
                     }
                 }
             }

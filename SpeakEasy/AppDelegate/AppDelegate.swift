@@ -18,10 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var venueId = ""
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems, let venue = queryItems.first(where: { $0.name == "v" })?.value else {
+        guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
             return true
         }
-        venueId = venue
+        if let venue = queryItems.first(where: { $0.name == "v" })?.value {
+            venueId = venue
+            return true
+        }
+        if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+            venueId = venue
+            return true
+        }
         return true
     }
     

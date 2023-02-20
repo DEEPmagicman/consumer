@@ -129,6 +129,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             vc.isGeneralAdmission = indexPath.row == 0
             vc.venueName = self.venueDetail?.name ?? ""
             vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""
+            navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -139,5 +140,11 @@ extension SelectTicketClipVC: WebSocketCallBackDelegate {
         if uniqueId == self.venueId {
             getEventTicket(withLoader: false)
         }
+    }
+}
+
+extension SelectTicketClipVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
     }
 }

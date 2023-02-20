@@ -16,11 +16,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         if let activity = connectionOptions.userActivities.filter({ $0.activityType == NSUserActivityTypeBrowsingWeb }).first {
             if let incomingURL = activity.webpageURL {
-                guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems, let venue = queryItems.first(where: { $0.name == "v" })?.value else {
+                guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
                     return
                 }
-                venueId = venue
-                UserDefaults.standard.setValue(venue, forKey: "venueId")
+                if let venue = queryItems.first(where: { $0.name == "v" })?.value {
+                    venueId = venue
+                    UserDefaults.standard.setValue(venue, forKey: "venueId")
+                    return
+                }
+                if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+                    venueId = venue
+                    UserDefaults.standard.setValue(venue, forKey: "venueId")
+                }
             }
         }
     }
