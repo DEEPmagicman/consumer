@@ -163,8 +163,7 @@ final class Navigate {
     
     func MVPVenueListViewController(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
-        sender.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.navigationController?.viewControllers = [vc]
     }
     
     func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String) {
@@ -207,6 +206,9 @@ final class Navigate {
         vc.ticketPrice = ticketPrice
         vc.venueName = venueName
         vc.bookingId = bookingId
+        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+            sender.navigationController?.viewControllers = [homeVc,vc]
+        }
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

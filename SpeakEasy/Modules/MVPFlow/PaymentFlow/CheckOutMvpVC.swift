@@ -140,9 +140,9 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
                 }
             case .canceled:
                 self.isPaymentInitiated = false
-                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+//                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
             case .failed:
                 self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
@@ -214,9 +214,9 @@ extension CheckOutMvpVC {
             present(alert, animated: true, completion: nil)
         case .userCancellation:
             self.isPaymentInitiated = false
-            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+//            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+//            present(alert, animated: true, completion: nil)
         @unknown default:
             fatalError()
         }

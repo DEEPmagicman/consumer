@@ -198,7 +198,7 @@ extension CheckOutClipVC {
             alertPopup("Alert", "Payment field")
         case .userCancellation:
             isPaymentInitiated = false
-            alertPopup("Alert", "Payment interrupted")
+//            alertPopup("Alert", "Payment interrupted")
         @unknown default:
             fatalError()
         }
