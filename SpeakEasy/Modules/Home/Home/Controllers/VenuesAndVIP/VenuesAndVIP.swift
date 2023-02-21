@@ -130,21 +130,21 @@ extension VenuesAndVIP: UITableViewDataSource {
             if Constants.localizedCity == "Chicago" {
                 data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
                 if indexPath.row == Constants.arrayRemainingHotVenueEventsChicago.count - 1 {
-                    cell.setData(seeAll: true)
+                    cell.setData(data: data, seeAll: true)
                     cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    cell.setData(seeAll: false)
+                    cell.setData(data: data, seeAll: false)
                 }
             }else {
                 data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
                 if indexPath.row == Constants.arrayRemainingHotVenueEventsCleveland.count - 1 {
-                    cell.setData(seeAll: true)
+                    cell.setData(data: data, seeAll: true)
                     cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    cell.setData(seeAll: false)
+                    cell.setData(data: data, seeAll: false)
                 }
             }
-            cell.setData(data: data)
+//            cell.setData(data: data)
             return cell
         }
     }

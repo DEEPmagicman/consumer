@@ -10,8 +10,8 @@ import UIKit
 class AllVenues: BaseController {
 
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
-    @IBOutlet weak var viewPageMenu: UIView!
     @IBOutlet weak var lblCity: UILabelDeviceClass!
+    @IBOutlet weak var venueListTableView: UITableView!
     
     var arrTabBarOptions = [TabBarOption(label: Strings.FEATURED.text, index: 0, icon: UIImage(named: "featured"), selectedIcon: nil, isSelected: true),
                             TabBarOption(label: Strings.CITY_VIEWS.text, index: 1, icon: UIImage(named: "cityviews"), selectedIcon: nil, isSelected: false),
@@ -19,22 +19,42 @@ class AllVenues: BaseController {
                             TabBarOption(label: Strings.WATERFRONT.text, index: 3, icon: UIImage(named: "waterfront"), selectedIcon: nil, isSelected: false),
                             TabBarOption(label: Strings.STEAKHOUSE.text, index: 4, icon: UIImage(named: "steakhouse"), selectedIcon: nil, isSelected: false)]
 
-
-
     var selectedIndex = 0
-    var pageMenu: CAPSPageMenu?
-    var pageMenuControllers = [UIViewController]()
+    var venueDelegate = VenuePresenter()
+    var venueList = [Venue]()
+    var from = 0
+    var hasMore = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        fetchAllVenue()
         
-        // Do any additional setup after loading the view.
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.setPageMenu()
+    
+    private func fetchAllVenue() {
+        self.venueDelegate.getVenues(from: self.from) { isSuccess, errMsg, venueList, hasMore in
+            if isSuccess {
+                for venue in venueList {
+                    self.venueList.append(venue)
+                }
+                if hasMore {
+                    self.from = self.venueList.count
+                }
+                self.venueListTableView.reloadData()
+                self.hasMore = hasMore
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+
     }
+
     
     @IBAction func onBtnChangeLocation(_ sender: UIButton) {
         self.navigationController?.pushViewController(NotificationVC(), animated: true)
@@ -54,48 +74,10 @@ extension AllVenues {
     }
     private func registerCells(){
         self.homeTabCollectionView.register(UINib(nibName: "TabVenueCVC", bundle: nil), forCellWithReuseIdentifier: "TabVenueCVC")
+        self.venueListTableView.register(UINib(nibName: "VenueTVC", bundle: nil), forCellReuseIdentifier: "VenueTVC")
     }
 }
-extension AllVenues {
-    private func setPageMenu(){
-        if self.pageMenu == nil {
-            let featured = self.getNavigationContainer(controller: FeaturedVenue())
-            let cityviews = self.getNavigationContainer(controller: FeaturedVenue())
-            let rooftop = self.getNavigationContainer(controller: FeaturedVenue())
-            let waterfront = self.getNavigationContainer(controller: FeaturedVenue())
-            let steakhouse = self.getNavigationContainer(controller: FeaturedVenue())
 
-            
-            self.pageMenuControllers.append(featured)
-            self.pageMenuControllers.append(cityviews)
-            self.pageMenuControllers.append(rooftop)
-            self.pageMenuControllers.append(waterfront)
-            self.pageMenuControllers.append(steakhouse)
-
-            let parameters: [CAPSPageMenuOption] = [
-                .menuItemSeparatorWidth(0),
-                .menuItemSeparatorPercentageHeight(0),
-                .menuHeight(0),
-                .bottomMenuHairlineColor(.clear),
-                .scrollAnimationDurationOnMenuItemTap(0)
-            ]
-            self.pageMenu = CAPSPageMenu(viewControllers: self.pageMenuControllers, frame: CGRect(x: 0.0, y: 0.0, width: self.viewPageMenu.frame.width, height: self.viewPageMenu.frame.height), pageMenuOptions: parameters)
-            
-            guard let pageMenu = self.pageMenu else {return}
-            pageMenu.controllerScrollView.isScrollEnabled = false
-            
-            self.viewPageMenu.addSubview(pageMenu.view)
-        }
-    }
-}
-//MARK: - Container controllers
-extension AllVenues {
-    private func getNavigationContainer(controller: UIViewController)->UINavigationController{
-        let navigationController = UINavigationController(rootViewController: controller)
-        navigationController.navigationBar.isHidden = true
-        return navigationController
-    }
-}
 extension AllVenues: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrTabBarOptions.count
@@ -126,7 +108,42 @@ extension AllVenues: UICollectionViewDelegate {
             self.selectedIndex = indexPath.item
             collectionView.reloadData()
             
-            self.pageMenu?.moveToPage(self.selectedIndex)
         }
+    }
+}
+
+extension AllVenues: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.venueList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
+        let data = self.venueList[indexPath.row]
+        cell.selectionStyle = .none
+        cell.setDataNew(data: data, seeAll: false)
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return UITableView.automaticDimension
+        default:
+            return UITableView.automaticDimension
+        }
+    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row ==  venueList.count - 1 {
+            if self.hasMore {
+                self.fetchAllVenue()
+            }
+        }
+    }
+  
+}
+extension AllVenues: VenueDetailProtocol {
+    func didSelect(index: Int) {
+        Utility.main.topViewController()?.navigationController?.pushViewController(VenueDetails(), animated: true)
     }
 }

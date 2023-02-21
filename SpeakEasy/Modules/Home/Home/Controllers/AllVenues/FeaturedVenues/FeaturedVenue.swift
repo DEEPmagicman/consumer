@@ -4,7 +4,7 @@
 //
 //  Created by Admin on 16/09/2022.
 //
-
+/* TODO: Remove this file*/
 import UIKit
 
 class FeaturedVenue: BaseController {
@@ -48,8 +48,8 @@ extension FeaturedVenue: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
         let data = self.arrayRemainingHotVenueEvents[indexPath.row]
         cell.selectionStyle = .none
-        cell.setData(data: data)
-        cell.setData(seeAll: false)
+        cell.setData(data: data, seeAll: false)
+//        cell.setData(seeAll: false)
         return cell
     }
 }
