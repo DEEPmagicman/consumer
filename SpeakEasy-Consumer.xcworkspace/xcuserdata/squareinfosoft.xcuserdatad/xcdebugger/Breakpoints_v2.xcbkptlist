@@ -338,6 +338,69 @@
             endingLineNumber = "208"
             landmarkName = "qrCodeMvpVC(_:totalTicket:ticketPrice:isGeneral:venueName:bookingId:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 4ec2c595d30c524f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
+                  moduleName = "Speakeasy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208"
+                  offsetFromSymbolStart = "784">
+               </Location>
+               <Location
+                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 4ec2c595d30c524f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
+                  moduleName = "Speakeasy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208"
+                  offsetFromSymbolStart = "1138">
+               </Location>
+               <Location
+                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 5821c6da5d9a2134"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIViewController) -&gt; Swift.Bool in Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
+                  moduleName = "Speakeasy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "208"
+                  endingLineNumber = "208"
+                  offsetFromSymbolStart = "35">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "41DFACB8-150D-4CC1-BFC2-439133EF8B3C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "getVenueDetail(withLoader:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

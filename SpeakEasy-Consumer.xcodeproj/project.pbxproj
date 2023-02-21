@@ -4605,7 +4605,7 @@
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy-Consumer";
+				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy Go!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -4639,7 +4639,7 @@
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy-Consumer";
+				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy Go!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
