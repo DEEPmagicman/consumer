@@ -21,10 +21,41 @@ class NotificationVC: UIViewController {
     @IBOutlet weak var lblCity: UILabelDeviceClass!
     @IBOutlet weak var citySkyline: UIImageView!
     
+    var cityDelegate = OnBoardingPresenter()
+    var arrCityList = [City]()
+    var selectedCity = ""
+    var from = 0
+    var hasMore = false
+    var searchText = ""
+    var lastSearch = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
     }
+    
+    private func fatchCityList() {
+        print(searchText)
+        self.cityDelegate.getCityListAPi(from: from, searchText: searchText) { cityList, hasMore, isSuccess in
+            if isSuccess {
+                for city in cityList {
+                    if city.isDeleted == false {
+                        self.arrCityList.append(city)
+                    }
+                }
+                if hasMore {
+                    self.from = self.arrCityList.count
+                }
+                self.hasMore = hasMore
+//                self.selectCityTableView.reloadData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
+            }
+            Loader.hide()
+        }
+    }
+
+    
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
@@ -66,6 +97,7 @@ extension NotificationVC: UITableViewDelegate {
         let cityMap = self.arrCitySelection[indexPath.row].img
         Constants.localizedCity = city ?? ""
         Constants.localizedMap = cityMap
+        UserDefault.shared.localCity = city ?? ""
         AppDelegate.shared.changeRootViewController()
     }
     

@@ -16,6 +16,7 @@ final class UserDefault: NSObject {
         case isGuest = "isGuest"
         case isMvp = "isMvp"
         case hasVisitedStartingPage = "hasVisitedStartingPage"
+        case localCity = "Surat"
     }
     
     let userDefaults = UserDefaults.standard
@@ -82,6 +83,14 @@ final class UserDefault: NSObject {
             (UserDefaults.standard.value(forKey: UserDefaultKey.hasVisitedStartingPage.rawValue) as? Bool) ?? false
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasVisitedStartingPage.rawValue)
+        }
+    }
+    
+    var localCity: String {
+        get {
+            (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? ""
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
         }
     }
     
