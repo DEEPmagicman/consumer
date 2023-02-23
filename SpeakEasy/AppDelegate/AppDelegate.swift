@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UserDefault.shared.isMvp = true
+        UserDefault.shared.isMvp = false
         self.application = application
         GMSServices.provideAPIKey(Constants.apiKey)
         

@@ -55,7 +55,8 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
         self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess,errorMsg  in
             if isSuccess {
                 UserDefault.shared.user?.dateOfBirth = dob
-                Navigate.to.selectGenderVc(self)
+                Navigate.to.SetProfilePicVc(self)
+//                Navigate.to.selectGenderVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

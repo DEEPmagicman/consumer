@@ -59,7 +59,8 @@ final class SelectGenderViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         self.onBoardingDelegate.editUserProfileApi(gender: UserDefault.shared.user?.gender) { isSuccess,errorMsg  in
             if isSuccess {
-                Navigate.to.SetProfilePicVc(self)
+                Navigate.to.connectAccountVc(self)
+//                Navigate.to.SetProfilePicVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

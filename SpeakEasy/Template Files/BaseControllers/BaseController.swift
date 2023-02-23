@@ -15,6 +15,5 @@ class BaseController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.loopThroughSubViewAndAlignTextfieldText(subviews: self.view.subviews)
     }
 }

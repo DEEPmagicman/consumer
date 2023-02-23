@@ -47,7 +47,8 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""
                 UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
-                Navigate.to.connectAccountVc(self)
+                Navigate.to.selectGenderVc(self)
+//                Navigate.to.connectAccountVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

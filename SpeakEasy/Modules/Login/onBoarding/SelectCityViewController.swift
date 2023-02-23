@@ -75,7 +75,8 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
         self.onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { isSuccess,errorMsg  in
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
-                Navigate.to.selectVibesVc(self)
+                Navigate.to.connectSocialMediaVc(self)
+//                Navigate.to.selectVibesVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
