@@ -333,6 +333,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func homeCitySelection(_ sender: UIViewController) {
+        let vc = HomeCitySelectionVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullscreenPush(vc: UIViewController) {
         if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)

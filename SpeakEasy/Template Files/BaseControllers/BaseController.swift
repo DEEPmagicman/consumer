@@ -13,7 +13,4 @@ class BaseController: UIViewController {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
 }

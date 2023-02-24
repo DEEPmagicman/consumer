@@ -12,7 +12,7 @@ struct CitySelection {
         var img : String
     }
     
-class NotificationVC: UIViewController {
+class HomeCitySelectionVC: UIViewController {
 
     var arrCitySelection = [CitySelection(name: "Chicago, IL", img: "New York, NY 1"),
                             CitySelection(name: "Cleveland, OH", img: "Miami, FL")]
@@ -77,7 +77,7 @@ class NotificationVC: UIViewController {
     }
 }
 //MARK: - UITableViewDataSource
- extension NotificationVC: UITableViewDataSource {
+ extension HomeCitySelectionVC: UITableViewDataSource {
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
          return self.arrCitySelection.count
      }
@@ -90,7 +90,7 @@ class NotificationVC: UIViewController {
      }
  }
 //MARK: - UITableViewDelegate
-extension NotificationVC: UITableViewDelegate {
+extension HomeCitySelectionVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let city = self.arrCitySelection[indexPath.row].name.components(separatedBy: ",").first

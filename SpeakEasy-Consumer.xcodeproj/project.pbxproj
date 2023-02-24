@@ -270,6 +270,8 @@
 		CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE858068299A2089001F6E56 /* FlagKit.xcassets */; };
 		CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB895299F60200083059B /* MVPStartScreenVC.swift */; };
+		CE8F55CB29A87C3E000E3EC9 /* NewHome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE8F55CA29A87C3E000E3EC9 /* NewHome.storyboard */; };
+		CE8F55CD29A87C8E000E3EC9 /* NewHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8F55CC29A87C8E000E3EC9 /* NewHomeVC.swift */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
@@ -445,8 +447,8 @@
 		E16705A128CA6B3800644BF0 /* VenueDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = E167059A28CA6B3700644BF0 /* VenueDetails.xib */; };
 		E16705A228CA6B3800644BF0 /* DressCodeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E167059C28CA6B3700644BF0 /* DressCodeTVC.swift */; };
 		E16705A328CA6B3800644BF0 /* DressCodeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E167059D28CA6B3700644BF0 /* DressCodeTVC.xib */; };
-		E16705AA28CA6B6E00644BF0 /* NotificationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E16705A528CA6B6E00644BF0 /* NotificationVC.xib */; };
-		E16705AB28CA6B6E00644BF0 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16705A628CA6B6E00644BF0 /* NotificationVC.swift */; };
+		E16705AA28CA6B6E00644BF0 /* HomeCitySelectionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E16705A528CA6B6E00644BF0 /* HomeCitySelectionVC.xib */; };
+		E16705AB28CA6B6E00644BF0 /* HomeCitySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16705A628CA6B6E00644BF0 /* HomeCitySelectionVC.swift */; };
 		E16705AC28CA6B6E00644BF0 /* NotificationTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E16705A828CA6B6E00644BF0 /* NotificationTVC.xib */; };
 		E16705AD28CA6B6E00644BF0 /* NotificationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16705A928CA6B6E00644BF0 /* NotificationTVC.swift */; };
 		E16705B728CA6BB500644BF0 /* TicketRecipients.xib in Resources */ = {isa = PBXBuildFile; fileRef = E16705AF28CA6BB500644BF0 /* TicketRecipients.xib */; };
@@ -853,6 +855,8 @@
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
+		CE8F55CA29A87C3E000E3EC9 /* NewHome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewHome.storyboard; sourceTree = "<group>"; };
+		CE8F55CC29A87C8E000E3EC9 /* NewHomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHomeVC.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
@@ -1029,8 +1033,8 @@
 		E167059A28CA6B3700644BF0 /* VenueDetails.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VenueDetails.xib; sourceTree = "<group>"; };
 		E167059C28CA6B3700644BF0 /* DressCodeTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DressCodeTVC.swift; sourceTree = "<group>"; };
 		E167059D28CA6B3700644BF0 /* DressCodeTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DressCodeTVC.xib; sourceTree = "<group>"; };
-		E16705A528CA6B6E00644BF0 /* NotificationVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationVC.xib; sourceTree = "<group>"; };
-		E16705A628CA6B6E00644BF0 /* NotificationVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
+		E16705A528CA6B6E00644BF0 /* HomeCitySelectionVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeCitySelectionVC.xib; sourceTree = "<group>"; };
+		E16705A628CA6B6E00644BF0 /* HomeCitySelectionVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCitySelectionVC.swift; sourceTree = "<group>"; };
 		E16705A828CA6B6E00644BF0 /* NotificationTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationTVC.xib; sourceTree = "<group>"; };
 		E16705A928CA6B6E00644BF0 /* NotificationTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTVC.swift; sourceTree = "<group>"; };
 		E16705AF28CA6BB500644BF0 /* TicketRecipients.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TicketRecipients.xib; sourceTree = "<group>"; };
@@ -2104,6 +2108,7 @@
 		CE4867E7286F7DC500FD277E /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				CE8F55C929A87BE3000E3EC9 /* NewHome */,
 				0436D083295966B40087D3DB /* Settings */,
 				E11F4A7A28C800B1008D2E30 /* AccessPass */,
 				E1A9E6D328C55D540081FB28 /* Home */,
@@ -2121,6 +2126,15 @@
 				CE65D67A298D24B800DE1E8A /* ClipVenue.swift */,
 			);
 			path = APPClipModal;
+			sourceTree = "<group>";
+		};
+		CE8F55C929A87BE3000E3EC9 /* NewHome */ = {
+			isa = PBXGroup;
+			children = (
+				CE8F55CA29A87C3E000E3EC9 /* NewHome.storyboard */,
+				CE8F55CC29A87C8E000E3EC9 /* NewHomeVC.swift */,
+			);
+			path = NewHome;
 			sourceTree = "<group>";
 		};
 		CEA9474A288CABA600D7BB91 /* AWLineChart */ = {
@@ -3118,8 +3132,8 @@
 		E16705A428CA6B6E00644BF0 /* NotificationVC */ = {
 			isa = PBXGroup;
 			children = (
-				E16705A528CA6B6E00644BF0 /* NotificationVC.xib */,
-				E16705A628CA6B6E00644BF0 /* NotificationVC.swift */,
+				E16705A528CA6B6E00644BF0 /* HomeCitySelectionVC.xib */,
+				E16705A628CA6B6E00644BF0 /* HomeCitySelectionVC.swift */,
 				E16705A728CA6B6E00644BF0 /* NotificationTVC */,
 			);
 			path = NotificationVC;
@@ -3955,6 +3969,7 @@
 				E1889D2828BBA59000E1625A /* StatusAndRewards.xib in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				E1FAD5E328CEA9C4004F70DE /* EditProfileVC.xib in Resources */,
+				CE8F55CB29A87C3E000E3EC9 /* NewHome.storyboard in Resources */,
 				E11F4B9F28C8358C008D2E30 /* EventBookingSelectionTVC.xib in Resources */,
 				E1A9E7FE28C579690081FB28 /* SocialMediaCVC.xib in Resources */,
 				E1A9E7D228C56FD10081FB28 /* SearchAndAddTVC.xib in Resources */,
@@ -3971,7 +3986,7 @@
 				E11F4BFE28C835F3008D2E30 /* BookingsTVC.xib in Resources */,
 				E11F4BFC28C835F3008D2E30 /* Bookings.xib in Resources */,
 				E11F4B3328C83564008D2E30 /* AdditionalGuestsTVC.xib in Resources */,
-				E16705AA28CA6B6E00644BF0 /* NotificationVC.xib in Resources */,
+				E16705AA28CA6B6E00644BF0 /* HomeCitySelectionVC.xib in Resources */,
 				E11F4BA528C8358C008D2E30 /* EventTableViewHeader.xib in Resources */,
 				9D4A028C28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib in Resources */,
 				E167058F28CA6AB800644BF0 /* SearchFriendTVC.xib in Resources */,
@@ -4293,6 +4308,7 @@
 				04FDAF8528F920EB007129CC /* PublikAttendeesProfileCVC.swift in Sources */,
 				828E9A9F2983E0CC000F2736 /* BottleCategoryHeaderView.swift in Sources */,
 				828A04962962E23B004A5F2B /* SelectPhotosViewController.swift in Sources */,
+				CE8F55CD29A87C8E000E3EC9 /* NewHomeVC.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
@@ -4462,7 +4478,7 @@
 				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
-				E16705AB28CA6B6E00644BF0 /* NotificationVC.swift in Sources */,
+				E16705AB28CA6B6E00644BF0 /* HomeCitySelectionVC.swift in Sources */,
 				BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */,
 				CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */,
 				E11F4B8B28C8358C008D2E30 /* HeaderView.swift in Sources */,

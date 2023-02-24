@@ -97,7 +97,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
         cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
         cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-        cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+        if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
+            cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+        } else {
+            cell.ticketPriceLbl.text = "FREE"
+        }
         if indexPath.row == (venueDetails?.appClipTicket?.count ?? 0) - 1 {
             cell.lineView.isHidden = true
         } else {
@@ -106,7 +110,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
-            cell.sideArrow.isHidden = false
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 {
+                cell.sideArrow.isHidden = true
+            } else {
+                cell.sideArrow.isHidden = false
+            }
         } else {
             cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
@@ -118,7 +126,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if venueDetails?.bookingStatus != "OPEN" { return }
+        if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
         if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         Navigate.to.enterPhoneNumForMvpViewController(self, ticketPrice: venueDetails?.appClipTicket?[indexPath.row].price ?? 0, isGeneral: venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", ticketId: venueDetails?.appClipTicket?[indexPath.row].id ?? "", venueId: self.venueId)
     }

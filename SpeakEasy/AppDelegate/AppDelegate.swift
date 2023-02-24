@@ -66,7 +66,8 @@ extension AppDelegate {
             return
         }
         if UserDefault.shared.isLoggedIn == true {
-            self.showHome(selectedIndex: 0)
+//            self.showHome(selectedIndex: 0)
+            self.showNewHome(selectedIndex: 0)
         } else {
             self.showOnboarding()
         }
@@ -171,5 +172,34 @@ extension AppDelegate {
         self.window?.rootViewController = tabBarControllerNavigation
 
     }
+    
+    public func showNewHome(selectedIndex: Int){
+        let tabBarController = UITabBarController()
+
+        let home = StoryboardAndXibManager.StoryBoard.newHome.instantiateVC(NewHomeVC.self)
+        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
+        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
+        let homeNavigation = UINavigationController(rootViewController: home)
+        homeNavigation.navigationBar.isHidden = true
+        
+        let myAccount = MyAccount()
+        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
+        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
+        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
+        myAccountNavigation.navigationBar.isHidden = true
+
+        tabBarController.viewControllers = [homeNavigation,myAccountNavigation]
+        
+        tabBarController.selectedIndex = selectedIndex
+        
+        tabBarController.tabBar.isTranslucent = false
+        
+        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+        tabBarControllerNavigation.navigationBar.isHidden = true
+        self.window?.rootViewController = tabBarControllerNavigation
+
+    }
+
 }
 

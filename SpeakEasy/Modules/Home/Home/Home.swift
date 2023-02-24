@@ -32,7 +32,7 @@ final class Home: BaseController {
     }
     
     @IBAction private func onBtnChangeLocation(_ sender: UIButton) {
-        navigationController?.pushViewController(NotificationVC(), animated: true)
+        navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
     }
     @IBAction private func onBtnSearch(_ sender: UIButton) {
         navigationController?.pushViewController(Search(), animated: true)
