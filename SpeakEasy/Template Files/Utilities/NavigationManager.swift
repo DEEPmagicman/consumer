@@ -338,6 +338,12 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func mvpCitySelection(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPCitySelectionVC.self)
+        vc.citySelectionDelegate = sender as? any CitySelectionDelegate
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullscreenPush(vc: UIViewController) {
         if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)

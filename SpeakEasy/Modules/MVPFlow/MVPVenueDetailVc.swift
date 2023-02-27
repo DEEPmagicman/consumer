@@ -29,7 +29,7 @@ final class MVPVenueDetailVc: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         backBtn.isHidden = isFromAppClip
-        ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
+        ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
@@ -94,7 +94,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         venueDetails?.appClipTicket?.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
         cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
         cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
         if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {

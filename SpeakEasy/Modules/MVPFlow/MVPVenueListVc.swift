@@ -26,6 +26,7 @@ final class MVPVenueListVc: UIViewController {
         refresh.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         venueListTableView.addSubview(refresh)
         WebSocketWrapper.shared.delegate.append(self)
+        venueListTableView.setupPadding()
     }
     
     @objc private func refresh(_ sender: AnyObject) {
@@ -37,6 +38,10 @@ final class MVPVenueListVc: UIViewController {
     
     @IBAction private func onClickSetting(_ sender: Any) {
         Navigate.to.MVPSettingVC(self)
+    }
+    
+    @IBAction func onClickCityName(_ sender: Any) {
+        Navigate.to.mvpCitySelection(self)
     }
     
     private func fetchAllVenueForMVP(withLoader: Bool = true) {
@@ -75,8 +80,16 @@ final class MVPVenueListVc: UIViewController {
 }
 
 extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        venueList.count
+        if section == 0 {
+           return venueList.count
+        } else {
+           return venueList.count
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
@@ -96,6 +109,22 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
             }
         }
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = MVPVenueTypeHeaderView.instanceFromNib() as? MVPVenueTypeHeaderView
+        if section == 0 {
+            header?.openCloseLbl.text = "Venues in Chicago"
+            header?.detailLbl.text = "Venues in your city."
+        } else {
+            header?.openCloseLbl.text = "Open Tonight"
+            header?.detailLbl.text = "Venues that are currently open in your city."
+        }
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60
+    }
 }
 
 extension MVPVenueListVc: WebSocketCallBackDelegate {
@@ -105,5 +134,12 @@ extension MVPVenueListVc: WebSocketCallBackDelegate {
         venueList.removeAll()
         venueListTableView.reloadData()
         self.fetchAllVenueForMVP(withLoader: false)
+    }
+}
+
+extension MVPVenueListVc: CitySelectionDelegate {
+    func citySelected(city: String) {
+        //TO DO: refresh screen(city vise)
+        print("refresh")
     }
 }

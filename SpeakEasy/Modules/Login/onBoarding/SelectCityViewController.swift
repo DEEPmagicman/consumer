@@ -27,7 +27,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 
         selectCityInfoLbl.highlightBold(["Enable Location Services"], size: 15, textColor: Constant.Color.primaryColor)
         
-        self.selectCityTableView.register(UINib(nibName: "NotificationTVC", bundle: nil), forCellReuseIdentifier: "NotificationTVC")
+        self.selectCityTableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
         self.searchTextField.delegate = self
         self.searchTextField.addTarget(self, action: #selector(searchFieldTextChange), for: .editingChanged)
         fatchCityList()
@@ -95,7 +95,7 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTVC", for: indexPath) as? NotificationTVC
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CitySelectionTableCell", for: indexPath) as? CitySelectionTableCell
         let data = arrCityList[indexPath.row]
         cell?.setDataCity(data: data)
         cell?.containtView.backgroundColor = .clear

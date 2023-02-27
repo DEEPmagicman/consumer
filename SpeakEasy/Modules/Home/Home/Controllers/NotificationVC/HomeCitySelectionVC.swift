@@ -73,7 +73,7 @@ class HomeCitySelectionVC: UIViewController {
     }
     
     func registerCell() {
-        self.tableView.register(UINib(nibName: "NotificationTVC", bundle: nil), forCellReuseIdentifier: "NotificationTVC")
+        self.tableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
     }
 }
 //MARK: - UITableViewDataSource
@@ -82,7 +82,7 @@ class HomeCitySelectionVC: UIViewController {
          return self.arrCitySelection.count
      }
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-         guard let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTVC", for: indexPath) as? NotificationTVC else { return UITableViewCell() }
+         guard let cell = tableView.dequeueReusableCell(withIdentifier: "CitySelectionTableCell", for: indexPath) as? CitySelectionTableCell else { return UITableViewCell() }
          cell.selectionStyle = .none
          let data = self.arrCitySelection[indexPath.row]
          cell.setData(data: data)

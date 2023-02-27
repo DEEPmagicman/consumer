@@ -16,6 +16,7 @@ class venueTableCell: UITableViewCell {
     @IBOutlet weak var coverLbl: UILabelDeviceClass!
     @IBOutlet weak var eventNameLbl: UILabelDeviceClass!
     @IBOutlet weak var waitTimeLbl: UILabelDeviceClass!
+    @IBOutlet weak var locationLbl: UILabelDeviceClass!
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -32,6 +33,7 @@ class venueTableCell: UITableViewCell {
         self.venueEventImg.sd_setImage(with: URL( string: imgUrl), completed: nil)
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
+        self.locationLbl.text = data.address
         self.waitTimeLbl.text = data.bookingWaiting
         data.appClipTicket?.forEach({ ganral in
             if ganral.name == "GENERALTICKET" {

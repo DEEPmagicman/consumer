@@ -13,6 +13,7 @@ class ticketTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var infoLbl: UILabelDeviceClass!
     @IBOutlet weak var ticketPriceLbl: UILabelDeviceClass!
     @IBOutlet weak var lineView: UIView!
+    @IBOutlet weak var sideArrow: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

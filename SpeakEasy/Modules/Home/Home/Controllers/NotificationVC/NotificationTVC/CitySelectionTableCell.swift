@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NotificationTVC: UITableViewCell {
+class CitySelectionTableCell: UITableViewCell {
 
     @IBOutlet weak var lblCity: UILabelDeviceClass!
     @IBOutlet weak var imgCity: UIImageView!
@@ -28,9 +28,10 @@ class NotificationTVC: UITableViewCell {
         self.imgCity.image = UIImage(named: data.img)
     }
     
-    func setDataCity(data: City) {
+    func setDataCity(data: City, hideCityImg: Bool = false) {
         self.lblCity.text = data.name
         self.imgCity.image = UIImage(named: "New York, NY 1")
+        self.imgCity.isHidden = hideCityImg
     }
 
 }
