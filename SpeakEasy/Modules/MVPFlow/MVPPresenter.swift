@@ -135,4 +135,22 @@ final class MVPPresenter {
             completion(false, nil)
         }
     }
+    
+    func mvpCityListAPi(completion: @escaping(_ cityList: [String], _ isSuccess: Bool) -> Void) {
+            Loader.show()
+        AFWrapper.getRequest(APIBuilder.mvpCityListURL, params: nil, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? [String:Any], let cityArray = responseDic["city"] as? NSArray
+            else {
+                completion([String](), false)
+                return
+            }
+            
+            completion(cityArray as! [String], true)
+        } failure: { (error) in
+            completion([String](), false)
+            print(error ?? "")
+        }
+    }
+
 }

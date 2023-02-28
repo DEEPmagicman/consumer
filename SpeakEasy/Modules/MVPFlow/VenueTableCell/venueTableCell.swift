@@ -37,7 +37,11 @@ class venueTableCell: UITableViewCell {
         self.waitTimeLbl.text = data.bookingWaiting
         data.appClipTicket?.forEach({ ganral in
             if ganral.name == "GENERALTICKET" {
-                self.coverLbl.text = "$\(ganral.price)"
+                if ganral.price >= 5 {
+                    self.coverLbl.text = "$\(ganral.price)"
+                } else {
+                    self.coverLbl.text = "FREE"
+                }
             }
         })
         if data.bookingStatus == "OPEN" {

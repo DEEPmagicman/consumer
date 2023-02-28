@@ -11,6 +11,9 @@
         <array key="Poppins-Bold.ttf">
             <string>Poppins-Bold</string>
         </array>
+        <array key="Poppins-Medium.ttf">
+            <string>Poppins-Medium</string>
+        </array>
         <array key="Poppins-Regular.ttf">
             <string>Poppins-Regular</string>
         </array>
@@ -29,7 +32,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-NG-UWF">
-                        <rect key="frame" x="0.0" y="11" width="496" height="212"/>
+                        <rect key="frame" x="0.0" y="15" width="496" height="208"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General Admission" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-bV-Bk6" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                 <rect key="frame" x="10" y="11" width="419.5" height="24"/>
@@ -41,7 +44,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provides general admission to the venue. Admission subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKK-ir-Xwf" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="10" y="49" width="436" height="36.5"/>
+                                <rect key="frame" x="10" y="49" width="406" height="36.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -50,6 +53,12 @@
                                 <rect key="frame" x="439.5" y="7.5" width="43.5" height="31"/>
                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="Hot Night!" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOM-Ut-JRn" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
+                                <rect key="frame" x="431.5" y="60.5" width="51.5" height="14"/>
+                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
+                                <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sideArr" translatesAutoresizingMaskIntoConstraints="NO" id="0rq-sf-Wm7">
@@ -67,9 +76,9 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vRX-HR-NMm">
-                                <rect key="frame" x="173" y="99.5" width="150" height="63"/>
+                                <rect key="frame" x="248" y="99.5" width="0.0" height="0.0"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn7-Cz-YYd">
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn7-Cz-YYd">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="63"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XA4-j6-bbU">
@@ -128,12 +137,14 @@
                             <constraint firstItem="YKK-ir-Xwf" firstAttribute="top" secondItem="VgT-bV-Bk6" secondAttribute="bottom" constant="14" id="228-SW-38C"/>
                             <constraint firstItem="UuF-8i-IxH" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="16" id="4uc-Pj-Z9h"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="UuF-8i-IxH" secondAttribute="bottom" id="5mR-PU-t0X"/>
+                            <constraint firstItem="BOM-Ut-JRn" firstAttribute="centerY" secondItem="YKK-ir-Xwf" secondAttribute="centerY" id="H6E-88-We9"/>
                             <constraint firstItem="tAa-Ha-WLH" firstAttribute="centerY" secondItem="VgT-bV-Bk6" secondAttribute="centerY" id="I56-Ft-h8J"/>
                             <constraint firstItem="vRX-HR-NMm" firstAttribute="top" secondItem="YKK-ir-Xwf" secondAttribute="bottom" constant="14" id="QE4-2O-oVC"/>
                             <constraint firstItem="YKK-ir-Xwf" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="10" id="bzx-gO-4EC"/>
+                            <constraint firstAttribute="trailing" secondItem="BOM-Ut-JRn" secondAttribute="trailing" constant="13" id="cNs-Do-xCm"/>
                             <constraint firstAttribute="trailing" secondItem="UuF-8i-IxH" secondAttribute="trailing" constant="16" id="fDH-Sn-JCA"/>
                             <constraint firstItem="VgT-bV-Bk6" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="10" id="gn3-b0-x9Z"/>
-                            <constraint firstAttribute="trailing" secondItem="YKK-ir-Xwf" secondAttribute="trailing" constant="50" id="hz5-st-Dl1"/>
+                            <constraint firstAttribute="trailing" secondItem="YKK-ir-Xwf" secondAttribute="trailing" constant="80" id="hz5-st-Dl1"/>
                             <constraint firstAttribute="trailing" secondItem="0rq-sf-Wm7" secondAttribute="trailing" constant="1" id="ipo-HD-d1v"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="vRX-HR-NMm" secondAttribute="bottom" constant="5" id="jpW-TJ-IXv"/>
                             <constraint firstItem="vRX-HR-NMm" firstAttribute="centerX" secondItem="av2-NG-UWF" secondAttribute="centerX" id="k3J-Ah-Vwd"/>
@@ -150,6 +161,7 @@
                         </userDefinedRuntimeAttributes>
                         <variation key="default">
                             <mask key="subviews">
+                                <exclude reference="0rq-sf-Wm7"/>
                                 <exclude reference="UuF-8i-IxH"/>
                             </mask>
                         </variation>
@@ -157,7 +169,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="av2-NG-UWF" secondAttribute="trailing" id="2tc-ei-DfG"/>
-                    <constraint firstItem="av2-NG-UWF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="F3f-lX-eh2"/>
+                    <constraint firstItem="av2-NG-UWF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="F3f-lX-eh2"/>
                     <constraint firstItem="av2-NG-UWF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="PKZ-PU-nqp"/>
                     <constraint firstAttribute="bottom" secondItem="av2-NG-UWF" secondAttribute="bottom" id="iNG-hC-aen"/>
                 </constraints>
@@ -165,11 +177,16 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="hotVenueLbl" destination="BOM-Ut-JRn" id="1Os-hH-3jf"/>
                 <outlet property="infoLbl" destination="YKK-ir-Xwf" id="saW-dg-8rH"/>
                 <outlet property="lineView" destination="UuF-8i-IxH" id="FzA-Ce-6Hn"/>
+                <outlet property="minusBtn" destination="XA4-j6-bbU" id="OgK-07-cKq"/>
+                <outlet property="plusBtn" destination="92x-Io-uOq" id="dcO-oH-IWg"/>
                 <outlet property="sideArrow" destination="0rq-sf-Wm7" id="ZbJ-gf-etk"/>
+                <outlet property="ticketPlusMinusView" destination="gn7-Cz-YYd" id="Oe4-cG-fRe"/>
                 <outlet property="ticketPriceLbl" destination="tAa-Ha-WLH" id="ggQ-2u-uow"/>
                 <outlet property="ticketTypeLbl" destination="VgT-bV-Bk6" id="qRG-kG-faL"/>
+                <outlet property="totalTicketLbl" destination="a2t-kL-VmD" id="c4y-p3-fpO"/>
             </connections>
             <point key="canvasLocation" x="208.69565217391306" y="111.49553571428571"/>
         </tableViewCell>

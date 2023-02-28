@@ -27,6 +27,7 @@ final class MVPVenueListVc: UIViewController {
         venueListTableView.addSubview(refresh)
         WebSocketWrapper.shared.delegate.append(self)
         venueListTableView.setupPadding()
+        cityNameLbl.text = UserDefault.shared.localCity
     }
     
     @objc private func refresh(_ sender: AnyObject) {
@@ -139,7 +140,11 @@ extension MVPVenueListVc: WebSocketCallBackDelegate {
 
 extension MVPVenueListVc: CitySelectionDelegate {
     func citySelected(city: String) {
-        //TO DO: refresh screen(city vise)
-        print("refresh")
+        from = 0
+        hasMore = false
+        venueList.removeAll()
+        venueListTableView.reloadData()
+        self.fetchAllVenueForMVP()
+        cityNameLbl.text = UserDefault.shared.localCity
     }
 }
