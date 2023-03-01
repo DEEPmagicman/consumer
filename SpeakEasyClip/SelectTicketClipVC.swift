@@ -15,12 +15,16 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet private weak var liveCloseLbl: UILabel!
     @IBOutlet private weak var ticketTypeTableView: UITableView!
     @IBOutlet private weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var venueInfoLbl: UILabel!
+    @IBOutlet weak var continueBtnView: UIView!
     
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
-
+    private var selectedTicketIndex: Int?
+    private var totalTicket = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
@@ -35,7 +39,7 @@ final class SelectTicketClipVC: UIViewController {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if withLoader {
-            AppClipLoader.showLoader(self.view)            
+            AppClipLoader.showLoader(self.view)
         }
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
@@ -51,7 +55,7 @@ final class SelectTicketClipVC: UIViewController {
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
             self.setUpUI()
             DispatchQueue.main.async {
-                self.ticketTypeTableView.reloadData()
+                self.updateContinueBtn(forceRemove: true)
                 AppClipLoader.hideLoader()
             }
         }.resume()
@@ -87,6 +91,49 @@ final class SelectTicketClipVC: UIViewController {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         tableViewHeight.constant = ticketTypeTableView.contentSize.height
     }
+    
+    @IBAction func onClickContinue(_ sender: Any) {
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let index = selectedTicketIndex {
+            vc.totalTicket = self.totalTicket
+            vc.ticketInfo = self.venueDetail?.appClipTicket?[index].description ?? ""
+            vc.ticketPrice = self.venueDetail?.appClipTicket?[index].price ?? 0
+            vc.isGeneralAdmission = index == 0
+            vc.venueName = self.venueDetail?.name ?? ""
+            vc.appClipTicketId = self.venueDetail?.appClipTicket?[index].id ?? ""
+            vc.venueAttachment = self.venueDetail?.venueAttachment.first?.key ?? ""
+            vc.venueLogo = self.venueDetail?.logo?.key ?? ""
+            navigationController?.interactivePopGestureRecognizer?.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    @objc func minusBtnClick(_ sender: UIButton) {
+        if totalTicket > 1 {
+            totalTicket -= 1
+            ticketTypeTableView.reloadData()
+            updateContinueBtn()
+        }
+    }
+    
+    @objc func plusBtnClick(_ sender: UIButton) {
+        totalTicket += 1
+        ticketTypeTableView.reloadData()
+        updateContinueBtn()
+    }
+    
+    func updateContinueBtn(forceRemove: Bool = false) {
+        DispatchQueue.main.async {
+            if forceRemove {
+                self.continueBtnView.isHidden = true
+                self.selectedTicketIndex = nil
+                self.totalTicket = 1
+                self.ticketTypeTableView.reloadData()
+                return
+            }
+            let price = self.venueDetail?.appClipTicket?[self.selectedTicketIndex ?? 0].price ?? 0
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
+        }
+    }
 }
 
 extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
@@ -105,24 +152,20 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.ticketPriceLbl.text = "FREE"
         }
-//        if indexPath.row == (self.venueDetail?.appClipTicket?.count ?? 0) - 1{
-//            cell.lineView.isHidden = true
-//        } else {
-//            cell.lineView.isHidden = false
-//        }
+        cell.ticketPlusMinusView.isHidden = !(indexPath.row == selectedTicketIndex)
+        cell.minusBtn.tag = indexPath.row
+        cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
+        cell.plusBtn.tag = indexPath.row
+        cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
+        cell.totalTicketLbl.text = "\(totalTicket)"
+        cell.minusBtn.alpha = totalTicket == 1 ? 0.5 : 1
         if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
-            if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 {
-                cell.sideArrow.isHidden = true
-            } else {
-                cell.sideArrow.isHidden = false
-            }
 
         } else {
             cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-            cell.sideArrow.isHidden = true
         }
         cell.selectionStyle = .none
         cell.layoutIfNeeded()
@@ -130,21 +173,14 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if self.venueDetail?.bookingStatus != "OPEN" || venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
-        if self.venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
+        if venueDetail?.bookingStatus != "OPEN" || venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
+        if venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
-            vc.totalTicket = 1
-            vc.ticketInfo = self.venueDetail?.appClipTicket?[indexPath.row].description ?? ""
-            vc.ticketPrice = self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0
-            vc.isGeneralAdmission = indexPath.row == 0
-            vc.venueName = self.venueDetail?.name ?? ""
-            vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""
-            vc.venueAttachment = self.venueDetail?.venueAttachment.first?.key ?? ""
-            vc.venueLogo = self.venueDetail?.logo?.key ?? ""
-            navigationController?.interactivePopGestureRecognizer?.delegate = self
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        selectedTicketIndex = indexPath.row
+        totalTicket = 1
+        ticketTypeTableView.reloadData()
+        updateContinueBtn()
+        continueBtnView.isHidden = false
     }
 }
 
