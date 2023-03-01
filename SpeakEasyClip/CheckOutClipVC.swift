@@ -33,6 +33,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var ticketInfo = ""
     var appClipTicketId = ""
     var venueName = ""
+    var venueAttachment = ""
+    var venueLogo = ""
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var bookingId = ""
@@ -237,9 +239,12 @@ extension CheckOutClipVC {
                         AppClipLoader.hideLoader()
                         vc.totalTicket = self.totalTicket
                         vc.isGeneralAdmission = self.isGeneralAdmission
+                        vc.ticketInfo = self.ticketInfo
                         vc.ticketPrice = self.ticketPrice
                         vc.venueName = self.venueName
                         vc.bookingId = self.bookingId
+                        vc.venueLogo = self.venueLogo
+                        vc.venueAttachment = self.venueAttachment
                         if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                             self.navigationController?.viewControllers = [selectVC, vc]
                         }
@@ -315,7 +320,9 @@ extension CheckOutClipVC: UITextFieldDelegate {
         if isValidNo {
             checkApplePay()
         } else {
-            self.alertPopup("Alert", "Enter valid number")
+            if textField.text?.replacingOccurrences(of: " ", with: "") != "" {
+                alertPopup("Alert", "Enter valid number")
+            }
         }
     }
 }
@@ -346,6 +353,7 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             isValidNo = isValid
+            isIntendCreated = false
         }
     }
 }

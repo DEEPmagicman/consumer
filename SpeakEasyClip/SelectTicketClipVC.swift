@@ -15,7 +15,6 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet private weak var liveCloseLbl: UILabel!
     @IBOutlet private weak var ticketTypeTableView: UITableView!
     @IBOutlet private weak var tableViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var eventLocationLbl: UILabel!
     @IBOutlet weak var venueInfoLbl: UILabel!
     
     var isLive = true
@@ -73,9 +72,8 @@ final class SelectTicketClipVC: UIViewController {
         } catch {}
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
-            self.eventLocationLbl.text = self.venueDetail?.address
-            self.venueInfoLbl.text = "Entry tickets can only be purchased in-person at \(self.venueDetail?.name ?? "") by App Clip scan. Prices shown here are live and subject to change."
-            self.venueInfoLbl.highlightBold(["only","in-person","live and subject to change."], size: 15, textColor: .white, underLineText: "only")
+            self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
+            self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
             if self.venueDetail?.bookingStatus == "OPEN" {
                 self.liveCloseLbl.text = "LIVE"
                 self.liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
@@ -142,6 +140,8 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             vc.isGeneralAdmission = indexPath.row == 0
             vc.venueName = self.venueDetail?.name ?? ""
             vc.appClipTicketId = self.venueDetail?.appClipTicket?[indexPath.row].id ?? ""
+            vc.venueAttachment = self.venueDetail?.venueAttachment.first?.key ?? ""
+            vc.venueLogo = self.venueDetail?.logo?.key ?? ""
             navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
