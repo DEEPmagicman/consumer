@@ -134,7 +134,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private func addPaymentApi() {
         if isIntendCreated { return }
-        AppClipLoader.showLoader(view)
         guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
