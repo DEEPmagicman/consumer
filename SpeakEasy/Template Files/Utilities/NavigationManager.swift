@@ -186,15 +186,15 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func checkOutMvpVC(_ sender: UIViewController, phoneNum: String,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String, venueId: String) {
+    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
-        vc.phoneNo = phoneNum
         vc.totalTicket = totalTicket
         vc.ticketPrice = ticketPrice
         vc.isGeneralAdmission = isGeneral
         vc.venueName = venueName
-        vc.bookingId = bookingId
+        vc.appClipTicketId = appClipTicketId
         vc.venueId = venueId
+        vc.ticketInfo = ticketInfo
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

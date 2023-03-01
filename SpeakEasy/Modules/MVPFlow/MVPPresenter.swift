@@ -136,19 +136,26 @@ final class MVPPresenter {
         }
     }
     
-    func mvpCityListAPi(completion: @escaping(_ cityList: [String], _ isSuccess: Bool) -> Void) {
+    func mvpCityListAPi(completion: @escaping(_ cityList: [MVPCity], _ isSuccess: Bool) -> Void) {
             Loader.show()
         AFWrapper.getRequest(APIBuilder.mvpCityListURL, params: nil, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String:Any], let cityArray = responseDic["city"] as? NSArray
+            guard let responseDic = response as? [String:Any], let cityArray = responseDic["city"] as? [[String: Any]]
             else {
-                completion([String](), false)
+                completion([], false)
                 return
             }
-            
-            completion(cityArray as! [String], true)
+        
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: cityArray, options: .prettyPrinted)
+                let cityList = try decoder.decode([MVPCity].self, from: data)
+                completion(cityList, true)
+            } catch {
+                completion([], false)
+            }
         } failure: { (error) in
-            completion([String](), false)
+            completion([], false)
             print(error ?? "")
         }
     }

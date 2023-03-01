@@ -3,7 +3,7 @@
 //  SpeakEasy-Consumer
 //
 //  Created by Square Infosoft on 09/02/23.
-//
+//TO DO: remove file
 
 import UIKit
 import FlagPhoneNumber
@@ -185,9 +185,9 @@ final class EnterPhomeNumberMvpVC: UIViewController {
     }
     
     func navigate(bookingId: String) {
-        DispatchQueue.main.async {
-            Navigate.to.checkOutMvpVC(self, phoneNum: self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? "", totalTicket: Int(self.ticketNumberLbl.text ?? "") ?? 1, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: bookingId, venueId: self.venueId)
-        }
+//        DispatchQueue.main.async {
+//            Navigate.to.checkOutMvpVC(self, phoneNum: self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? "", totalTicket: Int(self.ticketNumberLbl.text ?? "") ?? 1, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: bookingId, venueId: self.venueId)
+//        }
     }
 }
 

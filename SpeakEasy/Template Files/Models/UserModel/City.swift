@@ -71,3 +71,14 @@ extension City: Codable {
         try values.encode(isDeleted, forKey: .isDeleted)
     }
 }
+
+struct MVPCity: Codable {
+    var label: String
+    var value: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(label, forKey: .label)
+        try container.encode(value, forKey: .value)
+    }
+}

@@ -15,7 +15,7 @@ class MVPCitySelectionVC: UIViewController {
 
     @IBOutlet weak var cityListTableView: UITableView!
     
-    var arrCityList = [String]()
+    var arrCityList = [MVPCity]()
     var cityListDelegate = MVPPresenter()
     var citySelectionDelegate: CitySelectionDelegate?
     
@@ -52,7 +52,7 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CitySelectionTableCell", for: indexPath) as? CitySelectionTableCell
         let data = arrCityList[indexPath.row]
-        cell?.lblCity.text = data
+        cell?.lblCity.text = data.value
         cell?.imgCity.isHidden = true
         cell?.containtView.backgroundColor = .clear
         cell?.contentView.backgroundColor = .clear
@@ -61,8 +61,8 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefault.shared.localCity = arrCityList[indexPath.row]
+        UserDefault.shared.localCity = arrCityList[indexPath.row].value
         navigationController?.popViewController(animated: true)
-        self.citySelectionDelegate?.citySelected(city: arrCityList[indexPath.row])
+        self.citySelectionDelegate?.citySelected(city: arrCityList[indexPath.row].value)
     }
 }

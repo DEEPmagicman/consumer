@@ -88,7 +88,7 @@ final class UserDefault: NSObject {
     
     var localCity: String {
         get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? ""
+            (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Chicago"
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
         }
