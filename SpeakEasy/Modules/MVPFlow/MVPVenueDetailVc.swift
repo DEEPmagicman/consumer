@@ -39,9 +39,7 @@ final class MVPVenueDetailVc: UIViewController {
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
-        continueBtn.alpha = 0.5
-        continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.setTitle("CONINTUE TO CHECKOUT", for: .normal)
+        updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
     }
@@ -58,7 +56,7 @@ final class MVPVenueDetailVc: UIViewController {
             if isSuccess {
                 self.venueDetails = venueDetail
                 self.setUpUI()
-                self.ticketTypeTableView.reloadData()
+                self.updateContinueBtn(forceRemove: true)
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -85,36 +83,11 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @objc func openAppleMap() {
-        self.getAUId(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0)
-        let coordinate = CLLocationCoordinate2DMake(41.893482, -87.629860) // (21.2049,72.8411)
+        let coordinate = CLLocationCoordinate2DMake(venueDetails?.latitude ?? 0, venueDetails?.longitude ?? 0)
         let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
         mapItem.name = venueDetails?.name
         mapItem.openInMaps()
     }
-    
-     func getAUId(latitude: Double, longitude: Double) {
-        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let options = MKMapSnapshotter.Options()
-        options.region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        options.size = CGSize(width: 1, height: 1)
-
-        let snapshotter = MKMapSnapshotter(options: options)
-        snapshotter.start { snapshot, error in
-            guard let snapshot = snapshot else {
-                if let error = error {
-                    print("Error occurred during snapshot: \(error.localizedDescription)")
-                }
-                return
-            }
-            let coordinatePoint = snapshot.point(for: coordinate)
-            let mapPoint = MKMapPoint(coordinate)
-            let coordinateMapPoint = MKMapPoint(coordinate)
-            let distance = mapPoint.distance(to: coordinateMapPoint)
-            let auId = Int(round(distance))
-            print("AUId: \(auId)")
-        }
-    }
-
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         tableViewHeight.constant = ticketTypeTableView.contentSize.height
@@ -195,6 +168,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.totalTicketLbl.text = "\(totalTicket)"
+        cell.minusBtn.alpha = totalTicket == 1 ? 0.5 : 1
         cell.selectionStyle = .none
         cell.layoutIfNeeded()
         return cell
@@ -204,31 +178,42 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
         if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         if indexPath.row == self.selectedTicket { return }
-        self.continueBtn.alpha = 1
-        self.continueBtn.isUserInteractionEnabled = true
-        self.selectedTicket = indexPath.row
-        self.totalTicket = 1
+        continueBtn.alpha = 1
+        continueBtn.isUserInteractionEnabled = true
+        selectedTicket = indexPath.row
+        totalTicket = 1
         ticketTypeTableView.reloadData()
-        let price = venueDetails?.appClipTicket?[selectedTicket].price ?? 0
-        self.continueBtn.setTitle("CONINTUE TO CHECKOUT -  $\(totalTicket*price)", for: .normal)
-
+        updateContinueBtn()
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
         if totalTicket > 1 {
             self.totalTicket -= 1
             self.ticketTypeTableView.reloadData()
-            let price = venueDetails?.appClipTicket?[selectedTicket].price ?? 0
-            self.continueBtn.setTitle("CONINTUE TO CHECKOUT -  $\(totalTicket*price)", for: .normal)
+            updateContinueBtn()
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
         self.totalTicket += 1
         self.ticketTypeTableView.reloadData()
-        let price = venueDetails?.appClipTicket?[selectedTicket].price ?? 0
-        self.continueBtn.setTitle("CONINTUE TO CHECKOUT -  $\(totalTicket*price)", for: .normal)
-
+        updateContinueBtn()
+    }
+    
+    func updateContinueBtn(forceRemove: Bool = false) {
+        DispatchQueue.main.async {
+            if forceRemove {
+                self.continueBtn.alpha = 0.5
+                self.continueBtn.isUserInteractionEnabled = false
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                self.selectedTicket = -1
+                self.totalTicket = 1
+                self.ticketTypeTableView.reloadData()
+                return
+            }
+            let price = self.venueDetails?.appClipTicket?[self.selectedTicket].price ?? 0
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
+        }
     }
 }
 
