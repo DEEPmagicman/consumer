@@ -24,6 +24,9 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var updatedAtLbl: UILabel!
+    @IBOutlet weak var headerVenueName: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var headerView: UIView!
     
     var venueId = ""
     var isFromAppClip = false
@@ -34,6 +37,9 @@ final class MVPVenueDetailVc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.headerVenueName.isHidden = true
+        self.headerView.backgroundColor = .clear
+        scrollView.delegate = self
         backBtn.isHidden = isFromAppClip
         ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
@@ -99,6 +105,7 @@ final class MVPVenueDetailVc: UIViewController {
         venueBgImg.sd_setImage(with: URL(string: imgStr),completed: nil)
         logoImg.sd_setImage(with: URL(string: logoStr),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
+        headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
         infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.\nPrices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
         infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
@@ -221,6 +228,18 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.venueId == uniqueId {
             getVenueDetail(withLoader: false)
+        }
+    }
+}
+
+extension MVPVenueDetailVc: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > 220 {
+            self.headerVenueName.isHidden = false
+            self.headerView.backgroundColor = .black
+        } else  {
+            self.headerVenueName.isHidden = true
+            self.headerView.backgroundColor = .clear
         }
     }
 }

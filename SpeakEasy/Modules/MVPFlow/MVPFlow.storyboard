@@ -526,10 +526,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ni6-di-W7q">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="116"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="74"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="abQ-vv-3BT">
-                                        <rect key="frame" x="16" y="48" width="40" height="20"/>
+                                        <rect key="frame" x="16" y="44" width="40" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="Jax-hb-5sG"/>
                                             <constraint firstAttribute="height" constant="20" id="Lw7-H6-5gW"/>
@@ -547,26 +547,26 @@
                                             <constraint firstAttribute="height" constant="85" id="MdI-77-EOC"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvt-xh-PG8">
-                                        <rect key="frame" x="137.5" y="25" width="139" height="20"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvt-xh-PG8">
+                                        <rect key="frame" x="199.5" y="36.5" width="15" height="35"/>
+                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="wFJ-l2-Dec" firstAttribute="centerX" secondItem="ni6-di-W7q" secondAttribute="centerX" id="06w-Yt-Yg5"/>
                                     <constraint firstItem="wFJ-l2-Dec" firstAttribute="top" secondItem="ni6-di-W7q" secondAttribute="top" constant="26" id="0IE-pD-x4b"/>
-                                    <constraint firstItem="abQ-vv-3BT" firstAttribute="centerY" secondItem="ni6-di-W7q" secondAttribute="centerY" id="71i-9L-dXa"/>
                                     <constraint firstItem="abQ-vv-3BT" firstAttribute="leading" secondItem="ni6-di-W7q" secondAttribute="leading" constant="16" id="Hnc-ja-fX7"/>
+                                    <constraint firstItem="hvt-xh-PG8" firstAttribute="centerY" secondItem="abQ-vv-3BT" secondAttribute="centerY" id="Hqw-9J-IiQ"/>
+                                    <constraint firstItem="hvt-xh-PG8" firstAttribute="centerX" secondItem="ni6-di-W7q" secondAttribute="centerX" id="Puh-Vr-7Oz"/>
+                                    <constraint firstAttribute="bottom" secondItem="abQ-vv-3BT" secondAttribute="bottom" constant="10" id="nKN-Ik-0nn"/>
                                     <constraint firstAttribute="bottom" secondItem="wFJ-l2-Dec" secondAttribute="bottom" constant="-9" id="qYC-V0-fQh"/>
-                                    <constraint firstItem="abQ-vv-3BT" firstAttribute="top" secondItem="ni6-di-W7q" secondAttribute="top" constant="48" id="qoa-Qr-Ytb"/>
+                                    <constraint firstItem="abQ-vv-3BT" firstAttribute="top" secondItem="ni6-di-W7q" secondAttribute="top" constant="44" id="qoa-Qr-Ytb"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
                                         <exclude reference="wFJ-l2-Dec"/>
-                                        <exclude reference="hvt-xh-PG8"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -598,11 +598,14 @@
                         <outlet property="backBtn" destination="abQ-vv-3BT" id="uRS-Cf-DXf"/>
                         <outlet property="contectNoLbl" destination="mxI-D6-WXn" id="JVa-VV-gpv"/>
                         <outlet property="continueBtn" destination="9P3-39-8sb" id="3KR-3M-wXK"/>
+                        <outlet property="headerVenueName" destination="hvt-xh-PG8" id="eZV-1t-rk8"/>
+                        <outlet property="headerView" destination="ni6-di-W7q" id="vpQ-qM-U0a"/>
                         <outlet property="infoLbl" destination="nyt-1g-cfM" id="prK-LB-52K"/>
                         <outlet property="liveLbl" destination="Va2-QZ-vxz" id="pIE-2F-CQ4"/>
                         <outlet property="locationLbl" destination="nSm-V7-b7k" id="2fU-F5-fJl"/>
                         <outlet property="logoImg" destination="fpG-0h-c5m" id="3Kp-KF-b2c"/>
                         <outlet property="mapView" destination="eH0-hZ-sxS" id="0G9-1f-IiF"/>
+                        <outlet property="scrollView" destination="GpO-nK-c1C" id="P0O-o8-Laa"/>
                         <outlet property="tableViewHeight" destination="tvZ-kQ-dN4" id="nS3-jJ-2RM"/>
                         <outlet property="ticketTypeTableView" destination="s0c-8q-s4k" id="zrY-4G-uFP"/>
                         <outlet property="updatedAtLbl" destination="wii-0q-TEg" id="kZL-Rf-to1"/>

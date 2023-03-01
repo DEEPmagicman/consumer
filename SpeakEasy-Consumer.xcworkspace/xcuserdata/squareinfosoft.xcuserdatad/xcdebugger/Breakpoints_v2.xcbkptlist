@@ -39,16 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B47F2303-518F-40E0-8131-B240A615337C"
+            uuid = "A1345322-5DF2-4ED4-8029-94B209D67A91"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/PaymentFlow/QRCodeMvpVC.swift"
+            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "generateQRCode(from:)"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "plusBtnClick(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -311,69 +311,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0394A712-2959-4001-B2B0-3005AA0AC787"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Template Files/Utilities/NavigationManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
-            landmarkName = "qrCodeMvpVC(_:totalTicket:ticketPrice:isGeneral:venueName:bookingId:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 4d75e8c1ac52c92d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "208"
-                  endingLineNumber = "208"
-                  offsetFromSymbolStart = "612">
-               </Location>
-               <Location
-                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 4d75e8c1ac52c92d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "208"
-                  endingLineNumber = "208"
-                  offsetFromSymbolStart = "848">
-               </Location>
-               <Location
-                  uuid = "0394A712-2959-4001-B2B0-3005AA0AC787 - 5b96eb8e22c4ba56"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.UIViewController) -&gt; Swift.Bool in Speakeasy.Navigate.qrCodeMvpVC(_: __C.UIViewController, totalTicket: Swift.Int, ticketPrice: Swift.Int, isGeneral: Swift.Bool, venueName: Swift.String, bookingId: Swift.String) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Utilities/NavigationManager.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "208"
-                  endingLineNumber = "208"
-                  offsetFromSymbolStart = "36">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "F98764C9-9FA0-4B80-93FC-AF05B39FDD07"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -403,139 +340,139 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "160">
+                  offsetFromSymbolStart = "139">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "224">
+                  offsetFromSymbolStart = "225">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "340">
+                  offsetFromSymbolStart = "385">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "588">
+                  offsetFromSymbolStart = "652">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "892">
+                  offsetFromSymbolStart = "1034">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1216">
+                  offsetFromSymbolStart = "1449">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1504">
+                  offsetFromSymbolStart = "1790">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1796">
+                  offsetFromSymbolStart = "2121">
                </Location>
                <Location
-                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - 3b7cb24b9746b72b"
+                  uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Array&lt;Any&gt;, SocketIO.SocketAckEmitter) -&gt; () in Speakeasy.WebSocketWrapper.addEventListener() -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Template%20Files/Network/WebSocketWrapper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "2088">
+                  offsetFromSymbolStart = "2452">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -572,49 +509,49 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - dc8b9dbdc31a6b90"
+                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 34e38787effb4278"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "Speakeasy.OnBoardingPresenter.uploadPhotoApi(image: __C.UIImage, completion: (Swift.String, Swift.Bool) -&gt; ()) -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "396">
+                  offsetFromSymbolStart = "390">
                </Location>
                <Location
-                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - dc8b9dbdc31a6b90"
+                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 34e38787effb4278"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "Speakeasy.OnBoardingPresenter.uploadPhotoApi(image: __C.UIImage, completion: (Swift.String, Swift.Bool) -&gt; ()) -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "476">
+                  offsetFromSymbolStart = "485">
                </Location>
                <Location
-                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - f0299adbef1ff124"
+                  uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 184180e1c3fed95c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 (Swift.Optional&lt;Any&gt;) -&gt; () in Speakeasy.OnBoardingPresenter.uploadPhotoApi(image: __C.UIImage, completion: (Swift.String, Swift.Bool) -&gt; ()) -&gt; ()"
                   moduleName = "Speakeasy"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/Deep/Speakeasy-Consumer-Alpha-Build/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
+                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/Login/onBoarding/OnBoardingPresenter.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "281"
                   endingLineNumber = "281"
-                  offsetFromSymbolStart = "92">
+                  offsetFromSymbolStart = "134">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -661,9 +598,9 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
-            landmarkName = "setUpUI()"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
