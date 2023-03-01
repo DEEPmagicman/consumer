@@ -8,6 +8,7 @@
 import UIKit
 import PassKit
 import StripeApplePay
+import FlagPhoneNumber
 
 enum PaymentStatus: String {
     case SUCCESS
@@ -16,36 +17,70 @@ enum PaymentStatus: String {
 
 final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
-    @IBOutlet private weak var phoneNoLbl: UILabel!
     @IBOutlet private weak var ticketTitleLbl: UILabel!
-    @IBOutlet private weak var ticketPriceLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!
+    @IBOutlet private weak var ticketSubTitleLbl: UILabel!
+    @IBOutlet private weak var countryCodeTextField: FPNTextField!
+    @IBOutlet private weak var phoneNumTextField: UITextField!
     @IBOutlet private weak var errorLbl: UILabel!
     @IBOutlet private weak var applePayBtn: PKPaymentButton!
     @IBOutlet private weak var ticketQuantityLbl: UILabel!
-    @IBOutlet weak var dressCodeInfoLbl: UILabel!
+    @IBOutlet private weak var dressCodeInfoLbl: UILabel!
     
-    var phoneNo = ""
     var totalTicket = 1
     var ticketPrice = 1
     var isGeneralAdmission = false
-    private var paymentIntent = ""
-    var paymentHistoryId = ""
+    var ticketInfo = ""
+    var appClipTicketId = ""
     var venueName = ""
-    var bookingId = ""
-    var isIntendCreated = false
-    var isApplePayNotSupported = false
+    private var paymentIntent = ""
+    private var paymentHistoryId = ""
+    private var bookingId = ""
+    private var isIntendCreated = false
+    private var isApplePayNotSupported = false
     private var isPaymentInitiated = false
+    private var checkFPNField = FPNTextField()
+    private var countryCode = ""
+    private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
+    private var isValidNo = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
-        dressCodeInfoLbl.text = "*All entries subject to doorman discretion*  At \(venueName), we encourage smart, casual-elegant attire."
-        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
-        phoneNoLbl.text = phoneNo
+        applePayBtn.alpha = 0.5
+        applePayBtn.isUserInteractionEnabled = false
+
+        countryCodeTextField.textColor = .white
+        
+        phoneNumTextField.delegate = self
+        checkFPNField.delegate = self
+        
+        countryCodeTextField.delegate = self
+        countryCodeTextField.setFlag(countryCode: .US)
+        countryCode = "+1"
+        
+        listController.setup(repository: countryCodeTextField.countryRepository)
+        listController.didSelect = { [weak self] country in
+            self?.countryCodeTextField.setFlag(countryCode: country.code)
+        }
+        
+        countryCodeTextField.flagButtonSize = CGSize(width: 44, height: 44)
+        countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        countryCodeTextField.displayMode = .list
+
+        let items = [
+            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
+            UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
+            UIBarButtonItem(title: "Item 2", style: .plain, target: self, action: nil)
+        ]
+        countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
+        
+        listController.showCountryPhoneCode = true
+
+        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
         ticketQuantityLbl.text = "\(totalTicket)x"
         ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
-        ticketPriceLbl.text = "$\(totalTicket * ticketPrice)"
+        ticketSubTitleLbl.text = ticketInfo
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
@@ -56,17 +91,31 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             isApplePayNotSupported = true
             errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
         }
-        checkApplePay()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
+    private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
+        let toolbar: UIToolbar = UIToolbar()
+        
+        toolbar.barStyle = UIBarStyle.default
+        toolbar.items = items
+        toolbar.sizeToFit()
+        
+        return toolbar
+    }
+    
+    @objc private func dismissCountries() {
+        listController.dismiss(animated: true, completion: nil)
+    }
+    
     @objc func checkApplePay() {
+        if isValidNo == false { return }
         if StripeAPI.deviceSupportsApplePay() {
             if isIntendCreated { return }
-            addPaymentApi()
+            createBooking()
             applePayBtn.isHidden = false
             errorLbl.isHidden = true
             applePayBtn.alpha = 0.5
@@ -180,10 +229,12 @@ extension CheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
+            AppClipLoader.showLoader(view)
             paymentStatus(.SUCCESS) { [weak self] in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
                     if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+                        AppClipLoader.hideLoader()
                         vc.totalTicket = self.totalTicket
                         vc.isGeneralAdmission = self.isGeneralAdmission
                         vc.ticketPrice = self.ticketPrice
@@ -203,6 +254,98 @@ extension CheckOutClipVC {
 //            alertPopup("Alert", "Payment interrupted")
         @unknown default:
             fatalError()
+        }
+    }
+
+    func createBooking() {
+        AppClipLoader.showLoader(self.view)
+        let parameters = "{\n  \"phone\": \"\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")\",\n  \"appclipTicketId\": \"\(appClipTicketId)\",\n  \"ticketQuantity\": \(totalTicket)\n}"
+        let postData = parameters.data(using: .utf8)
+        
+        guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
+                return
+            }
+            if let bookingId = json["id"] as? String {
+                self.bookingId = bookingId
+                self.addPaymentApi()
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+                self.bookingId = bookingId
+                self.addPaymentApi()
+            } else if let error = json["error"] as? String, let message = json["message"] as? String {
+                AppClipLoader.hideLoader()
+                self.alertPopup(error, message)
+            } else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Booking failed")
+            }
+        }
+        task.resume()
+    }
+}
+
+extension CheckOutClipVC: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        checkFPNField.text = textField.text
+        checkFPNField.sendActions(for: .editingChanged)
+        phoneNumTextField.delegate = nil
+        phoneNumTextField.text = checkFPNField.text
+        phoneNumTextField.delegate = self
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        applePayBtn.alpha = 0.5
+        applePayBtn.isUserInteractionEnabled = false
+        if isValidNo {
+            checkApplePay()
+        } else {
+            self.alertPopup("Alert", "Enter valid number")
+        }
+    }
+}
+
+extension CheckOutClipVC: FPNTextFieldDelegate {
+    func fpnDisplayCountryList() {
+        let navigationViewController = UINavigationController(rootViewController: listController)
+        listController.title = "Countries"
+        listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
+        present(navigationViewController, animated: true, completion: nil)
+    }
+    
+    func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
+        if let countryCode = FPNCountryCode(rawValue: code) {
+            if countryCode == checkFPNField.selectedCountry?.code { return }
+            checkFPNField.delegate = nil
+            checkFPNField.setFlag(countryCode: countryCode)
+            checkFPNField.delegate = self
+            checkFPNField.sendActions(for: .editingChanged)
+            self.countryCode = dialCode
+        }
+    }
+    
+    func fpnDidValidatePhoneNumber(textField: FPNTextField, isValid: Bool) {
+        if textField == countryCodeTextField {
+            phoneNumTextField.placeholder = countryCodeTextField.placeholder
+            countryCodeTextField.placeholder = ""
+            countryCodeTextField.text = ""
+        } else if textField == checkFPNField {
+            isValidNo = isValid
         }
     }
 }

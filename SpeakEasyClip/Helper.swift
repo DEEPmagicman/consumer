@@ -34,12 +34,14 @@ extension UILabel {
 struct AppClipLoader {
     static private var indicator = UIActivityIndicatorView(style: .medium)
     static func showLoader(_ view: UIView) {
-        indicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        indicator.center = view.center
-        indicator.color = .white
-        view.addSubview(indicator)
-        view.bringSubviewToFront(indicator)
-        indicator.startAnimating()
+        DispatchQueue.main.async {
+            indicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+            indicator.center = view.center
+            indicator.color = .white
+            view.addSubview(indicator)
+            view.bringSubviewToFront(indicator)
+            indicator.startAnimating()
+        }
     }
     static func hideLoader() {
         DispatchQueue.main.async {
