@@ -141,7 +141,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.checkOutMvpVC(self, totalTicket: self.totalTicket, ticketPrice: venueDetails?.appClipTicket?[selectedTicket].price ?? 0, isGeneral: venueDetails?.appClipTicket?[selectedTicket].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", appClipTicketId: venueDetails?.appClipTicket?[selectedTicket].id ?? "", venueId: self.venueId, ticketInfo: venueDetails?.appClipTicket?[selectedTicket].description ?? "")
+        Navigate.to.checkOutMvpVC(self, totalTicket: self.totalTicket, ticketPrice: venueDetails?.appClipTicket?[selectedTicket].price ?? 0, isGeneral: venueDetails?.appClipTicket?[selectedTicket].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", appClipTicketId: venueDetails?.appClipTicket?[selectedTicket].id ?? "", venueId: self.venueId, ticketInfo: venueDetails?.appClipTicket?[selectedTicket].description ?? "",venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "")
     }
     
     @IBAction private func onClickBack(_ sender: Any) {

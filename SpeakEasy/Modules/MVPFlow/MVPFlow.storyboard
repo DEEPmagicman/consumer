@@ -193,8 +193,12 @@
                                                     <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LD9-tZ-mgQ">
                                                         <rect key="frame" x="0.0" y="0.0" width="414" height="298"/>
                                                     </imageView>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BounceLogoLarge" translatesAutoresizingMaskIntoConstraints="NO" id="fpG-0h-c5m">
-                                                        <rect key="frame" x="177.5" y="119.5" width="59" height="59"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fpG-0h-c5m">
+                                                        <rect key="frame" x="117" y="59" width="180" height="180"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="fpG-0h-c5m" secondAttribute="height" multiplier="1:1" id="7sU-R9-s80"/>
+                                                            <constraint firstAttribute="width" constant="180" id="tdH-iX-he6"/>
+                                                        </constraints>
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.054901960780000002" green="0.054901960780000002" blue="0.054901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -934,9 +938,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WelcomeBackground" translatesAutoresizingMaskIntoConstraints="NO" id="goY-OW-G01">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3AA-LW-duF">
                                 <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
@@ -1001,7 +1002,7 @@
                                         <rect key="frame" x="0.0" y="178" width="414" height="586"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="dataSource" destination="CuA-eC-F38" id="2Z8-Ws-dkm"/>
@@ -1009,7 +1010,7 @@
                                         </connections>
                                     </tableView>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="yGi-60-8pV" firstAttribute="top" secondItem="yVd-BV-xih" secondAttribute="bottom" constant="21" id="97A-UQ-kEd"/>
                                     <constraint firstItem="V9o-VX-CVJ" firstAttribute="leading" secondItem="3AA-LW-duF" secondAttribute="leading" id="Hs3-1g-jaW"/>
@@ -1035,16 +1036,12 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="s6I-rP-HyK"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="s6I-rP-HyK" firstAttribute="trailing" secondItem="3AA-LW-duF" secondAttribute="trailing" id="FbF-BO-fjG"/>
-                            <constraint firstItem="goY-OW-G01" firstAttribute="trailing" secondItem="s6I-rP-HyK" secondAttribute="trailing" id="I6I-U6-zzS"/>
                             <constraint firstItem="s6I-rP-HyK" firstAttribute="bottom" secondItem="3AA-LW-duF" secondAttribute="bottom" id="ZvV-Sc-GCe"/>
                             <constraint firstItem="3AA-LW-duF" firstAttribute="top" secondItem="s6I-rP-HyK" secondAttribute="top" id="bqC-3z-auN"/>
-                            <constraint firstItem="goY-OW-G01" firstAttribute="top" secondItem="IJf-l5-crg" secondAttribute="top" id="dBC-l6-jlM"/>
                             <constraint firstItem="3AA-LW-duF" firstAttribute="leading" secondItem="s6I-rP-HyK" secondAttribute="leading" id="f4c-GR-BKk"/>
-                            <constraint firstAttribute="bottom" secondItem="goY-OW-G01" secondAttribute="bottom" id="fA2-Bm-R0B"/>
-                            <constraint firstItem="goY-OW-G01" firstAttribute="leading" secondItem="s6I-rP-HyK" secondAttribute="leading" id="m83-xp-gui"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1059,11 +1056,9 @@
     <resources>
         <image name="ArrowRight" width="8.5" height="6"/>
         <image name="BackArrow" width="26.5" height="19"/>
-        <image name="BounceLogoLarge" width="59" height="59"/>
         <image name="LocationPin" width="16.5" height="22"/>
         <image name="LogoHome" width="172" height="85"/>
         <image name="SearchIcon" width="19" height="19"/>
-        <image name="WelcomeBackground" width="2708.5" height="5860"/>
         <image name="ic-call" width="12" height="15.5"/>
         <image name="ic-customer-service" width="24" height="24"/>
         <image name="ic-location" width="12.5" height="15"/>

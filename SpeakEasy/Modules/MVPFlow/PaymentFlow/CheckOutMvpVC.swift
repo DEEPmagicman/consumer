@@ -29,6 +29,8 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var isGeneralAdmission = false
     var ticketInfo = ""
     var appClipTicketId = ""
+    var venueAttachment = ""
+    var venueLogo = ""
     private var checkFPNField = FPNTextField()
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
@@ -209,7 +211,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus {
-                    Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+                    Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -278,7 +280,7 @@ extension CheckOutMvpVC {
         switch status {
         case .success:
             paymentStatus {
-                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId)
+                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
             }
         case .error:
             self.isPaymentInitiated = false

@@ -35,16 +35,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="380" height="240"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LIVE" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J1b-Cc-XVp" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="335" y="14" width="32" height="22.5"/>
+                                <rect key="frame" x="335" y="14.000000000000002" width="32" height="22.666666666666671"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
                                 <color key="textColor" red="0.0" green="1" blue="0.58039215686274503" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bounce" translatesAutoresizingMaskIntoConstraints="NO" id="iiU-45-bGB">
-                                <rect key="frame" x="162.5" y="92.5" width="55" height="55"/>
+                                <rect key="frame" x="162.66666666666666" y="92.666666666666671" width="55" height="55.000000000000014"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30 mins" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFl-AD-2Ct" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="319" y="39.5" width="48" height="17"/>
+                                <rect key="frame" x="319" y="39.666666666666664" width="48" height="17"/>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="12"/>
                                 <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -53,7 +53,7 @@
                                 <rect key="frame" x="0.0" y="170" width="380" height="70"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TAO Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ebd-Ae-cyW" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="10" width="133.5" height="30"/>
+                                        <rect key="frame" x="10" y="10" width="137" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="2v8-dW-lLy"/>
                                         </constraints>
@@ -68,7 +68,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uxV-d8-axm">
-                                        <rect key="frame" x="10" y="40" width="213.5" height="20"/>
+                                        <rect key="frame" x="10" y="40" width="213.66666666666666" height="20"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locationIcon2" translatesAutoresizingMaskIntoConstraints="NO" id="Ydm-e1-W4j">
                                                 <rect key="frame" x="0.0" y="3" width="11" height="14"/>
@@ -79,7 +79,7 @@
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="632 N. Dearborn St. Chicago, IL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RV5-MP-tI2" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                                <rect key="frame" x="14" y="1" width="199.5" height="18.5"/>
+                                                <rect key="frame" x="14" y="0.66666666666665719" width="199.66666666666666" height="18.666666666666668"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -164,8 +164,8 @@
                 <outlet property="liveLbl" destination="J1b-Cc-XVp" id="tG8-9K-Dg3"/>
                 <outlet property="locationLbl" destination="RV5-MP-tI2" id="aER-Aw-Is2"/>
                 <outlet property="logoImg" destination="iiU-45-bGB" id="YFd-eG-jmt"/>
+                <outlet property="updatedAtLbl" destination="vFl-AD-2Ct" id="VKL-My-nY4"/>
                 <outlet property="venueEventImg" destination="qdT-B4-dzN" id="hiE-Bs-dez"/>
-                <outlet property="waitTimeLbl" destination="vFl-AD-2Ct" id="PXe-0M-XGc"/>
             </connections>
             <point key="canvasLocation" x="198.55072463768118" y="212.61160714285714"/>
         </tableViewCell>

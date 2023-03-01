@@ -186,7 +186,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String) {
+    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String,venueAttachment: String, venueLogo:String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
         vc.totalTicket = totalTicket
         vc.ticketPrice = ticketPrice
@@ -195,16 +195,21 @@ final class Navigate {
         vc.appClipTicketId = appClipTicketId
         vc.venueId = venueId
         vc.ticketInfo = ticketInfo
+        vc.venueAttachment = venueAttachment
+        vc.venueLogo = venueLogo
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String) {
+    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String,ticketInfo: String,venueAttachment: String, venueLogo:String) {
         let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(QRCodeMvpVC.self)
         vc.totalTicket = totalTicket
         vc.isGeneralAdmission = isGeneral
         vc.ticketPrice = ticketPrice
         vc.venueName = venueName
         vc.bookingId = bookingId
+        vc.ticketInfo = ticketInfo
+        vc.venueAttachment = venueAttachment
+        vc.venueLogo = venueLogo
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             sender.navigationController?.viewControllers = [homeVc,vc]
         }

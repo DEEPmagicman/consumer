@@ -14,8 +14,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/VenueTableCell/venueTableCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "setData(data:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/PaymentFlow/CheckOutMvpVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "paymentStatus(completion:)"
             landmarkType = "7">
             <Locations>
@@ -256,7 +256,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "114"
             endingLineNumber = "114"
-            landmarkName = "checkApplePay()"
+            landmarkName = "dismissCountries()"
             landmarkType = "7">
             <Locations>
                <Location
@@ -703,22 +703,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "07A77B0D-5231-4497-8AEA-7C8DD2FF237D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/PaymentFlow/QRCodeMvpVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "onClickClose(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "A770DE5B-BDC6-44FD-9B2A-492E17716E9C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -726,8 +710,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
             landmarkName = "mvpCityListAPi(completion:)"
             landmarkType = "7">
             <Locations>
@@ -789,8 +773,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
             landmarkName = "mvpCityListAPi(completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -821,8 +805,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueListVc.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
             landmarkName = "onClickSetting(_:)"
             landmarkType = "7">
          </BreakpointContent>
