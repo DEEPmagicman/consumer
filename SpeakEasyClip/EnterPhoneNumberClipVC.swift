@@ -202,12 +202,12 @@ final class EnterPhoneNumberClipVC: UIViewController {
         DispatchQueue.main.async {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
                 AppClipLoader.hideLoader()
-                vc.phoneNo = self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
+//                vc.phoneNo = self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "") ?? ""
                 vc.totalTicket = Int(self.ticketNumberLbl.text ?? "") ?? 1
                 vc.ticketPrice = self.ticketPrice
                 vc.isGeneralAdmission = self.isGeneralAdmission
                 vc.venueName = self.venueName
-                vc.bookingId = bookingId
+//                vc.bookingId = bookingId
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }

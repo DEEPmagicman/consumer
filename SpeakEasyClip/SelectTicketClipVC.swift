@@ -107,11 +107,11 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.ticketPriceLbl.text = "FREE"
         }
-        if indexPath.row == (self.venueDetail?.appClipTicket?.count ?? 0) - 1{
-            cell.lineView.isHidden = true
-        } else {
-            cell.lineView.isHidden = false
-        }
+//        if indexPath.row == (self.venueDetail?.appClipTicket?.count ?? 0) - 1{
+//            cell.lineView.isHidden = true
+//        } else {
+//            cell.lineView.isHidden = false
+//        }
         if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
@@ -134,7 +134,10 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.venueDetail?.bookingStatus != "OPEN" || venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
         if self.venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "EnterPhoneNumberClipVC")) as? EnterPhoneNumberClipVC {
+        
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
+            vc.totalTicket = 1
+            vc.ticketInfo = self.venueDetail?.appClipTicket?[indexPath.row].description ?? ""
             vc.ticketPrice = self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0
             vc.isGeneralAdmission = indexPath.row == 0
             vc.venueName = self.venueDetail?.name ?? ""
