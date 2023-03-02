@@ -9,7 +9,7 @@ import Foundation
 
 struct APIBuilder {
     
-    static private let baseURL = "https://api.speakeasygo.com" //"https://speakeasy-stag.cmdev.cc" 
+    static private let baseURL = "https://speakeasy-stag.cmdev.cc"  //"https://api.speakeasygo.com" 
     static private let route = "/consumer"
     static private let auth = "/auth"
     static private let phoneLogin = "/phone-login"

@@ -36,15 +36,16 @@ class venueTableCell: UITableViewCell {
         self.eventNameLbl.text = data.name
         self.locationLbl.text = data.address
         self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) )"
-        data.appClipTicket?.forEach({ ganral in
-            if ganral.name == "GENERALTICKET" {
-                if ganral.price >= 5 {
-                    self.coverLbl.text = "$\(ganral.price)"
-                } else {
-                    self.coverLbl.text = "FREE"
-                }
+        if let ticket = data.appClipTicket?.first(where: { $0.name == "GENERALTICKET" && $0.status == "ENABLED" }) {
+            if ticket.price >= 5 {
+                self.coverLbl.text = "$\(ticket.price)"
+            } else {
+                self.coverLbl.text = "FREE"
             }
-        })
+        } else if let ticket = data.appClipTicket?.first(where: { $0.name != "GENERALTICKET"}) {
+            self.coverLbl.text = "$\(ticket.price)"
+        }
+
         if data.bookingStatus == "OPEN" {
             self.liveLbl.text = data.displayWaitTime
             self.liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
