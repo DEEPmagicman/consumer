@@ -307,7 +307,7 @@
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check Out" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8r-ne-xLp">
-                                                        <rect key="frame" x="128.66666666666669" y="0.0" width="135.66666666666669" height="35"/>
+                                                        <rect key="frame" x="130.33333333333337" y="0.0" width="132.66666666666663" height="35"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -379,7 +379,7 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter phone number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sMw-Ng-3qH">
-                                                <rect key="frame" x="16" y="75" width="192" height="25.333333333333329"/>
+                                                <rect key="frame" x="16" y="75" width="187.33333333333334" height="25.333333333333329"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -409,7 +409,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="1X" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KYH-Uy-FFS">
-                                                        <rect key="frame" x="322.33333333333331" y="25.333333333333371" width="19.666666666666686" height="25.333333333333329"/>
+                                                        <rect key="frame" x="323" y="25.333333333333371" width="19" height="25.333333333333329"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -425,7 +425,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LDB-R2-z1s">
-                                                        <rect key="frame" x="10" y="83.333333333333371" width="41.666666666666664" height="24"/>
+                                                        <rect key="frame" x="10" y="83.333333333333371" width="41" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="8qQ-5n-um3"/>
                                                         </constraints>
@@ -758,20 +758,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="AvQ-CA-AFn">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="AvQ-CA-AFn">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W4a-qo-JLP">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="741"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ydC-wJ-LwK">
+                                            <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ydC-wJ-LwK">
                                                 <rect key="frame" x="0.0" y="0.0" width="393" height="240"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="240" id="E5I-9D-C8E"/>
                                                 </constraints>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouE-Ae-snf">
-                                                <rect key="frame" x="16" y="15" width="44" height="44"/>
+                                                <rect key="frame" x="16" y="45" width="44" height="44"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="44" id="2xo-DW-wyr"/>
@@ -789,7 +789,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9jB-Qw-Kgr">
-                                                <rect key="frame" x="333" y="15" width="44" height="44"/>
+                                                <rect key="frame" x="333" y="45" width="44" height="44"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="44" id="1rW-Ap-Pt2"/>
                                                     <constraint firstAttribute="height" constant="44" id="FHb-J5-W3Z"/>
@@ -855,7 +855,7 @@
                                             <constraint firstItem="vIQ-bX-RrM" firstAttribute="leading" secondItem="gFM-2F-w6J" secondAttribute="leading" id="L92-ai-JqS"/>
                                             <constraint firstItem="GpQ-ib-hhc" firstAttribute="centerX" secondItem="W4a-qo-JLP" secondAttribute="centerX" id="LxG-sU-g1X"/>
                                             <constraint firstItem="c4Z-Ag-iXL" firstAttribute="centerY" secondItem="ydC-wJ-LwK" secondAttribute="centerY" constant="20" id="Rvx-hU-OZC"/>
-                                            <constraint firstItem="9jB-Qw-Kgr" firstAttribute="top" secondItem="W4a-qo-JLP" secondAttribute="top" constant="15" id="TgV-Io-hj7"/>
+                                            <constraint firstItem="9jB-Qw-Kgr" firstAttribute="top" secondItem="W4a-qo-JLP" secondAttribute="top" constant="45" id="TgV-Io-hj7"/>
                                             <constraint firstItem="pPW-YC-uy1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gFM-2F-w6J" secondAttribute="trailing" constant="10" id="Tzi-2d-E9W"/>
                                             <constraint firstItem="vIQ-bX-RrM" firstAttribute="top" secondItem="gFM-2F-w6J" secondAttribute="bottom" id="UOi-x7-myG"/>
                                             <constraint firstItem="GpQ-ib-hhc" firstAttribute="leading" secondItem="W4a-qo-JLP" secondAttribute="leading" constant="40" id="Whh-fJ-MZV"/>
@@ -866,7 +866,7 @@
                                             <constraint firstItem="ouE-Ae-snf" firstAttribute="leading" secondItem="W4a-qo-JLP" secondAttribute="leading" constant="16" id="bVC-A3-q0B"/>
                                             <constraint firstAttribute="bottom" secondItem="oTf-hj-51b" secondAttribute="bottom" constant="37" id="g1C-PE-lAS"/>
                                             <constraint firstItem="pPW-YC-uy1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vIQ-bX-RrM" secondAttribute="trailing" constant="10" id="k5b-bq-hJZ"/>
-                                            <constraint firstItem="ouE-Ae-snf" firstAttribute="top" secondItem="W4a-qo-JLP" secondAttribute="top" constant="15" id="sbe-Rl-ovW"/>
+                                            <constraint firstItem="ouE-Ae-snf" firstAttribute="top" secondItem="W4a-qo-JLP" secondAttribute="top" constant="45" id="sbe-Rl-ovW"/>
                                         </constraints>
                                     </view>
                                 </subviews>

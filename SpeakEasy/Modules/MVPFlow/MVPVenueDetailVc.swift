@@ -27,6 +27,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var headerVenueName: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     
     var venueId = ""
     var isFromAppClip = false
@@ -110,7 +111,7 @@ final class MVPVenueDetailVc: UIViewController {
         infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.\nPrices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
         infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
         if venueDetails?.bookingStatus == "OPEN" {
-            liveLbl.text = "\(venueDetails?.bookingWaiting ?? "") Wait"
+            liveLbl.text = venueDetails?.displayWaitTime
             liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
         } else {
             liveLbl.text = "CLOSED"
@@ -122,6 +123,15 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         Navigate.to.checkOutMvpVC(self, totalTicket: self.totalTicket, ticketPrice: venueDetails?.appClipTicket?[selectedTicket].price ?? 0, isGeneral: venueDetails?.appClipTicket?[selectedTicket].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", appClipTicketId: venueDetails?.appClipTicket?[selectedTicket].id ?? "", venueId: self.venueId, ticketInfo: venueDetails?.appClipTicket?[selectedTicket].description ?? "",venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "")
+    }
+    
+    @IBAction func onClickShare(_ sender: Any) {
+        let msgText = """
+ Download Speaskeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
+
+ Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+ """
+         Utility.main.shareSocialWith(text: msgText)
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
@@ -185,8 +195,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
         if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         if indexPath.row == self.selectedTicket { return }
-        continueBtn.alpha = 1
-        continueBtn.isUserInteractionEnabled = true
+        continueBtn.isHidden = false
+        scrollViewBottomConstraint.constant = 90
         selectedTicket = indexPath.row
         totalTicket = 1
         ticketTypeTableView.reloadData()
@@ -210,8 +220,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func updateContinueBtn(forceRemove: Bool = false) {
         DispatchQueue.main.async {
             if forceRemove {
-                self.continueBtn.alpha = 0.5
-                self.continueBtn.isUserInteractionEnabled = false
+                self.continueBtn.isHidden = true
+                self.scrollViewBottomConstraint.constant = 30
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
                 self.selectedTicket = -1
                 self.totalTicket = 1
