@@ -45,6 +45,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var countryCode = ""
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private var isValidNo = false
+    private var isChangingFlag = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +111,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func dismissCountries() {
+        isChangingFlag = false
         listController.dismiss(animated: true, completion: nil)
     }
     
@@ -316,6 +318,7 @@ extension CheckOutClipVC: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         applePayBtn.alpha = 0.5
         applePayBtn.isUserInteractionEnabled = false
+        if isChangingFlag { return }
         if isValidNo {
             checkApplePay()
         } else {
@@ -328,14 +331,17 @@ extension CheckOutClipVC: UITextFieldDelegate {
 
 extension CheckOutClipVC: FPNTextFieldDelegate {
     func fpnDisplayCountryList() {
+        isChangingFlag = true
         let navigationViewController = UINavigationController(rootViewController: listController)
         listController.title = "Countries"
         listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
+        listController.navigationController?.presentationController?.delegate = self
         present(navigationViewController, animated: true, completion: nil)
     }
     
     func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
         if let countryCode = FPNCountryCode(rawValue: code) {
+            isChangingFlag = false
             if countryCode == checkFPNField.selectedCountry?.code { return }
             checkFPNField.delegate = nil
             checkFPNField.setFlag(countryCode: countryCode)
@@ -371,5 +377,11 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
                 }
             }
         }
+    }
+}
+
+extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        isChangingFlag = false
     }
 }

@@ -44,20 +44,15 @@ final class MVPVenueListVc: UIViewController {
         closeFrom = 0
         openHasMore = false
         closeHasMore = false
-        openVenueList.removeAll()
-        closeVenueList.removeAll()
         fetchAllOpenVenueForMVP()
         fetchAllCloseVenueForMVP()
     }
     
-    private func refreshData(withLoader:  Bool = true) {
+    private func refreshData(withLoader: Bool = true) {
         openFrom = 0
         closeFrom = 0
         openHasMore = false
         closeHasMore = false
-        openVenueList.removeAll()
-        closeVenueList.removeAll()
-        venueListTableView.reloadData()
         fetchAllOpenVenueForMVP(withLoader: withLoader)
         fetchAllCloseVenueForMVP(withLoader: withLoader)
     }
@@ -80,6 +75,9 @@ final class MVPVenueListVc: UIViewController {
                 return
             }
             if isSuccess {
+                if self.openFrom == 0 {
+                    self.openVenueList.removeAll()
+                }
                 for venue in openVenueList {
                     self.openVenueList.append(venue)
                 }
@@ -113,6 +111,9 @@ final class MVPVenueListVc: UIViewController {
                 return
             }
             if isSuccess {
+                if self.closeFrom == 0 {
+                    self.closeVenueList.removeAll()
+                }
                 for venue in closeVenueList {
                     self.closeVenueList.append(venue)
                 }
@@ -135,13 +136,11 @@ final class MVPVenueListVc: UIViewController {
             Loader.hide()
         }
     }
-
-    
 }
 
 extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-            return 2
+        2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -151,11 +150,12 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
            return closeVenueList.count
         }
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
-        let data: ClipVenue?
+        var data: ClipVenue?
         if indexPath.section == 0 {
-             data = openVenueList[indexPath.row]
+            data = openVenueList[indexPath.row]
             cell.coverLbl.isHidden = false
             cell.updatedAtLbl.isHidden = false
         } else {
@@ -163,14 +163,16 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
             cell.coverLbl.isHidden = true
             cell.updatedAtLbl.isHidden = true
         }
-        cell.setData(data: data!)
+        if let data = data {
+            cell.setData(data: data)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             Navigate.to.MVPVenueDetailViewController(self,venueId: self.openVenueList[indexPath.row].uniqueId)
-        } else { return }
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -220,13 +222,13 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
 
 extension MVPVenueListVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
-        self.refreshData(withLoader: false)
+        refreshData(withLoader: false)
     }
 }
 
 extension MVPVenueListVc: CitySelectionDelegate {
     func citySelected(city: String) {
-        self.refreshData()
+        refreshData()
         cityNameLbl.text = UserDefault.shared.localCity
     }
 }
