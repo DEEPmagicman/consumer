@@ -44,6 +44,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     private var isValidNo = false
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private var countryCode = ""
+    private var isChangingFlag = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +122,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func dismissCountries() {
+        isChangingFlag = false
         listController.dismiss(animated: true, completion: nil)
     }
 
@@ -312,6 +314,7 @@ extension CheckOutMvpVC: UITextFieldDelegate {
         applePayBtn.isUserInteractionEnabled = false
         creditCardPayBtn.alpha = 0.5
         creditCardPayBtn.isUserInteractionEnabled = false
+        if isChangingFlag { return }
         if isValidNo {
             checkApplePay()
             createBooking()
@@ -325,14 +328,17 @@ extension CheckOutMvpVC: UITextFieldDelegate {
 
 extension CheckOutMvpVC: FPNTextFieldDelegate {
     func fpnDisplayCountryList() {
+        isChangingFlag = true
         let navigationViewController = UINavigationController(rootViewController: listController)
         listController.title = "Countries"
         listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
+        listController.navigationController?.presentationController?.delegate = self
         present(navigationViewController, animated: true, completion: nil)
     }
     
     func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
         if let countryCode = FPNCountryCode(rawValue: code) {
+            isChangingFlag = false
             if countryCode == checkFPNField.selectedCountry?.code { return }
             checkFPNField.delegate = nil
             checkFPNField.setFlag(countryCode: countryCode)
@@ -378,3 +384,8 @@ extension CheckOutMvpVC: WebSocketCallBackDelegate {
     }
 }
 
+extension CheckOutMvpVC: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        isChangingFlag = false
+    }
+}
