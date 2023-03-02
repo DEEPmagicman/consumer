@@ -807,7 +807,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "66"
             endingLineNumber = "66"
-            landmarkName = "onClickSetting(_:)"
+            landmarkName = "onClickCityName(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
