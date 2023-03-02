@@ -39,6 +39,17 @@ struct ClipVenue: Codable {
     var longitude: Double {
         Double(lng) ?? 0.0
     }
+    var displayWaitTime: String {
+        if let waitTime = bookingWaiting {
+            if waitTime.contains("mins") || waitTime.contains("Hour") {
+                return "\(waitTime.replacingOccurrences(of: "mins", with: "Minute")) Wait"
+            } else {
+                return waitTime
+            }
+        } else {
+            return ""
+        }
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

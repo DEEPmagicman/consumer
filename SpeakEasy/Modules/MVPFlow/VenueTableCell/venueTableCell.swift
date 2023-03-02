@@ -46,7 +46,7 @@ class venueTableCell: UITableViewCell {
             }
         })
         if data.bookingStatus == "OPEN" {
-            self.liveLbl.text = "\(data.bookingWaiting ?? "") Wait"
+            self.liveLbl.text = data.displayWaitTime
             self.liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
         } else {
             self.liveLbl.text = "CLOSED"
