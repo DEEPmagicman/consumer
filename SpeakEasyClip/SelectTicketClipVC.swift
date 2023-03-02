@@ -17,8 +17,8 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet private weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var venueInfoLbl: UILabel!
-    @IBOutlet weak var continueBtnView: UIView!
-    
+    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
+
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
@@ -124,7 +124,8 @@ final class SelectTicketClipVC: UIViewController {
     func updateContinueBtn(forceRemove: Bool = false) {
         DispatchQueue.main.async {
             if forceRemove {
-                self.continueBtnView.isHidden = true
+                self.continueBtn.isHidden = true
+                self.scrollViewBottomConstraint.constant = 20
                 self.selectedTicketIndex = nil
                 self.totalTicket = 1
                 self.ticketTypeTableView.reloadData()
@@ -180,7 +181,8 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         totalTicket = 1
         ticketTypeTableView.reloadData()
         updateContinueBtn()
-        continueBtnView.isHidden = false
+        continueBtn.isHidden = false
+        scrollViewBottomConstraint.constant = 98
     }
 }
 
