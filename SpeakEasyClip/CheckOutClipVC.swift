@@ -311,6 +311,9 @@ extension CheckOutClipVC: UITextFieldDelegate {
         checkFPNField.text = textField.text
         checkFPNField.sendActions(for: .editingChanged)
         phoneNumTextField.delegate = nil
+        if textField.text?.contains("+") == true && checkFPNField.text?.contains("+") == false {
+            checkFPNField.sendActions(for: .editingChanged)
+        }
         phoneNumTextField.text = checkFPNField.text
         phoneNumTextField.delegate = self
     }
@@ -347,6 +350,9 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
             checkFPNField.setFlag(countryCode: countryCode)
             checkFPNField.delegate = self
             checkFPNField.sendActions(for: .editingChanged)
+            phoneNumTextField.delegate = nil
+            phoneNumTextField.text = checkFPNField.text
+            phoneNumTextField.delegate = self
             self.countryCode = dialCode
         }
     }
