@@ -18,12 +18,14 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var venueInfoLbl: UILabel!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var tonightLbl: UILabel!
 
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
     private var selectedTicketIndex: Int?
     private var totalTicket = 1
+    private var maxTicket = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,9 +83,11 @@ final class SelectTicketClipVC: UIViewController {
             if self.venueDetail?.bookingStatus == "OPEN" {
                 self.liveCloseLbl.text = "LIVE"
                 self.liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
+                self.tonightLbl.alpha = 1
             } else {
                 self.liveCloseLbl.text = "CLOSED"
                 self.liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+                self.tonightLbl.alpha = 0.5
             }
         }
     }
@@ -112,13 +116,17 @@ final class SelectTicketClipVC: UIViewController {
             totalTicket -= 1
             ticketTypeTableView.reloadData()
             updateContinueBtn()
+        } else if totalTicket == 1 {
+            updateContinueBtn(forceRemove: true)
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        totalTicket += 1
-        ticketTypeTableView.reloadData()
-        updateContinueBtn()
+        if totalTicket < maxTicket {
+            totalTicket += 1
+            ticketTypeTableView.reloadData()
+            updateContinueBtn()
+        }
     }
     
     func updateContinueBtn(forceRemove: Bool = false) {
@@ -159,7 +167,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.totalTicketLbl.text = "\(totalTicket)"
-        cell.minusBtn.alpha = totalTicket == 1 ? 0.5 : 1
+        cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
         if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
