@@ -257,6 +257,7 @@
                         <outlet property="scrollViewBottomConstraint" destination="uhE-GS-IeW" id="W7V-hQ-qsf"/>
                         <outlet property="tableViewHeight" destination="nGF-HY-UcA" id="I6V-JE-7fa"/>
                         <outlet property="ticketTypeTableView" destination="VEE-Vb-HmO" id="bGm-8G-taM"/>
+                        <outlet property="tonightLbl" destination="QYZ-Jq-wvX" id="SfD-eK-s8Z"/>
                         <outlet property="venueBgImg" destination="Zum-n8-nNr" id="nYC-e7-he1"/>
                         <outlet property="venueInfoLbl" destination="b5t-Ni-gJE" id="mYI-WJ-91t"/>
                         <outlet property="venueTitleNameLbl" destination="9l9-eq-lJt" id="D9e-hg-BhM"/>
