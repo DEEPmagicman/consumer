@@ -54,7 +54,6 @@
 		29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */; };
 		29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */; };
 		29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */; };
-		29DF44FF2981417500A83DC1 /* EnterPhoneNumberClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */; };
 		4A7CC53028E377C200F8BA63 /* BookingInvites.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */; };
@@ -641,7 +640,6 @@
 		29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutClipVC.swift; sourceTree = "<group>"; };
 		29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeClipVC.swift; sourceTree = "<group>"; };
 		29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketClipVC.swift; sourceTree = "<group>"; };
-		29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberClipVC.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		4A7CC52D28E377C200F8BA63 /* BookingInvites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingInvites.swift; sourceTree = "<group>"; };
 		4A7CC52E28E377C200F8BA63 /* BookingInvites.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingInvites.xib; sourceTree = "<group>"; };
@@ -1286,7 +1284,6 @@
 				2966E3382980F86000B5E103 /* Info.plist */,
 				2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */,
 				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
-				29DF44FE2981417500A83DC1 /* EnterPhoneNumberClipVC.swift */,
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
 				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
@@ -4203,7 +4200,6 @@
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
-				29DF44FF2981417500A83DC1 /* EnterPhoneNumberClipVC.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
