@@ -12,8 +12,6 @@ class ticketTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var ticketTypeLbl: UILabelDeviceClass!
     @IBOutlet weak var infoLbl: UILabelDeviceClass!
     @IBOutlet weak var ticketPriceLbl: UILabelDeviceClass!
-    @IBOutlet weak var lineView: UIView!
-    @IBOutlet weak var sideArrow: UIImageView!
     @IBOutlet weak var ticketPlusMinusView: UIView!
     @IBOutlet weak var minusBtn: UIButton!
     @IBOutlet weak var plusBtn: UIButton!

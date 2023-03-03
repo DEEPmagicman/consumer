@@ -35,7 +35,7 @@
                         <rect key="frame" x="0.0" y="15" width="496" height="208"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General Admission" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-bV-Bk6" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="10" y="11" width="419.5" height="24"/>
+                                <rect key="frame" x="10" y="11" width="420" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="24" id="Bjt-ZI-ysG"/>
                                 </constraints>
@@ -50,7 +50,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="$50" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tAa-Ha-WLH" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="439.5" y="7.5" width="43.5" height="31"/>
+                                <rect key="frame" x="440" y="7.5" width="43" height="31"/>
                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -179,10 +179,8 @@
             <connections>
                 <outlet property="hotVenueLbl" destination="BOM-Ut-JRn" id="1Os-hH-3jf"/>
                 <outlet property="infoLbl" destination="YKK-ir-Xwf" id="saW-dg-8rH"/>
-                <outlet property="lineView" destination="UuF-8i-IxH" id="FzA-Ce-6Hn"/>
                 <outlet property="minusBtn" destination="XA4-j6-bbU" id="OgK-07-cKq"/>
                 <outlet property="plusBtn" destination="92x-Io-uOq" id="dcO-oH-IWg"/>
-                <outlet property="sideArrow" destination="0rq-sf-Wm7" id="ZbJ-gf-etk"/>
                 <outlet property="ticketPlusMinusView" destination="gn7-Cz-YYd" id="Oe4-cG-fRe"/>
                 <outlet property="ticketPriceLbl" destination="tAa-Ha-WLH" id="ggQ-2u-uow"/>
                 <outlet property="ticketTypeLbl" destination="VgT-bV-Bk6" id="qRG-kG-faL"/>

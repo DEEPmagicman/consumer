@@ -172,6 +172,8 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             Navigate.to.MVPVenueDetailViewController(self,venueId: self.openVenueList[indexPath.row].uniqueId)
+        } else {
+            Navigate.to.MVPVenueDetailViewController(self,venueId: self.closeVenueList[indexPath.row].uniqueId)
         }
     }
     

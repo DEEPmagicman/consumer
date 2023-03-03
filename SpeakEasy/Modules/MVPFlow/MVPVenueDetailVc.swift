@@ -28,6 +28,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var toNightLbl: UILabel!
     
     var venueId = ""
     var isFromAppClip = false
@@ -35,6 +36,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var venueDetails: ClipVenue?
     var selectedTicket = -1
     var totalTicket = 1
+    private var maxTicket = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -113,8 +115,14 @@ final class MVPVenueDetailVc: UIViewController {
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime
             liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
+            updatedAtLbl.isHidden = false
+            liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 16)
+            toNightLbl.alpha = 1
         } else {
+            toNightLbl.alpha = 0.5
+            updatedAtLbl.isHidden = true
             liveLbl.text = "CLOSED"
+            liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 18)
             liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
         }
         updatedAtLbl.text = "Updated: \(venueDetails?.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) ?? "")"
@@ -152,23 +160,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         } else {
             cell.ticketPriceLbl.text = "FREE"
         }
-        if indexPath.row == (venueDetails?.appClipTicket?.count ?? 0) - 1 {
-            cell.lineView.isHidden = true
-        } else {
-            cell.lineView.isHidden = false
-        }
         if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 {
-                cell.sideArrow.isHidden = true
-            } else {
-                cell.sideArrow.isHidden = false
-            }
         } else {
             cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-            cell.sideArrow.isHidden = true
         }
         if indexPath.row == selectedTicket {
             cell.ticketPlusMinusView.isHidden = false
@@ -185,7 +182,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.totalTicketLbl.text = "\(totalTicket)"
-        cell.minusBtn.alpha = totalTicket == 1 ? 0.5 : 1
+        cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
         cell.selectionStyle = .none
         cell.layoutIfNeeded()
         return cell
@@ -208,13 +205,19 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             self.totalTicket -= 1
             self.ticketTypeTableView.reloadData()
             updateContinueBtn()
+        } else if totalTicket == 1 {
+            self.selectedTicket = -1
+            self.ticketTypeTableView.reloadData()
+            updateContinueBtn(forceRemove: true)
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        self.totalTicket += 1
-        self.ticketTypeTableView.reloadData()
-        updateContinueBtn()
+        if totalTicket < maxTicket {
+            self.totalTicket += 1
+            self.ticketTypeTableView.reloadData()
+            updateContinueBtn()
+        }
     }
     
     func updateContinueBtn(forceRemove: Bool = false) {
@@ -228,6 +231,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.ticketTypeTableView.reloadData()
                 return
             }
+            self.continueBtn.isHidden = false
             let price = self.venueDetails?.appClipTicket?[self.selectedTicket].price ?? 0
             self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
         }

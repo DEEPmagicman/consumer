@@ -39,22 +39,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A1345322-5DF2-4ED4-8029-94B209D67A91"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
-            landmarkName = "plusBtnClick(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "EB04B6FB-7638-42CE-BEFC-448022AB3AE3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -199,54 +183,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "284748CF-37AF-4A94-BDB2-1212A7DD2183"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/PaymentFlow/CheckOutMvpVC.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
-            landmarkName = "paymentStatus(completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "284748CF-37AF-4A94-BDB2-1212A7DD2183 - 287f84fd1ba3601d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Speakeasy.CheckOutMvpVC.paymentStatus(completion: () -&gt; ()) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/MVPFlow/PaymentFlow/CheckOutMvpVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "182"
-                  endingLineNumber = "182"
-                  offsetFromSymbolStart = "66">
-               </Location>
-               <Location
-                  uuid = "284748CF-37AF-4A94-BDB2-1212A7DD2183 - 4ddbdaed391ff6ff"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Bool, Swift.Optional&lt;Swift.String&gt;) -&gt; () in Speakeasy.CheckOutMvpVC.paymentStatus(completion: () -&gt; ()) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/MVPFlow/PaymentFlow/CheckOutMvpVC.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "183"
-                  endingLineNumber = "183"
-                  offsetFromSymbolStart = "123">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C12DE0F7-E95B-45D8-9D95-234EBD71D7B7"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -352,7 +288,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "139">
+                  offsetFromSymbolStart = "160">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -367,7 +303,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "225">
+                  offsetFromSymbolStart = "224">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -382,7 +318,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "385">
+                  offsetFromSymbolStart = "340">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -397,7 +333,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "652">
+                  offsetFromSymbolStart = "588">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -412,7 +348,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1034">
+                  offsetFromSymbolStart = "892">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -427,7 +363,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1449">
+                  offsetFromSymbolStart = "1216">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -442,7 +378,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1790">
+                  offsetFromSymbolStart = "1504">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -457,7 +393,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "2121">
+                  offsetFromSymbolStart = "1796">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -472,7 +408,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "2452">
+                  offsetFromSymbolStart = "2088">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -521,7 +457,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "390">
+                  offsetFromSymbolStart = "396">
                </Location>
                <Location
                   uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 34e38787effb4278"
@@ -536,7 +472,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "485">
+                  offsetFromSymbolStart = "476">
                </Location>
                <Location
                   uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 184180e1c3fed95c"
@@ -551,7 +487,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "281"
                   endingLineNumber = "281"
-                  offsetFromSymbolStart = "134">
+                  offsetFromSymbolStart = "92">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -585,22 +521,6 @@
             startingLineNumber = "21"
             endingLineNumber = "21"
             landmarkName = "getVenuesDetailForaMVP(venueId:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F31C67E0-9708-48A7-980D-9962BFC8D145"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
-            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -664,7 +584,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "12"
                   endingLineNumber = "12"
-                  offsetFromSymbolStart = "82">
+                  offsetFromSymbolStart = "80">
                </Location>
                <Location
                   uuid = "2746D3E8-9C31-4BB3-9577-5662008FCAA1 - bfdb83270c3d5c0b"
@@ -679,7 +599,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "14"
                   endingLineNumber = "14"
-                  offsetFromSymbolStart = "192">
+                  offsetFromSymbolStart = "148">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -839,7 +759,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "3834">
+                  offsetFromSymbolStart = "3100">
                </Location>
                <Location
                   uuid = "8C65DFF2-275B-480A-BBF7-F852760097EB - 56d652fac0e9c5c8"
@@ -854,7 +774,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "285">
+                  offsetFromSymbolStart = "224">
                </Location>
             </Locations>
          </BreakpointContent>
