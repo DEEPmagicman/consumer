@@ -18,7 +18,7 @@ extension CLLocation {
         return
       }
       if let town = placeMark.locality, let country = placeMark.country, let state = placeMark.administrativeArea {
-        completion("\(town), \(state), \(country)")
+        completion(town)
       } else {
         completion("")
       }

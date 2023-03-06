@@ -11,6 +11,7 @@ enum VenueStatus: String {
 }
 
 import UIKit
+import CoreLocation
 
 final class MVPVenueListVc: UIViewController {
 
@@ -25,9 +26,11 @@ final class MVPVenueListVc: UIViewController {
     private var closeFrom = 0
     private var closeHasMore = false
     private var refresh = UIRefreshControl()
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
         venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
         fetchAllOpenVenueForMVP()
         fetchAllCloseVenueForMVP()
@@ -37,6 +40,18 @@ final class MVPVenueListVc: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
         venueListTableView.setupPadding()
         cityNameLbl.text = UserDefault.shared.localCity
+        
+        if UserDefault.shared.defaultCitySelected == false {
+            self.locationManager.requestWhenInUseAuthorization()
+            DispatchQueue.global().async {
+                if CLLocationManager.locationServicesEnabled() {
+                    self.locationManager.requestAlwaysAuthorization()
+                    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                    self.locationManager.startUpdatingLocation()
+                }
+            }
+        }
+        
     }
     
     @objc private func refresh(_ sender: AnyObject) {
@@ -234,3 +249,33 @@ extension MVPVenueListVc: CitySelectionDelegate {
         cityNameLbl.text = UserDefault.shared.localCity
     }
 }
+
+extension MVPVenueListVc: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        
+        let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
+            print("\(cityName)")
+            if cityName == UserDefault.shared.localCity {
+                return
+            }
+            self.fetchCityList(userCity: cityName)
+        }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+    }
+    
+    private func fetchCityList(userCity: String) {
+        self.venueListDelegate.mvpCityListAPi() { cityList, isSuccess in
+            if isSuccess {
+                if let city = cityList.first(where: { $0.value == userCity }) {
+                    UserDefault.shared.localCity = city.value
+                    self.refreshData()
+                    self.cityNameLbl.text = UserDefault.shared.localCity
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
+            }
+        }
+    }
+}
+

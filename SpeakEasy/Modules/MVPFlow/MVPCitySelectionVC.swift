@@ -27,6 +27,7 @@ class MVPCitySelectionVC: UIViewController {
     }
     
     private func fetchCityList() {
+        Loader.show()
         self.cityListDelegate.mvpCityListAPi() { cityList, isSuccess in
             if isSuccess {
                 self.arrCityList = cityList
@@ -63,6 +64,7 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         UserDefault.shared.localCity = arrCityList[indexPath.row].value
         navigationController?.popViewController(animated: true)
+        UserDefault.shared.defaultCitySelected = true
         self.citySelectionDelegate?.citySelected(city: arrCityList[indexPath.row].value)
     }
 }

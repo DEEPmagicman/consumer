@@ -288,7 +288,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "160">
+                  offsetFromSymbolStart = "139">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -303,7 +303,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "224">
+                  offsetFromSymbolStart = "225">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -318,7 +318,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "340">
+                  offsetFromSymbolStart = "385">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -333,7 +333,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "588">
+                  offsetFromSymbolStart = "652">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -348,7 +348,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "892">
+                  offsetFromSymbolStart = "1034">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -363,7 +363,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1216">
+                  offsetFromSymbolStart = "1449">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -378,7 +378,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1504">
+                  offsetFromSymbolStart = "1790">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -393,7 +393,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "1796">
+                  offsetFromSymbolStart = "2121">
                </Location>
                <Location
                   uuid = "50D746A8-ECB7-47A3-986C-EB06660E9894 - a35c6e391e57bb27"
@@ -408,7 +408,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "40"
                   endingLineNumber = "40"
-                  offsetFromSymbolStart = "2088">
+                  offsetFromSymbolStart = "2452">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -457,7 +457,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "396">
+                  offsetFromSymbolStart = "390">
                </Location>
                <Location
                   uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 34e38787effb4278"
@@ -472,7 +472,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "279"
                   endingLineNumber = "279"
-                  offsetFromSymbolStart = "476">
+                  offsetFromSymbolStart = "485">
                </Location>
                <Location
                   uuid = "21FB489B-4135-4890-B93A-46122C7F3DDE - 184180e1c3fed95c"
@@ -487,7 +487,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "281"
                   endingLineNumber = "281"
-                  offsetFromSymbolStart = "92">
+                  offsetFromSymbolStart = "134">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -506,102 +506,6 @@
             endingLineNumber = "108"
             landmarkName = "multipart(_:fileData:fileName:fileParamKey:params:headers:method:success:failure:)"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "00551429-154F-436D-B880-8CC109FF7F8C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "getVenuesDetailForaMVP(venueId:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D8CCDA09-FCCD-45F7-891E-103AB885F32E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
-            landmarkName = "getVenuesDetailForaMVP(venueId:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "46484B83-BB81-4D7E-8A87-BDC88EDDFF30"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
-            landmarkName = "getVenuesDetailForaMVP(venueId:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2746D3E8-9C31-4BB3-9577-5662008FCAA1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "12"
-            endingLineNumber = "12"
-            landmarkName = "getVenuesDetailForaMVP(venueId:completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "2746D3E8-9C31-4BB3-9577-5662008FCAA1 - 7e852c826161aaa0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Speakeasy.MVPPresenter.getVenuesDetailForaMVP(venueId: Swift.String, completion: (Swift.Bool, Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Speakeasy.ClipVenue&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "12"
-                  endingLineNumber = "12"
-                  offsetFromSymbolStart = "80">
-               </Location>
-               <Location
-                  uuid = "2746D3E8-9C31-4BB3-9577-5662008FCAA1 - bfdb83270c3d5c0b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Any&gt;) -&gt; () in Speakeasy.MVPPresenter.getVenuesDetailForaMVP(venueId: Swift.String, completion: (Swift.Bool, Swift.Optional&lt;Swift.String&gt;, Swift.Optional&lt;Speakeasy.ClipVenue&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "Speakeasy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/squareinfosoft/Documents/avi/speakeasy-consumer-ios/SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "14"
-                  endingLineNumber = "14"
-                  offsetFromSymbolStart = "148">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -630,8 +534,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
             landmarkName = "mvpCityListAPi(completion:)"
             landmarkType = "7">
             <Locations>
@@ -693,8 +597,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPPresenter.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
             landmarkName = "mvpCityListAPi(completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -709,8 +613,8 @@
             filePath = "SpeakEasy/Modules/MVPFlow/MVPCitySelectionVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "fetchCityList()"
             landmarkType = "7">
          </BreakpointContent>
@@ -718,24 +622,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "354205FA-A50D-42BD-B971-54542F4EAD90"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueListVc.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "onClickCityName(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "8C65DFF2-275B-480A-BBF7-F852760097EB"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SpeakEasy/Modules/MVPFlow/VenueTableCell/venueTableCell.swift"
@@ -759,7 +647,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "3100">
+                  offsetFromSymbolStart = "3834">
                </Location>
                <Location
                   uuid = "8C65DFF2-275B-480A-BBF7-F852760097EB - 56d652fac0e9c5c8"
@@ -774,9 +662,25 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "39"
                   endingLineNumber = "39"
-                  offsetFromSymbolStart = "224">
+                  offsetFromSymbolStart = "285">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8D4C0C8A-46D5-4724-9D78-0D4086A410BB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SpeakEasy/Modules/MVPFlow/MVPVenueDetailVc.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "MVPVenueDetailVc"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

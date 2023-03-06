@@ -17,6 +17,7 @@ final class UserDefault: NSObject {
         case isMvp = "isMvp"
         case hasVisitedStartingPage = "hasVisitedStartingPage"
         case localCity = "Surat"
+        case defaultCitySelected = "defaultCitySelected"
     }
     
     let userDefaults = UserDefaults.standard
@@ -91,6 +92,14 @@ final class UserDefault: NSObject {
             (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Cleveland"
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
+        }
+    }
+    
+    var defaultCitySelected: Bool {
+        get {
+            (UserDefaults.standard.value(forKey: UserDefaultKey.defaultCitySelected.rawValue) as? Bool) ?? false
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.defaultCitySelected.rawValue)
         }
     }
     
