@@ -252,6 +252,7 @@ extension MVPVenueListVc: CitySelectionDelegate {
 
 extension MVPVenueListVc: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if UserDefault.shared.defaultCitySelected == true { return }
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
         let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
@@ -261,7 +262,6 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
             }
             self.fetchCityList(userCity: cityName)
         }
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
     }
     
     private func fetchCityList(userCity: String) {

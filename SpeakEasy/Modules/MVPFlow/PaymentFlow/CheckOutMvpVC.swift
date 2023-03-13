@@ -77,7 +77,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         
         listController.showCountryPhoneCode = true
         
-        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*"], size: 15, textColor: .white)
+        dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 15, textColor: .white)
         ticketQuantityLbl.text = "\(totalTicket)x"
         ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
         totalPriceLbl.text = "$\(totalTicket * ticketPrice)"

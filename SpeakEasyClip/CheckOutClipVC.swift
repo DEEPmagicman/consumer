@@ -80,7 +80,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         
         listController.showCountryPhoneCode = true
 
-        dressCodeInfoLbl.highlightBold(["*All entries subject to doorman discretion*."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
+        dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
         ticketQuantityLbl.text = "\(totalTicket)x"
         ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
         ticketSubTitleLbl.text = ticketInfo
