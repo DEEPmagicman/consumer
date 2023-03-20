@@ -126,6 +126,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             applePayBtn.isUserInteractionEnabled = false
         } else if isApplePayNotSupported == false {
             alertForWallet()
+            setUpPaymentBtn()
             applePayBtn.alpha = 0.5
             applePayBtn.isUserInteractionEnabled = false
         } else {
@@ -182,9 +183,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func alertForWallet() {
-        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        let setUpAction = UIAlertAction(title: "Go to Apple Wallet", style: .default) { (_) in
+        let alertController = UIAlertController(title: "Add Card to Apple Pay", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
@@ -195,6 +196,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func applePayButtonTapped() {
+        if isApplePayNotSupported == false && StripeAPI.deviceSupportsApplePay() == false {
+            alertForWallet()
+            return
+        }
         isPaymentInitiated = true
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")

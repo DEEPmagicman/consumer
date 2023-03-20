@@ -128,9 +128,9 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
 
     
     func alertForWallet() {
-        let alertController = UIAlertController(title: "Error", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        let setUpAction = UIAlertAction(title: "Go to Apple Wallet", style: .default) { (_) in
+        let alertController = UIAlertController(title: "Add Card to Apple Pay", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
