@@ -29,6 +29,8 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var toNightLbl: UILabel!
+    @IBOutlet weak var venuePageView: UIView!
+    @IBOutlet weak var closeTicketView: UIView!
     
     var venueId = ""
     var isFromAppClip = false
@@ -124,6 +126,15 @@ final class MVPVenueDetailVc: UIViewController {
             liveLbl.text = "CLOSED"
             liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 18)
             liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+        }
+        if venueDetails?.appClipTicket?.allSatisfy({ ticket in
+            ticket.status == "DISABLED"
+        }) == true {
+            closeTicketView.isHidden = false
+            venuePageView.isHidden = true
+        } else {
+            venuePageView.isHidden = false
+            closeTicketView.isHidden = true
         }
         updatedAtLbl.text = "Updated: \(venueDetails?.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) ?? "")"
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)

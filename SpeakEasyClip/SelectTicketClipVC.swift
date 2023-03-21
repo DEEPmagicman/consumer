@@ -19,7 +19,9 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var venueInfoLbl: UILabel!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var tonightLbl: UILabel!
-
+    @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var closeLblView: UIView!
+    
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
@@ -88,6 +90,15 @@ final class SelectTicketClipVC: UIViewController {
                 self.liveCloseLbl.text = "CLOSED"
                 self.liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 self.tonightLbl.alpha = 0.5
+            }
+            if self.venueDetail?.appClipTicket?.allSatisfy({ ticket in
+                ticket.status == "DISABLED"
+            }) == true {
+                self.infoView.isHidden = true
+                self.closeLblView.isHidden = false
+            } else {
+                self.infoView.isHidden = false
+                self.closeLblView.isHidden = true
             }
         }
     }
