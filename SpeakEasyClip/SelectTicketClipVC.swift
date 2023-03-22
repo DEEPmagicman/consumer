@@ -211,6 +211,13 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         continueBtn.isHidden = false
         scrollViewBottomConstraint.constant = 98
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if venueDetail?.appClipTicket?[indexPath.row].status == "DISABLED" {
+            return 0
+        }
+        return UITableView.automaticDimension
+    }
 }
 
 extension SelectTicketClipVC: WebSocketCallBackDelegate {

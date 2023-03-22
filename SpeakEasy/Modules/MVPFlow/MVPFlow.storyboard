@@ -163,7 +163,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wB8-sH-IIa">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1132"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="966"/>
                                         <subviews>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wnz-Pk-zcu" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="298"/>
@@ -388,10 +388,10 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="sgV-G2-5Cj">
-                                                <rect key="frame" x="16" y="355" width="382" height="747"/>
+                                                <rect key="frame" x="16" y="355" width="382" height="581"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mn5-Lc-bSV">
-                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="747"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAm-dF-H2H">
+                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="265"/>
                                                         <subviews>
                                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="s0c-8q-s4k">
                                                                 <rect key="frame" x="0.0" y="5" width="382" height="250"/>
@@ -404,6 +404,35 @@
                                                                     <outlet property="delegate" destination="FV3-b8-Xls" id="UTS-LG-faM"/>
                                                                 </connections>
                                                             </tableView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="s0c-8q-s4k" secondAttribute="bottom" constant="10" id="2do-V1-zaP"/>
+                                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="top" secondItem="AAm-dF-H2H" secondAttribute="top" constant="5" id="53r-43-KTA"/>
+                                                            <constraint firstAttribute="trailing" secondItem="s0c-8q-s4k" secondAttribute="trailing" id="6a7-ZB-wbD"/>
+                                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="leading" secondItem="AAm-dF-H2H" secondAttribute="leading" id="VT4-HE-Yip"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZWc-BX-kdU" userLabel="View1">
+                                                        <rect key="frame" x="0.0" y="265" width="382" height="30"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The venue is not currently selling entries. Come back later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XXT-OO-EVs">
+                                                                <rect key="frame" x="0.0" y="10" width="382" height="0.0"/>
+                                                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="18"/>
+                                                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="XXT-OO-EVs" secondAttribute="bottom" constant="20" id="Buq-cQ-QK9"/>
+                                                            <constraint firstItem="XXT-OO-EVs" firstAttribute="leading" secondItem="ZWc-BX-kdU" secondAttribute="leading" id="Mqb-lw-pQO"/>
+                                                            <constraint firstItem="XXT-OO-EVs" firstAttribute="top" secondItem="ZWc-BX-kdU" secondAttribute="top" constant="10" id="NL2-Qj-bcT"/>
+                                                            <constraint firstAttribute="trailing" secondItem="XXT-OO-EVs" secondAttribute="trailing" id="bRv-vx-dAl"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mn5-Lc-bSV">
+                                                        <rect key="frame" x="0.0" y="265" width="382" height="316"/>
+                                                        <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nyt-1g-cfM">
                                                                 <rect key="frame" x="0.0" y="275" width="382" height="126"/>
                                                                 <string key="text">Entry tickets can be purchased in-person at TAO Chicago by scanning the banner located outside the venue. Prices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue.</string>
@@ -412,7 +441,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Venue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sY-MG-9Dj">
-                                                                <rect key="frame" x="0.0" y="441" width="59.5" height="28"/>
+                                                                <rect key="frame" x="0.0" y="10" width="59.5" height="28"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="28" id="9ka-78-wIY"/>
                                                                 </constraints>
@@ -421,7 +450,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WIS-JU-W3m">
-                                                                <rect key="frame" x="0.0" y="481" width="382" height="20"/>
+                                                                <rect key="frame" x="0.0" y="50" width="382" height="20"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSm-V7-b7k">
                                                                         <rect key="frame" x="16" y="1" width="7.5" height="18.5"/>
@@ -447,7 +476,7 @@
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qoV-cG-sdr">
-                                                                <rect key="frame" x="0.0" y="510" width="382" height="237"/>
+                                                                <rect key="frame" x="0.0" y="79" width="382" height="237"/>
                                                                 <subviews>
                                                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eH0-hZ-sxS">
                                                                         <rect key="frame" x="0.0" y="0.0" width="382" height="237"/>
@@ -470,38 +499,23 @@
                                                         </subviews>
                                                         <constraints>
                                                             <constraint firstItem="qoV-cG-sdr" firstAttribute="leading" secondItem="mn5-Lc-bSV" secondAttribute="leading" id="3ef-Pf-jsU"/>
+                                                            <constraint firstItem="8sY-MG-9Dj" firstAttribute="top" secondItem="mn5-Lc-bSV" secondAttribute="top" constant="10" id="8ip-Jt-M5B"/>
                                                             <constraint firstItem="WIS-JU-W3m" firstAttribute="top" secondItem="8sY-MG-9Dj" secondAttribute="bottom" constant="12" id="AFx-Z5-zuq"/>
                                                             <constraint firstAttribute="bottom" secondItem="qoV-cG-sdr" secondAttribute="bottom" id="Hwy-8W-E3u"/>
                                                             <constraint firstItem="nyt-1g-cfM" firstAttribute="leading" secondItem="mn5-Lc-bSV" secondAttribute="leading" id="KwZ-UF-5PZ"/>
                                                             <constraint firstItem="qoV-cG-sdr" firstAttribute="top" secondItem="WIS-JU-W3m" secondAttribute="bottom" constant="9" id="Uk8-LW-gbg"/>
                                                             <constraint firstAttribute="trailing" secondItem="WIS-JU-W3m" secondAttribute="trailing" id="clP-9c-cDn"/>
-                                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="top" secondItem="mn5-Lc-bSV" secondAttribute="top" constant="5" id="db2-vp-C3R"/>
-                                                            <constraint firstItem="s0c-8q-s4k" firstAttribute="leading" secondItem="mn5-Lc-bSV" secondAttribute="leading" id="iHl-Gj-DKI"/>
                                                             <constraint firstAttribute="trailing" secondItem="qoV-cG-sdr" secondAttribute="trailing" id="iZg-yh-4fu"/>
-                                                            <constraint firstItem="nyt-1g-cfM" firstAttribute="top" secondItem="s0c-8q-s4k" secondAttribute="bottom" constant="20" id="j5Y-68-98u"/>
-                                                            <constraint firstAttribute="trailing" secondItem="s0c-8q-s4k" secondAttribute="trailing" id="jBK-Xa-RH9"/>
                                                             <constraint firstAttribute="trailing" secondItem="nyt-1g-cfM" secondAttribute="trailing" id="jLO-m5-nxp"/>
                                                             <constraint firstItem="WIS-JU-W3m" firstAttribute="leading" secondItem="mn5-Lc-bSV" secondAttribute="leading" id="vEe-uw-YpC"/>
                                                             <constraint firstItem="8sY-MG-9Dj" firstAttribute="top" secondItem="nyt-1g-cfM" secondAttribute="bottom" constant="40" id="w4T-XV-zaH"/>
                                                             <constraint firstItem="8sY-MG-9Dj" firstAttribute="leading" secondItem="mn5-Lc-bSV" secondAttribute="leading" id="xJh-3S-13s"/>
                                                         </constraints>
-                                                    </view>
-                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZWc-BX-kdU" userLabel="View1">
-                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="200"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The venue is not currently selling entries. Come back later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XXT-OO-EVs">
-                                                                <rect key="frame" x="0.0" y="10" width="382" height="50.5"/>
-                                                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="18"/>
-                                                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="XXT-OO-EVs" firstAttribute="leading" secondItem="ZWc-BX-kdU" secondAttribute="leading" id="Mqb-lw-pQO"/>
-                                                            <constraint firstItem="XXT-OO-EVs" firstAttribute="top" secondItem="ZWc-BX-kdU" secondAttribute="top" constant="10" id="NL2-Qj-bcT"/>
-                                                            <constraint firstAttribute="trailing" secondItem="XXT-OO-EVs" secondAttribute="trailing" id="bRv-vx-dAl"/>
-                                                            <constraint firstAttribute="height" constant="200" id="fW1-h4-bLh"/>
-                                                        </constraints>
+                                                        <variation key="default">
+                                                            <mask key="subviews">
+                                                                <exclude reference="nyt-1g-cfM"/>
+                                                            </mask>
+                                                        </variation>
                                                     </view>
                                                 </subviews>
                                             </stackView>
@@ -668,7 +682,7 @@
                         <outlet property="toNightLbl" destination="JK1-3e-vll" id="7fF-d4-AX0"/>
                         <outlet property="updatedAtLbl" destination="wii-0q-TEg" id="kZL-Rf-to1"/>
                         <outlet property="venueBgImg" destination="LD9-tZ-mgQ" id="JXY-yH-jdB"/>
-                        <outlet property="venuePageView" destination="mn5-Lc-bSV" id="unc-Js-JFD"/>
+                        <outlet property="venuePageView" destination="AAm-dF-H2H" id="AhU-zJ-1UV"/>
                         <outlet property="venueTitleNameLbl" destination="gfU-HC-wcQ" id="mLV-IX-NAN"/>
                     </connections>
                 </viewController>
@@ -881,7 +895,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EXPLORE. BOOK. GO." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ljs-go-MIG">
-                                                <rect key="frame" x="88" y="187" width="238.5" height="34"/>
+                                                <rect key="frame" x="86" y="187" width="242.5" height="34"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="24"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -1130,7 +1144,7 @@
         <image name="ic-settings" width="20" height="21.5"/>
         <image name="locationIcon2" width="11" height="14"/>
         <image name="mvpBg-img" width="5417" height="11720"/>
-        <image name="speakEasy" width="172" height="85"/>
+        <image name="speakEasy" width="90" height="49"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

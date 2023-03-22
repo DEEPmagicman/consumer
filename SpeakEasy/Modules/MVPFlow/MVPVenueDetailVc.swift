@@ -211,6 +211,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         updateContinueBtn()
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
+            return 0
+        }
+        return UITableView.automaticDimension
+    }
+    
     @objc func minusBtnClick(_ sender: UIButton) {
         if totalTicket > 1 {
             self.totalTicket -= 1
