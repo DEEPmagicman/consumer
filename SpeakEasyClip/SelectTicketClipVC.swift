@@ -21,7 +21,8 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var tonightLbl: UILabel!
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var closeLblView: UIView!
-    
+    @IBOutlet weak var closeLbl: UILabel!
+
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
@@ -99,6 +100,13 @@ final class SelectTicketClipVC: UIViewController {
             } else {
                 self.infoView.isHidden = false
                 self.closeLblView.isHidden = true
+            }
+            if self.venueDetail == nil {
+                self.closeLbl.text = "Venue not found"
+                self.infoView.isHidden = true
+                self.closeLblView.isHidden = false
+                self.liveCloseLbl.isHidden = true
+                self.tonightLbl.isHidden = true
             }
         }
     }
