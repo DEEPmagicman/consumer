@@ -45,7 +45,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false, isFromLoginasGuest: Bool = false) {
+    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmPopUpViewController.self)
         vc.modalPresentationStyle = .overCurrentContext
         vc.confirmPopUpDelegate = sender as? ConfirmPopUpDelegate
@@ -53,7 +53,6 @@ final class Navigate {
         vc.infoDetailtext = text2
         vc.infoNoteText = text3
         vc.isPrivetOrPublic = isYesOrNoBtn
-        vc.isFromLoginGuest = isFromLoginasGuest
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     

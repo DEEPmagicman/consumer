@@ -40,10 +40,7 @@ final class DateOfBirthViewController: UIViewController {
         let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string())"
         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmBirthDate, text2: birthdate, text3: Constant.String.over21Info)
     }
-    
-
 }
-
 
 extension DateOfBirthViewController: ConfirmPopUpDelegate {
     func cancelDetail() {
@@ -67,5 +64,4 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
             Loader.hide()
         }
     }
-    
 }

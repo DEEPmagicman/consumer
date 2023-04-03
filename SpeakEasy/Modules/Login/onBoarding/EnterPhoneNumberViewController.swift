@@ -15,8 +15,9 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var phoneNumTextField: UITextField!
     @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var backBtn: UIButton!
-    @IBOutlet weak var contrySelectionView: UIView!
-    
+    @IBOutlet weak var contrySelectionView: UIView!    
+    @IBOutlet weak var errorTextLbl: UILabel!
+
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
     private var settingDelegate = SettingPresenter()
@@ -188,7 +189,6 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             if isValid {
-                print("valid")
                 self.continueBtn.isUserInteractionEnabled = true
                 self.continueBtn.alpha = 1
                 //      textField.getFormattedPhoneNumber(format: .E164),       // Output "+33600000001"
@@ -197,7 +197,6 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
                 //      textField.getFormattedPhoneNumber(format: .RFC3966),      // Output "tel:+33-6-00-00-00-01"
                 textField.getRawPhoneNumber()                               // Output "600000001"
             } else {
-                print("not")
                 self.continueBtn.isUserInteractionEnabled = false
                 self.continueBtn.alpha = 0.5
             }

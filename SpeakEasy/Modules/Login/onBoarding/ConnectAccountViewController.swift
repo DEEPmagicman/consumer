@@ -33,7 +33,7 @@ final class ConnectAccountViewController: UIViewController {
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        Navigate.to.addEmailVc(self)
+        Navigate.to.dateOfBirthVc(self)
     }
     
     func connectWithGoogle() {

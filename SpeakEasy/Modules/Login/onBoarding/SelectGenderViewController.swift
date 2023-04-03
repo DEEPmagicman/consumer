@@ -11,8 +11,10 @@ final class SelectGenderViewController: UIViewController {
 
     @IBOutlet weak var manSelectionView: UIView!
     @IBOutlet weak var womenSelectionView: UIView!
+    @IBOutlet weak var otherSelectionView: UIView!
     @IBOutlet weak var manRedioBtn: UIButton!
     @IBOutlet weak var womenRedioBtn: UIButton!
+    @IBOutlet weak var otherRedioBtn: UIButton!
     @IBOutlet weak var continueBtn: UIButton!
     
     var onBoardingDelegate = OnBoardingPresenter()
@@ -24,8 +26,11 @@ final class SelectGenderViewController: UIViewController {
         self.manSelectionView.addGestureRecognizer(gesture)
         let gesture2 = UITapGestureRecognizer(target: self, action: #selector(onClickWomanView))
         self.womenSelectionView.addGestureRecognizer(gesture2)
+        let gesture3 = UITapGestureRecognizer(target: self, action: #selector(onClickOtherView))
+        self.otherSelectionView.addGestureRecognizer(gesture3)
         self.manSelectionView.tag = 0
         self.womenSelectionView.tag = 0
+        self.otherSelectionView.tag = 0
         
         self.continueBtn.isUserInteractionEnabled = false
         self.continueBtn.alpha = 0.5
@@ -33,8 +38,9 @@ final class SelectGenderViewController: UIViewController {
     }
     
     @objc func onClickManView() {
-            self.manRedioBtn.setImage(Constant.Icon.radioClick, for: .normal)
-          self.womenRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
+        self.manRedioBtn.setImage(Constant.Icon.radioClick, for: .normal)
+        self.womenRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
+        self.otherRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
         UserDefault.shared.user?.gender = "MALE"
@@ -43,9 +49,19 @@ final class SelectGenderViewController: UIViewController {
     @objc func onClickWomanView() {
             self.womenRedioBtn.setImage(Constant.Icon.radioClick, for: .normal)
         self.manRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
+        self.otherRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
         UserDefault.shared.user?.gender = "FEMALE"
+    }
+    
+    @objc func onClickOtherView() {
+        self.manRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
+        self.womenRedioBtn.setImage(Constant.Icon.radioIcon, for: .normal)
+        self.otherRedioBtn.setImage(Constant.Icon.radioClick, for: .normal)
+        self.continueBtn.isUserInteractionEnabled = true
+        self.continueBtn.alpha = 1
+        UserDefault.shared.user?.gender = "OTHER"
     }
     
     @IBAction func onClickManBtn(_ sender: Any) {
@@ -71,5 +87,4 @@ final class SelectGenderViewController: UIViewController {
             Loader.hide()
         }
     }
-
 }

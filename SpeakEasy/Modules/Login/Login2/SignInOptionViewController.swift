@@ -11,7 +11,7 @@ import GoogleSignIn
 import AuthenticationServices
 import JWTDecode
 
-class SignInOptionViewController: UIViewController {
+final class SignInOptionViewController: UIViewController {
 
     @IBOutlet weak var bgImageView: UIImageView!
     @IBOutlet weak var byTappingInfoLbl: UILabel!
@@ -73,9 +73,9 @@ class SignInOptionViewController: UIViewController {
         connectWithGoogle()
     }
     
-    @IBAction func onClickSignInwithEmail(_ sender: Any) {
-        Navigate.to.loginWithEmailVc(self)
-    }
+//    @IBAction func onClickSignInwithEmail(_ sender: Any) {
+//        Navigate.to.loginWithEmailVc(self)
+//    }
     
     @IBAction func onClickSignInwithPhoneNum(_ sender: Any) {
 //        Navigate.to.loginWithPhoneNumberVc(self)

@@ -36,8 +36,6 @@ final class VerificationCodeViewController: UIViewController {
         self.continueBtn.alpha = 0.5
         print("*-*\(currectOtp)")
         Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp)")
-
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,13 +66,11 @@ final class VerificationCodeViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if otpText == ""{
-                showAlert(with: "", message: "Please Enter Otp")
+        if otpText == "" {
+            showAlert(with: "", message: "Please Enter Otp")
         } else {
-                otpVerification()
-
+            otpVerification()
         }
-
     }
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
@@ -249,5 +245,4 @@ extension VerificationCodeViewController : OTPFieldViewDelegate{
         }
         return true
     }
-    
 }

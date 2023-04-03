@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -27,7 +28,7 @@
         <!--Start Screen View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="StartScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="StartScreenViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StartScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="StartScreenViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -85,7 +86,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qmP-gV-33m">
                                         <rect key="frame" x="20" y="693" width="374" height="48"/>
-                                        <color key="backgroundColor" red="0.45882352941176469" green="0.18823529411764706" blue="0.62352941176470589" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="XQ3-9j-Aba"/>
                                         </constraints>
@@ -161,7 +162,7 @@
         <!--Connect Account View Controller-->
         <scene sceneID="51t-yB-p29">
             <objects>
-                <viewController storyboardIdentifier="ConnectAccountViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zS6-HR-2ql" customClass="ConnectAccountViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConnectAccountViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zS6-HR-2ql" customClass="ConnectAccountViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8SZ-nF-Vk9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -170,7 +171,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5b2-LR-Lze">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect your account." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9I-cf-Vcp">
                                         <rect key="frame" x="20" y="35" width="374" height="38"/>
@@ -299,7 +300,7 @@
         <!--Add Email View Controller-->
         <scene sceneID="vRe-XS-0Fw">
             <objects>
-                <viewController storyboardIdentifier="AddEmailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4oD-Xn-xAZ" customClass="AddEmailViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddEmailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4oD-Xn-xAZ" customClass="AddEmailViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BrI-cT-YWG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -308,7 +309,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kQb-n6-FB9">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What’s your email?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzU-De-PWp">
                                         <rect key="frame" x="20" y="35" width="245" height="38"/>
@@ -447,7 +448,7 @@
         <!--Date Of Birth View Controller-->
         <scene sceneID="8k2-ON-thT">
             <objects>
-                <viewController storyboardIdentifier="DateOfBirthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2qf-pQ-q01" customClass="DateOfBirthViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DateOfBirthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2qf-pQ-q01" customClass="DateOfBirthViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8tL-HA-oeB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -456,7 +457,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2hX-vN-smJ">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What’s your date of birth?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jCZ-Ic-9XB">
                                         <rect key="frame" x="20" y="35" width="328.5" height="38"/>
@@ -582,7 +583,7 @@
         <!--Set Profile Picture View Controller-->
         <scene sceneID="f86-el-Pz5">
             <objects>
-                <viewController storyboardIdentifier="SetProfilePictureViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bBz-q3-GZc" customClass="SetProfilePictureViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SetProfilePictureViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bBz-q3-GZc" customClass="SetProfilePictureViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lcr-Rj-l5g">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -591,7 +592,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ke-kn-2RL">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set your profile picture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBy-ax-q6s">
                                         <rect key="frame" x="20" y="35" width="288" height="38"/>
@@ -603,13 +604,13 @@
                                         <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your picture is needed so that venues can identify you. This picture will also be shown to friends." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1B-us-Pud">
-                                        <rect key="frame" x="20" y="93" width="374" height="42"/>
+                                        <rect key="frame" x="20" y="93" width="374" height="63"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EuU-hx-PUK">
-                                        <rect key="frame" x="132" y="180" width="150" height="150"/>
+                                        <rect key="frame" x="132" y="201" width="150" height="150"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add +" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hb0-iR-KsX">
                                                 <rect key="frame" x="54" y="64" width="47" height="21"/>
@@ -654,7 +655,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S3w-mJ-Y8B">
-                                        <rect key="frame" x="20" y="378" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="399" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="gWQ-yP-zB2"/>
@@ -722,7 +723,7 @@
         <!--Enter Phone Number View Controller-->
         <scene sceneID="FPL-zT-ITq">
             <objects>
-                <viewController storyboardIdentifier="EnterPhoneNumberViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PMB-sV-H7w" customClass="EnterPhoneNumberViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EnterPhoneNumberViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PMB-sV-H7w" customClass="EnterPhoneNumberViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0no-Zv-FcW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -731,7 +732,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uMS-mZ-d6w">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i5J-HI-KEp">
                                         <rect key="frame" x="15" y="10" width="25" height="17"/>
@@ -751,8 +752,14 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll  text you to confirm your number. Standard message and data rates apply." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8pr-Z5-lvA">
+                                        <rect key="frame" x="20" y="112" width="374" height="36.5"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BL1-hY-a2W">
-                                        <rect key="frame" x="20" y="137" width="80" height="50"/>
+                                        <rect key="frame" x="20" y="173.5" width="80" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Ha-FD-VvL" customClass="FPNTextField" customModule="FlagPhoneNumber">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="49"/>
@@ -780,7 +787,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1a-8X-HRg">
-                                        <rect key="frame" x="125" y="137" width="269" height="50"/>
+                                        <rect key="frame" x="125" y="173.5" width="269" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="XXX-XXX-XXXX" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O71-vO-Gby">
                                                 <rect key="frame" x="0.0" y="0.0" width="269" height="49"/>
@@ -807,15 +814,15 @@
                                             <constraint firstItem="vTc-FX-Wu2" firstAttribute="leading" secondItem="c1a-8X-HRg" secondAttribute="leading" id="wSb-Nx-Akm"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll  text you to confirm your number. Standard message and data rates apply." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nk6-aB-Moe">
-                                        <rect key="frame" x="20" y="237" width="374" height="36.5"/>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Too many verification requests, please wait a moment." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nk6-aB-Moe">
+                                        <rect key="frame" x="30" y="238.5" width="354" height="36.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" name="errorRed"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g7o-ve-eMD">
-                                        <rect key="frame" x="20" y="323.5" width="374" height="48"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <rect key="frame" x="20" y="290" width="374" height="48"/>
+                                        <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="tvs-au-2XZ"/>
                                         </constraints>
@@ -832,7 +839,7 @@
                                                 <real key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -844,18 +851,21 @@
                                 <constraints>
                                     <constraint firstItem="BL1-hY-a2W" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="2Jk-aQ-Tbx"/>
                                     <constraint firstItem="i5J-HI-KEp" firstAttribute="top" secondItem="uMS-mZ-d6w" secondAttribute="top" constant="10" id="6AI-tH-mNX"/>
-                                    <constraint firstItem="nk6-aB-Moe" firstAttribute="top" secondItem="c1a-8X-HRg" secondAttribute="bottom" constant="50" id="P7T-UQ-com"/>
-                                    <constraint firstItem="c1a-8X-HRg" firstAttribute="top" secondItem="lqE-c2-epN" secondAttribute="bottom" constant="50" id="QAl-L0-xSC"/>
-                                    <constraint firstAttribute="trailing" secondItem="nk6-aB-Moe" secondAttribute="trailing" constant="20" id="Sjw-q2-fo7"/>
+                                    <constraint firstItem="nk6-aB-Moe" firstAttribute="top" secondItem="c1a-8X-HRg" secondAttribute="bottom" constant="15" id="P7T-UQ-com"/>
+                                    <constraint firstAttribute="trailing" secondItem="nk6-aB-Moe" secondAttribute="trailing" constant="30" id="Sjw-q2-fo7"/>
                                     <constraint firstItem="c1a-8X-HRg" firstAttribute="leading" secondItem="BL1-hY-a2W" secondAttribute="trailing" constant="25" id="TZg-1o-6Hy"/>
+                                    <constraint firstAttribute="trailing" secondItem="8pr-Z5-lvA" secondAttribute="trailing" constant="20" id="WFs-U8-Z3Y"/>
+                                    <constraint firstItem="8pr-Z5-lvA" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="YEM-ZQ-geQ"/>
+                                    <constraint firstItem="8pr-Z5-lvA" firstAttribute="top" secondItem="lqE-c2-epN" secondAttribute="bottom" constant="25" id="YbT-rU-aeK"/>
                                     <constraint firstItem="lqE-c2-epN" firstAttribute="top" secondItem="uMS-mZ-d6w" secondAttribute="top" constant="52" id="goR-p5-bT7"/>
                                     <constraint firstItem="lqE-c2-epN" firstAttribute="centerX" secondItem="uMS-mZ-d6w" secondAttribute="centerX" id="jXO-4s-AYY"/>
-                                    <constraint firstItem="nk6-aB-Moe" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="kns-5i-Roi"/>
+                                    <constraint firstItem="nk6-aB-Moe" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="30" id="kns-5i-Roi"/>
+                                    <constraint firstItem="c1a-8X-HRg" firstAttribute="top" secondItem="8pr-Z5-lvA" secondAttribute="bottom" constant="25" id="lIP-hX-U4P"/>
                                     <constraint firstItem="i5J-HI-KEp" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="15" id="lq5-Fn-WAB"/>
+                                    <constraint firstItem="BL1-hY-a2W" firstAttribute="top" secondItem="8pr-Z5-lvA" secondAttribute="bottom" constant="25" id="n88-ZJ-uOL"/>
                                     <constraint firstAttribute="trailing" secondItem="c1a-8X-HRg" secondAttribute="trailing" constant="20" id="nAQ-WS-LvI"/>
-                                    <constraint firstItem="BL1-hY-a2W" firstAttribute="top" secondItem="lqE-c2-epN" secondAttribute="bottom" constant="50" id="qeK-VC-NNA"/>
                                     <constraint firstItem="g7o-ve-eMD" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="rQc-xv-xGI"/>
-                                    <constraint firstItem="g7o-ve-eMD" firstAttribute="top" secondItem="nk6-aB-Moe" secondAttribute="bottom" constant="50" id="vhY-UY-jZU"/>
+                                    <constraint firstItem="g7o-ve-eMD" firstAttribute="top" secondItem="nk6-aB-Moe" secondAttribute="bottom" constant="15" id="vhY-UY-jZU"/>
                                     <constraint firstAttribute="trailing" secondItem="g7o-ve-eMD" secondAttribute="trailing" constant="20" id="wfC-Mp-c8O"/>
                                 </constraints>
                             </view>
@@ -879,6 +889,7 @@
                         <outlet property="continueBtn" destination="g7o-ve-eMD" id="iOf-Oh-oCB"/>
                         <outlet property="contrySelectionView" destination="BL1-hY-a2W" id="cxy-YJ-d2C"/>
                         <outlet property="countryCodeTextField" destination="4Ha-FD-VvL" id="XI8-na-dUx"/>
+                        <outlet property="errorTextLbl" destination="nk6-aB-Moe" id="5kO-hP-xnN"/>
                         <outlet property="phoneNumTextField" destination="O71-vO-Gby" id="zKE-2u-Wyr"/>
                     </connections>
                 </viewController>
@@ -889,7 +900,7 @@
         <!--Verification Code View Controller-->
         <scene sceneID="VEg-Jy-BOk">
             <objects>
-                <viewController storyboardIdentifier="VerificationCodeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bet-dE-8E3" customClass="VerificationCodeViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VerificationCodeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bet-dE-8E3" customClass="VerificationCodeViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HeO-Gn-JXm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -898,7 +909,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4hl-lE-tCo">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0OE-qF-Wrv">
                                         <rect key="frame" x="15" y="10" width="25" height="17"/>
@@ -925,17 +936,17 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="773 234 2345" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cMo-S9-TzG">
-                                        <rect key="frame" x="77" y="122" width="98.5" height="21"/>
+                                        <rect key="frame" x="77" y="122" width="96.5" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qo-6f-uKC">
-                                        <rect key="frame" x="185.5" y="116" width="30" height="33"/>
+                                        <rect key="frame" x="183.5" y="116" width="30" height="33"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Edit">
-                                            <color key="titleColor" red="0.45882352939999999" green="0.18823529410000001" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="onClickEdit:" destination="bet-dE-8E3" eventType="touchUpInside" id="fVk-oE-U5Y"/>
@@ -943,7 +954,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B0y-Jt-a3k">
                                         <rect key="frame" x="20" y="331" width="374" height="48"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="NCo-3C-Hg4"/>
                                         </constraints>
@@ -960,7 +971,7 @@
                                                 <real key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -982,7 +993,7 @@
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Didn’t get a code?">
-                                            <color key="titleColor" red="0.45882352939999999" green="0.18823529410000001" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="onClickDidNotGetCode:" destination="bet-dE-8E3" eventType="touchUpInside" id="ONJ-Dm-jPV"/>
@@ -1043,7 +1054,7 @@
         <!--Enter Name View Controller-->
         <scene sceneID="KBW-B5-J4D">
             <objects>
-                <viewController storyboardIdentifier="EnterNameViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nhG-Ob-lux" customClass="EnterNameViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EnterNameViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nhG-Ob-lux" customClass="EnterNameViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ICn-zC-VaC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1052,7 +1063,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k5d-6u-Toh">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dhy-yL-aP4">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -1170,7 +1181,7 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yny-Es-UFB">
                                                 <rect key="frame" x="20" y="456" width="374" height="48"/>
-                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" name="primaryBlue"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="48" id="qDj-ds-6JZ"/>
                                                 </constraints>
@@ -1187,7 +1198,7 @@
                                                         <real key="value" value="1"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -1259,16 +1270,16 @@
         <!--Confirm Pop Up View Controller-->
         <scene sceneID="HE9-lh-zf2">
             <objects>
-                <viewController storyboardIdentifier="ConfirmPopUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="m1H-7t-6Vm" customClass="ConfirmPopUpViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConfirmPopUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="m1H-7t-6Vm" customClass="ConfirmPopUpViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CS6-qs-9rm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WZ2-2Q-Gsa">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cJY-wf-VpE">
-                                        <rect key="frame" x="20" y="274" width="374" height="270.5"/>
+                                        <rect key="frame" x="20" y="272" width="374" height="270.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" text="Please confirm your information" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ig-U7-YDl">
                                                 <rect key="frame" x="15" y="15" width="344" height="70"/>
@@ -1373,7 +1384,7 @@
         <!--Notification Permission View Controller-->
         <scene sceneID="GJZ-Ca-ZQu">
             <objects>
-                <viewController storyboardIdentifier="NotificationPermissionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z2g-Tr-aaq" customClass="NotificationPermissionViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NotificationPermissionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z2g-Tr-aaq" customClass="NotificationPermissionViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8lc-Iv-fsT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1382,7 +1393,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yL2-6k-QJ3">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Never miss invitations and stay up to date on what’s happening in your city." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MBF-iM-FaD">
                                         <rect key="frame" x="20" y="35" width="374" height="105"/>
@@ -1474,7 +1485,7 @@
         <!--Set Location View Controller-->
         <scene sceneID="6KF-t4-Wy2">
             <objects>
-                <viewController storyboardIdentifier="SetLocationViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g14-dx-dol" customClass="SetLocationViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SetLocationViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g14-dx-dol" customClass="SetLocationViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="90o-IM-qkl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1483,7 +1494,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xC1-wn-kSF">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Set your location" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uhc-Tp-wEe">
                                         <rect key="frame" x="20" y="35" width="374" height="35"/>
@@ -1577,7 +1588,7 @@
         <!--Connect Social Media View Controller-->
         <scene sceneID="SFU-kJ-MCB">
             <objects>
-                <viewController storyboardIdentifier="ConnectSocialMediaViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jmy-2p-gPO" customClass="ConnectSocialMediaViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConnectSocialMediaViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jmy-2p-gPO" customClass="ConnectSocialMediaViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6VZ-nk-4LM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1586,7 +1597,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dPi-sK-Fno">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect your social" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tcx-tX-Z5C">
                                         <rect key="frame" x="20" y="35" width="374" height="38"/>
@@ -1653,7 +1664,7 @@
                                                             <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qFn-tb-Ybr">
                                                                 <rect key="frame" x="0.0" y="0.0" width="44" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dm6-ZI-Hwf" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dm6-ZI-Hwf" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                                         <rect key="frame" x="4" y="4" width="36" height="14"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="10"/>
                                                                         <color key="textColor" red="0.46666663889999999" green="0.46666663889999999" blue="0.46666663889999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1687,7 +1698,7 @@
                                                             <view tag="6" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Daf-Zb-bC9">
                                                                 <rect key="frame" x="44" y="0.0" width="39.5" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ESo-ms-QvC" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ESo-ms-QvC" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                                         <rect key="frame" x="4" y="4" width="31.5" height="14"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="10"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1796,7 +1807,7 @@
                                                             <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHG-bN-HHA">
                                                                 <rect key="frame" x="0.0" y="0.0" width="44" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C8S-jm-nel" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C8S-jm-nel" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                                         <rect key="frame" x="4" y="4" width="36" height="14"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="10"/>
                                                                         <color key="textColor" red="0.46666663889999999" green="0.46666663889999999" blue="0.46666663889999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -1830,7 +1841,7 @@
                                                             <view tag="6" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CYC-pV-6NG">
                                                                 <rect key="frame" x="44" y="0.0" width="39.5" height="22"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FjB-gW-Yhv" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FjB-gW-Yhv" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                                         <rect key="frame" x="4" y="4" width="31.5" height="14"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="10"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1903,7 +1914,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VHw-PX-iKd">
-                                        <rect key="frame" x="20" y="720" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="716" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="QmG-jb-vBJ"/>
@@ -1992,7 +2003,7 @@
         <!--Create Password View Controller-->
         <scene sceneID="mve-fG-fSj">
             <objects>
-                <viewController storyboardIdentifier="CreatePasswordViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="a3v-L7-4vZ" customClass="CreatePasswordViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreatePasswordViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="a3v-L7-4vZ" customClass="CreatePasswordViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2tB-zw-kmL">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2001,7 +2012,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkN-uQ-gkD">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G2Z-4R-oF9">
                                         <rect key="frame" x="15" y="10" width="25" height="17"/>
@@ -2158,7 +2169,7 @@
         <!--Select Gender View Controller-->
         <scene sceneID="g7t-h8-SYu">
             <objects>
-                <viewController storyboardIdentifier="SelectGenderViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WmK-vf-uux" customClass="SelectGenderViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectGenderViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WmK-vf-uux" customClass="SelectGenderViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="10F-lA-nJ5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2167,7 +2178,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cb3-Rt-yhG">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Which gender best describes you?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cOS-0n-g4c">
                                         <rect key="frame" x="20" y="35" width="374" height="70"/>
@@ -2246,7 +2257,7 @@
                                                 <rect key="frame" x="0.0" y="15" width="374" height="30"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Female" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0iU-Ej-0Na">
-                                                        <rect key="frame" x="0.0" y="3" width="62" height="24"/>
+                                                        <rect key="frame" x="0.0" y="3" width="63" height="24"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="17"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -2297,9 +2308,67 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjb-9d-TCD">
+                                        <rect key="frame" x="20" y="302" width="374" height="60"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wu-P9-d4i">
+                                                <rect key="frame" x="0.0" y="15" width="374" height="30"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Other" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VH7-gx-5PV">
+                                                        <rect key="frame" x="0.0" y="3" width="47.5" height="24"/>
+                                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="17"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9e-bF-I0A">
+                                                        <rect key="frame" x="344" y="5" width="20" height="20"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="20" id="9hq-Bt-WQx"/>
+                                                            <constraint firstAttribute="width" constant="20" id="k5f-KA-V1f"/>
+                                                        </constraints>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="radioCirculIcon"/>
+                                                        <connections>
+                                                            <action selector="onClickWomanBtn:" destination="WmK-vf-uux" eventType="touchUpInside" id="ElE-b2-L3c"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="G9e-bF-I0A" secondAttribute="trailing" constant="10" id="TlX-H8-3PT"/>
+                                                    <constraint firstItem="VH7-gx-5PV" firstAttribute="centerY" secondItem="5wu-P9-d4i" secondAttribute="centerY" id="e3S-YG-YMc"/>
+                                                    <constraint firstItem="G9e-bF-I0A" firstAttribute="centerY" secondItem="5wu-P9-d4i" secondAttribute="centerY" id="h1l-Y9-fFC"/>
+                                                    <constraint firstItem="VH7-gx-5PV" firstAttribute="leading" secondItem="5wu-P9-d4i" secondAttribute="leading" id="x67-md-GJi"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Efw-wk-YT9">
+                                                <rect key="frame" x="0.0" y="59" width="374" height="1"/>
+                                                <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="3oE-NG-bCZ"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="5wu-P9-d4i" secondAttribute="bottom" constant="15" id="1S9-8U-EiM"/>
+                                            <constraint firstAttribute="height" constant="60" id="3di-Uk-Vmp"/>
+                                            <constraint firstItem="5wu-P9-d4i" firstAttribute="top" secondItem="hjb-9d-TCD" secondAttribute="top" constant="15" id="Bbh-Zv-vzU"/>
+                                            <constraint firstAttribute="trailing" secondItem="Efw-wk-YT9" secondAttribute="trailing" id="C9z-IS-vaG"/>
+                                            <constraint firstItem="5wu-P9-d4i" firstAttribute="leading" secondItem="hjb-9d-TCD" secondAttribute="leading" id="Ec0-Kl-tra"/>
+                                            <constraint firstItem="Efw-wk-YT9" firstAttribute="leading" secondItem="hjb-9d-TCD" secondAttribute="leading" id="LnO-Iu-0KJ"/>
+                                            <constraint firstAttribute="bottom" secondItem="Efw-wk-YT9" secondAttribute="bottom" id="X2D-8N-jA0"/>
+                                            <constraint firstAttribute="trailing" secondItem="5wu-P9-d4i" secondAttribute="trailing" id="cXg-ng-fl4"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" red="0.4823529412" green="0.47843137250000001" blue="0.48627450979999998" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFv-nh-NLp">
-                                        <rect key="frame" x="20" y="347" width="374" height="48"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <rect key="frame" x="20" y="407" width="374" height="48"/>
+                                        <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="tub-sv-otL"/>
                                         </constraints>
@@ -2316,7 +2385,7 @@
                                                 <real key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -2328,13 +2397,15 @@
                                 <constraints>
                                     <constraint firstItem="nu7-qe-Ljc" firstAttribute="leading" secondItem="Cb3-Rt-yhG" secondAttribute="leading" constant="20" id="0N7-Ff-5CD"/>
                                     <constraint firstItem="lFv-nh-NLp" firstAttribute="leading" secondItem="Cb3-Rt-yhG" secondAttribute="leading" constant="20" id="9MO-Vm-i11"/>
-                                    <constraint firstItem="lFv-nh-NLp" firstAttribute="top" secondItem="0jI-Md-ET1" secondAttribute="bottom" constant="45" id="C2x-MT-Ahn"/>
                                     <constraint firstAttribute="trailing" secondItem="lFv-nh-NLp" secondAttribute="trailing" constant="20" id="H3O-sr-9Fd"/>
+                                    <constraint firstItem="hjb-9d-TCD" firstAttribute="trailing" secondItem="0jI-Md-ET1" secondAttribute="trailing" id="H9R-Ac-PC1"/>
                                     <constraint firstItem="cOS-0n-g4c" firstAttribute="top" secondItem="Cb3-Rt-yhG" secondAttribute="top" constant="35" id="KHl-fe-Kty"/>
                                     <constraint firstItem="nu7-qe-Ljc" firstAttribute="top" secondItem="cOS-0n-g4c" secondAttribute="bottom" constant="21" id="LGe-1K-DMe"/>
+                                    <constraint firstItem="hjb-9d-TCD" firstAttribute="top" secondItem="0jI-Md-ET1" secondAttribute="bottom" id="Pf0-pT-ixY"/>
                                     <constraint firstAttribute="trailing" secondItem="nu7-qe-Ljc" secondAttribute="trailing" constant="20" id="UZ1-Sp-s2x"/>
                                     <constraint firstAttribute="trailing" secondItem="cOS-0n-g4c" secondAttribute="trailing" constant="20" id="aK8-gf-NMz"/>
                                     <constraint firstItem="cOS-0n-g4c" firstAttribute="leading" secondItem="Cb3-Rt-yhG" secondAttribute="leading" constant="20" id="cmn-TE-K9t"/>
+                                    <constraint firstItem="lFv-nh-NLp" firstAttribute="top" secondItem="hjb-9d-TCD" secondAttribute="bottom" constant="45" id="gHs-vt-VXb"/>
                                     <constraint firstAttribute="trailing" secondItem="hCB-zc-e3e" secondAttribute="trailing" constant="20" id="gfL-gh-Ioa"/>
                                     <constraint firstAttribute="trailing" secondItem="0jI-Md-ET1" secondAttribute="trailing" constant="20" id="iCJ-6b-fhG"/>
                                     <constraint firstItem="0jI-Md-ET1" firstAttribute="top" secondItem="hCB-zc-e3e" secondAttribute="bottom" id="k7T-Oh-fH5"/>
@@ -2343,6 +2414,7 @@
                                     <constraint firstItem="hCB-zc-e3e" firstAttribute="top" secondItem="nu7-qe-Ljc" secondAttribute="bottom" constant="35" id="p3E-qJ-DNE"/>
                                     <constraint firstAttribute="trailing" secondItem="lFv-nh-NLp" secondAttribute="trailing" constant="20" id="qXY-fh-IXL"/>
                                     <constraint firstItem="lFv-nh-NLp" firstAttribute="leading" secondItem="Cb3-Rt-yhG" secondAttribute="leading" constant="20" id="qfy-8B-n3Q"/>
+                                    <constraint firstItem="hjb-9d-TCD" firstAttribute="leading" secondItem="0jI-Md-ET1" secondAttribute="leading" id="sDg-YW-dU5"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -2363,6 +2435,8 @@
                         <outlet property="continueBtn" destination="lFv-nh-NLp" id="pGb-gs-NIq"/>
                         <outlet property="manRedioBtn" destination="ksB-hz-VbE" id="BSX-5j-GWZ"/>
                         <outlet property="manSelectionView" destination="q0q-VU-m2x" id="65r-ko-rJe"/>
+                        <outlet property="otherRedioBtn" destination="G9e-bF-I0A" id="JzX-kk-EOu"/>
+                        <outlet property="otherSelectionView" destination="5wu-P9-d4i" id="dgO-L9-2tI"/>
                         <outlet property="womenRedioBtn" destination="wov-5T-MtH" id="SEz-LK-dZD"/>
                         <outlet property="womenSelectionView" destination="T2Q-lZ-TXA" id="maz-XT-Ddf"/>
                     </connections>
@@ -2374,13 +2448,13 @@
         <!--Instagram Web Controller-->
         <scene sceneID="bPE-6g-vpZ">
             <objects>
-                <viewController storyboardIdentifier="InstagramWebController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wAb-OY-kJA" customClass="InstagramWebController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InstagramWebController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wAb-OY-kJA" customClass="InstagramWebController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cEQ-3n-3zZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J1i-pO-dDW">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -2408,13 +2482,13 @@
         <!--Select Photos View Controller-->
         <scene sceneID="QV7-Bf-j34">
             <objects>
-                <viewController storyboardIdentifier="SelectPhotosViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PcJ-cI-9SI" customClass="SelectPhotosViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectPhotosViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PcJ-cI-9SI" customClass="SelectPhotosViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BhP-sD-neC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="cbp-Be-GTR">
-                                <rect key="frame" x="0.0" y="54" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="58" width="414" height="804"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="1ch-Xp-pIg">
                                     <size key="itemSize" width="128" height="128"/>
@@ -2423,7 +2497,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="PhotoCollectionviewCell" reuseIdentifier="PhotoCollectionviewCell" id="dQc-vj-stC" customClass="PhotoCollectionviewCell" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="PhotoCollectionviewCell" reuseIdentifier="PhotoCollectionviewCell" id="dQc-vj-stC" customClass="PhotoCollectionviewCell" customModule="Speakeasy" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="dDG-R3-J23">
@@ -2471,7 +2545,7 @@
         <!--Select City View Controller-->
         <scene sceneID="1E7-vW-oVG">
             <objects>
-                <viewController storyboardIdentifier="SelectCityViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="o8W-6w-Os6" customClass="SelectCityViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectCityViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="o8W-6w-Os6" customClass="SelectCityViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7IN-VG-WEQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2480,7 +2554,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oTL-cW-wx9">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select City" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6G-JF-ZqI">
                                         <rect key="frame" x="20" y="35" width="374" height="35"/>
@@ -2495,7 +2569,7 @@
                                         <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CcM-NG-QW6" customClass="RoundedView" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CcM-NG-QW6" customClass="RoundedView" customModule="Speakeasy" customModuleProvider="target">
                                         <rect key="frame" x="20" y="195" width="374" height="40"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SearchIcon" translatesAutoresizingMaskIntoConstraints="NO" id="iLZ-AN-IuD">
@@ -2528,7 +2602,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="TxM-sW-i9x">
-                                        <rect key="frame" x="0.0" y="255" width="414" height="435"/>
+                                        <rect key="frame" x="0.0" y="255" width="414" height="431"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2539,7 +2613,7 @@
                                         </connections>
                                     </tableView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nnh-4Y-wDw">
-                                        <rect key="frame" x="20" y="720" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="716" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="9k1-jJ-Che"/>
@@ -2614,7 +2688,7 @@
         <!--Select Vibes View Controller-->
         <scene sceneID="kJS-LL-TNV">
             <objects>
-                <viewController storyboardIdentifier="SelectVibesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uMw-7h-a9e" customClass="SelectVibesViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectVibesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uMw-7h-a9e" customClass="SelectVibesViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="PSP-t4-6dL">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2623,7 +2697,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="veM-62-Gzz">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vibes" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5A-JU-6sH">
                                         <rect key="frame" x="20" y="35" width="374" height="35"/>
@@ -2638,7 +2712,7 @@
                                         <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select at least 4" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lit-CW-C7d">
-                                        <rect key="frame" x="155" y="686.5" width="104" height="18.5"/>
+                                        <rect key="frame" x="155.5" y="682.5" width="103.5" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2649,7 +2723,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="Syz-YJ-1GD"/>
                                         </constraints>
-                                        <collectionViewLayout key="collectionViewLayout" id="hHb-Ke-a4a" customClass="LeftAlignedCollectionViewFlowLayout" customModule="SpeakEasy_Consumer" customModuleProvider="target"/>
+                                        <collectionViewLayout key="collectionViewLayout" id="hHb-Ke-a4a" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Speakeasy" customModuleProvider="target"/>
                                         <cells/>
                                         <connections>
                                             <outlet property="dataSource" destination="uMw-7h-a9e" id="AEx-nv-a9d"/>
@@ -2657,7 +2731,7 @@
                                         </connections>
                                     </collectionView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Visible on profile" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4F-1v-DBd">
-                                        <rect key="frame" x="50" y="387.5" width="122.5" height="21"/>
+                                        <rect key="frame" x="50" y="387.5" width="123" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                         <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -2675,7 +2749,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7hh-xu-mTW">
-                                        <rect key="frame" x="20" y="720" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="716" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="t8o-0k-wr4"/>
@@ -2751,7 +2825,7 @@
         <!--Select Favorite Drink View Controller-->
         <scene sceneID="Xpk-v1-Bh0">
             <objects>
-                <viewController storyboardIdentifier="SelectFavoriteDrinkViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KrE-IA-gxc" customClass="SelectFavoriteDrinkViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectFavoriteDrinkViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KrE-IA-gxc" customClass="SelectFavoriteDrinkViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XNX-oL-oa8">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2760,7 +2834,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SiN-VC-3dP">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Drinks" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tC9-1A-aqW">
                                         <rect key="frame" x="20" y="35" width="374" height="35"/>
@@ -2780,7 +2854,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="gbE-Sr-Ip8"/>
                                         </constraints>
-                                        <collectionViewLayout key="collectionViewLayout" id="Od4-ur-2Fv" customClass="LeftAlignedCollectionViewFlowLayout" customModule="SpeakEasy_Consumer" customModuleProvider="target"/>
+                                        <collectionViewLayout key="collectionViewLayout" id="Od4-ur-2Fv" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Speakeasy" customModuleProvider="target"/>
                                         <cells/>
                                         <connections>
                                             <outlet property="dataSource" destination="KrE-IA-gxc" id="qrK-Of-yi3"/>
@@ -2788,7 +2862,7 @@
                                         </connections>
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pcg-rG-TsL">
-                                        <rect key="frame" x="20" y="720" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="716" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="ayt-78-O4C"/>
@@ -2857,7 +2931,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="YPD-54-aGv">
             <objects>
-                <viewController storyboardIdentifier="WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oq1-iB-b9b" customClass="WelcomeViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Oq1-iB-b9b" customClass="WelcomeViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Li8-br-rEv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2866,7 +2940,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5D-2b-Fha">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Welcome 1 Glass" translatesAutoresizingMaskIntoConstraints="NO" id="lTj-hb-kQy">
                                         <rect key="frame" x="87" y="100" width="240" height="240"/>
@@ -2956,7 +3030,7 @@
         <!--Welcome Itroduce View Controller-->
         <scene sceneID="yS5-8X-bWH">
             <objects>
-                <viewController storyboardIdentifier="WelcomeItroduceViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TM9-OJ-ZkR" customClass="WelcomeItroduceViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WelcomeItroduceViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TM9-OJ-ZkR" customClass="WelcomeItroduceViewController" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2eS-KO-aYO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2965,7 +3039,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IOM-yV-UoW">
-                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Welcome 5 Discoball" translatesAutoresizingMaskIntoConstraints="NO" id="pne-RQ-XgN">
                                         <rect key="frame" x="87" y="100" width="240" height="240"/>
@@ -3062,6 +3136,12 @@
         <image name="radioCirculIcon" width="20" height="20"/>
         <image name="speakEasy" width="90" height="49"/>
         <image name="spotifyConnect_Ic" width="20" height="20"/>
+        <namedColor name="errorRed">
+            <color red="1" green="0.0" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="primaryBlue">
+            <color red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
