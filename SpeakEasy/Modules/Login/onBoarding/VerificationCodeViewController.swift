@@ -24,7 +24,7 @@ final class VerificationCodeViewController: UIViewController {
     private var onBoardingDelegate = OnBoardingPresenter()
     var isFromSettings = false
     var isForEmail = false
-    var settingDelegate = SettingPresenter()
+    private var settingDelegate = SettingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,20 +45,20 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             bgImg.isHidden = false
         }
-            phoneNumLbl.text = phoneNum
+        phoneNumLbl.text = phoneNum
     }
     
-    func setOtpView() {
-        self.otpFieldView.fieldsCount = 6
-        self.otpFieldView.fieldBorderWidth = 1
-        self.otpFieldView.defaultBorderColor = .white
-        self.otpFieldView.cursorColor = Constant.Color.primaryColor
-        self.otpFieldView.filledBorderColor = Constant.Color.primaryColor
-        self.otpFieldView.displayType = .underlinedBottom
-        self.otpFieldView.fieldSize = 40
-        self.otpFieldView.separatorSpace = 8
-        self.otpFieldView.shouldAllowIntermediateEditing = false
-        self.otpFieldView.initializeUI()
+    private func setOtpView() {
+        otpFieldView.fieldsCount = 6
+        otpFieldView.fieldBorderWidth = 1
+        otpFieldView.defaultBorderColor = .white
+        otpFieldView.cursorColor = Constant.Color.primaryColor
+        otpFieldView.filledBorderColor = Constant.Color.primaryColor
+        otpFieldView.displayType = .underlinedBottom
+        otpFieldView.fieldSize = 40
+        otpFieldView.separatorSpace = 8
+        otpFieldView.shouldAllowIntermediateEditing = false
+        otpFieldView.initializeUI()
     }
 
     @IBAction func onClickEdit(_ sender: Any) {
@@ -137,7 +137,6 @@ final class VerificationCodeViewController: UIViewController {
                     }
                     Loader.hide()
                 }
-
             }
         }
     }
@@ -226,15 +225,15 @@ final class VerificationCodeViewController: UIViewController {
 
 extension VerificationCodeViewController : OTPFieldViewDelegate{
     func shouldBecomeFirstResponderForOTP(otpTextFieldIndex index: Int) -> Bool {
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
         return true
     }
     
     func enteredOTP(otp: String) {
-            otpText = otp
-        self.continueBtn.isUserInteractionEnabled = true
-        self.continueBtn.alpha = 1.0
+        otpText = otp
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.alpha = 1.0
     }
     
     func hasEnteredAllOTP(hasEnteredAll: Bool) -> Bool {

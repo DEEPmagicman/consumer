@@ -115,7 +115,7 @@ final class EnterPhoneNumberViewController: UIViewController {
             if isFromSettings {
                 self.settingDelegate.changePhoneNumberApi(phone: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess, errMsg in
                     if isSuccess {
-                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else {
                         if errMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -129,7 +129,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                 self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
-                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                         Loader.hide()
                     } else {
                         if errorMsg != nil {
@@ -166,7 +166,6 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
         listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
         
         self.present(navigationViewController, animated: true, completion: nil)
-        
     }
     
     func fpnDidSelectCountry(name: String, dialCode: String, code: String) {

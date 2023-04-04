@@ -20,7 +20,7 @@ final class SetProfilePictureViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var continueBtn: UIButton!
     
-    var onBoardingDelegate = OnBoardingPresenter()
+    private var onBoardingDelegate = OnBoardingPresenter()
     var imgUrl = ""
     
     override func viewDidLoad() {
@@ -38,8 +38,8 @@ final class SetProfilePictureViewController: UIViewController {
         self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
             if isSuccess {
                 self.imgUrl = imgUrl
-                let imgDetail = ImageDetail(key:imgUrl,name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
-                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess,errorMsg  in
+                let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
+                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess, errorMsg  in
                     if isSuccess {
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
@@ -88,12 +88,11 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
     }
     
     func fetchInstaPhotos(_ fromViewController: UIViewController) {
-        
         if !Connectivity.isConnectedToInternet {
             Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
             return
         }
-         let instaToken = UserDefault.shared.user?.instagramToken
+        let instaToken = UserDefault.shared.user?.instagramToken
         if instaToken != "" && instaToken != nil {
             Navigate.to.selectPhotoVc(self)
         } else {

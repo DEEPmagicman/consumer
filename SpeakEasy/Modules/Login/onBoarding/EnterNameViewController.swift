@@ -24,11 +24,11 @@ final class EnterNameViewController: UIViewController {
         firstNameTextField.delegate = self
         nikNameTextField.delegate = self
         lastNameTextField.delegate = self
-        self.ContinueBtn.isUserInteractionEnabled = false
-        self.ContinueBtn.alpha = 0.5
+        ContinueBtn.isUserInteractionEnabled = false
+        ContinueBtn.alpha = 0.5
     }
     
-    @IBAction func onClickContinue(_ sender: Any) {
+    @IBAction private func onClickContinue(_ sender: Any) {
         let name = "Legal name: \(firstNameTextField.text ?? "") \(lastNameTextField.text ?? "") \nNickname: \(nikNameTextField.text ?? "")"
         Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmInfo, text2: name, text3: Constant.String.nameNote)
     }
@@ -36,7 +36,6 @@ final class EnterNameViewController: UIViewController {
 
 extension EnterNameViewController: ConfirmPopUpDelegate {
     func cancelDetail() {
-    
     }
     
     func confirmDetail() {
@@ -57,7 +56,6 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
             }
         }
     }
-    
 }
 
 extension EnterNameViewController: UITextFieldDelegate {

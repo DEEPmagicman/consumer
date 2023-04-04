@@ -208,6 +208,8 @@
 		CE0E87492994C61000F2B2E9 /* PeymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PeymentFlow.storyboard */; };
 		CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */; };
+		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
+		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
 		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
@@ -795,6 +797,8 @@
 		CE0E87482994C61000F2B2E9 /* PeymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PeymentFlow.storyboard; sourceTree = "<group>"; };
 		CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhomeNumberMvpVC.swift; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutMvpVC.swift; sourceTree = "<group>"; };
+		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
+		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
 		CE3C896329A61C8A0072E93C /* FloorPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlan.swift; sourceTree = "<group>"; };
@@ -1619,6 +1623,8 @@
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
 				828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */,
+				CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */,
+				CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -4215,6 +4221,7 @@
 				E11F4C1428C835F3008D2E30 /* Invites.swift in Sources */,
 				CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */,
 				E11F4BAB28C8358C008D2E30 /* BookingCalenderTVC.swift in Sources */,
+				CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */,
 				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
 				E1A9E7F628C579690081FB28 /* FriendsListCVC.swift in Sources */,
 				E167055C28CA442800644BF0 /* SelectedTicketTVC.swift in Sources */,
@@ -4459,6 +4466,7 @@
 				CE4867D2286F358800FD277E /* GifAnimation.swift in Sources */,
 				E1A9E74F28C55D550081FB28 /* PhotoGalleryCVC.swift in Sources */,
 				E11F4B9028C8358C008D2E30 /* TopEventsTVC.swift in Sources */,
+				CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */,
 				E17DC85828C6C16500244C4F /* NFTCVC.swift in Sources */,
 				E11F4C0028C835F3008D2E30 /* BookingDetails.swift in Sources */,
 				9D4A029028CE9E4B009CD670 /* CostSplitSelectionTVC.swift in Sources */,

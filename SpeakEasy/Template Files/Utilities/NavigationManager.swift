@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NBBottomSheet
 
 final class Navigate {
     
@@ -29,7 +30,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "",phoneNum: String) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(VerificationCodeViewController.self)
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp ?? ""
@@ -54,6 +55,21 @@ final class Navigate {
         vc.infoNoteText = text3
         vc.isPrivetOrPublic = isYesOrNoBtn
         sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func confirmEmailVC(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailVC.self)
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func presentCommentDoneBottomSheet(_ sender: UIViewController) {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(380))
+        let viewController = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailBottomSheet.self)
+        let bottomSheetController = NBBottomSheetController(configuration: configuration)
+        bottomSheetController.present(viewController, on: sender)
     }
     
     func connectAccountVc(_ sender: UIViewController) {
