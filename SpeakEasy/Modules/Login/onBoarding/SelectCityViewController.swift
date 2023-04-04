@@ -24,17 +24,17 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        selectCityInfoLbl.highlightBold(["Enable Location Services"], size: 15, textColor: Constant.Color.primaryColor)
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
+        selectCityInfoLbl.highlightBold(["Enable Location Services"], size: 15, textColor: Constant.Color.purpleColor)
         
         self.selectCityTableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
         self.searchTextField.delegate = self
         self.searchTextField.addTarget(self, action: #selector(searchFieldTextChange), for: .editingChanged)
-        fatchCityList()
-
+        fetchCityList()
     }
     
-    private func fatchCityList() {
+    private func fetchCityList() {
         print(searchText)
         self.onBoardingDelegate.getCityListAPi(from: from, searchText: searchText) { cityList, hasMore, isSuccess in
             if isSuccess {
@@ -67,15 +67,16 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
         self.arrCityList.removeAll()
         self.selectCityTableView.reloadData()
         self.hasMore = false
-        self.fatchCityList()
-        
+        self.fetchCityList()
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
         self.onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { isSuccess,errorMsg  in
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
-                Navigate.to.connectSocialMediaVc(self)
+                UserDefault.shared.isLoggedIn = true
+                AppDelegate.shared.changeRootViewController()
+//                Navigate.to.connectSocialMediaVc(self)
 //                Navigate.to.selectVibesVc(self)
             } else {
                 if errorMsg != nil {
@@ -91,7 +92,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 
 extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrCityList.count
+        arrCityList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -104,16 +105,17 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.selectedCity = arrCityList[indexPath.row].name
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.alpha = 1
+        selectedCity = arrCityList[indexPath.row].name
 //        Navigate.to.selectVibesVc(self)
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == arrCityList.count - 1 {
             if self.hasMore {
-                self.fatchCityList()
+                self.fetchCityList()
             }
         }
     }
-    
 }

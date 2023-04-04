@@ -17,6 +17,7 @@ struct Constant {
         static let code7Acolor = UIColor(named: "code7a")
         static let code2Fcolor = UIColor(named: "code2f")
         static let submiteRequestBtnColor = UIColor(hex: "#0B78FF")
+        static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
     }
     
     struct Icon {

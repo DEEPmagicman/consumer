@@ -34,8 +34,8 @@ final class EnterPhoneNumberViewController: UIViewController {
         checkFPNField.delegate = self
         
         countryCodeTextField.delegate = self
-        countryCodeTextField.setFlag(countryCode: .IN)
-        self.contryCode = "+91"
+        countryCodeTextField.setFlag(countryCode: .US)
+        self.contryCode = "+1"
         
         listController.setup(repository: countryCodeTextField.countryRepository)
         listController.didSelect = { [weak self] country in
@@ -96,11 +96,11 @@ final class EnterPhoneNumberViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-            let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
+        let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
             self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(self,isFromLogin: true, otp: otp, otpRef: otpRef,phoneNum: self.phoneNumTextField.text ?? "")
+                    Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     Loader.hide()
                 } else {
                     if errorMsg != nil {
@@ -110,7 +110,6 @@ final class EnterPhoneNumberViewController: UIViewController {
                     }
                     Loader.hide()
                 }
-               
             }
         } else {
             if isFromSettings {
@@ -143,7 +142,6 @@ final class EnterPhoneNumberViewController: UIViewController {
                 }
             }
         }
-           
     }
 }
 

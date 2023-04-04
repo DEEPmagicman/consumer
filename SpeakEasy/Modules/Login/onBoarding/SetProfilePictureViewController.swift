@@ -19,7 +19,6 @@ final class SetProfilePictureViewController: UIViewController {
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var cameraBtn: UIButton!
     
     var onBoardingDelegate = OnBoardingPresenter()
     var imgUrl = ""
@@ -42,7 +41,6 @@ final class SetProfilePictureViewController: UIViewController {
                 let imgDetail = ImageDetail(key:imgUrl,name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
                 self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess,errorMsg  in
                     if isSuccess {
-                        
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
                         Loader.hide()
@@ -59,18 +57,18 @@ final class SetProfilePictureViewController: UIViewController {
                 Alert.showAlertSheet(style: .alert, title: "image not upload", message: "")
                 Loader.hide()
             }
-            
         }
     }
     
-    @IBAction func onClickCamaraBtn(_ sender: Any) {
-        onClickAddPhoto()
+    @IBAction func onClickSkipForNow(_ sender: Any) {
+        Navigate.to.notificationPermissionVc(self)
     }
     
     @objc func onClickAddPhoto() {
-        showImagePickerControllerActionSheet()
+        self.showImagePickerController(soureType:.photoLibrary)
+        // MARK: hide showImagePickerControllerActionSheet for now
+//        showImagePickerControllerActionSheet()
     }
-    
 }
 
 extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -78,15 +76,15 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (action) in
             self.showImagePickerController(soureType:.photoLibrary)
         }
-        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
-//            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
-//            self.showImagePickerController(soureType:.camera)
-            self.fetchInstaPhotos(self)
-        }
+        // MARK: comment out Instagram flow for now
+//        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
+////            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
+////            self.showImagePickerController(soureType:.camera)
+//            self.fetchInstaPhotos(self)
+//        }
         let cancelAction =  UIAlertAction(title: "Cancel", style: .cancel, handler: nil )
         
-        Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction,cancelAction,instagram], completion: nil)
-        
+        Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction, cancelAction], completion: nil)
     }
     
     func fetchInstaPhotos(_ fromViewController: UIViewController) {
@@ -115,13 +113,11 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imageView.image = editedImage
-            self.cameraBtn.isHidden = true
             self.continueBtn.isUserInteractionEnabled = true
             self.continueBtn.alpha = 1
             
         } else if let orignalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageView.image = orignalImage
-            self.cameraBtn.isHidden = true
             self.continueBtn.isUserInteractionEnabled = true
             self.continueBtn.alpha = 1
         }
@@ -138,7 +134,6 @@ extension SetProfilePictureViewController: InstagramConnectedDelegate {
 extension SetProfilePictureViewController: SelectedInstaImgDelegate {
     func selectedImg(image: String) {
         imageView.sd_setImage(with: URL( string: image), completed: nil)
-        self.cameraBtn.isHidden = true
         self.continueBtn.isUserInteractionEnabled = true
         self.continueBtn.alpha = 1
     }

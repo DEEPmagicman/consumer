@@ -204,11 +204,10 @@ final class VerificationCodeViewController: UIViewController {
                     }
                     print("*-*settingPhone")
                 }
-               
             } else {
                 self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
                     if isSuccess {
-                            Navigate.to.welcomeVc(self)
+                        Navigate.to.enterNameVc(self)
                         Loader.hide()
                     } else {
                         if errorMsg != nil {
@@ -222,7 +221,6 @@ final class VerificationCodeViewController: UIViewController {
                print("*-*signup")
             }
         }
-      
     }
 }
 

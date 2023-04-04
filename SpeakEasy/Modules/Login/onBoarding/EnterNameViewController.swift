@@ -20,7 +20,7 @@ final class EnterNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        firstNameAndLastNameInfo.highlightBold(["Why?"], size: 15, textColor: Constant.Color.primaryColor)
+        firstNameAndLastNameInfo.highlightBold(["Why?"], size: 15, textColor: Constant.Color.purpleColor)
         firstNameTextField.delegate = self
         nikNameTextField.delegate = self
         lastNameTextField.delegate = self
@@ -30,9 +30,8 @@ final class EnterNameViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         let name = "Legal name: \(firstNameTextField.text ?? "") \(lastNameTextField.text ?? "") \nNickname: \(nikNameTextField.text ?? "")"
-        Navigate.to.presentConfirmPopUp(self,text1: Constant.String.confirmInfo,text2: name,text3: Constant.String.nameNote)
+        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmInfo, text2: name, text3: Constant.String.nameNote)
     }
-
 }
 
 extension EnterNameViewController: ConfirmPopUpDelegate {
@@ -66,7 +65,7 @@ extension EnterNameViewController: UITextFieldDelegate {
         if firstNameTextField.text != "" && lastNameTextField.text != "" {
             self.ContinueBtn.isUserInteractionEnabled = true
             self.ContinueBtn.alpha = 1.0
-        }else {
+        } else {
             self.ContinueBtn.isUserInteractionEnabled = false
             self.ContinueBtn.alpha = 0.5
         }

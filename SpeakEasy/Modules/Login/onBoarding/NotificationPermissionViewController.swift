@@ -11,7 +11,6 @@ final class NotificationPermissionViewController: UIViewController, UNUserNotifi
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
     
     @IBAction func onClickTurnOnNotification(_ sender: Any) {
@@ -26,7 +25,7 @@ final class NotificationPermissionViewController: UIViewController, UNUserNotifi
                 options: authOptions,
                 completionHandler: { _, _ in
                     DispatchQueue.main.async {
-                        Navigate.to.welcomeItroduceVc(self)
+                        Navigate.to.setLocationVc(self)
                     }
                 }
             )
@@ -40,6 +39,6 @@ final class NotificationPermissionViewController: UIViewController, UNUserNotifi
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        Navigate.to.welcomeItroduceVc(self)
+        Navigate.to.setLocationVc(self)
     }
 }
