@@ -7,22 +7,16 @@
 
 import UIKit
 
-class HoursTVC: UITableViewCell {
+final class HoursTVC: UITableViewCell {
 
     @IBOutlet weak var lblTime: UILabelDeviceClass!
     @IBOutlet weak var lblDay: UILabelDeviceClass!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    func setData(data:HoursDataSet) {
+    func setData(data: HoursDataSet) {
         self.lblDay.text = data.day
         self.lblTime.text = data.time
     }

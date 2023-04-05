@@ -54,12 +54,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 //MARK: - Application flow
 extension AppDelegate {
-    private func launchApplication(){
+    private func launchApplication() {
         let controller = Splash()
         self.window?.rootViewController = controller
         self.window?.makeKeyAndVisible()
     }
-    func changeRootViewController(){
+
+    func changeRootViewController() {
         if UserDefault.shared.isMvp == true {
             self.showMVP()
             return
@@ -119,63 +120,62 @@ extension AppDelegate {
         self.window?.rootViewController = navigation
     }
 
-    func showLogin(){
-        let controller = LogIn()
-        controller.isHeroEnabled = true
-        controller.modalTransitionStyle = .crossDissolve
-        controller.modalPresentationStyle = .overCurrentContext
-        self.window?.rootViewController = controller
-    }
-    public func showHome(selectedIndex: Int){
-        let tabBarController = UITabBarController()
+//    func showLogin() {
+//        let controller = LogIn()
+//        controller.isHeroEnabled = true
+//        controller.modalTransitionStyle = .crossDissolve
+//        controller.modalPresentationStyle = .overCurrentContext
+//        self.window?.rootViewController = controller
+//    }
 
-        let home = Home()
-        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
-        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
-        let homeNavigation = UINavigationController(rootViewController: home)
-        homeNavigation.navigationBar.isHidden = true
-
-        let bookingsAndInvites = BookingsAndInvites()
-        bookingsAndInvites.tabBarItem.image               = UIImage(named :"BookingsAndInvites")?.withRenderingMode(.alwaysOriginal)
-        bookingsAndInvites.tabBarItem.selectedImage       = UIImage(named :"BookingsAndInvitesSelected")?.withRenderingMode(.alwaysOriginal)
-        let bookingsAndInvitesNavigation = UINavigationController(rootViewController: bookingsAndInvites)
-        bookingsAndInvitesNavigation.navigationBar.isHidden = true
-
-        let accessPass = Wallet()
-        accessPass.tabBarItem.image               = UIImage(named :"AccessPass")?.withRenderingMode(.alwaysOriginal)
-        accessPass.tabBarItem.selectedImage       = UIImage(named :"AccessPassSelected")?.withRenderingMode(.alwaysOriginal)
-        let accessPassNavigation = UINavigationController(rootViewController: accessPass)
-        accessPassNavigation.navigationBar.isHidden = true
-
-        let statusAndRewards = StatusAndRewards()
-        statusAndRewards.tabBarItem.image         = UIImage(named :"StatusAndRewards")?.withRenderingMode(.alwaysOriginal)
-        statusAndRewards.tabBarItem.selectedImage = UIImage(named :"StatusAndRewardsSelected")?.withRenderingMode(.alwaysOriginal)
-        let statusAndRewardsNavigation = UINavigationController(rootViewController: statusAndRewards)
-        statusAndRewardsNavigation.navigationBar.isHidden = true
-        
-        let myAccount = MyAccount()
-        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
-        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
-        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
-        myAccountNavigation.navigationBar.isHidden = true
-
-        tabBarController.viewControllers = [homeNavigation,bookingsAndInvitesNavigation,accessPassNavigation,statusAndRewardsNavigation,myAccountNavigation]
-        
-        tabBarController.selectedIndex = selectedIndex
-        
-        tabBarController.tabBar.isTranslucent = false
-        
-        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
-        tabBarControllerNavigation.navigationBar.isHidden = true
-        self.window?.rootViewController = tabBarControllerNavigation
-
-    }
+//    public func showHome(selectedIndex: Int) {
+//        let tabBarController = UITabBarController()
+//        let home = Home()
+//        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
+//        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
+//        let homeNavigation = UINavigationController(rootViewController: home)
+//        homeNavigation.navigationBar.isHidden = true
+//
+//        let bookingsAndInvites = BookingsAndInvites()
+//        bookingsAndInvites.tabBarItem.image               = UIImage(named :"BookingsAndInvites")?.withRenderingMode(.alwaysOriginal)
+//        bookingsAndInvites.tabBarItem.selectedImage       = UIImage(named :"BookingsAndInvitesSelected")?.withRenderingMode(.alwaysOriginal)
+//        let bookingsAndInvitesNavigation = UINavigationController(rootViewController: bookingsAndInvites)
+//        bookingsAndInvitesNavigation.navigationBar.isHidden = true
+//
+//        let accessPass = Wallet()
+//        accessPass.tabBarItem.image               = UIImage(named :"AccessPass")?.withRenderingMode(.alwaysOriginal)
+//        accessPass.tabBarItem.selectedImage       = UIImage(named :"AccessPassSelected")?.withRenderingMode(.alwaysOriginal)
+//        let accessPassNavigation = UINavigationController(rootViewController: accessPass)
+//        accessPassNavigation.navigationBar.isHidden = true
+//
+//        let statusAndRewards = StatusAndRewards()
+//        statusAndRewards.tabBarItem.image         = UIImage(named :"StatusAndRewards")?.withRenderingMode(.alwaysOriginal)
+//        statusAndRewards.tabBarItem.selectedImage = UIImage(named :"StatusAndRewardsSelected")?.withRenderingMode(.alwaysOriginal)
+//        let statusAndRewardsNavigation = UINavigationController(rootViewController: statusAndRewards)
+//        statusAndRewardsNavigation.navigationBar.isHidden = true
+//
+//        let myAccount = MyAccount()
+//        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
+//        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
+//        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
+//        myAccountNavigation.navigationBar.isHidden = true
+//
+//        tabBarController.viewControllers = [homeNavigation,bookingsAndInvitesNavigation,accessPassNavigation,statusAndRewardsNavigation,myAccountNavigation]
+//
+//        tabBarController.selectedIndex = selectedIndex
+//
+//        tabBarController.tabBar.isTranslucent = false
+//
+//        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+//        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+//        tabBarControllerNavigation.navigationBar.isHidden = true
+//        self.window?.rootViewController = tabBarControllerNavigation
+//    }
     
-    public func showNewHome(selectedIndex: Int){
+    public func showNewHome(selectedIndex: Int) {
         let tabBarController = UITabBarController()
 
-        let home = StoryboardAndXibManager.StoryBoard.newHome.instantiateVC(NewHomeVC.self)
+        let home = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
         home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
         home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
         let homeNavigation = UINavigationController(rootViewController: home)
@@ -197,6 +197,5 @@ extension AppDelegate {
         let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
         tabBarControllerNavigation.navigationBar.isHidden = true
         self.window?.rootViewController = tabBarControllerNavigation
-
     }
 }

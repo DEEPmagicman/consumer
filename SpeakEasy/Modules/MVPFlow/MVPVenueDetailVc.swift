@@ -31,7 +31,15 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var toNightLbl: UILabel!
     @IBOutlet weak var venuePageView: UIView!
     @IBOutlet weak var closeTicketView: UIView!
-    
+    @IBOutlet weak var openingHoursView: UIView!
+    @IBOutlet weak var vibeView: UIView!
+    @IBOutlet weak var dressCodeView: UIView!
+    @IBOutlet weak var venuePolicyView: UIView!
+    @IBOutlet weak var vibesCollectionView: UICollectionView!
+    @IBOutlet weak var vibeCollectionHeight: NSLayoutConstraint!
+    @IBOutlet weak var openingTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var openingHoursTableView: UITableView!
+
     var venueId = ""
     var isFromAppClip = false
     private var mvpDelegate = MVPPresenter()
@@ -39,6 +47,10 @@ final class MVPVenueDetailVc: UIViewController {
     var selectedTicket = -1
     var totalTicket = 1
     private var maxTicket = 10
+    private var vibeHeightObservation: NSKeyValueObservation?
+    private var hoursHeightObservation: NSKeyValueObservation?
+    private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
+    private let demoHours = Constants.taoHours
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +65,18 @@ final class MVPVenueDetailVc: UIViewController {
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
+        vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
+        vibeHeightObservation = vibesCollectionView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.vibeCollectionHeight.constant = self.vibesCollectionView.contentSize.height
+            self.vibesCollectionView.layoutIfNeeded()
+        }
+        openingHoursTableView.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
+        hoursHeightObservation = openingHoursTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.openingTableHeight.constant = self.openingHoursTableView.contentSize.height
+            self.openingHoursTableView.layoutIfNeeded()
+        }
     }
     
     func getVenueDetail(withLoader: Bool = true) {
@@ -160,62 +184,93 @@ final class MVPVenueDetailVc: UIViewController {
 
 extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        venueDetails?.appClipTicket?.count ?? 0
+        switch tableView {
+        case ticketTypeTableView:
+            return venueDetails?.appClipTicket?.count ?? 0
+        case openingHoursTableView:
+            return demoHours.count
+        default:
+            return 0
+        }
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
-        cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-        if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
-            cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
-        } else {
-            cell.ticketPriceLbl.text = "FREE"
+        switch tableView {
+        case ticketTypeTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
+            cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
+                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+            } else {
+                cell.ticketPriceLbl.text = "FREE"
+            }
+            if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
+                cell.ticketPriceLbl.textColor = .white
+                cell.ticketTypeLbl.textColor = .white
+            } else {
+                cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+                cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+            }
+            if indexPath.row == selectedTicket {
+                cell.ticketPlusMinusView.isHidden = false
+            } else {
+                cell.ticketPlusMinusView.isHidden = true
+            }
+            if venueDetails?.checkInUser ?? 0 > 100 {
+                cell.hotVenueLbl.isHidden = false
+            } else {
+                cell.hotVenueLbl.isHidden = true
+            }
+            cell.minusBtn.tag = indexPath.row
+            cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
+            cell.plusBtn.tag = indexPath.row
+            cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
+            cell.totalTicketLbl.text = "\(totalTicket)"
+            cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
+            cell.selectionStyle = .none
+            cell.layoutIfNeeded()
+            return cell
+        case openingHoursTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
+            cell.setData(data: demoHours[indexPath.row])
+            return cell
+        default:
+            return UITableViewCell()
         }
-        if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
-            cell.ticketPriceLbl.textColor = .white
-            cell.ticketTypeLbl.textColor = .white
-        } else {
-            cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-            cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-        }
-        if indexPath.row == selectedTicket {
-            cell.ticketPlusMinusView.isHidden = false
-        } else {
-            cell.ticketPlusMinusView.isHidden = true
-        }
-        if venueDetails?.checkInUser ?? 0 > 100 {
-            cell.hotVenueLbl.isHidden = false
-        } else {
-            cell.hotVenueLbl.isHidden = true
-        }
-        cell.minusBtn.tag = indexPath.row
-        cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
-        cell.plusBtn.tag = indexPath.row
-        cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-        cell.totalTicketLbl.text = "\(totalTicket)"
-        cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
-        cell.selectionStyle = .none
-        cell.layoutIfNeeded()
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
-        if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        if indexPath.row == self.selectedTicket { return }
-        continueBtn.isHidden = false
-        scrollViewBottomConstraint.constant = 90
-        selectedTicket = indexPath.row
-        totalTicket = 1
-        ticketTypeTableView.reloadData()
-        updateContinueBtn()
+        switch tableView {
+        case ticketTypeTableView:
+            if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
+            if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
+            if indexPath.row == self.selectedTicket { return }
+            continueBtn.isHidden = false
+            scrollViewBottomConstraint.constant = 90
+            selectedTicket = indexPath.row
+            totalTicket = 1
+            ticketTypeTableView.reloadData()
+            updateContinueBtn()
+        case openingHoursTableView:
+            break
+        default:
+            break
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
-            return 0
+        switch tableView {
+        case ticketTypeTableView:
+            if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
+                return 0
+            }
+            return UITableView.automaticDimension
+        case openingHoursTableView:
+            return UITableView.automaticDimension
+        default:
+            return UITableView.automaticDimension
         }
-        return UITableView.automaticDimension
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
@@ -273,5 +328,26 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             self.headerVenueName.isHidden = true
             self.headerView.backgroundColor = .clear
         }
+    }
+}
+
+extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        demoVibes.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = vibesCollectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
+        cell.lblVibes.text = demoVibes[indexPath.row]
+        return cell
+    }
+}
+
+extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width + 30.0
+        
+        let size = CGSize(width: width, height: 40.0)
+        return size
     }
 }

@@ -67,7 +67,7 @@ class BookingInvites: UIViewController {
         Utility.main.topViewController()?.navigationController?.popViewController(animated: true)
     }
     @IBAction func onBtnCross(_ sender: UIButton) {
-        AppDelegate.shared.showHome(selectedIndex: 1)
+//        AppDelegate.shared.showHome(selectedIndex: 1)
     }
 }
 
@@ -323,7 +323,8 @@ extension BookingInvites: UITableViewDelegate, UITableViewDataSource {
             
             self.navigationController?.pushViewController(bookingInvites, animated: true)
         case .BookingConfirmation:
-            AppDelegate.shared.showHome(selectedIndex: 1)
+            break
+//            AppDelegate.shared.showHome(selectedIndex: 1)
         }
     }
     @objc func onBtnCancelRequest(_ sender: UIButton) {

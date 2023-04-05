@@ -152,8 +152,8 @@ struct Constants {
     // Hours
     static var taoHours = [
         HoursDataSet(day: "Thursday", time: "10:00 PM - 3:00 AM"),
-        HoursDataSet(day: "Friday", time: "10:00 PM - Late"),
-        HoursDataSet(day: "Saturday", time: "10:00 PM - Late")
+        HoursDataSet(day: "Friday", time: "10:00 PM -       LATE"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM -       LATE")
     ]
     static var undergroundHours = [
         HoursDataSet(day: "Wednesday", time: "11:00 PM - 4:00 AM"),

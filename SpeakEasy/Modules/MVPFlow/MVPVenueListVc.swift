@@ -51,7 +51,6 @@ final class MVPVenueListVc: UIViewController {
                 }
             }
         }
-        
     }
     
     @objc private func refresh(_ sender: AnyObject) {
@@ -70,10 +69,6 @@ final class MVPVenueListVc: UIViewController {
         closeHasMore = false
         fetchAllOpenVenueForMVP(withLoader: withLoader)
         fetchAllCloseVenueForMVP(withLoader: withLoader)
-    }
-    
-    @IBAction private func onClickSetting(_ sender: Any) {
-        Navigate.to.MVPSettingVC(self)
     }
     
     @IBAction func onClickCityName(_ sender: Any) {
@@ -256,7 +251,6 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
         let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
-            print("\(cityName)")
             if cityName == UserDefault.shared.localCity {
                 return
             }
@@ -278,4 +272,3 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
         }
     }
 }
-
