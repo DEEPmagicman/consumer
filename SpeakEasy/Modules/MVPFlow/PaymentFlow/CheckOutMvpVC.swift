@@ -9,21 +9,19 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
-import FlagPhoneNumber
 
 final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
 
-    @IBOutlet private weak var phoneNoLbl: UILabel!
-    @IBOutlet private weak var ticketTitleLbl: UILabel!
-    @IBOutlet private weak var totalPriceLbl: UILabel!
-    @IBOutlet private weak var applePayBtn: PKPaymentButton!
-    @IBOutlet private weak var creditCardPayBtn: UIButton!
-    @IBOutlet private weak var ticketQuantityLbl: UILabel!
+//    @IBOutlet private weak var ticketTitleLbl: UILabel!
+//    @IBOutlet private weak var totalPriceLbl: UILabel!
+//    @IBOutlet private weak var applePayBtn: PKPaymentButton!
+//    @IBOutlet private weak var creditCardPayBtn: UIButton!
+//    @IBOutlet private weak var ticketQuantityLbl: UILabel!
     @IBOutlet weak var dressCodeInfoLbl: UILabel!
-    @IBOutlet weak var countryCodeTextField: FPNTextField!
-    @IBOutlet weak var phoneNumTextField: UITextField!
-    @IBOutlet weak var ticketSubTitleLbl: UILabel!
-    
+//    @IBOutlet weak var ticketSubTitleLbl: UILabel!
+    @IBOutlet private weak var ticketListTableView: UITableView!
+    @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
+
     var totalTicket = 1 // remove
     var ticketPrice = 1 // remove
     var isGeneralAdmission = false // remove
@@ -32,7 +30,6 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var venueAttachment = ""
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
-    private var checkFPNField = FPNTextField()
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
@@ -42,59 +39,35 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var venueId = ""
     var isApplePayNotSupported = false
     var isPaymentInitiated = false
-    private var isValidNo = false
-    private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
-    private var countryCode = ""
-    private var isChangingFlag = false
+    private var ticketListHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
         
-        countryCodeTextField.textColor = .white
-        
-        phoneNumTextField.delegate = self
-        checkFPNField.delegate = self
-        
-        countryCodeTextField.delegate = self
-        countryCodeTextField.setFlag(countryCode: .US)
-        countryCode = "+1"
-        
-        listController.setup(repository: countryCodeTextField.countryRepository)
-        listController.didSelect = { [weak self] country in
-            self?.countryCodeTextField.setFlag(countryCode: country.code)
-        }
-        
-        countryCodeTextField.flagButtonSize = CGSize(width: 44, height: 44)
-        countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        countryCodeTextField.displayMode = .list
-
-        let items = [
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
-            UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
-            UIBarButtonItem(title: "Item 2", style: .plain, target: self, action: nil)
-        ]
-        countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
-        
-        listController.showCountryPhoneCode = true
-        
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 15, textColor: .white)
-        ticketQuantityLbl.text = "\(totalTicket)x"
-        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
-        totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
-        ticketSubTitleLbl.text = ticketInfo
-
-        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
-        creditCardPayBtn.isHidden = false
-        creditCardPayBtn.alpha = 0.5
-        creditCardPayBtn.isUserInteractionEnabled = false
-        applePayBtn.alpha = 0.5
-        applePayBtn.isUserInteractionEnabled = false
-        if PKPaymentAuthorizationViewController.canMakePayments() {
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
-        } else {
-            isApplePayNotSupported = true
+//        ticketQuantityLbl.text = "\(totalTicket)x"
+//        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
+//        totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
+//        ticketSubTitleLbl.text = ticketInfo
+//
+//        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
+//        creditCardPayBtn.isHidden = false
+//        creditCardPayBtn.alpha = 0.5
+//        creditCardPayBtn.isUserInteractionEnabled = false
+//        applePayBtn.alpha = 0.5
+//        applePayBtn.isUserInteractionEnabled = false
+//        if PKPaymentAuthorizationViewController.canMakePayments() {
+//            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
+//            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
+//        } else {
+//            isApplePayNotSupported = true
+//        }
+        ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
+            self.ticketListTableView.layoutIfNeeded()
         }
     }
     
@@ -112,21 +85,15 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         return toolbar
     }
     
-    @objc func checkApplePay() {
-        if StripeAPI.deviceSupportsApplePay() {
-            applePayBtn.isHidden = false
-        } else if isApplePayNotSupported == false {
-            applePayBtn.isHidden = false
-        } else {
-            applePayBtn.isHidden = true
-        }
-    }
-    
-    @objc private func dismissCountries() {
-        isChangingFlag = false
-        listController.dismiss(animated: true, completion: nil)
-    }
-
+//    @objc func checkApplePay() {
+//        if StripeAPI.deviceSupportsApplePay() {
+//            applePayBtn.isHidden = false
+//        } else if isApplePayNotSupported == false {
+//            applePayBtn.isHidden = false
+//        } else {
+//            applePayBtn.isHidden = true
+//        }
+//    }
     
     func alertForWallet() {
         let alertController = UIAlertController(title: "Add Card to Apple Pay", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
@@ -142,7 +109,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     func createBooking() {
-        mvpDelegate.createBookingForMVP(phone: phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "", ticketId: appClipTicketId, totalTicket: (totalTicket)) { [weak self] isSuccess, errMsg, id in
+        mvpDelegate.createBookingForMVP(phone: "", ticketId: appClipTicketId, totalTicket: (totalTicket)) { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -185,7 +152,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setUpPaymentBottemSheet() {
-        STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
+        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
@@ -194,12 +161,12 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
         paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
-        DispatchQueue.main.async {
-            self.creditCardPayBtn.alpha = 1
-            self.creditCardPayBtn.isUserInteractionEnabled = true
-            self.applePayBtn.alpha = 1
-            self.applePayBtn.isUserInteractionEnabled = true
-        }
+//        DispatchQueue.main.async {
+//            self.creditCardPayBtn.alpha = 1
+//            self.creditCardPayBtn.isUserInteractionEnabled = true
+//            self.applePayBtn.alpha = 1
+//            self.applePayBtn.isUserInteractionEnabled = true
+//        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -272,11 +239,24 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
 }
 
+extension CheckOutMvpVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        2
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+        cell.selectionStyle = .none
+        return cell
+    }
+}
+
+
 extension CheckOutMvpVC {
     func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
         let clientSecret = paymentIntent
         // Call the completion block with the client secret or an error
-        completion(clientSecret, nil);
+        completion(clientSecret, nil)
     }
 
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
@@ -297,71 +277,6 @@ extension CheckOutMvpVC {
 //            present(alert, animated: true, completion: nil)
         @unknown default:
             fatalError()
-        }
-    }
-}
-
-extension CheckOutMvpVC: UITextFieldDelegate {
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        checkFPNField.text = textField.text
-        checkFPNField.sendActions(for: .editingChanged)
-        phoneNumTextField.delegate = nil
-        if textField.text?.contains("+") == true && checkFPNField.text?.contains("+") == false {
-            checkFPNField.sendActions(for: .editingChanged)
-        }
-        phoneNumTextField.text = checkFPNField.text
-        phoneNumTextField.delegate = self
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        applePayBtn.alpha = 0.5
-        applePayBtn.isUserInteractionEnabled = false
-        creditCardPayBtn.alpha = 0.5
-        creditCardPayBtn.isUserInteractionEnabled = false
-        if isChangingFlag { return }
-        if isValidNo {
-            checkApplePay()
-            createBooking()
-        } else {
-            if textField.text?.replacingOccurrences(of: " ", with: "") != "" {
-                Alert.showAlertSheet(style: .alert, title: "Alert", message: "Enter valid number")
-            }
-        }
-    }
-}
-
-extension CheckOutMvpVC: FPNTextFieldDelegate {
-    func fpnDisplayCountryList() {
-        isChangingFlag = true
-        let navigationViewController = UINavigationController(rootViewController: listController)
-        listController.title = "Countries"
-        listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
-        listController.navigationController?.presentationController?.delegate = self
-        present(navigationViewController, animated: true, completion: nil)
-    }
-    
-    func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
-        if let countryCode = FPNCountryCode(rawValue: code) {
-            isChangingFlag = false
-            if countryCode == checkFPNField.selectedCountry?.code { return }
-            checkFPNField.delegate = nil
-            checkFPNField.setFlag(countryCode: countryCode)
-            checkFPNField.delegate = self
-            checkFPNField.sendActions(for: .editingChanged)
-            phoneNumTextField.delegate = nil
-            phoneNumTextField.text = checkFPNField.text
-            phoneNumTextField.delegate = self
-            self.countryCode = dialCode
-        }
-    }
-    
-    func fpnDidValidatePhoneNumber(textField: FPNTextField, isValid: Bool) {
-        if textField == countryCodeTextField {
-            phoneNumTextField.placeholder = countryCodeTextField.placeholder
-            countryCodeTextField.placeholder = ""
-            countryCodeTextField.text = ""
-        } else if textField == checkFPNField {
-            isValidNo = isValid
         }
     }
 }
@@ -388,11 +303,5 @@ extension CheckOutMvpVC: WebSocketCallBackDelegate {
                 Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
             }
         }
-    }
-}
-
-extension CheckOutMvpVC: UIAdaptivePresentationControllerDelegate {
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        isChangingFlag = false
     }
 }

@@ -206,7 +206,6 @@
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */; };
 		CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */; };
-		CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
@@ -264,6 +263,8 @@
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE6813D629DE976400B41418 /* UpcomingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* UpcomingTVC.swift */; };
 		CE6813D729DE976400B41418 /* UpcomingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* UpcomingTVC.xib */; };
+		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
+		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
@@ -797,7 +798,6 @@
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeMvpVC.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PaymentFlow.storyboard; sourceTree = "<group>"; };
-		CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhomeNumberMvpVC.swift; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutMvpVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
@@ -856,6 +856,8 @@
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
 		CE6813D429DE976400B41418 /* UpcomingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTVC.swift; sourceTree = "<group>"; };
 		CE6813D529DE976400B41418 /* UpcomingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpcomingTVC.xib; sourceTree = "<group>"; };
+		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
+		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -1777,8 +1779,8 @@
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
+				CE6813D829DEEEB300B41418 /* TicketDetailTVC */,
 				CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */,
-				CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */,
 				CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */,
 				CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */,
 			);
@@ -2151,6 +2153,15 @@
 				CE6813D529DE976400B41418 /* UpcomingTVC.xib */,
 			);
 			path = UpcomingTVC;
+			sourceTree = "<group>";
+		};
+		CE6813D829DEEEB300B41418 /* TicketDetailTVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */,
+				CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */,
+			);
+			path = TicketDetailTVC;
 			sourceTree = "<group>";
 		};
 		CE8F55C929A87BE3000E3EC9 /* NewHome */ = {
@@ -4077,6 +4088,7 @@
 				E11F4BA428C8358C008D2E30 /* VIPTableBookingTVC.xib in Resources */,
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
+				CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */,
 				82994A8D296D29CB008CA778 /* InviteFriendsPopUp.xib in Resources */,
 				E15D6B7428BC39AC0076286C /* Tutorial4CVC.xib in Resources */,
 				820EEDBA296BF78400B9E015 /* TableBookingDetailsCell.xib in Resources */,
@@ -4531,8 +4543,8 @@
 				E167058428CA6AB800644BF0 /* FriendCVC.swift in Sources */,
 				CAC4140F28A478050007BA86 /* FrameHelper.swift in Sources */,
 				CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */,
-				CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */,
 				BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */,
+				CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */,
 				CE4867B8286F358800FD277E /* Dictionary+Extension.swift in Sources */,
 				E1A9E75D28C55D550081FB28 /* VenueTVC.swift in Sources */,
 				E11F4C0A28C835F3008D2E30 /* BookingStatusTVC.swift in Sources */,

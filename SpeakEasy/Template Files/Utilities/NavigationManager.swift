@@ -191,16 +191,6 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String, venueId: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(EnterPhomeNumberMvpVC.self)
-        vc.ticketPrice = ticketPrice
-        vc.isGeneralAdmission = isGeneral
-        vc.venueName = venueName
-        vc.appClipTicketId = ticketId
-        vc.venueId = venueId
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func checkOutMvpVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
         let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(CheckOutMvpVC.self)
         vc.selectedTickets = selectedTickets
