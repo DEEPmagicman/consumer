@@ -134,6 +134,8 @@ struct AppClipTicket: Codable {
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
+    // MARK: app side parameters
+    var selectedQuantity: Int?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

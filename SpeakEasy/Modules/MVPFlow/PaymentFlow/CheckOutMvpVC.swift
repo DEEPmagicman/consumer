@@ -24,13 +24,14 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var phoneNumTextField: UITextField!
     @IBOutlet weak var ticketSubTitleLbl: UILabel!
     
-    var totalTicket = 1
-    var ticketPrice = 1
-    var isGeneralAdmission = false
-    var ticketInfo = ""
-    var appClipTicketId = ""
+    var totalTicket = 1 // remove
+    var ticketPrice = 1 // remove
+    var isGeneralAdmission = false // remove
+    var ticketInfo = "" // remove
+    var appClipTicketId = "" // remove
     var venueAttachment = ""
     var venueLogo = ""
+    var selectedTickets = [AppClipTicket]()
     private var checkFPNField = FPNTextField()
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""

@@ -192,7 +192,7 @@ final class Navigate {
     }
     
     func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String, venueId: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
+        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(EnterPhomeNumberMvpVC.self)
         vc.ticketPrice = ticketPrice
         vc.isGeneralAdmission = isGeneral
         vc.venueName = venueName
@@ -201,22 +201,18 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String,venueAttachment: String, venueLogo:String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
-        vc.totalTicket = totalTicket
-        vc.ticketPrice = ticketPrice
-        vc.isGeneralAdmission = isGeneral
+    func checkOutMvpVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
+        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(CheckOutMvpVC.self)
+        vc.selectedTickets = selectedTickets
         vc.venueName = venueName
-        vc.appClipTicketId = appClipTicketId
         vc.venueId = venueId
-        vc.ticketInfo = ticketInfo
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String,ticketInfo: String,venueAttachment: String, venueLogo:String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(QRCodeMvpVC.self)
+        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(QRCodeMvpVC.self)
         vc.totalTicket = totalTicket
         vc.isGeneralAdmission = isGeneral
         vc.ticketPrice = ticketPrice

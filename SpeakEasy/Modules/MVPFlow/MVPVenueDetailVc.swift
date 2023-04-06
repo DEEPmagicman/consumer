@@ -46,12 +46,19 @@ final class MVPVenueDetailVc: UIViewController {
     var isFromAppClip = false
     private var mvpDelegate = MVPPresenter()
     private var venueDetails: ClipVenue?
-    var selectedTicket = -1
-    var totalTicket = 1
     private var maxTicket = 10
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
+    private var totalPrice: Int {
+        var total = 0
+        venueDetails?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += ($0.price * quantity)
+            }
+        }
+        return total
+    }
     private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
     private let demoHours = Constants.taoHours
     private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
@@ -177,7 +184,9 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.checkOutMvpVC(self, totalTicket: self.totalTicket, ticketPrice: venueDetails?.appClipTicket?[selectedTicket].price ?? 0, isGeneral: venueDetails?.appClipTicket?[selectedTicket].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", appClipTicketId: venueDetails?.appClipTicket?[selectedTicket].id ?? "", venueId: self.venueId, ticketInfo: venueDetails?.appClipTicket?[selectedTicket].description ?? "",venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "")
+        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+            Navigate.to.checkOutMvpVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets)
+        }
     }
     
     @IBAction func onClickShare(_ sender: Any) {
@@ -226,7 +235,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             }
-            if indexPath.row == selectedTicket {
+            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
                 cell.ticketPlusMinusView.isHidden = true
@@ -240,8 +249,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-            cell.totalTicketLbl.text = "\(totalTicket)"
-            cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
+            cell.totalTicketLbl.text = "\(venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
+            cell.plusBtn.alpha = venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 == maxTicket ? 0.5 : 1
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell
@@ -265,11 +274,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case ticketTypeTableView:
             if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
             if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-            if indexPath.row == self.selectedTicket { return }
+            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
             continueBtn.isHidden = false
             scrollViewBottomConstraint.constant = 90
-            selectedTicket = indexPath.row
-            totalTicket = 1
+            venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             ticketTypeTableView.reloadData()
             updateContinueBtn()
         case openingHoursTableView:
@@ -294,22 +302,28 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
-        if totalTicket > 1 {
-            self.totalTicket -= 1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn()
-        } else if totalTicket == 1 {
-            self.selectedTicket = -1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn(forceRemove: true)
+        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket > 1 {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket - 1
+                self.ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else if totalTicket == 1 {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = nil
+                self.ticketTypeTableView.reloadData()
+                updateContinueBtn(forceRemove: (venueDetails?.appClipTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
+            }
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        if totalTicket < maxTicket {
-            self.totalTicket += 1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn()
+        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket < maxTicket {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
+                self.ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else {
+                Alert.showToast("Max ticket selection reached")
+            }
         }
     }
     
@@ -319,14 +333,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 30
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
-                self.selectedTicket = -1
-                self.totalTicket = 1
                 self.ticketTypeTableView.reloadData()
                 return
             }
             self.continueBtn.isHidden = false
-            let price = self.venueDetails?.appClipTicket?[self.selectedTicket].price ?? 0
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
         }
     }
 }

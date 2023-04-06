@@ -205,7 +205,7 @@
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */; };
-		CE0E87492994C61000F2B2E9 /* PeymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PeymentFlow.storyboard */; };
+		CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */; };
 		CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
@@ -796,7 +796,7 @@
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeMvpVC.swift; sourceTree = "<group>"; };
-		CE0E87482994C61000F2B2E9 /* PeymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PeymentFlow.storyboard; sourceTree = "<group>"; };
+		CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PaymentFlow.storyboard; sourceTree = "<group>"; };
 		CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhomeNumberMvpVC.swift; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutMvpVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
@@ -1777,7 +1777,7 @@
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
-				CE0E87482994C61000F2B2E9 /* PeymentFlow.storyboard */,
+				CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */,
 				CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */,
 				CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */,
 				CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */,
@@ -4052,7 +4052,7 @@
 				E11F4B8D28C8358C008D2E30 /* TopEventsTVC.xib in Resources */,
 				E1A9E74E28C55D550081FB28 /* VenuePhotoGallery.xib in Resources */,
 				E167056228CA442800644BF0 /* ViewEventHeader.xib in Resources */,
-				CE0E87492994C61000F2B2E9 /* PeymentFlow.storyboard in Resources */,
+				CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */,
 				E1A9E79728C560BC0081FB28 /* Search.xib in Resources */,
 				828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */,
 				E11F4A9628C800B1008D2E30 /* NFTAssets.xib in Resources */,
