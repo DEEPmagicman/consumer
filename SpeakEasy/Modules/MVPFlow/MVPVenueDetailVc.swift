@@ -39,6 +39,8 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var vibeCollectionHeight: NSLayoutConstraint!
     @IBOutlet weak var openingTableHeight: NSLayoutConstraint!
     @IBOutlet weak var openingHoursTableView: UITableView!
+    @IBOutlet weak var upcomingTableView: UITableView!
+    @IBOutlet weak var upcomingTableHeight: NSLayoutConstraint!
 
     var venueId = ""
     var isFromAppClip = false
@@ -49,8 +51,12 @@ final class MVPVenueDetailVc: UIViewController {
     private var maxTicket = 10
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
+    private var upcomingHeightObservation: NSKeyValueObservation?
     private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
     private let demoHours = Constants.taoHours
+    private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
+    private let demoPrices = ["Starting at $25", "Starting at $35", "Starting at $35"]
+    private let demoNames = ["Steve Aoki with Apollo XO & NABBS", "NIGHTMRE & DJ Diox XO DJ Heavy", "TAO Friday"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +82,12 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             self.openingTableHeight.constant = self.openingHoursTableView.contentSize.height
             self.openingHoursTableView.layoutIfNeeded()
+        }
+        upcomingTableView.register(UINib(nibName: "UpcomingTVC", bundle: nil), forCellReuseIdentifier: "UpcomingTVC")
+        upcomingHeightObservation = upcomingTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.upcomingTableHeight.constant = self.upcomingTableView.contentSize.height
+            self.upcomingTableView.layoutIfNeeded()
         }
     }
     
@@ -189,6 +201,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             return venueDetails?.appClipTicket?.count ?? 0
         case openingHoursTableView:
             return demoHours.count
+        case upcomingTableView:
+            return demoNames.count
         default:
             return 0
         }
@@ -234,6 +248,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case openingHoursTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
             cell.setData(data: demoHours[indexPath.row])
+            return cell
+        case upcomingTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UpcomingTVC", for: indexPath) as! UpcomingTVC
+            cell.nameLbl.text = demoNames[indexPath.row]
+            cell.dateLbl.text = demoDates[indexPath.row]
+            cell.priceLbl.text = demoPrices[indexPath.row]
             return cell
         default:
             return UITableViewCell()
@@ -345,8 +365,7 @@ extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource
 
 extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width + 30.0
-        
+        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width
         let size = CGSize(width: width, height: 40.0)
         return size
     }

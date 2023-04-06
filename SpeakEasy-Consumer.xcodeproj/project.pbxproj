@@ -262,6 +262,8 @@
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
+		CE6813D629DE976400B41418 /* UpcomingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* UpcomingTVC.swift */; };
+		CE6813D729DE976400B41418 /* UpcomingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* UpcomingTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
@@ -852,6 +854,8 @@
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
+		CE6813D429DE976400B41418 /* UpcomingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTVC.swift; sourceTree = "<group>"; };
+		CE6813D529DE976400B41418 /* UpcomingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpcomingTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -1442,6 +1446,7 @@
 		82847A77298244A000611DC4 /* MVPFlow */ = {
 			isa = PBXGroup;
 			children = (
+				CE6813D329DE966600B41418 /* UpcomingTVC */,
 				CED07E9829AC9504004EBBC5 /* MVPVenueTypeHeaderView */,
 				CE0E87472994C5E600F2B2E9 /* PaymentFlow */,
 				82847A8329828B4000611DC4 /* ticketTypeTableViewCell */,
@@ -2137,6 +2142,15 @@
 				CE65D67A298D24B800DE1E8A /* ClipVenue.swift */,
 			);
 			path = APPClipModal;
+			sourceTree = "<group>";
+		};
+		CE6813D329DE966600B41418 /* UpcomingTVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE6813D429DE976400B41418 /* UpcomingTVC.swift */,
+				CE6813D529DE976400B41418 /* UpcomingTVC.xib */,
+			);
+			path = UpcomingTVC;
 			sourceTree = "<group>";
 		};
 		CE8F55C929A87BE3000E3EC9 /* NewHome */ = {
@@ -4071,6 +4085,7 @@
 				E11F4C0C28C835F3008D2E30 /* ChatHeadTVC.xib in Resources */,
 				9D4A029128CE9E4B009CD670 /* CostSplitSelectionTVC.xib in Resources */,
 				E1A9E74928C55D550081FB28 /* Home.xib in Resources */,
+				CE6813D729DE976400B41418 /* UpcomingTVC.xib in Resources */,
 				4A7CC53528E37ACA00F8BA63 /* BookingAddressTVC.xib in Resources */,
 				E1A9E75E28C55D550081FB28 /* VenueTVC.xib in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
@@ -4390,6 +4405,7 @@
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */,
+				CE6813D629DE976400B41418 /* UpcomingTVC.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
@@ -4712,6 +4728,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4775,6 +4792,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
