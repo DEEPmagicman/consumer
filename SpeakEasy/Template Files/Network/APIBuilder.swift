@@ -190,3 +190,9 @@ struct APIBuilder {
         baseURL + mvpCity
     }
 }
+
+extension String {
+    var imageURL: String {
+        "https://speakeasy-storage.s3.amazonaws.com/\(self)"
+    }
+}

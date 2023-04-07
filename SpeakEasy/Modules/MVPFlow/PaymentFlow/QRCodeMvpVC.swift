@@ -7,49 +7,57 @@
 
 import UIKit
 import SDWebImage
+import PassKit
 
 final class QRCodeMvpVC: UIViewController {
 
-    @IBOutlet weak var venueImg: UIImageView!
-    @IBOutlet weak var venueLogoImg: UIImageView!
-    @IBOutlet weak var ticketTitleLbl: UILabel!
-    @IBOutlet weak var ticketSubTitle: UILabel!
-    @IBOutlet weak var ticketQuantityLbl: UILabel!
-    @IBOutlet weak var ticketDetailLbl: UILabel!
-    @IBOutlet weak var QRImg: UIImageView!
-    
-    var isGeneralAdmission = false
-    var totalTicket = 1
-    var ticketPrice = 90
+    @IBOutlet private weak var venueImg: UIImageView!
+    @IBOutlet private weak var venueLogoImg: UIImageView!
+    @IBOutlet private weak var ticketDetailLbl: UILabel!
+    @IBOutlet private weak var QRImg: UIImageView!
+    @IBOutlet private weak var ticketListTableView: UITableView!
+    @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
+    @IBOutlet private weak var addToWalletBtn: PKAddPassButton!    
+    @IBOutlet private weak var eventDetailsLbl: UILabel!
+
     var venueName = ""
     var bookingId = ""
     var venueAttachment = ""
     var venueLogo = ""
-    var ticketInfo = ""
+    var selectedTickets = [AppClipTicket]()
+    private var ticketListHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if isGeneralAdmission {
-            ticketDetailLbl.text = "When it’s your turn present the above QR code to be scanned in."
-            ticketTitleLbl.text = "General Admission"
-        } else {
-            ticketDetailLbl.text = "Walk up to front of line and present the above QR code to be scanned in."
-            ticketTitleLbl.text = "VIP Skip the Line"
-        }
-        ticketSubTitle.text = ticketInfo
-        ticketQuantityLbl.text = "\(totalTicket)x"
         QRImg.image = generateQRCode(from: bookingId)
         loadImage()
+        addToWalletBtn.addPassButtonStyle = .blackOutline
+        ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
+            self.ticketListTableView.layoutIfNeeded()
+        }
+        addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEventDetail))
+        eventDetailsLbl.isUserInteractionEnabled = true
+        eventDetailsLbl.addGestureRecognizer(tap)
     }
     
-    func loadImage() {
-        let imgStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueAttachment)"
-        let logoStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueLogo)"
-        venueImg.sd_setImage(with: URL(string: imgStr),completed: nil)
-        venueLogoImg.sd_setImage(with: URL(string: logoStr),completed: nil)
+    @objc private func onClickEventDetail() {
+        // TODO: navigate to event detail page
     }
     
-    func generateQRCode(from string: String) -> UIImage? {
+    @objc private func addToWalletBtnTapped() {
+        // TODO: add to wallet API
+    }
+    
+    private func loadImage() {
+        venueImg.sd_setImage(with: URL(string: self.venueAttachment.imageURL),completed: nil)
+        venueLogoImg.sd_setImage(with: URL(string: self.venueLogo.imageURL),completed: nil)
+    }
+    
+    private func generateQRCode(from string: String) -> UIImage? {
         let data = string.data(using: String.Encoding.ascii)
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
@@ -62,7 +70,7 @@ final class QRCodeMvpVC: UIViewController {
         return nil
     }
     
-    @IBAction func onBtnShare(_ sender: Any) {
+    @IBAction private func onBtnShare(_ sender: Any) {
        let msgText = """
 Thank you for checking into \(venueName) with Speakeasy!
 
@@ -72,12 +80,27 @@ Download Speaskeasy on the Apple App Store to stay updated on covers and wait ti
 
 Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
 """
-        
         Utility.main.shareSocialWith(text: msgText)
     }
     
-    @IBAction func onClickClose(_ sender: Any) {
+    @IBAction private func onClickClose(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
 }
 
+extension QRCodeMvpVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        selectedTickets.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+        cell.titleLbl.text = selectedTickets[indexPath.row].name
+        cell.subTitleLbl.text = selectedTickets[indexPath.row].description
+        cell.quantityLbl.text = "\(selectedTickets[indexPath.row].selectedQuantity ?? 0)x"
+        cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
+        return cell
+    }
+}

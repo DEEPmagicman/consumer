@@ -148,10 +148,8 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func setUpUI() {
-        let imgStr = "https://speakeasy-storage.s3.amazonaws.com/\(venueDetails?.venueAttachment.first?.key ?? "")"
-        let logoStr = "https://speakeasy-storage.s3.amazonaws.com/\(venueDetails?.logo?.key ?? "")"
-        venueBgImg.sd_setImage(with: URL(string: imgStr),completed: nil)
-        logoImg.sd_setImage(with: URL(string: logoStr),completed: nil)
+        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+        logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
@@ -185,7 +183,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutMvpVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets)
+            Navigate.to.checkOutMvpVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets, totalPrice: totalPrice)
         }
     }
     

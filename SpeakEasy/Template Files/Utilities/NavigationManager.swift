@@ -202,18 +202,16 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String,ticketInfo: String,venueAttachment: String, venueLogo:String) {
+    func qrCodeMvpVC(_ sender: UIViewController, venueName: String, bookingId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
         let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(QRCodeMvpVC.self)
-        vc.totalTicket = totalTicket
-        vc.isGeneralAdmission = isGeneral
-        vc.ticketPrice = ticketPrice
         vc.venueName = venueName
         vc.bookingId = bookingId
-        vc.ticketInfo = ticketInfo
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
+        vc.selectedTickets = selectedTickets
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             sender.navigationController?.viewControllers = [homeVc,vc]
+            return
         }
         sender.navigationController?.pushViewController(vc, animated: true)
     }

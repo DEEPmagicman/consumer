@@ -187,7 +187,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction func onClickBuy(_ sender: Any) {
-        Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+        Navigate.to.qrCodeMvpVC(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: selectedTickets)
     }
 
     @IBAction private func onClickCreditCardPay(_ sender: Any) {
@@ -198,7 +198,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus {
-                    Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+//                    Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -284,7 +284,7 @@ extension CheckOutMvpVC {
         switch status {
         case .success:
             paymentStatus {
-                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+//                Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
             }
         case .error:
             self.isPaymentInitiated = false
