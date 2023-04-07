@@ -8,6 +8,10 @@
 import UIKit
 
 final class TicketDetailTVC: UITableViewCell {
+    
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var subTitleLbl: UILabel!
+    @IBOutlet weak var quantityLbl: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

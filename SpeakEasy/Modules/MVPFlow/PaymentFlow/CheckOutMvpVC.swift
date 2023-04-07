@@ -12,15 +12,13 @@ import StripePaymentSheet
 
 final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
 
-//    @IBOutlet private weak var ticketTitleLbl: UILabel!
-//    @IBOutlet private weak var totalPriceLbl: UILabel!
+    @IBOutlet private weak var totalPriceLbl: UILabel!
 //    @IBOutlet private weak var applePayBtn: PKPaymentButton!
 //    @IBOutlet private weak var creditCardPayBtn: UIButton!
-//    @IBOutlet private weak var ticketQuantityLbl: UILabel!
-    @IBOutlet weak var dressCodeInfoLbl: UILabel!
-//    @IBOutlet weak var ticketSubTitleLbl: UILabel!
+    @IBOutlet private weak var infoLbl: UILabel!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
+    @IBOutlet private weak var paymentMethodView: UIView!
 
     var totalTicket = 1 // remove
     var ticketPrice = 1 // remove
@@ -30,7 +28,9 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     var venueAttachment = ""
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
+    var totalPrice = 0
     private var paymentSheet: PaymentSheet?
+//    private var paymentSheetFlowController: PaymentSheet.FlowController?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     var venueName = ""
@@ -44,13 +44,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
-        
-        dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 15, textColor: .white)
-//        ticketQuantityLbl.text = "\(totalTicket)x"
-//        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
-//        totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
-//        ticketSubTitleLbl.text = ticketInfo
-//
+        totalPriceLbl.text = "$\(totalPrice)"
 //        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
 //        creditCardPayBtn.isHidden = false
 //        creditCardPayBtn.alpha = 0.5
@@ -69,20 +63,39 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
+        paymentMethodView.addGestureRecognizer(tap)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
     
-    private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
-        let toolbar: UIToolbar = UIToolbar()
-        
-        toolbar.barStyle = UIBarStyle.default
-        toolbar.items = items
-        toolbar.sizeToFit()
-        
-        return toolbar
+    @objc private func onClickPaymentMethod() {
+        Navigate.to.paymentMethodsVc(self)
+//        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
+//        var configuration = PaymentSheet.Configuration()
+//        configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
+//        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
+//        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+//        // methods that complete payment after a delay, like SEPA Debit and Sofort.
+//        configuration.savePaymentMethodOptInBehavior = .requiresOptIn
+//        configuration.allowsDelayedPaymentMethods = true
+//
+//        configuration.customer = .init(id: "cus_NKC12q6XozObF5", ephemeralKeySecret: "ek_test_YWNjdF8xTVZyRExCdVNzYVVkN0JULHkwUlNNUkRjVnJBbTV0NHBlajdrdDZWUXdEY1N4b2Q_00Kt2YtjBN")
+//
+//        PaymentSheet.FlowController.create(paymentIntentClientSecret: self.paymentIntent, configuration: configuration) { [weak self] result in
+//          switch result {
+//          case .failure(let error):
+//            print(error)
+//          case .success(let paymentSheetFlowController):
+//            self?.paymentSheetFlowController = paymentSheetFlowController
+//            // Update your UI using paymentSheetFlowController.paymentOption
+//          }
+//        }
+//        paymentSheetFlowController?.presentPaymentOptions(from: self) {
+//          // Update your UI using paymentSheetFlowController.paymentOption
+//        }
     }
     
 //    @objc func checkApplePay() {
@@ -109,7 +122,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     func createBooking() {
-        mvpDelegate.createBookingForMVP(phone: "", ticketId: appClipTicketId, totalTicket: (totalTicket)) { [weak self] isSuccess, errMsg, id in
+        mvpDelegate.createBookingForMVP(phone: "9878978719", ticketId: selectedTickets.first?.id ?? "", totalTicket: 1) { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -152,7 +165,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setUpPaymentBottemSheet() {
-        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
+        STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
@@ -173,6 +186,10 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
         navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func onClickBuy(_ sender: Any) {
+        Navigate.to.qrCodeMvpVC(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+    }
+
     @IBAction private func onClickCreditCardPay(_ sender: Any) {
         // MARK: Start the checkout process
         isPaymentInitiated = true
@@ -241,16 +258,20 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
 
 extension CheckOutMvpVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        selectedTickets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+        cell.titleLbl.text = selectedTickets[indexPath.row].name
+        cell.subTitleLbl.text = selectedTickets[indexPath.row].description
+        cell.quantityLbl.text = "\(selectedTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
         return cell
     }
 }
-
 
 extension CheckOutMvpVC {
     func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
