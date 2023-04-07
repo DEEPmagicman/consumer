@@ -15,5 +15,6 @@ struct StoryboardAndXibManager {
         static let mvp = UIStoryboard(name: "MVPFlow", bundle: nil)
         static let paymentFlow = UIStoryboard(name: "PaymentFlow", bundle: nil)
         static let newHome = UIStoryboard(name: "NewHome", bundle: nil)
+        static let account = UIStoryboard(name: "Account", bundle: nil)
     }
 }

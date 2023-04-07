@@ -181,7 +181,7 @@ extension AppDelegate {
         let homeNavigation = UINavigationController(rootViewController: home)
         homeNavigation.navigationBar.isHidden = true
         
-        let myAccount = MyAccount()
+        let myAccount = StoryboardAndXibManager.StoryBoard.account.instantiateVC(AccountVC.self)
         myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
         myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
         let myAccountNavigation = UINavigationController(rootViewController: myAccount)

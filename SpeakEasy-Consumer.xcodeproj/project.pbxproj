@@ -212,6 +212,10 @@
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
 		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
+		CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE3213C629E02E8700EBC179 /* Account.storyboard */; };
+		CE3213C929E03B8E00EBC179 /* AccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3213C829E03B8E00EBC179 /* AccountVC.swift */; };
+		CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */; };
+		CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE3213CD29E03DA400EBC179 /* TitleHeader.xib */; };
 		CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3C896329A61C8A0072E93C /* FloorPlan.swift */; };
 		CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486721286F2CB000FD277E /* AppDelegate.swift */; };
 		CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE48672A286F2CB100FD277E /* Assets.xcassets */; };
@@ -803,6 +807,10 @@
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
+		CE3213C629E02E8700EBC179 /* Account.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
+		CE3213C829E03B8E00EBC179 /* AccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVC.swift; sourceTree = "<group>"; };
+		CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHeader.swift; sourceTree = "<group>"; };
+		CE3213CD29E03DA400EBC179 /* TitleHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleHeader.xib; sourceTree = "<group>"; };
 		CE3C896329A61C8A0072E93C /* FloorPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlan.swift; sourceTree = "<group>"; };
 		CE48671E286F2CB000FD277E /* Speakeasy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Speakeasy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE486721286F2CB000FD277E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1785,6 +1793,15 @@
 				CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */,
 			);
 			path = PaymentFlow;
+			sourceTree = "<group>";
+		};
+		CE3213CA29E03D6500EBC179 /* TitleHeader */ = {
+			isa = PBXGroup;
+			children = (
+				CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */,
+				CE3213CD29E03DA400EBC179 /* TitleHeader.xib */,
+			);
+			path = TitleHeader;
 			sourceTree = "<group>";
 		};
 		CE486715286F2CB000FD277E = {
@@ -3722,6 +3739,7 @@
 		E1A9E7DE28C579690081FB28 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				CE3213CA29E03D6500EBC179 /* TitleHeader */,
 				0477E38428FEAA5C009C86C6 /* FavoriteArtistProfileCVC */,
 				E1A9E7DF28C579690081FB28 /* FavouriteArtistsCVC */,
 				E1A9E7E228C579690081FB28 /* FriendsListCVC */,
@@ -3731,6 +3749,8 @@
 				E1A9E7EF28C579690081FB28 /* SocialMediaCVC */,
 				E1A9E7E828C579690081FB28 /* MyAccount.xib */,
 				E1A9E7F228C579690081FB28 /* MyAccount.swift */,
+				CE3213C629E02E8700EBC179 /* Account.storyboard */,
+				CE3213C829E03B8E00EBC179 /* AccountVC.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -4001,6 +4021,7 @@
 				E167055D28CA442800644BF0 /* SelectedTicketTVC.xib in Resources */,
 				E11CE3ED28C8EC30003899C4 /* ViewRewardTable.xib in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
+				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				E17DC85728C6C16500244C4F /* Wallet.xib in Resources */,
 				E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */,
 				E1A9E7CE28C56FD10081FB28 /* FriendRequest.xib in Resources */,
@@ -4115,6 +4136,7 @@
 				E196301F28C3E596001A40AB /* VIPBookingInvite.xib in Resources */,
 				84248DA928D3D66200A6E260 /* FeaturedVenue.xib in Resources */,
 				E1A9E7CB28C56FD10081FB28 /* FellowPeopleTVC.xib in Resources */,
+				CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */,
 				E13F4CF428D288E100D9C64E /* GalleryCVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4266,6 +4288,7 @@
 				E1A9E76228C55D550081FB28 /* HotVenuesTVC.swift in Sources */,
 				E167058C28CA6AB800644BF0 /* SelectedBookingTVC.swift in Sources */,
 				29868361297565E400CB827B /* VenueHours.swift in Sources */,
+				CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */,
 				BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */,
 				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				E11F4BA828C8358C008D2E30 /* VIPTableBookingCalendar.swift in Sources */,
@@ -4443,6 +4466,7 @@
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
 				CE4867BE286F358800FD277E /* CustomLocale.swift in Sources */,
 				BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */,
+				CE3213C929E03B8E00EBC179 /* AccountVC.swift in Sources */,
 				E1A9E7FD28C579690081FB28 /* VibesCVC.swift in Sources */,
 				E1A9E7CF28C56FD10081FB28 /* SearchAndAddFriend.swift in Sources */,
 				E16705A028CA6B3700644BF0 /* HoursTVC.swift in Sources */,
