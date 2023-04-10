@@ -17,6 +17,7 @@ struct Constant {
         static let code7Acolor = UIColor(named: "code7a")
         static let code2Fcolor = UIColor(named: "code2f")
         static let submiteRequestBtnColor = UIColor(hex: "#0B78FF")
+        static let primaryBlue = UIColor(named: "primaryBlue")
         static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
     }
     
@@ -29,6 +30,7 @@ struct Constant {
         static let defaultIcon = UIImage(named: "defaultIcon")
         static let maleIdentify = UIImage(named: "maleIdentify_Ic")
         static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
+        static let liveCover = UIImage(named: "liveCover")
     }
     
     struct String {

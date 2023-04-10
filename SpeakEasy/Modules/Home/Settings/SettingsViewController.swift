@@ -7,9 +7,10 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController {
+final class SettingsViewController: UIViewController {
 
-    @IBOutlet weak var logoutBtn: UIButton!
+    @IBOutlet private weak var logoutBtn: UIButton!
+    @IBOutlet private weak var versionLbl: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +19,7 @@ class SettingsViewController: UIViewController {
                 NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue
                 ]), for: .normal)
         }
+        versionLbl.text = "Version \(Bundle.main.releaseVersionNumber) (\(Bundle.main.buildVersionNumber))"
     }
     
     @IBAction func onClickCancel(_ sender: Any) {
@@ -49,7 +51,8 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickCustomerSupport(_ sender: Any) {
-        
+        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickFeedback(_ sender: Any) {
@@ -57,10 +60,13 @@ class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickPrivacy(_ sender: Any) {
-        
+        guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickTermsOfService(_ sender: Any) {
+        guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickLogOut(_ sender: Any) {

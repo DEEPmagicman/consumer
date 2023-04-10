@@ -7,10 +7,11 @@
 
 import UIKit
 
-class NotificationViewController: UIViewController {
+final class NotificationViewController: UIViewController {
 
-    @IBOutlet weak var notificationBtn: UIButton!
-    private var notificationOn = true
+    @IBOutlet private weak var notificationBtn: UIButton!
+
+    private var isNotificationOn = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,21 +19,18 @@ class NotificationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        notificationOnOff(notificationOn: notificationOn)
+        notificationOnOff(notificationOn: isNotificationOn)
     }
     
-    func notificationOnOff(notificationOn: Bool) {
+    private func notificationOnOff(notificationOn: Bool) {
         if notificationOn {
-            notificationBtn.setTitleColor(.white, for: .normal)
-            notificationBtn.backgroundColor = .black
-            notificationBtn.borderColor = .white
-            notificationBtn.borderWidth = 1
+            notificationBtn.setTitleColor(Constant.Color.primaryBlue, for: .normal)
+            notificationBtn.backgroundColor = .white
             notificationBtn.setTitle("Turn off Notifications", for: .normal)
         } else {
-            notificationBtn.backgroundColor = .white
-            notificationBtn.borderWidth = 0
-            notificationBtn.setTitle("Turn on Notifications", for: .normal)
-            notificationBtn.setTitleColor(.black, for: .normal)
+            notificationBtn.setTitleColor(.white, for: .normal)
+            notificationBtn.backgroundColor = Constant.Color.primaryBlue
+            notificationBtn.setTitle("Allow Notifications", for: .normal)
         }
     }
     
@@ -41,7 +39,7 @@ class NotificationViewController: UIViewController {
     }
 
     @IBAction func onClickNotification(_ sender: Any) {
-        notificationOnOff(notificationOn: !notificationOn)
-        notificationOn = !notificationOn
+        isNotificationOn.toggle()
+        notificationOnOff(notificationOn: isNotificationOn)
     }
 }

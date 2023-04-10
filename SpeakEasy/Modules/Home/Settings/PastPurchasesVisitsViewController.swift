@@ -7,22 +7,21 @@
 
 import UIKit
 
-class PastPurchasesVisitsViewController: UIViewController {
+final class PastPurchasesVisitsViewController: UIViewController {
 
     @IBOutlet weak var pastPurchasesTableView: UITableView!
     
-    var arrBookings = [
-                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-artist"), isTicket: true, date: "Thursday, June 30", status: .PurchaseConfirmed),
-                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .BookingConfirmation),
-                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-artist"), isTicket: true, date: "Thursday, June 30", status: .PurchaseConfirmed),
-                       BookingsDataSet(brand: UIImage(named: "ic-tao"), bookingName: "TAO Chicago", performerCover: UIImage(named: "ic-await-approval-bg"), isTicket: false, date: "Sunday, August 7", status: .BookingConfirmation)]
+    private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
+    private let demoPrices = ["Forward Day + Nightclub", "TAO Nightclub, Chicago", "TAO Nightclub, Chicago"]
+    private let demoNames = ["Live Cover Ticket", "NIGHTMRE & DJ Diox XO DJ Heavy", "TAO Friday"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         pastPurchasesTableView.delegate = self
         pastPurchasesTableView.dataSource = self
-        pastPurchasesTableView.register(UINib(nibName: "BookingsTVC", bundle: nil), forCellReuseIdentifier: "BookingsTVC")
+        pastPurchasesTableView.register(UINib(nibName: "UpcomingTVC", bundle: nil), forCellReuseIdentifier: "UpcomingTVC")
+        pastPurchasesTableView.setupPadding()
+        pastPurchasesTableView.groupStyleSpacing()
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -32,41 +31,23 @@ class PastPurchasesVisitsViewController: UIViewController {
 
 extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrBookings.count
+        demoDates.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.pastPurchasesTableView.dequeueReusableCell(withIdentifier: "BookingsTVC") as! BookingsTVC
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UpcomingTVC", for: indexPath) as! UpcomingTVC
         cell.selectionStyle = .none
-        cell.btnBookingInvites.tag = indexPath.row
-
-        let data = self.arrBookings[indexPath.row]
-        cell.setData(data: data, isFromSettings: true)
-        
-        if data.status == .AwaitingVenueApproval {
-            cell.btnBookingInvites.addTarget(self, action: #selector(onBtnPendingBookingAwait(_:)), for: .touchUpInside)
-        }else if data.status == .PurchaseConfirmed {
-            cell.btnBookingInvites.addTarget(self, action: #selector(onBtnConfirmBooking(_:)), for: .touchUpInside)
-        } else{
-            cell.btnBookingInvites.addTarget(self, action: #selector(onBtnBookingInvites(_:)), for: .touchUpInside)
+        cell.nameLbl.text = demoNames[indexPath.row]
+        cell.dateLbl.text = demoDates[indexPath.row]
+        cell.priceLbl.text = demoPrices[indexPath.row]
+        if demoNames[indexPath.row] == "Live Cover Ticket" {
+            cell.upcomingImage.image = Constant.Icon.liveCover
         }
-        
         return cell
     }
     
-    @objc func onBtnConfirmBooking(_ sender: UIButton) {
-        let data = self.arrBookings[sender.tag]
-        Navigate.to.ticketConfirmation(self, data: data, isFromSettings: true)
-    }
-    @objc func onBtnBookingInvites(_ sender: UIButton) {
-        let data = self.arrBookings[sender.tag]
-        if data.status == .BookingConfirmation {
-            Navigate.to.bookingInvite(self, booking: data, isFromSettings: true)
-        }
-    }
-    @objc func onBtnPendingBookingAwait(_ sender: UIButton) {
-        let data = self.arrBookings[sender.tag]
-        Navigate.to.pendingBookingAwait(self, data: data)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        Navigate.to.checkOutMvpVC(self, venueName: "", venueId: "", venueAttachment: "", venueLogo: "", selectedTickets: [], totalPrice: 40)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -98,5 +79,4 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
 
         topCell.contentView.alpha = topCellOpacity
     }
-
 }
