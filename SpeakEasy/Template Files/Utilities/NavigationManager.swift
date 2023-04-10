@@ -176,12 +176,12 @@ final class Navigate {
     }
     
     func MVPVenueListViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
         sender.navigationController?.viewControllers = [vc]
     }
     
     func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
         vc.venueId = venueId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -349,7 +349,7 @@ final class Navigate {
     }
     
     func mvpCitySelection(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPCitySelectionVC.self)
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPCitySelectionVC.self)
         vc.citySelectionDelegate = sender as? any CitySelectionDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }

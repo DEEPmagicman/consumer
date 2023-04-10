@@ -61,15 +61,15 @@ extension AppDelegate {
     }
 
     func changeRootViewController() {
+        // TODO: remove mvp flow
         if UserDefault.shared.isMvp == true {
-            self.showMVP()
+            showMVP()
             return
         }
         if UserDefault.shared.isLoggedIn == true {
-//            self.showHome(selectedIndex: 0)
-            self.showNewHome(selectedIndex: 0)
+            showHome(selectedIndex: 0)
         } else {
-            self.showOnboarding()
+            showOnboarding()
         }
     }
     
@@ -88,7 +88,7 @@ extension AppDelegate {
     private func setAppClipNavigation() {
         ReachabilityManager.shared.startMonitoring()
         if venueId != "" {
-            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
             vc.venueId = venueId
             vc.isFromAppClip = true
             let navigation = UINavigationController(rootViewController: vc)
@@ -104,7 +104,7 @@ extension AppDelegate {
         ReachabilityManager.shared.startMonitoring()
         if isAppClipSet { return }
         if UserDefault.shared.hasVisitedStartingPage {
-            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
             let navigation = UINavigationController(rootViewController: vc)
             navigation.navigationBar.isHidden = true
             navigation.modalTransitionStyle = .crossDissolve
@@ -112,7 +112,7 @@ extension AppDelegate {
             self.window?.rootViewController = navigation
             return
         }
-        let controller = StoryboardAndXibManager.StoryBoard.mvp.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
+        let controller = StoryboardAndXibManager.StoryBoard.home.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
         let navigation = UINavigationController(rootViewController: controller)
         navigation.navigationBar.isHidden = true
         navigation.modalTransitionStyle = .crossDissolve
@@ -172,10 +172,10 @@ extension AppDelegate {
 //        self.window?.rootViewController = tabBarControllerNavigation
 //    }
     
-    public func showNewHome(selectedIndex: Int) {
+    public func showHome(selectedIndex: Int) {
         let tabBarController = UITabBarController()
 
-        let home = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
         home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
         home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
         let homeNavigation = UINavigationController(rootViewController: home)

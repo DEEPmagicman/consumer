@@ -20,12 +20,6 @@ class venueTableCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
     }
     
     func setData(data: ClipVenue) {
@@ -54,6 +48,4 @@ class venueTableCell: UITableViewCell {
             self.liveLbl.textColor = UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha: 1)
         }
     }
-
-    
 }
