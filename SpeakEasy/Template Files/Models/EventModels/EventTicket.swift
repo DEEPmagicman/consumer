@@ -35,5 +35,3 @@ struct EventTicket: Codable {
         try container.encode(updatedAt, forKey: .updatedAt)
     }
 }
-
-

@@ -154,7 +154,7 @@
 		BDA001552942F24B0057E834 /* DateOfBirthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */; };
 		BDB0AADF2950233E00CD1FDA /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */; };
 		BDB0AAE12950235400CD1FDA /* WelcomeItroduceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */; };
-		BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */; };
+		BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB2D3FD2955BCB400FD9407 /* User.swift */; };
 		BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C272946EA8800595436 /* SelectCityViewController.swift */; };
 		BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */; };
 		BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */; };
@@ -293,7 +293,6 @@
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
-		CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */; };
 		CEECAA70288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */; };
 		CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */; };
 		CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */; };
@@ -401,10 +400,6 @@
 		E13F4CF428D288E100D9C64E /* GalleryCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E13F4CF228D288E100D9C64E /* GalleryCVC.xib */; };
 		E15D6B6128BC39AC0076286C /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B4128BC39AB0076286C /* Splash.swift */; };
 		E15D6B6228BC39AC0076286C /* Splash.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B4228BC39AB0076286C /* Splash.xib */; };
-		E15D6B6328BC39AC0076286C /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B4428BC39AB0076286C /* SignUp.swift */; };
-		E15D6B6428BC39AC0076286C /* SignUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B4528BC39AB0076286C /* SignUp.xib */; };
-		E15D6B6728BC39AC0076286C /* SignIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B4A28BC39AB0076286C /* SignIn.xib */; };
-		E15D6B6828BC39AC0076286C /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B4B28BC39AB0076286C /* SignIn.swift */; };
 		E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B4E28BC39AB0076286C /* Tutorial3CVC.swift */; };
 		E15D6B6A28BC39AC0076286C /* Tutorial3CVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B4F28BC39AB0076286C /* Tutorial3CVC.xib */; };
 		E15D6B6B28BC39AC0076286C /* Tutorial2CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B5128BC39AB0076286C /* Tutorial2CVC.swift */; };
@@ -751,7 +746,7 @@
 		BDA001542942F24B0057E834 /* DateOfBirthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOfBirthViewController.swift; sourceTree = "<group>"; };
 		BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeItroduceViewController.swift; sourceTree = "<group>"; };
-		BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
+		BDB2D3FD2955BCB400FD9407 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BDCC5C272946EA8800595436 /* SelectCityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityViewController.swift; sourceTree = "<group>"; };
 		BDCC5C292946F8F900595436 /* SelectVibesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectVibesViewController.swift; sourceTree = "<group>"; };
 		BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFavoriteDrinkViewController.swift; sourceTree = "<group>"; };
@@ -887,7 +882,6 @@
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
-		CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMvpVC.swift; sourceTree = "<group>"; };
 		CEECAA68288D8B7C007C5F9C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerCell.swift; sourceTree = "<group>"; };
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
@@ -999,10 +993,6 @@
 		E13F4CF228D288E100D9C64E /* GalleryCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryCVC.xib; sourceTree = "<group>"; };
 		E15D6B4128BC39AB0076286C /* Splash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		E15D6B4228BC39AB0076286C /* Splash.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Splash.xib; sourceTree = "<group>"; };
-		E15D6B4428BC39AB0076286C /* SignUp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
-		E15D6B4528BC39AB0076286C /* SignUp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignUp.xib; sourceTree = "<group>"; };
-		E15D6B4A28BC39AB0076286C /* SignIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SignIn.xib; sourceTree = "<group>"; };
-		E15D6B4B28BC39AB0076286C /* SignIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		E15D6B4E28BC39AB0076286C /* Tutorial3CVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial3CVC.swift; sourceTree = "<group>"; };
 		E15D6B4F28BC39AB0076286C /* Tutorial3CVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tutorial3CVC.xib; sourceTree = "<group>"; };
 		E15D6B5128BC39AB0076286C /* Tutorial2CVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tutorial2CVC.swift; sourceTree = "<group>"; };
@@ -1468,7 +1458,6 @@
 				82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */,
 				82847A8129827AC500611DC4 /* MVPVenueDetailVc.swift */,
 				CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */,
-				CEEA4CD329963342001D2A35 /* SettingMvpVC.swift */,
 				CE8AB895299F60200083059B /* MVPStartScreenVC.swift */,
 				CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */,
 			);
@@ -2122,7 +2111,7 @@
 		CE4867D9286F392900FD277E /* UserModel */ = {
 			isa = PBXGroup;
 			children = (
-				BDB2D3FD2955BCB400FD9407 /* CurrentUser.swift */,
+				BDB2D3FD2955BCB400FD9407 /* User.swift */,
 				BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */,
 				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
 				828A04932962DA3E004A5F2B /* InstagramMedia.swift */,
@@ -2870,8 +2859,6 @@
 				BD3FB2482940637200BE7713 /* onBoarding */,
 				E15D6B4028BC39AB0076286C /* Splash */,
 				E1A9E79828C56F6D0081FB28 /* LogIn */,
-				E15D6B4328BC39AB0076286C /* SignUp */,
-				E15D6B4928BC39AB0076286C /* SignIn */,
 				E15D6B4C28BC39AB0076286C /* Tutorials */,
 			);
 			path = Login;
@@ -2884,24 +2871,6 @@
 				E15D6B4228BC39AB0076286C /* Splash.xib */,
 			);
 			path = Splash;
-			sourceTree = "<group>";
-		};
-		E15D6B4328BC39AB0076286C /* SignUp */ = {
-			isa = PBXGroup;
-			children = (
-				E15D6B4428BC39AB0076286C /* SignUp.swift */,
-				E15D6B4528BC39AB0076286C /* SignUp.xib */,
-			);
-			path = SignUp;
-			sourceTree = "<group>";
-		};
-		E15D6B4928BC39AB0076286C /* SignIn */ = {
-			isa = PBXGroup;
-			children = (
-				E15D6B4A28BC39AB0076286C /* SignIn.xib */,
-				E15D6B4B28BC39AB0076286C /* SignIn.swift */,
-			);
-			path = SignIn;
 			sourceTree = "<group>";
 		};
 		E15D6B4C28BC39AB0076286C /* Tutorials */ = {
@@ -4031,7 +4000,6 @@
 				E17DC85928C6C16500244C4F /* NFTCVC.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
-				E15D6B6428BC39AC0076286C /* SignUp.xib in Resources */,
 				04FDAF8328F920B3007129CC /* PublikAttendeesProfileCVC.xib in Resources */,
 				E1A9E7D428C56FD10081FB28 /* ManageFriendTVC.xib in Resources */,
 				E167058D28CA6AB800644BF0 /* SelectedBookingTVC.xib in Resources */,
@@ -4125,7 +4093,6 @@
 				4A7CC53528E37ACA00F8BA63 /* BookingAddressTVC.xib in Resources */,
 				E1A9E75E28C55D550081FB28 /* VenueTVC.xib in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
-				E15D6B6728BC39AC0076286C /* SignIn.xib in Resources */,
 				E166184728BED1810027C6EA /* RewardDetailsStretchyTVC.xib in Resources */,
 				E17DC86128C6C16500244C4F /* NFTsonSpeakEasy.xib in Resources */,
 				E17DC85F28C6C16500244C4F /* NFTAssets.xib in Resources */,
@@ -4281,7 +4248,6 @@
 				BDCC5C2E294739A600595436 /* ConnectSocialMediaViewController.swift in Sources */,
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
-				E15D6B6828BC39AC0076286C /* SignIn.swift in Sources */,
 				BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */,
 				0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */,
 				BD942F4329595F6200D52115 /* UserDefault.swift in Sources */,
@@ -4396,7 +4362,7 @@
 				2986835B2975658300CB827B /* Venue.swift in Sources */,
 				E11F4BFB28C835F3008D2E30 /* Bookings.swift in Sources */,
 				E167055928CA442800644BF0 /* PaymentMethodTVC.swift in Sources */,
-				BDB2D3FE2955BCB400FD9407 /* CurrentUser.swift in Sources */,
+				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				E13F4CF328D288E100D9C64E /* GalleryCVC.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
 				E11F4BAE28C8358C008D2E30 /* VIPTableBookingCalenderTVC.swift in Sources */,
@@ -4437,7 +4403,6 @@
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				4A7CC54428E385E700F8BA63 /* PaymentsTVC.swift in Sources */,
-				E15D6B6328BC39AC0076286C /* SignUp.swift in Sources */,
 				E1A9E7D328C56FD10081FB28 /* Friends.swift in Sources */,
 				84248DA828D3D66200A6E260 /* FeaturedVenue.swift in Sources */,
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
@@ -4570,7 +4535,6 @@
 				4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */,
 				E167058428CA6AB800644BF0 /* FriendCVC.swift in Sources */,
 				CAC4140F28A478050007BA86 /* FrameHelper.swift in Sources */,
-				CEEA4CD429963343001D2A35 /* SettingMvpVC.swift in Sources */,
 				BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */,
 				CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */,
 				CE4867B8286F358800FD277E /* Dictionary+Extension.swift in Sources */,

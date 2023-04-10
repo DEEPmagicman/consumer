@@ -5,7 +5,6 @@
 //  Created by Square Infosoft on 26/12/22.
 //
 
-import Foundation
 import UIKit
 
 final class OnBoardingPresenter {
@@ -45,7 +44,7 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String:Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             UserDefault.shared.isLoggedIn = true
-            let user = Currentuser(fromDictionary: userDic)
+            let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
@@ -120,7 +119,7 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String:Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             UserDefault.shared.isLoggedIn = true
-            let user = Currentuser(fromDictionary: userDic)
+            let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
@@ -171,7 +170,7 @@ final class OnBoardingPresenter {
                 return
             }
             let imageDic = userDic["image"] as? [String:Any]
-            let user = Currentuser(fromDictionary: userDic)
+            let user = User(fromDictionary: userDic)
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
@@ -380,7 +379,7 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String:Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             UserDefault.shared.isLoggedIn = true
-            let user = Currentuser(fromDictionary: userDic)
+            let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
@@ -438,7 +437,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String:Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
-            let user = Currentuser(fromDictionary: userDic)
+            let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")

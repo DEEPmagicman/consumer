@@ -186,11 +186,6 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPSettingVC(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(SettingMvpVC.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket], totalPrice: Int) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedTickets = selectedTickets

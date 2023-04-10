@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Currentuser {
+struct User {
     
     var id: String
     var uniqueId: String
@@ -67,7 +67,7 @@ struct Currentuser {
         case drinkIds = "drink_ids"
     }
     
-    init(fromDictionary dictionary: [String : Any]) {
+    init(fromDictionary dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? ""
         self.uniqueId = dictionary["uniqueId"] as? String ?? ""
         self.firstName = dictionary["firstName"] as? String ?? ""
@@ -98,7 +98,7 @@ struct Currentuser {
     }
 }
 
-extension Currentuser: Decodable, Encodable {
+extension User: Decodable, Encodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = (try? values.decode(String.self, forKey: .id)) ?? ""
@@ -180,7 +180,6 @@ struct ImageDetail {
         self.description = description
     }
     
-    
     init(fromDictionary dictionary: [String : Any]) {
         self.key = dictionary["key"] as? String ?? ""
         self.name = dictionary["name"] as? String ?? ""
@@ -188,12 +187,12 @@ struct ImageDetail {
     }
     
     func toDictionary() -> [String: Any] {
-            var jsonDict = [String: Any]()
-            jsonDict["key"] = key
-            jsonDict["name"] = name
-            jsonDict["description"] = description
-            return jsonDict
-        }
+        var jsonDict = [String: Any]()
+        jsonDict["key"] = key
+        jsonDict["name"] = name
+        jsonDict["description"] = description
+        return jsonDict
+    }
 }
 
 extension ImageDetail: Decodable, Encodable {

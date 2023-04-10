@@ -32,7 +32,7 @@ final class AFWrapper: NSObject {
             return
         }
         
-        let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+        let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
             
             if let responseCode = responseObject.response?.statusCode {
                 if responseCode == 200 || responseCode == 201 {
