@@ -287,6 +287,7 @@
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
 		CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */; };
+		CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */; };
 		CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */; };
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
@@ -872,6 +873,7 @@
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
 		CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWCenterTextLayer.swift; sourceTree = "<group>"; };
 		CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChartExtensions.swift; sourceTree = "<group>"; };
+		CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketVC.swift; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
@@ -2174,6 +2176,14 @@
 			path = AWLineChart;
 			sourceTree = "<group>";
 		};
+		CEAE5CD829E430D000CB20E5 /* PreSold */ = {
+			isa = PBXGroup;
+			children = (
+				CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */,
+			);
+			path = PreSold;
+			sourceTree = "<group>";
+		};
 		CED07E9829AC9504004EBBC5 /* MVPVenueTypeHeaderView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3400,6 +3410,7 @@
 		E1A9E6DA28C55D540081FB28 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CEAE5CD829E430D000CB20E5 /* PreSold */,
 				84248DA028D3D38F00A6E260 /* AllVenues */,
 				84248D9628D29AA200A6E260 /* AllEvents */,
 				E11F4AEC28C83564008D2E30 /* TableBookings */,
@@ -4495,6 +4506,7 @@
 				2986835F297565C500CB827B /* VenueAttachment.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
+				CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
 				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,

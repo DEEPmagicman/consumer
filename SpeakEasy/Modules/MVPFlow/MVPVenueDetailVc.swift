@@ -278,8 +278,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             ticketTypeTableView.reloadData()
             updateContinueBtn()
-        case openingHoursTableView:
-            break
+        case upcomingTableView:
+            Navigate.to.selectTicket(self, venueId: venueId, venueDetail: venueDetails)
         default:
             break
         }

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+// TODO: check if being use anywhere or remove
 class HomeTabCVC: UICollectionViewCell {
 
     @IBOutlet weak var imgIcon: UIImageView!

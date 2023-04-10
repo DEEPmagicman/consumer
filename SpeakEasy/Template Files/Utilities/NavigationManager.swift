@@ -186,6 +186,13 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func selectTicket(_ sender: UIViewController, venueId: String, venueDetail: ClipVenue?) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(SelectTicketVC.self)
+        vc.venueDetails = venueDetail
+        vc.venueId = venueId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket], totalPrice: Int) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedTickets = selectedTickets
