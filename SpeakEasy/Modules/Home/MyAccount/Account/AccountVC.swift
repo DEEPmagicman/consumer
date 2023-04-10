@@ -11,7 +11,8 @@ final class AccountVC: UIViewController {
 
     @IBOutlet private weak var listTableView: UITableView!
     @IBOutlet private weak var listHeight: NSLayoutConstraint!
-    
+    @IBOutlet private weak var confirmEmailLbl: UILabel!
+
     private var listHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
@@ -23,11 +24,24 @@ final class AccountVC: UIViewController {
             self.listHeight.constant = self.listTableView.contentSize.height
             self.listTableView.layoutIfNeeded()
         }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickConfirmEmail))
+        confirmEmailLbl.isUserInteractionEnabled = true
+        confirmEmailLbl.addGestureRecognizer(tap)
         listTableView.setupPadding()
         listTableView.groupStyleSpacing()
     }
     
+    @objc private func onClickConfirmEmail() {
+        Navigate.to.presentCommentDoneBottomSheet(self)
+    }
+    
     @IBAction func onClickShare(_ sender: Any) {
+        let msgText = """
+ Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
+
+ Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+ """
+         Utility.main.shareSocialWith(text: msgText)
     }
 
     @IBAction func onBtnSetting(_ sender: UIButton) {
@@ -61,5 +75,18 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             header?.titleLbl.text = "Recommended"
         }
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            // TODO: navigate with actual data
+            Navigate.to.qrCodeMvpVC(self, venueName: "hello", bookingId: "hello", venueAttachment: "hee", venueLogo: "aas", selectedTickets: [])
+        case 1:
+            // TODO: navigate to recommended event
+            break
+        default:
+            break
+        }
     }
 }

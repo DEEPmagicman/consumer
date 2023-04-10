@@ -64,31 +64,35 @@
                                                             <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Email to get Verified!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCx-Ec-DMq" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="104" y="46.666666666666657" width="257" height="18.333333333333329"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YAz-Xg-Vfj">
+                                                        <rect key="frame" x="104.00000000000001" y="63" width="189.33333333333337" height="1"/>
+                                                        <color key="backgroundColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="hc5-CD-67a"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Email to get Verified!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCx-Ec-DMq">
+                                                        <rect key="frame" x="104.00000000000001" y="46.666666666666657" width="189.33333333333337" height="18.333333333333329"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                                                <real key="value" value="13"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
-                                                        </userDefinedRuntimeAttributes>
                                                     </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="RlX-2j-QRJ" secondAttribute="bottom" id="1wR-Ev-fP0"/>
-                                                    <constraint firstItem="XCx-Ec-DMq" firstAttribute="trailing" secondItem="YDX-LM-OK3" secondAttribute="trailing" id="Cps-RL-h38"/>
                                                     <constraint firstAttribute="height" constant="81" id="G5v-7t-DuC"/>
                                                     <constraint firstAttribute="trailing" secondItem="YDX-LM-OK3" secondAttribute="trailing" id="GSn-f0-SpQ"/>
                                                     <constraint firstItem="RlX-2j-QRJ" firstAttribute="top" secondItem="dhE-uc-Ots" secondAttribute="top" id="MIe-nw-mWb"/>
                                                     <constraint firstItem="XCx-Ec-DMq" firstAttribute="bottom" secondItem="RlX-2j-QRJ" secondAttribute="bottom" constant="-16" id="QyJ-tC-CL4"/>
                                                     <constraint firstItem="XCx-Ec-DMq" firstAttribute="leading" secondItem="YDX-LM-OK3" secondAttribute="leading" id="aEL-or-XxV"/>
+                                                    <constraint firstItem="YAz-Xg-Vfj" firstAttribute="leading" secondItem="XCx-Ec-DMq" secondAttribute="leading" id="dtx-XX-1rm"/>
                                                     <constraint firstItem="RlX-2j-QRJ" firstAttribute="leading" secondItem="dhE-uc-Ots" secondAttribute="leading" id="f9l-qq-6n3"/>
+                                                    <constraint firstItem="YAz-Xg-Vfj" firstAttribute="bottom" secondItem="XCx-Ec-DMq" secondAttribute="bottom" constant="-1" id="fUq-9g-Ogu"/>
                                                     <constraint firstItem="YDX-LM-OK3" firstAttribute="leading" secondItem="RlX-2j-QRJ" secondAttribute="trailing" constant="23" id="gkX-kK-5JV"/>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XCx-Ec-DMq" secondAttribute="trailing" id="ia8-QJ-24b"/>
                                                     <constraint firstItem="YDX-LM-OK3" firstAttribute="top" secondItem="RlX-2j-QRJ" secondAttribute="top" constant="10" id="mbv-ov-1Em"/>
+                                                    <constraint firstItem="YAz-Xg-Vfj" firstAttribute="trailing" secondItem="XCx-Ec-DMq" secondAttribute="trailing" id="nSM-8Z-jKO"/>
                                                 </constraints>
                                             </view>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="W5L-a5-ZsB">
@@ -164,6 +168,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="confirmEmailLbl" destination="XCx-Ec-DMq" id="LNe-Do-uPI"/>
                         <outlet property="listHeight" destination="NCm-ee-EaL" id="bfj-pg-aey"/>
                         <outlet property="listTableView" destination="W5L-a5-ZsB" id="Uq9-WG-tF1"/>
                     </connections>

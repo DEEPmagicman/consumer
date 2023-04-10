@@ -199,6 +199,7 @@ final class Navigate {
         vc.venueId = venueId
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
+        vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -189,7 +189,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickShare(_ sender: Any) {
         let msgText = """
- Download Speaskeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
+ Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
 
  Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
  """
