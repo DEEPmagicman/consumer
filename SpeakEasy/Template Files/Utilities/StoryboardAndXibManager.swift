@@ -13,7 +13,7 @@ struct StoryboardAndXibManager {
         static let login2 = UIStoryboard(name: "Login2", bundle: nil)
         static let settings = UIStoryboard(name: "Settings", bundle: nil)
         static let mvp = UIStoryboard(name: "MVPFlow", bundle: nil)
-        static let paymentFlow = UIStoryboard(name: "PaymentFlow", bundle: nil)
+        static let payment = UIStoryboard(name: "Payment", bundle: nil)
         static let newHome = UIStoryboard(name: "NewHome", bundle: nil)
         static let account = UIStoryboard(name: "Account", bundle: nil)
     }

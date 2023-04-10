@@ -192,7 +192,7 @@ final class Navigate {
     }
     
     func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket], totalPrice: Int) {
-        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(CheckOutVC.self)
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedTickets = selectedTickets
         vc.totalPrice = totalPrice
         vc.venueName = venueName
@@ -203,8 +203,8 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func qrCodeMvpVC(_ sender: UIViewController, venueName: String, bookingId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
-        let vc = StoryboardAndXibManager.StoryBoard.paymentFlow.instantiateVC(QRCodeMvpVC.self)
+    func QRCode(_ sender: UIViewController, venueName: String, bookingId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(QRCodeVC.self)
         vc.venueName = venueName
         vc.bookingId = bookingId
         vc.venueAttachment = venueAttachment
@@ -215,6 +215,15 @@ final class Navigate {
             return
         }
         sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func paymentDetailVC(_ sender: UIViewController, selectedTickets: [AppClipTicket], totalPrice: Int) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(PaymentDetailVC.self)
+        vc.selectedTickets = selectedTickets
+        vc.totalPrice = totalPrice
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        sender.present(vc, animated: true)
     }
     
     func settingsVc(_ sender: UIViewController) {

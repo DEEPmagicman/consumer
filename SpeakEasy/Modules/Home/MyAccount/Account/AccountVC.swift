@@ -81,7 +81,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.section {
         case 0:
             // TODO: navigate with actual data
-            Navigate.to.qrCodeMvpVC(self, venueName: "hello", bookingId: "hello", venueAttachment: "hee", venueLogo: "aas", selectedTickets: [])
+            Navigate.to.QRCode(self, venueName: "hello", bookingId: "hello", venueAttachment: "hee", venueLogo: "aas", selectedTickets: [])
         case 1:
             // TODO: navigate to recommended event
             break

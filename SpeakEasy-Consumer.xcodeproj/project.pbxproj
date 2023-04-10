@@ -204,8 +204,8 @@
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
-		CE08978B2994FBE100EE6117 /* QRCodeMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */; };
-		CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */; };
+		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
+		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
@@ -284,6 +284,7 @@
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
+		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA9474F288CABA600D7BB91 /* AWBezierConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */; };
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
@@ -800,8 +801,8 @@
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
-		CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeMvpVC.swift; sourceTree = "<group>"; };
-		CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PaymentFlow.storyboard; sourceTree = "<group>"; };
+		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
+		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
@@ -877,6 +878,7 @@
 		CE8F55CA29A87C3E000E3EC9 /* NewHome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewHome.storyboard; sourceTree = "<group>"; };
 		CE8F55CC29A87C8E000E3EC9 /* NewHomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewHomeVC.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
+		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
 		CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWCenterTextLayer.swift; sourceTree = "<group>"; };
@@ -1788,9 +1790,10 @@
 			isa = PBXGroup;
 			children = (
 				CE6813D829DEEEB300B41418 /* TicketDetailTVC */,
-				CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */,
+				CE0E87482994C61000F2B2E9 /* Payment.storyboard */,
 				CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */,
-				CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */,
+				CE08978A2994FBE100EE6117 /* QRCodeVC.swift */,
+				CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -4084,7 +4087,7 @@
 				E11F4B8D28C8358C008D2E30 /* TopEventsTVC.xib in Resources */,
 				E1A9E74E28C55D550081FB28 /* VenuePhotoGallery.xib in Resources */,
 				E167056228CA442800644BF0 /* ViewEventHeader.xib in Resources */,
-				CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */,
+				CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */,
 				E1A9E79728C560BC0081FB28 /* Search.xib in Resources */,
 				828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */,
 				E11F4A9628C800B1008D2E30 /* NFTAssets.xib in Resources */,
@@ -4465,6 +4468,7 @@
 				BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */,
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
 				CE4867BE286F358800FD277E /* CustomLocale.swift in Sources */,
+				CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */,
 				BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */,
 				CE3213C929E03B8E00EBC179 /* AccountVC.swift in Sources */,
 				E1A9E7FD28C579690081FB28 /* VibesCVC.swift in Sources */,
@@ -4578,7 +4582,7 @@
 				E16705B928CA6BB500644BF0 /* FriendsCVC.swift in Sources */,
 				2986836829756EA600CB827B /* Flyer.swift in Sources */,
 				E11F4A9328C800B1008D2E30 /* AccessPass.swift in Sources */,
-				CE08978B2994FBE100EE6117 /* QRCodeMvpVC.swift in Sources */,
+				CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */,
 				CAC4141228A478050007BA86 /* DaysCollectionViewCell.swift in Sources */,
 				E11F4C0D28C835F3008D2E30 /* ChatHeadTVC.swift in Sources */,
 				BD3FB2512940690D00BE7713 /* IdentifierHelper.swift in Sources */,

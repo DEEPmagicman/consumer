@@ -1,5 +1,5 @@
 //
-//  QRCodeMvpVC.swift
+//  QRCodeVC.swift
 //  SpeakEasy-Consumer
 //
 //  Created by Square Infosoft on 09/02/23.
@@ -9,7 +9,7 @@ import UIKit
 import SDWebImage
 import PassKit
 
-final class QRCodeMvpVC: UIViewController {
+final class QRCodeVC: UIViewController {
 
     @IBOutlet private weak var venueImg: UIImageView!
     @IBOutlet private weak var venueLogoImg: UIImageView!
@@ -88,7 +88,7 @@ Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
     }
 }
 
-extension QRCodeMvpVC: UITableViewDelegate, UITableViewDataSource {
+extension QRCodeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         selectedTickets.count
     }

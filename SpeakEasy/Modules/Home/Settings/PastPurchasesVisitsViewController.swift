@@ -14,6 +14,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
     private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
     private let demoPrices = ["Forward Day + Nightclub", "TAO Nightclub, Chicago", "TAO Nightclub, Chicago"]
     private let demoNames = ["Live Cover Ticket", "NIGHTMRE & DJ Diox XO DJ Heavy", "TAO Friday"]
+    private let demoSelectedTicket = Array(repeating: AppClipTicket(id: "", venueId: "", name: "General Admission - Tier 1", price: 10, status: "", description: "Allows general admission through front door.", isDeleted: false, createdAt: "", updatedAt: "", selectedQuantity: 2), count: 8)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +48,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.checkOutVC(self, venueName: "", venueId: "", venueAttachment: "", venueLogo: "", selectedTickets: [], totalPrice: 40)
+        Navigate.to.paymentDetailVC(self, selectedTickets: demoSelectedTicket, totalPrice: 40)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
