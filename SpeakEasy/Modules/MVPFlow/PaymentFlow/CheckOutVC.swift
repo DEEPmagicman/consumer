@@ -1,5 +1,5 @@
 //
-//  CheckOutMvpVC.swift
+//  CheckOutVC.swift
 //  SpeakEasy-Consumer
 //
 //  Created by Square Infosoft on 09/02/23.
@@ -10,7 +10,7 @@ import PassKit
 import StripeApplePay
 import StripePaymentSheet
 
-final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
+final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     @IBOutlet private weak var totalPriceLbl: UILabel!
 //    @IBOutlet private weak var applePayBtn: PKPaymentButton!
@@ -256,7 +256,7 @@ final class CheckOutMvpVC: UIViewController, ApplePayContextDelegate {
     }
 }
 
-extension CheckOutMvpVC: UITableViewDelegate, UITableViewDataSource {
+extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         selectedTickets.count
     }
@@ -273,7 +273,7 @@ extension CheckOutMvpVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension CheckOutMvpVC {
+extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
         let clientSecret = paymentIntent
         // Call the completion block with the client secret or an error
@@ -302,10 +302,10 @@ extension CheckOutMvpVC {
     }
 }
 
-extension CheckOutMvpVC: WebSocketCallBackDelegate {
+extension CheckOutVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
-        if self.navigationController?.viewControllers.last is CheckOutMvpVC && self.venueId == uniqueId {
+        if self.navigationController?.viewControllers.last is CheckOutVC && self.venueId == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in

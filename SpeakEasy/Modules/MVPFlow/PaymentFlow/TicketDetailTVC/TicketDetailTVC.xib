@@ -35,7 +35,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allows general admission through front door." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BwU-FW-wZq">
-                        <rect key="frame" x="10" y="35" width="301.66666666666669" height="10"/>
+                        <rect key="frame" x="10" y="35" width="297.66666666666669" height="10"/>
                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -56,7 +56,7 @@
                     <constraint firstItem="Pmk-eX-Y8X" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="P9R-Ru-UDj"/>
                     <constraint firstItem="BwU-FW-wZq" firstAttribute="top" secondItem="Pmk-eX-Y8X" secondAttribute="bottom" id="feu-QN-Rs3"/>
                     <constraint firstItem="Pmk-eX-Y8X" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="ksI-7t-W1J"/>
-                    <constraint firstItem="Kb8-Zw-HTB" firstAttribute="leading" secondItem="BwU-FW-wZq" secondAttribute="trailing" id="w3E-JL-OYm"/>
+                    <constraint firstItem="Kb8-Zw-HTB" firstAttribute="leading" secondItem="BwU-FW-wZq" secondAttribute="trailing" constant="4" id="w3E-JL-OYm"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

@@ -90,7 +90,7 @@ final class MVPVenueDetailVc: UIViewController {
             self.openingTableHeight.constant = self.openingHoursTableView.contentSize.height
             self.openingHoursTableView.layoutIfNeeded()
         }
-        upcomingTableView.register(UINib(nibName: "UpcomingTVC", bundle: nil), forCellReuseIdentifier: "UpcomingTVC")
+        upcomingTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
         upcomingHeightObservation = upcomingTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.upcomingTableHeight.constant = self.upcomingTableView.contentSize.height
@@ -183,7 +183,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutMvpVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets, totalPrice: totalPrice)
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets, totalPrice: totalPrice)
         }
     }
     
@@ -257,7 +257,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.setData(data: demoHours[indexPath.row])
             return cell
         case upcomingTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UpcomingTVC", for: indexPath) as! UpcomingTVC
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
             cell.nameLbl.text = demoNames[indexPath.row]
             cell.dateLbl.text = demoDates[indexPath.row]
             cell.priceLbl.text = demoPrices[indexPath.row]

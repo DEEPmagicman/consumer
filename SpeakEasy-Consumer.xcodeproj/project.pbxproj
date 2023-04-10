@@ -206,7 +206,7 @@
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */; };
 		CE0E87492994C61000F2B2E9 /* PaymentFlow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */; };
-		CE0E87502994D1B600F2B2E9 /* CheckOutMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */; };
+		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
@@ -265,8 +265,8 @@
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
-		CE6813D629DE976400B41418 /* UpcomingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* UpcomingTVC.swift */; };
-		CE6813D729DE976400B41418 /* UpcomingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* UpcomingTVC.xib */; };
+		CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* DetailTVC.swift */; };
+		CE6813D729DE976400B41418 /* DetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* DetailTVC.xib */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
@@ -802,7 +802,7 @@
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeMvpVC.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PaymentFlow.storyboard; sourceTree = "<group>"; };
-		CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutMvpVC.swift; sourceTree = "<group>"; };
+		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -862,8 +862,8 @@
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
-		CE6813D429DE976400B41418 /* UpcomingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingTVC.swift; sourceTree = "<group>"; };
-		CE6813D529DE976400B41418 /* UpcomingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpcomingTVC.xib; sourceTree = "<group>"; };
+		CE6813D429DE976400B41418 /* DetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTVC.swift; sourceTree = "<group>"; };
+		CE6813D529DE976400B41418 /* DetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTVC.xib; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
 		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
@@ -1456,7 +1456,7 @@
 		82847A77298244A000611DC4 /* MVPFlow */ = {
 			isa = PBXGroup;
 			children = (
-				CE6813D329DE966600B41418 /* UpcomingTVC */,
+				CE6813D329DE966600B41418 /* DetailTVC */,
 				CED07E9829AC9504004EBBC5 /* MVPVenueTypeHeaderView */,
 				CE0E87472994C5E600F2B2E9 /* PaymentFlow */,
 				82847A8329828B4000611DC4 /* ticketTypeTableViewCell */,
@@ -1789,7 +1789,7 @@
 			children = (
 				CE6813D829DEEEB300B41418 /* TicketDetailTVC */,
 				CE0E87482994C61000F2B2E9 /* PaymentFlow.storyboard */,
-				CE0E874F2994D1B600F2B2E9 /* CheckOutMvpVC.swift */,
+				CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */,
 				CE08978A2994FBE100EE6117 /* QRCodeMvpVC.swift */,
 			);
 			path = PaymentFlow;
@@ -2163,13 +2163,13 @@
 			path = APPClipModal;
 			sourceTree = "<group>";
 		};
-		CE6813D329DE966600B41418 /* UpcomingTVC */ = {
+		CE6813D329DE966600B41418 /* DetailTVC */ = {
 			isa = PBXGroup;
 			children = (
-				CE6813D429DE976400B41418 /* UpcomingTVC.swift */,
-				CE6813D529DE976400B41418 /* UpcomingTVC.xib */,
+				CE6813D429DE976400B41418 /* DetailTVC.swift */,
+				CE6813D529DE976400B41418 /* DetailTVC.xib */,
 			);
-			path = UpcomingTVC;
+			path = DetailTVC;
 			sourceTree = "<group>";
 		};
 		CE6813D829DEEEB300B41418 /* TicketDetailTVC */ = {
@@ -4118,7 +4118,7 @@
 				E11F4C0C28C835F3008D2E30 /* ChatHeadTVC.xib in Resources */,
 				9D4A029128CE9E4B009CD670 /* CostSplitSelectionTVC.xib in Resources */,
 				E1A9E74928C55D550081FB28 /* Home.xib in Resources */,
-				CE6813D729DE976400B41418 /* UpcomingTVC.xib in Resources */,
+				CE6813D729DE976400B41418 /* DetailTVC.xib in Resources */,
 				4A7CC53528E37ACA00F8BA63 /* BookingAddressTVC.xib in Resources */,
 				E1A9E75E28C55D550081FB28 /* VenueTVC.xib in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
@@ -4347,7 +4347,7 @@
 				82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */,
 				E166184B28BED1810027C6EA /* RewardDetails.swift in Sources */,
 				E11F4BFA28C835F3008D2E30 /* BookingsAndInvites.swift in Sources */,
-				CE0E87502994D1B600F2B2E9 /* CheckOutMvpVC.swift in Sources */,
+				CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */,
 				E17DC97228C6D01700244C4F /* Main.swift in Sources */,
 				CAC413F328A478040007BA86 /* Date.swift in Sources */,
 				BD942F4729599FED00D52115 /* Loader.swift in Sources */,
@@ -4440,7 +4440,7 @@
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */,
-				CE6813D629DE976400B41418 /* UpcomingTVC.swift in Sources */,
+				CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,

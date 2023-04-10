@@ -19,7 +19,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
         super.viewDidLoad()
         pastPurchasesTableView.delegate = self
         pastPurchasesTableView.dataSource = self
-        pastPurchasesTableView.register(UINib(nibName: "UpcomingTVC", bundle: nil), forCellReuseIdentifier: "UpcomingTVC")
+        pastPurchasesTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
         pastPurchasesTableView.setupPadding()
         pastPurchasesTableView.groupStyleSpacing()
     }
@@ -35,7 +35,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UpcomingTVC", for: indexPath) as! UpcomingTVC
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
         cell.selectionStyle = .none
         cell.nameLbl.text = demoNames[indexPath.row]
         cell.dateLbl.text = demoDates[indexPath.row]
@@ -47,7 +47,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.checkOutMvpVC(self, venueName: "", venueId: "", venueAttachment: "", venueLogo: "", selectedTickets: [], totalPrice: 40)
+        Navigate.to.checkOutVC(self, venueName: "", venueId: "", venueAttachment: "", venueLogo: "", selectedTickets: [], totalPrice: 40)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

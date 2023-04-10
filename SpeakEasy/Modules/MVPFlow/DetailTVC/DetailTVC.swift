@@ -1,5 +1,5 @@
 //
-//  UpcomingTVC.swift
+//  DetailTVC.swift
 //  SpeakEasy-Consumer
 //
 //  Created by Square Infosoft on 06/04/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class UpcomingTVC: UITableViewCell {
+final class DetailTVC: UITableViewCell {
 
     @IBOutlet weak var priceLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
