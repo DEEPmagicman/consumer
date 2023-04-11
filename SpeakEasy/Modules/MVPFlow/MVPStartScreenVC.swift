@@ -6,66 +6,70 @@
 //
 
 import UIKit
-import SCPageControl
+import AVFoundation
 
-class MVPStartScreenVC: UIViewController {
-
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var pageControllerView: SCPageControlView!
+final class MVPStartScreenVC: UIViewController {
     
-    var pagesCount = 3
+    @IBOutlet weak var bgImageView: UIImageView!
+    
+    var player: AVPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        pageControllerView.scp_style = .SCJAFillCircle
-        pageControllerView.set_view(self.pagesCount , current: 0, current_color: Constant.Color.submiteRequestBtnColor, disable_color: .red)
-        collectionView.register(UINib(nibName: "MVPSplashCVC", bundle: nil), forCellWithReuseIdentifier: "MVPSplashCVC")
+        playBackgroundVideo()
     }
     
-
-    @IBAction func onClickContinueasGuest(_ sender: Any) {
-        UserDefault.shared.hasVisitedStartingPage = true
-        Navigate.to.MVPVenueListViewController(self)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // background event
+        NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        // foreground event
+        NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        // add these 2 notifications to prevent freeze on long Home button press and back
+        NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.willResignActiveNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
+        player?.play()
     }
     
-}
-
-extension MVPStartScreenVC: UICollectionViewDataSource, UICollectionViewDelegate{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.pagesCount
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        player?.pause()
+        NotificationCenter.default.removeObserver(self)
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MVPSplashCVC", for: indexPath) as! MVPSplashCVC
-        switch indexPath.item {
-        case 0:
-            cell.imgView.image = UIImage(named: "MVPHome-Ic")
-            cell.headerLbl.text = "Top Venues & Events"
-            cell.infoLbl.text = "Buy entry to your favorite nightclubs, bars, & events"
-        case 1:
-            cell.imgView.image = UIImage(named: "MVPWifi-ic")
-            cell.headerLbl.text = "Live Cover & Wait Times"
-            cell.infoLbl.text = "View this all here to plan your night live!"
-        case 2:
-            cell.imgView.image = UIImage(named: "MVPLock-ic")
-            cell.headerLbl.text = " + Guaranteed Entry"
-            cell.infoLbl.text = "Full protection with Speakeasy+ Purchase"
-        default: break
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func setPlayerLayerToNil(){
+        player?.pause()
+    }
+
+    @objc func reinitializePlayerLayer(){
+        player?.play()
+    }
+    
+    private func playBackgroundVideo() {
+        if let filePath = Bundle.main.path(forResource: "video", ofType:"mp4") {
+            let filePathUrl = NSURL.fileURL(withPath: filePath)
+            player = AVPlayer(url: filePathUrl)
+            let playerLayer = AVPlayerLayer(player: player)
+            playerLayer.frame = self.bgImageView.bounds
+            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: nil) { [weak self] (_) in
+                self?.player?.seek(to: CMTime.zero)
+                self?.player?.play()
+            }
+            self.bgImageView.layer.addSublayer(playerLayer)
+            player?.play()
         }
-        return cell
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.pageControllerView.scroll_did(scrollView)
+
+    @IBAction func onClickBtn(_ sender: Any) {
+        UserDefault.shared.emptyData()
+        AppDelegate.shared.changeRootViewController()
     }
 }
-
-extension MVPStartScreenVC: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = collectionView.frame.height
-        let width = collectionView.frame.width
-        let size = CGSize(width: width, height: height)
-        return size
-    }
-}
-
