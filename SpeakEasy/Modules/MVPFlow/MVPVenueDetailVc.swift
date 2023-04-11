@@ -60,6 +60,15 @@ final class MVPVenueDetailVc: UIViewController {
         }
         return total
     }
+    private var isMaxTicketReached: Bool {
+        var total = 0
+        venueDetails?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += quantity
+            }
+        }
+        return total >= maxTicket
+    }
     private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
     private let demoHours = Constants.taoHours
     private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
@@ -249,7 +258,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
             cell.totalTicketLbl.text = "\(venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
-            cell.plusBtn.alpha = venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 == maxTicket ? 0.5 : 1
+            cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell
@@ -274,6 +283,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
             if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
             if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
+            if isMaxTicketReached {
+                Alert.showToast("Max ticket selection reached")
+                return
+            }
             continueBtn.isHidden = false
             scrollViewBottomConstraint.constant = 90
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
@@ -315,6 +328,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
+        if isMaxTicketReached {
+            Alert.showToast("Max ticket selection reached")
+            return
+        }
         if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
             if totalTicket < maxTicket {
                 venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
