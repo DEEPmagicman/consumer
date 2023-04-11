@@ -47,6 +47,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var mvpDelegate = MVPPresenter()
     private var venueDetails: ClipVenue?
     private var maxTicket = 10
+    private var ticketListHeightObservation: NSKeyValueObservation?
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
@@ -72,7 +73,11 @@ final class MVPVenueDetailVc: UIViewController {
         scrollView.delegate = self
         backBtn.isHidden = isFromAppClip
         ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
-        ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
+        ticketListHeightObservation = ticketTypeTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.tableViewHeight.constant = self.ticketTypeTableView.contentSize.height
+            self.ticketTypeTableView.layoutIfNeeded()
+        }
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
         updateContinueBtn(forceRemove: true)
@@ -143,10 +148,6 @@ final class MVPVenueDetailVc: UIViewController {
         mapItem.openInMaps()
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        tableViewHeight.constant = ticketTypeTableView.contentSize.height
-    }
-    
     private func setUpUI() {
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
@@ -197,7 +198,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        Navigate.to.back(self)
     }
 }
 
@@ -303,11 +304,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
             if totalTicket > 1 {
                 venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket - 1
-                self.ticketTypeTableView.reloadData()
+                ticketTypeTableView.reloadData()
                 updateContinueBtn()
             } else if totalTicket == 1 {
                 venueDetails?.appClipTicket?[sender.tag].selectedQuantity = nil
-                self.ticketTypeTableView.reloadData()
+                ticketTypeTableView.reloadData()
                 updateContinueBtn(forceRemove: (venueDetails?.appClipTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
             }
         }
@@ -317,7 +318,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
             if totalTicket < maxTicket {
                 venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
-                self.ticketTypeTableView.reloadData()
+                ticketTypeTableView.reloadData()
                 updateContinueBtn()
             } else {
                 Alert.showToast("Max ticket selection reached")
@@ -374,7 +375,7 @@ extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource
 
 extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width
+        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width + 16
         let size = CGSize(width: width, height: 40.0)
         return size
     }

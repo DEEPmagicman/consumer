@@ -736,25 +736,25 @@
                                             <constraint firstAttribute="height" constant="17" id="8TR-Jq-B7z"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <buttonConfiguration key="configuration" style="plain"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="BackArrow"/>
                                         <connections>
                                             <action selector="onClickBack:" destination="PMB-sV-H7w" eventType="touchUpInside" id="Fi8-aN-uPM"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your phone number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lqE-c2-epN">
-                                        <rect key="frame" x="45" y="52" width="324" height="35"/>
+                                        <rect key="frame" x="20" y="52" width="374" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll  text you to confirm your number. Standard message and data rates apply." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8pr-Z5-lvA">
-                                        <rect key="frame" x="20" y="112" width="374" height="36.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We’ll send you a text to confirm your account" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8pr-Z5-lvA">
+                                        <rect key="frame" x="20" y="112" width="374" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BL1-hY-a2W">
-                                        <rect key="frame" x="20" y="173.5" width="80" height="50"/>
+                                        <rect key="frame" x="20" y="155.5" width="80" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4Ha-FD-VvL" customClass="FPNTextField" customModule="FlagPhoneNumber">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="49"/>
@@ -782,7 +782,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c1a-8X-HRg">
-                                        <rect key="frame" x="125" y="173.5" width="269" height="50"/>
+                                        <rect key="frame" x="125" y="155.5" width="269" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="XXX-XXX-XXXX" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O71-vO-Gby">
                                                 <rect key="frame" x="0.0" y="0.0" width="269" height="49"/>
@@ -810,13 +810,13 @@
                                         </constraints>
                                     </view>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Too many verification requests, please wait a moment." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nk6-aB-Moe">
-                                        <rect key="frame" x="30" y="238.5" width="354" height="36.5"/>
+                                        <rect key="frame" x="30" y="220.5" width="354" height="36.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                         <color key="textColor" name="errorRed"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g7o-ve-eMD">
-                                        <rect key="frame" x="20" y="290" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="272" width="374" height="48"/>
                                         <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="tvs-au-2XZ"/>
@@ -849,6 +849,7 @@
                                     <constraint firstItem="nk6-aB-Moe" firstAttribute="top" secondItem="c1a-8X-HRg" secondAttribute="bottom" constant="15" id="P7T-UQ-com"/>
                                     <constraint firstAttribute="trailing" secondItem="nk6-aB-Moe" secondAttribute="trailing" constant="30" id="Sjw-q2-fo7"/>
                                     <constraint firstItem="c1a-8X-HRg" firstAttribute="leading" secondItem="BL1-hY-a2W" secondAttribute="trailing" constant="25" id="TZg-1o-6Hy"/>
+                                    <constraint firstItem="lqE-c2-epN" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="V3w-jH-Inj"/>
                                     <constraint firstAttribute="trailing" secondItem="8pr-Z5-lvA" secondAttribute="trailing" constant="20" id="WFs-U8-Z3Y"/>
                                     <constraint firstItem="8pr-Z5-lvA" firstAttribute="leading" secondItem="uMS-mZ-d6w" secondAttribute="leading" constant="20" id="YEM-ZQ-geQ"/>
                                     <constraint firstItem="8pr-Z5-lvA" firstAttribute="top" secondItem="lqE-c2-epN" secondAttribute="bottom" constant="25" id="YbT-rU-aeK"/>

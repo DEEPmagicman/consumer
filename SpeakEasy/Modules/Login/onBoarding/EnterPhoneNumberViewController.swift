@@ -64,13 +64,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isFromSettings {
-            bgImg.isHidden = true
-            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
-        } else {
-            bgImg.isHidden = false
-            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
-        }
+        bgImg.isHidden = isFromSettings
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -92,7 +86,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     }
     
     @IBAction func onClickBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        Navigate.to.back(self)
     }
     
     @IBAction func onClickContinue(_ sender: Any) {

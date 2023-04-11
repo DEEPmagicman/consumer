@@ -8,7 +8,7 @@
 import UIKit
 import DropDown
 
-class PersonalInformationViewController: UIViewController {
+final class PersonalInformationViewController: UIViewController {
 
     @IBOutlet weak var firstName: SkyFloatingLabelTextField!
     @IBOutlet weak var lastName: SkyFloatingLabelTextField!
@@ -19,12 +19,11 @@ class PersonalInformationViewController: UIViewController {
     @IBOutlet weak var emailLbl: UILabel!
     @IBOutlet weak var phoneNumberLbl: UILabel!
     
-    let genderDropDown = DropDown()
-    var editInfoDelegate = OnBoardingPresenter()
+    private let genderDropDown = DropDown()
+    private var editInfoDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         textFieldSetUP(firstName)
         textFieldSetUP(lastName)
         textFieldSetUP(nickName)
@@ -77,10 +76,6 @@ class PersonalInformationViewController: UIViewController {
     @IBAction func onClickPhoneNumber(_ sender: Any) {
         Navigate.to.enterPhoneNumVc(self, isFromSettings: true)
      }
-           
-    @IBAction func onClickPassword(_ sender: Any) {
-        Navigate.to.changePasswordVc(self)
-    }
     
     @IBAction func onClickGenderDropdown(_ sender: Any) {
         genderSelectionDropDown()

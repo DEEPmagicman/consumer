@@ -190,6 +190,7 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(SelectTicketVC.self)
         vc.venueDetails = venueDetail
         vc.venueId = venueId
+        vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -213,10 +214,12 @@ final class Navigate {
         vc.venueLogo = venueLogo
         vc.selectedTickets = selectedTickets
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
-            sender.navigationController?.viewControllers = [homeVc,vc]
+            homeVc.present(vc, animated: true)
+            homeVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [homeVc]
             return
         }
-        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.navigationController?.present(vc, animated: true)
     }
     
     func paymentDetailVC(_ sender: UIViewController, selectedTickets: [AppClipTicket], totalPrice: Int) {

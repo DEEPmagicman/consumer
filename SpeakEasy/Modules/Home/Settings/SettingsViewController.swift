@@ -9,16 +9,10 @@ import UIKit
 
 final class SettingsViewController: UIViewController {
 
-    @IBOutlet private weak var logoutBtn: UIButton!
     @IBOutlet private weak var versionLbl: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if UserDefault.shared.isGuest == true {
-            logoutBtn.setAttributedTitle(NSAttributedString(string: "Log In", attributes: [
-                NSAttributedString.Key.underlineStyle: NSUnderlineStyle.thick.rawValue
-                ]), for: .normal)
-        }
         versionLbl.text = "Version \(Bundle.main.releaseVersionNumber) (\(Bundle.main.buildVersionNumber))"
     }
     
