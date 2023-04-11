@@ -15,7 +15,6 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var venueBgImg: UIImageView!
     @IBOutlet weak var venueTitleNameLbl: UILabelDeviceClass!
     @IBOutlet weak var locationLbl: UILabel!
-    @IBOutlet weak var contectNoLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var ticketTypeTableView: UITableView!
     @IBOutlet weak var infoLbl: UILabel!
@@ -77,8 +76,8 @@ final class MVPVenueDetailVc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.headerVenueName.isHidden = true
-        self.headerView.backgroundColor = .clear
+        headerVenueName.isHidden = true
+        headerView.backgroundColor = .clear
         scrollView.delegate = self
         backBtn.isHidden = isFromAppClip
         ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
@@ -144,10 +143,10 @@ final class MVPVenueDetailVc: UIViewController {
         point.title = title
         point.coordinate = coordinate
         point.accessibilityNavigationStyle = .separate
-        self.mapView.removeAnnotations(self.mapView.annotations)
-        self.mapView.addAnnotation(point)
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.addAnnotation(point)
         let viewRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
-        self.mapView.setRegion(viewRegion, animated: true)
+        mapView.setRegion(viewRegion, animated: true)
     }
     
     @objc func openAppleMap() {
@@ -293,7 +292,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             ticketTypeTableView.reloadData()
             updateContinueBtn()
         case upcomingTableView:
-            Navigate.to.selectTicket(self, venueId: venueId, venueDetail: venueDetails)
+            updateContinueBtn(forceRemove: true)
+            Navigate.to.eventDetail(self, venueDetail: venueDetails)
         default:
             break
         }
@@ -346,6 +346,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func updateContinueBtn(forceRemove: Bool = false) {
         DispatchQueue.main.async {
             if forceRemove {
+                self.venueDetails?.appClipTicket?.indices.forEach {
+                    self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+                }
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 30
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
@@ -369,11 +372,11 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
 extension MVPVenueDetailVc: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 220 {
-            self.headerVenueName.isHidden = false
-            self.headerView.backgroundColor = .black
-        } else  {
-            self.headerVenueName.isHidden = true
-            self.headerView.backgroundColor = .clear
+            headerVenueName.isHidden = false
+            headerView.backgroundColor = .black
+        } else {
+            headerVenueName.isHidden = true
+            headerView.backgroundColor = .clear
         }
     }
 }

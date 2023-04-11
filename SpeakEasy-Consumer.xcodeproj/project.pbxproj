@@ -207,6 +207,7 @@
 		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
+		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
@@ -796,6 +797,7 @@
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
+		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -1778,6 +1780,14 @@
 				CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */,
 			);
 			path = PaymentFlow;
+			sourceTree = "<group>";
+		};
+		CE2605F029E55AA400C46EFA /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */,
+			);
+			path = Event;
 			sourceTree = "<group>";
 		};
 		CE3213CA29E03D6500EBC179 /* TitleHeader */ = {
@@ -3410,6 +3420,7 @@
 		E1A9E6DA28C55D540081FB28 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CE2605F029E55AA400C46EFA /* Event */,
 				CEAE5CD829E430D000CB20E5 /* PreSold */,
 				84248DA028D3D38F00A6E260 /* AllVenues */,
 				84248D9628D29AA200A6E260 /* AllEvents */,
@@ -4364,6 +4375,7 @@
 				CE4867C1286F358800FD277E /* CustomLoader.swift in Sources */,
 				82E7F5B429681F8F007FC573 /* City.swift in Sources */,
 				E11F4C0428C835F3008D2E30 /* SenderTVC.swift in Sources */,
+				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				E11F4B3228C83564008D2E30 /* AdditionalGuestsTVC.swift in Sources */,
 				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
