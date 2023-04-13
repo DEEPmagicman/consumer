@@ -38,11 +38,14 @@ final class DateOfBirthViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string())"
         let dob = datePickerView.date.string(format: .YYYYMMDD)
-        self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess,errorMsg  in
+        self.onBoardingDelegate.editUserProfileApi(dob: dob) { [weak self] isSuccess, errorMsg  in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
             if isSuccess {
                 UserDefault.shared.user?.dateOfBirth = dob
                 Navigate.to.SetProfilePicVc(self)
-//                Navigate.to.selectGenderVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

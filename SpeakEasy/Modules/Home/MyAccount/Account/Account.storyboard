@@ -34,7 +34,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dhE-uc-Ots">
                                                 <rect key="frame" x="16" y="60" width="361" height="81"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="uploadImage" translatesAutoresizingMaskIntoConstraints="NO" id="RlX-2j-QRJ" customClass="RoundedImage" customModule="Speakeasy" customModuleProvider="target">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="uploadImage" translatesAutoresizingMaskIntoConstraints="NO" id="RlX-2j-QRJ">
                                                         <rect key="frame" x="0.0" y="0.0" width="81" height="81"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="RlX-2j-QRJ" secondAttribute="height" multiplier="1:1" id="XLV-la-mLq"/>
@@ -52,27 +52,21 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </imageView>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tamas An" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YDX-LM-OK3" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="104" y="10" width="257" height="31"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YDX-LM-OK3">
+                                                        <rect key="frame" x="104" y="10" width="257" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                                                <real key="value" value="22"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
-                                                        </userDefinedRuntimeAttributes>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YAz-Xg-Vfj">
-                                                        <rect key="frame" x="104.00000000000001" y="63" width="189.33333333333337" height="1"/>
+                                                        <rect key="frame" x="103.99999999999999" y="63" width="190.66666666666663" height="1"/>
                                                         <color key="backgroundColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="1" id="hc5-CD-67a"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Email to get Verified!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCx-Ec-DMq">
-                                                        <rect key="frame" x="104.00000000000001" y="46.666666666666657" width="189.33333333333337" height="18.333333333333329"/>
+                                                        <rect key="frame" x="103.99999999999999" y="46.666666666666657" width="190.66666666666663" height="18.333333333333329"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -171,6 +165,8 @@
                         <outlet property="confirmEmailLbl" destination="XCx-Ec-DMq" id="LNe-Do-uPI"/>
                         <outlet property="listHeight" destination="NCm-ee-EaL" id="bfj-pg-aey"/>
                         <outlet property="listTableView" destination="W5L-a5-ZsB" id="Uq9-WG-tF1"/>
+                        <outlet property="nameLbl" destination="YDX-LM-OK3" id="Kaq-cv-P5g"/>
+                        <outlet property="profileImg" destination="RlX-2j-QRJ" id="a4y-zh-8Sd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -15,7 +15,7 @@ final class EnterNameViewController: UIViewController {
     @IBOutlet weak var ContinueBtn: UIButton!
     @IBOutlet weak var firstNameAndLastNameInfo: UILabel!
     
-    var onBoardingDelegate = OnBoardingPresenter()
+    private var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +39,14 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        self.onBoardingDelegate.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "") { isSuccess,errorMsg  in
+        self.onBoardingDelegate.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "") { [weak self] isSuccess,errorMsg  in
             Loader.hide()
+            guard let self = self else { return }
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""
                 UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
                 Navigate.to.selectGenderVc(self)
-//                Navigate.to.connectAccountVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

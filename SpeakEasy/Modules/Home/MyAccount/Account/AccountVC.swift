@@ -9,6 +9,8 @@ import UIKit
 
 final class AccountVC: UIViewController {
 
+    @IBOutlet private weak var profileImg: UIImageView!
+    @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var listTableView: UITableView!
     @IBOutlet private weak var listHeight: NSLayoutConstraint!
     @IBOutlet private weak var confirmEmailLbl: UILabel!
@@ -17,6 +19,8 @@ final class AccountVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileImg.sd_setImage(with: URL(string: UserDefault.shared.user?.image.key ?? ""), completed: nil)
+        nameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "")"
         listTableView.register(UINib(nibName: "TitleHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: "TitleHeader")
         listTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
         listHeightObservation = listTableView.observe(\.contentSize, options: []) { [weak self] _, _ in

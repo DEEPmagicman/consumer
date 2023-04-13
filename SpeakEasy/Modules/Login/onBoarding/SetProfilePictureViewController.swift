@@ -27,19 +27,27 @@ final class SetProfilePictureViewController: UIViewController {
         super.viewDidLoad()
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onClickAddPhoto))
-        self.profileView.addGestureRecognizer(gesture)
+        profileView.addGestureRecognizer(gesture)
         
-        self.imageView.cornerRadius = 75
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        imageView.cornerRadius = 75
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
+        self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
             if isSuccess {
                 self.imgUrl = imgUrl
                 let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
-                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess, errorMsg  in
+                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
@@ -133,8 +141,8 @@ extension SetProfilePictureViewController: InstagramConnectedDelegate {
 extension SetProfilePictureViewController: SelectedInstaImgDelegate {
     func selectedImg(image: String) {
         imageView.sd_setImage(with: URL( string: image), completed: nil)
-        self.continueBtn.isUserInteractionEnabled = true
-        self.continueBtn.alpha = 1
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.alpha = 1
     }
     
     func loginAgain() {

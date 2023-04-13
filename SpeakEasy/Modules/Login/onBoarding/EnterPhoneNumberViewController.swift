@@ -21,7 +21,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     var isFromLogin = false
     private var onBoardingDelegate = OnBoardingPresenter()
     private var settingDelegate = SettingPresenter()
-    var contryCode = ""
+    var countryCode = ""
     var isFromSettings = false
     
     private var checkFPNField = FPNTextField()
@@ -35,7 +35,7 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         countryCodeTextField.delegate = self
         countryCodeTextField.setFlag(countryCode: .US)
-        self.contryCode = "+1"
+        countryCode = "+1"
         
         listController.setup(repository: countryCodeTextField.countryRepository)
         listController.didSelect = { [weak self] country in
@@ -46,7 +46,6 @@ final class EnterPhoneNumberViewController: UIViewController {
         countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         countryCodeTextField.displayMode = .list // .picker by default
         
-        
         let items = [
             UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
             UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
@@ -56,10 +55,10 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         listController.showCountryPhoneCode = true
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickContrySelect))
-        self.contrySelectionView.addGestureRecognizer(tap)
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
+        contrySelectionView.addGestureRecognizer(tap)
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,8 +80,8 @@ final class EnterPhoneNumberViewController: UIViewController {
         listController.dismiss(animated: true, completion: nil)
     }
     
-    @objc func onClickContrySelect() {
-        self.fpnDisplayCountryList()
+    @objc func onClickCountrySelect() {
+        fpnDisplayCountryList()
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -92,7 +91,11 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
-            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
+            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     Loader.hide()
@@ -107,7 +110,11 @@ final class EnterPhoneNumberViewController: UIViewController {
             }
         } else {
             if isFromSettings {
-                self.settingDelegate.changePhoneNumberApi(phone: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess, errMsg in
+                self.settingDelegate.changePhoneNumberApi(phone: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errMsg in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else {
@@ -120,7 +127,11 @@ final class EnterPhoneNumberViewController: UIViewController {
                     Loader.hide()
                 }
             } else {
-                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: self.contryCode) { otp, otpRef, isSuccess,errorMsg  in
+                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
@@ -149,7 +160,6 @@ extension EnterPhoneNumberViewController: UITextFieldDelegate {
     }
 }
 
-
 extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
     
     func fpnDisplayCountryList() {
@@ -169,7 +179,7 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
             checkFPNField.setFlag(countryCode: countryCode)
             checkFPNField.delegate = self
             checkFPNField.sendActions(for: .editingChanged)
-            self.contryCode = dialCode
+            self.countryCode = dialCode
         }
     }
     
@@ -180,16 +190,11 @@ extension EnterPhoneNumberViewController: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             if isValid {
-                self.continueBtn.isUserInteractionEnabled = true
-                self.continueBtn.alpha = 1
-                //      textField.getFormattedPhoneNumber(format: .E164),       // Output "+33600000001"
-                //      textField.getFormattedPhoneNumber(format: .International),  // Output "+33 6 00 00 00 01"
-                //      textField.getFormattedPhoneNumber(format: .National),       // Output "06 00 00 00 01"
-                //      textField.getFormattedPhoneNumber(format: .RFC3966),      // Output "tel:+33-6-00-00-00-01"
-                textField.getRawPhoneNumber()                               // Output "600000001"
+                continueBtn.isUserInteractionEnabled = true
+                continueBtn.alpha = 1
             } else {
-                self.continueBtn.isUserInteractionEnabled = false
-                self.continueBtn.alpha = 0.5
+                continueBtn.isUserInteractionEnabled = false
+                continueBtn.alpha = 0.5
             }
         }
     }
