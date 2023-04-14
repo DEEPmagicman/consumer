@@ -14,6 +14,14 @@ final class Navigate {
     
     private init() { }
     
+    func showImagePickerController(_ sender: UIViewController, sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = sender as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        imagePickerController.allowsEditing = true
+        imagePickerController.sourceType = sourceType
+        sender.present(imagePickerController, animated: true, completion: nil)
+    }
+    
     func back(_ sender: UIViewController) {
         sender.navigationController?.popViewController(animated: true)
     }

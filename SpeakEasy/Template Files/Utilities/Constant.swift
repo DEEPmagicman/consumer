@@ -5,7 +5,6 @@
 //  Created by Square Infosoft on 08/12/22.
 //
 
-import Foundation
 import UIKit
 
 struct Constant {
@@ -31,6 +30,7 @@ struct Constant {
         static let maleIdentify = UIImage(named: "maleIdentify_Ic")
         static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
         static let liveCover = UIImage(named: "liveCover")
+        static let uploadImage = UIImage(named: "uploadImage")
     }
     
     struct String {

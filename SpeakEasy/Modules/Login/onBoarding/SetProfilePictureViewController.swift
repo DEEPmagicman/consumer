@@ -20,8 +20,7 @@ final class SetProfilePictureViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var continueBtn: UIButton!
     
-    private var onBoardingDelegate = OnBoardingPresenter()
-    var imgUrl = ""
+    private var presenter = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,16 +33,15 @@ final class SetProfilePictureViewController: UIViewController {
         continueBtn.alpha = 0.5
     }
 
-    @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
+    @IBAction private func onClickContinue(_ sender: Any) {
+        presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
             guard let self = self else {
                 Loader.hide()
                 return
             }
             if isSuccess {
-                self.imgUrl = imgUrl
                 let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
-                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
+                self.presenter.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
                     guard let self = self else {
                         Loader.hide()
                         return
@@ -68,12 +66,12 @@ final class SetProfilePictureViewController: UIViewController {
         }
     }
     
-    @IBAction func onClickSkipForNow(_ sender: Any) {
+    @IBAction private func onClickSkipForNow(_ sender: Any) {
         Navigate.to.notificationPermissionVc(self)
     }
     
-    @objc func onClickAddPhoto() {
-        self.showImagePickerController(soureType:.photoLibrary)
+    @objc private func onClickAddPhoto() {
+        Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
         // MARK: hide showImagePickerControllerActionSheet for now
 //        showImagePickerControllerActionSheet()
     }
@@ -82,7 +80,7 @@ final class SetProfilePictureViewController: UIViewController {
 extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePickerControllerActionSheet() {
         let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (action) in
-            self.showImagePickerController(soureType:.photoLibrary)
+            Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
         }
         // MARK: comment out Instagram flow for now
 //        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
@@ -106,14 +104,6 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         } else {
             Navigate.to.instagramWebView(self)
         }
-    }
-    
-    func showImagePickerController(soureType:UIImagePickerController.SourceType){
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
-        imagePickerController.sourceType = soureType
-        present(imagePickerController, animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
