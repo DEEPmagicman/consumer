@@ -33,13 +33,13 @@ struct APIBuilder {
     static private let changeEmail = "/change-email"
     static private let changePhone = "/change-phone"
     static private let changePassword = "/change-password"
-    static private let includeEventDetails = "?include=venue&include=eventTicket"
     static private let appClip = "/appclip/"
     static private let appClipVenue = "/appClipVenue?include=appClipTicket"
     static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
+    static private let include = "include=%@"
 
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -126,8 +126,12 @@ struct APIBuilder {
         baseURL + route + event
     }
     
+    static func eventURL(includes: [String]) -> String {
+        baseURL + route + event + "?" + includes.map { String(format: "include=%@", $0) }.joined(separator: "&")
+    }
+    
     static func eventDetailURL(_ id: String) -> String {
-        baseURL + route + event + "/\(id)" + includeEventDetails
+        baseURL + route + event + "/\(id)"
     }
     
     static func bottleListURL(_ id: String) -> String {

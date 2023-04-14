@@ -20,7 +20,6 @@ class AllEvents: BaseController {
                             TabBarOption(label: Strings.CUSTOM_DATES.text, index: 2, icon: nil, selectedIcon: nil, isSelected: false)]
 
     var selectedIndex = 0
-    var eventDelegate = EventPresenter()
     var from = 0
     var hasMore = false
     var eventList = [Event]()
@@ -36,7 +35,8 @@ class AllEvents: BaseController {
     }
     
     private func fetchAllEvent() {
-        self.eventDelegate.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
+        Loader.show()
+            EventPresenter.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
             if isSuccess {
                 for event in eventList {
                     self.eventList.append(event)
@@ -119,7 +119,7 @@ extension AllEvents: UICollectionViewDataSource {
                 cell.imgEventCover.sd_setImage(with: URL( string: (data.flyer?.key ?? "").imageURL), completed: nil)
                 cell.lblPerformerName.text = data.title
                 cell.lblVenueName.text = data.eventType
-                let date = data.date.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
+                let date = data.date?.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
                 cell.lblEventDate.text = date
                 //            cell.setData(data: data)
                 return cell

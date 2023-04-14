@@ -151,7 +151,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wB8-sH-IIa">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1925"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1750"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wnz-Pk-zcu" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="298"/>
@@ -293,7 +293,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="sgV-G2-5Cj">
-                                                <rect key="frame" x="16" y="355" width="382" height="1540"/>
+                                                <rect key="frame" x="16" y="355" width="382" height="1365"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAm-dF-H2H">
                                                         <rect key="frame" x="0.0" y="0.0" width="382" height="265"/>
@@ -335,7 +335,7 @@
                                                             <constraint firstAttribute="trailing" secondItem="XXT-OO-EVs" secondAttribute="trailing" id="bRv-vx-dAl"/>
                                                         </constraints>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EMw-bV-ePF">
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EMw-bV-ePF">
                                                         <rect key="frame" x="0.0" y="265" width="382" height="175"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Upcoming" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T9K-jk-4hf">
@@ -369,7 +369,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mn5-Lc-bSV">
-                                                        <rect key="frame" x="0.0" y="440" width="382" height="316"/>
+                                                        <rect key="frame" x="0.0" y="265" width="382" height="316"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nyt-1g-cfM">
                                                                 <rect key="frame" x="0.0" y="275" width="382" height="126"/>
@@ -456,7 +456,7 @@
                                                         </variation>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S5l-AB-teO">
-                                                        <rect key="frame" x="0.0" y="756" width="382" height="145"/>
+                                                        <rect key="frame" x="0.0" y="581" width="382" height="145"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VenueClock" translatesAutoresizingMaskIntoConstraints="NO" id="hgC-kX-Lju">
                                                                 <rect key="frame" x="2" y="66.5" width="15" height="12"/>
@@ -488,7 +488,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eDP-VT-m8b">
-                                                        <rect key="frame" x="0.0" y="901" width="382" height="130"/>
+                                                        <rect key="frame" x="0.0" y="726" width="382" height="130"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="waveIc" translatesAutoresizingMaskIntoConstraints="NO" id="LMh-YG-RvX">
                                                                 <rect key="frame" x="2" y="57.5" width="15" height="15"/>
@@ -530,7 +530,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4u7-46-I1F">
-                                                        <rect key="frame" x="0.0" y="1031" width="382" height="254.5"/>
+                                                        <rect key="frame" x="0.0" y="856" width="382" height="254.5"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dressCode" translatesAutoresizingMaskIntoConstraints="NO" id="NY9-th-h6Z">
                                                                 <rect key="frame" x="2" y="119" width="13" height="16.5"/>
@@ -557,7 +557,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sPE-KF-CvD">
-                                                        <rect key="frame" x="0.0" y="1285.5" width="382" height="254.5"/>
+                                                        <rect key="frame" x="0.0" y="1110.5" width="382" height="254.5"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gFg-LX-jF4">
                                                                 <rect key="frame" x="2" y="118" width="13" height="19"/>
@@ -751,6 +751,7 @@
                         <outlet property="tableViewHeight" destination="tvZ-kQ-dN4" id="nS3-jJ-2RM"/>
                         <outlet property="ticketTypeTableView" destination="s0c-8q-s4k" id="zrY-4G-uFP"/>
                         <outlet property="toNightLbl" destination="JK1-3e-vll" id="7fF-d4-AX0"/>
+                        <outlet property="upcomingSectionView" destination="EMw-bV-ePF" id="g0Y-Cu-1g4"/>
                         <outlet property="upcomingTableHeight" destination="3td-Aq-KSf" id="119-j2-cp1"/>
                         <outlet property="upcomingTableView" destination="tyg-G8-0gn" id="IIU-Fy-tuH"/>
                         <outlet property="updatedAtLbl" destination="wii-0q-TEg" id="kZL-Rf-to1"/>
@@ -1172,13 +1173,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7hc-vi-Zjr">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1633.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1611"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YtI-uD-Xwi" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="390"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F2c-i6-z9m">
-                                                        <rect key="frame" x="0.0" y="105" width="414" height="285"/>
+                                                        <rect key="frame" x="0.0" y="176" width="414" height="214"/>
                                                     </imageView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1213,10 +1214,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tx-Lu-WZh">
-                                                <rect key="frame" x="16" y="447" width="382" height="46"/>
+                                                <rect key="frame" x="16" y="447" width="382" height="23.5"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Sat, Feb 26" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GaJ-j8-x5V">
-                                                        <rect key="frame" x="0.0" y="0.0" width="86.5" height="19.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GaJ-j8-x5V">
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="19.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="19.670000000000002" id="N54-P0-o03"/>
                                                         </constraints>
@@ -1224,14 +1225,14 @@
                                                         <color key="textColor" red="0.96078431369999995" green="0.50588235290000005" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="(10PM - 2AM)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fg8-St-Yqh">
-                                                        <rect key="frame" x="90.5" y="-1.5" width="291.5" height="22.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="()" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fg8-St-Yqh">
+                                                        <rect key="frame" x="4" y="-1.5" width="378" height="22.5"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="16"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="TAO Nightclub, Chicago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AEQ-kz-7dZ">
-                                                        <rect key="frame" x="0.0" y="23.5" width="382" height="22.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AEQ-kz-7dZ">
+                                                        <rect key="frame" x="0.0" y="23.5" width="382" height="0.0"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="16"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -1251,7 +1252,7 @@
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uUe-Ua-ymn">
-                                                <rect key="frame" x="16" y="498" width="382" height="1045.5"/>
+                                                <rect key="frame" x="16" y="475.5" width="382" height="1045.5"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X39-9E-qZr">
                                                         <rect key="frame" x="0.0" y="0.0" width="382" height="209.5"/>
@@ -1265,9 +1266,8 @@
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="9Ru-d2-Dde">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="9Ru-d2-Dde">
                                                                 <rect key="frame" x="0.0" y="48" width="382" height="146.5"/>
-                                                                <string key="text">Join Tao Chicago for a performance by renowned DJ, Steve Aoki. At Tao we encourage smart, casual–elegant attire. We do not allow shorts, baseball caps, athletic apparel, tank tops, baggy clothing, exposed chains or flip flops.  </string>
                                                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="16"/>
                                                                 <color key="textColor" red="0.75294117650000003" green="0.74901960779999999" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -1446,7 +1446,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="BUY NOW - STARTING AT $35">
+                                <state key="normal" title="BUY NOW">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
@@ -1556,8 +1556,9 @@
                     <connections>
                         <outlet property="continueBtn" destination="RHR-gZ-xAx" id="eEj-aX-h4V"/>
                         <outlet property="dateLbl" destination="GaJ-j8-x5V" id="TCh-Fc-SPb"/>
+                        <outlet property="detailLbl" destination="9Ru-d2-Dde" id="NSB-3u-Umv"/>
                         <outlet property="dressCodeView" destination="gqa-tm-pcd" id="Jcl-dR-7pN"/>
-                        <outlet property="headerVenueName" destination="R3Y-LK-rvd" id="2C4-9c-GFB"/>
+                        <outlet property="headerTitleLbl" destination="R3Y-LK-rvd" id="jzE-I7-Q8z"/>
                         <outlet property="headerView" destination="o2O-lA-SM9" id="PVp-y5-mWB"/>
                         <outlet property="locationLbl" destination="FwE-fc-ftH" id="PL6-8e-jaQ"/>
                         <outlet property="mainImg" destination="F2c-i6-z9m" id="642-MX-q4R"/>
@@ -1566,6 +1567,7 @@
                         <outlet property="timingLbl" destination="Fg8-St-Yqh" id="w6a-vH-oRe"/>
                         <outlet property="titleLbl" destination="szi-mE-0ao" id="2su-Nb-Mbf"/>
                         <outlet property="venuePolicyView" destination="qUW-Zw-4xv" id="Ggz-OW-lvu"/>
+                        <outlet property="venueTitleLbl" destination="AEQ-kz-7dZ" id="mli-Sc-1dx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8k4-TX-48Y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

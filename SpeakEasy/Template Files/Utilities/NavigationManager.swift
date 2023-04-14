@@ -202,9 +202,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, venueDetail: ClipVenue?) {
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
+        vc.eventId = eventId
         vc.venueDetails = venueDetail
+        vc.event = event
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -362,7 +364,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String){
+    func eventDetail(_ sender: UIViewController, eventId: String) {
         let vc = EventBookingDetails()
         vc.eventId = eventId
         sender.navigationController?.pushViewController(vc, animated: true)

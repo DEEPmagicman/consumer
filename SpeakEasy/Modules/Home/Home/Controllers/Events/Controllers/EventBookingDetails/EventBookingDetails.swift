@@ -32,7 +32,6 @@ class EventBookingDetails: UIViewController {
     var topEventData: TopEventDataSet?
     var attendeeData: AttendeeProfile?
     var totalTicket = 0
-    var eventDetailDelegate = EventPresenter()
     var eventId = "63db9445b3a07c728c4e0032"
     var eventDetail: Event?
     
@@ -44,7 +43,8 @@ class EventBookingDetails: UIViewController {
     }
     
     private func fetchEventDetail() {
-        self.eventDetailDelegate.getEventDetail(eventId: self.eventId) { [weak self] isSuccess, errMsg, eventDetails in
+        Loader.show()
+        EventPresenter.getEventDetail(eventId: self.eventId) { [weak self] isSuccess, errMsg, eventDetails in
             guard let self = self else { return }
             if isSuccess {
                 self.eventDetail = eventDetails
@@ -68,8 +68,8 @@ class EventBookingDetails: UIViewController {
     
     private func setUpUI() {
         lblArtistName.text = self.eventDetail?.title
-        let date = self.eventDetail?.date.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
-        let dd = self.eventDetail?.date.toDate(withFormat: .YYYYMMDD)
+        let date = self.eventDetail?.date?.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
+        let dd = self.eventDetail?.date?.toDate(withFormat: .YYYYMMDD)
         lblEventDate.text = date
         print(dd ?? Date())
     }

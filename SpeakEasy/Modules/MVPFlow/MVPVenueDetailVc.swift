@@ -34,6 +34,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var vibeView: UIView!
     @IBOutlet weak var dressCodeView: UIView!
     @IBOutlet weak var venuePolicyView: UIView!
+    @IBOutlet weak var upcomingSectionView: UIView!
     @IBOutlet weak var vibesCollectionView: UICollectionView!
     @IBOutlet weak var vibeCollectionHeight: NSLayoutConstraint!
     @IBOutlet weak var openingTableHeight: NSLayoutConstraint!
@@ -43,7 +44,7 @@ final class MVPVenueDetailVc: UIViewController {
 
     var venueId = ""
     var isFromAppClip = false
-    private var mvpDelegate = MVPPresenter()
+    private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
     private var maxTicket = 10
     private var ticketListHeightObservation: NSKeyValueObservation?
@@ -68,11 +69,9 @@ final class MVPVenueDetailVc: UIViewController {
         }
         return total >= maxTicket
     }
+    private var events = [Event]()
     private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
     private let demoHours = Constants.taoHours
-    private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
-    private let demoPrices = ["Starting at $25", "Starting at $35", "Starting at $35"]
-    private let demoNames = ["Steve Aoki with Apollo XO & NABBS", "NIGHTMRE & DJ Diox XO DJ Heavy", "TAO Friday"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +87,7 @@ final class MVPVenueDetailVc: UIViewController {
         }
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
+        getEvents()
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
@@ -111,11 +111,11 @@ final class MVPVenueDetailVc: UIViewController {
         }
     }
     
-    func getVenueDetail(withLoader: Bool = true) {
+    private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {
             Loader.show()
         }
-        mvpDelegate.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -134,6 +134,21 @@ final class MVPVenueDetailVc: UIViewController {
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
                 Alert.showToast("Venue detail updated")
             }
+            Loader.hide()
+        }
+    }
+    
+    private func getEvents() {
+        Loader.show()
+        // TODO: add pagination
+        EventPresenter.getEvents() { [weak self] isSuccess, errMsg, eventList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            self.events = eventList
+            self.upcomingSectionView.isHidden = eventList.count == 0
+            self.upcomingTableView.reloadData()
             Loader.hide()
         }
     }
@@ -218,7 +233,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case openingHoursTableView:
             return demoHours.count
         case upcomingTableView:
-            return demoNames.count
+            return events.count
         default:
             return 0
         }
@@ -267,9 +282,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             return cell
         case upcomingTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
-            cell.nameLbl.text = demoNames[indexPath.row]
-            cell.dateLbl.text = demoDates[indexPath.row]
-            cell.priceLbl.text = demoPrices[indexPath.row]
+            cell.upcomingImage.sd_setImage(with: URL(string: (events[indexPath.row].flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = events[indexPath.row].title
+            cell.dateLbl.text = events[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.priceLbl.text = "Starting at $\(events[indexPath.row].lowestPriceTicket?.price ?? 0)"
             return cell
         default:
             return UITableViewCell()
@@ -293,7 +309,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             updateContinueBtn()
         case upcomingTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, venueDetail: venueDetails)
+            Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
         default:
             break
         }

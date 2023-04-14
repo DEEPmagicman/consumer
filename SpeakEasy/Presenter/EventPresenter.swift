@@ -8,10 +8,9 @@
 import Foundation
 
 final class EventPresenter {
-    func getEvents(from: Int? = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
-        Loader.show()
+    static func getEvents(from: Int? = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
         let param = ["skip": from]
-        AFWrapper.getRequest(APIBuilder.eventURL,params: param, headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -35,8 +34,7 @@ final class EventPresenter {
         }
     }
     
-    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: Event?) -> Void) {
-        Loader.show()
+    static func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {

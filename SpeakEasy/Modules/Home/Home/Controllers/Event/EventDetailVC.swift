@@ -11,38 +11,58 @@ import MapKit
 final class EventDetailVC: UIViewController {
 
     @IBOutlet weak var mainImg: UIImageView!
+    @IBOutlet weak var venueTitleLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var headerVenueName: UILabel!
+    @IBOutlet weak var headerTitleLbl: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var dressCodeView: UIView!
     @IBOutlet weak var venuePolicyView: UIView!
-    
+    @IBOutlet weak var detailLbl: UILabel!
+
+    var eventId: String?
     var venueDetails: ClipVenue?
+    var event: Event?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerVenueName.isHidden = true
+        getEventDetail()
+        setupData()
+        headerTitleLbl.isHidden = true
         headerView.backgroundColor = .clear
         scrollView.delegate = self
         // TODO: add webSocket to sync tier left ticket
         // WebSocketWrapper.shared.delegate.append(self)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
-        setUpUI()
     }
     
-    private func setUpUI() {
-        mainImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
-        titleLbl.text = "NIGHTMRE & DJ Diox XO DJ Heavy" // venueDetails?.name
-        headerVenueName.text = venueDetails?.name
+    private func setupData() {
+        mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        titleLbl.text = event?.title ?? "Untitle Event"
+        headerTitleLbl.text = event?.title ?? "Untitle Event"
+        venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+        detailLbl.text = event?.description
         locationLbl.text = venueDetails?.address
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
+        dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+        timingLbl.text = "(\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE"))"
+        continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+    }
+    
+    private func getEventDetail() {
+        EventPresenter.getEventDetail(eventId: eventId ?? "") { [weak self] isSuccess, errMsg, eventDetail in
+            guard let self = self else {
+                return
+            }
+            self.event = eventDetail
+            self.setupData()
+        }
     }
     
     @objc func openAppleMap() {
@@ -84,10 +104,10 @@ final class EventDetailVC: UIViewController {
 extension EventDetailVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 220 {
-            headerVenueName.isHidden = false
+            headerTitleLbl.isHidden = false
             headerView.backgroundColor = .black
         } else {
-            headerVenueName.isHidden = true
+            headerTitleLbl.isHidden = true
             headerView.backgroundColor = .clear
         }
     }
