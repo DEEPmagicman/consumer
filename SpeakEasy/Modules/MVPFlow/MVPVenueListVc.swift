@@ -254,6 +254,7 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
             if cityName == UserDefault.shared.localCity {
                 return
             }
+            self.locationManager.delegate = nil
             self.fetchCityList(userCity: cityName)
         }
     }
