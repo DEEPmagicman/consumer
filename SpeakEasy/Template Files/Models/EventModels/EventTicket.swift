@@ -24,7 +24,10 @@ struct EventTicket: Codable {
     var createdAt: String
     var updatedAt: String
     var eventTicketHasTier: [EventTicketHasTier]?
-    var selectedTicketCount: Int? = 0
+    var selectedTicketCount: Int?
+    var remainingQuantity: Int? {
+        issuedUnits - (soldUnits ?? 0)
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

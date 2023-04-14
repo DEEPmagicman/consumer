@@ -194,10 +194,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectTicket(_ sender: UIViewController, venueId: String, venueDetail: ClipVenue?) {
+    func selectTicket(_ sender: UIViewController, venueDetail: ClipVenue?, event: Event?, type: TicketType = .appClip) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(SelectTicketVC.self)
         vc.venueDetails = venueDetail
-        vc.venueId = venueId
+        vc.event = event
+        vc.type = type
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }

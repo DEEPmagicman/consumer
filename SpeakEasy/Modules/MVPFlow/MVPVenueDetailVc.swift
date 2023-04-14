@@ -51,6 +51,8 @@ final class MVPVenueDetailVc: UIViewController {
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
+    private var from = 0
+    private var hasMore = false
     private var totalPrice: Int {
         var total = 0
         venueDetails?.appClipTicket?.forEach {
@@ -115,7 +117,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -140,8 +142,8 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getEvents() {
         Loader.show()
-        // TODO: add pagination
-        EventPresenter.getEvents() { [weak self] isSuccess, errMsg, eventList, hasMore in
+        // TODO: add pagination + venue wise
+        EventPresenter.getEvents(venueId: venueId) { [weak self] isSuccess, errMsg, eventList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -149,6 +151,7 @@ final class MVPVenueDetailVc: UIViewController {
             self.events = eventList
             self.upcomingSectionView.isHidden = eventList.count == 0
             self.upcomingTableView.reloadData()
+            self.hasMore = hasMore
             Loader.hide()
         }
     }

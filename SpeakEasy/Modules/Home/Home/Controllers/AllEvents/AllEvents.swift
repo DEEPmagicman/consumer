@@ -36,7 +36,7 @@ class AllEvents: BaseController {
     
     private func fetchAllEvent() {
         Loader.show()
-            EventPresenter.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
+            EventPresenter.getEvents(from: self.from, venueId: "") { isSuccess, errMsg, eventList, hasMore in
             if isSuccess {
                 for event in eventList {
                     self.eventList.append(event)

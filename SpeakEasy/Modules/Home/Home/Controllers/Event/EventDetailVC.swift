@@ -97,7 +97,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction private func onClickContinue(_ sender: Any) {
-        Navigate.to.selectTicket(self, venueId: "", venueDetail: venueDetails)
+        Navigate.to.selectTicket(self, venueDetail: venueDetails, event: event, type: .event)
     }
 }
 
