@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PaymentTableViewCell: UITableViewCell {
+final class PaymentTableViewCell: UITableViewCell {
 
     @IBOutlet weak var paymentIcon: UIImageView!
     @IBOutlet weak var paymentType: UILabel!
@@ -15,12 +15,9 @@ class PaymentTableViewCell: UITableViewCell {
     @IBOutlet weak var navigateBtn: UIButton!
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var headerLbl: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
     }
     
     func setUi(isSetting: Bool) {
@@ -36,5 +33,4 @@ class PaymentTableViewCell: UITableViewCell {
             self.headerLbl.isHidden = false
         }
     }
-    
 }

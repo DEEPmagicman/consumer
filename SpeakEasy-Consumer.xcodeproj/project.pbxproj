@@ -19,8 +19,6 @@
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		0447306A295AABEE0001F568 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473068295AABEE0001F568 /* PaymentTableViewCell.swift */; };
 		0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04473069295AABEE0001F568 /* PaymentTableViewCell.xib */; };
-		0447306D295AB8A80001F568 /* AddPaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */; };
-		0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
@@ -607,8 +605,6 @@
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473068295AABEE0001F568 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
 		04473069295AABEE0001F568 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
-		0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodsViewController.swift; sourceTree = "<group>"; };
-		0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardInfoViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
@@ -1204,8 +1200,6 @@
 				0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */,
 				046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */,
 				04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */,
-				0447306C295AB8A80001F568 /* AddPaymentMethodsViewController.swift */,
-				0447306E295AB8BD0001F568 /* AddCardInfoViewController.swift */,
 				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
 				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
 				829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */,
@@ -4303,7 +4297,6 @@
 				828F38312971567000DEE305 /* VipBookingInviteNew.swift in Sources */,
 				BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */,
 				CE4867B5286F358800FD277E /* UIImage+Extension.swift in Sources */,
-				0447306F295AB8BD0001F568 /* AddCardInfoViewController.swift in Sources */,
 				820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */,
 				E11CE3FA28C97709003899C4 /* ExtendedTabCVC.swift in Sources */,
 				E1A9E76728C55D550081FB28 /* Locations.swift in Sources */,
@@ -4428,7 +4421,6 @@
 				CAC413FF28A478040007BA86 /* Double.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
-				0447306D295AB8A80001F568 /* AddPaymentMethodsViewController.swift in Sources */,
 				CE4867C3286F358800FD277E /* ButtonStates.swift in Sources */,
 				BD3DB01F2952DBB3005B5987 /* Main1.swift in Sources */,
 				E15D6B6928BC39AC0076286C /* Tutorial3CVC.swift in Sources */,
