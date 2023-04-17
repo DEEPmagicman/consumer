@@ -52,6 +52,9 @@ final class Navigate {
     func enterNameVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
+        if let indexOfOTPVC = sender.navigationController?.viewControllers.firstIndex(where: { $0.isKind(of: VerificationCodeViewController.self) }) {
+            sender.navigationController?.viewControllers.remove(at: indexOfOTPVC)
+        }
     }
     
     func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
@@ -231,6 +234,7 @@ final class Navigate {
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
         vc.selectedTickets = selectedTickets
+        vc.delegate = sender as? QRCodeVCNavigationDelegate
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)
             homeVc.tabBarController?.selectedIndex = 1
@@ -247,6 +251,10 @@ final class Navigate {
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
         sender.present(vc, animated: true)
+    }
+    
+    func loginMandatory(_ sender: UIViewController) {
+        sender.tabBarController?.selectedIndex = 1
     }
     
     func settingsVc(_ sender: UIViewController) {

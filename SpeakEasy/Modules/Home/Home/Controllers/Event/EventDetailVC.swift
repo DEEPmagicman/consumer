@@ -51,7 +51,7 @@ final class EventDetailVC: UIViewController {
         locationLbl.text = venueDetails?.address
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
-        timingLbl.text = "(\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE"))"
+        timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE")"
         continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
     }
     
@@ -97,6 +97,10 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction private func onClickContinue(_ sender: Any) {
+        if UserDefault.shared.isGuest == true {
+            Navigate.to.loginMandatory(self)
+            return
+        }
         Navigate.to.selectTicket(self, venueDetail: venueDetails, event: event, type: .event)
     }
 }

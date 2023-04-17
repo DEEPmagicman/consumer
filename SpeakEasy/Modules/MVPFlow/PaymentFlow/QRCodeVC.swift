@@ -9,11 +9,14 @@ import UIKit
 import SDWebImage
 import PassKit
 
+protocol QRCodeVCNavigationDelegate: AnyObject {
+    func navigateToEventDetail(eventId: String)
+}
+
 final class QRCodeVC: UIViewController {
 
     @IBOutlet private weak var venueImg: UIImageView!
     @IBOutlet private weak var venueLogoImg: UIImageView!
-    @IBOutlet private weak var ticketDetailLbl: UILabel!
     @IBOutlet private weak var QRImg: UIImageView!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
@@ -25,6 +28,7 @@ final class QRCodeVC: UIViewController {
     var venueAttachment = ""
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
+    weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
@@ -45,7 +49,8 @@ final class QRCodeVC: UIViewController {
     }
     
     @objc private func onClickEventDetail() {
-        // TODO: navigate to event detail page
+        delegate?.navigateToEventDetail(eventId: "EVE-AYXQIY")
+        dismiss(animated: true)
     }
     
     @objc private func addToWalletBtnTapped() {
@@ -84,7 +89,7 @@ Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
     }
     
     @IBAction private func onClickClose(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        dismiss(animated: true)
     }
 }
 

@@ -15,9 +15,11 @@ struct Constant {
         static let selectedDrinkColor = UIColor(hex: "#007AFF")
         static let code7Acolor = UIColor(named: "code7a")
         static let code2Fcolor = UIColor(named: "code2f")
+        static let codea1Color = UIColor(named: "codea1")
         static let submiteRequestBtnColor = UIColor(hex: "#0B78FF")
         static let primaryBlue = UIColor(named: "primaryBlue")
         static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
+        static let customGray = UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.00)
     }
     
     struct Icon {
@@ -46,7 +48,7 @@ struct Constant {
         static let changesLaterInfo = "This information can be changed later."
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
         static let confirm21YearText = "You must be over 21 years old to continue."
-        static let genderList = ["MALE", "FEMALE"]
+        static let genderList = ["MALE", "FEMALE", "OTHER"]
         static let InstagramDirectUri = "https://speakeasy.com/auth"
         static let spotifyDirectUri = "https://speakeasy.com/sauth"
         static let authorizationCode = "authorization_code"
@@ -54,6 +56,7 @@ struct Constant {
         static let somethingWrong = "Something Went Wrong"
         static let max5FrdString = "you Can Invite Max 5 Friend"
         static let sessionTimeOut = "Your current session has expired, \n Please login again."
+        static let enableLocationServices = "Enable Location Services"
     }
     
     struct Font {

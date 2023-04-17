@@ -111,6 +111,8 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+        cell.priceLbl.text = "TAO Nightclub, Chicago"
+        cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell
     }
     
@@ -152,5 +154,11 @@ extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDele
         }
         picker.dismiss(animated: true, completion: nil)
         uploadProfileImg()
+    }
+}
+
+extension AccountVC: QRCodeVCNavigationDelegate {
+    func navigateToEventDetail(eventId: String) {
+        Navigate.to.eventDetail(self, eventId: eventId, venueDetail: nil, event: nil)
     }
 }

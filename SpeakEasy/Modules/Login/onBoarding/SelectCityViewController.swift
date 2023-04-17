@@ -27,7 +27,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
-        selectCityInfoLbl.highlightBold(["Enable Location Services"], size: 15, textColor: Constant.Color.purpleColor)
+        selectCityInfoLbl.highlightBold([Constant.String.enableLocationServices], size: 15, textColor: Constant.Color.purpleColor)
         
         selectCityTableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
         searchTextField.delegate = self
@@ -121,13 +121,19 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
         let data = arrCityList[indexPath.row]
         cell?.lblCity.text = data.value
         cell?.imgCity.isHidden = true
-        cell?.containtView.backgroundColor = .clear
-        cell?.contentView.backgroundColor = .clear
+        if data.value == selectedCity {
+            cell?.contentView.backgroundColor = Constant.Color.customGray.withAlphaComponent(0.5)
+        } else {
+            cell?.containtView.backgroundColor = .clear
+            cell?.contentView.backgroundColor = .clear
+        }
+        cell?.selectionStyle = .none
         return cell ?? UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCity = arrCityList[indexPath.row].value
+        selectCityTableView.reloadData()
         continueBtn.isUserInteractionEnabled = true
         continueBtn.alpha = 1
     }

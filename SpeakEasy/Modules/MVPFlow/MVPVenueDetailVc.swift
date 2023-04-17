@@ -209,6 +209,10 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
+        if UserDefault.shared.isGuest == true {
+            Navigate.to.loginMandatory(self)
+            return
+        }
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
             Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets, totalPrice: totalPrice)
         }

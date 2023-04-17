@@ -49,11 +49,11 @@ final class StartScreenViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    @objc func setPlayerLayerToNil(){
+    @objc func setPlayerLayerToNil() {
         player?.pause()
     }
 
-    @objc func reinitializePlayerLayer(){
+    @objc func reinitializePlayerLayer() {
         player?.play()
     }
     
