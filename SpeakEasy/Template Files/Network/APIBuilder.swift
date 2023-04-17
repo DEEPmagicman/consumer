@@ -33,13 +33,14 @@ struct APIBuilder {
     static private let changeEmail = "/change-email"
     static private let changePhone = "/change-phone"
     static private let changePassword = "/change-password"
-    static private let appClip = "/appclip/"
+    static private let appClip = "/appclip"
     static private let appClipVenue = "/appClipVenue?include=appClipTicket"
     static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
     static private let include = "include=%@"
+    static private let appleWallet = "/apple-wallet"
 
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -171,7 +172,7 @@ struct APIBuilder {
     }
     
     static func MVPVenueDetailURL(_ id: String) -> String{
-        baseURL + appClip + id
+        baseURL + appClip + "/\(id)"
     }
     
     static var MVPVenueListURL: String {
@@ -192,6 +193,10 @@ struct APIBuilder {
     
     static var mvpCityListURL: String {
         baseURL + mvpCity
+    }
+    
+    static func appClipAppleWallet(_ bookingId: String) -> String {
+        baseURL + appClip + "/\(bookingId)" + appleWallet
     }
 }
 

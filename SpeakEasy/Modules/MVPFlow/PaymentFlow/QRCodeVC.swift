@@ -30,6 +30,7 @@ final class QRCodeVC: UIViewController {
     var selectedTickets = [AppClipTicket]()
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
+    private var pass: PKPass?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +55,46 @@ final class QRCodeVC: UIViewController {
     }
     
     @objc private func addToWalletBtnTapped() {
-        // TODO: add to wallet API
+        guard let url = URL(string: APIBuilder.appClipAppleWallet(bookingId)) else { return }
+//        let pkl = PKPassLibrary()
+        if let pass = pass {
+//            if pkl.containsPass(pass) {
+//                Alert.showToast("Ticket already Added")
+//            } else {
+                presentAddPKPass(pass)
+//            }
+            return
+        }
+        Loader.show()
+        URLSession.shared.fetchData(at: url) { [weak self] data, error in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            if let data = data {
+                do {
+                    let pass = try PKPass(data: data)
+                    Loader.hide()
+                    self.presentAddPKPass(pass)
+                    self.pass = pass
+                } catch {
+                    Loader.hide()
+                    Alert.showAlertSheet(style: .alert, title: "Incorrect data", message: "")
+                }
+            } else {
+                Loader.hide()
+                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    private func presentAddPKPass(_ pass: PKPass) {
+        if let vc = PKAddPassesViewController(pass: pass) {
+            DispatchQueue.main.async {
+//                vc.delegate = self
+                self.present(vc, animated: true)
+            }
+        }
     }
     
     private func loadImage() {
@@ -109,3 +149,13 @@ extension QRCodeVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 }
+
+//extension QRCodeVC: PKAddPassesViewControllerDelegate {
+//    func addPassesViewControllerDidFinish(_ controller: PKAddPassesViewController) {
+//        controller.dismiss(animated: true)
+//        let pkl = PKPassLibrary()
+//        if let pass = pass, pkl.containsPass(pass) {
+//            Alert.showToast("Ticket added to wallet")
+//        }
+//    }
+//}

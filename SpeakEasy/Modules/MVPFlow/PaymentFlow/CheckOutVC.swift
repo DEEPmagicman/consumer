@@ -35,7 +35,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentHistoryId = ""
     var venueName = ""
     var bookingId = ""
-    var mvpDelegate = MVPPresenter()
+    var presenter = MVPPresenter()
     var venueId = ""
     var isApplePayNotSupported = false
     var isPaymentInitiated = false
@@ -65,6 +65,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
+        createBooking()
     }
     
 //    deinit {
@@ -122,7 +123,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     func createBooking() {
-        mvpDelegate.createBookingForMVP(phone: "9878978719", ticketId: selectedTickets.first?.id ?? "", totalTicket: 1) { [weak self] isSuccess, errMsg, id in
+        var appClipTickets = [[String: Any]]()
+        selectedTickets.forEach {
+            appClipTickets.append(["ticketId": $0.id,
+                                   "ticketQuantity": $0.selectedQuantity])
+        }
+        presenter.createBookingForMVP(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -147,7 +153,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
         
     private func addPaymentApi() {
-        mvpDelegate.addPaymentApiForMVP(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret, paymentHistoryId in
+        presenter.addPaymentApiForMVP(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret, paymentHistoryId in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
@@ -241,7 +247,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     func paymentStatus(completion: @escaping (()-> Void)) {
         Loader.show()
-        mvpDelegate.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
+        presenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()

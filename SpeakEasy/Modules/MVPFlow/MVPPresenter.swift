@@ -60,10 +60,10 @@ final class MVPPresenter {
         }
     }
     
-    func createBookingForMVP(phone: String,ticketId: String,totalTicket:Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ id: String?) -> Void) {
+    func createBookingForMVP(phone: String, appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?,_ id: String?) -> Void) {
         let param = ["phone": phone,
-                     "appclipTicketId":ticketId,
-                     "ticketQuantity": totalTicket] as [String : Any]
+                     "appclipTicket": appClipTickets,
+                     "venueId": venueId] as [String: Any]
         Loader.show()
         AFWrapper.postRequest(APIBuilder.createBookingMVPURL,params: param, headers: Header.header()) { response in
             
