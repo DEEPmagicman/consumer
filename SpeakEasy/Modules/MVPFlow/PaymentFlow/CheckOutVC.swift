@@ -17,12 +17,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var paymentMethodView: UIView!
+    @IBOutlet private weak var buyNowBtn: UIButton!
 
-    var totalTicket = 1 // remove
-    var ticketPrice = 1 // remove
-    var isGeneralAdmission = false // remove
-    var ticketInfo = "" // remove
-    var appClipTicketId = "" // remove
     var venueAttachment = ""
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
@@ -30,6 +26,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
+    private var ephemeralKey = ""
     private var selectedId = "Apple Pay"
     var venueName = ""
     var bookingId = ""
@@ -44,11 +41,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         createBooking()
         WebSocketWrapper.shared.delegate.append(self)
         totalPriceLbl.text = "$\(totalPrice)"
-//        creditCardPayBtn.isHidden = false
-//        creditCardPayBtn.alpha = 0.5
-//        creditCardPayBtn.isUserInteractionEnabled = false
-//        applePayBtn.alpha = 0.5
-//        applePayBtn.isUserInteractionEnabled = false
+        buyNowBtn.alpha = 0.5
+        buyNowBtn.isUserInteractionEnabled = false
 //        if PKPaymentAuthorizationViewController.canMakePayments() {
 //            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
 //            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -100,7 +94,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         var appClipTickets = [[String: Any]]()
         selectedTickets.forEach {
             appClipTickets.append(["ticketId": $0.id,
-                                   "ticketQuantity": $0.selectedQuantity])
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
         }
         presenter.createBookingForMVP(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
@@ -127,11 +121,17 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
         
     private func addPaymentApi() {
-        presenter.addPaymentApiForMVP(bookingId: bookingId, name: isGeneralAdmission ? "General Admission" : "VIP Skip the Line", price: self.ticketPrice, totalTicket: self.totalTicket) { isSuccess, errMsg, clientSecret, paymentHistoryId in
+        var appClipTickets = [[String: Any]]()
+        selectedTickets.forEach {
+            appClipTickets.append(["ticketId": $0.id,
+                                   "quantity": $0.selectedQuantity ?? 0])
+        }
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: .appClip) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
                 self.paymentHistoryId = paymentHistoryId
+                self.ephemeralKey = ephemeralKey
                 self.setUpPaymentBottomSheet()
             } else {
                 if errMsg != nil {
@@ -149,18 +149,16 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-        configuration.customer = .init(id: "cus_NjIf65HxFjE65P", ephemeralKeySecret: "ek_test_YWNjdF8xTVZyRExCdVNzYVVkN0JULEhoaEQyTVZFSTNnUnVLQUQxNVlpc0ZkTHlaYndmR3M_00EdRY7brQ")
+        configuration.customer = .init(id: "cus_NjIf65HxFjE65P", ephemeralKeySecret: ephemeralKey)
         configuration.savePaymentMethodOptInBehavior = .automatic
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
         paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
-//        DispatchQueue.main.async {
-//            self.creditCardPayBtn.alpha = 1
-//            self.creditCardPayBtn.isUserInteractionEnabled = true
-//            self.applePayBtn.alpha = 1
-//            self.applePayBtn.isUserInteractionEnabled = true
-//        }
+        DispatchQueue.main.async {
+            self.buyNowBtn.alpha = 1
+            self.buyNowBtn.isUserInteractionEnabled = true
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -213,7 +211,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         paymentRequest.paymentSummaryItems = [
             // The final line should represent your company;
             // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: ticketPrice * totalTicket)),
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice)),
         ]
         paymentRequest.requiredBillingContactFields = []
         // Initialize an STPApplePayContext instance

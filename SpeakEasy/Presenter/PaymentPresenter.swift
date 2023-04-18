@@ -7,7 +7,46 @@
 
 import Foundation
 
+enum PaymentIntentType {
+    case appClip
+    case singleTickedEvent
+    case tieredTickedEvent
+}
+
 final class PaymentPresenter {
+    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String) -> Void) {
+        var param = ["cart": selectedTickets] as [String: Any]
+        switch type {
+        case .appClip:
+            param["isAppClipPayment"] = true
+        case .singleTickedEvent:
+            param["isAppClipPayment"] = false
+            param["isTieredTicket"] = false
+        case .tieredTickedEvent:
+            param["isAppClipPayment"] = false
+            param["isTieredTicket"] = true
+        }
+
+        AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId), params: param, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "", "")
+                return
+            }
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String {
+                completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey)
+            } else {
+                completion(false, "internal error", "", "", "")
+            }
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, "", "", "")
+                return
+            }
+            completion(false, nil, "", "", "")
+        }
+    }
+    
     static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
 
         AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in

@@ -140,6 +140,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        // TODO: change as per new API request parameters
         let param = ["cart":
                         [
                             ["name": (isGeneralAdmission ? "General Admission" : "VIP Skip the Line"),

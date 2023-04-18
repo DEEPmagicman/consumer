@@ -331,6 +331,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="buyNowBtn" destination="IGo-yl-2U5" id="Nep-UO-3cx"/>
                         <outlet property="infoLbl" destination="gqd-rD-SWC" id="WcR-kG-0li"/>
                         <outlet property="paymentMethodView" destination="9n5-H9-w5s" id="yEU-Pi-9lB"/>
                         <outlet property="ticketListHeight" destination="w67-mJ-cAP" id="AW5-x8-zfk"/>
