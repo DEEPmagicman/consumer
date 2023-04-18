@@ -13,8 +13,6 @@ import StripePaymentSheet
 final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     @IBOutlet private weak var totalPriceLbl: UILabel!
-//    @IBOutlet private weak var applePayBtn: PKPaymentButton!
-//    @IBOutlet private weak var creditCardPayBtn: UIButton!
     @IBOutlet private weak var infoLbl: UILabel!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
@@ -30,9 +28,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var selectedTickets = [AppClipTicket]()
     var totalPrice = 0
     private var paymentSheet: PaymentSheet?
-//    private var paymentSheetFlowController: PaymentSheet.FlowController?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
+    private var selectedId = "Apple Pay"
     var venueName = ""
     var bookingId = ""
     var presenter = MVPPresenter()
@@ -43,9 +41,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        createBooking()
         WebSocketWrapper.shared.delegate.append(self)
         totalPriceLbl.text = "$\(totalPrice)"
-//        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
 //        creditCardPayBtn.isHidden = false
 //        creditCardPayBtn.alpha = 0.5
 //        creditCardPayBtn.isUserInteractionEnabled = false
@@ -65,7 +63,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
-        createBooking()
     }
     
 //    deinit {
@@ -74,29 +71,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     @objc private func onClickPaymentMethod() {
         Navigate.to.paymentMethodsVc(self)
-//        STPAPIClient.shared.publishableKey = "pk_test_51MVrDLBuSsaUd7BTwD22BrfvI0QvLhYMe1b4usjbCW5NefmUVgc0Th4ZrdeOBDL5Xdh3GgzYgvPsct7qFOw9q97W00Dx516uA1"
-//        var configuration = PaymentSheet.Configuration()
-//        configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-//        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
-//        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-//        // methods that complete payment after a delay, like SEPA Debit and Sofort.
-//        configuration.savePaymentMethodOptInBehavior = .requiresOptIn
-//        configuration.allowsDelayedPaymentMethods = true
-//
-//        configuration.customer = .init(id: "cus_NKC12q6XozObF5", ephemeralKeySecret: "ek_test_YWNjdF8xTVZyRExCdVNzYVVkN0JULHkwUlNNUkRjVnJBbTV0NHBlajdrdDZWUXdEY1N4b2Q_00Kt2YtjBN")
-//
-//        PaymentSheet.FlowController.create(paymentIntentClientSecret: self.paymentIntent, configuration: configuration) { [weak self] result in
-//          switch result {
-//          case .failure(let error):
-//            print(error)
-//          case .success(let paymentSheetFlowController):
-//            self?.paymentSheetFlowController = paymentSheetFlowController
-//            // Update your UI using paymentSheetFlowController.paymentOption
-//          }
-//        }
-//        paymentSheetFlowController?.presentPaymentOptions(from: self) {
-//          // Update your UI using paymentSheetFlowController.paymentOption
-//        }
     }
     
 //    @objc func checkApplePay() {
@@ -158,7 +132,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
                 self.paymentHistoryId = paymentHistoryId
-                self.setUpPaymentBottemSheet()
+                self.setUpPaymentBottomSheet()
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -170,12 +144,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func setUpPaymentBottemSheet() {
+    private func setUpPaymentBottomSheet() {
         STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-        //        configuration.customer = .init(id: "customerId", ephemeralKeySecret: "customerEphemeralKeySecret")
+        configuration.customer = .init(id: "cus_NjIf65HxFjE65P", ephemeralKeySecret: "ek_test_YWNjdF8xTVZyRExCdVNzYVVkN0JULEhoaEQyTVZFSTNnUnVLQUQxNVlpc0ZkTHlaYndmR3M_00EdRY7brQ")
+        configuration.savePaymentMethodOptInBehavior = .automatic
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
@@ -193,7 +168,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction func onClickBuy(_ sender: Any) {
-        Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: selectedTickets)
+        // TODO: initial flow for card
+//        if selectedId == "Apple Pay" {
+//            applePayButtonTapped()
+//        } else {
+            onClickCreditCardPay("")
+//        }
     }
 
     @IBAction private func onClickCreditCardPay(_ sender: Any) {
@@ -204,7 +184,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus {
-//                    Navigate.to.QRCode(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedTickets)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -290,7 +270,7 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus {
-//                Navigate.to.QRCode(self, totalTicket: self.totalTicket, ticketPrice: self.ticketPrice, isGeneral: self.isGeneralAdmission, venueName: self.venueName, bookingId: self.bookingId,ticketInfo: self.ticketInfo, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo)
+                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedTickets)
             }
         case .error:
             self.isPaymentInitiated = false
@@ -330,5 +310,11 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                 Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
             }
         }
+    }
+}
+
+extension CheckOutVC: PaymentMethodVCDelegate {
+    func didSelectMethod(_ id: String) {
+        selectedId = id
     }
 }

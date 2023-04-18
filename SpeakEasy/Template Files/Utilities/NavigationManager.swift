@@ -284,11 +284,14 @@ final class Navigate {
     
     func paymentMethodsVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PaymentMethodsViewController.self)
+        vc.delegate = sender as? PaymentMethodVCDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func cardDetailsVc(_ sender: UIViewController) {
+    func cardDetailsVc(_ sender: UIViewController, customerId: String, paymentMethod: PaymentMethod) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(CardDetailsViewController.self)
+        vc.customerId = customerId
+        vc.paymentMethod = paymentMethod
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

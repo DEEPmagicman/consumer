@@ -91,7 +91,7 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
-            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self = self else {
                     Loader.hide()
                     return

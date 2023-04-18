@@ -32,7 +32,7 @@ final class OnBoardingPresenter {
     
     func loginOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
-        let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
+        let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         AFWrapper.postRequest(APIBuilder.loginOTPVerifyURL, params: param, headers: Header.header(), shouldForceLogout: false) { response in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any] else {

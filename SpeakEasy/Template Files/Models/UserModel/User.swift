@@ -36,6 +36,7 @@ struct User {
     var updatedAt: String
     var vibeIds: [String]
     var drinkIds: [String]
+    var stripeCusId: String
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -65,6 +66,7 @@ struct User {
         case updatedAt = "updated_at"
         case vibeIds = "vibe_ids"
         case drinkIds = "drink_ids"
+        case stripeCusId = "stripeCustId"
     }
     
     init(fromDictionary dictionary: [String: Any]) {
@@ -95,6 +97,7 @@ struct User {
         self.updatedAt = dictionary["updatedAt"] as? String ?? ""
         self.vibeIds = dictionary["vibeIds"] as? Array ?? []
         self.drinkIds = dictionary["drinkIds"] as? Array ?? []
+        self.stripeCusId = dictionary["stripeCustId"] as? String ?? ""
     }
 }
 
@@ -128,6 +131,7 @@ extension User: Decodable, Encodable {
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
         vibeIds = (try? values.decode([String].self, forKey: .vibeIds)) ?? []
         drinkIds = (try? values.decode([String].self, forKey: .drinkIds)) ?? []
+        stripeCusId = (try? values.decode(String.self, forKey: .stripeCusId)) ?? ""
     }
     
     func encode(to encoder: Encoder) throws {
@@ -159,6 +163,7 @@ extension User: Decodable, Encodable {
         try val.encode(updatedAt, forKey: .updatedAt)
         try val.encode(vibeIds, forKey: .vibeIds)
         try val.encode(drinkIds, forKey: .drinkIds)
+        try val.encode(stripeCusId, forKey: .stripeCusId)
     }
 }
 

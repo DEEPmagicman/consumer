@@ -41,7 +41,8 @@ struct APIBuilder {
     static private let mvpCity = "/common-data/venueCitys"
     static private let include = "include=%@"
     static private let appleWallet = "/apple-wallet"
-
+    static private let method = "/method"
+    
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
     static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
@@ -197,6 +198,14 @@ struct APIBuilder {
     
     static func appClipAppleWallet(_ bookingId: String) -> String {
         baseURL + appClip + "/\(bookingId)" + appleWallet
+    }
+    
+    static func customerMethod(_ customerId: String) -> String {
+        baseURL + route + payment + method + "/\(customerId)"
+    }
+    
+    static func deleteMethod(_ customerId: String, methodId: String) -> String {
+        baseURL + route + payment + method + "/\(customerId)" + "/\(methodId)"
     }
 }
 

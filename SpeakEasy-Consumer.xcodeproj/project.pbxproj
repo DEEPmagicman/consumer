@@ -202,6 +202,7 @@
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
 		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
+		CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04049129EE6D6A00DD546D /* PaymentMethod.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
@@ -791,6 +792,7 @@
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
+		CE04049129EE6D6A00DD546D /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
@@ -2116,6 +2118,7 @@
 				BD92D2A8295D52A200C3CBD9 /* Drink.swift */,
 				828A04932962DA3E004A5F2B /* InstagramMedia.swift */,
 				82E7F5B329681F8F007FC573 /* City.swift */,
+				CE04049129EE6D6A00DD546D /* PaymentMethod.swift */,
 			);
 			path = UserModel;
 			sourceTree = "<group>";
@@ -4462,6 +4465,7 @@
 				E1A9E7C428C56FD10081FB28 /* SearchAndAddCVC.swift in Sources */,
 				E15D6B7228BC39AC0076286C /* MVPSplashCVC.swift in Sources */,
 				CE4867B6286F358800FD277E /* UIViewController+Extension.swift in Sources */,
+				CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
 				E167059E28CA6B3700644BF0 /* VenueDetails.swift in Sources */,
