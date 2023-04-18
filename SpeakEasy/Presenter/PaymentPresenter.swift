@@ -14,6 +14,35 @@ enum PaymentIntentType {
 }
 
 final class PaymentPresenter {
+    static func createBooking(phone: String, appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+        let param = ["phone": phone,
+                     "appclipTicket": appClipTickets,
+                     "venueId": venueId] as [String: Any]
+        AFWrapper.postRequest(APIBuilder.createBookingURL, params: param, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "")
+                return
+            }
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id)
+            } else if let booking = responseDic["booking"] as? [String: Any], let id = booking["id"] as? String {
+                completion(true, nil, id)
+            } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
+                completion(false, error, message)
+            } else {
+                completion(false, "Alert", "Booking failed")
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, "")
+                return
+            }
+            completion(false, nil, "")
+        }
+    }
+    
     static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String) -> Void) {
         var param = ["cart": selectedTickets] as [String: Any]
         switch type {
@@ -79,6 +108,22 @@ final class PaymentPresenter {
             completion(true, nil)
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            completion(false, nil)
+        }
+    }
+    
+    static func successPayment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: nil, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil)
+                return
+            }
+            completion(true, nil)
+        } failure: { error in
+            if let err = (error as? NSError), err.code == 0 {
                 completion(false, err.domain)
                 return
             }

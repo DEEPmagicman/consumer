@@ -23,17 +23,16 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
     var totalPrice = 0
+    var venueName = ""
+    var venueId = ""
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
     private var selectedId = "Apple Pay"
-    var venueName = ""
-    var bookingId = ""
-    var presenter = MVPPresenter()
-    var venueId = ""
-    var isApplePayNotSupported = false
-    var isPaymentInitiated = false
+    private var bookingId = ""
+    private var isApplePayNotSupported = false
+    private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
@@ -96,7 +95,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             appClipTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        presenter.createBookingForMVP(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
+        PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -161,11 +160,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    @IBAction func onClickBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+    @IBAction private func onClickBack(_ sender: Any) {
+        Navigate.to.back(self)
     }
     
-    @IBAction func onClickBuy(_ sender: Any) {
+    @IBAction private func onClickBuy(_ sender: Any) {
         // TODO: initial flow for card
 //        if selectedId == "Apple Pay" {
 //            applePayButtonTapped()
@@ -225,7 +224,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     func paymentStatus(completion: @escaping (()-> Void)) {
         Loader.show()
-        presenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
+        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()

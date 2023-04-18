@@ -180,7 +180,7 @@ struct APIBuilder {
         baseURL + route + venue + appClipVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     
-    static var createBookingMVPURL: String {
+    static var createBookingURL: String {
         baseURL + appClipUser
     }
     

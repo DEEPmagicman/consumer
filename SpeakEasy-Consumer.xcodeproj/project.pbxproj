@@ -1205,7 +1205,6 @@
 				046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */,
 				04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */,
 				04473070295AB8CE0001F568 /* CardDetailsViewController.swift */,
-				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
 				829FB89C2988F64500E89019 /* ChangePasswordViewController.swift */,
 			);
 			path = Settings;
@@ -1300,6 +1299,8 @@
 			children = (
 				297AB3EE2975608D0086259F /* VenuePresenter.swift */,
 				29868362297567DF00CB827B /* EventPresenter.swift */,
+				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
+				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
 			);
 			path = Presenter;
@@ -1620,7 +1621,6 @@
 				BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */,
 				BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */,
 				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
-				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
 				828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */,
 				CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */,
@@ -1655,14 +1655,6 @@
 				BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */,
 			);
 			path = Login2;
-			sourceTree = "<group>";
-		};
-		BD7FA0F6294892AA00935275 /* myVideo */ = {
-			isa = PBXGroup;
-			children = (
-				04348225297A9135008989E6 /* video.mp4 */,
-			);
-			path = myVideo;
 			sourceTree = "<group>";
 		};
 		BD80B38B295EBC25005592A7 /* InstgramManager */ = {
@@ -1844,6 +1836,7 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				04348225297A9135008989E6 /* video.mp4 */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
 			);
@@ -1864,7 +1857,6 @@
 			isa = PBXGroup;
 			children = (
 				BD942F3B29595A0D00D52115 /* Network */,
-				BD7FA0F6294892AA00935275 /* myVideo */,
 				BD3FB24B2940678800BE7713 /* Utilities */,
 				CE4867E6286F392D00FD277E /* Models */,
 				CE486772286F358700FD277E /* BaseControllers */,
