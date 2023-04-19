@@ -83,11 +83,12 @@ final class Navigate {
         bottomSheetController.present(viewController, on: sender)
     }
     
-    func presentDateSelectionBottomSheet(_ sender: UIViewController) {
+    func presentDateSelectionBottomSheet(_ sender: UIViewController, date: Date? = nil) {
         var configuration: NBBottomSheetConfiguration
         configuration = NBBottomSheetConfiguration(sheetSize: .fixed(310))
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(DateSelectionBottomSheet.self)
         vc.delegate = sender as? DateSelectionDelegate
+        vc.date = date
         let bottomSheetController = NBBottomSheetController(configuration: configuration)
         bottomSheetController.present(vc, on: sender)
     }

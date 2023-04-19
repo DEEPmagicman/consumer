@@ -65,18 +65,13 @@ extension String {
     }
     
     func toDate(withFormat format: DateFormat)-> Date?{
-
-          let dateFormatter = DateFormatter()
-          dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
-          dateFormatter.locale = Locale(identifier: "fa-IR")
-          dateFormatter.calendar = Calendar(identifier: .gregorian)
+        let dateFormatter = DateFormatter()
+//          dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+//          dateFormatter.locale = Locale(identifier: "fa-IR")
+//          dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format.rawValue
-          let date = dateFormatter.date(from: self)
-
-          return date
-
-      }
-
+        return dateFormatter.date(from: self)
+    }
 }
 
 extension Double {

@@ -17,6 +17,7 @@ final class DateSelectionBottomSheet: UIViewController {
     @IBOutlet weak var bottomLbl: UILabel!
     
     weak var delegate: DateSelectionDelegate?
+    var date: Date?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,9 @@ final class DateSelectionBottomSheet: UIViewController {
         datePickerView.preferredDatePickerStyle = .wheels
         let maxDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
         datePickerView.maximumDate = maxDate
+        if let date = date {
+            datePickerView.date = date
+        }
         bottomLbl.text = "Age \(datePickerView.date.age)"
     }
     

@@ -32,7 +32,7 @@ final class EnterNameViewController: UIViewController {
     }
     
     @IBAction private func onClickDOB(_ sender: Any) {
-        Navigate.to.presentDateSelectionBottomSheet(self)
+        Navigate.to.presentDateSelectionBottomSheet(self, date: DOBTextField.text?.toDate(withFormat: .YYYYMMDD))
     }
 
     @IBAction private func onClickContinue(_ sender: Any) {
