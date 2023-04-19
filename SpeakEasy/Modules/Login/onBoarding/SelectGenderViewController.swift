@@ -82,7 +82,7 @@ final class SelectGenderViewController: UIViewController {
                 return
             }
             if isSuccess {
-                Navigate.to.connectAccountVc(self)
+                Navigate.to.SetProfilePicVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

@@ -206,6 +206,7 @@
 		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
+		CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */; };
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
@@ -796,6 +797,7 @@
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
+		CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectionBottomSheet.swift; sourceTree = "<group>"; };
 		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
@@ -1625,6 +1627,7 @@
 				828A04952962E23B004A5F2B /* SelectPhotosViewController.swift */,
 				CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */,
 				CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */,
+				CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */,
 			);
 			path = onBoarding;
 			sourceTree = "<group>";
@@ -4400,6 +4403,7 @@
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */,
+				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,
 				CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */,

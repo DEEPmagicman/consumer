@@ -235,7 +235,7 @@ final class VerificationCodeViewController: UIViewController {
                         return
                     }
                     if isSuccess {
-                        Navigate.to.enterNameVc(self)
+                        Navigate.to.connectAccountVc(self)
                         Loader.hide()
                     } else {
                         if errorMsg != nil {

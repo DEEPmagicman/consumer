@@ -95,6 +95,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             appClipTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
+        Loader.show()
         PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()

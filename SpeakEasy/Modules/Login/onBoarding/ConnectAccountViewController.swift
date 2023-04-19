@@ -56,7 +56,7 @@ final class ConnectAccountViewController: UIViewController {
                     return
                 }
                 if isSuccess {
-                    Navigate.to.dateOfBirthVc(self)
+                    Navigate.to.enterNameVc(self)
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

@@ -23,11 +23,11 @@ extension Date {
         return ageComponents.year ?? 0
     }
     
-    func string(format:DateFormat) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")!
-            dateFormatter.dateFormat = format.rawValue
-            return dateFormatter.string(from: self)
+    func string(format: DateFormat) -> String {
+        let dateFormatter = DateFormatter()
+//        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        dateFormatter.dateFormat = format.rawValue
+        return dateFormatter.string(from: self)
     }
 }
 
