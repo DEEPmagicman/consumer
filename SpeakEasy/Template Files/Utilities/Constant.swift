@@ -25,8 +25,6 @@ struct Constant {
     struct Icon {
         static let radioClick = UIImage(named: "blueCheck")
         static let radioIcon = UIImage(named: "radioCirculIcon")
-        static let applePay = UIImage(named: "applePay")
-        static let masterCard = UIImage(named: "masterCard")
         static let check = UIImage(named: "purpul_Check")
         static let defaultIcon = UIImage(named: "defaultIcon")
         static let maleIdentify = UIImage(named: "maleIdentify_Ic")
@@ -57,11 +55,28 @@ struct Constant {
         static let max5FrdString = "you Can Invite Max 5 Friend"
         static let sessionTimeOut = "Your current session has expired, \n Please login again."
         static let enableLocationServices = "Enable Location Services"
+        static let notSupported = "Not Supported"
+        static let applePayNotSupported = "This device not support Apple Pay, Please choose different Payment Method"
+        static let addCardToApplePay = "Add Card to Apple Pay"
+        static let addCardToYourApplePayWallet = "Please add a card to your Apple Pay wallet and check again."
+        static let defaultSelectedPM = "Apple Pay"
+        static let addNewCard = "addNewCard"
     }
     
     struct Font {
         static func boldText(size: CGFloat) -> UIFont {
             return UIFont(name: "Poppins-Bold", size: size)!
         }
+    }
+    
+    struct Card {
+        static let visa = UIImage(named: "visa")
+        static let cardIc = UIImage(named: "cardIc")
+        static let applePay = UIImage(named: "applePay")
+        static let masterCard = UIImage(named: "mastercard")
+        static let amex = UIImage(named: "amex")
+        static let discover = UIImage(named: "discover")
+        static let diners = UIImage(named: "diners")
+        static let jcb = UIImage(named: "jcb")
     }
 }

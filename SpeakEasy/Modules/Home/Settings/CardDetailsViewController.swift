@@ -12,16 +12,29 @@ final class CardDetailsViewController: UIViewController {
     @IBOutlet weak var defaultBtn: UIButton!
     @IBOutlet weak var expLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var deleteView: UIView!
 
     var paymentMethod: PaymentMethod?
     var customerId: String?
+    var isDefault = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLbl.text = "\(paymentMethod?.brand ?? "") \(paymentMethod?.last4 ?? "")"
-        expLbl.text = "\(paymentMethod?.expMonth ?? 0)/\(paymentMethod?.expYear ?? 0)"
+        if let paymentMethod = paymentMethod {
+            titleLbl.text = "\(paymentMethod.brand.capitalized) \(paymentMethod.last4)"
+            expLbl.text = "\(paymentMethod.expMonth.displayMonth)/\(paymentMethod.expYear.displayYear)"
+            deleteBtn.isHidden = false
+            deleteView.isHidden = false
+        } else {
+            titleLbl.text = Constant.String.defaultSelectedPM
+            expLbl.text = ""
+            deleteBtn.isHidden = true
+            deleteView.isHidden = true
+        }
         defaultBtn.setImage(Constant.Icon.defaultIcon, for: .normal)
         defaultBtn.setImage(Constant.Icon.check, for: .selected)
+        defaultBtn.isSelected = isDefault
     }
     
     @IBAction func onClickBack(_ sender: Any) {

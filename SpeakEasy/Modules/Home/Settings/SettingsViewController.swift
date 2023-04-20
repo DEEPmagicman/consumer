@@ -21,7 +21,7 @@ final class SettingsViewController: UIViewController {
     }
 
     @IBAction func onClickPayment(_ sender: Any) {
-        Navigate.to.paymentMethodsVc(self)
+        Navigate.to.paymentMethodsVc(self, selectedId: Constant.String.defaultSelectedPM, isEditable: true)
     }
     
     @IBAction func onClickPersonalInfo(_ sender: Any) {

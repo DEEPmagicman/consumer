@@ -17,6 +17,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var paymentMethodView: UIView!
+    @IBOutlet private weak var paymentMethodImg: UIImageView!
     @IBOutlet private weak var buyNowBtn: UIButton!
 
     var venueAttachment = ""
@@ -29,9 +30,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
-    private var selectedId = "Apple Pay"
+    private var selectedId = Constant.String.defaultSelectedPM
     private var bookingId = ""
-    private var isApplePayNotSupported = false
+    private var isApplePayNotSupported: Bool {
+        !PKPaymentAuthorizationViewController.canMakePayments()
+    }
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
 
@@ -42,12 +45,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         totalPriceLbl.text = "$\(totalPrice)"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
-//        if PKPaymentAuthorizationViewController.canMakePayments() {
-//            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
-//            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
-//        } else {
-//            isApplePayNotSupported = true
-//        }
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -58,26 +55,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         paymentMethodView.addGestureRecognizer(tap)
     }
     
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
-    
     @objc private func onClickPaymentMethod() {
-        Navigate.to.paymentMethodsVc(self)
+        Navigate.to.paymentMethodsVc(self, selectedId: selectedId)
     }
     
-//    @objc func checkApplePay() {
-//        if StripeAPI.deviceSupportsApplePay() {
-//            applePayBtn.isHidden = false
-//        } else if isApplePayNotSupported == false {
-//            applePayBtn.isHidden = false
-//        } else {
-//            applePayBtn.isHidden = true
-//        }
-//    }
-    
-    func alertForWallet() {
-        let alertController = UIAlertController(title: "Add Card to Apple Pay", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
+    private func alertForWallet() {
+        let title = isApplePayNotSupported ? Constant.String.notSupported : Constant.String.addCardToApplePay
+        let message = isApplePayNotSupported ? Constant.String.applePayNotSupported : Constant.String.addCardToYourApplePayWallet
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
@@ -89,7 +74,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         present(alertController, animated: true, completion: nil)
     }
     
-    func createBooking() {
+    private func createBooking() {
         var appClipTickets = [[String: Any]]()
         selectedTickets.forEach {
             appClipTickets.append(["ticketId": $0.id,
@@ -166,15 +151,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
-        // TODO: initial flow for card
-//        if selectedId == "Apple Pay" {
-//            applePayButtonTapped()
-//        } else {
-            onClickCreditCardPay("")
-//        }
+        if selectedId == Constant.String.defaultSelectedPM {
+            applePayButtonTapped()
+        } else {
+            onClickCreditCardPay()
+        }
     }
 
-    @IBAction private func onClickCreditCardPay(_ sender: Any) {
+    private func onClickCreditCardPay() {
         // MARK: Start the checkout process
         isPaymentInitiated = true
         paymentSheet?.present(from: self) { paymentResult in
@@ -198,7 +182,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    @objc private func applePayButtonTapped() {
+    private func applePayButtonTapped() {
         if StripeAPI.deviceSupportsApplePay() == false {
             alertForWallet()
             return
@@ -223,7 +207,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(completion: @escaping (()-> Void)) {
         Loader.show()
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
             Loader.hide()
@@ -312,7 +296,16 @@ extension CheckOutVC: WebSocketCallBackDelegate {
 }
 
 extension CheckOutVC: PaymentMethodVCDelegate {
-    func didSelectMethod(_ id: String) {
+    func didSelectMethod(_ id: String, image: UIImage?) {
         selectedId = id
+        paymentMethodImg.image = image
+    }
+    
+    func addCard() {
+        selectedId = Constant.String.addNewCard
+        paymentMethodImg.image = Constant.Card.cardIc
+        DispatchQueue.main.async {
+            self.onClickCreditCardPay()
+        }
     }
 }

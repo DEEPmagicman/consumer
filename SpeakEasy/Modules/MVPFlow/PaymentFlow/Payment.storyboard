@@ -159,6 +159,7 @@
                                                             </imageView>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="applePay" translatesAutoresizingMaskIntoConstraints="NO" id="ddH-uF-w0k">
                                                                 <rect key="frame" x="270" y="11" width="36.333333333333314" height="34"/>
+                                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="34" id="uWA-qH-eRj"/>
                                                                     <constraint firstAttribute="width" secondItem="ddH-uF-w0k" secondAttribute="height" multiplier="16:15" id="zdJ-SX-wvV"/>
@@ -333,6 +334,7 @@
                     <connections>
                         <outlet property="buyNowBtn" destination="IGo-yl-2U5" id="Nep-UO-3cx"/>
                         <outlet property="infoLbl" destination="gqd-rD-SWC" id="WcR-kG-0li"/>
+                        <outlet property="paymentMethodImg" destination="ddH-uF-w0k" id="JnH-WG-ppl"/>
                         <outlet property="paymentMethodView" destination="9n5-H9-w5s" id="yEU-Pi-9lB"/>
                         <outlet property="ticketListHeight" destination="w67-mJ-cAP" id="AW5-x8-zfk"/>
                         <outlet property="ticketListTableView" destination="hbO-dA-vd7" id="0n4-Le-5oI"/>
@@ -423,7 +425,7 @@
                                                 </constraints>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Event Details" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GaW-4o-YGy">
-                                                <rect key="frame" x="286.66666666666669" y="178.33333333333334" width="90.333333333333314" height="18.333333333333343"/>
+                                                <rect key="frame" x="290.33333333333331" y="178.33333333333334" width="86.666666666666686" height="18.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -703,7 +705,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lLE-Lv-Kdm">
-                                                        <rect key="frame" x="10" y="133" width="41" height="24"/>
+                                                        <rect key="frame" x="10" y="133" width="41.666666666666664" height="24"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="24" id="ECy-xM-8Qz"/>
                                                         </constraints>

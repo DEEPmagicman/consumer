@@ -292,16 +292,19 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func paymentMethodsVc(_ sender: UIViewController) {
+    func paymentMethodsVc(_ sender: UIViewController, selectedId: String, isEditable: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PaymentMethodsViewController.self)
         vc.delegate = sender as? PaymentMethodVCDelegate
+        vc.selectedId = selectedId
+        vc.isEditable = isEditable
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func cardDetailsVc(_ sender: UIViewController, customerId: String, paymentMethod: PaymentMethod) {
+    func cardDetailsVc(_ sender: UIViewController, customerId: String, paymentMethod: PaymentMethod?, isDefault: Bool) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(CardDetailsViewController.self)
         vc.customerId = customerId
         vc.paymentMethod = paymentMethod
+        vc.isDefault = isDefault
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

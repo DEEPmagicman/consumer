@@ -8,15 +8,21 @@
 import UIKit
 
 protocol PaymentMethodVCDelegate: AnyObject {
-    func didSelectMethod(_ id: String)
+    func didSelectMethod(_ id: String, image: UIImage?)
+    func addCard()
 }
 
 final class PaymentMethodsViewController: UIViewController {
 
     @IBOutlet weak var paymentTableView: UITableView!
 
+    var selectedId = Constant.String.defaultSelectedPM
+    var isEditable = false
     private var paymentMethods = [PaymentMethod]()
-    private var selectedId = "Apple Pay"
+    private var selectedImage = Constant.Card.cardIc
+    private var isNoPaymentMethodFound: Bool {
+        paymentMethods.count == 0
+    }
     weak var delegate: PaymentMethodVCDelegate?
     
     override func viewDidLoad() {
@@ -60,7 +66,10 @@ final class PaymentMethodsViewController: UIViewController {
 
 extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        paymentMethods.count + 1
+        if isNoPaymentMethodFound {
+            return isEditable ? 1 : 2
+        }
+        return paymentMethods.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -68,16 +77,22 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
         cell.selectionStyle = .none
         cell.setUi(isSetting: true)
         if indexPath.row == 0 {
-            cell.paymentIcon.image = Constant.Icon.applePay
-            cell.paymentType.text = "Apple Pay"
-            cell.defaultLbl.isHidden = selectedId == "Apple Pay" ? false : true
+            cell.paymentIcon.image = Constant.Card.applePay
+            cell.paymentType.text = Constant.String.defaultSelectedPM
+            cell.defaultLbl.isHidden = (selectedId == Constant.String.defaultSelectedPM || selectedId == Constant.String.addNewCard) ? false : true
         } else {
-            let paymentMethod = paymentMethods[indexPath.row - 1]
-            cell.paymentIcon.image = Constant.Icon.masterCard
-            cell.paymentType.text = "\(paymentMethod.brand) \(paymentMethod.last4)"
-            cell.defaultLbl.isHidden = selectedId == paymentMethod.id ? false : true
+            if isNoPaymentMethodFound {
+                cell.paymentIcon.image = Constant.Card.cardIc
+                cell.paymentType.text = "Add card"
+                cell.defaultLbl.isHidden = true
+            } else {
+                let paymentMethod = paymentMethods[indexPath.row - 1]
+                cell.paymentIcon.image = paymentMethods[indexPath.row - 1].image
+                cell.paymentType.text = "\(paymentMethod.brand) \(paymentMethod.last4)"
+                cell.defaultLbl.isHidden = selectedId == paymentMethod.id ? false : true
+            }
         }
-        cell.navigateBtn.isHidden = true
+        cell.navigateBtn.isHidden = !isEditable
         cell.navigateBtn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         cell.navigateBtn.tag = indexPath.row
         return cell
@@ -85,12 +100,27 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            selectedId = "Apple Pay"
+            if isEditable {
+                Navigate.to.cardDetailsVc(self, customerId: "", paymentMethod: nil, isDefault: (selectedId == Constant.String.defaultSelectedPM || selectedId == Constant.String.addNewCard))
+                return
+            }
+            selectedId = Constant.String.defaultSelectedPM
+            selectedImage = Constant.Card.applePay
         } else {
-            selectedId = paymentMethods[indexPath.row - 1].id
-            Navigate.to.cardDetailsVc(self, customerId: "cus_NjIf65HxFjE65P", paymentMethod: paymentMethods[indexPath.row - 1])
+            if isEditable {
+                Navigate.to.cardDetailsVc(self, customerId: "cus_NjIf65HxFjE65P", paymentMethod: paymentMethods[indexPath.row - 1], isDefault: selectedId == paymentMethods[indexPath.row - 1].id)
+                return
+            }
+            if isNoPaymentMethodFound {
+                delegate?.addCard()
+                Navigate.to.back(self)
+                return
+            } else {
+                selectedId = paymentMethods[indexPath.row - 1].id
+                selectedImage = paymentMethods[indexPath.row - 1].image
+            }
         }
         paymentTableView.reloadData()
-        delegate?.didSelectMethod(selectedId)
+        delegate?.didSelectMethod(selectedId, image: selectedImage)
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 18/04/23.
 //
 
-import Foundation
+import UIKit
 
 struct PaymentMethod: Codable {
 
@@ -15,6 +15,24 @@ struct PaymentMethod: Codable {
     var expYear: Int
     var last4: String
     var type: String
+    var image: UIImage? {
+        switch brand {
+        case "visa":
+            return Constant.Card.visa
+        case "mastercard":
+            return Constant.Card.masterCard
+        case "amex":
+            return Constant.Card.amex
+        case "discover":
+            return Constant.Card.discover
+        case "diners":
+            return Constant.Card.diners
+        case "jcb":
+            return Constant.Card.jcb
+        default:
+            return Constant.Card.cardIc
+        }
+    }
 
     private enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -33,5 +51,17 @@ struct PaymentMethod: Codable {
         try container.encode(expYear, forKey: .expYear)
         try container.encode(last4, forKey: .last4)
         try container.encode(type, forKey: .type)
+    }
+}
+
+extension Int {
+    var displayMonth: String {
+        String(format: "%02d", self)
+    }
+}
+
+extension Int {
+    var displayYear: String {
+        String("\(self)".dropFirst(2))
     }
 }
