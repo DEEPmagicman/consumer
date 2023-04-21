@@ -55,7 +55,7 @@ final class AccountVC: UIViewController {
     }
     
     @objc private func onClickConfirmEmail() {
-        Navigate.to.presentCommentDoneBottomSheet(self)
+//        Navigate.to.presentCommentDoneBottomSheet(self)
     }
     
     private func uploadProfileImg() {
@@ -127,6 +127,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         } else {
             header?.titleLbl.text = "Recommended"
         }
+        header?.tintColor = .black
         return header
     }
     

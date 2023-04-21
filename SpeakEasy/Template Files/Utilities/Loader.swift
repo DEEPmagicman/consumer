@@ -18,7 +18,7 @@ struct Loader {
     
     private static func config() {
         SVProgressHUD.resetOffsetFromCenter()
-        SVProgressHUD.setBackgroundColor(.black)
+        SVProgressHUD.setBackgroundColor(.clear)
         SVProgressHUD.setForegroundColor(Constant.Color.primaryColor)
         SVProgressHUD.setRingThickness(4)
         SVProgressHUD.setDefaultAnimationType(.flat)

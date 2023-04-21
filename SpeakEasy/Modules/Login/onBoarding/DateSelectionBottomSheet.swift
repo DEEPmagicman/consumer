@@ -27,7 +27,7 @@ final class DateSelectionBottomSheet: UIViewController {
     private func setDatePicker() {
         datePickerView.datePickerMode = .date
         datePickerView.preferredDatePickerStyle = .wheels
-        let maxDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
+        let maxDate = Date()
         datePickerView.maximumDate = maxDate
         if let date = date {
             datePickerView.date = date

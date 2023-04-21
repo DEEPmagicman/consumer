@@ -29,7 +29,7 @@ class venueTableCell: UITableViewCell {
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
         self.locationLbl.text = data.address
-        self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) )"
+        self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) )"
         if let ticket = data.appClipTicket?.first(where: { $0.name == "GENERALTICKET" && $0.status == "ENABLED" }) {
             if ticket.price >= 5 {
                 self.coverLbl.text = "$\(ticket.price)"

@@ -46,7 +46,7 @@ struct Constant {
         static let changesLaterInfo = "This information can be changed later."
         static let sendReceiptText = "Receipt emailed to rjohnson@gmail.com"
         static let confirm21YearText = "You must be over 21 years old to continue."
-        static let genderList = ["MALE", "FEMALE", "OTHER"]
+        static let genderList = ["Female", "Male", "Other"]
         static let InstagramDirectUri = "https://speakeasy.com/auth"
         static let spotifyDirectUri = "https://speakeasy.com/sauth"
         static let authorizationCode = "authorization_code"

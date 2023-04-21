@@ -190,3 +190,9 @@ extension Bundle {
         infoDictionary?["CFBundleVersion"] as? String ?? ""
     }
 }
+
+extension UIView {
+    static var nib: UINib {
+        UINib(nibName: "\(self)", bundle: nil)
+    }
+}

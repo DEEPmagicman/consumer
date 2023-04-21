@@ -28,10 +28,10 @@ final class PersonalInformationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        firstNameTF.text = UserDefault.shared.user?.firstName ?? "Tamas"
-        lastNameTF.text = UserDefault.shared.user?.lastName ?? "An"
-        nickNameTF.text = UserDefault.shared.user?.nickName ?? "Tomi"
-        genderTF.text = UserDefault.shared.user?.gender ?? "MALE"
+        firstNameTF.text = UserDefault.shared.user?.firstName ?? ""
+        lastNameTF.text = UserDefault.shared.user?.lastName ?? ""
+        nickNameTF.text = UserDefault.shared.user?.nickName ?? ""
+        genderTF.text = UserDefault.shared.user?.gender ?? ""
         dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY)
         emailTF.text = UserDefault.shared.user?.email
         phoneNumberTF.text = UserDefault.shared.user?.phone
@@ -80,8 +80,8 @@ final class PersonalInformationViewController: UIViewController {
     
     private func genderSelectionDropDown() {
         genderDropDown.anchorView = genderBtn
-        genderDropDown.bottomOffset = CGPoint(x: genderBtn.bounds.width - 189, y: genderBtn.bounds.height - 6)
-        genderDropDown.cellHeight = 37
+        genderDropDown.bottomOffset = CGPoint(x: -8, y: genderBtn.bounds.height + 7)
+        genderDropDown.cellHeight = 40
         genderDropDown.selectionBackgroundColor = .clear
         genderDropDown.selectedTextColor = .white
         genderDropDown.textColor = .white
@@ -91,9 +91,15 @@ final class PersonalInformationViewController: UIViewController {
         genderDropDown.backgroundColor = Constant.Color.code2Fcolor
         genderDropDown.textFont = Fonts.poppinsRegular(15)
         genderDropDown.dataSource = Constant.String.genderList
-        genderDropDown.width = 200
+        genderDropDown.width = genderBtn.bounds.width + 20
+        genderDropDown.cellNib = CustomDropDownCell.nib
         genderDropDown.selectionAction = { [weak self] (index, item) in
             self?.genderTF.text = item
+        }
+        genderDropDown.customCellConfiguration = {(index: Index, item: String, cell: DropDownCell) in
+        guard let cell = cell as? CustomDropDownCell else { return }
+            cell.optionLabel.textAlignment = .left
+            cell.separatorView.isHidden = index == Constant.String.genderList.count - 1
         }
     }
 }

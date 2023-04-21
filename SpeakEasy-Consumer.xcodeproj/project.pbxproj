@@ -17,8 +17,6 @@
 		0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */; };
 		0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
-		0447306A295AABEE0001F568 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473068295AABEE0001F568 /* PaymentTableViewCell.swift */; };
-		0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04473069295AABEE0001F568 /* PaymentTableViewCell.xib */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
@@ -282,6 +280,10 @@
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
+		CE9AD76A29F28EC000FA55C9 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE9AD76829F28EC000FA55C9 /* PaymentTableViewCell.xib */; };
+		CE9AD76B29F28EC000FA55C9 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD76929F28EC000FA55C9 /* PaymentTableViewCell.swift */; };
+		CE9AD76E29F28ECD00FA55C9 /* CustomDropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */; };
+		CE9AD76F29F28ECD00FA55C9 /* CustomDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA9474F288CABA600D7BB91 /* AWBezierConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */; };
@@ -606,8 +608,6 @@
 		0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+fixCaretPosition.swift"; sourceTree = "<group>"; };
 		0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextField.swift; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
-		04473068295AABEE0001F568 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
-		04473069295AABEE0001F568 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
@@ -870,6 +870,10 @@
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
+		CE9AD76829F28EC000FA55C9 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
+		CE9AD76929F28EC000FA55C9 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
+		CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomDropDownCell.xib; sourceTree = "<group>"; };
+		CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDropDownCell.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
@@ -1198,6 +1202,7 @@
 		0436D083295966B40087D3DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				CE18917429F28AC6009D7A5B /* CustomDropDownCell */,
 				04473067295AABC20001F568 /* PaymentMethodsCell */,
 				0436D084295966CF0087D3DB /* Settings.storyboard */,
 				0436D086295966E30087D3DB /* SettingsViewController.swift */,
@@ -1225,8 +1230,8 @@
 		04473067295AABC20001F568 /* PaymentMethodsCell */ = {
 			isa = PBXGroup;
 			children = (
-				04473068295AABEE0001F568 /* PaymentTableViewCell.swift */,
-				04473069295AABEE0001F568 /* PaymentTableViewCell.xib */,
+				CE9AD76929F28EC000FA55C9 /* PaymentTableViewCell.swift */,
+				CE9AD76829F28EC000FA55C9 /* PaymentTableViewCell.xib */,
 			);
 			path = PaymentMethodsCell;
 			sourceTree = "<group>";
@@ -1774,6 +1779,15 @@
 				CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */,
 			);
 			path = PaymentFlow;
+			sourceTree = "<group>";
+		};
+		CE18917429F28AC6009D7A5B /* CustomDropDownCell */ = {
+			isa = PBXGroup;
+			children = (
+				CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */,
+				CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */,
+			);
+			path = CustomDropDownCell;
 			sourceTree = "<group>";
 		};
 		CE2605F029E55AA400C46EFA /* Event */ = {
@@ -4028,7 +4042,7 @@
 				E1A9E75228C55D550081FB28 /* BottleMenuTVC.xib in Resources */,
 				E166184A28BED1810027C6EA /* HeaderViewCustom.xib in Resources */,
 				E1A9E76828C55D550081FB28 /* Locations.xib in Resources */,
-				0447306B295AABEE0001F568 /* PaymentTableViewCell.xib in Resources */,
+				CE9AD76E29F28ECD00FA55C9 /* CustomDropDownCell.xib in Resources */,
 				0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */,
 				E1A9E7F928C579690081FB28 /* MyAccount.xib in Resources */,
 				820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */,
@@ -4074,6 +4088,7 @@
 				E11CE3F928C97709003899C4 /* ExtendedTabCVC.xib in Resources */,
 				E1A9E7D028C56FD10081FB28 /* SearchAndAddFriend.xib in Resources */,
 				E11F4BA428C8358C008D2E30 /* VIPTableBookingTVC.xib in Resources */,
+				CE9AD76A29F28EC000FA55C9 /* PaymentTableViewCell.xib in Resources */,
 				E1A9E76628C55D550081FB28 /* NotificationCitySelection.xib in Resources */,
 				E17DC85A28C6C16500244C4F /* TabCVC.xib in Resources */,
 				CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */,
@@ -4263,7 +4278,6 @@
 				E1A9E79628C560BC0081FB28 /* Search.swift in Sources */,
 				E17DC7F628C6B3B500244C4F /* NoResultFoundTVC.swift in Sources */,
 				E167058B28CA6AB800644BF0 /* InviteFromContactTVC.swift in Sources */,
-				0447306A295AABEE0001F568 /* PaymentTableViewCell.swift in Sources */,
 				E11F4C1128C835F3008D2E30 /* PendingBookingAwait.swift in Sources */,
 				E15D6B6B28BC39AC0076286C /* Tutorial2CVC.swift in Sources */,
 				CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */,
@@ -4464,6 +4478,7 @@
 				CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
+				CE9AD76F29F28ECD00FA55C9 /* CustomDropDownCell.swift in Sources */,
 				E167059E28CA6B3700644BF0 /* VenueDetails.swift in Sources */,
 				E167058E28CA6AB800644BF0 /* SearchFriendTVC.swift in Sources */,
 				E17DC97028C6D01700244C4F /* MainTVC.swift in Sources */,
@@ -4547,6 +4562,7 @@
 				E11F4C0D28C835F3008D2E30 /* ChatHeadTVC.swift in Sources */,
 				BD3FB2512940690D00BE7713 /* IdentifierHelper.swift in Sources */,
 				CE4867B4286F358800FD277E /* UIButton+Extension.swift in Sources */,
+				CE9AD76B29F28EC000FA55C9 /* PaymentTableViewCell.swift in Sources */,
 				E11F4BF928C835F3008D2E30 /* BookingsCVC.swift in Sources */,
 				BD942F3F29595C7800D52115 /* APIBuilder.swift in Sources */,
 				CAC4141528A478050007BA86 /* Fonts.swift in Sources */,
