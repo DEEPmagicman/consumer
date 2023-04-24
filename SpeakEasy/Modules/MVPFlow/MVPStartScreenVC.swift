@@ -53,9 +53,10 @@ final class MVPStartScreenVC: UIViewController {
     }
     
     private func playBackgroundVideo() {
-        if let filePath = Bundle.main.path(forResource: "video", ofType:"mp4") {
+        if let filePath = Bundle.main.path(forResource: "bgvideo", ofType:"mov") {
             let filePathUrl = NSURL.fileURL(withPath: filePath)
             player = AVPlayer(url: filePathUrl)
+            player?.volume = 0
             let playerLayer = AVPlayerLayer(player: player)
             playerLayer.frame = self.bgImageView.bounds
             playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
