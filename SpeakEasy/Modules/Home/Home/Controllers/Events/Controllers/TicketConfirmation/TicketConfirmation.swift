@@ -12,13 +12,16 @@ class TicketConfirmation: UIViewController {
     @IBOutlet weak var strechyTableView: UITableView!
 //    @IBOutlet weak var btnBack: UIButton!
     @IBOutlet weak var btnViewInBookings: UIButtonDeviceClass!
+    @IBOutlet weak var backBtn: UIButton!
+    @IBOutlet weak var topTitleLbl: UILabelDeviceClass!
+    @IBOutlet weak var shareBtn: UIButton!
     
     var headerView: UIView!
     var kTableHeaderHeight:CGFloat = 487.0
     var selectedTabAt = 0
     var screenType: TicketConfirmationType = .FromHome
     var topEventData: TopEventDataSet?
-
+    var isFromSettings = false
     
     
     override func viewDidLoad() {
@@ -29,6 +32,19 @@ class TicketConfirmation: UIViewController {
         self.setupStreachyHeaderViewFrames()
         self.strechyTableView.layoutIfNeeded()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isFromSettings {
+            shareBtn.isHidden = true
+            backBtn.setImage(UIImage(named: "ic-close"), for: .normal)
+            topTitleLbl.text = "Ticket Details"
+        } else {
+            backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
+            topTitleLbl.text = "Confirmation"
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.updateHeaderView()
@@ -51,7 +67,11 @@ class TicketConfirmation: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func onBtnShare(_ sender: UIButton) {
-        Utility.main.shareSocialWith(text: "www.SpeakEasy.com")
+        if self.screenType == .FromHome {
+            AppDelegate.shared.showHome(selectedIndex: 0)
+        } else {
+            Utility.main.shareSocialWith(text: "www.SpeakEasy.com")
+        }
     }
 }
 //MARK: - HELPER METHODS
@@ -61,7 +81,8 @@ extension TicketConfirmation {
         
         switch self.screenType  {
         case .FromHome:
-//            self.btnBack.isHidden = true
+            self.backBtn.isHidden = true
+            shareBtn.setImage(UIImage(named: "ic-close"), for: .normal)
             self.btnViewInBookings.isHidden = false
         case .FromBooking:
 //            self.btnBack.isHidden = false
@@ -70,12 +91,13 @@ extension TicketConfirmation {
     }
     private func registerCell() {
         self.strechyTableView.register(UINib(nibName: "SelectedTicketAndRecipientTVC", bundle: nil), forCellReuseIdentifier: "SelectedTicketAndRecipientTVC")
-        self.strechyTableView.register(UINib(nibName: "ViewEventTicketConfirmInvitedPeopleTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketConfirmInvitedPeopleTVC")
-        self.strechyTableView.register(UINib(nibName: "PaymentMethodTVC", bundle: nil), forCellReuseIdentifier: "PaymentMethodTVC")
+        self.strechyTableView.register(UINib(nibName: "ViewEventTicketConfirmTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketConfirmTVC")
+        self.strechyTableView.register(UINib(nibName: "PaymentTableViewCell", bundle: nil), forCellReuseIdentifier: "PaymentTableViewCell")
         self.strechyTableView.register(UINib(nibName: "TransactionSummaryTVC", bundle: nil), forCellReuseIdentifier: "TransactionSummaryTVC")
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
+            //let tableHeaderView  = ViewEventHeader.instanceFromNib()
             let tableHeaderView  = ViewEventHeader.instanceFromNib() as! ViewEventHeader
             guard let data = self.topEventData else {return}
             tableHeaderView.setData(data: data)
@@ -124,12 +146,14 @@ extension TicketConfirmation: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "SelectedTicketAndRecipientTVC", for: indexPath) as? SelectedTicketAndRecipientTVC else { return UITableViewCell() }
+            if isFromSettings { cell.ticketInfo.text = "" }
             return cell
         case 1:
-            guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "ViewEventTicketConfirmInvitedPeopleTVC", for: indexPath) as? ViewEventTicketConfirmInvitedPeopleTVC else { return UITableViewCell() }
+            guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "ViewEventTicketConfirmTVC", for: indexPath) as? ViewEventTicketConfirmTVC else { return UITableViewCell() }
             return cell
         case 2:
-            guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "PaymentMethodTVC", for: indexPath) as? PaymentMethodTVC else { return UITableViewCell() }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell") as! PaymentTableViewCell
+            cell.setUi(isSetting: isFromSettings)
             return cell
         case 3:
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "TransactionSummaryTVC", for: indexPath) as? TransactionSummaryTVC else { return UITableViewCell() }

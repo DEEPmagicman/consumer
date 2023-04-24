@@ -20,8 +20,11 @@ class BookingsTVC: UITableViewCell {
     @IBOutlet weak var lblStatus: UILabel!
     @IBOutlet weak var imgArtist: UIImageView!
     @IBOutlet weak var viewCount: UIView!
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var lblCount: UILabelDeviceClass!
     
-    func setData(data: BookingsDataSet){
+    func setData(data: BookingsDataSet, isFromSettings: Bool = false){
+        
         self.imgBrand.image = data.brand
         self.lblBookingName.text = data.bookingName
         self.imgArtist.image = data.performerCover
@@ -48,22 +51,17 @@ class BookingsTVC: UITableViewCell {
         else {
             self.viewCount.isHidden = true
         }
-        
-        if data.status == .PurchaseConfirmed {
-            self.lblStatus.font = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 13.0)
-        }
-        else {
-            self.lblStatus.font = Utility.main.getDeviceSpecificFont(fontWeight: "regular", fontSize: 13.0)
+        if isFromSettings {
+            viewCount.isHidden = true
         }
         
         if data.status == .PurchaseConfirmed || data.status == .TicketPurchasedConfirmed {
-            self.lblStatus.textColor = Global.APP_COLOR_LIGHT_PINK
+            self.lblStatus.textColor = UIColor(hex: "#F581FE")
         }
         else {
-            self.lblStatus.textColor = Global.APP_COLOR_LIGHT_GREY
+            self.lblStatus.textColor = UIColor(hex: "#7D7D7D")
         }
-        
-        
+        statusView.isHidden = isFromSettings
     }
 }
 

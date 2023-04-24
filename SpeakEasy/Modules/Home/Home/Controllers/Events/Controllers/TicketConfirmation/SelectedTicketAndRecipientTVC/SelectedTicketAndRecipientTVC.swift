@@ -9,6 +9,8 @@ import UIKit
 
 class SelectedTicketAndRecipientTVC: UITableViewCell {
 
+    @IBOutlet weak var ticketInfo: UILabelDeviceClass!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

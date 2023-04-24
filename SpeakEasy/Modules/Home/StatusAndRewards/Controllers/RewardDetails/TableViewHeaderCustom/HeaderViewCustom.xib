@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,11 +22,14 @@
             <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RewardCover" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-bZ-FMQ">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="RewardCoverPrysm" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-bZ-FMQ">
                     <rect key="frame" x="0.0" y="0.0" width="547" height="300"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PRYSM Chicago" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-2f-E7N" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                    <rect key="frame" x="16" y="183" width="208" height="35"/>
+                    <rect key="frame" x="16" y="186" width="201" height="38"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="3qX-6W-Zc8"/>
+                    </constraints>
                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -36,6 +40,13 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
                     </userDefinedRuntimeAttributes>
                 </label>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TaoLogo" translatesAutoresizingMaskIntoConstraints="NO" id="SMm-Xg-lZP" customClass="RoundedImage" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                    <rect key="frame" x="482" y="244" width="49" height="49"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="49" id="Cvj-Yb-MVx"/>
+                        <constraint firstAttribute="width" constant="49" id="tYz-ru-cRj"/>
+                    </constraints>
+                </imageView>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-location" translatesAutoresizingMaskIntoConstraints="NO" id="776-IN-w6A">
                     <rect key="frame" x="16" y="237" width="12" height="15"/>
                 </imageView>
@@ -76,23 +87,37 @@
                 <constraint firstItem="m0e-ic-xoi" firstAttribute="leading" secondItem="hPP-di-3XM" secondAttribute="trailing" constant="12" id="DOS-vJ-t7s"/>
                 <constraint firstAttribute="bottom" secondItem="m0e-ic-xoi" secondAttribute="bottom" constant="12" id="EBN-Tg-0J1"/>
                 <constraint firstItem="hPP-di-3XM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="FCu-4O-wCV"/>
+                <constraint firstItem="d3O-2f-E7N" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="GJR-AZ-p5o"/>
                 <constraint firstItem="776-IN-w6A" firstAttribute="leading" secondItem="hPP-di-3XM" secondAttribute="leading" id="Iz9-2w-6J5"/>
                 <constraint firstAttribute="bottom" secondItem="m0e-bZ-FMQ" secondAttribute="bottom" id="LUF-Ti-aFI"/>
-                <constraint firstItem="vFG-hn-X9Y" firstAttribute="top" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="16" id="M6x-mh-BMD"/>
+                <constraint firstItem="vFG-hn-X9Y" firstAttribute="top" secondItem="d3O-2f-E7N" secondAttribute="bottom" constant="10" id="M6x-mh-BMD"/>
                 <constraint firstItem="m0e-ic-xoi" firstAttribute="top" secondItem="vFG-hn-X9Y" secondAttribute="bottom" constant="12" id="PBD-gJ-6Ly"/>
                 <constraint firstItem="d3O-2f-E7N" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="leading" id="Yvr-rq-Jt2"/>
                 <constraint firstItem="vFG-hn-X9Y" firstAttribute="leading" secondItem="776-IN-w6A" secondAttribute="trailing" constant="12" id="agE-zA-a08"/>
                 <constraint firstItem="vFG-hn-X9Y" firstAttribute="centerY" secondItem="776-IN-w6A" secondAttribute="centerY" id="epe-uT-PHZ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="m0e-bZ-FMQ" secondAttribute="trailing" id="l3s-nK-FkP"/>
+                <constraint firstAttribute="bottom" secondItem="SMm-Xg-lZP" secondAttribute="bottom" constant="7" id="mKv-DN-KYf"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vFG-hn-X9Y" secondAttribute="trailing" constant="12" id="rHM-Af-axq"/>
                 <constraint firstItem="m0e-bZ-FMQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wWH-So-ci4"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="SMm-Xg-lZP" secondAttribute="trailing" constant="16" id="yUd-RY-aM1"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="SMm-Xg-lZP"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="imgVenue" destination="m0e-bZ-FMQ" id="oP1-3w-pGf"/>
+                <outlet property="imgVenueLogo" destination="SMm-Xg-lZP" id="aqn-5H-Nnx"/>
+                <outlet property="lblVenue" destination="d3O-2f-E7N" id="wR9-3d-D7O"/>
+            </connections>
             <point key="canvasLocation" x="205.07246376811597" y="-166.74107142857142"/>
         </view>
     </objects>
     <resources>
-        <image name="RewardCover" width="390" height="301"/>
+        <image name="RewardCoverPrysm" width="390" height="301"/>
+        <image name="TaoLogo" width="33" height="33"/>
         <image name="ic-location" width="12.5" height="15"/>
         <image name="phone" width="12" height="15.5"/>
     </resources>

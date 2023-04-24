@@ -28,7 +28,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="187" height="70"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="djE-ST-V2A">
-                                <rect key="frame" x="13" y="11.666666666666668" width="161" height="46.666666666666657"/>
+                                <rect key="frame" x="25.333333333333329" y="11.666666666666668" width="136.33333333333337" height="46.666666666666657"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Birthday" translatesAutoresizingMaskIntoConstraints="NO" id="7hp-w8-Vpn">
                                         <rect key="frame" x="0.0" y="0.0" width="46.666666666666664" height="46.666666666666664"/>
@@ -37,7 +37,7 @@
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="khe-p6-I3h">
-                                        <rect key="frame" x="58.666666666666679" y="2.6666666666666679" width="102.33333333333331" height="41.333333333333329"/>
+                                        <rect key="frame" x="58.666666666666664" y="2.6666666666666679" width="77.666666666666686" height="41.333333333333329"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="May 29" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1aP-6D-jia" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="47" height="18.333333333333332"/>
@@ -51,8 +51,8 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Birthday" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDP-9y-Wba" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="20.333333333333329" width="102.33333333333333" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your BDay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDP-9y-Wba" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="20.333333333333329" width="77.666666666666671" height="21"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -99,6 +99,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Birthday" width="35" height="35.333332061767578"/>
+        <image name="Birthday" width="45" height="45"/>
     </resources>
 </document>

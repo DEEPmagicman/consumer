@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FavoriteArtistProfileCVC" id="gTV-IL-0wX" customClass="FavoriteArtistProfileCVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="92" height="102"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="92" height="102"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xk1-Wx-CsS">
+                        <rect key="frame" x="0.0" y="0.0" width="92" height="102"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eh0-S3-xcP">
+                                <rect key="frame" x="5" y="10" width="82" height="82"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="artistIc" translatesAutoresizingMaskIntoConstraints="NO" id="fsg-fO-CTO">
+                                        <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="82" id="7HE-YM-jDv"/>
+                                            <constraint firstAttribute="height" constant="82" id="h2o-nT-yFu"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="eh0-S3-xcP" firstAttribute="centerX" secondItem="xk1-Wx-CsS" secondAttribute="centerX" id="mnd-4K-lIe"/>
+                            <constraint firstItem="eh0-S3-xcP" firstAttribute="centerY" secondItem="xk1-Wx-CsS" secondAttribute="centerY" id="rfs-DD-K4S"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="xk1-Wx-CsS" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="5FA-vL-tJd"/>
+                <constraint firstItem="xk1-Wx-CsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="E5Z-Yg-zu3"/>
+                <constraint firstAttribute="trailing" secondItem="xk1-Wx-CsS" secondAttribute="trailing" id="bvK-fJ-0be"/>
+                <constraint firstAttribute="bottom" secondItem="xk1-Wx-CsS" secondAttribute="bottom" id="ihB-kr-dva"/>
+            </constraints>
+            <size key="customSize" width="102" height="62"/>
+            <connections>
+                <outlet property="artistImg" destination="fsg-fO-CTO" id="N1d-HT-vm5"/>
+            </connections>
+            <point key="canvasLocation" x="144.92753623188406" y="25.446428571428569"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="artistIc" width="82" height="82"/>
+    </resources>
+</document>

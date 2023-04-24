@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import RealmSwift
-
+//import RealmSwift
+// TODO: remove old login pages
 class LogIn: BaseController {
 
     @IBOutlet weak var lblCountry: UILabelDeviceClass!
@@ -16,8 +16,8 @@ class LogIn: BaseController {
         super.viewDidLoad()
     }
     @IBAction func onBtnLogin(_ sender: UIButton) {
-        let user = UserModel()
-        AppStateManager.sharedInstance.loginUser(user: user)
+//        let user = UserModel()
+//        AppStateManager.sharedInstance.loginUser(user: user)
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)

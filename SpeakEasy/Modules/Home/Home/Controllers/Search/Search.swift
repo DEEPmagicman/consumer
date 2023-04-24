@@ -49,6 +49,7 @@ class Search: BaseController {
 }
 extension Search {
     private func setUI(){
+        tableView.groupStyleSpacing()
         if #available(iOS 15.0, *) {
             self.tableView.sectionHeaderTopPadding = 0.0
         } else {
@@ -65,21 +66,16 @@ extension Search {
         guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? HotVenuesTVC else {return}
         cell.searchText = self.tfSeach.text ?? ""
         cell.searchVenue()
-        
-        cell.hasVenues = { hasVenues in
-            self.hasVenues = hasVenues
-            self.tableView.reloadData()
-        }
+        self.hasVenues = cell.hasVenue
+        self.tableView.reloadData()
     }
     private func searchEvents(){
         guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 1)) as? AllEventsTVC else {return}
         cell.searchText = self.tfSeach.text ?? ""
         cell.searchEvent()
         
-        cell.hasEvents = { hasEvents in
-            self.hasEvents = hasEvents
-            self.tableView.reloadData()
-        }
+        self.hasEvents = cell.hasEvent
+        self.tableView.reloadData()
     }
     
     private func resetSearchVenues(){
@@ -132,6 +128,7 @@ extension Search: UITableViewDataSource {
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "AllEventsTVC", for: indexPath) as! AllEventsTVC
             cell.tag = 0
+            cell.viewSeperator.isHidden = true
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "NoResultFoundTVC", for: indexPath) as! NoResultFoundTVC
@@ -148,11 +145,11 @@ extension Search: UITableViewDelegate {
             let height = tableView.frame.height * 0.6
             return self.hasVenues ? height:0.0
         case 1:
-            let height = tableView.frame.height * 0.34
+            let height = tableView.frame.height * 0.36
             return self.hasEvents ? height:0.0
         default:
             if !self.hasVenues || !self.hasEvents {
-                let height = tableView.frame.height * 0.25
+                let height = tableView.frame.height * 0.36
                 return height
             }
             else {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,13 +12,23 @@
         <array key="Poppins-Bold.ttf">
             <string>Poppins-Bold</string>
         </array>
+        <array key="Poppins-Medium.ttf">
+            <string>Poppins-Medium</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PendingBookingAwait" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
+                <outlet property="headerView" destination="2Lu-Wd-aqc" id="6jU-71-3ud"/>
                 <outlet property="homeTabCollectionView" destination="yNe-zM-sIp" id="chf-cA-VVe"/>
+                <outlet property="pendingBookingLbl" destination="wJ7-Po-SAd" id="wA4-2C-wbh"/>
+                <outlet property="pendingBookingStatusView" destination="ex4-Zt-la6" id="2cD-10-lnm"/>
+                <outlet property="statusLbl" destination="ObA-E5-PPj" id="ANV-Zk-4bn"/>
+                <outlet property="topBgColorView" destination="S80-6a-fMM" id="EmP-R2-AqD"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="viewCollectionAndLine" destination="dFr-14-UHC" id="3hU-AX-4yM"/>
                 <outlet property="viewPageMenu" destination="3wa-EX-ItZ" id="XG4-Hn-uSe"/>
+                <outlet property="viewPageTop" destination="Nf4-fd-AHH" id="9aq-yQ-FtX"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -28,59 +39,60 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WelcomeBackground" translatesAutoresizingMaskIntoConstraints="NO" id="QDs-CN-zpe">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                 </imageView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Lu-Wd-aqc">
-                    <rect key="frame" x="0.0" y="44" width="414" height="60"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3wa-EX-ItZ">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S80-6a-fMM">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="177"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dFr-14-UHC">
+                    <rect key="frame" x="0.0" y="127" width="414" height="50"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VjS-vK-JQm">
-                            <rect key="frame" x="16" y="10" width="40" height="40"/>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xtl-Zm-Xh8">
+                            <rect key="frame" x="0.0" y="48" width="414" height="2"/>
+                            <color key="backgroundColor" red="0.2039148808" green="0.19608268139999999" blue="0.19607818129999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="40" id="AE0-0v-UZX"/>
-                                <constraint firstAttribute="width" secondItem="VjS-vK-JQm" secondAttribute="height" id="GMY-ju-ndn"/>
+                                <constraint firstAttribute="height" constant="2" id="eGj-eY-b9J"/>
                             </constraints>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" image="BackArrow"/>
+                        </view>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="yNe-zM-sIp">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ecl-rU-Bsd">
+                                <size key="itemSize" width="128" height="128"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
                             <connections>
-                                <action selector="onBtnBack:" destination="-1" eventType="touchUpInside" id="c2y-Kf-Rpl"/>
+                                <outlet property="dataSource" destination="-1" id="Z2y-UI-pyc"/>
+                                <outlet property="delegate" destination="-1" id="LLc-ah-reg"/>
                             </connections>
-                        </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3c2-MS-Sal" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="94" y="12.5" width="226" height="35"/>
-                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
-                                    <real key="value" value="25"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
-                            </userDefinedRuntimeAttributes>
-                        </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zA2-yV-lch">
-                            <rect key="frame" x="332" y="19" width="16" height="22"/>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" image="Info"/>
-                        </button>
+                        </collectionView>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="zA2-yV-lch" firstAttribute="leading" secondItem="3c2-MS-Sal" secondAttribute="trailing" constant="12" id="6vX-zT-93s"/>
-                        <constraint firstItem="3c2-MS-Sal" firstAttribute="centerX" secondItem="2Lu-Wd-aqc" secondAttribute="centerX" id="9Wc-Sm-s0b"/>
-                        <constraint firstAttribute="height" constant="60" id="OKk-it-Tfv"/>
-                        <constraint firstItem="VjS-vK-JQm" firstAttribute="leading" secondItem="2Lu-Wd-aqc" secondAttribute="leading" constant="16" id="bdS-gI-hSL"/>
-                        <constraint firstItem="zA2-yV-lch" firstAttribute="centerY" secondItem="3c2-MS-Sal" secondAttribute="centerY" id="fa7-ep-p1y"/>
-                        <constraint firstItem="VjS-vK-JQm" firstAttribute="centerY" secondItem="3c2-MS-Sal" secondAttribute="centerY" id="gZm-oy-JqP"/>
-                        <constraint firstItem="3c2-MS-Sal" firstAttribute="centerY" secondItem="2Lu-Wd-aqc" secondAttribute="centerY" id="nvD-qk-Y2s"/>
+                        <constraint firstAttribute="bottom" secondItem="xtl-Zm-Xh8" secondAttribute="bottom" id="3up-pg-4D6"/>
+                        <constraint firstItem="xtl-Zm-Xh8" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="6rs-p8-9lW"/>
+                        <constraint firstAttribute="height" constant="50" id="ChR-Iw-tQe"/>
+                        <constraint firstItem="yNe-zM-sIp" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="eFb-vc-hD4"/>
+                        <constraint firstAttribute="trailing" secondItem="xtl-Zm-Xh8" secondAttribute="trailing" id="pZR-yI-NWf"/>
+                        <constraint firstItem="yNe-zM-sIp" firstAttribute="top" secondItem="dFr-14-UHC" secondAttribute="top" id="uEk-XR-OnN"/>
+                        <constraint firstItem="xtl-Zm-Xh8" firstAttribute="top" secondItem="yNe-zM-sIp" secondAttribute="bottom" id="x72-NT-JZ1"/>
+                        <constraint firstAttribute="trailing" secondItem="yNe-zM-sIp" secondAttribute="trailing" id="y90-q4-Gzv"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ex4-Zt-la6">
                     <rect key="frame" x="0.0" y="104" width="414" height="29"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="LAn-Yn-ft3">
-                            <rect key="frame" x="40" y="4" width="334.5" height="21"/>
+                            <rect key="frame" x="48" y="4" width="318.5" height="21"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJ7-Po-SAd" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="140.5" height="21"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="134.5" height="21"/>
                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="15"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -90,9 +102,9 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Awaiting Venue Approval" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ObA-E5-PPj" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="144.5" y="0.0" width="190" height="21"/>
-                                    <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="14"/>
-                                    <color key="textColor" red="0.78431372549019607" green="0.78431372549019607" blue="0.78431372549019607" alpha="1" colorSpace="calibratedRGB"/>
+                                    <rect key="frame" x="138.5" y="0.0" width="180" height="21"/>
+                                    <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="14"/>
+                                    <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -112,66 +124,72 @@
                         <constraint firstItem="LAn-Yn-ft3" firstAttribute="centerY" secondItem="ex4-Zt-la6" secondAttribute="centerY" id="e47-Cn-ckY"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dFr-14-UHC">
-                    <rect key="frame" x="0.0" y="137" width="414" height="48"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Lu-Wd-aqc">
+                    <rect key="frame" x="0.0" y="44" width="414" height="60"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xtl-Zm-Xh8">
-                            <rect key="frame" x="0.0" y="46" width="414" height="2"/>
-                            <color key="backgroundColor" red="0.2039148808" green="0.19608268139999999" blue="0.19607818129999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VjS-vK-JQm">
+                            <rect key="frame" x="16" y="10" width="40" height="40"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="2" id="eGj-eY-b9J"/>
+                                <constraint firstAttribute="width" constant="40" id="AE0-0v-UZX"/>
+                                <constraint firstAttribute="width" secondItem="VjS-vK-JQm" secondAttribute="height" id="GMY-ju-ndn"/>
                             </constraints>
-                        </view>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="yNe-zM-sIp">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="46"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ecl-rU-Bsd">
-                                <size key="itemSize" width="128" height="128"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </collectionViewFlowLayout>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="BackArrow"/>
                             <connections>
-                                <outlet property="dataSource" destination="-1" id="Z2y-UI-pyc"/>
-                                <outlet property="delegate" destination="-1" id="LLc-ah-reg"/>
+                                <action selector="onBtnBack:" destination="-1" eventType="touchUpInside" id="c2y-Kf-Rpl"/>
                             </connections>
-                        </collectionView>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3c2-MS-Sal" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="99" y="12.5" width="216.5" height="35"/>
+                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                                    <real key="value" value="25"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zA2-yV-lch">
+                            <rect key="frame" x="327.5" y="19" width="16" height="22"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="Info"/>
+                        </button>
                     </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="xtl-Zm-Xh8" secondAttribute="bottom" id="3up-pg-4D6"/>
-                        <constraint firstItem="xtl-Zm-Xh8" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="6rs-p8-9lW"/>
-                        <constraint firstAttribute="width" secondItem="dFr-14-UHC" secondAttribute="height" multiplier="69:8" id="ZDg-P7-7gD"/>
-                        <constraint firstItem="yNe-zM-sIp" firstAttribute="leading" secondItem="dFr-14-UHC" secondAttribute="leading" id="eFb-vc-hD4"/>
-                        <constraint firstAttribute="trailing" secondItem="xtl-Zm-Xh8" secondAttribute="trailing" id="pZR-yI-NWf"/>
-                        <constraint firstItem="yNe-zM-sIp" firstAttribute="top" secondItem="dFr-14-UHC" secondAttribute="top" id="uEk-XR-OnN"/>
-                        <constraint firstItem="xtl-Zm-Xh8" firstAttribute="top" secondItem="yNe-zM-sIp" secondAttribute="bottom" id="x72-NT-JZ1"/>
-                        <constraint firstAttribute="trailing" secondItem="yNe-zM-sIp" secondAttribute="trailing" id="y90-q4-Gzv"/>
+                        <constraint firstItem="zA2-yV-lch" firstAttribute="leading" secondItem="3c2-MS-Sal" secondAttribute="trailing" constant="12" id="6vX-zT-93s"/>
+                        <constraint firstItem="3c2-MS-Sal" firstAttribute="centerX" secondItem="2Lu-Wd-aqc" secondAttribute="centerX" id="9Wc-Sm-s0b"/>
+                        <constraint firstAttribute="height" constant="60" id="OKk-it-Tfv"/>
+                        <constraint firstItem="VjS-vK-JQm" firstAttribute="leading" secondItem="2Lu-Wd-aqc" secondAttribute="leading" constant="16" id="bdS-gI-hSL"/>
+                        <constraint firstItem="zA2-yV-lch" firstAttribute="centerY" secondItem="3c2-MS-Sal" secondAttribute="centerY" id="fa7-ep-p1y"/>
+                        <constraint firstItem="VjS-vK-JQm" firstAttribute="centerY" secondItem="3c2-MS-Sal" secondAttribute="centerY" id="gZm-oy-JqP"/>
+                        <constraint firstItem="3c2-MS-Sal" firstAttribute="centerY" secondItem="2Lu-Wd-aqc" secondAttribute="centerY" id="nvD-qk-Y2s"/>
                     </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3wa-EX-ItZ">
-                    <rect key="frame" x="0.0" y="185" width="414" height="677"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="3wa-EX-ItZ" secondAttribute="trailing" id="13c-nJ-5D4"/>
-                <constraint firstItem="dFr-14-UHC" firstAttribute="top" secondItem="ex4-Zt-la6" secondAttribute="bottom" constant="4" id="6PQ-1n-9Qh"/>
+                <constraint firstItem="dFr-14-UHC" firstAttribute="bottom" secondItem="S80-6a-fMM" secondAttribute="bottom" id="5XF-9i-bIF"/>
+                <constraint firstItem="dFr-14-UHC" firstAttribute="top" secondItem="ex4-Zt-la6" secondAttribute="bottom" constant="-6" id="6PQ-1n-9Qh"/>
                 <constraint firstItem="3wa-EX-ItZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="8Oa-5w-UVC"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="dFr-14-UHC" secondAttribute="trailing" id="9gJ-wq-uSZ"/>
                 <constraint firstItem="2Lu-Wd-aqc" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="EQB-Td-ZI9"/>
+                <constraint firstItem="S80-6a-fMM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="HEt-mv-EVd"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ex4-Zt-la6" secondAttribute="trailing" id="IqM-pf-Y26"/>
                 <constraint firstItem="QDs-CN-zpe" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="LJa-62-nJk"/>
                 <constraint firstItem="ex4-Zt-la6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="N10-cy-sQ8"/>
-                <constraint firstItem="3wa-EX-ItZ" firstAttribute="top" secondItem="dFr-14-UHC" secondAttribute="bottom" id="P8h-p9-WSU"/>
+                <constraint firstItem="3wa-EX-ItZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Nf4-fd-AHH"/>
                 <constraint firstItem="ex4-Zt-la6" firstAttribute="top" secondItem="2Lu-Wd-aqc" secondAttribute="bottom" id="Q7g-2i-doM"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="3wa-EX-ItZ" secondAttribute="bottom" id="QNs-H3-apw"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2Lu-Wd-aqc" secondAttribute="trailing" id="XsA-x8-a2c"/>
                 <constraint firstItem="2Lu-Wd-aqc" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="YkB-25-2Fc"/>
                 <constraint firstItem="QDs-CN-zpe" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="eW2-uj-iqY"/>
+                <constraint firstItem="S80-6a-fMM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="mdM-US-rlV"/>
                 <constraint firstItem="dFr-14-UHC" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="oOI-1S-Bai"/>
+                <constraint firstItem="S80-6a-fMM" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="tpO-8z-qXy"/>
                 <constraint firstAttribute="bottom" secondItem="QDs-CN-zpe" secondAttribute="bottom" id="u00-mh-eGv"/>
                 <constraint firstItem="QDs-CN-zpe" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="y7j-fB-ul9"/>
             </constraints>
@@ -181,7 +199,7 @@
     <resources>
         <image name="BackArrow" width="26.5" height="19"/>
         <image name="Info" width="16" height="16"/>
-        <image name="WelcomeBackground" width="195" height="433.5"/>
+        <image name="WelcomeBackground" width="2708.5" height="5860"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -16,12 +16,19 @@ struct TopEventDataSet {
     var currentLiveEventFires: UIStackView?
     var isLive: Bool? = false
     var location: String?
+    var imgBrandLogoLarge: UIImage?
+    var lblSongName: String?
+    var lblSongArtist: String?
 }
 
 
 class Events: BaseController {
     
     @IBOutlet weak var tableView: UITableView!
+    
+    let eventDelegate = EventPresenter()
+    var eventList = [Event]()
+    var from = 0
     
     var arrayHeaders = [HeaderOption(label: Strings.TOP_EVENTS.text, icon: UIImage(named: "EventsTabSelected")),
                         HeaderOption(label: Strings.FEATURED_EVENTS.text, icon: nil),
@@ -31,7 +38,32 @@ class Events: BaseController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        fetchAllEvent()
         // Do any additional setup after loading the view.
+    }
+    
+    private func fetchAllEvent() {
+        self.eventDelegate.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
+            if isSuccess {
+                for event in eventList {
+                    self.eventList.append(event)
+                }
+                if hasMore {
+                    self.from = self.eventList.count
+                    self.fetchAllEvent()
+                    return
+                }
+                print(self.eventList)
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+
     }
 }
 extension Events {
@@ -92,7 +124,7 @@ extension Events: UITableViewDataSource {
         }
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
-        self.pushToAllEvents()
+        Navigate.to.allEvents(self)
     }
     
     func pushToEventBookingDetails(indexPath: IndexPath,index: Int) {
@@ -130,10 +162,10 @@ extension Events: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.5
+            let height = 290.0 //tableView.frame.height * 0.5
             return height
         default:
-            let height = tableView.frame.height * 0.34
+            let height = 210.0 //tableView.frame.height * 0.34
             
             if indexPath.section == self.arrayHeaders.count - 1 {
                 return height + 60.0

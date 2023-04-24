@@ -12,8 +12,8 @@ class SocialMediaCVC: UICollectionViewCell {
     @IBOutlet weak var imgSocialLink: UIImageView!
     @IBOutlet weak var lblUsername: UILabelDeviceClass!
     
-    func setData(userName: String, socialLink: UIImage?) {
+    func setData(socialLink: UIImage?) {
         self.imgSocialLink.image = socialLink
-        self.lblUsername.text = userName
+//        self.lblUsername.text = userName
     }
 }

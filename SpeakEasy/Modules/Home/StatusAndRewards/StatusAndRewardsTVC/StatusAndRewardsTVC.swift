@@ -49,5 +49,10 @@ class StatusAndRewardsTVC: UITableViewCell {
         
         self.imgCover.image = data.eventCover
         self.lblReward.text = data.rewardDescription
+        if data.rewardDescription == "FREE" {
+            lblReward.textColor = UIColor(hex: "#F581FE")
+        } else {
+            lblReward.textColor = UIColor(hex: "#007AFF")
+        }
     }
 }

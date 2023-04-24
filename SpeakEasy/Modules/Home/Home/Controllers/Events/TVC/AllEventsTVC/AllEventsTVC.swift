@@ -23,6 +23,7 @@ class AllEventsTVC: UITableViewCell {
     var searchText = ""
     var isFilter = false
     var hasEvents: ((Bool)->Void)?
+    var hasEvent = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,6 +61,7 @@ extension AllEventsTVC{
         self.collectionView.reloadData()
         
         self.hasEvents?(!self.arrayFilteredFeaturedEvents.isEmpty)
+        self.hasEvent = !self.arrayFilteredFeaturedEvents.isEmpty
     }
 }
 extension AllEventsTVC: UICollectionViewDataSource {
@@ -101,7 +103,6 @@ extension AllEventsTVC: UICollectionViewDataSource {
                 let data = Constants.arrayUpcomingEventsCleveland[indexPath.item]
                 cell.setData(data: data)
             }
-
         case 2:
             if Constants.localizedCity == "Chicago" {
                 let data = Constants.arrayGeneralAdmissionChicago[indexPath.item]
@@ -110,8 +111,6 @@ extension AllEventsTVC: UICollectionViewDataSource {
                 let data = Constants.arrayGeneralAdmissionCleveland[indexPath.item]
                 cell.setData(data: data)
             }
-
-
         default:
             break
         }
@@ -127,7 +126,7 @@ extension AllEventsTVC: UICollectionViewDelegate {
 }
 extension AllEventsTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width / 3.0
+        let width = 150.0//collectionView.frame.width / 3.0
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

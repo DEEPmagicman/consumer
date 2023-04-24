@@ -12,6 +12,7 @@ class AllEvents: BaseController {
     @IBOutlet weak var homeTabCollectionView: UICollectionView!
     @IBOutlet weak var viewPageMenu: UIView!
     @IBOutlet weak var lblCity: UILabelDeviceClass!
+    @IBOutlet weak var eventCollectionView: UICollectionView!
     
    
     var arrTabBarOptions = [TabBarOption(label: Strings.ALL.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
@@ -19,22 +20,46 @@ class AllEvents: BaseController {
                             TabBarOption(label: Strings.CUSTOM_DATES.text, index: 2, icon: nil, selectedIcon: nil, isSelected: false)]
 
     var selectedIndex = 0
-    var pageMenu: CAPSPageMenu?
-    var pageMenuControllers = [UIViewController]()
+    var eventDelegate = EventPresenter()
+    var from = 0
+    var hasMore = false
+    var eventList = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
-        
+        self.fetchAllEvent()
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.setPageMenu()
+    }
+    
+    private func fetchAllEvent() {
+        self.eventDelegate.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
+            if isSuccess {
+                for event in eventList {
+                    self.eventList.append(event)
+                }
+                if hasMore {
+                    self.from = self.eventList.count
+                }
+                self.hasMore = hasMore
+                self.eventCollectionView.reloadData()
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+
     }
     
     @IBAction func onBtnChangeLocation(_ sender: UIButton) {
-        self.navigationController?.pushViewController(NotificationVC(), animated: true)
+        self.navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
     }
     @IBAction func onBtnSearch(_ sender: UIButton) {
         self.navigationController?.pushViewController(Search(), animated: true)
@@ -46,40 +71,15 @@ class AllEvents: BaseController {
 //MARK: - Helper Methods
 extension AllEvents {
     private func setUI(){
-        self.lblCity.text = Constants.localizedCity
         self.registerCells()
+        self.lblCity.text = Constants.localizedCity
     }
     private func registerCells(){
         self.homeTabCollectionView.register(UINib(nibName: "TabCVC", bundle: nil), forCellWithReuseIdentifier: "TabCVC")
+        self.eventCollectionView.register(UINib(nibName: "EventCVC", bundle: nil), forCellWithReuseIdentifier: "EventCVC")
     }
 }
-extension AllEvents {
-    private func setPageMenu(){
-        if self.pageMenu == nil {
-            let events = self.getNavigationContainer(controller: All())
-            let venues = self.getNavigationContainer(controller: All())
-            let heatMap = self.getNavigationContainer(controller: All())
-            
-            self.pageMenuControllers.append(events)
-            self.pageMenuControllers.append(venues)
-            self.pageMenuControllers.append(heatMap)
-            
-            let parameters: [CAPSPageMenuOption] = [
-                .menuItemSeparatorWidth(0),
-                .menuItemSeparatorPercentageHeight(0),
-                .menuHeight(0),
-                .bottomMenuHairlineColor(.clear),
-                .scrollAnimationDurationOnMenuItemTap(0)
-            ]
-            self.pageMenu = CAPSPageMenu(viewControllers: self.pageMenuControllers, frame: CGRect(x: 0.0, y: 0.0, width: self.viewPageMenu.frame.width, height: self.viewPageMenu.frame.height), pageMenuOptions: parameters)
-            
-            guard let pageMenu = self.pageMenu else {return}
-            pageMenu.controllerScrollView.isScrollEnabled = false
-            
-            self.viewPageMenu.addSubview(pageMenu.view)
-        }
-    }
-}
+
 //MARK: - Container controllers
 extension AllEvents {
     private func getNavigationContainer(controller: UIViewController)->UINavigationController{
@@ -90,41 +90,92 @@ extension AllEvents {
 }
 extension AllEvents: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.arrTabBarOptions.count
+        if collectionView == homeTabCollectionView {
+            return self.arrTabBarOptions.count
+        } else {
+            if Constants.localizedCity == "Chicago" {
+                return Constants.arrayAllEventsChicago.count
+            }else {
+                //            return Constants.arrayAllEventsCleveland.count
+                return eventList.count
+            }
+        }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabCVC", for: indexPath) as! TabCVC
-        let data = self.arrTabBarOptions[indexPath.item]
-        cell.setData(data: data)
-        return cell
+        if collectionView == homeTabCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabCVC", for: indexPath) as! TabCVC
+            let data = self.arrTabBarOptions[indexPath.item]
+            cell.setData(data: data)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EventCVC", for: indexPath) as! EventCVC
+            if Constants.localizedCity == "Chicago" {
+                let data = Constants.arrayAllEventsChicago[indexPath.item]
+                cell.setData(data: data)
+                return cell
+            }else {
+                //            let data = Constants.arrayAllEventsCleveland[indexPath.item]
+                let data = eventList[indexPath.row]
+                let imgUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.flyer?.key ?? "")"
+                cell.imgEventCover.sd_setImage(with: URL( string: imgUrl), completed: nil)
+                cell.lblPerformerName.text = data.title
+                cell.lblVenueName.text = data.eventType
+                let date = data.date.convertDateFormat(from: .YYYYMMDD, to: .EEEEMMMD)
+                cell.lblEventDate.text = date
+                //            cell.setData(data: data)
+                return cell
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if collectionView == eventCollectionView {
+            if indexPath.row == eventList.count - 1 {
+                if self.hasMore {
+                    self.fetchAllEvent()
+                }
+            }
+        }
     }
 }
 extension AllEvents: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 15.0)
+        if collectionView == homeTabCollectionView {
+            let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 15.0)
+            
+            let height = collectionView.frame.height
+            
+            let tabOption = self.arrTabBarOptions[indexPath.item].label
+            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
+            
+            let size = CGSize(width: width, height: height)
+            return size
+        } else {
+            let width = collectionView.frame.width/2.07
+            let size = CGSize(width: width, height: width * 1.43)
+            return size
+        }
         
-        let height = collectionView.frame.height
-        
-        let tabOption = self.arrTabBarOptions[indexPath.item].label
-        let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
-        
-        let size = CGSize(width: width, height: height)
-        return size
     }
 }
 
 extension AllEvents: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if self.selectedIndex != indexPath.item {
-            for index in 0..<self.arrTabBarOptions.count {
-                self.arrTabBarOptions[index].isSelected = false
+        if collectionView == homeTabCollectionView {
+            if self.selectedIndex != indexPath.item {
+                for index in 0..<self.arrTabBarOptions.count {
+                    self.arrTabBarOptions[index].isSelected = false
+                }
+                self.arrTabBarOptions[indexPath.item].isSelected = true
+                self.selectedIndex = indexPath.item
+                collectionView.reloadData()
+                
+                //            self.pageMenu?.moveToPage(self.selectedIndex)
+                //TO DO handle collectionview tab change
             }
-            self.arrTabBarOptions[indexPath.item].isSelected = true
-            self.selectedIndex = indexPath.item
-            collectionView.reloadData()
-            
-            self.pageMenu?.moveToPage(self.selectedIndex)
+        } else {
+            Navigate.to.eventDetail(self, eventId: eventList[indexPath.row].id )
         }
     }
 }

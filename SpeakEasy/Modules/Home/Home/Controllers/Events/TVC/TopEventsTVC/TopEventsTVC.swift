@@ -57,7 +57,7 @@ extension TopEventsTVC: UICollectionViewDataSource {
 }
 extension TopEventsTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width * 0.65
+        let width = 250.0//collectionView.frame.width * 0.65
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

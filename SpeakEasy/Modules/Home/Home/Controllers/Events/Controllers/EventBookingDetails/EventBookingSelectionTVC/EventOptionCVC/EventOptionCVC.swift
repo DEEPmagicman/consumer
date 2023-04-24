@@ -9,7 +9,7 @@ import UIKit
 
 class EventOptionCVC: UICollectionViewCell {
 
-    @IBOutlet weak var lblOption: UILabel!
+    @IBOutlet weak var lblOption: UILabelDeviceClass!
     @IBOutlet weak var viewSelectedTab: UIView!
     
     func setData(data: EventHeaderOptions) {
@@ -23,5 +23,6 @@ class EventOptionCVC: UICollectionViewCell {
         }
 
         self.viewSelectedTab.isHidden = !data.isSelected
+        lblOption.isShadowed = data.isSelected
     }
 }

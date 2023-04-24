@@ -357,12 +357,12 @@ enum Strings: String{
     case HEAT_MAP = "Heat Map"
     
     case ALL = "All"
-    case THIS_WEEK = "This week"
-    case CUSTOM_DATES = "Custom Dates"
+    case THIS_WEEK = "This Week"
+    case CUSTOM_DATES = "Custom Date"
     
     case FEATURED = "Featured"
     case CITY_VIEWS = "City Views"
-    case ROOFTOP = "Roof Tops"
+    case ROOFTOP = "Rooftop"
     case WATERFRONT = "Waterfront"
     case STEAKHOUSE = "Steakhouse"
     
@@ -388,6 +388,9 @@ enum Strings: String{
     
     case TICKETS = "Tickets"
     case VIP_TABLE_BOOKING = "VIP Table Booking"
+    case PUBLIK_ATTENDEES = "Public Attendees"
+    case PREFERENCES = "Preferences"
+    case MEMBERSGIP_NFT = "Memberships & NFT"
     
     case SEARCH_RESULTS = "Search Results"
     

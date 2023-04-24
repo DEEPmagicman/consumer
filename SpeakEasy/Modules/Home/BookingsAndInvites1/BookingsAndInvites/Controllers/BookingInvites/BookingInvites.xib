@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,10 +22,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BookingInvites" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
+                <outlet property="backBtn" destination="jef-t7-OXF" id="auh-N9-F2P"/>
                 <outlet property="btnBack" destination="jef-t7-OXF" id="yu1-FF-qDG"/>
                 <outlet property="btnCross" destination="0Oh-Oh-UoB" id="Qnq-AO-7HJ"/>
+                <outlet property="fadeView" destination="Ytr-eE-q7f" id="gP6-C9-aAO"/>
                 <outlet property="lblTitle" destination="mai-aN-bH1" id="Vcl-bA-1uv"/>
+                <outlet property="statusLbl" destination="DTg-aO-vKH" id="52L-vb-Ae6"/>
+                <outlet property="statuslblSteckview" destination="z5C-EQ-D4H" id="fGy-gg-dVy"/>
                 <outlet property="tableView" destination="jOk-Md-eOO" id="gRf-6L-ELz"/>
+                <outlet property="titleView" destination="uJn-YN-WAy" id="diP-Zo-cCg"/>
+                <outlet property="topTitleLbl" destination="mai-aN-bH1" id="JpA-BN-w1c"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewBookingRequestSent" destination="LKr-YA-dzZ" id="ubk-QT-qQB"/>
                 <outlet property="viewPendingPayment" destination="cy7-AI-4Pg" id="Lfd-D3-oeb"/>
@@ -78,7 +85,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mai-aN-bH1" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                            <rect key="frame" x="94" y="12.5" width="226" height="35"/>
+                            <rect key="frame" x="99" y="12.5" width="216.5" height="35"/>
                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -108,19 +115,19 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="125"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DTg-aO-vKH" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="20" y="12" width="374" height="101"/>
+                                    <rect key="frame" x="20" y="2" width="374" height="111"/>
                                     <string key="text">Your request is pending payment from Paul S. (Friend). Once their payment is complete, the request will be sent to the venue for confirmation</string>
                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
-                                    <color key="textColor" red="0.92941176469999998" green="0.72549019609999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="DTg-aO-vKH" firstAttribute="leading" secondItem="cy7-AI-4Pg" secondAttribute="leading" constant="20" id="6B5-jc-S9G"/>
                                 <constraint firstAttribute="bottom" secondItem="DTg-aO-vKH" secondAttribute="bottom" constant="12" id="8BV-y0-7Tk"/>
                                 <constraint firstItem="DTg-aO-vKH" firstAttribute="centerX" secondItem="cy7-AI-4Pg" secondAttribute="centerX" id="Rqs-7C-9P2"/>
-                                <constraint firstItem="DTg-aO-vKH" firstAttribute="top" secondItem="cy7-AI-4Pg" secondAttribute="top" constant="12" id="bun-go-4QO"/>
+                                <constraint firstItem="DTg-aO-vKH" firstAttribute="top" secondItem="cy7-AI-4Pg" secondAttribute="top" constant="2" id="bun-go-4QO"/>
                                 <constraint firstAttribute="trailing" secondItem="DTg-aO-vKH" secondAttribute="trailing" constant="20" id="fqt-aF-75l"/>
                             </constraints>
                         </view>
@@ -140,7 +147,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your request is now pending payment from your " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvZ-vP-a9X" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="20" y="24" width="341.5" height="0.0"/>
+                                    <rect key="frame" x="20" y="24" width="325.5" height="0.0"/>
                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="13"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <nil key="highlightedColor"/>
@@ -152,7 +159,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lm5-Ze-kkE">
-                                    <rect key="frame" x="20" y="24" width="341.5" height="1"/>
+                                    <rect key="frame" x="20" y="24" width="325.5" height="1"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="ulo-Li-hnK"/>
@@ -183,7 +190,7 @@
                                     </subviews>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keep an eye out for any venue" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXk-SS-0nO" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                    <rect key="frame" x="76" y="19" width="198" height="18.5"/>
+                                    <rect key="frame" x="76" y="19" width="197.5" height="18.5"/>
                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     <nil key="highlightedColor"/>

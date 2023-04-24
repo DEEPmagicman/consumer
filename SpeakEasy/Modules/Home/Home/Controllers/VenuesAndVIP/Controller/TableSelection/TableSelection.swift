@@ -55,11 +55,22 @@ extension TableSelection {
     private func setPageMenu(){
         if self.pageMenu == nil {
             
-            let floor = self.getNavigationContainer(controller: Main())
+            let floor = Main1()
+            floor.from = "main"
+            let floorNavigation = self.getNavigationContainer(controller:  floor)
             
-            self.pageMenuControllers.append(floor)
-            self.pageMenuControllers.append(floor)
-            self.pageMenuControllers.append(floor)
+            let floor1 = Main1()
+            floor1.from = "lotus"
+            let floor1Navigation = self.getNavigationContainer(controller: floor1)
+
+            let floor2 = Main1()
+            floor2.from = "chandelier"
+            let floor2Navigation = self.getNavigationContainer(controller:  floor2)
+            
+            
+            self.pageMenuControllers.append(floorNavigation)
+            self.pageMenuControllers.append(floor1Navigation)
+            self.pageMenuControllers.append(floor2Navigation)
             
             let parameters: [CAPSPageMenuOption] = [
                 .menuItemSeparatorWidth(0),

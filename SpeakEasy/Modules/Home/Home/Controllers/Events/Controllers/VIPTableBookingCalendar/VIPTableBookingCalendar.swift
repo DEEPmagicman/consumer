@@ -60,6 +60,10 @@ extension VIPTableBookingCalendar: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VIPTableBookingCalenderTVC", for: indexPath) as! VIPTableBookingCalenderTVC
+            //Dummy Data - set calendar associated event
+            if (VenueDetails.hotVenuesData?.upcomingEvents?.count ?? 0 > 0) {
+                cell.arrayAssociatedEvent.append((VenueDetails.hotVenuesData?.upcomingEvents?[0])!)
+            }
             cell.setTableSelectionData(seeAll: false)
             return cell
         }
@@ -70,10 +74,11 @@ extension VIPTableBookingCalendar: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.6
+            let height = 325.0//tableView.frame.height * 0.6
             return height
         default:
-            let height = tableView.frame.height * 0.38
+            /* if last row height = 280 , another row 200 */
+            let height = 280.0//tableView.frame.height * 0.38
             return height
         }
     }

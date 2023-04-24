@@ -507,3 +507,27 @@ extension Utility{
     }
 }
 
+class Alert {
+    
+    static func showAlertSheet(style: UIAlertController.Style, title: String?, message: String?, actions: [UIAlertAction] = [UIAlertAction(title: "ok", style: .cancel, handler: nil)], completion: (() -> Swift.Void)? = nil) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: style)
+        for action in actions {
+            alert.addAction(action)
+        }
+        if let topVC = UIApplication.getTopMostViewController() {
+            alert.popoverPresentationController?.sourceView = topVC.view
+            alert.popoverPresentationController?.sourceRect = CGRect(x: topVC.view.bounds.midX, y: topVC.view.bounds.midY, width: 0, height: 0)
+            alert.popoverPresentationController?.permittedArrowDirections = []
+            DispatchQueue.main.async {
+                topVC.present(alert, animated: true, completion: completion)
+            }
+        }
+    }
+    
+    static func showToast(_ message: String) {
+        if let vcc = UIApplication.shared.keyWindow?.rootViewController {
+            vcc.view.makeToast(message)
+        }
+    }
+}
+

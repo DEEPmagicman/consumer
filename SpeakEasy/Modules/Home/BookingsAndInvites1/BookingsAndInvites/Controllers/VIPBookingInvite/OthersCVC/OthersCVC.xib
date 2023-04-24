@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="Poppins-Medium.ttf">
             <string>Poppins-Medium</string>
+        </array>
+        <array key="Poppins-Regular.ttf">
+            <string>Poppins-Regular</string>
         </array>
     </customFonts>
     <objects>
@@ -28,18 +32,25 @@
                             <constraint firstAttribute="width" constant="56" id="gVm-wS-EgL"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="28"/>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
+                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="frdpaymentVerify_Ic" translatesAutoresizingMaskIntoConstraints="NO" id="wVs-bZ-wrm">
+                        <rect key="frame" x="36" y="0.0" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="3Kg-ck-CXZ"/>
+                            <constraint firstAttribute="width" secondItem="wVs-bZ-wrm" secondAttribute="height" multiplier="1:1" id="zYJ-Kb-4l5"/>
+                        </constraints>
+                    </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Sv2-pt-ebF">
-                        <rect key="frame" x="17" y="64" width="22" height="28"/>
+                        <rect key="frame" x="19.666666666666668" y="63.999999999999993" width="17.000000000000004" height="22.666666666666664"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Paul" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hUB-49-3kk" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="22" height="14"/>
-                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="0.0" y="0.0" width="17" height="11.333333333333334"/>
+                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="8"/>
+                                <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -49,9 +60,9 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzH-11-iZg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                <rect key="frame" x="1" y="14" width="20.333333333333332" height="14"/>
-                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
-                                <color key="textColor" red="0.92941176469999998" green="0.72549019609999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="0.33333333333333215" y="11.333333333333329" width="16.333333333333332" height="11.333333333333336"/>
+                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="8"/>
+                                <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
@@ -63,9 +74,9 @@
                         </subviews>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verified-tick" translatesAutoresizingMaskIntoConstraints="NO" id="Nk8-TN-xGf">
-                        <rect key="frame" x="43" y="43" width="11" height="11"/>
+                        <rect key="frame" x="39.666666666666664" y="37.666666666666664" width="16.333333333333336" height="16.333333333333336"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="11" id="7CZ-Cd-w4x"/>
+                            <constraint firstAttribute="height" constant="16.5" id="7CZ-Cd-w4x"/>
                             <constraint firstAttribute="width" secondItem="Nk8-TN-xGf" secondAttribute="height" multiplier="1:1" id="UWa-Aq-bir"/>
                         </constraints>
                     </imageView>
@@ -76,7 +87,10 @@
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="top" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="8" id="06t-lk-FYo"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="top" secondItem="ZTg-uK-7eu" secondAttribute="top" id="2L4-jz-i9W"/>
                 <constraint firstItem="Nk8-TN-xGf" firstAttribute="bottom" secondItem="6qg-6t-oWS" secondAttribute="bottom" constant="-2" id="8SB-lQ-xns"/>
-                <constraint firstItem="Nk8-TN-xGf" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" constant="-2" id="Err-vM-Jht"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="top" secondItem="6qg-6t-oWS" secondAttribute="top" id="DrB-cU-G6B"/>
+                <constraint firstItem="Nk8-TN-xGf" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" id="Err-vM-Jht"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="width" secondItem="wVs-bZ-wrm" secondAttribute="height" multiplier="1:1" id="eQE-kN-QLI"/>
+                <constraint firstItem="wVs-bZ-wrm" firstAttribute="trailing" secondItem="6qg-6t-oWS" secondAttribute="trailing" id="gr7-rK-Vfd"/>
                 <constraint firstItem="Sv2-pt-ebF" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="gsv-7O-Bag"/>
                 <constraint firstItem="6qg-6t-oWS" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="nlA-pv-T2P"/>
             </constraints>
@@ -86,11 +100,13 @@
                 <outlet property="imgVerified" destination="Nk8-TN-xGf" id="kEy-Xu-I4i"/>
                 <outlet property="lblPercentage" destination="pzH-11-iZg" id="1fE-qS-X4G"/>
                 <outlet property="lblUser" destination="hUB-49-3kk" id="pmI-5O-hRE"/>
+                <outlet property="paymentConfirmImg" destination="wVs-bZ-wrm" id="mQ0-Jp-6Lm"/>
             </connections>
             <point key="canvasLocation" x="202.17391304347828" y="99.107142857142847"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="frdpaymentVerify_Ic" width="20" height="20"/>
         <image name="ic-friends" width="56" height="56"/>
         <image name="verified-tick" width="11" height="11"/>
     </resources>

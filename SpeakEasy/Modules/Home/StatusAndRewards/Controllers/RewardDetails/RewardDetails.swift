@@ -10,8 +10,16 @@ import UIKit
 class RewardDetails: UIViewController {
 
     @IBOutlet weak var strechyTableView: UITableView!
+
     var headerView: UIView!
-    var kTableHeaderHeight: CGFloat = 0.0
+    var kTableHeaderHeight: CGFloat = 400.0
+    var isShowEvent = false
+    var isFree = false
+    private let freeTicket = "FREE TICKET:"
+    private let twentyOff = "20% OFF TICKET:"
+    private let minOff = "20% LOWER MIN. SPEND"
+    
+    var rewardData: StatusAndRewardDataSet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,8 +27,10 @@ class RewardDetails: UIViewController {
         self.loadHeaderView()
         
         self.setupStreachyHeaderViewFrames()
-        self.updateHeaderView()
         self.strechyTableView.layoutIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            self.updateHeaderView()
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -33,6 +43,11 @@ class RewardDetails: UIViewController {
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    @IBAction func onClickDecline(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     @IBAction func onBtnProceedToBookings(_ sender: UIButton) {
         self.navigationController?.pushViewController(TableSelection(), animated: true)
 //        AppDelegate.shared.showHome(selectedIndex: 1)
@@ -53,13 +68,15 @@ extension RewardDetails {
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
-            let tableHeaderView  = HeaderViewCustom.instanceFromNib()
+            let tableHeaderView  = HeaderViewCustom.instanceFromNib() as! HeaderViewCustom
+            tableHeaderView.imgVenue.image = rewardData?.imgVenue
+            tableHeaderView.lblVenue.text = rewardData?.venueName
+            tableHeaderView.imgVenueLogo.image = rewardData?.imgVenueLogo
             strechyTableView.contentOffset = CGPoint(x: 0, y: -32)
             strechyTableView.tableHeaderView = tableHeaderView
         }
     }
     func setupStreachyHeaderViewFrames() {
-        kTableHeaderHeight = self.view.frame.height * 0.4
         strechyTableView.rowHeight = UITableView.automaticDimension
         headerView = strechyTableView.tableHeaderView
         strechyTableView.tableHeaderView = nil
@@ -82,15 +99,21 @@ extension RewardDetails {
 }
 
 extension RewardDetails: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "RewardDetailsStretchyTVC", for: indexPath) as? RewardDetailsStretchyTVC else { return UITableViewCell() }
         cell.indentationLevel = 2;
+        cell.lblRewardName.text = rewardData?.rewardName
+        
+        cell.rewardNote.text = rewardData?.rewardNote
+        cell.guestView.isHidden = true//!rewardData!.isTable
+        cell.EventCollectionView.isHidden = !rewardData!.hasEventBanner
+        cell.discountLbl.text = isFree ? freeTicket : minOff
+        cell.discountLbl.textColor = isFree ? UIColor(red: 204/255, green: 0, blue: 1, alpha: 1) : UIColor(red: 0, green: 122/255, blue: 1, alpha: 1)
         return cell
     }
 }

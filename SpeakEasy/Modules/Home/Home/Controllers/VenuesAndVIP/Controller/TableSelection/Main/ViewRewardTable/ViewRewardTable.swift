@@ -15,8 +15,8 @@ class ViewRewardTable: UIView {
     @IBOutlet weak var imgUnavailable: UIImageView!
     @IBOutlet weak var btnTable: UIButton!
     
-    let availableColor = UIColor(red:55/255, green:124/255, blue:246/255, alpha:1)
-    let unavailableColor = UIColor(red:52/255, green:50/255, blue:52/255, alpha:1)
+    let availableColor = UIColor(red:138/255, green:138/255, blue:138/255, alpha:1)
+    let unavailableColor = UIColor(red:69/255, green:151/255, blue:196/255, alpha:1)
     let selectedColor = UIColor(red:255/255, green:255/255, blue:255/255, alpha:1)
     
     class func instanceFromNib() -> UIView {
@@ -39,12 +39,9 @@ extension ViewRewardTable {
             else {
                 self.viewBackGround.backgroundColor = self.availableColor
             }
-            self.viewBackGround.borderColor = .clear
         }
         else {
-            self.viewBackGround.borderColor = self.availableColor
             self.viewBackGround.backgroundColor = self.unavailableColor
-            self.imgUnavailable.isHidden = false
         }
     }
 }

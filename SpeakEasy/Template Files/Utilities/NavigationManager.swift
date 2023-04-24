@@ -1,0 +1,359 @@
+//
+//  NavigationManager.swift
+//  SpeakEasy-Consumer
+//
+//  Created by Square Infosoft on 07/12/22.
+//
+
+import UIKit
+
+final class Navigate {
+    
+   static let to = Navigate()
+    
+    private init() { }
+    
+    func back(_ sender: UIViewController) {
+        sender.navigationController?.popViewController(animated: true)
+    }
+    
+    func startScreenViewController(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(StartScreenViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterPhoneNumberViewController.self)
+        vc.isFromLogin = isFromLogin
+        vc.isFromSettings = isFromSettings
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "",phoneNum: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(VerificationCodeViewController.self)
+        vc.isFromLogin = isFromLogin
+        vc.currectOtp = otp ?? ""
+        vc.otpRef = otpRef ?? ""
+        vc.isFromSettings = isFromSettings
+        vc.isForEmail = isForEmail
+        vc.phoneNum = phoneNum
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterNameVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false, isFromLoginasGuest: Bool = false) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmPopUpViewController.self)
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.confirmPopUpDelegate = sender as? ConfirmPopUpDelegate
+        vc.confirmInfoText = text1
+        vc.infoDetailtext = text2
+        vc.infoNoteText = text3
+        vc.isPrivetOrPublic = isYesOrNoBtn
+        vc.isFromLoginGuest = isFromLoginasGuest
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func connectAccountVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConnectAccountViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addEmailVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(AddEmailViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func dateOfBirthVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(DateOfBirthViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func SetProfilePicVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SetProfilePictureViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func notificationPermissionVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(NotificationPermissionViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func setLocationVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SetLocationViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectCityVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectCityViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectVibesVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectVibesViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectFavoriteDrinkVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectFavoriteDrinkViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func connectSocialMediaVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConnectSocialMediaViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func signInOptionVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(SignInOptionViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func loginWithPhoneNumberVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithPhoneViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithEmailViewController.self)
+        vc.isFromSettings = isFromSettings
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterEmailPassVc(_ sender: UIViewController, email: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(EnterEmailPassViewController.self)
+        vc.email = email
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func resetPasswordVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(ResetPasswordViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func createPasswordVc(_ sender: UIViewController,email: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(CreatePasswordViewController.self)
+        vc.email = email
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func changePasswordVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(ChangePasswordViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func selectGenderVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectGenderViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func welcomeVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func welcomeItroduceVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeItroduceViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func MVPVenueListViewController(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        sender.navigationController?.viewControllers = [vc]
+    }
+    
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+        vc.venueId = venueId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func MVPSettingVC(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(SettingMvpVC.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String, venueId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
+        vc.ticketPrice = ticketPrice
+        vc.isGeneralAdmission = isGeneral
+        vc.venueName = venueName
+        vc.appClipTicketId = ticketId
+        vc.venueId = venueId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String,venueAttachment: String, venueLogo:String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
+        vc.totalTicket = totalTicket
+        vc.ticketPrice = ticketPrice
+        vc.isGeneralAdmission = isGeneral
+        vc.venueName = venueName
+        vc.appClipTicketId = appClipTicketId
+        vc.venueId = venueId
+        vc.ticketInfo = ticketInfo
+        vc.venueAttachment = venueAttachment
+        vc.venueLogo = venueLogo
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String,ticketInfo: String,venueAttachment: String, venueLogo:String) {
+        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(QRCodeMvpVC.self)
+        vc.totalTicket = totalTicket
+        vc.isGeneralAdmission = isGeneral
+        vc.ticketPrice = ticketPrice
+        vc.venueName = venueName
+        vc.bookingId = bookingId
+        vc.ticketInfo = ticketInfo
+        vc.venueAttachment = venueAttachment
+        vc.venueLogo = venueLogo
+        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+            sender.navigationController?.viewControllers = [homeVc,vc]
+        }
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func settingsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(SettingsViewController.self)
+        fullscreenPush(vc: vc)
+    }
+    
+    func notificationVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(NotificationViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func deleteAccountVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(DeleteAccountViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func personalInformationVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PersonalInformationViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func pastPurchasesVisitsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PastPurchasesVisitsViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func paymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PaymentMethodsViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addPaymentMethodsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(AddPaymentMethodsViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func addCardInfoVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(AddCardInfoViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func cardDetailsVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(CardDetailsViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func instagramWebView(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(InstagramWebController.self)
+        vc.instaConnectedDelegate = sender as? InstagramConnectedDelegate
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func selectPhotoVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectPhotosViewController.self)
+        vc.selectedImgDelegate = sender as? SelectedInstaImgDelegate
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func inviteFriendPopUp(_ sender: UIViewController, invitedFrdList: [InviteFriendsModel], selectedGuest: Int) {
+        let vc = InviteFriendsPopUp()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.invitedFrdDelegate = sender as? InvitedFriendDelegate
+        vc.selectedFriend = invitedFrdList
+        vc.guest = selectedGuest
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func editProfile(_ sender: UIViewController) {
+        let vc = EditProfileVC()
+        fullscreenPush(vc: vc)
+    }
+    
+    func bookingInvite(_ sender: UIViewController, booking: BookingsDataSet?, isFromSettings: Bool = false) {
+        let vc = PendingBookingAwait()
+        vc.booking = booking
+        vc.isFromSettings = isFromSettings
+        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func VIPBookingInviteNew(_ sender: UIViewController, isFree: Bool) {
+        let vc = VipBookingInviteNew()
+        vc.itsFree = isFree
+        fullscreenPush(vc: vc)
+    }
+    
+    func pendingBookingAwait(_ sender: UIViewController, data: BookingsDataSet?, fromBooking: Bool = false) {
+        let vc = PendingBookingAwait()
+        vc.booking = data
+        vc.fromBookingInvite = fromBooking
+        fullscreenPush(vc: vc)
+    }
+    
+    func ticketConfirmation(_ sender: UIViewController, data: BookingsDataSet?, isFromSettings: Bool = false) {
+      let data = TopEventDataSet(imgEventCover: UIImage(named: "duttonRanch"), lblPerformerName: "Dutton Ranch", lblVenueName: "Welcome to the Farm",imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 28",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Country Girl", lblSongArtist: "Luke Bryan")
+        let vc = TicketConfirmation()
+        vc.screenType = .FromBooking
+        vc.isFromSettings = isFromSettings
+        vc.topEventData = data
+        fullscreenPush(vc: vc)
+    }
+    
+    func allEvents(_ sender: UIViewController) {
+        let vc = AllEvents()
+        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func allVenues(_ sender: UIViewController) {
+        let vc = AllVenues()
+        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tutorialVc(_ sender: UIViewController) {
+        let vc = Tutorials()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func eventDetail(_ sender: UIViewController, eventId: String){
+        let vc = EventBookingDetails()
+        vc.eventId = eventId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func homeCitySelection(_ sender: UIViewController) {
+        let vc = HomeCitySelectionVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func mvpCitySelection(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPCitySelectionVC.self)
+        vc.citySelectionDelegate = sender as? any CitySelectionDelegate
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func fullscreenPush(vc: UIViewController) {
+        if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
+            Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}

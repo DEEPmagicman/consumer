@@ -13,6 +13,7 @@ class SubmitRequestTVC: UITableViewCell {
     @IBOutlet weak var btnSubmitRequest: UIButtonDeviceClass!
     @IBOutlet weak var viewSubmitRequest: UIView!
     @IBOutlet weak var btnCancelRequest: UIButton!
+    @IBOutlet weak var infoLbl: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -36,26 +37,29 @@ class SubmitRequestTVC: UITableViewCell {
              self.btnSubmitRequest.isHidden = true
             
         case .AwaitingVenueApproval:
-            
-             self.viewCancelReques.isHidden = true
-             self.btnCancelRequest.isHidden = true
-             self.viewSubmitRequest.isHidden = false
-             self.btnSubmitRequest.isHidden = false
+            self.btnSubmitRequest.setTitle("View in Bookings", for: .normal)
+           self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
+             self.viewCancelReques.isHidden = false
+             self.btnCancelRequest.isHidden = false
+             self.viewSubmitRequest.isHidden = true
+             self.btnSubmitRequest.isHidden = true
 
         case .SubmitRequest:
-
+            self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
              self.viewCancelReques.isHidden = true
              self.btnCancelRequest.isHidden = true
              self.viewSubmitRequest.isHidden = false
              self.btnSubmitRequest.isHidden = false
+            self.viewSubmitRequest.backgroundColor = Constant.Color.submiteRequestBtnColor
 
         case .BookingConfirmation:
              self.btnSubmitRequest.setTitle("View in Bookings", for: .normal)
-            
-             self.viewCancelReques.isHidden = true
-             self.btnCancelRequest.isHidden = true
-             self.viewSubmitRequest.isHidden = false
-             self.btnSubmitRequest.isHidden = false
+//            self.infoLbl.text = Constant.String.sendReceiptText
+            self.infoLbl.highlightBold(["Once confirmed by the venue, all bookings are FINAL"], size: 15, textColor: .white)
+             self.viewCancelReques.isHidden = false
+             self.btnCancelRequest.isHidden = false
+             self.viewSubmitRequest.isHidden = true
+             self.btnSubmitRequest.isHidden = true
 
         }
     }

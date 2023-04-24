@@ -18,6 +18,7 @@ class HotVenuesTVC: UITableViewCell {
     var searchText = ""
     var isFilter = false
     var hasVenues: ((Bool)->Void)?
+    var hasVenue = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -43,8 +44,8 @@ extension HotVenuesTVC{
             }else {
                 self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsCleveland.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
             }
-
-
+            
+            
             if Constants.localizedCity == "Chicago" {
                 self.arrayFilteredHotVenueEvents = Constants.arrayHotVenueEventsChicago.filter{($0.lblPerformerName ?? "").localizedCaseInsensitiveContains(searchText)}
             }else {
@@ -53,8 +54,8 @@ extension HotVenuesTVC{
         }
         
         self.collectionView.reloadData()
-        
         self.hasVenues?(!self.arrayFilteredHotVenueEvents.isEmpty)
+        hasVenue = !self.arrayFilteredHotVenueEvents.isEmpty
     }
 }
 extension HotVenuesTVC: UICollectionViewDataSource {
@@ -69,6 +70,7 @@ extension HotVenuesTVC: UICollectionViewDataSource {
                 return Constants.arrayHotVenueEventsCleveland.count
             }
         }
+        
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch self.isFilter {
@@ -92,7 +94,7 @@ extension HotVenuesTVC: UICollectionViewDataSource {
 }
 extension HotVenuesTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width * 0.675
+        let width = 250.0//collectionView.frame.width * 0.675
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

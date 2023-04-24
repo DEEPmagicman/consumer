@@ -4,7 +4,7 @@
 //
 //  Created by Admin on 16/09/2022.
 //
-
+/* TODO: Remove this file*/
 import UIKit
 
 class FeaturedVenue: BaseController {
@@ -47,8 +47,9 @@ extension FeaturedVenue: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
         let data = self.arrayRemainingHotVenueEvents[indexPath.row]
-        cell.setData(data: data)
-        cell.setData(seeAll: false)
+        cell.selectionStyle = .none
+        cell.setData(data: data, seeAll: false)
+//        cell.setData(seeAll: false)
         return cell
     }
 }
@@ -57,8 +58,9 @@ extension FeaturedVenue: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.45
-            return height
+//            let height = tableView.frame.height * 0.45
+//            return height
+            return UITableView.automaticDimension
         default:
             return UITableView.automaticDimension
         }

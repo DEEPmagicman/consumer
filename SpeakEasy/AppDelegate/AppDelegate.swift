@@ -8,25 +8,51 @@
 import UIKit
 import GoogleMaps
 import IQKeyboardManagerSwift
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    private var venueId = ""
+    private var isAppClipSet = false
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return true
+        }
+        if let venue = queryItems.first(where: { $0.name == "v" })?.value {
+            venueId = venue
+            setAppClipNavigation()
+            return true
+        }
+        if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+            venueId = venue
+            setAppClipNavigation()
+            return true
+        }
+        return true
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
+        FirebaseApp.configure()
+        UserDefault.shared.isMvp = true
+        self.application = application
         GMSServices.provideAPIKey(Constants.apiKey)
         
         IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.disabledToolbarClasses = []
-        IQKeyboardManager.shared.enableAutoToolbar = false
         
-        self.window = UIWindow(frame:UIScreen.main.bounds)
-        self.launchApplication()
+        window = UIWindow(frame:UIScreen.main.bounds)
+        launchApplication()
+        Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
+    }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
+    {
+        .portrait
     }
 }
 //MARK: - Application flow
@@ -37,26 +63,65 @@ extension AppDelegate {
         self.window?.makeKeyAndVisible()
     }
     func changeRootViewController(){
-        switch AppStateManager.sharedInstance.isUserLoggedIn() {
-        case true:
-            self.showHome(selectedIndex: 0)
-        case false:
-            self.showTutorials()
+        if UserDefault.shared.isMvp == true {
+            self.showMVP()
+            return
+        }
+        if UserDefault.shared.isLoggedIn == true {
+//            self.showHome(selectedIndex: 0)
+            self.showNewHome(selectedIndex: 0)
+        } else {
+            self.showOnboarding()
         }
     }
-    func showTutorials(){
-        let controller = Tutorials()
-        controller.isHeroEnabled = true
+    
+    func showOnboarding() {
+//        let controller = StartScreenViewController()
+        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
+
+//        controller.isHeroEnabled = true
         let tutorialNavigation = UINavigationController(rootViewController: controller)
         tutorialNavigation.navigationBar.isHidden = true
         tutorialNavigation.modalTransitionStyle = .crossDissolve
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
-
-        
-//        UIView.transition(with: self.window!, duration: 0.5, options: .transitionFlipFromLeft, animations: {
-//        }, completion: nil)
     }
+    
+    private func setAppClipNavigation() {
+        ReachabilityManager.shared.startMonitoring()
+        if venueId != "" {
+            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+            vc.venueId = venueId
+            vc.isFromAppClip = true
+            let navigation = UINavigationController(rootViewController: vc)
+            navigation.navigationBar.isHidden = true
+            navigation.modalTransitionStyle = .crossDissolve
+            navigation.modalPresentationStyle = .overCurrentContext
+            self.window?.rootViewController = navigation
+            isAppClipSet = true
+        }
+    }
+    
+    func showMVP() {
+        ReachabilityManager.shared.startMonitoring()
+        if isAppClipSet { return }
+        if UserDefault.shared.hasVisitedStartingPage {
+            let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+            let navigation = UINavigationController(rootViewController: vc)
+            navigation.navigationBar.isHidden = true
+            navigation.modalTransitionStyle = .crossDissolve
+            navigation.modalPresentationStyle = .overCurrentContext
+            self.window?.rootViewController = navigation
+            return
+        }
+        let controller = StoryboardAndXibManager.StoryBoard.mvp.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
+        let navigation = UINavigationController(rootViewController: controller)
+        navigation.navigationBar.isHidden = true
+        navigation.modalTransitionStyle = .crossDissolve
+        navigation.modalPresentationStyle = .overCurrentContext
+        self.window?.rootViewController = navigation
+    }
+
     func showLogin(){
         let controller = LogIn()
         controller.isHeroEnabled = true
@@ -104,8 +169,39 @@ extension AppDelegate {
         tabBarController.tabBar.isTranslucent = false
         
         tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        self.window?.rootViewController = tabBarController
+        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+        tabBarControllerNavigation.navigationBar.isHidden = true
+        self.window?.rootViewController = tabBarControllerNavigation
 
     }
+    
+    public func showNewHome(selectedIndex: Int){
+        let tabBarController = UITabBarController()
+
+        let home = StoryboardAndXibManager.StoryBoard.newHome.instantiateVC(NewHomeVC.self)
+        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
+        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
+        let homeNavigation = UINavigationController(rootViewController: home)
+        homeNavigation.navigationBar.isHidden = true
+        
+        let myAccount = MyAccount()
+        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
+        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
+        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
+        myAccountNavigation.navigationBar.isHidden = true
+
+        tabBarController.viewControllers = [homeNavigation,myAccountNavigation]
+        
+        tabBarController.selectedIndex = selectedIndex
+        
+        tabBarController.tabBar.isTranslucent = false
+        
+        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+        tabBarControllerNavigation.navigationBar.isHidden = true
+        self.window?.rootViewController = tabBarControllerNavigation
+
+    }
+
 }
 

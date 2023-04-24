@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +19,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Home" customModule="SpeakEasy_Consumer" customModuleProvider="target">
             <connections>
                 <outlet property="homeTabCollectionView" destination="qM3-nr-AfC" id="mLF-t4-tbB"/>
-                <outlet property="lblCity" destination="ddZ-d5-OmT" id="b41-AB-JAH"/>
+                <outlet property="lblCity" destination="ddZ-d5-OmT" id="Sdg-Fu-m3D"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="Igd-f7-ea3"/>
                 <outlet property="viewPageMenu" destination="cuz-Ix-Gg2" id="LqB-XI-7SN"/>
             </connections>
@@ -148,7 +149,7 @@
                         <constraint firstItem="ddZ-d5-OmT" firstAttribute="leading" secondItem="yuR-xz-2BN" secondAttribute="trailing" constant="4" id="31x-7Q-VTI"/>
                         <constraint firstItem="ddZ-d5-OmT" firstAttribute="centerY" secondItem="yuR-xz-2BN" secondAttribute="centerY" id="4eD-t1-ZxK"/>
                         <constraint firstItem="Eak-HE-GxH" firstAttribute="centerY" secondItem="M7g-MI-Tc2" secondAttribute="centerY" id="HHM-HL-2Er"/>
-                        <constraint firstAttribute="width" secondItem="Imd-C2-2Hx" secondAttribute="height" multiplier="207:16" id="Ma3-cf-Q4D"/>
+                        <constraint firstAttribute="height" constant="32" id="HNs-Ea-Vdk"/>
                         <constraint firstItem="M7g-MI-Tc2" firstAttribute="top" secondItem="ddZ-d5-OmT" secondAttribute="top" id="cJG-lT-wze"/>
                         <constraint firstAttribute="bottom" secondItem="yuR-xz-2BN" secondAttribute="bottom" id="kPz-wE-GPg"/>
                         <constraint firstItem="M7g-MI-Tc2" firstAttribute="trailing" secondItem="ddZ-d5-OmT" secondAttribute="trailing" id="nq6-bk-1X3"/>
@@ -182,20 +183,21 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" red="0.054901950060000003" green="0.054901950060000003" blue="0.054901950060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstAttribute="height" constant="48" id="02m-fj-H4y"/>
                         <constraint firstItem="4n5-Pm-rf7" firstAttribute="top" secondItem="qM3-nr-AfC" secondAttribute="bottom" id="1ee-f3-5x8"/>
                         <constraint firstAttribute="bottom" secondItem="4n5-Pm-rf7" secondAttribute="bottom" id="4S3-ms-sWv"/>
                         <constraint firstItem="4n5-Pm-rf7" firstAttribute="leading" secondItem="7ua-yo-HeL" secondAttribute="leading" id="G9S-7W-ccV"/>
                         <constraint firstAttribute="trailing" secondItem="qM3-nr-AfC" secondAttribute="trailing" id="H5w-rb-UjR"/>
                         <constraint firstAttribute="trailing" secondItem="4n5-Pm-rf7" secondAttribute="trailing" id="QNQ-GY-Yhr"/>
                         <constraint firstItem="qM3-nr-AfC" firstAttribute="leading" secondItem="7ua-yo-HeL" secondAttribute="leading" id="SFY-F4-tHD"/>
-                        <constraint firstAttribute="width" secondItem="7ua-yo-HeL" secondAttribute="height" multiplier="69:8" id="UnM-1Q-Cfp"/>
                         <constraint firstItem="qM3-nr-AfC" firstAttribute="top" secondItem="7ua-yo-HeL" secondAttribute="top" id="Zgf-8L-Qba"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cuz-Ix-Gg2">
                     <rect key="frame" x="0.0" y="188" width="414" height="674"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>

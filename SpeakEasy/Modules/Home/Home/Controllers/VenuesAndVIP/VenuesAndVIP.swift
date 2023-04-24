@@ -18,6 +18,9 @@ struct VenuesVIPEventDataSet {
     var lblEventClosingTime: String? = ""
     var location: String?
     var phoneNumber: String?
+    var upcomingEvents: [TopEventDataSet]?
+    var description: String?
+    var hours: [HoursDataSet]?
 }
 
 class VenuesAndVIP: BaseController {
@@ -25,10 +28,42 @@ class VenuesAndVIP: BaseController {
     @IBOutlet weak var tableView: UITableView!
     
     var arrayHeaders = [HeaderOption(label: Strings.HOT_VENUES.text, icon: UIImage(named: "EventsTabSelected"))]
+    var venueDelegate = VenuePresenter()
+    var venueList = [Venue]()
+    var from = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
+        var frame = CGRect.zero
+        frame.size.height = .leastNormalMagnitude
+        tableView.tableHeaderView = UIView(frame: frame)
+        tableView.sectionHeaderHeight = 0
+        fetchAllVenue()
+    }
+    
+    private func fetchAllVenue() {
+        self.venueDelegate.getVenues(from: self.from) { isSuccess, errMsg, venueList, hasMore in
+            if isSuccess {
+                for venue in venueList {
+                    self.venueList.append(venue)
+                }
+                if hasMore {
+                    self.from = self.venueList.count
+                    self.fetchAllVenue()
+                    return
+                }
+                print(self.venueList)
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
+
     }
 }
 extension VenuesAndVIP {
@@ -69,33 +104,53 @@ extension VenuesAndVIP: UITableViewDataSource {
             return cell
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTVC", for: indexPath) as! VenueTVC
-            if indexPath.row == 2 {
-                let data: VenuesVIPEventDataSet!
-                if Constants.localizedCity == "Chicago" {
-                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//            if indexPath.row == 2 {
+//                let data: VenuesVIPEventDataSet!
+//                if Constants.localizedCity == "Chicago" {
+//                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//                }else {
+//                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+//                }
+//                cell.setData(data: data)
+//                cell.setData(seeAll: true)
+//                cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
+//            }
+//            else {
+//                let data: VenuesVIPEventDataSet!
+//                if Constants.localizedCity == "Chicago" {
+//                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+//                }else {
+//                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+//                }
+//                cell.setData(data: data)
+//                cell.setData(seeAll: false)
+//            }
+            
+            let data: VenuesVIPEventDataSet!
+            if Constants.localizedCity == "Chicago" {
+                data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+                if indexPath.row == Constants.arrayRemainingHotVenueEventsChicago.count - 1 {
+                    cell.setData(data: data, seeAll: true)
+                    cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                    cell.setData(data: data, seeAll: false)
                 }
-                cell.setData(data: data)
-                cell.setData(seeAll: true)
-                cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
-            }
-            else {
-                let data: VenuesVIPEventDataSet!
-                if Constants.localizedCity == "Chicago" {
-                    data = Constants.arrayRemainingHotVenueEventsChicago[indexPath.row]
+            }else {
+                data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                if indexPath.row == Constants.arrayRemainingHotVenueEventsCleveland.count - 1 {
+                    cell.setData(data: data, seeAll: true)
+                    cell.btnSeeAll.addTarget(self, action: #selector(self.onBtnSeeAll(_:)), for: .touchUpInside)
                 }else {
-                    data = Constants.arrayRemainingHotVenueEventsCleveland[indexPath.row]
+                    cell.setData(data: data, seeAll: false)
                 }
-
-                cell.setData(data: data)
-                cell.setData(seeAll: false)
             }
+//            cell.setData(data: data)
             return cell
         }
     }
     @objc func onBtnSeeAll(_ sender: UIButton) {
-        self.pushToAllVenues()
+        //Fix this
+        Navigate.to.allVenues(self)
     }
 }
 extension VenuesAndVIP: UITableViewDelegate {
@@ -113,7 +168,7 @@ extension VenuesAndVIP: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            let height = tableView.frame.height * 0.575
+            let height = 310.0//tableView.frame.height * 0.575
             return height
         default:
             return UITableView.automaticDimension

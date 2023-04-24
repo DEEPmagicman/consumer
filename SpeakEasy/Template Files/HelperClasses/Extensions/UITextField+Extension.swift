@@ -2,16 +2,16 @@
 import Foundation
 import UIKit
 
-extension UITextField{
-    @IBInspectable var placeHolderColor: UIColor? {
-        get {
-            return self.placeHolderColor
-        }
-        set {
-            self.attributedPlaceholder = NSAttributedString(string:self.placeholder != nil ? self.placeholder! : "", attributes:[NSAttributedString.Key.foregroundColor: newValue!])
-        }
-    }
-}
+//extension UITextField{
+//    @IBInspectable var placeHolderColor: UIColor? {
+//        get {
+//            return self.placeHolderColor
+//        }
+//        set {
+//            self.attributedPlaceholder = NSAttributedString(string:self.placeholder != nil ? self.placeholder! : "", attributes:[NSAttributedString.Key.foregroundColor: newValue!])
+//        }
+//    }
+//}
 
 extension UITextField {
     func validatedText(validationType: ValidatorType) throws -> String {

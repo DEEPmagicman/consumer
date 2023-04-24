@@ -40,7 +40,11 @@ extension Invites: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     @objc func onBtnBookingInvites(_ sender: UIButton) {
-        super.pushToVIPBookingInvite()
+        if arrDataSet[sender.tag] == "FREE" {
+            Navigate.to.VIPBookingInviteNew(self, isFree: true)
+        } else {
+            Navigate.to.VIPBookingInviteNew(self, isFree: false)
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

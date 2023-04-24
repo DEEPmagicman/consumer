@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -54,7 +55,7 @@
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="leading" secondItem="TCi-pL-8Qy" secondAttribute="leading" constant="5" id="AuC-2x-zHX"/>
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="centerY" secondItem="TCi-pL-8Qy" secondAttribute="centerY" id="Qe8-Jy-bsw"/>
                             <constraint firstItem="ENt-BD-T2t" firstAttribute="centerX" secondItem="TCi-pL-8Qy" secondAttribute="centerX" id="ybG-gC-sjW"/>
-                            <constraint firstItem="ENt-BD-T2t" firstAttribute="top" secondItem="TCi-pL-8Qy" secondAttribute="top" constant="9.6666666666666643" id="zew-iU-UqG"/>
+                            <constraint firstItem="ENt-BD-T2t" firstAttribute="top" secondItem="TCi-pL-8Qy" secondAttribute="top" constant="9.6699999999999999" id="zew-iU-UqG"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -67,6 +68,10 @@
                 <constraint firstItem="TCi-pL-8Qy" firstAttribute="bottom" secondItem="ZTg-uK-7eu" secondAttribute="bottom" id="hY9-jf-NqB"/>
             </constraints>
             <size key="customSize" width="66" height="97"/>
+            <connections>
+                <outlet property="firstName" destination="1BX-gW-h8i" id="ykM-nf-pOv"/>
+                <outlet property="profileImg" destination="zIk-i3-ehn" id="ooJ-P9-qR1"/>
+            </connections>
             <point key="canvasLocation" x="144.92753623188406" y="86.820652173913047"/>
         </collectionViewCell>
     </objects>

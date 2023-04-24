@@ -7,10 +7,6 @@ target 'SpeakEasy-Consumer' do
 
   # Pods for SpeakEasy
   pod 'Alamofire', '4.9.1'
-  pod 'SwiftyJSON'
-  pod 'RealmSwift'
-  pod 'ObjectMapper'
-  pod 'ObjectMapper+Realm'
   pod 'SDWebImage'
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'
@@ -24,11 +20,37 @@ target 'SpeakEasy-Consumer' do
   pod 'SCPageControl'
   pod 'GoogleMaps'
   pod "GSImageViewerController"
+  pod "FlagPhoneNumber"
+  pod 'OTPFieldView'
+  pod 'SVProgressHUD'
+  pod 'GoogleSignIn'
+  pod 'SwiftInstagram', '~> 1.1.2'
+  pod 'JWTDecode'
+  pod 'StripeApplePay'
+  pod 'StripePaymentSheet'
+  pod 'ReachabilitySwift', '~> 3'
+  pod 'Socket.IO-Client-Swift'
+  pod 'Firebase/RemoteConfig'
 end
+
+target 'SpeakEasyClip' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for SpeakEasyClip
+  pod "FlagPhoneNumber"
+  pod 'IQKeyboardManagerSwift'
+  pod 'DropDown'
+  pod 'StripeApplePay'
+  pod 'ReachabilitySwift', '~> 3'
+  pod 'Socket.IO-Client-Swift'
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64 i386"
+      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+#      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64 i386"
     end
   end
 end

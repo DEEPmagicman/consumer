@@ -17,6 +17,10 @@ class Fonts {
     static let light: UIFont = UIFont(name: "HelveticaNeue-Light", size: 17)!
 
     static let medium: UIFont = UIFont(name: "HelveticaNeue-Medium", size: 17)!
+    
+    static func poppinsRegular(_ size: CGFloat) -> UIFont {
+        UIFont(name: "Poppins-Regular", size: size) ?? UIFont.systemFont(ofSize: size, weight: .medium)
+    }
 
 
 }

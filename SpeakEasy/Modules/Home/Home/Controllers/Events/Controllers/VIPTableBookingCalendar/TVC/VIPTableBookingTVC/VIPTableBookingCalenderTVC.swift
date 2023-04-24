@@ -25,9 +25,7 @@ class VIPTableBookingCalenderTVC: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    var arrayAssociatedEvent = [
-        TopEventDataSet(imgEventCover: UIImage(named: "UpcomingEventsBG1"), lblPerformerName: "NGHTMRE", lblVenueName: "TAO Chicago",  lblEventDate: "",location: "632 N. Dearborn St. chicago, IL")
-    ]
+    var arrayAssociatedEvent: [TopEventDataSet] = []
     
     func setData(seeAll: Bool){
         self.viewSeperator.isHidden = seeAll
@@ -62,7 +60,7 @@ extension VIPTableBookingCalenderTVC: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegateFlowLayout
 extension VIPTableBookingCalenderTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width / 2.5
+        let width = 150.0//collectionView.frame.width / 2.5
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

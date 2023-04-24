@@ -11,10 +11,11 @@ class StatusAndRewards: UIViewController {
     
     @IBOutlet weak var tableViewReward: UITableView!
     
-    var arrStatusAndRewardDataSet = [StatusAndRewardDataSet(brand: UIImage(named: "ic-tao"), eventCover: UIImage(named: "ic-artist"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "TAO Chicago", performerName: "Steve Aoki", ticketDescription: "GA + Skip Line", date: "Thursday, June 30", rewardDescription: "FREE"),
-                                     StatusAndRewardDataSet(brand: UIImage(named: "ic-prism"), eventCover: UIImage(named: "ic-prism-cover"), isPerformer: false, isTable: true, isGroupInvite: true, isTicket: false, venueName: "PRYSM Chicago", performerName: nil, ticketDescription: nil, date: "Sunday, August 7", rewardDescription: "20% OFF"),
-                                     StatusAndRewardDataSet(brand: UIImage(named: "ic-prism"), eventCover: UIImage(named: "ic-prism-cover2"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "PRYSM Chicago", performerName: "Qrion", ticketDescription: "GA + DJ Booth Access", date: "Friday, July 8", rewardDescription: "FREE"),
-                                     StatusAndRewardDataSet(brand: UIImage(named: "ic-rocbar"), eventCover: UIImage(named: "ic-rocbar-cover"), isPerformer: false, isTable: false, isGroupInvite: false, isTicket: true, venueName: "ROCBAR", performerName: nil, ticketDescription: "General Admission", date: "Saturday, July 9", rewardDescription: "FREE")]
+    var arrStatusAndRewardDataSet = [
+        StatusAndRewardDataSet(brand: UIImage(named: "ic-tao"), eventCover: UIImage(named: "ic-artist"), isPerformer: true, isTable: false, isGroupInvite: false, isTicket: true, venueName: "TAO Chicago", performerName: "Steve Aoki", ticketDescription: "GA + Skip Line", date: "Thursday, June 30", rewardDescription: "FREE", rewardName: "FOR THE USUALS", imgVenue: UIImage(named: "RewardCoverTAO"), imgVenueLogo: UIImage(named: "taoMedium"), rewardNote: "Hey Tamas! Enjoy this free ticket from TAO. Hoep to see you soon!", hasEventBanner: true),
+                                     StatusAndRewardDataSet(brand: UIImage(named: "ic-prism"), eventCover: UIImage(named: "ic-prism-cover"), isPerformer: false, isTable: true, isGroupInvite: true, isTicket: false, venueName: "PRYSM Chicago", performerName: nil, ticketDescription: nil, date: "Sunday, August 7", rewardDescription: "20% OFF", rewardName: "HIGH SPENDER USUAL", imgVenue: UIImage(named: "RewardCoverPrysm"), imgVenueLogo: UIImage(named: "prysmMedium"), rewardNote: "Hey Tamas, join us for a table. We've included 20% off for you for this weekend. We hope to see you at PRYSM.", hasEventBanner: false),
+        StatusAndRewardDataSet(brand: UIImage(named: "ic-tao"), eventCover: UIImage(named: "ic-await-approval-bg"), isPerformer: false, isTable: true, isGroupInvite: true, isTicket: false, venueName: "TAO Chicago", performerName: nil, ticketDescription: nil, date: "Saturday, August 6", rewardDescription: "20% OFF", rewardName: "FOR OUR VIPs", imgVenue: UIImage(named: "RewardCoverTAO"), imgVenueLogo: UIImage(named: "taoMedium"), rewardNote: "Hey Tamas, join us for a table. We've included 20% off for you for this weekend. We hope to see you at TAO.", hasEventBanner: true),
+                                     StatusAndRewardDataSet(brand: UIImage(named: "ic-rocbar"), eventCover: UIImage(named: "ic-rocbar-cover"), isPerformer: false, isTable: false, isGroupInvite: false, isTicket: true, venueName: "ROCBAR", performerName: nil, ticketDescription: "General Admission", date: "Saturday, July 9", rewardDescription: "FREE", rewardName: "FOR THE LADIES", imgVenue: UIImage(named: "RewardCoverRoc"), imgVenueLogo: UIImage(named: "rocbarMedium"), rewardNote: "Hi ladies! We hope to see you at Rocbar this Saturday for FREE!", hasEventBanner: false)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,11 @@ extension StatusAndRewards: UITableViewDataSource {
 extension StatusAndRewards: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(RewardDetails(), animated: true)
+        let vc = RewardDetails()
+        vc.rewardData = arrStatusAndRewardDataSet[indexPath.row]
+        vc.isShowEvent = arrStatusAndRewardDataSet[indexPath.row].rewardDescription == "FREE"
+        vc.isFree = arrStatusAndRewardDataSet[indexPath.row].rewardDescription == "FREE"
+        self.navigationController?.navigationController?.pushViewController(vc, animated: true)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -61,7 +61,7 @@ class ViewEventTickets: UIViewController {
         self.viewFirstText.isHidden = !toggel
         self.lblSecondText.isHidden = toggel
 //        self.lblFirstTextPlus.isHidden = !toggel
-        let title = toggel ? "Buy Tickets" : "Buy Tickets"
+        let title = toggel ? "Buy Ticket" : "Buy Ticket"
         self.btnBuyTickets.setTitle(title, for: .normal)
     }
     
@@ -93,6 +93,7 @@ extension ViewEventTickets {
         self.strechyTableView.register(UINib(nibName: "ViewEventTicketConfirmTVC", bundle: nil), forCellReuseIdentifier: "ViewEventTicketConfirmTVC")
         self.strechyTableView.register(UINib(nibName: "SelectedTicketTVC", bundle: nil), forCellReuseIdentifier: "SelectedTicketTVC")
         self.strechyTableView.register(UINib(nibName: "PaymentMethodTVC", bundle: nil), forCellReuseIdentifier: "PaymentMethodTVC")
+        self.strechyTableView.register(UINib(nibName: "PaymentTableViewCell", bundle: nil), forCellReuseIdentifier: "PaymentTableViewCell")
     }
     private func loadHeaderView() {
         if strechyTableView.tableHeaderView == nil {
@@ -151,7 +152,8 @@ extension ViewEventTickets: UITableViewDataSource {
             guard let cell = strechyTableView.dequeueReusableCell(withIdentifier: "ViewEventTicketConfirmTVC", for: indexPath) as? ViewEventTicketConfirmTVC else { return UITableViewCell() }
             return cell
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentMethodTVC", for: indexPath) as! PaymentMethodTVC
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell") as! PaymentTableViewCell
+            cell.setUi(isSetting: false)
             return cell
         default:
             return UITableViewCell()

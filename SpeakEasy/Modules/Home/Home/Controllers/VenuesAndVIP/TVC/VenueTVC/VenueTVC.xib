@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,7 +18,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="331" id="KGk-i7-Jjw" customClass="VenueTVC" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="331" id="KGk-i7-Jjw" customClass="VenueTVC" customModule="Speakeasy" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="404" height="331"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -29,12 +30,19 @@
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="JeD-I6-xqe">
                                 <rect key="frame" x="0.0" y="0.0" width="380" height="242"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="242" id="mut-FA-9Fc"/>
+                                </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bounce" translatesAutoresizingMaskIntoConstraints="NO" id="4Zr-RQ-QNs">
-                                <rect key="frame" x="12" y="12" width="55" height="55"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Bounce" translatesAutoresizingMaskIntoConstraints="NO" id="4Zr-RQ-QNs" customClass="RoundedImage" customModule="Speakeasy" customModuleProvider="target">
+                                <rect key="frame" x="10" y="11" width="53" height="53"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="53" id="6XP-gw-wGk"/>
+                                    <constraint firstAttribute="width" constant="53" id="DFB-oT-Cdu"/>
+                                </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tdg-aU-KzL">
-                                <rect key="frame" x="339" y="27.5" width="27" height="24"/>
+                                <rect key="frame" x="339" y="25.5" width="27" height="24"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="Favourite"/>
                                 <state key="selected" image="FavouriteSelected"/>
@@ -43,10 +51,10 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RHM-7U-mho">
-                                <rect key="frame" x="0.0" y="160.5" width="380" height="81.5"/>
+                                <rect key="frame" x="0.0" y="169" width="380" height="73"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bounce Sporting Club" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLH-QI-IlL" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="4" width="214.5" height="27"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bounce Sporting Club" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLH-QI-IlL" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="2" width="214.5" height="27"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="19"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -57,8 +65,8 @@
                                             <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="semiBold"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Now!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZPl-40-jVg" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="35" width="73.5" height="18.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open Now!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZPl-40-jVg" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="33" width="73.5" height="18.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                         <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
@@ -70,9 +78,9 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="zPY-Wo-FsE">
-                                        <rect key="frame" x="260.5" y="34" width="101.5" height="37.5"/>
+                                        <rect key="frame" x="260.5" y="25.5" width="101.5" height="37.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Closes 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9N-yX-0Cb" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Closes 4:00 AM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m9N-yX-0Cb" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="101.5" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
                                                 <color key="textColor" red="0.81174796819999995" green="0.79216748479999999" blue="0.79215627909999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -84,7 +92,7 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="medium"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-Os-D1Z" customClass="UIButtonDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o2w-Os-D1Z" customClass="UIButtonDeviceClass" customModule="Speakeasy" customModuleProvider="target">
                                                 <rect key="frame" x="60" y="18.5" width="41.5" height="19"/>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="13"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -103,23 +111,23 @@
                                 <constraints>
                                     <constraint firstItem="ZLH-QI-IlL" firstAttribute="leading" secondItem="RHM-7U-mho" secondAttribute="leading" constant="10" id="0Jk-rK-h2K"/>
                                     <constraint firstItem="ZPl-40-jVg" firstAttribute="top" secondItem="ZLH-QI-IlL" secondAttribute="bottom" constant="4" id="Khf-gL-1DI"/>
-                                    <constraint firstItem="ZLH-QI-IlL" firstAttribute="top" secondItem="RHM-7U-mho" secondAttribute="top" constant="4" id="PDW-yr-7DH"/>
+                                    <constraint firstItem="ZLH-QI-IlL" firstAttribute="top" secondItem="RHM-7U-mho" secondAttribute="top" constant="2" id="PDW-yr-7DH"/>
                                     <constraint firstAttribute="bottom" secondItem="zPY-Wo-FsE" secondAttribute="bottom" constant="10" id="Ph7-Yx-HcS"/>
-                                    <constraint firstAttribute="bottom" secondItem="ZPl-40-jVg" secondAttribute="bottom" constant="28" id="WLL-iX-73b"/>
                                     <constraint firstItem="ZPl-40-jVg" firstAttribute="leading" secondItem="ZLH-QI-IlL" secondAttribute="leading" id="YyY-6f-WiX"/>
                                     <constraint firstAttribute="trailing" secondItem="zPY-Wo-FsE" secondAttribute="trailing" constant="18" id="f7j-F1-R2k"/>
+                                    <constraint firstAttribute="height" constant="73" id="h5u-pZ-N6V"/>
                                 </constraints>
                             </view>
                             <pageControl hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" currentPage="1" translatesAutoresizingMaskIntoConstraints="NO" id="bnT-bC-hHe">
-                                <rect key="frame" x="104" y="124.5" width="172.5" height="26"/>
+                                <rect key="frame" x="123" y="133" width="134.5" height="26"/>
                                 <color key="pageIndicatorTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="currentPageIndicatorTintColor" red="0.56078431370000004" green="0.56078431370000004" blue="0.56078431370000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </pageControl>
                         </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="4Zr-RQ-QNs" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" constant="12" id="7sK-0j-c7o"/>
+                            <constraint firstItem="4Zr-RQ-QNs" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" constant="10" id="7sK-0j-c7o"/>
                             <constraint firstItem="JeD-I6-xqe" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" id="8ZN-Ss-g6h"/>
-                            <constraint firstAttribute="width" secondItem="4h9-HB-IaF" secondAttribute="height" multiplier="190:121" id="8wP-9q-TQ4"/>
                             <constraint firstItem="JeD-I6-xqe" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="top" id="Fjh-BF-WAy"/>
                             <constraint firstAttribute="bottom" secondItem="JeD-I6-xqe" secondAttribute="bottom" id="GJI-eS-Dvz"/>
                             <constraint firstItem="Tdg-aU-KzL" firstAttribute="centerY" secondItem="4Zr-RQ-QNs" secondAttribute="centerY" id="HnG-hQ-Fv0"/>
@@ -128,8 +136,9 @@
                             <constraint firstAttribute="trailing" secondItem="Tdg-aU-KzL" secondAttribute="trailing" constant="14" id="XPn-rG-hBv"/>
                             <constraint firstItem="RHM-7U-mho" firstAttribute="leading" secondItem="4h9-HB-IaF" secondAttribute="leading" id="Xgj-nd-5kO"/>
                             <constraint firstAttribute="trailing" secondItem="RHM-7U-mho" secondAttribute="trailing" id="dD6-Q4-BRn"/>
+                            <constraint firstAttribute="height" constant="242" id="gBV-8e-fFu"/>
                             <constraint firstAttribute="bottom" secondItem="RHM-7U-mho" secondAttribute="bottom" id="kos-ed-AiU"/>
-                            <constraint firstItem="4Zr-RQ-QNs" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="top" constant="12" id="wOI-yN-THs"/>
+                            <constraint firstItem="4Zr-RQ-QNs" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="top" constant="11" id="wOI-yN-THs"/>
                             <constraint firstItem="RHM-7U-mho" firstAttribute="top" secondItem="bnT-bC-hHe" secondAttribute="bottom" constant="10" id="zhY-VQ-9PD"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
@@ -139,19 +148,19 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="keB-wo-JfO">
-                        <rect key="frame" x="202" y="250" width="0.0" height="81"/>
+                        <rect key="frame" x="202" y="258" width="0.0" height="73"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UhV-9D-cDh">
-                                <rect key="frame" x="0.0" y="81" width="240" height="60"/>
+                                <rect key="frame" x="0.0" y="73" width="240" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xFz-kP-n1h">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
+                                        <rect key="frame" x="0.0" y="14" width="240" height="44"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal">
                                             <attributedString key="attributedTitle">
-                                                <fragment content="See all">
+                                                <fragment content="See All">
                                                     <attributes>
-                                                        <color key="NSColor" red="0.99999994039999995" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <font key="NSFont" size="15" name="Arial-BoldMT"/>
                                                         <integer key="NSUnderline" value="1"/>
                                                     </attributes>
@@ -161,20 +170,21 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="xFz-kP-n1h" firstAttribute="top" secondItem="UhV-9D-cDh" secondAttribute="top" id="3eb-Zo-ycP"/>
+                                    <constraint firstItem="xFz-kP-n1h" firstAttribute="top" secondItem="UhV-9D-cDh" secondAttribute="top" constant="14" id="3eb-Zo-ycP"/>
                                     <constraint firstAttribute="trailing" secondItem="xFz-kP-n1h" secondAttribute="trailing" id="8J0-Ew-xQy"/>
                                     <constraint firstItem="xFz-kP-n1h" firstAttribute="leading" secondItem="UhV-9D-cDh" secondAttribute="leading" id="ayD-Mw-tpb"/>
                                     <constraint firstAttribute="height" constant="60" id="bBP-nh-LOH"/>
-                                    <constraint firstAttribute="bottom" secondItem="xFz-kP-n1h" secondAttribute="bottom" constant="16" id="zVH-xA-sfx"/>
+                                    <constraint firstAttribute="bottom" secondItem="xFz-kP-n1h" secondAttribute="bottom" constant="2" id="zVH-xA-sfx"/>
                                 </constraints>
                             </view>
                         </subviews>
                     </stackView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="keB-wo-JfO" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="0eo-f4-MD6"/>
                     <constraint firstAttribute="bottom" secondItem="keB-wo-JfO" secondAttribute="bottom" id="dpY-mx-1HR"/>
-                    <constraint firstItem="keB-wo-JfO" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="bottom" constant="8" id="esZ-ek-D8J"/>
+                    <constraint firstItem="keB-wo-JfO" firstAttribute="top" secondItem="4h9-HB-IaF" secondAttribute="bottom" constant="16" id="esZ-ek-D8J"/>
                     <constraint firstAttribute="trailing" secondItem="4h9-HB-IaF" secondAttribute="trailing" constant="12" id="ipK-pk-B5U"/>
                     <constraint firstItem="4h9-HB-IaF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="nlo-wY-xFm"/>
                     <constraint firstItem="4h9-HB-IaF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="q2e-vy-M1B"/>

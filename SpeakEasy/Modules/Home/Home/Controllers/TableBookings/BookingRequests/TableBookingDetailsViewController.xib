@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Poppins-Bold.ttf">
+            <string>Poppins-Bold</string>
+        </array>
+        <array key="Poppins-SemiBold.ttf">
+            <string>Poppins-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TableBookingDetailsViewController" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+            <connections>
+                <outlet property="bookingTableView" destination="gYJ-JS-mU3" id="WBa-mf-jyd"/>
+                <outlet property="view" destination="RBO-9s-JGF" id="TqY-0T-XKu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="RBO-9s-JGF">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gYJ-JS-mU3">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="779"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="z3p-yf-2Tz"/>
+                        <outlet property="delegate" destination="-1" id="2mJ-kt-KbQ"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iF1-R0-hMO" userLabel="FadeView">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="114"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="114" id="XJE-LD-djx"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PrM-y9-lRz" userLabel="TitleView">
+                    <rect key="frame" x="0.0" y="44" width="414" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RHA-MC-owZ">
+                            <rect key="frame" x="16" y="10" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="RHA-MC-owZ" secondAttribute="height" multiplier="1:1" id="OJ8-EA-GRc"/>
+                                <constraint firstAttribute="width" constant="40" id="zbq-4a-Yal"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" image="BackArrow"/>
+                            <connections>
+                                <action selector="onBtnBack:" destination="-1" eventType="touchUpInside" id="4aW-z1-Xxa"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0j4-Id-RZv" customClass="UILabelDeviceClass" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                            <rect key="frame" x="107" y="12.5" width="200" height="35"/>
+                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="25"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="iPhoneFontSize">
+                                    <real key="value" value="25"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="bold"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="RHA-MC-owZ" firstAttribute="leading" secondItem="PrM-y9-lRz" secondAttribute="leading" constant="16" id="2Zm-S5-Zxh"/>
+                        <constraint firstItem="0j4-Id-RZv" firstAttribute="centerX" secondItem="PrM-y9-lRz" secondAttribute="centerX" id="DEK-3m-fuf"/>
+                        <constraint firstAttribute="height" constant="60" id="Rjc-g6-KN2"/>
+                        <constraint firstItem="RHA-MC-owZ" firstAttribute="centerY" secondItem="0j4-Id-RZv" secondAttribute="centerY" id="U4K-h8-Aj1"/>
+                        <constraint firstItem="0j4-Id-RZv" firstAttribute="centerY" secondItem="PrM-y9-lRz" secondAttribute="centerY" id="iYC-Ss-F04"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yFv-ro-Jqb" customClass="RoundedButton" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+                    <rect key="frame" x="16" y="794" width="382" height="48"/>
+                    <color key="backgroundColor" red="0.054901960780000002" green="0.054901960780000002" blue="0.054901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="zlA-Wq-76z"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="17"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Proceed">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                            <real key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                            <color key="value" red="0.62352941179999999" green="0.62352941179999999" blue="0.62352941179999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onBtnProcess:" destination="-1" eventType="touchUpInside" id="2TW-fO-TEq"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="ArC-rw-7kf"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="yFv-ro-Jqb" firstAttribute="top" secondItem="gYJ-JS-mU3" secondAttribute="bottom" constant="15" id="3N5-97-9yO"/>
+                <constraint firstItem="gYJ-JS-mU3" firstAttribute="leading" secondItem="ArC-rw-7kf" secondAttribute="leading" id="4Pi-4a-Fp5"/>
+                <constraint firstItem="PrM-y9-lRz" firstAttribute="leading" secondItem="ArC-rw-7kf" secondAttribute="leading" id="5um-1m-P73"/>
+                <constraint firstItem="PrM-y9-lRz" firstAttribute="trailing" secondItem="ArC-rw-7kf" secondAttribute="trailing" id="Jd3-7x-yuU"/>
+                <constraint firstItem="iF1-R0-hMO" firstAttribute="leading" secondItem="ArC-rw-7kf" secondAttribute="leading" id="Lml-ce-d6K"/>
+                <constraint firstItem="gYJ-JS-mU3" firstAttribute="trailing" secondItem="ArC-rw-7kf" secondAttribute="trailing" id="Lsy-be-x1s"/>
+                <constraint firstItem="iF1-R0-hMO" firstAttribute="top" secondItem="RBO-9s-JGF" secondAttribute="top" id="MjL-WD-kvj"/>
+                <constraint firstItem="ArC-rw-7kf" firstAttribute="bottom" secondItem="yFv-ro-Jqb" secondAttribute="bottom" constant="20" id="RXP-Pc-0NU"/>
+                <constraint firstItem="gYJ-JS-mU3" firstAttribute="top" secondItem="RBO-9s-JGF" secondAttribute="top" id="dpf-NV-T5I"/>
+                <constraint firstItem="iF1-R0-hMO" firstAttribute="trailing" secondItem="ArC-rw-7kf" secondAttribute="trailing" id="eAu-j0-XpA"/>
+                <constraint firstItem="ArC-rw-7kf" firstAttribute="trailing" secondItem="yFv-ro-Jqb" secondAttribute="trailing" constant="16" id="fjc-kb-fgP"/>
+                <constraint firstItem="PrM-y9-lRz" firstAttribute="top" secondItem="ArC-rw-7kf" secondAttribute="top" id="pWX-hm-MOF"/>
+                <constraint firstItem="yFv-ro-Jqb" firstAttribute="leading" secondItem="ArC-rw-7kf" secondAttribute="leading" constant="16" id="uiL-tw-e0h"/>
+            </constraints>
+            <point key="canvasLocation" x="107" y="-550"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="BackArrow" width="26.5" height="19"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -44,10 +44,10 @@ class ViewEventHeader: UIView {
         self.lblDescription.isHidden = !self.lblDescription.isHidden
         self.layoutIfNeeded()
     }
-    
+    //fixthis
     func setData(data: TopEventDataSet) {
         self.imgEventCover.image = data.imgEventCover
-        self.imgBrandCover.image = data.imgBrandLogo
+        self.imgBrandCover.image = data.imgBrandLogoLarge
         self.lblPerformerName.text = data.lblPerformerName ?? ""
         self.lblEventVenueName.text = data.lblVenueName
         self.lblEventDate.text = data.lblEventDate ?? ""

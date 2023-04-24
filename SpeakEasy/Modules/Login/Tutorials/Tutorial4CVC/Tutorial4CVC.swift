@@ -11,6 +11,5 @@ class Tutorial4CVC: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 }

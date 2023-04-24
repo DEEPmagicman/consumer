@@ -8,6 +8,7 @@
 import UIKit
 import SCPageControl
 
+// TODO: remove old vc (with SCPageControl pod)
 class Tutorials: BaseController {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -15,7 +16,7 @@ class Tutorials: BaseController {
     @IBOutlet weak var bottomFrontView: UIView!
     @IBOutlet weak var btnSkipCreateAccount: UIButton!
     
-    var pagesCount = 5
+    var pagesCount = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,14 +26,15 @@ class Tutorials: BaseController {
     }
     
     @IBAction func onBtnSignIn(_ sender: UIButton) {
-        AppDelegate.shared.showLogin()
+        UserDefault.shared.isLoggedIn = true
+        AppDelegate.shared.changeRootViewController()
     }
 }
 //MARK: - Helper Methods
 extension Tutorials{
     private func setUI(){
         self.pageControl.scp_style = .SCJAFillCircle
-        self.pageControl.set_view(self.pagesCount - 1 , current: 0, current_color: Global.APP_COLOR_DARK_PURPLE, disable_color: nil)
+        self.pageControl.set_view(self.pagesCount , current: 0, current_color: Global.APP_COLOR_DARK_PURPLE, disable_color: nil)
     }
     private func registerCell(){
         self.collectionView.register(UINib(nibName: "Tutorial1CVC", bundle: nil), forCellWithReuseIdentifier: "Tutorial1CVC")
@@ -43,7 +45,7 @@ extension Tutorials{
         
     }
     private func setCurrentPageBottom(currentPage: Int){
-        if currentPage == 4{
+        if currentPage == 2{
             DispatchQueue.main.async {
                 self.pageControl.isHidden = true
                 if !self.bottomFrontView.isHidden{return}
@@ -72,16 +74,16 @@ extension Tutorials: UICollectionViewDataSource{
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.item {
-        case 0:
+        case 3:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tutorial1CVC", for: indexPath)
             return cell
-        case 1:
+        case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tutorial2CVC", for: indexPath)
             return cell
-        case 2:
+        case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tutorial3CVC", for: indexPath)
             return cell
-        case 3:
+        case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Tutorial4CVC", for: indexPath)
             return cell
         default:

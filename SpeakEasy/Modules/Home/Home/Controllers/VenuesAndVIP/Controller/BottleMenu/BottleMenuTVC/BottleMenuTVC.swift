@@ -9,6 +9,12 @@ import UIKit
 
 class BottleMenuTVC: UITableViewCell {
 
+    @IBOutlet weak var lblType: UILabelDeviceClass!
+    @IBOutlet weak var lblDrinkOne: UILabelDeviceClass!
+    @IBOutlet weak var lblDrinkTwo: UILabelDeviceClass!
+    @IBOutlet weak var lblDrinkThree: UILabelDeviceClass!
+    @IBOutlet weak var lblDrinkFour: UILabelDeviceClass!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -8,7 +8,7 @@
 import UIKit
 
 
-
+// TODO: remove old VC
 class VIPBookingInvite: BaseController {
     
     @IBOutlet weak var collectionView: UICollectionView!

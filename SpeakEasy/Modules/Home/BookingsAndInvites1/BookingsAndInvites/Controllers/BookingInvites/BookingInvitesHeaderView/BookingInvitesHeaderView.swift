@@ -19,9 +19,10 @@ class BookingInvitesHeaderView: UIView {
     }
     
     func setData(data: VenuesVIPEventDataSet) {
-        self.lblLocation.text = data.location
+        self.lblLocation.text = data.location ?? ""
         self.lblPhoneNumber.text = data.phoneNumber ?? ""
-        self.lblPerfomerName.text = data.lblPerformerName
+        self.lblPerfomerName.text = data.lblPerformerName ?? ""
+        //fixthis
         self.imgVenueCover.image = data.imgEventCover
     }
 }

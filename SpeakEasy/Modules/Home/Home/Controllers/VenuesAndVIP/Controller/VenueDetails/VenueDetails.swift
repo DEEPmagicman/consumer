@@ -27,18 +27,16 @@ class VenueDetails: UIViewController {
     @IBOutlet weak var venueCollectionView: UICollectionView!
     @IBOutlet weak var tableViewDressCode: UITableView!
     @IBOutlet weak var viewVenueDetails: UIView!
+    @IBOutlet weak var lblVenueDescription: UILabelDeviceClass!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var lblTitle: UILabelDeviceClass!
     @IBOutlet weak var imgBrandLogo: RoundedImage!
-    @IBOutlet weak var lblLocation: UILabelDeviceClass!
-    @IBOutlet weak var lblPhoneNumber: UILabelDeviceClass!
+    //@IBOutlet weak var lblLocation: UILabelDeviceClass!
+    //@IBOutlet weak var lblPhoneNumber: UILabelDeviceClass!
+    @IBOutlet weak var vibesCollectionView: UICollectionView!
     
     var arrGallery = ["GeneralAdmissionBG1","GeneralAdmissionBG2","GeneralAdmissionBG3","GeneralAdmissionBG1","GeneralAdmissionBG2"]
-    var arrHours = [
-        HoursDataSet(day: "Thursday", time: "10:00PM - Late"),
-        HoursDataSet(day: "Friday", time: "10:00PM - Late"),
-        HoursDataSet(day: "Saturday", time: "10:00PM - Late")
-    ]
+    var arrHours: [HoursDataSet] = []
     var arrDressCode = [DressCodeDataSet(dressCode: "Smart casual"),
                         DressCodeDataSet(dressCode: "No shorts, baseball caps and athletic apparel"),
                         DressCodeDataSet(dressCode: "No large bags")]
@@ -46,12 +44,11 @@ class VenueDetails: UIViewController {
     var arrTabBarOptions = [TabBarOption(label: Strings.VIP_AND_EVENTS.text, index: 0, icon: nil, selectedIcon: nil, isSelected: true),
                             TabBarOption(label: Strings.VENUE_DEAILS.text,   index: 1, icon: nil, selectedIcon: nil, isSelected: false)]
     
-    var arrayTopEvents = [
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG1"), lblPerformerName: "Steve Aoki", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "VenueTao"), lblEventDate: "Tonight!", currentLiveEventFires: nil, isLive: true,location: "632 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG2"), lblPerformerName: "Qrion", lblVenueName: "PRYSM", imgBrandLogo: UIImage(named: "TopEventBrandLogo2"), lblEventDate: "Friday, July 8", currentLiveEventFires: nil, isLive: false,location: "586 N. Dearborn St."),
-        TopEventDataSet(imgEventCover: UIImage(named: "TopEventBG3"), lblPerformerName: "Worship Thursdays", lblVenueName: "TAO", imgBrandLogo: UIImage(named: "TaoLogo"), lblEventDate: "Thursday, July 21", currentLiveEventFires: nil, isLive: false,location: "335 N. Dearborn St.")]
+    var arrayTopEvents: [TopEventDataSet] = []
     
    static var hotVenuesData: VenuesVIPEventDataSet?
+    
+    var arrVibes = ["VIP Bottle Service","Strict Dress Code","Premium Bottles","Celebrity DJs",  "EDM", "Fashion Forward","Musical Variety", "Dress to Impress","Tables Recommended"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +69,7 @@ class VenueDetails: UIViewController {
         Utility.main.openMap(lat: 41.893600, lng: -87.629820)
     }
     @IBAction func onBtnBookVIPTable(_ sender: UIButtonDeviceClass) {
-        Utility.main.topViewController()?.navigationController?.pushViewController(VIPTableBookingCalendar(), animated: true)
+        Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(VIPTableBookingCalendar(), animated: true)
     }
     @IBAction func onBtnViewBottleMenu(_ sender: UIButtonDeviceClass) {
         self.navigationController?.pushViewController(BottleMenu(), animated: true)
@@ -90,13 +87,15 @@ extension VenueDetails{
         addObservers(tableView: self.tableViewDressCode)
     }
     private func setData() {
-        self.lblLocation.text = VenueDetails.hotVenuesData?.location
-        self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
-        self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName
+        //self.lblLocation.text = VenueDetails.hotVenuesData?.location ?? ""
+        //self.lblPhoneNumber.text = VenueDetails.hotVenuesData?.phoneNumber ?? ""
+        self.lblTitle.text = VenueDetails.hotVenuesData?.lblPerformerName ?? ""
         self.imgBrandLogo.image = VenueDetails.hotVenuesData?.imgBrandLogo
         let imgEventCover = VenueDetails.hotVenuesData?.imgEventCover?.imageAsset?.value(forKey: "assetName") as? String ?? ""
         self.arrGallery[0] = imgEventCover
-        
+        self.arrayTopEvents = VenueDetails.hotVenuesData?.upcomingEvents ?? []
+        self.lblVenueDescription.text = VenueDetails.hotVenuesData?.description
+        self.arrHours = VenueDetails.hotVenuesData?.hours ?? []
         DispatchQueue.main.async {
             self.galleryCollectionView.reloadData()
         }
@@ -115,6 +114,7 @@ extension VenueDetails{
         self.venueCollectionView.register(UINib(nibName: "TabCVC", bundle: nil), forCellWithReuseIdentifier: "TabCVC")
         self.tableViewHours.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
         self.tableViewDressCode.register(UINib(nibName: "DressCodeTVC", bundle: nil), forCellReuseIdentifier: "DressCodeTVC")
+        self.vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
     }
 }
 //MARK: - UICollectionViewDataSource
@@ -127,6 +127,8 @@ extension VenueDetails: UICollectionViewDataSource {
             return self.arrTabBarOptions.count
         case self.collectionView:
             return self.arrayTopEvents.count
+        case self.vibesCollectionView:
+            return self.arrVibes.count
         default:
             return 0
         }
@@ -148,6 +150,11 @@ extension VenueDetails: UICollectionViewDataSource {
             let data = self.arrayTopEvents[indexPath.item]
             cell.setData(data: data)
             return cell
+        case self.vibesCollectionView:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
+            cell.lblVibes.text = arrVibes[indexPath.row]
+            
+            return cell
         default:
             return UICollectionViewCell()
         }
@@ -156,8 +163,10 @@ extension VenueDetails: UICollectionViewDataSource {
 //MARK: - UICollectionViewDelegate
 extension VenueDetails: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.item == 1 {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: self.viewVenueDetails.frame.minY - 100), animated: true)
+        if collectionView == venueCollectionView {
+            if indexPath.item == 1 {
+                self.scrollView.setContentOffset(CGPoint(x: 0, y: self.viewVenueDetails.frame.minY - 100), animated: true)
+            }
         }
     }
 }
@@ -172,14 +181,25 @@ extension VenueDetails: UICollectionViewDelegateFlowLayout {
             return size
             
         case self.collectionView:
-            let width = collectionView.frame.width * 0.6
-            let height = collectionView.frame.height * 0.96
+            let width = 250.0//collectionView.frame.width * 0.6
+            let height = 290.0//collectionView.frame.height * 0.96
             let size = CGSize(width: width, height: height)
             return size
             
         case self.venueCollectionView:
-            let width = collectionView.frame.width * 0.32
+            let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "semiBold", fontSize: 15.0)
             let height = collectionView.frame.height
+            
+            let tabOption = self.arrTabBarOptions[indexPath.item].label
+            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 20.0
+            
+            let size = CGSize(width: width, height: height)
+            return size
+        case vibesCollectionView:
+            let lableFont = Utility.main.getDeviceSpecificFont(fontWeight: "medium", fontSize: 15.0)
+            let height = 40.0
+            let tabOption = self.arrVibes[indexPath.item]
+            let width = tabOption.size(withAttributes:[.font: lableFont ?? UIFont.systemFont(ofSize:15.0)]).width + 30.0
             let size = CGSize(width: width, height: height)
             return size
         default:

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="M8U-Hj-BYW">
-                        <rect key="frame" x="12" y="0.0" width="308" height="266"/>
+                        <rect key="frame" x="12" y="0.0" width="296" height="260"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="12" id="KdU-PX-GS5">
                             <size key="itemSize" width="128" height="128"/>
@@ -27,17 +28,17 @@
                         </collectionViewFlowLayout>
                     </collectionView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vdL-5H-Qpk">
-                        <rect key="frame" x="160" y="266" width="0.0" height="0.0"/>
+                        <rect key="frame" x="160" y="260" width="0.0" height="0.0"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cPU-jh-VaA">
-                                <rect key="frame" x="-160" y="0.0" width="240" height="60"/>
+                                <rect key="frame" x="-33.5" y="0.0" width="67" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Can-9M-UFK">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
+                                        <rect key="frame" x="0.0" y="16" width="67" height="44"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal">
                                             <attributedString key="attributedTitle">
-                                                <fragment content="See all">
+                                                <fragment content="See All">
                                                     <attributes>
                                                         <color key="NSColor" red="0.99999994039999995" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <font key="NSFont" size="15" name="Arial-BoldMT"/>
@@ -51,9 +52,9 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Can-9M-UFK" secondAttribute="trailing" id="05H-34-X1c"/>
                                     <constraint firstItem="Can-9M-UFK" firstAttribute="leading" secondItem="cPU-jh-VaA" secondAttribute="leading" id="BEb-L2-bzp"/>
-                                    <constraint firstAttribute="bottom" secondItem="Can-9M-UFK" secondAttribute="bottom" constant="16" id="aYD-Rb-YhX"/>
+                                    <constraint firstAttribute="bottom" secondItem="Can-9M-UFK" secondAttribute="bottom" id="aYD-Rb-YhX"/>
                                     <constraint firstAttribute="height" constant="60" id="pat-Ps-jGQ"/>
-                                    <constraint firstItem="Can-9M-UFK" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" id="x2z-mo-obZ"/>
+                                    <constraint firstItem="Can-9M-UFK" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" constant="16" id="x2z-mo-obZ"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -65,8 +66,11 @@
                             <constraint firstAttribute="height" constant="1" id="8e4-t8-9Xa"/>
                         </constraints>
                     </view>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGJ-E9-Ft3">
-                        <rect key="frame" x="126" y="266" width="67" height="60"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGJ-E9-Ft3">
+                        <rect key="frame" x="126.5" y="260" width="67" height="60"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="67" id="KsL-Tj-gOb"/>
+                        </constraints>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                         <state key="normal">
@@ -79,9 +83,10 @@
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="leading" secondItem="cPU-jh-VaA" secondAttribute="leading" id="98N-XV-lg8"/>
                     <constraint firstAttribute="bottom" secondItem="0Nf-Kg-MdN" secondAttribute="bottom" id="Cmh-HL-VFC"/>
                     <constraint firstItem="M8U-Hj-BYW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="G2b-i7-OAA"/>
-                    <constraint firstItem="0Nf-Kg-MdN" firstAttribute="top" secondItem="vdL-5H-Qpk" secondAttribute="bottom" constant="4" id="Mhf-ch-NHS"/>
-                    <constraint firstAttribute="trailing" secondItem="M8U-Hj-BYW" secondAttribute="trailing" id="REl-SI-SLV"/>
+                    <constraint firstItem="0Nf-Kg-MdN" firstAttribute="top" secondItem="vdL-5H-Qpk" secondAttribute="bottom" constant="10" id="Mhf-ch-NHS"/>
+                    <constraint firstAttribute="trailing" secondItem="M8U-Hj-BYW" secondAttribute="trailing" constant="12" id="REl-SI-SLV"/>
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="bottom" secondItem="cPU-jh-VaA" secondAttribute="bottom" id="Tad-Ot-CzL"/>
+                    <constraint firstItem="nGJ-E9-Ft3" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="TiC-d1-PnG"/>
                     <constraint firstItem="nGJ-E9-Ft3" firstAttribute="top" secondItem="cPU-jh-VaA" secondAttribute="top" id="icg-TH-K96"/>
                     <constraint firstItem="0Nf-Kg-MdN" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="pso-d7-S5e"/>
                     <constraint firstItem="M8U-Hj-BYW" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="sIB-xW-atz"/>

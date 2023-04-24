@@ -6,7 +6,6 @@
 //  Copyright © 2020 Code Creators. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 struct BookingTabBarOption {
@@ -30,20 +29,6 @@ struct EventHeaderOptions {
     var label = ""
     var isSelected = false
 }
-struct AddressAttributes{
-  var compactAddress: String?
-  var country: String?
-  var state: String?
-  var city: String?
-  var latitude: Double?
-  var longitude: Double?
-}
-struct OrderCells{
-    var flag = false
-}
-struct MenuCells{
-    var flag = false
-}
 struct BookingsDataSet {
     var brand: UIImage?
     var bookingName: String?
@@ -64,6 +49,11 @@ struct StatusAndRewardDataSet {
     var ticketDescription: String?
     var date: String?
     var rewardDescription: String?
+    var rewardName: String?
+    var imgVenue: UIImage?
+    var imgVenueLogo: UIImage?
+    var rewardNote: String?
+    var hasEventBanner: Bool
 }
 
 struct OthersInvites{
