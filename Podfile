@@ -31,6 +31,7 @@ target 'SpeakEasy-Consumer' do
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
   pod 'NBBottomSheet', '~> 1.2'
+  pod 'Firebase/RemoteConfig'
 end
 
 target 'SpeakEasyClip' do

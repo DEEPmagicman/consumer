@@ -208,6 +208,9 @@
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
 		CE31687329DC33ED00242CBF /* ConfirmEmailBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */; };
+		CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */; };
+		CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */; };
+		CE0E874E2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
 		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
@@ -801,6 +804,9 @@
 		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
 		CE31687229DC33ED00242CBF /* ConfirmEmailBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailBottomSheet.swift; sourceTree = "<group>"; };
+		CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigHelper.swift; sourceTree = "<group>"; };
+		CE0E874D2994C6EC00F2B2E9 /* EnterPhomeNumberMvpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhomeNumberMvpVC.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
 		CE3213C629E02E8700EBC179 /* Account.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
@@ -1681,6 +1687,7 @@
 				BD942F442959623E00D52115 /* Header.swift */,
 				CE565472299CA9A3009CE55C /* ReachabilityManager.swift */,
 				CE565475299CAC95009CE55C /* WebSocketWrapper.swift */,
+				CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1844,6 +1851,7 @@
 		CE486735286F2CCB00FD277E /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
+				CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */,
 				CE486721286F2CB000FD277E /* AppDelegate.swift */,
 				CE858068299A2089001F6E56 /* FlagKit.xcassets */,
 			);
@@ -4074,6 +4082,7 @@
 				E11F4C3928C8383A008D2E30 /* SelectedTicketAndRecipientTVC.xib in Resources */,
 				E15D6B6C28BC39AC0076286C /* Tutorial2CVC.xib in Resources */,
 				CAC4140A28A478050007BA86 /* MonthCollectionViewCell.xib in Resources */,
+				CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */,
 				E1A9E7F528C579690081FB28 /* FriendsListCVC.xib in Resources */,
 				E167059028CA6AB800644BF0 /* FriendTVC.xib in Resources */,
 				E11F4C0B28C835F3008D2E30 /* BookingStatusTVC.xib in Resources */,
@@ -4467,6 +4476,7 @@
 				CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */,
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,
 				BD942F452959623E00D52115 /* Header.swift in Sources */,
+				CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */,
 				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
 				CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */,
 				CE4867A8286F358800FD277E /* Validator.swift in Sources */,
@@ -4649,11 +4659,11 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy Go!";
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy Go!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -4683,11 +4693,11 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "SpeakEasy Go!";
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy Go!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -4839,7 +4849,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4884,7 +4894,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

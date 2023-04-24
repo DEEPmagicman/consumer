@@ -34,7 +34,12 @@ final class MVPVenueListVc: UIViewController {
         venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
         fetchAllOpenVenueForMVP()
         fetchAllCloseVenueForMVP()
+        RemoteConfigHelper.shared.getRemoteConfigValues(showSoftUpdate: true)
+        // foreground event
+        NotificationCenter.default.addObserver(self, selector: #selector(checkForceUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
         
+        // add these notification to prevent freeze on long Home button press and back
+        NotificationCenter.default.addObserver(self, selector: #selector(checkForceUpdate), name: UIApplication.didBecomeActiveNotification, object: nil)
         refresh.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         venueListTableView.addSubview(refresh)
         WebSocketWrapper.shared.delegate.append(self)
@@ -51,6 +56,10 @@ final class MVPVenueListVc: UIViewController {
                 }
             }
         }
+    }
+    
+    @objc private func checkForceUpdate() {
+        RemoteConfigHelper.shared.getRemoteConfigValues()
     }
     
     @objc private func refresh(_ sender: AnyObject) {
