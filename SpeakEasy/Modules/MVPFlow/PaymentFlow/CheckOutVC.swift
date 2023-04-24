@@ -22,10 +22,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     var venueAttachment = ""
     var venueLogo = ""
-    var selectedTickets = [AppClipTicket]()
+    var selectedAppClipTickets = [AppClipTicket]()
+    var selectedEventTicket = [EventTicket]()
     var totalPrice = 0
     var venueName = ""
     var venueId = ""
+    var type: PaymentIntentType = .appClip
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
@@ -76,12 +78,22 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func createBooking() {
         var appClipTickets = [[String: Any]]()
-        selectedTickets.forEach {
-            appClipTickets.append(["ticketId": $0.id,
-                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+        switch type {
+        case .appClip:
+            selectedAppClipTickets.forEach {
+                appClipTickets.append(["ticketId": $0.id,
+                                       "ticketQuantity": $0.selectedQuantity ?? 0])
+            }
+        case .singleTickedEvent:
+            selectedEventTicket.forEach {
+                appClipTickets.append(["ticketId": $0.id,
+                                       "ticketQuantity": $0.selectedTicketCount ?? 0])
+            }
+        case .tieredTickedEvent:
+            break
         }
         Loader.show()
-        PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: "6405b04375070abfb6862389") { [weak self] isSuccess, errMsg, id in
+        PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -107,11 +119,21 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         
     private func addPaymentApi() {
         var appClipTickets = [[String: Any]]()
-        selectedTickets.forEach {
-            appClipTickets.append(["ticketId": $0.id,
-                                   "quantity": $0.selectedQuantity ?? 0])
+        switch type {
+        case .appClip:
+            selectedAppClipTickets.forEach {
+                appClipTickets.append(["ticketId": $0.id,
+                                       "quantity": $0.selectedQuantity ?? 0])
+            }
+        case .singleTickedEvent:
+            selectedEventTicket.forEach {
+                appClipTickets.append(["ticketId": $0.id,
+                                       "quantity": $0.selectedTicketCount ?? 0])
+            }
+        case .tieredTickedEvent:
+            break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: .appClip) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
@@ -166,7 +188,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus {
-                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedTickets)
+                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -226,14 +248,30 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
 extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        selectedTickets.count
+        switch type {
+        case .appClip:
+            return selectedAppClipTickets.count
+        case .singleTickedEvent:
+            return selectedEventTicket.count
+        case .tieredTickedEvent:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = selectedTickets[indexPath.row].name
-        cell.subTitleLbl.text = selectedTickets[indexPath.row].description
-        cell.quantityLbl.text = "\(selectedTickets[indexPath.row].selectedQuantity ?? 0)x"
+        switch type {
+        case .appClip:
+            cell.titleLbl.text = selectedAppClipTickets[indexPath.row].name
+            cell.subTitleLbl.text = selectedAppClipTickets[indexPath.row].description
+            cell.quantityLbl.text = "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x"
+        case .singleTickedEvent:
+            cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
+            cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
+            cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
+        case .tieredTickedEvent:
+            break
+        }
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear
@@ -252,7 +290,7 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus {
-                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedTickets)
+                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
             }
         case .error:
             self.isPaymentInitiated = false

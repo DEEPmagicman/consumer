@@ -214,7 +214,7 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: self.venueId, venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedTickets: selectedTickets, totalPrice: totalPrice)
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
         }
     }
     
