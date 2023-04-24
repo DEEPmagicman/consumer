@@ -30,6 +30,7 @@ target 'SpeakEasy-Consumer' do
   pod 'StripePaymentSheet'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
+  pod 'Firebase/RemoteConfig'
 end
 
 target 'SpeakEasyClip' do

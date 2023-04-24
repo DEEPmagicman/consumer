@@ -8,6 +8,7 @@
 import UIKit
 import GoogleMaps
 import IQKeyboardManagerSwift
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -36,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
         UserDefault.shared.isMvp = true
         self.application = application
         GMSServices.provideAPIKey(Constants.apiKey)
