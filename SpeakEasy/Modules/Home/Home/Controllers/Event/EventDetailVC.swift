@@ -69,7 +69,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @objc func openFullImage() {
-        // TODO: navigate to full screen image
+        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
     }
     
     @objc func openAppleMap() {

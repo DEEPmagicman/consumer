@@ -296,6 +296,7 @@
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
 		CED5465D29F6B174006465FD /* bgvideo.mov in Resources */ = {isa = PBXBuildFile; fileRef = CED5465C29F6B174006465FD /* bgvideo.mov */; };
+		CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
 		CEECAA70288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */; };
@@ -888,6 +889,7 @@
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
 		CED5465C29F6B174006465FD /* bgvideo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = bgvideo.mov; sourceTree = "<group>"; };
+		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
 		CEECAA68288D8B7C007C5F9C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -1799,6 +1801,7 @@
 			isa = PBXGroup;
 			children = (
 				CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */,
+				CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -4402,6 +4405,7 @@
 				CE4867BA286F358800FD277E /* UITextField+Extension.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
 				E1A9E7D128C56FD10081FB28 /* SearchAndAddTVC.swift in Sources */,
+				CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */,
 				BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */,
 				E1A9E7C128C56FD10081FB28 /* SearchTVC.swift in Sources */,
 				CE4867A0286F358700FD277E /* DynamicFonts.swift in Sources */,
