@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol CardDetailChangeDelegate: AnyObject {
+    func didDeleteCard(id: String)
+}
+
 final class CardDetailsViewController: UIViewController {
 
     @IBOutlet weak var defaultBtn: UIButton!
@@ -18,6 +22,7 @@ final class CardDetailsViewController: UIViewController {
     var paymentMethod: PaymentMethod?
     var customerId: String?
     var isDefault = false
+    weak var delegate: CardDetailChangeDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +52,7 @@ final class CardDetailsViewController: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
+                self.delegate?.didDeleteCard(id: self.paymentMethod?.id ?? "")
                 Navigate.to.back(self)
             } else {
                 if errMsg != nil {

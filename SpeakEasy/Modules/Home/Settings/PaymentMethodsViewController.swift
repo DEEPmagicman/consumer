@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PaymentMethodVCDelegate: AnyObject {
-    func didSelectMethod(_ id: String, image: UIImage?)
+    func didSelectMethod(_ id: String, image: UIImage?, brand: String)
     func addCard()
 }
 
@@ -20,6 +20,7 @@ final class PaymentMethodsViewController: UIViewController {
     var isEditable = false
     private var paymentMethods = [PaymentMethod]()
     private var selectedImage = Constant.Card.cardIc
+    private var selectedBrand = Constant.String.defaultSelectedPM
     private var isNoPaymentMethodFound: Bool {
         paymentMethods.count == 0
     }
@@ -106,6 +107,7 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
             }
             selectedId = Constant.String.defaultSelectedPM
             selectedImage = Constant.Card.applePay
+            selectedBrand = Constant.String.defaultSelectedPM
         } else {
             if isEditable {
                 Navigate.to.cardDetailsVc(self, customerId: "cus_NjIf65HxFjE65P", paymentMethod: paymentMethods[indexPath.row - 1], isDefault: selectedId == paymentMethods[indexPath.row - 1].id)
@@ -118,9 +120,17 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
             } else {
                 selectedId = paymentMethods[indexPath.row - 1].id
                 selectedImage = paymentMethods[indexPath.row - 1].image
+                selectedBrand = paymentMethods[indexPath.row - 1].brand
             }
         }
         paymentTableView.reloadData()
-        delegate?.didSelectMethod(selectedId, image: selectedImage)
+        delegate?.didSelectMethod(selectedId, image: selectedImage, brand: selectedBrand)
+    }
+}
+
+extension PaymentMethodsViewController: CardDetailChangeDelegate {
+    func didDeleteCard(id: String) {
+        paymentMethods.removeAll { $0.id == id }
+        paymentTableView.reloadData()
     }
 }

@@ -12,8 +12,8 @@ struct EventTicket: Codable {
     var id: String
     var eventId: String?
     var tierName: String
-    var price: Int
-    var issuedUnits: Int
+    var price: Int?
+    var issuedUnits: Int?
     var beginSale: String
     var endSale: String
     var soldUnits: Int?
@@ -26,7 +26,7 @@ struct EventTicket: Codable {
     var eventTicketHasTier: [EventTicketHasTier]?
     var selectedTicketCount: Int?
     var remainingQuantity: Int? {
-        issuedUnits - (soldUnits ?? 0)
+        (issuedUnits ?? 0) - (soldUnits ?? 0)
     }
 
     func encode(to encoder: Encoder) throws {

@@ -12,6 +12,10 @@ import StripePaymentSheet
 
 final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
+    @IBOutlet private weak var purchaseImg: UIImageView!
+    @IBOutlet private weak var titleLbl: UILabel!
+    @IBOutlet private weak var dateLbl: UILabel!
+    @IBOutlet private weak var venueNameLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!
     @IBOutlet private weak var infoLbl: UILabel!
     @IBOutlet private weak var ticketListTableView: UITableView!
@@ -28,11 +32,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var venueName = ""
     var venueId = ""
     var type: PaymentIntentType = .appClip
+    var event: Event?
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
     private var selectedId = Constant.String.defaultSelectedPM
+    private var selectedPaymentBrand = Constant.String.defaultSelectedPM
     private var bookingId = ""
     private var isApplePayNotSupported: Bool {
         !PKPaymentAuthorizationViewController.canMakePayments()
@@ -47,6 +53,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         totalPriceLbl.text = "$\(totalPrice)"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
+        setUpData()
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -55,6 +62,22 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
+    }
+    
+    private func setUpData() {
+        switch type {
+        case .appClip:
+            titleLbl.text = "Live Cover Ticket"
+            dateLbl.text = "Tonight"
+            purchaseImg.image = Constant.Icon.liveCover
+        case .singleTickedEvent:
+            titleLbl.text = event?.title ?? "Untitle Event"
+            dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        case .tieredTickedEvent:
+            break
+        }
+        venueNameLbl.text = venueName
     }
     
     @objc private func onClickPaymentMethod() {
@@ -187,7 +210,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.paymentStatus {
+                self.paymentStatus(paymentFrom: self.selectedPaymentBrand) {
                     Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
                 }
             case .canceled:
@@ -229,9 +252,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(paymentFrom: String? = nil, completion: @escaping (()-> Void)) {
         Loader.show()
-        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
+        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, paymentFrom: paymentFrom) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()
@@ -289,7 +312,7 @@ extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            paymentStatus {
+            paymentStatus(paymentFrom: selectedPaymentBrand) {
                 Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
             }
         case .error:
@@ -334,14 +357,16 @@ extension CheckOutVC: WebSocketCallBackDelegate {
 }
 
 extension CheckOutVC: PaymentMethodVCDelegate {
-    func didSelectMethod(_ id: String, image: UIImage?) {
+    func didSelectMethod(_ id: String, image: UIImage?, brand: String) {
         selectedId = id
         paymentMethodImg.image = image
+        selectedPaymentBrand = brand
     }
     
     func addCard() {
         selectedId = Constant.String.addNewCard
         paymentMethodImg.image = Constant.Card.cardIc
+        selectedPaymentBrand = Constant.String.addNewCard
         DispatchQueue.main.async {
             self.onClickCreditCardPay()
         }

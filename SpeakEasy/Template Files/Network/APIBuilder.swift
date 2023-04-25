@@ -188,8 +188,12 @@ struct APIBuilder {
         baseURL + route + payment + "/\(id)"
     }
     
-    static func successPaymentURL(_ paymentHistoryId: String, _ id: String) -> String {
-        baseURL + route + payment + "/" + paymentHistoryId + "/" + id + statusSuccess
+    static func successPaymentURL(_ paymentHistoryId: String, _ id: String, paymentFrom: String? = nil) -> String {
+        var url = baseURL + route + payment + "/" + paymentHistoryId + "/" + id + statusSuccess
+        if let paymentFrom = paymentFrom {
+            url += "&paymentType=\(paymentFrom.replacingOccurrences(of: " ", with: "%20"))"
+        }
+        return url
     }
     
     static var mvpCityListURL: String {

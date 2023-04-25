@@ -13,11 +13,11 @@ final class MVPVenueDetailVc: UIViewController {
 
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var venueBgImg: UIImageView!
-    @IBOutlet weak var venueTitleNameLbl: UILabelDeviceClass!
+    @IBOutlet weak var venueTitleNameLbl: UILabel!
+    @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var ticketTypeTableView: UITableView!
-    @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var liveLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
@@ -30,6 +30,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var toNightLbl: UILabel!
     @IBOutlet weak var venuePageView: UIView!
     @IBOutlet weak var closeTicketView: UIView!
+    @IBOutlet weak var tonightView: UIView!
     @IBOutlet weak var openingHoursView: UIView!
     @IBOutlet weak var vibeView: UIView!
     @IBOutlet weak var dressCodeView: UIView!
@@ -41,6 +42,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var openingHoursTableView: UITableView!
     @IBOutlet weak var upcomingTableView: UITableView!
     @IBOutlet weak var upcomingTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var venuePolicyLbl: UILabel!
 
     var venueId = ""
     var isFromAppClip = false
@@ -152,6 +154,7 @@ final class MVPVenueDetailVc: UIViewController {
             self.upcomingSectionView.isHidden = eventList.count == 0
             self.upcomingTableView.reloadData()
             self.hasMore = hasMore
+            self.updateCloseViewVisibility()
             Loader.hide()
         }
     }
@@ -178,10 +181,10 @@ final class MVPVenueDetailVc: UIViewController {
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
+        cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
-        infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.\nPrices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
-        infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
+        venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime
             liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
@@ -198,14 +201,26 @@ final class MVPVenueDetailVc: UIViewController {
         if venueDetails?.appClipTicket?.allSatisfy({ ticket in
             ticket.status == "DISABLED"
         }) == true {
-            closeTicketView.isHidden = false
+            updateCloseViewVisibility()
+            tonightView.isHidden = true
             venuePageView.isHidden = true
         } else {
             venuePageView.isHidden = false
+            tonightView.isHidden = false
             closeTicketView.isHidden = true
         }
         updatedAtLbl.text = "Updated: \(venueDetails?.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) ?? "")"
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
+    }
+    
+    private func updateCloseViewVisibility() {
+        if (events.count == 0 && (venueDetails?.appClipTicket?.allSatisfy({ ticket in
+            ticket.status == "DISABLED"
+        }) == true)) {
+            closeTicketView.isHidden = false
+        } else {
+            closeTicketView.isHidden = true
+        }
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
@@ -240,6 +255,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case openingHoursTableView:
             return demoHours.count
         case upcomingTableView:
+            upcomingSectionView.isHidden = events.count == 0
             return events.count
         default:
             return 0

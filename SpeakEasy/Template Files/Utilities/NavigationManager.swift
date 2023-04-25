@@ -225,7 +225,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], totalPrice: Int, type: PaymentIntentType) {
+    func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Int, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
@@ -235,6 +235,7 @@ final class Navigate {
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
         vc.type = type
+        vc.event = event
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -260,8 +261,6 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(PaymentDetailVC.self)
         vc.selectedTickets = selectedTickets
         vc.totalPrice = totalPrice
-        vc.modalPresentationStyle = .overFullScreen
-        vc.modalTransitionStyle = .crossDissolve
         sender.present(vc, animated: true)
     }
     
@@ -307,6 +306,7 @@ final class Navigate {
         vc.customerId = customerId
         vc.paymentMethod = paymentMethod
         vc.isDefault = isDefault
+        vc.delegate = sender as? CardDetailChangeDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

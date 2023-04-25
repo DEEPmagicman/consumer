@@ -37,7 +37,7 @@ final class SelectTicketVC: UIViewController {
         case .event:
             event?.eventTicket?.forEach {
                 if let quantity = $0.selectedTicketCount {
-                    total += ($0.price * quantity)
+                    total += (($0.price ?? 0) * quantity)
                 }
             }
         }
@@ -91,7 +91,7 @@ final class SelectTicketVC: UIViewController {
 
     @IBAction func onClickContinue(_ sender: Any) {
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: event?.eventTicket ?? [], totalPrice: totalPrice, type: .singleTickedEvent)
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: event?.eventTicket ?? [], event: event, totalPrice: totalPrice, type: .singleTickedEvent)
         }
     }
     

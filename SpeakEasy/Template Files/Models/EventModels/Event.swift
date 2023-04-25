@@ -38,8 +38,8 @@ struct Event: Codable {
     var eventTicket: [EventTicket]?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
-        let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && ($0.issuedUnits > ($0.soldUnits ?? 0)) }
-        return filterTicket?.min { $0.price < $1.price }
+        let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
+        return filterTicket?.min { $0.price ?? 0 < $1.price ?? 0}
     }
 
     func encode(to encoder: Encoder) throws {

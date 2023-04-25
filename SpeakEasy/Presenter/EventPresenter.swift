@@ -11,7 +11,10 @@ final class EventPresenter {
     static func getEvents(from: Int? = 0, venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
         // TODO: change with actual venueId
         let param = ["skip": from ?? 0,
-                     "venueId": "6405b04375070abfb6862389"] as [String : Any]
+                     "venueId": "6405b04375070abfb6862389",
+                     "version": "PUBLISHED",
+                     "eventStatus": "APPROVED",
+                     "timeVersion": "FUTURE"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {

@@ -38,6 +38,9 @@ final class EventDetailVC: UIViewController {
         scrollView.delegate = self
         // TODO: add webSocket to sync tier left ticket
         // WebSocketWrapper.shared.delegate.append(self)
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(openFullImage))
+        mainImg.isUserInteractionEnabled = true
+        mainImg.addGestureRecognizer(tap1)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
     }
@@ -63,6 +66,10 @@ final class EventDetailVC: UIViewController {
             self.event = eventDetail
             self.setupData()
         }
+    }
+    
+    @objc func openFullImage() {
+        // TODO: navigate to full screen image
     }
     
     @objc func openAppleMap() {
