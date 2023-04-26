@@ -26,9 +26,14 @@ final class EnterNameViewController: UIViewController {
         lastNameTextField.delegate = self
         DOBTextField.delegate = self
         emailTextField.delegate = self
-        emailTextField.text = UserDefault.shared.user?.email
+        firstNameTextField.text = UserDefault.shared.user?.firstName
+        lastNameTextField.text = UserDefault.shared.user?.lastName
+        nikNameTextField.text = UserDefault.shared.user?.nickName
+        DOBTextField.text = UserDefault.shared.user?.dateOfBirth
+        emailTextField.text = UserDefault.shared.user?.additionalEmail ?? UserDefault.shared.user?.email
         ContinueBtn.isUserInteractionEnabled = false
         ContinueBtn.alpha = 0.5
+        textFieldDidChangeSelection(firstNameTextField)
     }
     
     @IBAction private func onClickDOB(_ sender: Any) {
@@ -47,7 +52,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     
     func confirmDetail() {
         // TODO: add additional email field in API
-        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "", dob: DOBTextField.text) { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: nikNameTextField.text ?? "", dob: DOBTextField.text, additionalEmail: emailTextField.text ?? "") { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
@@ -55,6 +60,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
                 UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""
                 UserDefault.shared.user?.nickName = self.nikNameTextField.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = self.DOBTextField.text ?? ""
+                UserDefault.shared.user?.additionalEmail = self.emailTextField.text ?? ""
                 Navigate.to.selectGenderVc(self)
             } else {
                 if errorMsg != nil {

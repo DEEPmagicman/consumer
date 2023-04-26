@@ -29,8 +29,14 @@ final class SetProfilePictureViewController: UIViewController {
         profileView.addGestureRecognizer(gesture)
         
         imageView.cornerRadius = 75
-        continueBtn.isUserInteractionEnabled = false
-        continueBtn.alpha = 0.5
+        if (UserDefault.shared.user?.image.key ?? "") != "", let url = URL(string: UserDefault.shared.user?.image.key ?? "") {
+            imageView.sd_setImage(with: url, placeholderImage: Constant.Icon.uploadImage)
+            continueBtn.isUserInteractionEnabled = true
+            continueBtn.alpha = 1
+        } else {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.alpha = 0.5
+        }
     }
 
     @IBAction private func onClickContinue(_ sender: Any) {

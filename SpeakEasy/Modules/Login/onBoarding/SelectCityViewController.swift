@@ -90,7 +90,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        onBoardingDelegate.editUserProfileApi(city: self.selectedCity) { [weak self] isSuccess,errorMsg  in
+        onBoardingDelegate.editUserProfileApi(city: self.selectedCity, isProfileCompleted: true) { [weak self] isSuccess,errorMsg  in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -98,6 +98,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
                 UserDefault.shared.isLoggedIn = true
+                UserDefault.shared.user?.isProfileCompleted = true
                 AppDelegate.shared.changeRootViewController()
             } else {
                 if errorMsg != nil {

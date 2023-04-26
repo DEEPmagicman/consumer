@@ -34,7 +34,7 @@ struct Constant {
     }
     
     struct String {
-        static let googleClientId = "971202288158-9gap4p13k19hgr5r257doeqidhdu736o.apps.googleusercontent.com"
+        static let googleClientId = "327697476599-4kbspuivil9hh6vacef3oe2j1u29iu4m.apps.googleusercontent.com"
         static let InstagramClientSecret = "1aa210cc8cf5084ec246c62b7cf68519"
         static let InstagramClientId = "1996312040570930"
         static let spotifyClientId = "7fe9739926f84543abb666bf8aeef274"

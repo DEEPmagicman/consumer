@@ -28,12 +28,16 @@ final class PersonalInformationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        firstNameTF.text = UserDefault.shared.user?.firstName ?? ""
-        lastNameTF.text = UserDefault.shared.user?.lastName ?? ""
-        nickNameTF.text = UserDefault.shared.user?.nickName ?? ""
-        genderTF.text = UserDefault.shared.user?.gender ?? ""
+        firstNameTF.text = UserDefault.shared.user?.firstName
+        lastNameTF.text = UserDefault.shared.user?.lastName
+        nickNameTF.text = UserDefault.shared.user?.nickName
+        genderTF.text = UserDefault.shared.user?.gender.capitalized
         dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY)
-        emailTF.text = UserDefault.shared.user?.email
+        if (UserDefault.shared.user?.email ?? "") == "" {
+            emailTF.text =  UserDefault.shared.user?.additionalEmail
+        } else {
+            emailTF.text = UserDefault.shared.user?.email
+        }
         phoneNumberTF.text = UserDefault.shared.user?.phone
     }
 
@@ -42,13 +46,18 @@ final class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickSave(_ sender: Any) {
-        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: nickNameTF.text ?? "", gender: genderTF.text) { [weak self] isSuccess,errorMsg  in
+        guard let date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD) else {
+            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+            return
+        }
+        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: nickNameTF.text ?? "", dob: date, gender: genderTF.text?.uppercased()) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTF.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
                 UserDefault.shared.user?.nickName = self.nickNameTF.text ?? ""
+                UserDefault.shared.user?.dateOfBirth = date
                 UserDefault.shared.user?.gender = self.genderTF.text ?? ""
                 Navigate.to.back(self)
             } else {

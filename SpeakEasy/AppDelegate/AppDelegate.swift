@@ -69,22 +69,26 @@ extension AppDelegate {
             return
         }
         if UserDefault.shared.isLoggedIn == true {
-            showHome(selectedIndex: 0)
+            if UserDefault.shared.user?.isProfileCompleted == true {
+                showHome(selectedIndex: 0)
+            } else {
+                showOnboarding(isNavigateToDetail: true)
+            }
         } else {
             showOnboarding()
         }
     }
     
-    func showOnboarding() {
-//        let controller = StartScreenViewController()
+    func showOnboarding(isNavigateToDetail: Bool = false) {
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
-
-//        controller.isHeroEnabled = true
         let tutorialNavigation = UINavigationController(rootViewController: controller)
         tutorialNavigation.navigationBar.isHidden = true
         tutorialNavigation.modalTransitionStyle = .crossDissolve
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
+        if isNavigateToDetail, let vc = self.window?.rootViewController {
+            Navigate.to.connectAccountVc(vc)
+        }
     }
     
     private func setAppClipNavigation() {

@@ -165,9 +165,17 @@ final class VerificationCodeViewController: UIViewController {
     private func otpVerification() {
         if isFromLogin {
             self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
-                if isSuccess {
-                    AppDelegate.shared.changeRootViewController()
+                guard let self = self else {
                     Loader.hide()
+                    return
+                }
+                if isSuccess {
+                    Loader.hide()
+                    if UserDefault.shared.user?.isProfileCompleted == true {
+                        AppDelegate.shared.changeRootViewController()
+                    } else {
+                        Navigate.to.connectAccountVc(self)
+                    }
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

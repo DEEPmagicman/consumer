@@ -34,6 +34,16 @@ final class SelectGenderViewController: UIViewController {
         
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
+        switch UserDefault.shared.user?.gender.capitalized {
+        case "Male":
+            onClickManView()
+        case "Female":
+            onClickWomanView()
+        case "Other":
+            onClickOtherView()
+        default:
+            break
+        }
     }
     
     @objc private func onClickManView() {

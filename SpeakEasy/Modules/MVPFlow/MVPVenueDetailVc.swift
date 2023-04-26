@@ -74,7 +74,6 @@ final class MVPVenueDetailVc: UIViewController {
         return total >= maxTicket
     }
     private var events = [Event]()
-    private let demoVibes = Array(repeating: "VIP Bottle Service", count: 6)
     private let demoHours = Constants.taoHours
     
     override func viewDidLoad() {
@@ -127,6 +126,7 @@ final class MVPVenueDetailVc: UIViewController {
             if isSuccess {
                 self.venueDetails = venueDetail
                 self.setUpUI()
+                self.vibesCollectionView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
             } else {
                 if errMsg != nil {
@@ -422,19 +422,20 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
 
 extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        demoVibes.count
+        vibeView.isHidden = (venueDetails?.venueVibes.count ?? 0) == 0
+        return venueDetails?.venueVibes.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = vibesCollectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
-        cell.lblVibes.text = demoVibes[indexPath.row]
+        cell.lblVibes.text = venueDetails?.venueVibes[indexPath.row]
         return cell
     }
 }
 
 extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = demoVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width + 16
+        let width = (venueDetails?.venueVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width ?? 0) + 16
         let size = CGSize(width: width, height: 40.0)
         return size
     }

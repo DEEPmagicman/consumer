@@ -32,7 +32,7 @@ final class ConnectAccountViewController: UIViewController {
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        Navigate.to.dateOfBirthVc(self)
+        Navigate.to.enterNameVc(self)
     }
     
     func connectWithGoogle() {
@@ -56,6 +56,7 @@ final class ConnectAccountViewController: UIViewController {
                     return
                 }
                 if isSuccess {
+                    UserDefault.shared.user?.email = email
                     Navigate.to.enterNameVc(self)
                 } else {
                     if errorMsg != nil {
@@ -97,7 +98,8 @@ extension ConnectAccountViewController: ASAuthorizationControllerDelegate{
                         return
                     }
                     if isSuccess {
-                        Navigate.to.dateOfBirthVc(self)
+                        UserDefault.shared.user?.email = decodedBody["email"] as? String ?? ""
+                        Navigate.to.enterNameVc(self)
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

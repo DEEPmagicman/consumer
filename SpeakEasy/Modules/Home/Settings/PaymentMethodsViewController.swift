@@ -36,7 +36,7 @@ final class PaymentMethodsViewController: UIViewController {
     
     private func getSavedMethods() {
         Loader.show()
-        PaymentPresenter.getUserSavedMethods(customerId: "cus_NjIf65HxFjE65P") { [weak self] isSuccess, errMsg, paymentMethods in
+        PaymentPresenter.getUserSavedMethods(customerId: UserDefault.shared.user?.stripeCusId ?? "") { [weak self] isSuccess, errMsg, paymentMethods in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -110,7 +110,7 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
             selectedBrand = Constant.String.defaultSelectedPM
         } else {
             if isEditable {
-                Navigate.to.cardDetailsVc(self, customerId: "cus_NjIf65HxFjE65P", paymentMethod: paymentMethods[indexPath.row - 1], isDefault: selectedId == paymentMethods[indexPath.row - 1].id)
+                Navigate.to.cardDetailsVc(self, customerId: UserDefault.shared.user?.stripeCusId ?? "", paymentMethod: paymentMethods[indexPath.row - 1], isDefault: selectedId == paymentMethods[indexPath.row - 1].id)
                 return
             }
             if isNoPaymentMethodFound {

@@ -196,7 +196,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil,instagramToken: String? = nil,spotifyToken: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg:String?) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, additionalEmail: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg:String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName, fName != "" {
             param["firstName"] = fName
@@ -237,7 +237,12 @@ final class OnBoardingPresenter {
         if let spotifyToken = spotifyToken {
             param["spotifyToken"] = spotifyToken
         }
-
+        if let additionalEmail = additionalEmail {
+            param["additionalEmail"] = additionalEmail
+        }
+        if let isProfileCompleted = isProfileCompleted {
+            param["isProfileCompleted"] = isProfileCompleted
+        }
         Loader.show()
         AFWrapper.patchRequest(APIBuilder.userProfileURL, params: param, headers: Header.header()) { response in
             

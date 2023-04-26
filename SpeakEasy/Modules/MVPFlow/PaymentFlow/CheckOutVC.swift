@@ -100,43 +100,66 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func createBooking() {
-        var appClipTickets = [[String: Any]]()
+        var tickets = [[String: Any]]()
         switch type {
         case .appClip:
             selectedAppClipTickets.forEach {
-                appClipTickets.append(["ticketId": $0.id,
+                tickets.append(["ticketId": $0.id,
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
+            }
+            Loader.show()
+            PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: tickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
+                if isSuccess {
+                    guard let id = id else {
+                        Loader.hide()
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                        return
+                    }
+                    self.bookingId = id
+                    self.addPaymentApi()
+                } else {
+                    if errMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                    }
+                    Loader.hide()
+                }
             }
         case .singleTickedEvent:
             selectedEventTicket.forEach {
-                appClipTickets.append(["ticketId": $0.id,
+                tickets.append(["ticketId": $0.id,
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
+            }
+            Loader.show()
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
+                if isSuccess {
+                    guard let id = id else {
+                        Loader.hide()
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                        return
+                    }
+                    self.bookingId = id
+                    self.addPaymentApi()
+                } else {
+                    if errMsg != nil {
+                        Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                    }
+                    Loader.hide()
+                }
             }
         case .tieredTickedEvent:
             break
-        }
-        Loader.show()
-        PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: appClipTickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
-            guard let self = self else {
-                Loader.hide()
-                return
-            }
-            if isSuccess {
-                guard let id = id else {
-                    Loader.hide()
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                    return
-                }
-                self.bookingId = id
-                self.addPaymentApi()
-            } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
-                Loader.hide()
-            }
         }
     }
         
@@ -179,7 +202,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-        configuration.customer = .init(id: "cus_NjIf65HxFjE65P", ephemeralKeySecret: ephemeralKey)
+        configuration.customer = .init(id: UserDefault.shared.user?.stripeCusId ?? "", ephemeralKeySecret: ephemeralKey)
         configuration.savePaymentMethodOptInBehavior = .automatic
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.

@@ -37,6 +37,8 @@ struct User {
     var vibeIds: [String]
     var drinkIds: [String]
     var stripeCusId: String
+    var additionalEmail: String?
+    var isProfileCompleted: Bool
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -67,6 +69,8 @@ struct User {
         case vibeIds = "vibe_ids"
         case drinkIds = "drink_ids"
         case stripeCusId = "stripeCustId"
+        case additionalEmail
+        case isProfileCompleted
     }
     
     init(fromDictionary dictionary: [String: Any]) {
@@ -98,6 +102,8 @@ struct User {
         self.vibeIds = dictionary["vibeIds"] as? Array ?? []
         self.drinkIds = dictionary["drinkIds"] as? Array ?? []
         self.stripeCusId = dictionary["stripeCustId"] as? String ?? ""
+        self.additionalEmail = dictionary["additionalEmail"] as? String ?? ""
+        self.isProfileCompleted = dictionary["isProfileCompleted"] as? Bool ?? false
     }
 }
 
@@ -132,6 +138,8 @@ extension User: Decodable, Encodable {
         vibeIds = (try? values.decode([String].self, forKey: .vibeIds)) ?? []
         drinkIds = (try? values.decode([String].self, forKey: .drinkIds)) ?? []
         stripeCusId = (try? values.decode(String.self, forKey: .stripeCusId)) ?? ""
+        additionalEmail = (try? values.decode(String.self, forKey: .additionalEmail)) ?? ""
+        isProfileCompleted = (try? values.decode(Bool.self, forKey: .isProfileCompleted)) ?? false
     }
     
     func encode(to encoder: Encoder) throws {
@@ -164,6 +172,8 @@ extension User: Decodable, Encodable {
         try val.encode(vibeIds, forKey: .vibeIds)
         try val.encode(drinkIds, forKey: .drinkIds)
         try val.encode(stripeCusId, forKey: .stripeCusId)
+        try val.encode(additionalEmail, forKey: .additionalEmail)
+        try val.encode(isProfileCompleted, forKey: .isProfileCompleted)
     }
 }
 
