@@ -135,7 +135,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.section {
         case 0:
             // TODO: navigate with actual data
-            Navigate.to.QRCode(self, venueName: "LIQR Box Chicago", bookingId: "hello", venueAttachment: "prod/p-1678166121050-0hkR.png", venueLogo: "prod/l-1678106876023-Z3iH.png", selectedTickets: [])
+            Navigate.to.QRCode(self, venueName: "LIQR Box Chicago", bookingId: "hello", venueAttachment: "prod/p-1678166121050-0hkR.png", venueLogo: "prod/l-1678106876023-Z3iH.png", selectedTickets: [], type: .singleTickedEvent)
         case 1:
             // TODO: navigate to recommended event
             break

@@ -248,7 +248,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func QRCode(_ sender: UIViewController, venueName: String, bookingId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket]) {
+    func QRCode(_ sender: UIViewController, venueName: String, bookingId: String, venueAttachment: String, venueLogo: String, selectedTickets: [AppClipTicket], type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(QRCodeVC.self)
         vc.venueName = venueName
         vc.bookingId = bookingId
@@ -256,6 +256,7 @@ final class Navigate {
         vc.venueLogo = venueLogo
         vc.selectedTickets = selectedTickets
         vc.delegate = sender as? QRCodeVCNavigationDelegate
+        vc.type = type
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)
             homeVc.tabBarController?.selectedIndex = 1

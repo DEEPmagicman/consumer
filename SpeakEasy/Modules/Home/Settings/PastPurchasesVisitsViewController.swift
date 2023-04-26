@@ -18,11 +18,18 @@ final class PastPurchasesVisitsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        getPastPurchase()
         pastPurchasesTableView.delegate = self
         pastPurchasesTableView.dataSource = self
         pastPurchasesTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
         pastPurchasesTableView.setupPadding()
         pastPurchasesTableView.groupStyleSpacing()
+    }
+    
+    private func getPastPurchase() {
+        PaymentPresenter.getPastTickets { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
+            print("")
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {

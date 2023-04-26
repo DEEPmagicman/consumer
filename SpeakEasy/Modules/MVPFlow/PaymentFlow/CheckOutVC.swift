@@ -234,7 +234,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus(paymentFrom: self.selectedPaymentBrand) {
-                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
+                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets, type: self.type)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -336,7 +336,7 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus(paymentFrom: selectedPaymentBrand) {
-                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets)
+                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets, type: self.type)
             }
         case .error:
             self.isPaymentInitiated = false

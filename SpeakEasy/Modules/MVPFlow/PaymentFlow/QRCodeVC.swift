@@ -15,19 +15,25 @@ protocol QRCodeVCNavigationDelegate: AnyObject {
 
 final class QRCodeVC: UIViewController {
 
+    @IBOutlet private weak var titleLbl: UILabel!
+    @IBOutlet private weak var dateLbl: UILabel!
+    @IBOutlet private weak var venueNameLbl: UILabel!
     @IBOutlet private weak var venueImg: UIImageView!
     @IBOutlet private weak var venueLogoImg: UIImageView!
     @IBOutlet private weak var QRImg: UIImageView!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
-    @IBOutlet private weak var addToWalletBtn: PKAddPassButton!    
+    @IBOutlet private weak var addToWalletBtn: PKAddPassButton!
     @IBOutlet private weak var eventDetailsLbl: UILabel!
+    @IBOutlet private weak var venueImgHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var QRToImgBottomConstraint: NSLayoutConstraint!
 
     var venueName = ""
     var bookingId = ""
     var venueAttachment = ""
     var venueLogo = ""
     var selectedTickets = [AppClipTicket]()
+    var type: PaymentIntentType = .appClip
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var pass: PKPass?
@@ -37,6 +43,27 @@ final class QRCodeVC: UIViewController {
         QRImg.image = generateQRCode(from: bookingId)
         loadImage()
         addToWalletBtn.addPassButtonStyle = .blackOutline
+        switch type {
+        case .appClip:
+            titleLbl.text = venueName
+            dateLbl.isHidden = true
+            venueNameLbl.isHidden = true
+            eventDetailsLbl.isHidden = true
+            venueImgHeightConstraint.constant = 320
+            QRToImgBottomConstraint.constant = -100
+        case .singleTickedEvent:
+            titleLbl.text = "Event"
+            dateLbl.text = "Date"
+            dateLbl.isHidden = false
+            venueNameLbl.text = venueName
+            venueNameLbl.isHidden = false
+            eventDetailsLbl.isHidden = false
+            venueImgHeightConstraint.constant = 390
+            QRToImgBottomConstraint.constant = -170
+        case .tieredTickedEvent:
+            break
+        }
+        venueNameLbl.text = venueName
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }

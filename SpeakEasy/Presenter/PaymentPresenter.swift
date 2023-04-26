@@ -128,6 +128,29 @@ final class PaymentPresenter {
         }
     }
     
+    static func getPastTickets(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String) -> Void) {
+
+        
+        AFWrapper.getRequest(APIBuilder.pastTicketsURL, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "", "", "")
+                return
+            }
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String {
+                completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey)
+            } else {
+                completion(false, "internal error", "", "", "")
+            }
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, "", "", "")
+                return
+            }
+            completion(false, nil, "", "", "")
+        }
+    }
+    
     static func deleteMethod(customerId: String, methodId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         AFWrapper.deleteRequest(APIBuilder.deleteMethod(customerId, methodId: methodId), headers: Header.header()) { response in
             guard let responseArray = response as? [String: Any] else {

@@ -18,6 +18,7 @@ final class UserDefault: NSObject {
         case hasVisitedStartingPage = "hasVisitedStartingPage"
         case localCity = "Surat"
         case defaultCitySelected = "defaultCitySelected"
+        case isNotificationOnKey = "isNotificationOn"
     }
     
     let userDefaults = UserDefaults.standard
@@ -103,6 +104,14 @@ final class UserDefault: NSObject {
         }
     }
     
+    var isNotificationOn: Bool {
+        get {
+            (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
+        }
+    }
+    
     func removeInstaConnection() {
         user?.instagramId = ""
         user?.instagramToken = nil
@@ -115,5 +124,6 @@ final class UserDefault: NSObject {
         user = nil
         isLoggedIn = false
         isGuest = false
+        isNotificationOn = false
     }
 }
