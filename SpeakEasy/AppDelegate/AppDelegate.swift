@@ -69,7 +69,7 @@ extension AppDelegate {
             return
         }
         if UserDefault.shared.isLoggedIn == true {
-            if UserDefault.shared.user?.isProfileCompleted == true {
+            if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
                 showHome(selectedIndex: 0)
             } else {
                 showOnboarding(isNavigateToDetail: true)

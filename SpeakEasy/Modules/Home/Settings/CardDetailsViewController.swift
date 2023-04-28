@@ -13,7 +13,6 @@ protocol CardDetailChangeDelegate: AnyObject {
 
 final class CardDetailsViewController: UIViewController {
 
-    @IBOutlet weak var defaultBtn: UIButton!
     @IBOutlet weak var expLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var deleteBtn: UIButton!
@@ -21,7 +20,6 @@ final class CardDetailsViewController: UIViewController {
 
     var paymentMethod: PaymentMethod?
     var customerId: String?
-    var isDefault = false
     weak var delegate: CardDetailChangeDelegate?
     
     override func viewDidLoad() {
@@ -37,9 +35,6 @@ final class CardDetailsViewController: UIViewController {
             deleteBtn.isHidden = true
             deleteView.isHidden = true
         }
-        defaultBtn.setImage(Constant.Icon.defaultIcon, for: .normal)
-        defaultBtn.setImage(Constant.Icon.check, for: .selected)
-        defaultBtn.isSelected = isDefault
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -62,9 +57,5 @@ final class CardDetailsViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    @IBAction func onClickDefault(_ sender: UIButton) {
-        defaultBtn.isSelected.toggle()
     }
 }

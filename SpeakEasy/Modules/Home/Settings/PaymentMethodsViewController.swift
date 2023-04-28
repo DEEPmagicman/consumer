@@ -58,11 +58,6 @@ final class PaymentMethodsViewController: UIViewController {
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
-    @objc func buttonAction(sender: UIButton) {
-//        if demoPaymentArray[sender.tag] == "Mastercard 1234" {
-//            Navigate.to.cardDetailsVc(self) }
-    }
 }
 
 extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -80,7 +75,8 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
         if indexPath.row == 0 {
             cell.paymentIcon.image = Constant.Card.applePay
             cell.paymentType.text = Constant.String.defaultSelectedPM
-            cell.defaultLbl.isHidden = (selectedId == Constant.String.defaultSelectedPM || selectedId == Constant.String.addNewCard) ? false : true
+            cell.defaultLbl.isHidden = selectedId == Constant.String.defaultSelectedPM ? false : true
+            cell.navigateBtn.isHidden = true
         } else {
             if isNoPaymentMethodFound {
                 cell.paymentIcon.image = Constant.Card.cardIc
@@ -92,25 +88,22 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
                 cell.paymentType.text = "\(paymentMethod.brand) \(paymentMethod.last4)"
                 cell.defaultLbl.isHidden = selectedId == paymentMethod.id ? false : true
             }
+            cell.navigateBtn.isHidden = !isEditable
         }
-        cell.navigateBtn.isHidden = !isEditable
-        cell.navigateBtn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        cell.navigateBtn.tag = indexPath.row
+        if isEditable {
+            cell.defaultLbl.isHidden = true
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            if isEditable {
-                Navigate.to.cardDetailsVc(self, customerId: "", paymentMethod: nil, isDefault: (selectedId == Constant.String.defaultSelectedPM || selectedId == Constant.String.addNewCard))
-                return
-            }
             selectedId = Constant.String.defaultSelectedPM
             selectedImage = Constant.Card.applePay
             selectedBrand = Constant.String.defaultSelectedPM
         } else {
             if isEditable {
-                Navigate.to.cardDetailsVc(self, customerId: UserDefault.shared.user?.stripeCusId ?? "", paymentMethod: paymentMethods[indexPath.row - 1], isDefault: selectedId == paymentMethods[indexPath.row - 1].id)
+                Navigate.to.cardDetailsVc(self, customerId: UserDefault.shared.user?.stripeCusId ?? "", paymentMethod: paymentMethods[indexPath.row - 1])
                 return
             }
             if isNoPaymentMethodFound {
