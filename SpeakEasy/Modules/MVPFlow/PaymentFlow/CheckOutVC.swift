@@ -67,7 +67,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func setUpData() {
         switch type {
         case .appClip:
-            titleLbl.text = "Live Cover Ticket"
+            titleLbl.text = Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
         case .singleTickedEvent:

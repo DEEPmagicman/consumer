@@ -17,6 +17,7 @@ final class AccountVC: UIViewController {
 
     private var listHeightObservation: NSKeyValueObservation?
     private var onBoardingPresenter = OnBoardingPresenter()
+    private var bookings = [Booking]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +41,7 @@ final class AccountVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        getTickets()
         displayData()
     }
     
@@ -48,6 +50,14 @@ final class AccountVC: UIViewController {
             self?.profileImg.borderWidth = err == nil ? 2 : 0
         }
         nameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "")"
+    }
+    
+    private func getTickets() {
+        PaymentPresenter.getTickets { [weak self] isSuccess, errMsg, bookings in
+            guard let self = self else { return }
+            self.bookings = bookings
+            self.listTableView.reloadData()
+        }
     }
     
     @objc private func onClickAddPhoto() {
@@ -106,11 +116,22 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        if section == 0 {
+            return bookings.count
+        }
+        return 3
     }
             
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+        if indexPath.section == 0 {
+            if bookings[indexPath.row].eventId == nil {
+                cell.nameLbl.text = Constant.String.liveCoverTicket
+                cell.upcomingImage.image = Constant.Icon.liveCover
+            } else {
+                cell.nameLbl.text = "Event name"
+            }
+        }
         cell.priceLbl.text = "TAO Nightclub, Chicago"
         cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell

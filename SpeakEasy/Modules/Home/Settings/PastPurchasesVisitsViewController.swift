@@ -27,7 +27,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
     }
     
     private func getPastPurchase() {
-        PaymentPresenter.getPastTickets { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
+        PaymentPresenter.getPastTickets { isSuccess, errMsg, bookings in
             print("")
         }
     }
@@ -48,7 +48,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
         cell.nameLbl.text = demoNames[indexPath.row]
         cell.dateLbl.text = demoDates[indexPath.row]
         cell.priceLbl.text = demoPrices[indexPath.row]
-        if demoNames[indexPath.row] == "Live Cover Ticket" {
+        if demoNames[indexPath.row] == Constant.String.liveCoverTicket {
             cell.upcomingImage.image = Constant.Icon.liveCover
         }
         return cell

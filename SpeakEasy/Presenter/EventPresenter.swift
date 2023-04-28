@@ -9,9 +9,8 @@ import Foundation
 
 final class EventPresenter {
     static func getEvents(from: Int? = 0, venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
-        // TODO: change with actual venueId
         let param = ["skip": from ?? 0,
-                     "venueId": "6405b04375070abfb6862389",
+                     "venueId": venueId,
                      "version": "PUBLISHED",
                      "eventStatus": "APPROVED",
                      "timeVersion": "FUTURE"] as [String : Any]

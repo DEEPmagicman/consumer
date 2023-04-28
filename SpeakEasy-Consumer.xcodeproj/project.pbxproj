@@ -205,6 +205,7 @@
 		CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */; };
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
+		CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
 		CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */; };
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */; };
@@ -801,6 +802,7 @@
 		CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigHelper.swift; sourceTree = "<group>"; };
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
+		CE0F423C29FBE6AB0082723B /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectionBottomSheet.swift; sourceTree = "<group>"; };
 		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31687029DC274D00242CBF /* ConfirmEmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailVC.swift; sourceTree = "<group>"; };
@@ -1788,6 +1790,14 @@
 			path = PaymentFlow;
 			sourceTree = "<group>";
 		};
+		CE0F423B29FBE69A0082723B /* Booking */ = {
+			isa = PBXGroup;
+			children = (
+				CE0F423C29FBE6AB0082723B /* Booking.swift */,
+			);
+			path = Booking;
+			sourceTree = "<group>";
+		};
 		CE18917429F28AC6009D7A5B /* CustomDropDownCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2144,6 +2154,7 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CE0F423B29FBE69A0082723B /* Booking */,
 				828E9A982983CF3B000F2736 /* BottleMenuList */,
 				29868364297567FB00CB827B /* EventModels */,
 				298683592975657200CB827B /* VenueModels */,
@@ -4488,6 +4499,7 @@
 				E15D6B7228BC39AC0076286C /* MVPSplashCVC.swift in Sources */,
 				CE4867B6286F358800FD277E /* UIViewController+Extension.swift in Sources */,
 				CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */,
+				CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
 				CE9AD76F29F28ECD00FA55C9 /* CustomDropDownCell.swift in Sources */,

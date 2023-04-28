@@ -1,0 +1,144 @@
+//
+//  Booking.swift
+//  SpeakEasy-Consumer
+//
+//  Created by Square Infosoft on 28/04/23.
+//
+
+import Foundation
+
+struct Booking: Codable {
+
+    var id: String
+    var venueId: String
+    var phone: String
+    var eventId: String?
+    var isAppClipUser: Bool
+    var paymentType: String
+//    var appClipUserId: Any
+//    var ticketName: Any
+    var isCheckedIn: Bool
+//    var ticketPrice: Any
+//    var ticketQuantity: Any
+    var totalPrice: Int
+//    var note: Any
+    var consumerUserId: [String]
+//    var bookingDate: Any
+    var bookingStartTime: String?
+    var bookingEndTime: String?
+    var paymentIntent: String
+//    var additionalSpent: Any
+    var paymentStatus: String
+    var bookingExpireDateTime: String
+//    var qrScannedDateTime: Any
+    var createdAt: String
+    var updatedAt: String
+    var isDeleted: Bool
+    var isApproved: Bool
+//    var eventTicketId: Any
+//    var eventTicketHasTierId: Any
+    var bookingHasItem: [BookingHasItem]
+
+    private enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case venueId = "venueId"
+        case phone = "phone"
+        case eventId = "eventId"
+        case isAppClipUser = "isAppClipUser"
+        case paymentType = "paymentType"
+//        case appClipUserId = "appClipUserId"
+//        case ticketName = "ticketName"
+        case isCheckedIn = "isCheckedIn"
+//        case ticketPrice = "ticketPrice"
+//        case ticketQuantity = "ticketQuantity"
+        case totalPrice = "totalPrice"
+//        case note = "note"
+        case consumerUserId = "consumerUserId"
+//        case bookingDate = "bookingDate"
+        case bookingStartTime = "bookingStartTime"
+        case bookingEndTime = "bookingEndTime"
+        case paymentIntent = "paymentIntent"
+//        case additionalSpent = "additionalSpent"
+        case paymentStatus = "paymentStatus"
+        case bookingExpireDateTime = "bookingExpireDateTime"
+//        case qrScannedDateTime = "qrScannedDateTime"
+        case createdAt = "createdAt"
+        case updatedAt = "updatedAt"
+        case isDeleted = "isDeleted"
+        case isApproved = "isApproved"
+//        case eventTicketId = "eventTicketId"
+//        case eventTicketHasTierId = "eventTicketHasTierId"
+        case bookingHasItem = "bookingHasItem"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(venueId, forKey: .venueId)
+        try container.encode(phone, forKey: .phone)
+        try container.encode(eventId, forKey: .eventId)
+        try container.encode(isAppClipUser, forKey: .isAppClipUser)
+        try container.encode(paymentType, forKey: .paymentType)
+        // TODO: Add code for encoding `appClipUserId`, It was null at the time of model creation.
+        // TODO: Add code for encoding `ticketName`, It was null at the time of model creation.
+        try container.encode(isCheckedIn, forKey: .isCheckedIn)
+        // TODO: Add code for encoding `ticketPrice`, It was null at the time of model creation.
+        // TODO: Add code for encoding `ticketQuantity`, It was null at the time of model creation.
+        try container.encode(totalPrice, forKey: .totalPrice)
+        // TODO: Add code for encoding `note`, It was null at the time of model creation.
+        try container.encode(consumerUserId, forKey: .consumerUserId)
+        // TODO: Add code for encoding `bookingDate`, It was null at the time of model creation.
+        try container.encode(bookingStartTime, forKey: .bookingStartTime)
+        try container.encode(bookingEndTime, forKey: .bookingEndTime)
+        try container.encode(paymentIntent, forKey: .paymentIntent)
+        // TODO: Add code for encoding `additionalSpent`, It was null at the time of model creation.
+        try container.encode(paymentStatus, forKey: .paymentStatus)
+        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
+        // TODO: Add code for encoding `qrScannedDateTime`, It was null at the time of model creation.
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(isApproved, forKey: .isApproved)
+        // TODO: Add code for encoding `eventTicketId`, It was null at the time of model creation.
+        // TODO: Add code for encoding `eventTicketHasTierId`, It was null at the time of model creation.
+        try container.encode(bookingHasItem, forKey: .bookingHasItem)
+    }
+}
+
+struct BookingHasItem: Codable {
+
+    var id: String
+    var ticketId: String
+    var ticketName: String?
+    var ticketPrice: Int
+    var isCheckedIn: Bool
+    var bookingId: String
+    var isDeleted: Bool
+    var createdAt: String
+    var updatedAt: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case ticketId = "ticketId"
+        case ticketName = "ticketName"
+        case ticketPrice = "ticketPrice"
+        case isCheckedIn = "isCheckedIn"
+        case bookingId = "bookingId"
+        case isDeleted = "isDeleted"
+        case createdAt = "createdAt"
+        case updatedAt = "updatedAt"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(ticketId, forKey: .ticketId)
+        try container.encode(ticketName, forKey: .ticketName)
+        try container.encode(ticketPrice, forKey: .ticketPrice)
+        try container.encode(isCheckedIn, forKey: .isCheckedIn)
+        try container.encode(bookingId, forKey: .bookingId)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}

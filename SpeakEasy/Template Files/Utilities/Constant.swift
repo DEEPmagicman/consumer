@@ -62,6 +62,7 @@ struct Constant {
         static let defaultSelectedPM = "Apple Pay"
         static let addNewCard = "addNewCard"
         static let venuePolicy = "%@ is a strictly 21+ venue, no minors will be admitted. Visibly intoxicated guests will not be admitted to venue. Security reserves the right to remove any disruptive guests without prior warning."
+        static let liveCoverTicket = "Live Cover Ticket"
     }
     
     struct Font {

@@ -190,9 +190,9 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].uniqueId)
+            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId)
         } else {
-            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].uniqueId)
+            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId)
         }
     }
     

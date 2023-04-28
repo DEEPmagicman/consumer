@@ -45,6 +45,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var venuePolicyLbl: UILabel!
 
     var venueId = ""
+    var venueUniqueId = ""
     var isFromAppClip = false
     private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
@@ -118,7 +119,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -144,7 +145,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getEvents() {
         Loader.show()
-        // TODO: add pagination + venue wise
+        // TODO: add pagination
         EventPresenter.getEvents(venueId: venueId) { [weak self] isSuccess, errMsg, eventList, hasMore in
             guard let self = self else {
                 Loader.hide()
@@ -402,7 +403,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
 
 extension MVPVenueDetailVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
-        if self.venueId == uniqueId {
+        if self.venueUniqueId == uniqueId {
             getVenueDetail(withLoader: false)
         }
     }
