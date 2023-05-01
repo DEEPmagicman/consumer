@@ -9,6 +9,7 @@ import Foundation
 
 struct Booking: Codable {
 
+    var venueObject: ClipVenue?
     var id: String
     var venueId: String
     var phone: String
@@ -22,24 +23,41 @@ struct Booking: Codable {
 //    var ticketQuantity: Any
     var totalPrice: Int
 //    var note: Any
-    var consumerUserId: [String]
+    var consumerUserId: [String]?
 //    var bookingDate: Any
     var bookingStartTime: String?
     var bookingEndTime: String?
     var paymentIntent: String
 //    var additionalSpent: Any
     var paymentStatus: String
-    var bookingExpireDateTime: String
+//    var bookingExpireDateTime: String
 //    var qrScannedDateTime: Any
     var createdAt: String
     var updatedAt: String
-    var isDeleted: Bool
+    var isDeleted: Bool?
     var isApproved: Bool
 //    var eventTicketId: Any
 //    var eventTicketHasTierId: Any
     var bookingHasItem: [BookingHasItem]
-
+    var event: Event?
+    var ticketDetails: [TicketDetails]?
+    // MARK: app side parameters
+    var uniqueTickets: [BookingHasItem] {
+        var tickets = [BookingHasItem]()
+        bookingHasItem.forEach { ticket in
+            if let index = tickets.firstIndex(where: { $0.ticketId == ticket.ticketId }), let quantity = tickets[index].selectedQuantity {
+                tickets[index].selectedQuantity = quantity + 1
+            } else {
+                var ticket = ticket
+                ticket.selectedQuantity = 1
+                tickets.append(ticket)
+            }
+        }
+        return tickets
+    }
+    
     private enum CodingKeys: String, CodingKey {
+        case venueObject
         case id = "id"
         case venueId = "venueId"
         case phone = "phone"
@@ -60,7 +78,7 @@ struct Booking: Codable {
         case paymentIntent = "paymentIntent"
 //        case additionalSpent = "additionalSpent"
         case paymentStatus = "paymentStatus"
-        case bookingExpireDateTime = "bookingExpireDateTime"
+//        case bookingExpireDateTime = "bookingExpireDateTime"
 //        case qrScannedDateTime = "qrScannedDateTime"
         case createdAt = "createdAt"
         case updatedAt = "updatedAt"
@@ -69,10 +87,13 @@ struct Booking: Codable {
 //        case eventTicketId = "eventTicketId"
 //        case eventTicketHasTierId = "eventTicketHasTierId"
         case bookingHasItem = "bookingHasItem"
+        case event = "event"
+        case ticketDetails = "ticketDetails"
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(venueObject, forKey: .venueObject)
         try container.encode(id, forKey: .id)
         try container.encode(venueId, forKey: .venueId)
         try container.encode(phone, forKey: .phone)
@@ -93,7 +114,7 @@ struct Booking: Codable {
         try container.encode(paymentIntent, forKey: .paymentIntent)
         // TODO: Add code for encoding `additionalSpent`, It was null at the time of model creation.
         try container.encode(paymentStatus, forKey: .paymentStatus)
-        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
+//        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
         // TODO: Add code for encoding `qrScannedDateTime`, It was null at the time of model creation.
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
@@ -102,6 +123,8 @@ struct Booking: Codable {
         // TODO: Add code for encoding `eventTicketId`, It was null at the time of model creation.
         // TODO: Add code for encoding `eventTicketHasTierId`, It was null at the time of model creation.
         try container.encode(bookingHasItem, forKey: .bookingHasItem)
+        try container.encode(event, forKey: .event)
+        try container.encode(ticketDetails, forKey: .ticketDetails)
     }
 }
 
@@ -113,9 +136,11 @@ struct BookingHasItem: Codable {
     var ticketPrice: Int
     var isCheckedIn: Bool
     var bookingId: String
-    var isDeleted: Bool
+    var isDeleted: Bool?
     var createdAt: String
     var updatedAt: String
+    // MARK: app side parameters
+    var selectedQuantity: Int? = nil
 
     private enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -140,5 +165,21 @@ struct BookingHasItem: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}
+
+struct TicketDetails: Codable {
+
+    var ticketName: String
+    var ticketId: String
+    var ticketDescription: String
+    var quantity: Int
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(ticketName, forKey: .ticketName)
+        try container.encode(ticketId, forKey: .ticketId)
+        try container.encode(ticketDescription, forKey: .ticketDescription)
+        try container.encode(quantity, forKey: .quantity)
     }
 }

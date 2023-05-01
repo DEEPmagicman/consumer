@@ -10,7 +10,7 @@ import SDWebImage
 import PassKit
 
 protocol QRCodeVCNavigationDelegate: AnyObject {
-    func navigateToEventDetail(eventId: String)
+    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?)
 }
 
 final class QRCodeVC: UIViewController {
@@ -28,42 +28,18 @@ final class QRCodeVC: UIViewController {
     @IBOutlet private weak var venueImgHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var QRToImgBottomConstraint: NSLayoutConstraint!
 
-    var venueName = ""
     var bookingId = ""
-    var venueAttachment = ""
-    var venueLogo = ""
-    var selectedTickets = [AppClipTicket]()
     var type: PaymentIntentType = .appClip
+    var booking: Booking?
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var pass: PKPass?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        QRImg.image = generateQRCode(from: bookingId)
-        loadImage()
+        getBooking(id: bookingId)
+        setupData()
         addToWalletBtn.addPassButtonStyle = .blackOutline
-        switch type {
-        case .appClip:
-            titleLbl.text = venueName
-            dateLbl.isHidden = true
-            venueNameLbl.isHidden = true
-            eventDetailsLbl.isHidden = true
-            venueImgHeightConstraint.constant = 320
-            QRToImgBottomConstraint.constant = -100
-        case .singleTickedEvent:
-            titleLbl.text = "Event"
-            dateLbl.text = "Date"
-            dateLbl.isHidden = false
-            venueNameLbl.text = venueName
-            venueNameLbl.isHidden = false
-            eventDetailsLbl.isHidden = false
-            venueImgHeightConstraint.constant = 390
-            QRToImgBottomConstraint.constant = -170
-        case .tieredTickedEvent:
-            break
-        }
-        venueNameLbl.text = venueName
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -76,13 +52,65 @@ final class QRCodeVC: UIViewController {
         eventDetailsLbl.addGestureRecognizer(tap)
     }
     
+    private func setupData() {
+        QRImg.image = generateQRCode(from: bookingId)
+        if let booking = booking {
+            switch type {
+            case .appClip:
+                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+                venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
+                titleLbl.text = booking.venueObject?.name
+                dateLbl.isHidden = true
+                venueNameLbl.isHidden = true
+                eventDetailsLbl.isHidden = true
+                venueImgHeightConstraint.constant = 320
+                QRToImgBottomConstraint.constant = -100
+            case .singleTickedEvent:
+                venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL),completed: nil)
+                titleLbl.text = booking.event?.title
+                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+                dateLbl.isHidden = false
+                venueNameLbl.text = booking.venueObject?.name
+                venueNameLbl.isHidden = false
+                eventDetailsLbl.isHidden = false
+                venueImgHeightConstraint.constant = 390
+                QRToImgBottomConstraint.constant = -170
+            case .tieredTickedEvent:
+                break
+            }
+            venueNameLbl.text = booking.venueObject?.name
+        }
+    }
+    
     @objc private func onClickEventDetail() {
-        delegate?.navigateToEventDetail(eventId: "EVE-AYXQIY")
+        delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
         dismiss(animated: true)
     }
     
+    private func getBooking(id: String) {
+        if booking == nil {
+            Loader.show()
+        }
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+            Loader.hide()
+            guard let self = self else { return }
+            self.booking = booking
+            self.setupData()
+            self.ticketListTableView.reloadData()
+        }
+    }
+    
     @objc private func addToWalletBtnTapped() {
-        guard let url = URL(string: APIBuilder.appClipAppleWallet(bookingId)) else { return }
+        var url = URL(string: "")
+        switch type {
+        case .appClip:
+            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
+        case .singleTickedEvent:
+            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
+        case .tieredTickedEvent:
+            break
+        }
+        guard let url = url else { return }
         let pkl = PKPassLibrary()
         if let pass = pass {
             if pkl.containsPass(pass) {
@@ -124,11 +152,6 @@ final class QRCodeVC: UIViewController {
         }
     }
     
-    private func loadImage() {
-        venueImg.sd_setImage(with: URL(string: self.venueAttachment.imageURL),completed: nil)
-        venueLogoImg.sd_setImage(with: URL(string: self.venueLogo.imageURL),completed: nil)
-    }
-    
     private func generateQRCode(from string: String) -> UIImage? {
         let data = string.data(using: String.Encoding.ascii)
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
@@ -144,7 +167,7 @@ final class QRCodeVC: UIViewController {
     
     @IBAction private func onBtnShare(_ sender: Any) {
        let msgText = """
-Thank you for checking into \(venueName) with Speakeasy!
+Thank you for checking into \(booking?.venueObject?.name ?? "Venue") with Speakeasy!
 
 Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
 
@@ -162,14 +185,14 @@ Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
 
 extension QRCodeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        selectedTickets.count
+        booking?.uniqueTickets.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = selectedTickets[indexPath.row].name
-        cell.subTitleLbl.text = selectedTickets[indexPath.row].description
-        cell.quantityLbl.text = "\(selectedTickets[indexPath.row].selectedQuantity ?? 0)x"
+        cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
+        cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+        cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear

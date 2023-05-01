@@ -128,11 +128,16 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             if bookings[indexPath.row].eventId == nil {
                 cell.nameLbl.text = Constant.String.liveCoverTicket
                 cell.upcomingImage.image = Constant.Icon.liveCover
+                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
             } else {
-                cell.nameLbl.text = "Event name"
+                cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
+                cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+                cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             }
+            cell.priceLbl.text = bookings[indexPath.row].venueObject?.name ?? ""
+        } else {
+            cell.priceLbl.text = "TAO Nightclub, Chicago"
         }
-        cell.priceLbl.text = "TAO Nightclub, Chicago"
         cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell
     }
@@ -162,8 +167,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            // TODO: navigate with actual data
-            Navigate.to.QRCode(self, venueName: "LIQR Box Chicago", bookingId: "hello", venueAttachment: "prod/p-1678166121050-0hkR.png", venueLogo: "prod/l-1678106876023-Z3iH.png", selectedTickets: [], type: .singleTickedEvent)
+            Navigate.to.QRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
         case 1:
             // TODO: navigate to recommended event
             break
@@ -187,7 +191,7 @@ extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDele
 }
 
 extension AccountVC: QRCodeVCNavigationDelegate {
-    func navigateToEventDetail(eventId: String) {
-        Navigate.to.eventDetail(self, eventId: eventId, venueDetail: nil, event: nil)
+    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) {
+        Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
     }
 }

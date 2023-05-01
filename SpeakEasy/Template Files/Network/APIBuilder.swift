@@ -183,10 +183,14 @@ struct APIBuilder {
         baseURL + route + venue + appClipVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     
-    static var createBookingURL: String {
-        baseURL + appClipUser
+    static func getBookingURL(_ bookingId: String) -> String {
+        baseURL + appClipUser + "/\(bookingId)"
     }
     
+    static var createCoverBookingURL: String {
+        baseURL + route + appClip + ticketBooking
+    }
+
     static var createEventBookingURL: String {
         baseURL + route + event + ticketBooking
     }
@@ -217,6 +221,10 @@ struct APIBuilder {
     
     static func appClipAppleWallet(_ bookingId: String) -> String {
         baseURL + appClip + "/\(bookingId)" + appleWallet
+    }
+    
+    static func eventAppleWallet(_ bookingId: String) -> String {
+        baseURL + route + event + "/\(bookingId)" + appleWallet
     }
     
     static func customerMethod(_ customerId: String) -> String {

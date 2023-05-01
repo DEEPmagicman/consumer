@@ -14,11 +14,10 @@ enum PaymentIntentType {
 }
 
 final class PaymentPresenter {
-    static func createBooking(phone: String, appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
-        let param = ["phone": phone,
-                     "appclipTicket": appClipTickets,
+    static func createCoverBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+        let param = ["appclipTicket": appClipTickets,
                      "venueId": venueId] as [String: Any]
-        AFWrapper.postRequest(APIBuilder.createBookingURL, params: param, headers: Header.header()) { response in
+        AFWrapper.postRequest(APIBuilder.createCoverBookingURL, params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, "")
@@ -69,6 +68,28 @@ final class PaymentPresenter {
                 return
             }
             completion(false, nil, "")
+        }
+    }
+    
+    static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
+        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: nil, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, nil)
+                return
+            }
+            do {
+                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
+                let booking = try JSONDecoder().decode(Booking.self, from: data)
+                completion(true, nil, booking)
+            } catch {
+                completion(false, "internal error", nil)
+            }
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            completion(false, nil, nil)
         }
     }
     
@@ -209,7 +230,9 @@ final class PaymentPresenter {
 
 extension URLSession {
     func fetchData(at url: URL, completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
-        self.dataTask(with: url) { (data, response, error) in
+        var request = URLRequest(url: url)
+        request.addValue("Bearer \(UserDefault.shared.accessToken ?? "")", forHTTPHeaderField: "Authorization")
+        self.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(nil, error)
             }

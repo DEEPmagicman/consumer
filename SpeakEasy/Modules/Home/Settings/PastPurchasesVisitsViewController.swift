@@ -11,10 +11,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
 
     @IBOutlet weak var pastPurchasesTableView: UITableView!
     
-    private let demoDates = ["Fri, Feb 25", "Sat, Feb 26", "Sat, Feb 27"]
-    private let demoPrices = ["Forward Day + Nightclub", "TAO Nightclub, Chicago", "TAO Nightclub, Chicago"]
-    private let demoNames = ["Live Cover Ticket", "NIGHTMRE & DJ Diox XO DJ Heavy", "TAO Friday"]
-    private let demoSelectedTicket = Array(repeating: AppClipTicket(id: "", venueId: "", name: "General Admission - Tier 1", price: 10, status: "", description: "Allows general admission through front door.", isDeleted: false, createdAt: "", updatedAt: "", selectedQuantity: 2), count: 8)
+    private var bookings = [Booking]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +24,12 @@ final class PastPurchasesVisitsViewController: UIViewController {
     }
     
     private func getPastPurchase() {
-        PaymentPresenter.getPastTickets { isSuccess, errMsg, bookings in
-            print("")
+        Loader.show()
+        PaymentPresenter.getPastTickets { [weak self] isSuccess, errMsg, bookings in
+            Loader.hide()
+            guard let self = self else { return }
+            self.bookings = bookings
+            self.pastPurchasesTableView.reloadData()
         }
     }
     
@@ -39,23 +40,28 @@ final class PastPurchasesVisitsViewController: UIViewController {
 
 extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        demoDates.count
+        bookings.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
         cell.selectionStyle = .none
-        cell.nameLbl.text = demoNames[indexPath.row]
-        cell.dateLbl.text = demoDates[indexPath.row]
-        cell.priceLbl.text = demoPrices[indexPath.row]
-        if demoNames[indexPath.row] == Constant.String.liveCoverTicket {
+        if bookings[indexPath.row].eventId == nil {
+            cell.nameLbl.text = Constant.String.liveCoverTicket
             cell.upcomingImage.image = Constant.Icon.liveCover
+            cell.dateLbl.text = bookings[indexPath.row].bookingStartTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+        } else {
+            cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
+            cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         }
+        cell.priceLbl.text = bookings[indexPath.row].venueObject?.name ?? ""
+        cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.paymentDetailVC(self, selectedTickets: demoSelectedTicket, totalPrice: 40)
+//        Navigate.to.paymentDetailVC(self, selectedTickets: demoSelectedTicket, totalPrice: 40)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

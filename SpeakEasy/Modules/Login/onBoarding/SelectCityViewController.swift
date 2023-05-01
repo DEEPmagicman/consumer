@@ -156,11 +156,11 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
         continueBtn.alpha = 1
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == displayList.count - 1 {
-            if self.hasMore {
-                self.fetchCityList()
-            }
-        }
-    }
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if indexPath.row == displayList.count - 1 {
+//            if self.hasMore {
+//                self.fetchCityList()
+//            }
+//        }
+//    }
 }

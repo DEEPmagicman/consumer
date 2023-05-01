@@ -108,7 +108,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createBooking(phone: UserDefault.shared.user?.phone ?? "", appClipTickets: tickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -234,7 +234,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus(paymentFrom: self.selectedPaymentBrand) {
-                    Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets, type: self.type)
+                    Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -336,7 +336,7 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus(paymentFrom: selectedPaymentBrand) {
-                Navigate.to.QRCode(self, venueName: self.venueName, bookingId: self.bookingId, venueAttachment: self.venueAttachment, venueLogo: self.venueLogo, selectedTickets: self.selectedAppClipTickets, type: self.type)
+                Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
             self.isPaymentInitiated = false

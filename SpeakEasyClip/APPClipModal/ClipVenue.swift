@@ -131,9 +131,9 @@ struct AppClipTicket: Codable {
     var price: Int
     var status: String?
     var description: String?
-    var isDeleted: Bool
-    var createdAt: String
-    var updatedAt: String
+    var isDeleted: Bool?
+    var createdAt: String?
+    var updatedAt: String?
     // MARK: app side parameters
     var selectedQuantity: Int?
 
