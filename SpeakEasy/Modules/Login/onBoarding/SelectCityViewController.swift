@@ -14,14 +14,16 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var searchTextField: UITextField!
     
-    var arrCityList = [MVPCity]()
-    var selectedCity = ""
-    var onBoardingDelegate = OnBoardingPresenter()
-    var cityListDelegate = MVPPresenter()
-    var from = 0
-    var hasMore = false
-    var searchText = ""
-    var lastSearch = ""
+    var userLocationCity = ""
+    private var arrCityList = [MVPCity]()
+    private var displayList = [MVPCity]()
+    private var selectedCity = ""
+    private var presenter = OnBoardingPresenter()
+    private var cityListDelegate = MVPPresenter()
+    private var from = 0
+    private var hasMore = false
+    private var searchText = ""
+    private var lastSearch = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +45,14 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
             }
             if isSuccess {
                 self.arrCityList = cityList
+                self.displayList = cityList
+                if self.userLocationCity != "", cityList.contains(where: { list in
+                    list.value == self.userLocationCity
+                }) {
+                    self.selectedCity = self.userLocationCity
+                    self.continueBtn.isUserInteractionEnabled = true
+                    self.continueBtn.alpha = 1
+                }
                 self.selectCityTableView.reloadData()
             } else {
                 Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
@@ -50,7 +60,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
             Loader.hide()
         }
         
-//        self.onBoardingDelegate.getCityListAPi(from: from, searchText: searchText) { [weak self] cityList, hasMore, isSuccess in
+//        self.presenter.getCityListAPi(from: from, searchText: searchText) { [weak self] cityList, hasMore, isSuccess in
 //            guard let self = self else {
 //                Loader.hide()
 //                return
@@ -81,22 +91,29 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func updateSearch(_ text: String) {
-        self.from = 0
-        self.searchText = text
-        self.arrCityList.removeAll()
-        self.selectCityTableView.reloadData()
-        self.hasMore = false
-        self.fetchCityList()
+//        self.from = 0
+//        self.searchText = text
+//        self.arrCityList.removeAll()
+//        self.selectCityTableView.reloadData()
+//        self.hasMore = false
+//        self.fetchCityList()
+        if text == "" {
+            displayList = arrCityList
+        } else {
+            displayList = arrCityList.filter { $0.value.lowercased().contains(text.lowercased()) }
+        }
+        selectCityTableView.reloadData()
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        onBoardingDelegate.editUserProfileApi(city: self.selectedCity, isProfileCompleted: true) { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(city: self.selectedCity, isProfileCompleted: true) { [weak self] isSuccess,errorMsg  in
             guard let self = self else {
                 Loader.hide()
                 return
             }
             if isSuccess {
                 UserDefault.shared.user?.city = self.selectedCity
+                UserDefault.shared.localCity = self.selectedCity
                 UserDefault.shared.isLoggedIn = true
                 UserDefault.shared.user?.isProfileCompleted = true
                 AppDelegate.shared.changeRootViewController()
@@ -114,12 +131,12 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 
 extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        arrCityList.count
+        displayList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CitySelectionTableCell", for: indexPath) as? CitySelectionTableCell
-        let data = arrCityList[indexPath.row]
+        let data = displayList[indexPath.row]
         cell?.lblCity.text = data.value
         cell?.imgCity.isHidden = true
         if data.value == selectedCity {
@@ -133,14 +150,14 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCity = arrCityList[indexPath.row].value
+        selectedCity = displayList[indexPath.row].value
         selectCityTableView.reloadData()
         continueBtn.isUserInteractionEnabled = true
         continueBtn.alpha = 1
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == arrCityList.count - 1 {
+        if indexPath.row == displayList.count - 1 {
             if self.hasMore {
                 self.fetchCityList()
             }

@@ -138,7 +138,14 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        72
+        switch section {
+        case 0:
+            return bookings.count > 0 ? 72 : 0
+        case 1:
+            return 72
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

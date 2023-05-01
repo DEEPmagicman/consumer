@@ -21,7 +21,7 @@ struct ClipVenue: Codable {
     var code: String
     var phone: String
     var website: String
-    var description: String
+    var description: String?
     var status: String
     var bookingStatus: String
     var venueVibes: [String]
@@ -130,7 +130,7 @@ struct AppClipTicket: Codable {
     var name: String
     var price: Int
     var status: String?
-    var description: String
+    var description: String?
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String

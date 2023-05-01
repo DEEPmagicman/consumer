@@ -90,8 +90,8 @@ final class SelectTicketVC: UIViewController {
     }
 
     @IBAction func onClickContinue(_ sender: Any) {
-        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: event?.eventTicket ?? [], event: event, totalPrice: totalPrice, type: .singleTickedEvent)
+        if let selectedTickets = event?.eventTicket?.filter({ $0.selectedTicketCount != nil }) {
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
         }
     }
     

@@ -53,8 +53,8 @@ final class VerificationCodeViewController: UIViewController {
         otpFieldView.fieldsCount = 6
         otpFieldView.fieldBorderWidth = 1
         otpFieldView.defaultBorderColor = .white
-        otpFieldView.cursorColor = Constant.Color.primaryColor
-        otpFieldView.filledBorderColor = Constant.Color.primaryColor
+        otpFieldView.cursorColor = Constant.Color.purpleColor
+        otpFieldView.filledBorderColor = Constant.Color.purpleColor
         otpFieldView.displayType = .underlinedBottom
         otpFieldView.fieldSize = 40
         otpFieldView.separatorSpace = 8

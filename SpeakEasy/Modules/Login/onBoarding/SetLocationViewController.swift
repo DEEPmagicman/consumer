@@ -39,8 +39,7 @@ extension SetLocationViewController: CLLocationManagerDelegate {
             guard let self = self else { return }
             self.locationManager.delegate = nil
             self.locationManager.stopUpdatingHeading()
-            Navigate.to.selectCityVc(self)
+            Navigate.to.selectCityVc(self, userLocationCity: cityName)
         }
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
     }
 }
