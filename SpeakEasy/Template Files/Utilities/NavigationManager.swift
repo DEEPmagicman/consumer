@@ -265,10 +265,9 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true)
     }
     
-    func paymentDetailVC(_ sender: UIViewController, selectedTickets: [AppClipTicket], totalPrice: Int) {
+    func paymentDetailVC(_ sender: UIViewController, booking: Booking?) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(PaymentDetailVC.self)
-        vc.selectedTickets = selectedTickets
-        vc.totalPrice = totalPrice
+        vc.booking = booking
         sender.present(vc, animated: true)
     }
     

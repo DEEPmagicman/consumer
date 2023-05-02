@@ -61,7 +61,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        Navigate.to.paymentDetailVC(self, selectedTickets: demoSelectedTicket, totalPrice: 40)
+        Navigate.to.paymentDetailVC(self, booking: bookings[indexPath.row])
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -15,24 +15,6 @@ struct PaymentMethod: Codable {
     var expYear: Int
     var last4: String
     var type: String
-    var image: UIImage? {
-        switch brand {
-        case "visa":
-            return Constant.Card.visa
-        case "mastercard":
-            return Constant.Card.masterCard
-        case "amex":
-            return Constant.Card.amex
-        case "discover":
-            return Constant.Card.discover
-        case "diners":
-            return Constant.Card.diners
-        case "jcb":
-            return Constant.Card.jcb
-        default:
-            return Constant.Card.cardIc
-        }
-    }
 
     private enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -63,5 +45,26 @@ extension Int {
 extension Int {
     var displayYear: String {
         String("\(self)".dropFirst(2))
+    }
+}
+
+extension String {
+    var paymentImg: UIImage? {
+        switch self {
+        case "visa":
+            return Constant.Card.visa
+        case "mastercard":
+            return Constant.Card.masterCard
+        case "amex":
+            return Constant.Card.amex
+        case "discover":
+            return Constant.Card.discover
+        case "diners":
+            return Constant.Card.diners
+        case "jcb":
+            return Constant.Card.jcb
+        default:
+            return Constant.Card.cardIc
+        }
     }
 }

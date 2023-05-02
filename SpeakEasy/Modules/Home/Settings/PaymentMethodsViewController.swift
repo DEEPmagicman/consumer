@@ -84,7 +84,7 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
                 cell.defaultLbl.isHidden = true
             } else {
                 let paymentMethod = paymentMethods[indexPath.row - 1]
-                cell.paymentIcon.image = paymentMethods[indexPath.row - 1].image
+                cell.paymentIcon.image = paymentMethods[indexPath.row - 1].brand.paymentImg
                 cell.paymentType.text = "\(paymentMethod.brand) \(paymentMethod.last4)"
                 cell.defaultLbl.isHidden = selectedId == paymentMethod.id ? false : true
             }
@@ -112,7 +112,7 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
                 return
             } else {
                 selectedId = paymentMethods[indexPath.row - 1].id
-                selectedImage = paymentMethods[indexPath.row - 1].image
+                selectedImage = paymentMethods[indexPath.row - 1].brand.paymentImg
                 selectedBrand = paymentMethods[indexPath.row - 1].brand
             }
         }
