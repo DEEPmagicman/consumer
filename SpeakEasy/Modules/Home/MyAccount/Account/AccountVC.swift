@@ -18,6 +18,7 @@ final class AccountVC: UIViewController {
     private var listHeightObservation: NSKeyValueObservation?
     private var onBoardingPresenter = OnBoardingPresenter()
     private var bookings = [Booking]()
+    private var recommended = [Event]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +43,7 @@ final class AccountVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getTickets()
+        getRecommended()
         displayData()
     }
     
@@ -57,6 +59,14 @@ final class AccountVC: UIViewController {
             guard let self = self else { return }
             self.bookings = bookings
             self.listTableView.reloadData()
+        }
+    }
+    
+    private func getRecommended() {
+        EventPresenter.getRecommendedEvents { [weak self] isSuccess, errMsg, eventList in
+            guard let self = self else { return }
+            self.recommended = eventList
+            self.listTableView.reloadSections([1], with: .automatic)
         }
     }
     
@@ -116,10 +126,14 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        switch section {
+        case 0:
             return bookings.count
+        case 1:
+            return recommended.count
+        default:
+            return 0
         }
-        return 3
     }
             
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -134,9 +148,12 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                 cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
                 cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             }
-            cell.priceLbl.text = bookings[indexPath.row].venueObject?.name ?? ""
+            cell.priceLbl.text = "\(bookings[indexPath.row].venueObject?.name ?? ""), \(bookings[indexPath.row].venueObject?.city ?? "")"
         } else {
-            cell.priceLbl.text = "TAO Nightclub, Chicago"
+            cell.upcomingImage.sd_setImage(with: URL(string: (recommended[indexPath.row].flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = recommended[indexPath.row].title
+            cell.dateLbl.text = recommended[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.priceLbl.text = ""
         }
         cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell
@@ -147,7 +164,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         case 0:
             return bookings.count > 0 ? 72 : 0
         case 1:
-            return 72
+            return recommended.count > 0 ? 72 : 0
         default:
             return 0
         }
@@ -169,8 +186,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         case 0:
             Navigate.to.QRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
         case 1:
-            // TODO: navigate to recommended event
-            break
+            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id)
         default:
             break
         }

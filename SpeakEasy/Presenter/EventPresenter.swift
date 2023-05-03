@@ -38,6 +38,30 @@ final class EventPresenter {
         }
     }
     
+    static func getRecommendedEvents(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
+        AFWrapper.getRequest(APIBuilder.recommendedEventURL, headers: Header.header()) { response in
+            
+            guard let responseArray = response as? [[String: Any]] else {
+                completion(false, nil, [])
+                return
+            }
+            do {
+                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
+                let eventList = try JSONDecoder().decode([Event].self, from: data)
+                completion(true, nil, eventList)
+            } catch {
+                completion(false, "internal error", [])
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+            completion(false, nil, [])
+        }
+    }
+    
     static func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), headers: Header.header()) { response in
             

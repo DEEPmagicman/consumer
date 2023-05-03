@@ -55,7 +55,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
             cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
             cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         }
-        cell.priceLbl.text = bookings[indexPath.row].venueObject?.name ?? ""
+        cell.priceLbl.text = "\(bookings[indexPath.row].venueObject?.name ?? ""), \(bookings[indexPath.row].venueObject?.city ?? "")"
         cell.priceLbl.textColor = Constant.Color.codea1Color
         return cell
     }
