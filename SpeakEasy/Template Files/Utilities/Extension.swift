@@ -55,7 +55,7 @@ extension String {
     func convertDateFormat(from:DateFormat, to:DateFormat) -> String {
         let olDateFormatter = DateFormatter()
         olDateFormatter.dateFormat = from.rawValue
-        olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+//        olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
         guard let oldDate = olDateFormatter.date(from: self) else {return "No date Found" }
         
         let convertDateFormatter = DateFormatter()

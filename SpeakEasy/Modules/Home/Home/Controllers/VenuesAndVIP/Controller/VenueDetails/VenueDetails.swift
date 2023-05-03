@@ -224,7 +224,7 @@ extension VenueDetails: UITableViewDataSource {
         case tableViewHours:
             let cell = tableViewHours.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
             let data = arrHours[indexPath.row]
-            cell.setData(data: data)
+//            cell.setData(data: data)
             return cell
             
         case tableViewDressCode:

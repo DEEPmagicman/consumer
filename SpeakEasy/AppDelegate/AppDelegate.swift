@@ -180,7 +180,7 @@ extension AppDelegate {
     
     public func showHome(selectedIndex: Int) {
         let tabBarController = UITabBarController()
-
+        ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
         home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
         home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)

@@ -235,13 +235,14 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, venueAttachment: String, venueLogo: String, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Int, type: PaymentIntentType) {
+    func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, uniqueId: String, venueAttachment: String, venueLogo: String, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Int, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
         vc.totalPrice = totalPrice
         vc.venueName = venueName
         vc.venueId = venueId
+        vc.uniqueId = uniqueId
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
         vc.type = type

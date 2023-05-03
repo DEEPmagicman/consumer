@@ -75,7 +75,6 @@ final class MVPVenueDetailVc: UIViewController {
         return total >= maxTicket
     }
     private var events = [Event]()
-    private let demoHours = Constants.taoHours
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,7 +118,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -128,6 +127,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.venueDetails = venueDetail
                 self.setUpUI()
                 self.vibesCollectionView.reloadData()
+                self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
             } else {
                 if errMsg != nil {
@@ -230,7 +230,7 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", uniqueId: venueDetails?.uniqueId ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
         }
     }
     
@@ -254,7 +254,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case ticketTypeTableView:
             return venueDetails?.appClipTicket?.count ?? 0
         case openingHoursTableView:
-            return demoHours.count
+            openingHoursView.isHidden = venueDetails?.openHours.count == 0
+            return venueDetails?.openHours.count ?? 0
         case upcomingTableView:
             upcomingSectionView.isHidden = events.count == 0
             return events.count
@@ -267,12 +268,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
+            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name
             cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
-                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
-            } else {
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 <= 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
+            } else {
+                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
             }
             if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
@@ -302,7 +303,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             return cell
         case openingHoursTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
-            cell.setData(data: demoHours[indexPath.row])
+            cell.setData(venueDetails?.openHours[indexPath.row])
             return cell
         case upcomingTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
@@ -405,6 +406,14 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if self.venueUniqueId == uniqueId {
             getVenueDetail(withLoader: false)
+            updateContinueBtn(forceRemove: true)
+        }
+    }
+    
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        if self.venueUniqueId == uniqueId {
+            getVenueDetail(withLoader: false)
+            updateContinueBtn(forceRemove: true)
         }
     }
 }

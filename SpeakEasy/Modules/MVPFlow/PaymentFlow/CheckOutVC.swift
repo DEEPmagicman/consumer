@@ -31,6 +31,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var totalPrice = 0
     var venueName = ""
     var venueId = ""
+    var uniqueId = ""
     var type: PaymentIntentType = .appClip
     var event: Event?
     private var paymentSheet: PaymentSheet?
@@ -38,7 +39,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
     private var selectedId = Constant.String.defaultSelectedPM
-    private var selectedPaymentBrand = Constant.String.defaultSelectedPM
     private var bookingId = ""
     private var isApplePayNotSupported: Bool {
         !PKPaymentAuthorizationViewController.canMakePayments()
@@ -233,7 +233,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.paymentStatus(paymentFrom: self.selectedPaymentBrand) {
+                self.paymentStatus {
                     Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
@@ -275,9 +275,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(paymentFrom: String? = nil, completion: @escaping (()-> Void)) {
+    private func paymentStatus(completion: @escaping (()-> Void)) {
         Loader.show()
-        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, paymentFrom: paymentFrom) { isSuccess, errMsg in
+        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()
@@ -335,7 +335,7 @@ extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            paymentStatus(paymentFrom: selectedPaymentBrand) {
+            paymentStatus {
                 Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
@@ -357,7 +357,7 @@ extension CheckOutVC {
 extension CheckOutVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
-        if self.navigationController?.viewControllers.last is CheckOutVC && self.venueId == uniqueId {
+        if self.navigationController?.viewControllers.last is CheckOutVC && self.uniqueId == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
@@ -377,19 +377,36 @@ extension CheckOutVC: WebSocketCallBackDelegate {
             }
         }
     }
+    
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        if isPaymentInitiated { return }
+        if self.navigationController?.viewControllers.last is CheckOutVC && self.uniqueId == uniqueId && type == .appClip {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueDetailVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's ticket",actions: [okAction])
+        }
+    }
 }
 
 extension CheckOutVC: PaymentMethodVCDelegate {
-    func didSelectMethod(_ id: String, image: UIImage?, brand: String) {
+    func didSelectMethod(_ id: String, image: UIImage?) {
         selectedId = id
         paymentMethodImg.image = image
-        selectedPaymentBrand = brand
     }
     
     func addCard() {
         selectedId = Constant.String.addNewCard
         paymentMethodImg.image = Constant.Card.cardIc
-        selectedPaymentBrand = Constant.String.addNewCard
         DispatchQueue.main.async {
             self.onClickCreditCardPay()
         }

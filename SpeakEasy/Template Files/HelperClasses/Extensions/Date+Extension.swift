@@ -41,5 +41,6 @@ enum DateFormat:String {
     case EEEMMMD = "EEE, MMM d"
     case hmm_a = "h:mm a"
     case hmma = "h:mma"
+    case HHmmss = "HH:mm:ss"
 }
 

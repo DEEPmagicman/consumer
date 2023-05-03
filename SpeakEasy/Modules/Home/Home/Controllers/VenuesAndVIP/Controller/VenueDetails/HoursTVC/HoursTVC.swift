@@ -16,8 +16,8 @@ final class HoursTVC: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func setData(data: HoursDataSet) {
-        self.lblDay.text = data.day
-        self.lblTime.text = data.time
+    func setData(_ data: VenueHoursClip?) {
+        lblDay.text = data?.day.capitalized
+        lblTime.text = "\(data?.from.convertDateFormat(from: .HHmmss, to: .hmm_a) ?? "") - \(data?.to.convertDateFormat(from: .HHmmss, to: .hmm_a) ?? "")"
     }
 }

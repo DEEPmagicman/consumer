@@ -47,7 +47,7 @@ final class QRCodeClipVC: UIViewController {
 
         Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
 
-        Download Speaskeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
+        Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
         Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
         """

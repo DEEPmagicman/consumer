@@ -26,6 +26,7 @@ struct ClipVenue: Codable {
     var bookingStatus: String
     var venueVibes: [String]
     var isDeleted: Bool
+    var isEnabledGenderBasedTicket: Bool
     var createdAt: String
     var updatedAt: String
     var bookingWaiting: String?
@@ -33,6 +34,7 @@ struct ClipVenue: Codable {
     var lng: String
     var appClipTicket: [AppClipTicket]?
     var checkInUser: Int?
+    // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
     }
@@ -49,6 +51,9 @@ struct ClipVenue: Codable {
         } else {
             return ""
         }
+    }
+    var openHours: [VenueHoursClip] {
+        venueHours.filter({ $0.venueStatus == "OPEN" })
     }
 
     func encode(to encoder: Encoder) throws {
@@ -70,6 +75,7 @@ struct ClipVenue: Codable {
         try container.encode(bookingStatus, forKey: .bookingStatus)
         try container.encode(venueVibes, forKey: .venueVibes)
         try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(isEnabledGenderBasedTicket, forKey: .isEnabledGenderBasedTicket)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(bookingWaiting, forKey: .bookingWaiting)
@@ -129,6 +135,7 @@ struct AppClipTicket: Codable {
     var venueId: String?
     var name: String
     var price: Int
+    var parentId: String?
     var status: String?
     var description: String?
     var isDeleted: Bool?
@@ -143,6 +150,7 @@ struct AppClipTicket: Codable {
         try container.encode(venueId, forKey: .venueId)
         try container.encode(name, forKey: .name)
         try container.encode(price, forKey: .price)
+        try container.encode(parentId, forKey: .parentId)
         try container.encode(status, forKey: .status)
         try container.encode(description, forKey: .description)
         try container.encode(isDeleted, forKey: .isDeleted)

@@ -41,7 +41,8 @@ final class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickFAQ(_ sender: Any) {
-        
+        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickCustomerSupport(_ sender: Any) {
@@ -50,7 +51,8 @@ final class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickFeedback(_ sender: Any) {
-        
+        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickPrivacy(_ sender: Any) {

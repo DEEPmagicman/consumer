@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PaymentMethodVCDelegate: AnyObject {
-    func didSelectMethod(_ id: String, image: UIImage?, brand: String)
+    func didSelectMethod(_ id: String, image: UIImage?)
     func addCard()
 }
 
@@ -20,7 +20,6 @@ final class PaymentMethodsViewController: UIViewController {
     var isEditable = false
     private var paymentMethods = [PaymentMethod]()
     private var selectedImage = Constant.Card.cardIc
-    private var selectedBrand = Constant.String.defaultSelectedPM
     private var isNoPaymentMethodFound: Bool {
         paymentMethods.count == 0
     }
@@ -100,7 +99,6 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
         if indexPath.row == 0 {
             selectedId = Constant.String.defaultSelectedPM
             selectedImage = Constant.Card.applePay
-            selectedBrand = Constant.String.defaultSelectedPM
         } else {
             if isEditable {
                 Navigate.to.cardDetailsVc(self, customerId: UserDefault.shared.user?.stripeCusId ?? "", paymentMethod: paymentMethods[indexPath.row - 1])
@@ -113,11 +111,10 @@ extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSour
             } else {
                 selectedId = paymentMethods[indexPath.row - 1].id
                 selectedImage = paymentMethods[indexPath.row - 1].brand.paymentImg
-                selectedBrand = paymentMethods[indexPath.row - 1].brand
             }
         }
         paymentTableView.reloadData()
-        delegate?.didSelectMethod(selectedId, image: selectedImage, brand: selectedBrand)
+        delegate?.didSelectMethod(selectedId, image: selectedImage)
     }
 }
 

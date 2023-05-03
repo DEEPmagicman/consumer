@@ -49,7 +49,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
         if bookings[indexPath.row].eventId == nil {
             cell.nameLbl.text = Constant.String.liveCoverTicket
             cell.upcomingImage.image = Constant.Icon.liveCover
-            cell.dateLbl.text = bookings[indexPath.row].bookingStartTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
         } else {
             cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
             cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
