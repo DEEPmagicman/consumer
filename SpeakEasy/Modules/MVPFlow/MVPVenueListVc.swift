@@ -192,7 +192,7 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
         if indexPath.section == 0 {
             Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId)
         } else {
-            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId)
+            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: closeVenueList[indexPath.row].uniqueId)
         }
     }
     

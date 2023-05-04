@@ -118,7 +118,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -126,9 +126,11 @@ final class MVPVenueDetailVc: UIViewController {
             if isSuccess {
                 self.venueDetails = venueDetail
                 self.setUpUI()
+                self.ticketTypeTableView.reloadData()
                 self.vibesCollectionView.reloadData()
                 self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
+                self.updateCloseViewVisibility()
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -321,6 +323,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 <= 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
             if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
             if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
             if isMaxTicketReached {

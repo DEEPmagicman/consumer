@@ -22,8 +22,8 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var dressCodeView: UIView!
-    @IBOutlet weak var venuePolicyView: UIView!
     @IBOutlet weak var detailLbl: UILabel!
+    @IBOutlet weak var eventPolicyLbl: UILabel!
 
     var eventId: String?
     var venueDetails: ClipVenue?
@@ -51,6 +51,7 @@ final class EventDetailVC: UIViewController {
         headerTitleLbl.text = event?.title ?? "Untitle Event"
         venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         detailLbl.text = event?.description
+        eventPolicyLbl.text = event?.disclaimer
         locationLbl.text = venueDetails?.address
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
