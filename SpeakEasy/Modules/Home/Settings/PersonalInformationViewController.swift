@@ -32,7 +32,7 @@ final class PersonalInformationViewController: UIViewController {
         lastNameTF.text = UserDefault.shared.user?.lastName
         nickNameTF.text = UserDefault.shared.user?.nickName
         genderTF.text = UserDefault.shared.user?.gender.capitalized
-        dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY)
+        dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
         if (UserDefault.shared.user?.email ?? "") == "" {
             emailTF.text =  UserDefault.shared.user?.additionalEmail
         } else {
@@ -46,7 +46,7 @@ final class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickSave(_ sender: Any) {
-        guard let date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD) else {
+        guard let date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) else {
             Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
             return
         }
@@ -71,7 +71,7 @@ final class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickDOB(_ sender: Any) {
-        Navigate.to.presentDateSelectionBottomSheet(self, date: dateOfBirthTF.text?.toDate(withFormat: .MMMMDDYYYY))
+        Navigate.to.presentDateSelectionBottomSheet(self, date: dateOfBirthTF.text?.toDate(withFormat: .MMMMDDYYYY, isUTC: false))
     }
     
     @IBAction func onClickEmail(_ sender: Any) {
@@ -115,6 +115,6 @@ final class PersonalInformationViewController: UIViewController {
 
 extension PersonalInformationViewController: DateSelectionDelegate {
     func selectedDate(date: Date) {
-        dateOfBirthTF.text = date.string(format: .MMMMDDYYYY)
+        dateOfBirthTF.text = date.string(format: .MMMMDDYYYY, isUTC: false)
     }
 }

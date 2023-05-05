@@ -52,10 +52,12 @@ extension String {
         return testEmail.evaluate(with: self)
     }
     
-    func convertDateFormat(from:DateFormat, to:DateFormat) -> String {
+    func convertDateFormat(from:DateFormat, to:DateFormat, isUTC: Bool = true) -> String {
         let olDateFormatter = DateFormatter()
         olDateFormatter.dateFormat = from.rawValue
-//        olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        if isUTC {
+            olDateFormatter.timeZone = TimeZone(identifier: "UTC")!            
+        }
         guard let oldDate = olDateFormatter.date(from: self) else {return "No date Found" }
         
         let convertDateFormatter = DateFormatter()
@@ -64,9 +66,11 @@ extension String {
         return convertDateFormatter.string(from: oldDate)
     }
     
-    func toDate(withFormat format: DateFormat)-> Date?{
+    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date?{
         let dateFormatter = DateFormatter()
-//          dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+        if isUTC {
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")            
+        }
 //          dateFormatter.locale = Locale(identifier: "fa-IR")
 //          dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format.rawValue

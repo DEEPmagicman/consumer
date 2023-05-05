@@ -55,6 +55,13 @@ struct ClipVenue: Codable {
     var openHours: [VenueHoursClip] {
         venueHours.filter({ $0.venueStatus == "OPEN" })
     }
+    var lowestPriceTicket: AppClipTicket? {
+        let filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })
+        let lowest = filterTickets?.min(by: { LHS, RHS in
+            LHS.price < RHS.price
+        })
+        return lowest
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

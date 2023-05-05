@@ -42,7 +42,7 @@ final class EnterNameViewController: UIViewController {
     }
     
     @IBAction private func onClickDOB(_ sender: Any) {
-        Navigate.to.presentDateSelectionBottomSheet(self, date: DOBTextField.text?.toDate(withFormat: .YYYYMMDD))
+        Navigate.to.presentDateSelectionBottomSheet(self, date: DOBTextField.text?.toDate(withFormat: .YYYYMMDD, isUTC: false))
     }
     
     @IBAction func onClickGenderDropdown(_ sender: Any) {
@@ -123,7 +123,7 @@ extension EnterNameViewController: UITextFieldDelegate {
 
 extension EnterNameViewController: DateSelectionDelegate {
     func selectedDate(date: Date) {
-        DOBTextField.text = date.string(format: .YYYYMMDD)
+        DOBTextField.text = date.string(format: .YYYYMMDD, isUTC: false)
         textFieldDidChangeSelection(emailTextField)
     }
 }

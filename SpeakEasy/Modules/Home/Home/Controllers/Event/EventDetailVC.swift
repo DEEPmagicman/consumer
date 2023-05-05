@@ -115,7 +115,7 @@ final class EventDetailVC: UIViewController {
 
 extension EventDetailVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y > 220 {
+        if scrollView.contentOffset.y > 350 {
             headerTitleLbl.isHidden = false
             headerView.backgroundColor = .black
         } else {
