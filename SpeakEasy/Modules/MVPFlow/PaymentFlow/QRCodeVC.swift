@@ -166,15 +166,31 @@ final class QRCodeVC: UIViewController {
     }
     
     @IBAction private func onBtnShare(_ sender: Any) {
-       let msgText = """
-Thank you for checking into \(booking?.venueObject?.name ?? "Venue") with Speakeasy!
+        var msgText = ""
+        switch type {
+        case .appClip:
+            msgText = """
+     Thank you for checking into \(booking?.venueObject?.name ?? "Venue") with Speakeasy!
 
-Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
+     Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
 
-Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
+     Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
-Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
-"""
+     Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+     """
+        case .singleTickedEvent, .tieredTickedEvent:
+            msgText = """
+
+        You’re going to \(booking?.event?.title.capitalized ?? "EVENT")! \(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") has sent you a ticket:
+
+        Access your ticket here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
+
+        Download Speakeasy for easy entry at \(booking?.venueObject?.name ?? "Venue"):
+        https://apps.apple.com/us/app/speakeasy-go/id1642351956
+
+        Enjoy & live life LIVE!
+        """
+        }
         Utility.main.shareSocialWith(text: msgText)
     }
     
