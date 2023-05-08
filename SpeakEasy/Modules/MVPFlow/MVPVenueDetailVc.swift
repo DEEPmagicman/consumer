@@ -272,7 +272,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name
             cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 <= 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
             } else {
                 cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
@@ -323,7 +323,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 <= 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
             if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
             if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
             if isMaxTicketReached {

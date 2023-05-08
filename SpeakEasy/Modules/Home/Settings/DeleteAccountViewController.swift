@@ -8,21 +8,34 @@
 import UIKit
 
 final class DeleteAccountViewController: UIViewController {
-
-    @IBOutlet weak var emailLbl: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        emailLbl.text = UserDefault.shared.user?.email ?? UserDefault.shared.user?.additionalEmail ?? "No email found"
     }
     
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
     
-    @IBAction func onClickSendEmail(_ sender: Any) {
+    @IBAction private func onClickContactUs(_ sender: Any) {
+        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    @IBAction private func onClickDelete(_ sender: Any) {
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            self.deleteAccount()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
+        Alert.showAlertSheet(style: .alert, title: "", message: "Are you sure you want to delete your account? Your information will be lost forever.", actions: [okAction, cancelAction])
+    }
+    
+    private func deleteAccount() {
         // TODO: delete email API flow?
-        Alert.showToast("Email sent")
+        Alert.showToast("deleted")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             UserDefault.shared.emptyData()
             AppDelegate.shared.changeRootViewController()
