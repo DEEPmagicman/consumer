@@ -23,7 +23,7 @@ final class DeleteAccountViewController: UIViewController {
     }
 
     @IBAction private func onClickDelete(_ sender: Any) {
-        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.destructive) {
             UIAlertAction in
             self.deleteAccount()
         }
