@@ -34,11 +34,17 @@ final class DeleteAccountViewController: UIViewController {
     }
     
     private func deleteAccount() {
-        // TODO: delete email API flow?
-        Alert.showToast("deleted")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UserDefault.shared.emptyData()
-            AppDelegate.shared.changeRootViewController()
+        Loader.show()
+        OnBoardingPresenter.deleteUser { isSuccess, errorMsg in
+            Loader.hide()
+            if isSuccess {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    UserDefault.shared.emptyData()
+                    AppDelegate.shared.changeRootViewController()
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
+            }
         }
     }
 }

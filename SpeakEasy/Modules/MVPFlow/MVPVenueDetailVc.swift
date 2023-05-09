@@ -29,6 +29,9 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var toNightLbl: UILabel!
     @IBOutlet weak var venuePageView: UIView!
+    @IBOutlet weak var todaysEventsView: UIView!
+    @IBOutlet weak var todaysEventTableView: UITableView!
+    @IBOutlet weak var todaysEventTableHeight: NSLayoutConstraint!
     @IBOutlet weak var closeTicketView: UIView!
     @IBOutlet weak var tonightView: UIView!
     @IBOutlet weak var openingHoursView: UIView!
@@ -54,6 +57,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
+    private var todaysEventHeightObservation: NSKeyValueObservation?
     private var from = 0
     private var hasMore = false
     private var totalPrice: Int {
@@ -75,6 +79,7 @@ final class MVPVenueDetailVc: UIViewController {
         return total >= maxTicket
     }
     private var events = [Event]()
+    private var todaysEvents = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,6 +116,12 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             self.upcomingTableHeight.constant = self.upcomingTableView.contentSize.height
             self.upcomingTableView.layoutIfNeeded()
+        }
+        todaysEventTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        todaysEventHeightObservation = todaysEventTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.todaysEventTableHeight.constant = self.todaysEventTableView.contentSize.height
+            self.todaysEventTableView.layoutIfNeeded()
         }
     }
     
@@ -157,6 +168,16 @@ final class MVPVenueDetailVc: UIViewController {
             self.upcomingSectionView.isHidden = eventList.count == 0
             self.upcomingTableView.reloadData()
             self.hasMore = hasMore
+            self.updateCloseViewVisibility()
+            Loader.hide()
+        }
+        EventPresenter.getEvents(venueId: venueId, time: "TODAY") { [weak self] isSuccess, errMsg, eventList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            self.todaysEvents = eventList
+            self.todaysEventTableView.reloadData()
             self.updateCloseViewVisibility()
             Loader.hide()
         }
@@ -217,7 +238,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func updateCloseViewVisibility() {
-        if (events.count == 0 && (venueDetails?.appClipTicket?.allSatisfy({ ticket in
+        if (events.count == 0 && todaysEvents.count == 0 && (venueDetails?.appClipTicket?.allSatisfy({ ticket in
             ticket.status == "DISABLED"
         }) == true)) {
             closeTicketView.isHidden = false
@@ -261,6 +282,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case upcomingTableView:
             upcomingSectionView.isHidden = events.count == 0
             return events.count
+        case todaysEventTableView:
+            todaysEventsView.isHidden = todaysEvents.count == 0
+            return todaysEvents.count
         default:
             return 0
         }
@@ -314,6 +338,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.dateLbl.text = events[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
             cell.priceLbl.text = "Starting at $\(events[indexPath.row].lowestPriceTicket?.price ?? 0)"
             return cell
+        case todaysEventTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+            cell.upcomingImage.sd_setImage(with: URL(string: (todaysEvents[indexPath.row].flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = todaysEvents[indexPath.row].title
+            cell.dateLbl.text = todaysEvents[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.priceLbl.text = "Starting at $\(todaysEvents[indexPath.row].lowestPriceTicket?.price ?? 0)"
+            return cell
         default:
             return UITableViewCell()
         }
@@ -338,6 +369,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case upcomingTableView:
             updateContinueBtn(forceRemove: true)
             Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
+        case todaysEventTableView:
+            updateContinueBtn(forceRemove: true)
+            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
         default:
             break
         }

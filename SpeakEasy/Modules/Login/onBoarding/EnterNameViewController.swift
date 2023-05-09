@@ -35,7 +35,7 @@ final class EnterNameViewController: UIViewController {
         nikNameTextField.text = UserDefault.shared.user?.nickName
         DOBTextField.text = UserDefault.shared.user?.dateOfBirth
         genderTF.text = UserDefault.shared.user?.gender.capitalized
-        emailTextField.text = UserDefault.shared.user?.additionalEmail ?? UserDefault.shared.user?.email
+        emailTextField.text = UserDefault.shared.user?.email ?? UserDefault.shared.user?.additionalEmail
         ContinueBtn.isUserInteractionEnabled = false
         ContinueBtn.alpha = 0.5
         textFieldDidChangeSelection(firstNameTextField)
