@@ -113,9 +113,11 @@ final class MVPVenueListVc: UIViewController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")
             }
+            #endif
             Loader.hide()
         }
     }
@@ -149,9 +151,11 @@ final class MVPVenueListVc: UIViewController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")
             }
+            #endif
             Loader.hide()
         }
     }
