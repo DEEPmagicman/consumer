@@ -26,7 +26,7 @@ struct ClipVenue: Codable {
     var bookingStatus: String
     var venueVibes: [String]
     var isDeleted: Bool
-    var isEnabledGenderBasedTicket: Bool
+    var isEnabledGenderBasedTicket: Bool?
     var createdAt: String
     var updatedAt: String
     var bookingWaiting: String?

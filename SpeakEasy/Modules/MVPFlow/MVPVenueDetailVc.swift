@@ -21,6 +21,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var liveLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var updatedAtLbl: UILabel!
     @IBOutlet weak var headerVenueName: UILabel!
@@ -210,6 +211,7 @@ final class MVPVenueDetailVc: UIViewController {
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
+        venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime

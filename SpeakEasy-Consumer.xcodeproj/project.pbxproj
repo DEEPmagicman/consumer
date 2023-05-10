@@ -262,6 +262,7 @@
 		CE4867D8286F358800FD277E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48679F286F358700FD277E /* CardView.swift */; };
 		CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
+		CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */; };
 		CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
@@ -863,6 +864,7 @@
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CE48679F286F358700FD277E /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
@@ -2050,6 +2052,7 @@
 			isa = PBXGroup;
 			children = (
 				BD3FB25429406EBC00BE7713 /* Poppins */,
+				CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */,
 				CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */,
 				CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */,
 				CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */,
@@ -4027,6 +4030,7 @@
 				E167055D28CA442800644BF0 /* SelectedTicketTVC.xib in Resources */,
 				E11CE3ED28C8EC30003899C4 /* ViewRewardTable.xib in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
+				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				E17DC85728C6C16500244C4F /* Wallet.xib in Resources */,
 				E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */,
