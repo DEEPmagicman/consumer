@@ -26,7 +26,7 @@ final class SelectTicketClipVC: UIViewController {
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
-    private var maxTicket = 10
+    private var maxTicket = 20
     private var totalPrice: Int {
         var total = 0
         venueDetail?.appClipTicket?.forEach {

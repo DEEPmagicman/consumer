@@ -13,7 +13,8 @@ final class EventPresenter {
                      "venueId": venueId,
                      "version": "PUBLISHED",
                      "eventStatus": "APPROVED",
-                     "timeVersion": time] as [String : Any]
+                     "timeVersion": time,
+                     "orderBy": "startDateTime|asc"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {

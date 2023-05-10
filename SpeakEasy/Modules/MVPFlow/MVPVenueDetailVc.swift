@@ -52,7 +52,7 @@ final class MVPVenueDetailVc: UIViewController {
     var isFromAppClip = false
     private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
-    private var maxTicket = 10
+    private var maxTicket = 20
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?

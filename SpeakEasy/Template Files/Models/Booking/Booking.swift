@@ -27,7 +27,7 @@ struct Booking: Codable {
 //    var bookingDate: Any
     var bookingStartTime: String?
     var bookingEndTime: String?
-    var paymentIntent: String
+    var paymentIntent: String?
 //    var additionalSpent: Any
     var paymentStatus: String
 //    var bookingExpireDateTime: String

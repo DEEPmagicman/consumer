@@ -24,7 +24,7 @@ final class SelectTicketVC: UIViewController {
     @IBOutlet private weak var continueBtn: UIButton!
     
     private var ticketListHeightObservation: NSKeyValueObservation?
-    private var maxTicket = 10
+    private var maxTicket = 20
     private var totalPrice: Int {
         var total = 0
         switch type {
@@ -44,6 +44,9 @@ final class SelectTicketVC: UIViewController {
         return total
     }
     private var isMaxTicketReached: Bool {
+        totalSelectedTickets >= maxTicket
+    }
+    private var totalSelectedTickets: Int {
         var total = 0
         switch type {
         case .appClip:
@@ -59,7 +62,7 @@ final class SelectTicketVC: UIViewController {
                 }
             }
         }
-        return total >= maxTicket
+        return total
     }
     var venueDetails: ClipVenue?
     var event: Event?
@@ -143,9 +146,11 @@ final class SelectTicketVC: UIViewController {
         case .event:
             if let totalTicket = event?.eventTicket?[sender.tag].selectedTicketCount {
                 if totalTicket < maxTicket {
-                    event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket + 1
-                    ticketListTableView.reloadData()
-                    updateContinueBtn()
+                    if let remaining = event?.eventTicket?[sender.tag].remainingQuantity, remaining > totalTicket {
+                        event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket + 1
+                        ticketListTableView.reloadData()
+                        updateContinueBtn()
+                    }
                 } else {
                     Alert.showToast("Max ticket selection reached")
                 }
@@ -232,9 +237,13 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
              } else {
                  cell.ticketPlusMinusView.isHidden = true
              }
-             if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining <= 10 {
+             if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining <= 20 {
                  cell.hotVenueLbl.isHidden = false
-                 cell.hotVenueLbl.text = "Only \(remaining) left"
+                 if remaining == 0 {
+                     cell.hotVenueLbl.text = "Sold out"
+                 } else {
+                     cell.hotVenueLbl.text = "Only \(remaining) left"
+                 }
              } else {
                  cell.hotVenueLbl.isHidden = true
              }
@@ -245,6 +254,9 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+        if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, let selectedTicket = event?.eventTicket?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
+            cell.plusBtn.alpha = 0.5
+        }
         cell.selectionStyle = .none
         cell.layoutIfNeeded()
         return cell
@@ -269,9 +281,17 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .appClip:
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
         case .event:
-            event?.eventTicket?[indexPath.row].selectedTicketCount = 1
+            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining >= 1 {
+                event?.eventTicket?[indexPath.row].selectedTicketCount = 1
+            } else {
+                Alert.showToast("Sold out")
+            }
         }
         ticketListTableView.reloadData()
-        updateContinueBtn()
+        if totalSelectedTickets == 0 {
+            updateContinueBtn(forceRemove: true)
+        } else {
+            updateContinueBtn()
+        }
     }
 }
