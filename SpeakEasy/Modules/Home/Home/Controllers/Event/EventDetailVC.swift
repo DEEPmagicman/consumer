@@ -16,6 +16,7 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var headerTitleLbl: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -50,6 +51,7 @@ final class EventDetailVC: UIViewController {
         titleLbl.text = event?.title ?? "Untitle Event"
         headerTitleLbl.text = event?.title ?? "Untitle Event"
         venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+        venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
         detailLbl.text = event?.description
         eventPolicyLbl.text = event?.disclaimer
         locationLbl.text = venueDetails?.address

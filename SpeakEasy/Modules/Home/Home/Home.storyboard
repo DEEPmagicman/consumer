@@ -1610,6 +1610,7 @@
                         <outlet property="scrollView" destination="YNi-pi-X9u" id="hXg-A1-jFl"/>
                         <outlet property="timingLbl" destination="Fg8-St-Yqh" id="w6a-vH-oRe"/>
                         <outlet property="titleLbl" destination="szi-mE-0ao" id="2su-Nb-Mbf"/>
+                        <outlet property="venueNameLbl" destination="S5U-w5-VD8" id="vsK-Nd-MNk"/>
                         <outlet property="venueTitleLbl" destination="AEQ-kz-7dZ" id="mli-Sc-1dx"/>
                     </connections>
                 </viewController>

@@ -17,7 +17,7 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var bgImg: UIImageView!
     
     var otpText = ""
-    var currectOtp = ""
+    var currectOtp: String?
     var otpRef = ""
     var phoneNum = ""
     var isFromLogin = false
@@ -34,9 +34,10 @@ final class VerificationCodeViewController: UIViewController {
         
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
+        #if DEBUG
         print("*-*\(currectOtp)")
-        // TODO: remove when upload to production
-        Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp)")
+        Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
+        #endif
     }
     
     override func viewWillAppear(_ animated: Bool) {

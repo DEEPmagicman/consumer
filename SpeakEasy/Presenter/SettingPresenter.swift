@@ -64,7 +64,7 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailPhoneResendOtpApi(otpref: String,isForPhone: Bool = false, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changeEmailPhoneResendOtpApi(otpref: String,isForPhone: Bool = false, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
         var url = ""
@@ -75,12 +75,11 @@ final class SettingPresenter {
         }
         AFWrapper.postRequest(url, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
-            else {
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            completion(responseDic["otp"] as? String, otpref, true, nil)
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {

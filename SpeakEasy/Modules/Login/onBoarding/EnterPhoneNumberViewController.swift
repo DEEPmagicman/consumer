@@ -127,7 +127,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                     Loader.hide()
                 }
             } else {
-                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg  in
                     guard let self = self else {
                         Loader.hide()
                         return

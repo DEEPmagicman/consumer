@@ -9,16 +9,15 @@ import UIKit
 
 final class OnBoardingPresenter {
         
-    func loginWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func loginWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.loginWithPhoneURL, params: param, headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String else {
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            completion(responseDic["otp"] as? String , otpref, true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -57,16 +56,16 @@ final class OnBoardingPresenter {
         }
     }
     
-    func loginResendOtpApi(otpref: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func loginResendOtpApi(otpref: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.loginResendOTPURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String else {
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            completion(responseDic["otp"] as? String, otpref, true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -78,16 +77,16 @@ final class OnBoardingPresenter {
         }
     }
     
-    func signUpWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func signUpWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.signUpWithPhoneURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String else {
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            completion(responseDic["otp"] as? String, otpref, true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -126,17 +125,17 @@ final class OnBoardingPresenter {
         }
     }
     
-    func signUpResendOtpApi(otpref: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func signUpResendOtpApi(otpref: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
         Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.signUpOTPResendURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String else {
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {
                 
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            completion(responseDic["otp"] as? String, otpref, true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
