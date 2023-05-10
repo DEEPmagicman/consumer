@@ -299,7 +299,6 @@
 		CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */; };
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
-		CED5465D29F6B174006465FD /* bgvideo.mov in Resources */ = {isa = PBXBuildFile; fileRef = CED5465C29F6B174006465FD /* bgvideo.mov */; };
 		CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
@@ -894,7 +893,6 @@
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
-		CED5465C29F6B174006465FD /* bgvideo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = bgvideo.mov; sourceTree = "<group>"; };
 		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
@@ -1876,7 +1874,6 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				CED5465C29F6B174006465FD /* bgvideo.mov */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
 			);
@@ -3999,7 +3996,6 @@
 				E11F4B3628C83564008D2E30 /* CostSplit.xib in Resources */,
 				CAC4140528A478050007BA86 /* DaysCollectionViewCell.xib in Resources */,
 				CE4867A6286F358800FD277E /* Localizable.strings in Resources */,
-				CED5465D29F6B174006465FD /* bgvideo.mov in Resources */,
 				E167058328CA6AB800644BF0 /* FriendCVC.xib in Resources */,
 				CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */,
 				E15D6B7128BC39AC0076286C /* MVPSplashCVC.xib in Resources */,
