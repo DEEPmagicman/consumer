@@ -95,10 +95,10 @@ final class Navigate {
     
     func connectAccountVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConnectAccountViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
         if let indexOfOTPVC = sender.navigationController?.viewControllers.firstIndex(where: { $0.isKind(of: VerificationCodeViewController.self) }) {
             sender.navigationController?.viewControllers.remove(at: indexOfOTPVC)
         }
-        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func addEmailVc(_ sender: UIViewController) {

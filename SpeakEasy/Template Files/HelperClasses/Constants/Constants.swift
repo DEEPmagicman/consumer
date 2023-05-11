@@ -67,8 +67,6 @@ struct Constants {
     static var iTunesURL                   = "http://itunes.apple.com/us/lookup?bundleId="
     static var pagesCount                  = 0
     static var ordersCount                 = 0
-    static let publishableKey              = "pk_test_51J2z3IRFnTSsDoMtXvQAuVpt6btuZ4v76dCcXjmb3PZtEl9uDSTofSYOmsUSAZLDKzt6jyU8cVz52uOTLp5fU7yV00GX4F5sqk"
-    //"pk_test_97ITXRHK8xZovDEszT5vMx0f"
     static let biggestHeight:CGFloat       = 926.0
     static let imHungryTimeRange           = 20*60 //20 minutes
     static let CarouselScrollingSpeed      = 0.95

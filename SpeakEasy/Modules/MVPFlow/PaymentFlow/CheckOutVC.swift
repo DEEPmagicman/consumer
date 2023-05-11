@@ -198,7 +198,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setUpPaymentBottomSheet() {
-        STPAPIClient.shared.publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
+        STPAPIClient.shared.publishableKey = Stripe.publishableKey
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"

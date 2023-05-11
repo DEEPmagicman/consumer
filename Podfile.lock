@@ -119,7 +119,7 @@ DEPENDENCIES:
   - FlagPhoneNumber
   - FSCalendar
   - GoogleMaps
-  - GoogleSignIn
+  - GoogleSignIn (~> 6.2.4)
   - GSImageViewerController
   - Hero
   - IQKeyboardManagerSwift
@@ -227,6 +227,6 @@ SPEC CHECKSUMS:
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: f4182b73335240963fb7beeacf0af3d9fa10d7f6
+PODFILE CHECKSUM: fe9977666b2185f6f71107f38ed6877a46ed0bb9
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0

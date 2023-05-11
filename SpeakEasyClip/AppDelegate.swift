@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         ReachabilityManager.shared.startMonitoring()
         IQKeyboardManager.shared.enable = true
-        StripeAPI.defaultPublishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
+        StripeAPI.defaultPublishableKey = Stripe.publishableKey
         Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
     }

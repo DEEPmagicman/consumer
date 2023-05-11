@@ -70,6 +70,8 @@
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
 		6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
+		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
+		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */; };
 		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
 		820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */; };
@@ -666,6 +668,7 @@
 		4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewEventTicketConfirmInvitedPeopleTVC.xib; sourceTree = "<group>"; };
 		4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCitySelectionHeaderView.swift; sourceTree = "<group>"; };
 		4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationCitySelectionHeaderView.xib; sourceTree = "<group>"; };
+		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
 		820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsViewController.swift; sourceTree = "<group>"; };
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
@@ -1953,6 +1956,7 @@
 			isa = PBXGroup;
 			children = (
 				CE486759286F358700FD277E /* Constants.swift */,
+				691574642A0CD0EF002F303A /* Stripe.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -4252,6 +4256,7 @@
 			files = (
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
+				691574662A0CD0EF002F303A /* Stripe.swift in Sources */,
 				CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */,
@@ -4443,6 +4448,7 @@
 				84248D9928D29ABC00A6E260 /* AllEvents.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				BD80B38D295EBC4A005592A7 /* InstagramManager.swift in Sources */,
+				691574652A0CD0EF002F303A /* Stripe.swift in Sources */,
 				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,
 				CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
@@ -4677,7 +4683,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4711,7 +4717,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4867,7 +4873,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4912,7 +4918,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
