@@ -187,16 +187,6 @@ extension UITableView {
     }
 }
 
-extension Bundle {
-    var releaseVersionNumber: String {
-        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-    }
-
-    var buildVersionNumber: String {
-        infoDictionary?["CFBundleVersion"] as? String ?? ""
-    }
-}
-
 extension UIView {
     static var nib: UINib {
         UINib(nibName: "\(self)", bundle: nil)

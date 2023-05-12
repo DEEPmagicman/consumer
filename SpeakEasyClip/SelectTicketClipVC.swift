@@ -59,6 +59,12 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
+        request.addValue("app_version", forHTTPHeaderField: Bundle.main.releaseVersionNumber)
+        request.addValue("build_number", forHTTPHeaderField: Bundle.main.buildVersionNumber)
+        request.addValue("platform", forHTTPHeaderField: "ios")
+        request.addValue("app_bundle_id", forHTTPHeaderField: Bundle.main.bundleIdentifier ?? "invalid bundle id")
+
         if withLoader {
             AppClipLoader.showLoader(self.view)
         }
