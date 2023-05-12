@@ -41,6 +41,20 @@ struct Event: Codable {
         let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
         return filterTicket?.min { $0.price ?? 0 < $1.price ?? 0}
     }
+    
+    var isPausedSellingAllTicekts: Bool {
+        if eventTicket?.count == 0 { return false }
+        let allTickets = eventTicket?.filter { ($0.isDeleted == false)}
+        let filterTicket = allTickets?.filter { ($0.sellingPaused == true) }
+        return filterTicket?.count == allTickets?.count
+    }
+    
+    var isSoldOutAllTickets: Bool {
+        if eventTicket?.count == 0 { return false }
+        let allTickets = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss, isUTC: false) ?? Date()) > Date()) }
+        let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) == ($0.soldUnits ?? 0)) }
+        return filterTicket?.count == allTickets?.count
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

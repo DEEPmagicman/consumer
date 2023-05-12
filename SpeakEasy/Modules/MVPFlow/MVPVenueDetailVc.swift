@@ -337,10 +337,17 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             return cell
         case upcomingTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
-            cell.upcomingImage.sd_setImage(with: URL(string: (events[indexPath.row].flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = events[indexPath.row].title
-            cell.dateLbl.text = events[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
-            cell.priceLbl.text = "Starting at $\(events[indexPath.row].lowestPriceTicket?.price ?? 0)"
+            let event = self.events[indexPath.row]
+            cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = event.title
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            if event.isPausedSellingAllTicekts {
+                cell.priceLbl.text = Constant.String.saleEnded
+            } else if event.isSoldOutAllTickets {
+                cell.priceLbl.text = Constant.String.soldOut
+            } else {
+                cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
+            }
             return cell
         case todaysEventTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC

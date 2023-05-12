@@ -63,6 +63,9 @@ struct Constant {
         static let addNewCard = "addNewCard"
         static let venuePolicy = "%@ is a strictly 21+ venue, no minors will be admitted. Visibly intoxicated guests will not be admitted to venue. Security reserves the right to remove any disruptive guests without prior warning."
         static let liveCoverTicket = "Live Cover Ticket"
+        static let soldOut = "Sold Out"
+        static let saleEnded = "Sale Ended"
+        static let ticketSellingWillStartAt = "Ticket selling will start at %@"
     }
     
     struct Font {

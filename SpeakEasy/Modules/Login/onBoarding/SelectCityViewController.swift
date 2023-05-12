@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 
@@ -14,6 +15,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var searchTextField: UITextField!
     
+    private let locationManager = CLLocationManager()
     var userLocationCity = ""
     private var arrCityList = [MVPCity]()
     private var displayList = [MVPCity]()
@@ -34,6 +36,11 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
         selectCityTableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
         searchTextField.delegate = self
         searchTextField.addTarget(self, action: #selector(searchFieldTextChange), for: .editingChanged)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickEnableLocation(_:)))
+        selectCityInfoLbl.addGestureRecognizer(tapGesture)
+        selectCityInfoLbl.isUserInteractionEnabled = true
+        
         fetchCityList()
     }
     
@@ -81,6 +88,21 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 //            }
 //            Loader.hide()
 //        }
+    }
+    
+    @objc private func onClickEnableLocation(_ sender: UITapGestureRecognizer) {
+        guard let range = selectCityInfoLbl.text?.range(of: Constant.String.enableLocationServices)?.nsRange else {
+            return
+        }
+        if sender.didTapAttributedTextInLabel(label: selectCityInfoLbl, inRange: range) {
+            locationManager.requestWhenInUseAuthorization()
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.requestAlwaysAuthorization()
+                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.startUpdatingLocation()
+            }
+        }
     }
     
     @objc func searchFieldTextChange() {
@@ -163,4 +185,18 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
 //            }
 //        }
 //    }
+}
+
+extension SelectCityViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        
+        let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { [weak self] cityName in
+            guard let self = self else { return }
+            self.locationManager.delegate = nil
+            self.locationManager.stopUpdatingHeading()
+            self.userLocationCity = cityName
+            self.fetchCityList()
+        }
+    }
 }

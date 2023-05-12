@@ -58,7 +58,18 @@ final class EventDetailVC: UIViewController {
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE")"
-        continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+        if event?.isPausedSellingAllTicekts == true {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
+            continueBtn.setTitle(Constant.String.saleEnded.uppercased(), for: .normal)
+        } else if event?.isSoldOutAllTickets == true {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
+            continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
+        } else {
+            continueBtn.isUserInteractionEnabled = true
+            continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+        }
     }
     
     private func getEventDetail() {
@@ -66,8 +77,10 @@ final class EventDetailVC: UIViewController {
             guard let self = self else {
                 return
             }
-            self.event = eventDetail
-            self.setupData()
+            if eventDetail != nil {
+                self.event = eventDetail
+                self.setupData()
+            }
         }
     }
     

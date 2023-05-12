@@ -271,22 +271,31 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .event:
             if event?.eventTicket?[indexPath.row].selectedTicketCount != nil { return }
         }
+        
         if isMaxTicketReached {
             Alert.showToast("Max ticket selection reached")
             return
         }
-        continueBtn.isHidden = false
-        scrollViewBottomConstraint.constant = 90
+        
         switch type {
         case .appClip:
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
         case .event:
+            if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss, isUTC: false) ?? Date()) > Date() {
+                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm, isUTC: false)))
+                return
+            }
+            
             if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining >= 1 {
                 event?.eventTicket?[indexPath.row].selectedTicketCount = 1
             } else {
                 Alert.showToast("Sold out")
+                return
             }
         }
+        
+        continueBtn.isHidden = false
+        scrollViewBottomConstraint.constant = 90
         ticketListTableView.reloadData()
         if totalSelectedTickets == 0 {
             updateContinueBtn(forceRemove: true)
