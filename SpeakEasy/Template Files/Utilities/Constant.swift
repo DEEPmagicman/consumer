@@ -65,6 +65,7 @@ struct Constant {
         static let liveCoverTicket = "Live Cover Ticket"
         static let soldOut = "Sold Out"
         static let saleEnded = "Sale Ended"
+        static let salePaused = "Sale Paused"
         static let ticketSellingWillStartAt = "Ticket selling will start at %@"
     }
     

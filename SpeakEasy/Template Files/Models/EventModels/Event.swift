@@ -42,7 +42,7 @@ struct Event: Codable {
         return filterTicket?.min { $0.price ?? 0 < $1.price ?? 0}
     }
     
-    var isPausedSellingAllTicekts: Bool {
+    var isPausedSellingAllTickets: Bool {
         if eventTicket?.count == 0 { return false }
         let allTickets = eventTicket?.filter { ($0.isDeleted == false)}
         let filterTicket = allTickets?.filter { ($0.sellingPaused == true) }

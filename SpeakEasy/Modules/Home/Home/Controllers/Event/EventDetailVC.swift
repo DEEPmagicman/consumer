@@ -60,10 +60,10 @@ final class EventDetailVC: UIViewController {
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE")"
-        if event?.isPausedSellingAllTicekts == true {
+        if event?.isPausedSellingAllTickets == true {
             continueBtn.isUserInteractionEnabled = false
             continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
-            continueBtn.setTitle(Constant.String.saleEnded.uppercased(), for: .normal)
+            continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
         } else if event?.isSoldOutAllTickets == true {
             continueBtn.isUserInteractionEnabled = false
             continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)

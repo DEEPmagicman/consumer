@@ -4881,7 +4881,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_TEAM = 843432T6P5;
-				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SpeakEasy/Template\\ Files/ThirdParty\\ Libraries",

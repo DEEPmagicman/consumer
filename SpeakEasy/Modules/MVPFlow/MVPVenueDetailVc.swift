@@ -343,7 +343,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = event.title
             cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
-            if event.isPausedSellingAllTicekts {
+            if event.isPausedSellingAllTickets {
                 cell.priceLbl.text = Constant.String.saleEnded
             } else if event.isSoldOutAllTickets {
                 cell.priceLbl.text = Constant.String.soldOut
@@ -357,7 +357,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = event.title
             cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
-            if event.isPausedSellingAllTicekts {
+            if event.isPausedSellingAllTickets {
                 cell.priceLbl.text = Constant.String.saleEnded
             } else if event.isSoldOutAllTickets {
                 cell.priceLbl.text = Constant.String.soldOut

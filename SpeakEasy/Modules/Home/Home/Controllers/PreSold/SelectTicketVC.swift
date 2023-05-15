@@ -281,8 +281,8 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .appClip:
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
         case .event:
-            if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss, isUTC: false) ?? Date()) > Date() {
-                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm, isUTC: false)))
+            if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date() {
+                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm)))
                 return
             }
             
