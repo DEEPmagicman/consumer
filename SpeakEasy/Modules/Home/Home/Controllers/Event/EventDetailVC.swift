@@ -23,6 +23,7 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var dressCodeView: UIView!
+    @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var detailLbl: UILabel!
     @IBOutlet weak var eventPolicyLbl: UILabel!
 
@@ -55,6 +56,7 @@ final class EventDetailVC: UIViewController {
         detailLbl.text = event?.description
         eventPolicyLbl.text = event?.disclaimer
         locationLbl.text = venueDetails?.address
+        dressCodeLbl.text = venueDetails?.dressCode
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE")"
@@ -68,6 +70,7 @@ final class EventDetailVC: UIViewController {
             continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
         } else {
             continueBtn.isUserInteractionEnabled = true
+            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(1)
             continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
         }
     }

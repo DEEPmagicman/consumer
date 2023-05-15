@@ -38,6 +38,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var openingHoursView: UIView!
     @IBOutlet weak var vibeView: UIView!
     @IBOutlet weak var dressCodeView: UIView!
+    @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var venuePolicyView: UIView!
     @IBOutlet weak var upcomingSectionView: UIView!
     @IBOutlet weak var vibesCollectionView: UICollectionView!
@@ -211,6 +212,7 @@ final class MVPVenueDetailVc: UIViewController {
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
+        dressCodeLbl.text = venueDetails?.dressCode
         venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {

@@ -43,9 +43,8 @@ final class MVPPresenter {
                 return
             }
             do {
-                let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let venueList = try decoder.decode([ClipVenue].self, from: data)
+                let venueList = try JSONDecoder().decode([ClipVenue].self, from: data)
                 completion(true, nil, venueList, hasMore)
             } catch {
                 completion(false, "internal error", [], false)

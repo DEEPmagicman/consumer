@@ -19,7 +19,15 @@ final class WebSocketWrapper: NSObject {
 
     private var socket: SocketIOClient?
     private var manager: SocketManager = SocketManager(socketURL: URL(string: "www.google.com")!)
-    private let webSocketURL = "https://api.speakeasygo.com"
+    private var webSocketURL: String {
+        get {
+            #if DEBUG
+                return "https://speakeasy-stag.cmdev.cc"
+            #else
+                return "https://api.speakeasygo.com"
+            #endif
+        }
+    }
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
     var delegate: [WebSocketCallBackDelegate] = []

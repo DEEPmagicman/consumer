@@ -16,6 +16,7 @@ struct ClipVenue: Codable {
     var uniqueId: String
     var name: String
     var address: String
+    var dressCode: String?
     var city: String
     var pinCode: String
     var code: String
@@ -72,6 +73,7 @@ struct ClipVenue: Codable {
         try container.encode(uniqueId, forKey: .uniqueId)
         try container.encode(name, forKey: .name)
         try container.encode(address, forKey: .address)
+        try container.encode(dressCode, forKey: .dressCode)
         try container.encode(city, forKey: .city)
         try container.encode(pinCode, forKey: .pinCode)
         try container.encode(code, forKey: .code)
