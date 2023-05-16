@@ -18,6 +18,6 @@ final class HoursTVC: UITableViewCell {
 
     func setData(_ data: VenueHoursClip?) {
         lblDay.text = data?.day.capitalized
-        lblTime.text = "\(data?.from.convertDateFormat(from: .HHmmss, to: .hmm_a) ?? "") - \(data?.to.convertDateFormat(from: .HHmmss, to: .hmm_a) ?? "")"
+        lblTime.text = "\(data?.from.convertDateFormat(from: .HHmmss, to: .hmm_a, useDayLightSavingTime: true) ?? "") - \(data?.to.convertDateFormat(from: .HHmmss, to: .hmm_a, useDayLightSavingTime: true) ?? "")"
     }
 }

@@ -52,21 +52,26 @@ extension String {
         return testEmail.evaluate(with: self)
     }
     
-    func convertDateFormat(from:DateFormat, to:DateFormat, isUTC: Bool = true) -> String {
+    func convertDateFormat(from:DateFormat, to:DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false) -> String {
         let olDateFormatter = DateFormatter()
         olDateFormatter.dateFormat = from.rawValue
         if isUTC {
-            olDateFormatter.timeZone = TimeZone(identifier: "UTC")!            
+            olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        } else {
+            olDateFormatter.timeZone = .current
         }
-        guard let oldDate = olDateFormatter.date(from: self) else {return "No date Found" }
-        
+        guard let oldDate = olDateFormatter.date(from: self) else { return "No date Found" }
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = to.rawValue
         convertDateFormatter.timeZone = .current
-        return convertDateFormatter.string(from: oldDate)
+        if useDayLightSavingTime {
+            return convertDateFormatter.string(from: oldDate.addingTimeInterval(NSTimeZone.local.daylightSavingTimeOffset()))
+        } else {
+            return convertDateFormatter.string(from: oldDate)
+        }
     }
     
-    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date?{
+    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date? {
         let dateFormatter = DateFormatter()
         if isUTC {
             dateFormatter.timeZone = TimeZone(identifier: "UTC")            
