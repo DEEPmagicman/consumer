@@ -129,6 +129,7 @@ final class Navigate {
     func selectCityVc(_ sender: UIViewController, userLocationCity: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectCityViewController.self)
         vc.userLocationCity = userLocationCity
+        if sender.navigationController?.viewControllers.last is SelectCityViewController { return }
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

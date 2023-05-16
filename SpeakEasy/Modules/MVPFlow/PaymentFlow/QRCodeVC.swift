@@ -94,9 +94,13 @@ final class QRCodeVC: UIViewController {
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()
             guard let self = self else { return }
-            self.booking = booking
-            self.setupData()
-            self.ticketListTableView.reloadData()
+            if isSuccess {
+                self.booking = booking
+                self.setupData()
+                self.ticketListTableView.reloadData()
+            } else {
+                self.eventDetailsLbl.isHidden = true
+            }
         }
     }
     

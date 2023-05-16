@@ -68,6 +68,10 @@ final class EventDetailVC: UIViewController {
             continueBtn.isUserInteractionEnabled = false
             continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
             continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
+        } else if event?.eventTicket?.count ?? 0 == 0 {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
+            continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
         } else {
             continueBtn.isUserInteractionEnabled = true
             continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(1)
@@ -76,6 +80,7 @@ final class EventDetailVC: UIViewController {
     }
     
     private func getEventDetail() {
+        if eventId ?? "" == "" { return }
         EventPresenter.getEventDetail(eventId: eventId ?? "") { [weak self] isSuccess, errMsg, eventDetail in
             guard let self = self else {
                 return

@@ -344,9 +344,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.nameLbl.text = event.title
             cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
             if event.isPausedSellingAllTickets {
-                cell.priceLbl.text = Constant.String.saleEnded
+                cell.priceLbl.text = Constant.String.salePaused
             } else if event.isSoldOutAllTickets {
                 cell.priceLbl.text = Constant.String.soldOut
+            } else if event.eventTicket?.count ?? 0 == 0 {
+                cell.priceLbl.text = Constant.String.salePaused
             } else {
                 cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
             }
