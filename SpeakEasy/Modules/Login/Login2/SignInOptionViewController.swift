@@ -15,56 +15,13 @@ final class SignInOptionViewController: UIViewController {
 
     @IBOutlet weak var bgImageView: UIImageView!
     @IBOutlet weak var byTappingInfoLbl: UILabel!
-    
-//    var player: AVPlayer?
+
     var onBoardingDelegate = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        // background event
-//           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.didEnterBackgroundNotification, object: nil)
-//
-//           // foreground event
-//           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.willEnterForegroundNotification, object: nil)
-//
-//          // add these 2 notifications to prevent freeze on long Home button press and back
-//           NotificationCenter.default.addObserver(self, selector: #selector(setPlayerLayerToNil), name: UIApplication.willResignActiveNotification, object: nil)
-//
-//           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
-       
-//        playBackgoundVideo()
         self.byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy"], size: 12, textColor: .white, addUnderLine: true)
     }
-    
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
-//
-//    @objc func setPlayerLayerToNil(){
-//        player?.pause()
-//    }
-//
-//    @objc func reinitializePlayerLayer(){
-//        player?.play()
-//    }
-//
-//    private func playBackgoundVideo() {
-//        if let filePath = Bundle.main.path(forResource: "bgvideo", ofType:"mov") {
-//            let filePathUrl = NSURL.fileURL(withPath: filePath)
-//            player = AVPlayer(url: filePathUrl)
-//            player?.volume = 0
-//            let playerLayer = AVPlayerLayer(player: player)
-//            playerLayer.frame = self.bgImageView.bounds
-//            playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-//            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem, queue: nil) { [weak self] (_) in
-//                self?.player?.seek(to: CMTime.zero)
-//                self?.player?.play()
-//            }
-//            self.bgImageView.layer.addSublayer(playerLayer)
-//            player?.play()
-//        }
-//    }
     
     @IBAction func onClickSignInWithApple(_ sender: Any) {
         connectWithApple()
