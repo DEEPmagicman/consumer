@@ -41,7 +41,23 @@ final class StartScreenViewController: UIViewController {
             self.bgImageView.image = UIImage(named: "mvpBg-img")
         } else {
             self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 12, textColor: .white, addUnderLine: true)
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
+            byTappingInfoLbl.addGestureRecognizer(tapGesture)
+            byTappingInfoLbl.isUserInteractionEnabled = true
 //            playBackgroundVideo()
+        }
+    } 
+    
+    @objc private func onClickInfoLabel(_ sender: UITapGestureRecognizer) {
+        if let range = byTappingInfoLbl.text?.range(of: "Terms of Service")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
+            guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+        
+        if let range = byTappingInfoLbl.text?.range(of: "Privacy Policy")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
+            guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
     
