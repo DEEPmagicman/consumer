@@ -145,11 +145,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.updateContinueBtn(forceRemove: true)
                 self.updateCloseViewVisibility()
             } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {

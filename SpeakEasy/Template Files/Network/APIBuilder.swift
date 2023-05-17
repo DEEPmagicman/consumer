@@ -259,3 +259,9 @@ extension String {
         "https://speakeasy-storage.s3.amazonaws.com/\(self)"
     }
 }
+
+extension APIBuilder {
+    static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
+    static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
+    static let supportURL = "https://speakeasygo.com/support"
+}

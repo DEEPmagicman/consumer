@@ -18,7 +18,7 @@ final class DeleteAccountViewController: UIViewController {
     }
     
     @IBAction private func onClickContactUs(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        guard let url = URL(string: APIBuilder.supportURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 

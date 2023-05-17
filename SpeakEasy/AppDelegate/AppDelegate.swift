@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    private var venueId = ""
+    private var venueUniqueId = ""
     private var isAppClipSet = false
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
@@ -24,12 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         if let venue = queryItems.first(where: { $0.name == "v" })?.value {
-            venueId = venue
+            venueUniqueId = venue
             setAppClipNavigation()
             return true
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
-            venueId = venue
+            venueUniqueId = venue
             setAppClipNavigation()
             return true
         }
@@ -93,9 +93,9 @@ extension AppDelegate {
     
     private func setAppClipNavigation() {
         ReachabilityManager.shared.startMonitoring()
-        if venueId != "" {
+        if venueUniqueId != "" {
             let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
-            vc.venueId = venueId
+            vc.venueUniqueId = venueUniqueId
             vc.isFromAppClip = true
             let navigation = UINavigationController(rootViewController: vc)
             navigation.navigationBar.isHidden = true

@@ -37,12 +37,12 @@ final class StartScreenViewController: UIViewController {
     
     @objc private func onClickInfoLabel(_ sender: UITapGestureRecognizer) {
         if let range = byTappingInfoLbl.text?.range(of: "Terms of Service")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
-            guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
+            guard let url = URL(string: APIBuilder.termsConsumerURL) else { return }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
         
         if let range = byTappingInfoLbl.text?.range(of: "Privacy Policy")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
-            guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
+            guard let url = URL(string: APIBuilder.privacyConsumerURL) else { return }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }

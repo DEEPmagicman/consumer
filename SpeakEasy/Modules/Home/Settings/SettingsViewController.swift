@@ -41,27 +41,27 @@ final class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickFAQ(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        guard let url = URL(string: APIBuilder.supportURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickCustomerSupport(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        guard let url = URL(string: APIBuilder.supportURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickFeedback(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/support") else { return }
+        guard let url = URL(string: APIBuilder.supportURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickPrivacy(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/privacy-consumer") else { return }
+        guard let url = URL(string: APIBuilder.privacyConsumerURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
     @IBAction func onClickTermsOfService(_ sender: Any) {
-        guard let url = URL(string: "https://speakeasygo.com/terms-consumer") else { return }
+        guard let url = URL(string: APIBuilder.termsConsumerURL) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
