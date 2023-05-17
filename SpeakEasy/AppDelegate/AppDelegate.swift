@@ -25,12 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         if let venue = queryItems.first(where: { $0.name == "v" })?.value {
             venueUniqueId = venue
-            setAppClipNavigation()
+            showHome(selectedIndex: 0, isAppClipNavigation: true)
             return true
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
             venueUniqueId = venue
-            setAppClipNavigation()
+            showHome(selectedIndex: 0, isAppClipNavigation: true)
             return true
         }
         return true
@@ -88,21 +88,6 @@ extension AppDelegate {
         self.window?.rootViewController = tutorialNavigation
         if isNavigateToDetail, let vc = self.window?.rootViewController {
             Navigate.to.connectAccountVc(vc)
-        }
-    }
-    
-    private func setAppClipNavigation() {
-        ReachabilityManager.shared.startMonitoring()
-        if venueUniqueId != "" {
-            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
-            vc.venueUniqueId = venueUniqueId
-            vc.isFromAppClip = true
-            let navigation = UINavigationController(rootViewController: vc)
-            navigation.navigationBar.isHidden = true
-            navigation.modalTransitionStyle = .crossDissolve
-            navigation.modalPresentationStyle = .overCurrentContext
-            self.window?.rootViewController = navigation
-            isAppClipSet = true
         }
     }
     
@@ -178,7 +163,7 @@ extension AppDelegate {
 //        self.window?.rootViewController = tabBarControllerNavigation
 //    }
     
-    public func showHome(selectedIndex: Int) {
+    public func showHome(selectedIndex: Int, isAppClipNavigation: Bool = false) {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -207,5 +192,15 @@ extension AppDelegate {
         let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
         tabBarControllerNavigation.navigationBar.isHidden = true
         self.window?.rootViewController = tabBarControllerNavigation
+        
+        if isAppClipNavigation {
+            if venueUniqueId != "" {
+                let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
+                vc.venueUniqueId = venueUniqueId
+                vc.isFromAppClip = true
+                isAppClipSet = true
+                home.navigationController?.pushViewController(vc, animated: false)
+            }
+        }
     }
 }

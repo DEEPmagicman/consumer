@@ -64,9 +64,9 @@ final class UserDefault: NSObject {
         }
     }
     
-    var isGuest: Bool? {
+    var isGuest: Bool {
         get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool
+            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool ?? true
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
         }
@@ -123,7 +123,7 @@ final class UserDefault: NSObject {
         accessToken = nil
         user = nil
         isLoggedIn = false
-        isGuest = false
+        isGuest = true
         isNotificationOn = false
     }
 }

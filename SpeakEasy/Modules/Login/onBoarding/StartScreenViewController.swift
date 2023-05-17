@@ -51,13 +51,11 @@ final class StartScreenViewController: UIViewController {
         if UserDefault.shared.isMvp ?? false {
             Navigate.to.MVPVenueListViewController(self)
         } else {
-            UserDefault.shared.isGuest = false
             Navigate.to.enterPhoneNumVc(self)
         }
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
-        UserDefault.shared.isGuest = false
         Navigate.to.signInOptionVc(self)
     }
     

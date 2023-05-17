@@ -49,6 +49,7 @@ final class SettingPresenter {
             let imageDic = userDic["image"] as? [String:Any]
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
+            UserDefault.shared.isGuest = false
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
             print("\(user)")
         
