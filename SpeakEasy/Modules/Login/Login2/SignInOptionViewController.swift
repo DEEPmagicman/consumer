@@ -34,7 +34,7 @@ final class SignInOptionViewController: UIViewController {
 //           NotificationCenter.default.addObserver(self, selector: #selector(reinitializePlayerLayer), name: UIApplication.didBecomeActiveNotification, object: nil)
        
 //        playBackgoundVideo()
-        self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 12, textColor: .white, addUnderLine: true)
+        self.byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy"], size: 12, textColor: .white, addUnderLine: true)
     }
     
 //    deinit {

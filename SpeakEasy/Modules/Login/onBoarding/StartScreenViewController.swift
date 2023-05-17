@@ -40,7 +40,7 @@ final class StartScreenViewController: UIViewController {
             self.byTappingInfoLbl.text = "By tapping ‘CONTINUE AS GUEST’, you attest that you are over the age of 21. This information cannot be changed later."
             self.bgImageView.image = UIImage(named: "mvpBg-img")
         } else {
-            self.byTappingInfoLbl.highlightBold(["Terms of Service","Privacy Policy","Cookies Policy."], size: 12, textColor: .white, addUnderLine: true)
+            self.byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy"], size: 12, textColor: .white, addUnderLine: true)
             
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
             byTappingInfoLbl.addGestureRecognizer(tapGesture)
