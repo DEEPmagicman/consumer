@@ -56,7 +56,6 @@ final class MVPVenueListVc: UIViewController {
                 }
             }
         }
-        
     }
     
     @objc private func checkForceUpdate() {
@@ -79,10 +78,6 @@ final class MVPVenueListVc: UIViewController {
         closeHasMore = false
         fetchAllOpenVenueForMVP(withLoader: withLoader)
         fetchAllCloseVenueForMVP(withLoader: withLoader)
-    }
-    
-    @IBAction private func onClickSetting(_ sender: Any) {
-        Navigate.to.MVPSettingVC(self)
     }
     
     @IBAction func onClickCityName(_ sender: Any) {
@@ -118,9 +113,11 @@ final class MVPVenueListVc: UIViewController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")
             }
+            #endif
             Loader.hide()
         }
     }
@@ -154,9 +151,11 @@ final class MVPVenueListVc: UIViewController {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+            #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")
             }
+            #endif
             Loader.hide()
         }
     }
@@ -195,9 +194,9 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            Navigate.to.MVPVenueDetailViewController(self,venueId: self.openVenueList[indexPath.row].uniqueId)
+            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId)
         } else {
-            Navigate.to.MVPVenueDetailViewController(self,venueId: self.closeVenueList[indexPath.row].uniqueId)
+            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: closeVenueList[indexPath.row].uniqueId)
         }
     }
     
@@ -265,10 +264,10 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
         let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
-            print("\(cityName)")
             if cityName == UserDefault.shared.localCity {
                 return
             }
+            self.locationManager.delegate = nil
             self.fetchCityList(userCity: cityName)
         }
     }
@@ -287,4 +286,3 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
         }
     }
 }
-

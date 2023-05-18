@@ -5,45 +5,44 @@
 //  Created by Square Infosoft on 09/12/22.
 //
 
-import Foundation
 import CoreLocation
 import UIKit
 
 extension CLLocation {
-  func getCity(completion: @escaping (String) -> Void) {
-    let locationManager = CLLocationManager()
-    locationManager.getPlace(for: self) { placeMark in
-      guard let placeMark = placeMark else {
-          completion("")
-        return
-      }
-      if let town = placeMark.locality, let country = placeMark.country, let state = placeMark.administrativeArea {
-        completion(town)
-      } else {
-        completion("")
-      }
+    func getCity(completion: @escaping (String) -> Void) {
+        let locationManager = CLLocationManager()
+        locationManager.getPlace(for: self) { placeMark in
+            guard let placeMark = placeMark else {
+                completion("")
+                return
+            }
+            if let town = placeMark.locality, let country = placeMark.country, let state = placeMark.administrativeArea {
+                completion(town)
+            } else {
+                completion("")
+            }
+        }
     }
-  }
 }
 
 extension CLLocationManager {
-  func getPlace(for location: CLLocation,
-         completion: @escaping (CLPlacemark?) -> Void) {
-    let geocoder = CLGeocoder()
-    geocoder.reverseGeocodeLocation(location) { placemarks, error in
-      guard error == nil else {
-        print("*** Error in \(#function): \(error?.localizedDescription ?? "")")
-        completion(nil)
-        return
-      }
-      guard let placemark = placemarks?.first else {
-        print("*** Error in \(#function): placemark is nil")
-        completion(nil)
-        return
-      }
-      completion(placemark)
+    func getPlace(for location: CLLocation,
+                  completion: @escaping (CLPlacemark?) -> Void) {
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            guard error == nil else {
+                print("*** Error in \(#function): \(error?.localizedDescription ?? "")")
+                completion(nil)
+                return
+            }
+            guard let placemark = placemarks?.first else {
+                print("*** Error in \(#function): placemark is nil")
+                completion(nil)
+                return
+            }
+            completion(placemark)
+        }
     }
-  }
 }
 
 extension String {
@@ -53,31 +52,37 @@ extension String {
         return testEmail.evaluate(with: self)
     }
     
-    func convertDateFormat(from:DateFormat, to:DateFormat) -> String {
+    func convertDateFormat(from:DateFormat, to:DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false) -> String {
         let olDateFormatter = DateFormatter()
         olDateFormatter.dateFormat = from.rawValue
-        olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
-        guard let oldDate = olDateFormatter.date(from: self) else {return "No date Found" }
-        
+        if isUTC {
+            olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        } else {
+            olDateFormatter.timeZone = .current
+        }
+        guard let oldDate = olDateFormatter.date(from: self) else { return "No date Found" }
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = to.rawValue
         convertDateFormatter.timeZone = .current
-        return convertDateFormatter.string(from: oldDate)
+        if useDayLightSavingTime {
+            return convertDateFormatter.string(from: oldDate.addingTimeInterval(NSTimeZone.local.daylightSavingTimeOffset()))
+        } else {
+            return convertDateFormatter.string(from: oldDate)
+        }
     }
     
-    func toDate(withFormat format: DateFormat)-> Date?{
-
-          let dateFormatter = DateFormatter()
-          dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
-          dateFormatter.locale = Locale(identifier: "fa-IR")
-          dateFormatter.calendar = Calendar(identifier: .gregorian)
+    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date? {
+        let dateFormatter = DateFormatter()
+        if isUTC {
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")            
+        } else {
+            dateFormatter.timeZone = .current
+        }
+//          dateFormatter.locale = Locale(identifier: "fa-IR")
+//          dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format.rawValue
-          let date = dateFormatter.date(from: self)
-
-          return date
-
-      }
-
+        return dateFormatter.date(from: self)
+    }
 }
 
 extension Double {
@@ -187,12 +192,37 @@ extension UITableView {
     }
 }
 
-extension Bundle {
-    var releaseVersionNumber: String {
-        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+extension UIView {
+    static var nib: UINib {
+        UINib(nibName: "\(self)", bundle: nil)
     }
+}
 
-    var buildVersionNumber: String {
-        infoDictionary?["CFBundleVersion"] as? String ?? ""
+extension UITapGestureRecognizer {
+    func didTapAttributedTextInLabel(label: UILabel, inRange targetRange: NSRange) -> Bool {
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: CGSize.zero)
+        let textStorage = NSTextStorage(attributedString: label.attributedText!)
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.lineBreakMode = label.lineBreakMode
+        textContainer.maximumNumberOfLines = label.numberOfLines
+        let labelSize = label.bounds.size
+        textContainer.size = labelSize
+        let locationOfTouchInLabel = location(in: label)
+        let textBoundingBox = layoutManager.usedRect(for: textContainer)
+        let textContainerOffset = CGPoint(x: (labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x, y: (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y)
+        let locationOfTouchInTextContainer = CGPoint(x: locationOfTouchInLabel.x - textContainerOffset.x, y: locationOfTouchInLabel.y - textContainerOffset.y)
+        let indexOfCharacter = layoutManager.characterIndex(for: locationOfTouchInTextContainer, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
+        return NSLocationInRange(indexOfCharacter, targetRange)
+    }
+}
+
+extension Range where Bound == String.Index {
+    var nsRange: NSRange {
+        return NSRange(location: lowerBound.encodedOffset,
+                       length: upperBound.encodedOffset -
+                           lowerBound.encodedOffset)
     }
 }

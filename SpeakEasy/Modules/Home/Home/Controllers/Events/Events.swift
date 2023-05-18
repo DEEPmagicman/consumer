@@ -26,7 +26,6 @@ class Events: BaseController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let eventDelegate = EventPresenter()
     var eventList = [Event]()
     var from = 0
     
@@ -43,7 +42,8 @@ class Events: BaseController {
     }
     
     private func fetchAllEvent() {
-        self.eventDelegate.getEvents(from: self.from) { isSuccess, errMsg, eventList, hasMore in
+        Loader.show()
+        EventPresenter.getEvents(from: self.from, venueId: "") { isSuccess, errMsg, eventList, hasMore in
             if isSuccess {
                 for event in eventList {
                     self.eventList.append(event)

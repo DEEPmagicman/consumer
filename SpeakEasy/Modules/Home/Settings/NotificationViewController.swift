@@ -7,10 +7,9 @@
 
 import UIKit
 
-class NotificationViewController: UIViewController {
+final class NotificationViewController: UIViewController, UNUserNotificationCenterDelegate {
 
-    @IBOutlet weak var notificationBtn: UIButton!
-    private var notificationOn = true
+    @IBOutlet private weak var notificationBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,21 +17,20 @@ class NotificationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        notificationOnOff(notificationOn: notificationOn)
+        notificationOnOff(notificationOn: UserDefault.shared.isNotificationOn)
     }
     
-    func notificationOnOff(notificationOn: Bool) {
-        if notificationOn {
-            notificationBtn.setTitleColor(.white, for: .normal)
-            notificationBtn.backgroundColor = .black
-            notificationBtn.borderColor = .white
-            notificationBtn.borderWidth = 1
-            notificationBtn.setTitle("Turn off Notifications", for: .normal)
-        } else {
-            notificationBtn.backgroundColor = .white
-            notificationBtn.borderWidth = 0
-            notificationBtn.setTitle("Turn on Notifications", for: .normal)
-            notificationBtn.setTitleColor(.black, for: .normal)
+    private func notificationOnOff(notificationOn: Bool) {
+        DispatchQueue.main.async {
+            if notificationOn {
+                self.notificationBtn.setTitleColor(Constant.Color.primaryBlue, for: .normal)
+                self.notificationBtn.backgroundColor = .white
+                self.notificationBtn.setTitle("Turn off Notifications", for: .normal)
+            } else {
+                self.notificationBtn.setTitleColor(.white, for: .normal)
+                self.notificationBtn.backgroundColor = Constant.Color.primaryBlue
+                self.notificationBtn.setTitle("Allow Notifications", for: .normal)
+            }
         }
     }
     
@@ -41,7 +39,30 @@ class NotificationViewController: UIViewController {
     }
 
     @IBAction func onClickNotification(_ sender: Any) {
-        notificationOnOff(notificationOn: !notificationOn)
-        notificationOn = !notificationOn
+        if UserDefault.shared.isNotificationOn == false {
+            if #available(iOS 10.0, *) {
+                UNUserNotificationCenter.current().delegate = self
+                let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+                UNUserNotificationCenter.current().requestAuthorization(
+                    options: authOptions,
+                    completionHandler: { isAllowed, _ in
+                        UserDefault.shared.isNotificationOn = isAllowed
+                        self.notificationOnOff(notificationOn: UserDefault.shared.isNotificationOn)
+                    }
+                )
+            } else {
+                let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                    appDelegate.application?.registerUserNotificationSettings(settings)
+                }
+                UserDefault.shared.isNotificationOn = true
+                notificationOnOff(notificationOn: UserDefault.shared.isNotificationOn)
+            }
+        } else {
+            UIApplication.shared.unregisterForRemoteNotifications()
+            UserDefault.shared.isNotificationOn = false
+            notificationOnOff(notificationOn: UserDefault.shared.isNotificationOn)
+        }
     }
 }

@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 08/12/22.
 //
 
-protocol ConfirmPopUpDelegate {
+protocol ConfirmPopUpDelegate: AnyObject {
     func confirmDetail()
     func cancelDetail()
 }
@@ -24,9 +24,8 @@ final class ConfirmPopUpViewController: UIViewController {
     var infoDetailtext = ""
     var infoNoteText = ""
     var isPrivetOrPublic = false
-    var isFromLoginGuest = false
     
-    var confirmPopUpDelegate: ConfirmPopUpDelegate?
+    weak var confirmPopUpDelegate: ConfirmPopUpDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,10 +37,7 @@ final class ConfirmPopUpViewController: UIViewController {
         if isPrivetOrPublic {
             self.editBtn.setTitle("No", for: .normal)
             self.confirmBtn.setTitle("Yes", for: .normal)
-        } else if isFromLoginGuest {
-            self.editBtn.setTitle("Back", for: .normal)
         }
-    
     }
     
     @IBAction func onClickEdit(_ sender: Any) {
@@ -53,6 +49,4 @@ final class ConfirmPopUpViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
         self.confirmPopUpDelegate?.confirmDetail()
     }
-    
-
 }

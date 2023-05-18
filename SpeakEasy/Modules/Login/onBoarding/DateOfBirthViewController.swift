@@ -20,11 +20,10 @@ final class DateOfBirthViewController: UIViewController {
         super.viewDidLoad()
         
         setDatePicker()
-        why21Lbl.highlightBold(["Why?"], size: 15, textColor: Constant.Color.primaryColor)
+//        why21Lbl.highlightBold(["Why?"], size: 15, textColor: Constant.Color.primaryColor)
     }
     
     private func setDatePicker() {
-        
         datePickerView.datePickerMode = .date
         datePickerView.preferredDatePickerStyle = .wheels
         let maxDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
@@ -38,25 +37,15 @@ final class DateOfBirthViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         let birthdate = "\(datePickerView.date.age) years old \nBorn \(datePickerView.date.string())"
-        Navigate.to.presentConfirmPopUp(self, text1: Constant.String.confirmBirthDate, text2: birthdate, text3: Constant.String.over21Info)
-    }
-    
-
-}
-
-
-extension DateOfBirthViewController: ConfirmPopUpDelegate {
-    func cancelDetail() {
-        
-    }
-    
-    func confirmDetail() {
         let dob = datePickerView.date.string(format: .YYYYMMDD)
-        self.onBoardingDelegate.editUserProfileApi(dob: dob) { isSuccess,errorMsg  in
+        self.onBoardingDelegate.editUserProfileApi(dob: dob) { [weak self] isSuccess, errorMsg  in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
             if isSuccess {
                 UserDefault.shared.user?.dateOfBirth = dob
                 Navigate.to.SetProfilePicVc(self)
-//                Navigate.to.selectGenderVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -67,5 +56,4 @@ extension DateOfBirthViewController: ConfirmPopUpDelegate {
             Loader.hide()
         }
     }
-    
 }

@@ -19,30 +19,40 @@ final class SetProfilePictureViewController: UIViewController {
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var cameraBtn: UIButton!
     
-    var onBoardingDelegate = OnBoardingPresenter()
-    var imgUrl = ""
+    private var presenter = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onClickAddPhoto))
-        self.profileView.addGestureRecognizer(gesture)
+        profileView.addGestureRecognizer(gesture)
         
-        self.imageView.cornerRadius = 75
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        imageView.cornerRadius = 75
+        if (UserDefault.shared.user?.image.key ?? "") != "", let url = URL(string: UserDefault.shared.user?.image.key ?? "") {
+            imageView.sd_setImage(with: url, placeholderImage: Constant.Icon.uploadImage)
+            continueBtn.isUserInteractionEnabled = true
+            continueBtn.alpha = 1
+        } else {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.alpha = 0.5
+        }
     }
 
-    @IBAction func onClickContinue(_ sender: Any) {
-        self.onBoardingDelegate.uploadPhotoApi(image: imageView.image ?? UIImage()) { imgUrl ,isSuccess in
+    @IBAction private func onClickContinue(_ sender: Any) {
+        presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
             if isSuccess {
-                self.imgUrl = imgUrl
-                let imgDetail = ImageDetail(key:imgUrl,name:"\(UserDefault.shared.user?.phone ?? "")", description:"profile picture")
-                self.onBoardingDelegate.editUserProfileApi(image: imgDetail) { isSuccess,errorMsg  in
+                let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
+                self.presenter.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
-                        
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
                         Loader.hide()
@@ -59,43 +69,42 @@ final class SetProfilePictureViewController: UIViewController {
                 Alert.showAlertSheet(style: .alert, title: "image not upload", message: "")
                 Loader.hide()
             }
-            
         }
     }
     
-    @IBAction func onClickCamaraBtn(_ sender: Any) {
-        onClickAddPhoto()
+    @IBAction private func onClickSkipForNow(_ sender: Any) {
+        Navigate.to.notificationPermissionVc(self)
     }
     
-    @objc func onClickAddPhoto() {
-        showImagePickerControllerActionSheet()
+    @objc private func onClickAddPhoto() {
+        Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
+        // MARK: hide showImagePickerControllerActionSheet for now
+//        showImagePickerControllerActionSheet()
     }
-    
 }
 
 extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePickerControllerActionSheet() {
         let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (action) in
-            self.showImagePickerController(soureType:.photoLibrary)
+            Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
         }
-        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
-//            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
-//            self.showImagePickerController(soureType:.camera)
-            self.fetchInstaPhotos(self)
-        }
+        // MARK: comment out Instagram flow for now
+//        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
+////            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
+////            self.showImagePickerController(soureType:.camera)
+//            self.fetchInstaPhotos(self)
+//        }
         let cancelAction =  UIAlertAction(title: "Cancel", style: .cancel, handler: nil )
         
-        Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction,cancelAction,instagram], completion: nil)
-        
+        Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction, cancelAction], completion: nil)
     }
     
     func fetchInstaPhotos(_ fromViewController: UIViewController) {
-        
         if !Connectivity.isConnectedToInternet {
             Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
             return
         }
-         let instaToken = UserDefault.shared.user?.instagramToken
+        let instaToken = UserDefault.shared.user?.instagramToken
         if instaToken != "" && instaToken != nil {
             Navigate.to.selectPhotoVc(self)
         } else {
@@ -103,25 +112,15 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         }
     }
     
-    func showImagePickerController(soureType:UIImagePickerController.SourceType){
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
-        imagePickerController.sourceType = soureType
-        present(imagePickerController, animated: true, completion: nil)
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             imageView.image = editedImage
-            self.cameraBtn.isHidden = true
             self.continueBtn.isUserInteractionEnabled = true
             self.continueBtn.alpha = 1
             
         } else if let orignalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             imageView.image = orignalImage
-            self.cameraBtn.isHidden = true
             self.continueBtn.isUserInteractionEnabled = true
             self.continueBtn.alpha = 1
         }
@@ -138,9 +137,8 @@ extension SetProfilePictureViewController: InstagramConnectedDelegate {
 extension SetProfilePictureViewController: SelectedInstaImgDelegate {
     func selectedImg(image: String) {
         imageView.sd_setImage(with: URL( string: image), completed: nil)
-        self.cameraBtn.isHidden = true
-        self.continueBtn.isUserInteractionEnabled = true
-        self.continueBtn.alpha = 1
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.alpha = 1
     }
     
     func loginAgain() {

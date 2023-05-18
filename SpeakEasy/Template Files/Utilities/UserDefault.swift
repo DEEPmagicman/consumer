@@ -18,6 +18,7 @@ final class UserDefault: NSObject {
         case hasVisitedStartingPage = "hasVisitedStartingPage"
         case localCity = "Surat"
         case defaultCitySelected = "defaultCitySelected"
+        case isNotificationOnKey = "isNotificationOn"
     }
     
     let userDefaults = UserDefaults.standard
@@ -37,11 +38,11 @@ final class UserDefault: NSObject {
         }
     }
     
-    var user: Currentuser? {
+    var user: User? {
         get {
             if let savedUser = UserDefaults.standard.object(forKey: UserDefaultKey.userKey.rawValue) as? Data {
                 do {
-                    let loadedUser = try JSONDecoder().decode(Currentuser.self, from: savedUser)
+                    let loadedUser = try JSONDecoder().decode(User.self, from: savedUser)
                     return loadedUser
                 } catch { }
             }
@@ -63,9 +64,9 @@ final class UserDefault: NSObject {
         }
     }
     
-    var isGuest: Bool? {
+    var isGuest: Bool {
         get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool
+            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool ?? true
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
         }
@@ -103,6 +104,14 @@ final class UserDefault: NSObject {
         }
     }
     
+    var isNotificationOn: Bool {
+        get {
+            (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
+        }
+    }
+    
     func removeInstaConnection() {
         user?.instagramId = ""
         user?.instagramToken = nil
@@ -114,6 +123,7 @@ final class UserDefault: NSObject {
         accessToken = nil
         user = nil
         isLoggedIn = false
-        isGuest = false
+        isGuest = true
+        isNotificationOn = false
     }
 }

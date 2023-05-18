@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import NBBottomSheet
 
 final class Navigate {
     
    static let to = Navigate()
     
     private init() { }
+    
+    func showImagePickerController(_ sender: UIViewController, sourceType: UIImagePickerController.SourceType) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = sender as? UIImagePickerControllerDelegate & UINavigationControllerDelegate
+        imagePickerController.allowsEditing = true
+        imagePickerController.sourceType = sourceType
+        sender.present(imagePickerController, animated: true, completion: nil)
+    }
     
     func back(_ sender: UIViewController) {
         sender.navigationController?.popViewController(animated: true)
@@ -29,7 +38,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "",phoneNum: String) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(VerificationCodeViewController.self)
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp ?? ""
@@ -43,9 +52,12 @@ final class Navigate {
     func enterNameVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
+        if let indexOfOTPVC = sender.navigationController?.viewControllers.firstIndex(where: { $0.isKind(of: VerificationCodeViewController.self) }) {
+            sender.navigationController?.viewControllers.remove(at: indexOfOTPVC)
+        }
     }
     
-    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false, isFromLoginasGuest: Bool = false) {
+    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmPopUpViewController.self)
         vc.modalPresentationStyle = .overCurrentContext
         vc.confirmPopUpDelegate = sender as? ConfirmPopUpDelegate
@@ -53,13 +65,40 @@ final class Navigate {
         vc.infoDetailtext = text2
         vc.infoNoteText = text3
         vc.isPrivetOrPublic = isYesOrNoBtn
-        vc.isFromLoginGuest = isFromLoginasGuest
         sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func confirmEmailVC(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailVC.self)
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overFullScreen
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func presentCommentDoneBottomSheet(_ sender: UIViewController) {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(380))
+        let viewController = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailBottomSheet.self)
+        let bottomSheetController = NBBottomSheetController(configuration: configuration)
+        bottomSheetController.present(viewController, on: sender)
+    }
+    
+    func presentDateSelectionBottomSheet(_ sender: UIViewController, date: Date? = nil) {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(310))
+        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(DateSelectionBottomSheet.self)
+        vc.delegate = sender as? DateSelectionDelegate
+        vc.date = date
+        let bottomSheetController = NBBottomSheetController(configuration: configuration)
+        bottomSheetController.present(vc, on: sender)
     }
     
     func connectAccountVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConnectAccountViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
+        if let indexOfOTPVC = sender.navigationController?.viewControllers.firstIndex(where: { $0.isKind(of: VerificationCodeViewController.self) }) {
+            sender.navigationController?.viewControllers.remove(at: indexOfOTPVC)
+        }
     }
     
     func addEmailVc(_ sender: UIViewController) {
@@ -87,8 +126,10 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectCityVc(_ sender: UIViewController) {
+    func selectCityVc(_ sender: UIViewController, userLocationCity: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectCityViewController.self)
+        vc.userLocationCity = userLocationCity
+        if sender.navigationController?.viewControllers.last is SelectCityViewController { return }
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -161,59 +202,82 @@ final class Navigate {
     }
     
     func MVPVenueListViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueListVc.self)
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
         sender.navigationController?.viewControllers = [vc]
     }
     
-    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPVenueDetailVc.self)
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
         vc.venueId = venueId
+        vc.venueUniqueId = venueUniqueId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPSettingVC(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(SettingMvpVC.self)
+    func selectTicket(_ sender: UIViewController, venueDetail: ClipVenue?, event: Event?, type: TicketType = .appClip) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(SelectTicketVC.self)
+        vc.venueDetails = venueDetail
+        vc.event = event
+        vc.type = type
+        vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterPhoneNumForMvpViewController(_ sender: UIViewController,ticketPrice: Int,isGeneral: Bool,venueName: String, ticketId: String, venueId: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(EnterPhomeNumberMvpVC.self)
-        vc.ticketPrice = ticketPrice
-        vc.isGeneralAdmission = isGeneral
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
+        vc.eventId = eventId
+        vc.venueDetails = venueDetail
+        vc.event = event
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func fullScreenImg(_ sender: UIViewController, imgURL: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(FullScreenImgVC.self)
+        vc.imgURL = imgURL
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func checkOutVC(_ sender: UIViewController, venueName: String, venueId: String, uniqueId: String, venueAttachment: String, venueLogo: String, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Int, type: PaymentIntentType) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
+        vc.selectedAppClipTickets = selectedAppClipTickets
+        vc.selectedEventTicket = selectedEventTicket
+        vc.totalPrice = totalPrice
         vc.venueName = venueName
-        vc.appClipTicketId = ticketId
         vc.venueId = venueId
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func checkOutMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, appClipTicketId: String, venueId: String, ticketInfo: String,venueAttachment: String, venueLogo:String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(CheckOutMvpVC.self)
-        vc.totalTicket = totalTicket
-        vc.ticketPrice = ticketPrice
-        vc.isGeneralAdmission = isGeneral
-        vc.venueName = venueName
-        vc.appClipTicketId = appClipTicketId
-        vc.venueId = venueId
-        vc.ticketInfo = ticketInfo
+        vc.uniqueId = uniqueId
         vc.venueAttachment = venueAttachment
         vc.venueLogo = venueLogo
+        vc.type = type
+        vc.event = event
+        vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func qrCodeMvpVC(_ sender: UIViewController,totalTicket: Int,ticketPrice: Int, isGeneral: Bool, venueName: String, bookingId: String,ticketInfo: String,venueAttachment: String, venueLogo:String) {
-        let vc = StoryboardAndXibManager.StoryBoard.peymentForMvp.instantiateVC(QRCodeMvpVC.self)
-        vc.totalTicket = totalTicket
-        vc.isGeneralAdmission = isGeneral
-        vc.ticketPrice = ticketPrice
-        vc.venueName = venueName
+    func QRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(QRCodeVC.self)
+        vc.booking = booking
         vc.bookingId = bookingId
-        vc.ticketInfo = ticketInfo
-        vc.venueAttachment = venueAttachment
-        vc.venueLogo = venueLogo
+        vc.delegate = sender as? QRCodeVCNavigationDelegate
+        vc.type = type
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
-            sender.navigationController?.viewControllers = [homeVc,vc]
+            homeVc.present(vc, animated: true)
+            homeVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [homeVc]
+            return
         }
-        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.navigationController?.present(vc, animated: true)
+    }
+    
+    func paymentDetailVC(_ sender: UIViewController, booking: Booking?) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(PaymentDetailVC.self)
+        vc.booking = booking
+        sender.present(vc, animated: true)
+    }
+    
+    func loginMandatory(_ sender: UIViewController) {
+        sender.tabBarController?.selectedIndex = 1
     }
     
     func settingsVc(_ sender: UIViewController) {
@@ -241,23 +305,19 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func paymentMethodsVc(_ sender: UIViewController) {
+    func paymentMethodsVc(_ sender: UIViewController, selectedId: String, isEditable: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(PaymentMethodsViewController.self)
+        vc.delegate = sender as? PaymentMethodVCDelegate
+        vc.selectedId = selectedId
+        vc.isEditable = isEditable
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func addPaymentMethodsVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(AddPaymentMethodsViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func addCardInfoVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(AddCardInfoViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func cardDetailsVc(_ sender: UIViewController) {
+    func cardDetailsVc(_ sender: UIViewController, customerId: String, paymentMethod: PaymentMethod?) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(CardDetailsViewController.self)
+        vc.customerId = customerId
+        vc.paymentMethod = paymentMethod
+        vc.delegate = sender as? CardDetailChangeDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -332,7 +392,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String){
+    func eventDetail(_ sender: UIViewController, eventId: String) {
         let vc = EventBookingDetails()
         vc.eventId = eventId
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -344,7 +404,7 @@ final class Navigate {
     }
     
     func mvpCitySelection(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.mvp.instantiateVC(MVPCitySelectionVC.self)
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPCitySelectionVC.self)
         vc.citySelectionDelegate = sender as? any CitySelectionDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }

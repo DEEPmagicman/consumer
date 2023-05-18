@@ -10,6 +10,7 @@ import SocketIO
 
 protocol WebSocketCallBackDelegate: AnyObject {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool)
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String)
 }
 
 final class WebSocketWrapper: NSObject {
@@ -18,7 +19,15 @@ final class WebSocketWrapper: NSObject {
 
     private var socket: SocketIOClient?
     private var manager: SocketManager = SocketManager(socketURL: URL(string: "www.google.com")!)
-    private let webSocketURL = "https://api.speakeasygo.com"
+    private var webSocketURL: String {
+        get {
+            #if DEBUG
+                return "https://speakeasy-stag.cmdev.cc"
+            #else
+                return "https://api.speakeasygo.com"
+            #endif
+        }
+    }
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
     var delegate: [WebSocketCallBackDelegate] = []
@@ -50,6 +59,13 @@ final class WebSocketWrapper: NSObject {
         socket?.on(clientEvent: .disconnect) { _, _ in
             self.isSocketConnected = false
         }
+        
+        socket?.on("updatedDoormanSettings") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
+        }
     }
     
     @objc func connect() {
@@ -66,4 +82,9 @@ final class WebSocketWrapper: NSObject {
         socket?.disconnect()
         self.isSocketConnected = false
     }
+}
+
+extension WebSocketCallBackDelegate {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {}
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {}
 }

@@ -13,15 +13,15 @@ final class MVPVenueDetailVc: UIViewController {
 
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var venueBgImg: UIImageView!
-    @IBOutlet weak var venueTitleNameLbl: UILabelDeviceClass!
+    @IBOutlet weak var venueTitleNameLbl: UILabel!
+    @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var locationLbl: UILabel!
-    @IBOutlet weak var contectNoLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var ticketTypeTableView: UITableView!
-    @IBOutlet weak var infoLbl: UILabel!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var liveLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var updatedAtLbl: UILabel!
     @IBOutlet weak var headerVenueName: UILabel!
@@ -30,36 +30,108 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var toNightLbl: UILabel!
     @IBOutlet weak var venuePageView: UIView!
+    @IBOutlet weak var todaysEventsView: UIView!
+    @IBOutlet weak var todaysEventTableView: UITableView!
+    @IBOutlet weak var todaysEventTableHeight: NSLayoutConstraint!
     @IBOutlet weak var closeTicketView: UIView!
-    
+    @IBOutlet weak var tonightView: UIView!
+    @IBOutlet weak var openingHoursView: UIView!
+    @IBOutlet weak var vibeView: UIView!
+    @IBOutlet weak var dressCodeView: UIView!
+    @IBOutlet weak var dressCodeLbl: UILabel!
+    @IBOutlet weak var venuePolicyView: UIView!
+    @IBOutlet weak var upcomingSectionView: UIView!
+    @IBOutlet weak var vibesCollectionView: UICollectionView!
+    @IBOutlet weak var vibeCollectionHeight: NSLayoutConstraint!
+    @IBOutlet weak var openingTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var openingHoursTableView: UITableView!
+    @IBOutlet weak var upcomingTableView: UITableView!
+    @IBOutlet weak var upcomingTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var venuePolicyLbl: UILabel!
+
     var venueId = ""
+    var venueUniqueId = ""
     var isFromAppClip = false
-    private var mvpDelegate = MVPPresenter()
+    private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
-    var selectedTicket = -1
-    var totalTicket = 1
-    private var maxTicket = 10
+    private var maxTicket = 20
+    private var ticketListHeightObservation: NSKeyValueObservation?
+    private var vibeHeightObservation: NSKeyValueObservation?
+    private var hoursHeightObservation: NSKeyValueObservation?
+    private var upcomingHeightObservation: NSKeyValueObservation?
+    private var todaysEventHeightObservation: NSKeyValueObservation?
+    private var from = 0
+    private var hasMore = false
+    private var totalPrice: Int {
+        var total = 0
+        venueDetails?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += ($0.price * quantity)
+            }
+        }
+        return total
+    }
+    private var isMaxTicketReached: Bool {
+        var total = 0
+        venueDetails?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += quantity
+            }
+        }
+        return total >= maxTicket
+    }
+    private var events = [Event]()
+    private var todaysEvents = [Event]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.headerVenueName.isHidden = true
-        self.headerView.backgroundColor = .clear
+        headerVenueName.isHidden = true
+        headerView.backgroundColor = .clear
         scrollView.delegate = self
         backBtn.isHidden = isFromAppClip
         ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
-        ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
+        ticketListHeightObservation = ticketTypeTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.tableViewHeight.constant = self.ticketTypeTableView.contentSize.height
+            self.ticketTypeTableView.layoutIfNeeded()
+        }
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
+        getEvents()
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
+        vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
+        vibeHeightObservation = vibesCollectionView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.vibeCollectionHeight.constant = self.vibesCollectionView.contentSize.height
+            self.vibesCollectionView.layoutIfNeeded()
+        }
+        openingHoursTableView.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
+        hoursHeightObservation = openingHoursTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.openingTableHeight.constant = self.openingHoursTableView.contentSize.height
+            self.openingHoursTableView.layoutIfNeeded()
+        }
+        upcomingTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        upcomingHeightObservation = upcomingTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.upcomingTableHeight.constant = self.upcomingTableView.contentSize.height
+            self.upcomingTableView.layoutIfNeeded()
+        }
+        todaysEventTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        todaysEventHeightObservation = todaysEventTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.todaysEventTableHeight.constant = self.todaysEventTableView.contentSize.height
+            self.todaysEventTableView.layoutIfNeeded()
+        }
     }
     
-    func getVenueDetail(withLoader: Bool = true) {
+    private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {
             Loader.show()
         }
-        mvpDelegate.getVenuesDetailForaMVP(venueId: self.venueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -67,17 +139,46 @@ final class MVPVenueDetailVc: UIViewController {
             if isSuccess {
                 self.venueDetails = venueDetail
                 self.setUpUI()
+                self.ticketTypeTableView.reloadData()
+                self.vibesCollectionView.reloadData()
+                self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
+                self.updateCloseViewVisibility()
             } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
+            #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
                 Alert.showToast("Venue detail updated")
             }
+            #endif
+            Loader.hide()
+        }
+    }
+    
+    private func getEvents() {
+        Loader.show()
+        // TODO: add pagination
+        EventPresenter.getEvents(venueId: venueId) { [weak self] isSuccess, errMsg, eventList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            self.events = eventList
+            self.upcomingSectionView.isHidden = eventList.count == 0
+            self.upcomingTableView.reloadData()
+            self.hasMore = hasMore
+            self.updateCloseViewVisibility()
+            Loader.hide()
+        }
+        EventPresenter.getEvents(venueId: venueId, time: "TODAY") { [weak self] isSuccess, errMsg, eventList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            self.todaysEvents = eventList
+            self.todaysEventTableView.reloadData()
+            self.updateCloseViewVisibility()
             Loader.hide()
         }
     }
@@ -87,10 +188,10 @@ final class MVPVenueDetailVc: UIViewController {
         point.title = title
         point.coordinate = coordinate
         point.accessibilityNavigationStyle = .separate
-        self.mapView.removeAnnotations(self.mapView.annotations)
-        self.mapView.addAnnotation(point)
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.addAnnotation(point)
         let viewRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
-        self.mapView.setRegion(viewRegion, animated: true)
+        mapView.setRegion(viewRegion, animated: true)
     }
     
     @objc func openAppleMap() {
@@ -100,20 +201,16 @@ final class MVPVenueDetailVc: UIViewController {
         mapItem.openInMaps()
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        tableViewHeight.constant = ticketTypeTableView.contentSize.height
-    }
-    
     private func setUpUI() {
-        let imgStr = "https://speakeasy-storage.s3.amazonaws.com/\(venueDetails?.venueAttachment.first?.key ?? "")"
-        let logoStr = "https://speakeasy-storage.s3.amazonaws.com/\(venueDetails?.logo?.key ?? "")"
-        venueBgImg.sd_setImage(with: URL(string: imgStr),completed: nil)
-        logoImg.sd_setImage(with: URL(string: logoStr),completed: nil)
+        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+        logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
+        cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
-        infoLbl.text = "Entry tickets can be purchased in-person at \(venueDetails?.name ?? "") by scanning the banner located outside the venue.\nPrices shown here are subject to change. Up to date prices will be shown upon ticket purchase at the venue."
-        infoLbl.highlightBold(["in-person"], size: 15, textColor: .white)
+        dressCodeLbl.text = venueDetails?.dressCode
+        venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
+        venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime
             liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
@@ -130,23 +227,41 @@ final class MVPVenueDetailVc: UIViewController {
         if venueDetails?.appClipTicket?.allSatisfy({ ticket in
             ticket.status == "DISABLED"
         }) == true {
-            closeTicketView.isHidden = false
+            updateCloseViewVisibility()
+            tonightView.isHidden = true
             venuePageView.isHidden = true
         } else {
             venuePageView.isHidden = false
+            tonightView.isHidden = false
             closeTicketView.isHidden = true
         }
-        updatedAtLbl.text = "Updated: \(venueDetails?.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) ?? "")"
+        updatedAtLbl.text = "Updated: \(venueDetails?.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) ?? "")"
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
     }
     
+    private func updateCloseViewVisibility() {
+        if (events.count == 0 && todaysEvents.count == 0 && (venueDetails?.appClipTicket?.allSatisfy({ ticket in
+            ticket.status == "DISABLED"
+        }) == true)) {
+            closeTicketView.isHidden = false
+        } else {
+            closeTicketView.isHidden = true
+        }
+    }
+    
     @IBAction func onClickContinue(_ sender: Any) {
-        Navigate.to.checkOutMvpVC(self, totalTicket: self.totalTicket, ticketPrice: venueDetails?.appClipTicket?[selectedTicket].price ?? 0, isGeneral: venueDetails?.appClipTicket?[selectedTicket].name == "GENERALTICKET", venueName: venueDetails?.name ?? "", appClipTicketId: venueDetails?.appClipTicket?[selectedTicket].id ?? "", venueId: self.venueId, ticketInfo: venueDetails?.appClipTicket?[selectedTicket].description ?? "",venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "")
+        if UserDefault.shared.isGuest == true {
+            Navigate.to.loginMandatory(self)
+            return
+        }
+        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", uniqueId: venueDetails?.uniqueId ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
+        }
     }
     
     @IBAction func onClickShare(_ sender: Any) {
         let msgText = """
- Download Speaskeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
+ Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
 
  Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
  """
@@ -154,112 +269,206 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        Navigate.to.back(self)
     }
 }
 
 extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        venueDetails?.appClipTicket?.count ?? 0
+        switch tableView {
+        case ticketTypeTableView:
+            return venueDetails?.appClipTicket?.count ?? 0
+        case openingHoursTableView:
+            openingHoursView.isHidden = venueDetails?.openHours.count == 0
+            return venueDetails?.openHours.count ?? 0
+        case upcomingTableView:
+            upcomingSectionView.isHidden = events.count == 0
+            return events.count
+        case todaysEventTableView:
+            todaysEventsView.isHidden = todaysEvents.count == 0
+            return todaysEvents.count
+        default:
+            return 0
+        }
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
-        cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-        if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
-            cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
-        } else {
-            cell.ticketPriceLbl.text = "FREE"
+        switch tableView {
+        case ticketTypeTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name
+            cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+                cell.ticketPriceLbl.text = "FREE"
+            } else {
+                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+            }
+            if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
+                cell.ticketPriceLbl.textColor = .white
+                cell.ticketTypeLbl.textColor = .white
+            } else {
+                cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+                cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
+            }
+            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
+                cell.ticketPlusMinusView.isHidden = false
+            } else {
+                cell.ticketPlusMinusView.isHidden = true
+            }
+            if venueDetails?.checkInUser ?? 0 > 100 {
+                cell.hotVenueLbl.isHidden = false
+            } else {
+                cell.hotVenueLbl.isHidden = true
+            }
+            cell.minusBtn.tag = indexPath.row
+            cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
+            cell.plusBtn.tag = indexPath.row
+            cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
+            cell.totalTicketLbl.text = "\(venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
+            cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+            cell.selectionStyle = .none
+            cell.layoutIfNeeded()
+            return cell
+        case openingHoursTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
+            cell.setData(venueDetails?.openHours[indexPath.row])
+            return cell
+        case upcomingTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+            let event = self.events[indexPath.row]
+            cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = event.title
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            if event.isPausedSellingAllTickets {
+                cell.priceLbl.text = Constant.String.salePaused
+            } else if event.isSoldOutAllTickets {
+                cell.priceLbl.text = Constant.String.soldOut
+            } else if event.eventTicket?.count ?? 0 == 0 {
+                cell.priceLbl.text = Constant.String.salePaused
+            } else {
+                cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
+            }
+            return cell
+        case todaysEventTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+            let event = self.todaysEvents[indexPath.row]
+            cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = event.title
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            if event.isPausedSellingAllTickets {
+                cell.priceLbl.text = Constant.String.saleEnded
+            } else if event.isSoldOutAllTickets {
+                cell.priceLbl.text = Constant.String.soldOut
+            } else {
+                cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
+            }
+            return cell
+        default:
+            return UITableViewCell()
         }
-        if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
-            cell.ticketPriceLbl.textColor = .white
-            cell.ticketTypeLbl.textColor = .white
-        } else {
-            cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-            cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
-        }
-        if indexPath.row == selectedTicket {
-            cell.ticketPlusMinusView.isHidden = false
-        } else {
-            cell.ticketPlusMinusView.isHidden = true
-        }
-        if venueDetails?.checkInUser ?? 0 > 100 {
-            cell.hotVenueLbl.isHidden = false
-        } else {
-            cell.hotVenueLbl.isHidden = true
-        }
-        cell.minusBtn.tag = indexPath.row
-        cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
-        cell.plusBtn.tag = indexPath.row
-        cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-        cell.totalTicketLbl.text = "\(totalTicket)"
-        cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
-        cell.selectionStyle = .none
-        cell.layoutIfNeeded()
-        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
-        if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        if indexPath.row == self.selectedTicket { return }
-        continueBtn.isHidden = false
-        scrollViewBottomConstraint.constant = 90
-        selectedTicket = indexPath.row
-        totalTicket = 1
-        ticketTypeTableView.reloadData()
-        updateContinueBtn()
+        switch tableView {
+        case ticketTypeTableView:
+            if venueDetails?.bookingStatus != "OPEN" || venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
+            if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
+            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
+            if isMaxTicketReached {
+                Alert.showToast("Max ticket selection reached")
+                return
+            }
+            continueBtn.isHidden = false
+            scrollViewBottomConstraint.constant = 90
+            venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
+            ticketTypeTableView.reloadData()
+            updateContinueBtn()
+        case upcomingTableView:
+            updateContinueBtn(forceRemove: true)
+            Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
+        case todaysEventTableView:
+            updateContinueBtn(forceRemove: true)
+            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
+        default:
+            break
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
-            return 0
+        switch tableView {
+        case ticketTypeTableView:
+            if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
+                return 0
+            }
+            return UITableView.automaticDimension
+        case openingHoursTableView:
+            return UITableView.automaticDimension
+        default:
+            return UITableView.automaticDimension
         }
-        return UITableView.automaticDimension
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
-        if totalTicket > 1 {
-            self.totalTicket -= 1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn()
-        } else if totalTicket == 1 {
-            self.selectedTicket = -1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn(forceRemove: true)
+        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket > 1 {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket - 1
+                ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else if totalTicket == 1 {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = nil
+                ticketTypeTableView.reloadData()
+                updateContinueBtn(forceRemove: (venueDetails?.appClipTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
+            }
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        if totalTicket < maxTicket {
-            self.totalTicket += 1
-            self.ticketTypeTableView.reloadData()
-            updateContinueBtn()
+        if isMaxTicketReached {
+            Alert.showToast("Max ticket selection reached")
+            return
+        }
+        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket < maxTicket {
+                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
+                ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else {
+                Alert.showToast("Max ticket selection reached")
+            }
         }
     }
     
     func updateContinueBtn(forceRemove: Bool = false) {
         DispatchQueue.main.async {
             if forceRemove {
+                self.venueDetails?.appClipTicket?.indices.forEach {
+                    self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+                }
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 30
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
-                self.selectedTicket = -1
-                self.totalTicket = 1
                 self.ticketTypeTableView.reloadData()
                 return
             }
             self.continueBtn.isHidden = false
-            let price = self.venueDetails?.appClipTicket?[self.selectedTicket].price ?? 0
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
         }
     }
 }
 
 extension MVPVenueDetailVc: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
-        if self.venueId == uniqueId {
+        if self.venueUniqueId == uniqueId {
             getVenueDetail(withLoader: false)
+            updateContinueBtn(forceRemove: true)
+        }
+    }
+    
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        if self.venueUniqueId == uniqueId {
+            getVenueDetail(withLoader: false)
+            updateContinueBtn(forceRemove: true)
         }
     }
 }
@@ -267,11 +476,32 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
 extension MVPVenueDetailVc: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 220 {
-            self.headerVenueName.isHidden = false
-            self.headerView.backgroundColor = .black
-        } else  {
-            self.headerVenueName.isHidden = true
-            self.headerView.backgroundColor = .clear
+            headerVenueName.isHidden = false
+            headerView.backgroundColor = .black
+        } else {
+            headerVenueName.isHidden = true
+            headerView.backgroundColor = .clear
         }
+    }
+}
+
+extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        vibeView.isHidden = (venueDetails?.venueVibes.count ?? 0) == 0
+        return venueDetails?.venueVibes.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = vibesCollectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
+        cell.lblVibes.text = venueDetails?.venueVibes[indexPath.row]
+        return cell
+    }
+}
+
+extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (venueDetails?.venueVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width ?? 0) + 16
+        let size = CGSize(width: width, height: 40.0)
+        return size
     }
 }

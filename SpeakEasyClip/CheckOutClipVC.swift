@@ -17,24 +17,20 @@ enum PaymentStatus: String {
 
 final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
-    @IBOutlet private weak var ticketTitleLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!
-    @IBOutlet private weak var ticketSubTitleLbl: UILabel!
+    @IBOutlet private weak var ticketListTableView: UITableView!
+    @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var countryCodeTextField: FPNTextField!
     @IBOutlet private weak var phoneNumTextField: UITextField!
     @IBOutlet private weak var errorLbl: UILabel!
     @IBOutlet private weak var applePayBtn: PKPaymentButton!
-    @IBOutlet private weak var ticketQuantityLbl: UILabel!
     @IBOutlet private weak var dressCodeInfoLbl: UILabel!
-    
-    var totalTicket = 1
-    var ticketPrice = 1
-    var isGeneralAdmission = false
-    var ticketInfo = ""
-    var appClipTicketId = ""
+
+    var totalPrice = 1
     var venueName = ""
     var venueAttachment = ""
     var venueLogo = ""
+    var selectedAppClipTickets = [AppClipTicket]()
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var bookingId = ""
@@ -46,10 +42,19 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private var isValidNo = false
     private var isChangingFlag = false
+    private var ticketListHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
+        
+        ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
+            self.ticketListTableView.layoutIfNeeded()
+        }
+        
         applePayBtn.alpha = 0.5
         applePayBtn.isUserInteractionEnabled = false
 
@@ -81,10 +86,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.showCountryPhoneCode = true
 
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
-        ticketQuantityLbl.text = "\(totalTicket)x"
-        ticketTitleLbl.text = "\(isGeneralAdmission ? "General Admission" : "VIP Skip the Line")"
-        ticketSubTitleLbl.text = ticketInfo
-        totalPriceLbl.text = "$\(totalTicket * ticketPrice)"
+        totalPriceLbl.text = "$\(totalPrice)"
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
@@ -140,14 +142,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        let param = ["cart":
-                        [
-                            ["name": (isGeneralAdmission ? "General Admission" : "VIP Skip the Line"),
-                             "price": ticketPrice,
-                             "quantity": totalTicket
-                            ]
-                        ]
-        ] as [String: Any]
+        var selectedTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                   "quantity": $0.selectedQuantity ?? 0])
+        }
+        var param = ["cart": selectedTickets] as [String: Any]
+        param["isAppClipPayment"] = true
         let bodyData = try? JSONSerialization.data(
             withJSONObject: param,
             options: [.prettyPrinted]
@@ -204,7 +205,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
         paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: ticketPrice * totalTicket))
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice))
         ]
         paymentRequest.requiredBillingContactFields = []
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
@@ -243,14 +244,11 @@ extension CheckOutClipVC {
                 DispatchQueue.main.async {
                     if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
                         AppClipLoader.hideLoader()
-                        vc.totalTicket = self.totalTicket
-                        vc.isGeneralAdmission = self.isGeneralAdmission
-                        vc.ticketInfo = self.ticketInfo
-                        vc.ticketPrice = self.ticketPrice
                         vc.venueName = self.venueName
                         vc.bookingId = self.bookingId
                         vc.venueLogo = self.venueLogo
                         vc.venueAttachment = self.venueAttachment
+                        vc.selectedAppClipTickets = self.selectedAppClipTickets
                         if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                             self.navigationController?.viewControllers = [selectVC, vc]
                         }
@@ -270,8 +268,24 @@ extension CheckOutClipVC {
 
     func createBooking() {
         AppClipLoader.showLoader(self.view)
-        let parameters = "{\n  \"phone\": \"\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")\",\n  \"appclipTicketId\": \"\(appClipTicketId)\",\n  \"ticketQuantity\": \(totalTicket)\n}"
-        let postData = parameters.data(using: .utf8)
+        var selectedTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+        }
+        let param = ["appclipTicket": selectedTickets,
+                     "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
+                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
         
         guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
@@ -308,6 +322,23 @@ extension CheckOutClipVC {
             }
         }
         task.resume()
+    }
+}
+
+extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       selectedAppClipTickets.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+        cell.titleLbl.text = selectedAppClipTickets[indexPath.row].name
+        cell.subTitleLbl.text = selectedAppClipTickets[indexPath.row].description
+        cell.quantityLbl.text = "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x"
+        cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        cell.contentView.backgroundColor = .clear
+        return cell
     }
 }
 
@@ -386,6 +417,15 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
                 alertPopup("Update", "Venue your trying to booking, updated it's price") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
+            }
+        }
+    }
+    
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        if isPaymentInitiated { return }
+        if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+            alertPopup("Update", "Venue your trying to booking, updated it's ticket") {
+                self.navigationController?.popToRootViewController(animated: true)
             }
         }
     }

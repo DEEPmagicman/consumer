@@ -26,9 +26,25 @@ final class SelectTicketClipVC: UIViewController {
     var isLive = true
     var venueDetail: ClipVenue?
     private var venueId = ""
-    private var selectedTicketIndex: Int?
-    private var totalTicket = 1
-    private var maxTicket = 10
+    private var maxTicket = 20
+    private var totalPrice: Int {
+        var total = 0
+        venueDetail?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += ($0.price * quantity)
+            }
+        }
+        return total
+    }
+    private var isMaxTicketReached: Bool {
+        var total = 0
+        venueDetail?.appClipTicket?.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += quantity
+            }
+        }
+        return total >= maxTicket
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +59,12 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
+        request.addValue("app_version", forHTTPHeaderField: Bundle.main.releaseVersionNumber)
+        request.addValue("build_number", forHTTPHeaderField: Bundle.main.buildVersionNumber)
+        request.addValue("platform", forHTTPHeaderField: "ios")
+        request.addValue("app_bundle_id", forHTTPHeaderField: Bundle.main.bundleIdentifier ?? "invalid bundle id")
+
         if withLoader {
             AppClipLoader.showLoader(self.view)
         }
@@ -58,6 +80,7 @@ final class SelectTicketClipVC: UIViewController {
                 return
             }
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+            UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
             self.setUpUI()
             DispatchQueue.main.async {
                 self.updateContinueBtn(forceRemove: true)
@@ -116,13 +139,10 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let index = selectedTicketIndex {
-            vc.totalTicket = self.totalTicket
-            vc.ticketInfo = self.venueDetail?.appClipTicket?[index].description ?? ""
-            vc.ticketPrice = self.venueDetail?.appClipTicket?[index].price ?? 0
-            vc.isGeneralAdmission = index == 0
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+            vc.selectedAppClipTickets = selectedTickets
+            vc.totalPrice = totalPrice
             vc.venueName = self.venueDetail?.name ?? ""
-            vc.appClipTicketId = self.venueDetail?.appClipTicket?[index].id ?? ""
             vc.venueAttachment = self.venueDetail?.venueAttachment.first?.key ?? ""
             vc.venueLogo = self.venueDetail?.logo?.key ?? ""
             navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -131,35 +151,48 @@ final class SelectTicketClipVC: UIViewController {
     }
 
     @objc func minusBtnClick(_ sender: UIButton) {
-        if totalTicket > 1 {
-            totalTicket -= 1
-            ticketTypeTableView.reloadData()
-            updateContinueBtn()
-        } else if totalTicket == 1 {
-            updateContinueBtn(forceRemove: true)
+        if let totalTicket = venueDetail?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket > 1 {
+                venueDetail?.appClipTicket?[sender.tag].selectedQuantity = totalTicket - 1
+                ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else if totalTicket == 1 {
+                venueDetail?.appClipTicket?[sender.tag].selectedQuantity = nil
+                ticketTypeTableView.reloadData()
+                updateContinueBtn(forceRemove: (venueDetail?.appClipTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
+            }
         }
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        if totalTicket < maxTicket {
-            totalTicket += 1
-            ticketTypeTableView.reloadData()
-            updateContinueBtn()
+        if isMaxTicketReached {
+//            Alert.showToast("Max ticket selection reached")
+            return
+        }
+        if let totalTicket = venueDetail?.appClipTicket?[sender.tag].selectedQuantity {
+            if totalTicket < maxTicket {
+                venueDetail?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
+                ticketTypeTableView.reloadData()
+                updateContinueBtn()
+            } else {
+//                Alert.showToast("Max ticket selection reached")
+            }
         }
     }
     
     func updateContinueBtn(forceRemove: Bool = false) {
         DispatchQueue.main.async {
             if forceRemove {
+                self.venueDetail?.appClipTicket?.indices.forEach {
+                    self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
+                }
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 20
-                self.selectedTicketIndex = nil
-                self.totalTicket = 1
                 self.ticketTypeTableView.reloadData()
                 return
             }
-            let price = self.venueDetail?.appClipTicket?[self.selectedTicketIndex ?? 0].price ?? 0
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalTicket*price)", for: .normal)
+            self.continueBtn.isHidden = false
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
         }
     }
 }
@@ -171,22 +204,25 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
-
-        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
+        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name
         cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
         cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
-        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
-            cell.ticketPriceLbl.text = "$\(venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
-        } else {
+        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
             cell.ticketPriceLbl.text = "FREE"
+        } else {
+            cell.ticketPriceLbl.text = "$\(venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
         }
-        cell.ticketPlusMinusView.isHidden = !(indexPath.row == selectedTicketIndex)
+        if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
+            cell.ticketPlusMinusView.isHidden = false
+        } else {
+            cell.ticketPlusMinusView.isHidden = true
+        }
         cell.minusBtn.tag = indexPath.row
         cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-        cell.totalTicketLbl.text = "\(totalTicket)"
-        cell.plusBtn.alpha = totalTicket == maxTicket ? 0.5 : 1
+        cell.totalTicketLbl.text = "\(venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
+        cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
@@ -202,10 +238,14 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if venueDetail?.bookingStatus != "OPEN" || venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
+        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
         if venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-        
-        selectedTicketIndex = indexPath.row
-        totalTicket = 1
+        if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
+        if isMaxTicketReached {
+//            Alert.showToast("Max ticket selection reached")
+            return
+        }
+        venueDetail?.appClipTicket?[indexPath.row].selectedQuantity = 1
         ticketTypeTableView.reloadData()
         updateContinueBtn()
         continueBtn.isHidden = false
@@ -222,6 +262,12 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
 extension SelectTicketClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
+        if uniqueId == self.venueId {
+            getEventTicket(withLoader: false)
+        }
+    }
+    
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if uniqueId == self.venueId {
             getEventTicket(withLoader: false)
         }

@@ -9,7 +9,15 @@ import Foundation
 
 struct APIBuilder {
     
-    static private let baseURL = "https://api.speakeasygo.com"  //"https://speakeasy-stag.cmdev.cc"  
+    static private var baseURL: String {
+        get {
+            #if DEBUG
+                return "https://speakeasy-stag.cmdev.cc"
+            #else
+                return "https://api.speakeasygo.com"
+            #endif
+        }
+    }
     static private let route = "/consumer"
     static private let auth = "/auth"
     static private let phoneLogin = "/phone-login"
@@ -33,14 +41,21 @@ struct APIBuilder {
     static private let changeEmail = "/change-email"
     static private let changePhone = "/change-phone"
     static private let changePassword = "/change-password"
-    static private let includeEventDetails = "?include=venue&include=eventTicket"
-    static private let appClip = "/appclip/"
+    static private let appClip = "/appclip"
     static private let appClipVenue = "/appClipVenue?include=appClipTicket"
     static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
-
+    static private let include = "include=%@"
+    static private let appleWallet = "/apple-wallet"
+    static private let method = "/method"
+    static private let ticketBooking = "/ticket-booking"
+    static private let pastTickets = "/past-tickets"
+    static private let consumerTickets = "/consumer-tickets"
+    static private let recommendedEvents = "/recommended-events"
+    static private let deleteAccount = "/delete-account"
+    
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
     static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
@@ -110,6 +125,10 @@ struct APIBuilder {
         baseURL + route + auth + socialLogin
     }
     
+    static var deleteUserURL: String {
+        baseURL + route + auth + deleteAccount
+    }
+    
     static var getInstagramToken: String {
         INSTAGRAMTOKEN
     }
@@ -126,8 +145,16 @@ struct APIBuilder {
         baseURL + route + event
     }
     
+    static func eventURL(includes: [String]) -> String {
+        baseURL + route + event + "?" + includes.map { String(format: "include=%@", $0) }.joined(separator: "&")
+    }
+    
+    static var recommendedEventURL: String {
+        baseURL + route + event + recommendedEvents
+    }
+
     static func eventDetailURL(_ id: String) -> String {
-        baseURL + route + event + "/\(id)" + includeEventDetails
+        baseURL + route + event + "/\(id)"
     }
     
     static func bottleListURL(_ id: String) -> String {
@@ -167,26 +194,74 @@ struct APIBuilder {
     }
     
     static func MVPVenueDetailURL(_ id: String) -> String{
-        baseURL + appClip + id
+        baseURL + appClip + "/\(id)"
     }
     
     static var MVPVenueListURL: String {
         baseURL + route + venue + appClipVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     
-    static var createBookingMVPURL: String {
-        baseURL + appClipUser
+    static func getBookingURL(_ bookingId: String) -> String {
+        baseURL + appClipUser + "/\(bookingId)"
+    }
+    
+    static var createCoverBookingURL: String {
+        baseURL + route + appClip + ticketBooking
+    }
+
+    static var createEventBookingURL: String {
+        baseURL + route + event + ticketBooking
+    }
+    
+    static var pastTicketsURL: String {
+        baseURL + route + event + pastTickets
+    }
+    
+    static var consumerTicketsURL: String {
+        baseURL + route + event + consumerTickets
     }
     
     static func addPaymentURL(_ id: String) -> String {
         baseURL + route + payment + "/\(id)"
     }
     
-    static func successPaymentURL(_ paymentHistoryId: String, _ id: String) -> String {
-        baseURL + route + payment + "/" + paymentHistoryId + "/" + id + statusSuccess
+    static func successPaymentURL(_ paymentHistoryId: String, _ id: String, paymentFrom: String? = nil) -> String {
+        var url = baseURL + route + payment + "/" + paymentHistoryId + "/" + id + statusSuccess
+        if let paymentFrom = paymentFrom {
+            url += "&paymentType=\(paymentFrom.replacingOccurrences(of: " ", with: "%20"))"
+        }
+        return url
     }
     
     static var mvpCityListURL: String {
         baseURL + mvpCity
     }
+    
+    static func appClipAppleWallet(_ bookingId: String) -> String {
+        baseURL + appClip + "/\(bookingId)" + appleWallet
+    }
+    
+    static func eventAppleWallet(_ bookingId: String) -> String {
+        baseURL + route + event + "/\(bookingId)" + appleWallet
+    }
+    
+    static func customerMethod(_ customerId: String) -> String {
+        baseURL + route + payment + method + "/\(customerId)"
+    }
+    
+    static func deleteMethod(_ customerId: String, methodId: String) -> String {
+        baseURL + route + payment + method + "/\(customerId)" + "/\(methodId)"
+    }
+}
+
+extension String {
+    var imageURL: String {
+        "https://speakeasy-storage.s3.amazonaws.com/\(self)"
+    }
+}
+
+extension APIBuilder {
+    static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
+    static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
+    static let supportURL = "https://speakeasygo.com/support"
 }

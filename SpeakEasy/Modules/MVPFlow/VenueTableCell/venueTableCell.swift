@@ -20,12 +20,6 @@ class venueTableCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
     }
     
     func setData(data: ClipVenue) {
@@ -35,17 +29,16 @@ class venueTableCell: UITableViewCell {
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
         self.locationLbl.text = data.address
-        self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmma) )"
-        if let ticket = data.appClipTicket?.first(where: { $0.name == "GENERALTICKET" && $0.status == "ENABLED" }) {
-            if ticket.price >= 5 {
-                self.coverLbl.text = "$\(ticket.price)"
+        self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) )"
+        if let ticket = data.lowestPriceTicket {
+            if ticket.price < 5 && ticket.name.lowercased().contains("general") == true {
+                coverLbl.text = "FREE"
             } else {
-                self.coverLbl.text = "FREE"
+                coverLbl.text = "$\(ticket.price)"
             }
-        } else if let ticket = data.appClipTicket?.first(where: { $0.name != "GENERALTICKET"}) {
-            self.coverLbl.text = "$\(ticket.price)"
+        } else {
+            coverLbl.text = ""
         }
-
         if data.bookingStatus == "OPEN" {
             self.liveLbl.text = data.displayWaitTime
             self.liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
@@ -54,6 +47,4 @@ class venueTableCell: UITableViewCell {
             self.liveLbl.textColor = UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha: 1)
         }
     }
-
-    
 }

@@ -17,14 +17,14 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var bgImg: UIImageView!
     
     var otpText = ""
-    var currectOtp = ""
+    var currectOtp: String?
     var otpRef = ""
     var phoneNum = ""
     var isFromLogin = false
-    private var onBoardingDelegate = OnBoardingPresenter()
     var isFromSettings = false
     var isForEmail = false
-    var settingDelegate = SettingPresenter()
+    private var onBoardingDelegate = OnBoardingPresenter()
+    private var settingDelegate = SettingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,12 +32,12 @@ final class VerificationCodeViewController: UIViewController {
         otpFieldView.delegate = self
         setOtpView()
         
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
+        #if DEBUG
         print("*-*\(currectOtp)")
-        Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp)")
-
-
+        Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
+        #endif
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,20 +47,20 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             bgImg.isHidden = false
         }
-            phoneNumLbl.text = phoneNum
+        phoneNumLbl.text = phoneNum
     }
     
-    func setOtpView() {
-        self.otpFieldView.fieldsCount = 6
-        self.otpFieldView.fieldBorderWidth = 1
-        self.otpFieldView.defaultBorderColor = .white
-        self.otpFieldView.cursorColor = Constant.Color.primaryColor
-        self.otpFieldView.filledBorderColor = Constant.Color.primaryColor
-        self.otpFieldView.displayType = .underlinedBottom
-        self.otpFieldView.fieldSize = 40
-        self.otpFieldView.separatorSpace = 8
-        self.otpFieldView.shouldAllowIntermediateEditing = false
-        self.otpFieldView.initializeUI()
+    private func setOtpView() {
+        otpFieldView.fieldsCount = 6
+        otpFieldView.fieldBorderWidth = 1
+        otpFieldView.defaultBorderColor = .white
+        otpFieldView.cursorColor = Constant.Color.purpleColor
+        otpFieldView.filledBorderColor = Constant.Color.purpleColor
+        otpFieldView.displayType = .underlinedBottom
+        otpFieldView.fieldSize = 40
+        otpFieldView.separatorSpace = 8
+        otpFieldView.shouldAllowIntermediateEditing = false
+        otpFieldView.initializeUI()
     }
 
     @IBAction func onClickEdit(_ sender: Any) {
@@ -68,18 +68,20 @@ final class VerificationCodeViewController: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if otpText == ""{
-                showAlert(with: "", message: "Please Enter Otp")
+        if otpText == "" {
+            showAlert(with: "", message: "Please Enter Otp")
         } else {
-                otpVerification()
-
+            otpVerification()
         }
-
     }
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
         if isFromLogin {
-            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess,errorMsg  in
+            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
@@ -96,7 +98,11 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess, errMsg in
+                        guard let self = self else {
+                            Loader.hide()
+                            return
+                        }
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
@@ -111,7 +117,11 @@ final class VerificationCodeViewController: UIViewController {
                         Loader.hide()
                     }
                 } else {
-                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef,isForPhone: true) { otp, otpRef, isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneResendOtpApi(otpref: self.otpRef,isForPhone: true) { [weak self] otp, otpRef, isSuccess, errMsg in
+                        guard let self = self else {
+                            Loader.hide()
+                            return
+                        }
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
@@ -127,7 +137,11 @@ final class VerificationCodeViewController: UIViewController {
                     }
                 }
             } else {
-                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { otp, otpRef, isSuccess,errorMsg  in
+                self.onBoardingDelegate.signUpResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
                         self.otpRef = otpRef
                         self.currectOtp = otp
@@ -141,7 +155,6 @@ final class VerificationCodeViewController: UIViewController {
                     }
                     Loader.hide()
                 }
-
             }
         }
     }
@@ -152,10 +165,18 @@ final class VerificationCodeViewController: UIViewController {
     
     private func otpVerification() {
         if isFromLogin {
-            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
-                if isSuccess {
-                    AppDelegate.shared.changeRootViewController()
+            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
+                guard let self = self else {
                     Loader.hide()
+                    return
+                }
+                if isSuccess {
+                    Loader.hide()
+                    if UserDefault.shared.user?.isProfileCompleted == true {
+                        AppDelegate.shared.changeRootViewController()
+                    } else {
+                        Navigate.to.connectAccountVc(self)
+                    }
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -169,7 +190,11 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errMsg in
+                        guard let self = self else {
+                            Loader.hide()
+                            return
+                        }
                         if isSuccess {
                             for controller in self.navigationController!.viewControllers{
                                 if controller.isKind(of: PersonalInformationViewController.self) {
@@ -190,7 +215,11 @@ final class VerificationCodeViewController: UIViewController {
 //                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
 //                          self.navigationController?.popToViewController(pInfoVC, animated: false)
 //                        }
-                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef,isForPhone: true) { isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
+                        guard let self = self else {
+                            Loader.hide()
+                            return
+                        }
                         if isSuccess {
                             for controller in self.navigationController!.viewControllers{
                                 if controller.isKind(of: PersonalInformationViewController.self) {
@@ -208,11 +237,14 @@ final class VerificationCodeViewController: UIViewController {
                     }
                     print("*-*settingPhone")
                 }
-               
             } else {
-                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { isSuccess,errorMsg  in
+                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
-                            Navigate.to.welcomeVc(self)
+                        Navigate.to.connectAccountVc(self)
                         Loader.hide()
                     } else {
                         if errorMsg != nil {
@@ -226,21 +258,20 @@ final class VerificationCodeViewController: UIViewController {
                print("*-*signup")
             }
         }
-      
     }
 }
 
-extension VerificationCodeViewController : OTPFieldViewDelegate{
+extension VerificationCodeViewController: OTPFieldViewDelegate {
     func shouldBecomeFirstResponderForOTP(otpTextFieldIndex index: Int) -> Bool {
-        self.continueBtn.isUserInteractionEnabled = false
-        self.continueBtn.alpha = 0.5
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
         return true
     }
     
     func enteredOTP(otp: String) {
-            otpText = otp
-        self.continueBtn.isUserInteractionEnabled = true
-        self.continueBtn.alpha = 1.0
+        otpText = otp
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.alpha = 1.0
     }
     
     func hasEnteredAllOTP(hasEnteredAll: Bool) -> Bool {
@@ -249,5 +280,4 @@ extension VerificationCodeViewController : OTPFieldViewDelegate{
         }
         return true
     }
-    
 }

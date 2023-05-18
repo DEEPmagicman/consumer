@@ -8,10 +8,14 @@
 import Foundation
 
 final class EventPresenter {
-    func getEvents(from: Int? = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
-        Loader.show()
-        let param = ["skip": from]
-        AFWrapper.getRequest(APIBuilder.eventURL,params: param, headers: Header.header()) { response in
+    static func getEvents(from: Int? = 0, venueId: String, time: String = "FUTURE", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
+        let param = ["skip": from ?? 0,
+                     "venueId": venueId,
+                     "version": "PUBLISHED",
+                     "eventStatus": "APPROVED",
+                     "timeVersion": time,
+                     "orderBy": "startDateTime|asc"] as [String : Any]
+        AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -35,8 +39,31 @@ final class EventPresenter {
         }
     }
     
-    func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: Event?) -> Void) {
-        Loader.show()
+    static func getRecommendedEvents(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event]) -> Void) {
+        AFWrapper.getRequest(APIBuilder.recommendedEventURL, headers: Header.header()) { response in
+            
+            guard let responseArray = response as? [[String: Any]] else {
+                completion(false, nil, [])
+                return
+            }
+            do {
+                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
+                let eventList = try JSONDecoder().decode([Event].self, from: data)
+                completion(true, nil, eventList)
+            } catch {
+                completion(false, "internal error", [])
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+            completion(false, nil, [])
+        }
+    }
+    
+    static func getEventDetail(eventId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {

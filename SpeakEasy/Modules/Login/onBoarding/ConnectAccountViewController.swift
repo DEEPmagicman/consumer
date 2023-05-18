@@ -21,11 +21,10 @@ final class ConnectAccountViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
     
     @IBAction func onClickConnectWithApple(_ sender: Any) {
-        self.connectWithApple()
+        connectWithApple()
     }
     
     @IBAction func onClickConnectWithGoogle(_ sender: Any) {
@@ -33,11 +32,11 @@ final class ConnectAccountViewController: UIViewController {
     }
     
     @IBAction func onClickSkip(_ sender: Any) {
-        Navigate.to.addEmailVc(self)
+        Navigate.to.enterNameVc(self)
     }
     
     func connectWithGoogle() {
-         let clientId = Constant.String.googleClientId
+        let clientId = Constant.String.googleClientId
         
         let config = GIDConfiguration(clientID: clientId)
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
@@ -48,13 +47,17 @@ final class ConnectAccountViewController: UIViewController {
                 return
             }
             guard let email = user?.profile?.email,
-                  let idToken = user?.authentication.idToken
-            else {
+                  let idToken = user?.authentication.idToken else {
                 return
             }
-            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in
+            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { [weak self] isSuccess, errorMsg  in
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
                 if isSuccess {
-                    Navigate.to.dateOfBirthVc(self)
+                    UserDefault.shared.user?.email = email
+                    Navigate.to.enterNameVc(self)
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -89,9 +92,14 @@ extension ConnectAccountViewController: ASAuthorizationControllerDelegate{
             do {
                let jwt = try decode(jwt: identityTokenString)
                let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { isSuccess,errorMsg  in
+                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { [weak self] isSuccess,errorMsg  in
+                    guard let self = self else {
+                        Loader.hide()
+                        return
+                    }
                     if isSuccess {
-                        Navigate.to.dateOfBirthVc(self)
+                        UserDefault.shared.user?.email = decodedBody["email"] as? String ?? ""
+                        Navigate.to.enterNameVc(self)
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

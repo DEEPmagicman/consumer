@@ -61,14 +61,14 @@ class TicketConfirmation: UIViewController {
     }
     
     @IBAction func onBtnViewInBookings(_ sender: UIButtonDeviceClass) {
-        AppDelegate.shared.showHome(selectedIndex: 1)
+//        AppDelegate.shared.showHome(selectedIndex: 1)
     }
     @IBAction func onBtnBack(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func onBtnShare(_ sender: UIButton) {
         if self.screenType == .FromHome {
-            AppDelegate.shared.showHome(selectedIndex: 0)
+//            AppDelegate.shared.showHome(selectedIndex: 0)
         } else {
             Utility.main.shareSocialWith(text: "www.SpeakEasy.com")
         }

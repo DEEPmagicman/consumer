@@ -7,14 +7,12 @@
 
 import UIKit
 
-class VibesCVC: UICollectionViewCell {
+final class VibesCVC: UICollectionViewCell {
 
     @IBOutlet weak var lblVibes: UILabelDeviceClass!
     @IBOutlet weak var bgColorView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
-
 }

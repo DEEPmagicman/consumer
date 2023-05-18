@@ -8,43 +8,37 @@
 import UIKit
 import DropDown
 
-class PersonalInformationViewController: UIViewController {
+final class PersonalInformationViewController: UIViewController {
 
-    @IBOutlet weak var firstName: SkyFloatingLabelTextField!
-    @IBOutlet weak var lastName: SkyFloatingLabelTextField!
-    @IBOutlet weak var nickName: SkyFloatingLabelTextField!
-    @IBOutlet weak var gender: SkyFloatingLabelTextField!
+    @IBOutlet weak var firstNameTF: UITextField!
+    @IBOutlet weak var lastNameTF: UITextField!
+    @IBOutlet weak var nickNameTF: UITextField!
+    @IBOutlet weak var genderTF: UITextField!
+    @IBOutlet weak var dateOfBirthTF: UITextField!
+    @IBOutlet weak var emailTF: UITextField!
+    @IBOutlet weak var phoneNumberTF: UITextField!
     @IBOutlet weak var genderBtn: UIButton!
-    @IBOutlet weak var dateOfBirthLbl: UILabel!
-    @IBOutlet weak var emailLbl: UILabel!
-    @IBOutlet weak var phoneNumberLbl: UILabel!
     
-    let genderDropDown = DropDown()
-    var editInfoDelegate = OnBoardingPresenter()
+    private let genderDropDown = DropDown()
+    private var presenter = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        textFieldSetUP(firstName)
-        textFieldSetUP(lastName)
-        textFieldSetUP(nickName)
-        textFieldSetUP(gender)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        firstName.text = UserDefault.shared.user?.firstName ?? "Tamas"
-        lastName.text = UserDefault.shared.user?.lastName ?? "An"
-        nickName.text = UserDefault.shared.user?.nickName ?? "Tomi"
-        gender.text = UserDefault.shared.user?.gender ?? "MALE"
-        dateOfBirthLbl.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY)
-        emailLbl.text = UserDefault.shared.user?.email
-        phoneNumberLbl.text = UserDefault.shared.user?.phone
-    }
-
-    private func textFieldSetUP(_ textField: SkyFloatingLabelTextField) {
-        textField.placeholderFont = Fonts.poppinsRegular(15)
-        textField.titleFormatter = { $0 }
+        firstNameTF.text = UserDefault.shared.user?.firstName
+        lastNameTF.text = UserDefault.shared.user?.lastName
+        nickNameTF.text = UserDefault.shared.user?.nickName
+        genderTF.text = UserDefault.shared.user?.gender.capitalized
+        dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
+        if (UserDefault.shared.user?.email ?? "") == "" {
+            emailTF.text =  UserDefault.shared.user?.additionalEmail
+        } else {
+            emailTF.text = UserDefault.shared.user?.email
+        }
+        phoneNumberTF.text = UserDefault.shared.user?.phone
     }
 
     @IBAction func onClickBack(_ sender: Any) {
@@ -52,13 +46,19 @@ class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickSave(_ sender: Any) {
-        self.editInfoDelegate.editUserProfileApi(fName: firstName.text ?? "", lName: lastName.text ?? "", nickName: nickName.text ?? "",gender: self.gender.text) { isSuccess,errorMsg  in
+        guard let date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) else {
+            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+            return
+        }
+        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: nickNameTF.text ?? "", dob: date, gender: genderTF.text?.uppercased()) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
+            guard let self = self else { return }
             if isSuccess {
-                UserDefault.shared.user?.firstName = self.firstName.text ?? ""
-                UserDefault.shared.user?.lastName = self.lastName.text ?? ""
-                UserDefault.shared.user?.nickName = self.nickName.text ?? ""
-                UserDefault.shared.user?.gender = self.gender.text ?? ""
+                UserDefault.shared.user?.firstName = self.firstNameTF.text ?? ""
+                UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
+                UserDefault.shared.user?.nickName = self.nickNameTF.text ?? ""
+                UserDefault.shared.user?.dateOfBirth = date
+                UserDefault.shared.user?.gender = self.genderTF.text ?? ""
                 Navigate.to.back(self)
             } else {
                 if errorMsg != nil {
@@ -70,6 +70,10 @@ class PersonalInformationViewController: UIViewController {
         }
     }
     
+    @IBAction func onClickDOB(_ sender: Any) {
+        Navigate.to.presentDateSelectionBottomSheet(self, date: dateOfBirthTF.text?.toDate(withFormat: .MMMMDDYYYY, isUTC: false))
+    }
+    
     @IBAction func onClickEmail(_ sender: Any) {
         Navigate.to.loginWithEmailVc(self, isFromSettings: true)
     }
@@ -77,10 +81,6 @@ class PersonalInformationViewController: UIViewController {
     @IBAction func onClickPhoneNumber(_ sender: Any) {
         Navigate.to.enterPhoneNumVc(self, isFromSettings: true)
      }
-           
-    @IBAction func onClickPassword(_ sender: Any) {
-        Navigate.to.changePasswordVc(self)
-    }
     
     @IBAction func onClickGenderDropdown(_ sender: Any) {
         genderSelectionDropDown()
@@ -89,8 +89,8 @@ class PersonalInformationViewController: UIViewController {
     
     private func genderSelectionDropDown() {
         genderDropDown.anchorView = genderBtn
-        genderDropDown.bottomOffset = CGPoint(x: genderBtn.bounds.width - 189, y: genderBtn.bounds.height - 6)
-        genderDropDown.cellHeight = 37
+        genderDropDown.bottomOffset = CGPoint(x: -8, y: genderBtn.bounds.height + 7)
+        genderDropDown.cellHeight = 40
         genderDropDown.selectionBackgroundColor = .clear
         genderDropDown.selectedTextColor = .white
         genderDropDown.textColor = .white
@@ -100,9 +100,21 @@ class PersonalInformationViewController: UIViewController {
         genderDropDown.backgroundColor = Constant.Color.code2Fcolor
         genderDropDown.textFont = Fonts.poppinsRegular(15)
         genderDropDown.dataSource = Constant.String.genderList
-        genderDropDown.width = 200
+        genderDropDown.width = genderBtn.bounds.width + 20
+        genderDropDown.cellNib = CustomDropDownCell.nib
         genderDropDown.selectionAction = { [weak self] (index, item) in
-            self?.gender.text = item
+            self?.genderTF.text = item
         }
+        genderDropDown.customCellConfiguration = {(index: Index, item: String, cell: DropDownCell) in
+        guard let cell = cell as? CustomDropDownCell else { return }
+            cell.optionLabel.textAlignment = .left
+            cell.separatorView.isHidden = index == Constant.String.genderList.count - 1
+        }
+    }
+}
+
+extension PersonalInformationViewController: DateSelectionDelegate {
+    func selectedDate(date: Date) {
+        dateOfBirthTF.text = date.string(format: .MMMMDDYYYY, isUTC: false)
     }
 }

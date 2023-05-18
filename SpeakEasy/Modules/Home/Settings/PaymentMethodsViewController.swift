@@ -7,72 +7,120 @@
 
 import UIKit
 
-class PaymentMethodsViewController: UIViewController {
+protocol PaymentMethodVCDelegate: AnyObject {
+    func didSelectMethod(_ id: String, image: UIImage?)
+    func addCard()
+}
+
+final class PaymentMethodsViewController: UIViewController {
 
     @IBOutlet weak var paymentTableView: UITableView!
-    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
-    
-    var paymentArray = ["Apple Pay", "Mastercard 1234"]
-    var defaultType = "Apple Pay"
+
+    var selectedId = Constant.String.defaultSelectedPM
+    var isEditable = false
+    private var paymentMethods = [PaymentMethod]()
+    private var selectedImage = Constant.Card.cardIc
+    private var isNoPaymentMethodFound: Bool {
+        paymentMethods.count == 0
+    }
+    weak var delegate: PaymentMethodVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        getSavedMethods()
         paymentTableView.delegate = self
         paymentTableView.dataSource = self
         paymentTableView.register(UINib(nibName: "PaymentTableViewCell", bundle: nil), forCellReuseIdentifier: "PaymentTableViewCell")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableViewHeightConstraint.constant = CGFloat((paymentArray.count) * 90)
-        paymentTableView.reloadData()
+    private func getSavedMethods() {
+        Loader.show()
+        PaymentPresenter.getUserSavedMethods(customerId: UserDefault.shared.user?.stripeCusId ?? "") { [weak self] isSuccess, errMsg, paymentMethods in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            if isSuccess {
+                self.paymentMethods = paymentMethods
+                self.paymentTableView.reloadData()
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+            Loader.hide()
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
-    @objc func buttonAction(sender: UIButton!) {
-        if paymentArray[sender.tag] == "Mastercard 1234" {
-            Navigate.to.cardDetailsVc(self) }
-    }
-    
-    @IBAction func onClickAddPaymentMethods(_ sender: Any) {
-        Navigate.to.addPaymentMethodsVc(self)
-    }
 }
 
 extension PaymentMethodsViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return paymentArray.count
+        if isNoPaymentMethodFound {
+            return isEditable ? 1 : 2
+        }
+        return paymentMethods.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PaymentTableViewCell", for: indexPath) as! PaymentTableViewCell
         cell.selectionStyle = .none
         cell.setUi(isSetting: true)
-        if paymentArray[indexPath.row] == "Apple Pay" {
-            cell.paymentIcon.image = Constant.Icon.applePay
+        if indexPath.row == 0 {
+            cell.paymentIcon.image = Constant.Card.applePay
+            cell.paymentType.text = Constant.String.defaultSelectedPM
+            cell.defaultLbl.isHidden = selectedId == Constant.String.defaultSelectedPM ? false : true
+            cell.navigateBtn.isHidden = true
         } else {
-            cell.paymentIcon.image = Constant.Icon.masterCard
+            if isNoPaymentMethodFound {
+                cell.paymentIcon.image = Constant.Card.cardIc
+                cell.paymentType.text = "Add card"
+                cell.defaultLbl.isHidden = true
+            } else {
+                let paymentMethod = paymentMethods[indexPath.row - 1]
+                cell.paymentIcon.image = paymentMethods[indexPath.row - 1].brand.paymentImg
+                cell.paymentType.text = "\(paymentMethod.brand) \(paymentMethod.last4)"
+                cell.defaultLbl.isHidden = selectedId == paymentMethod.id ? false : true
+            }
+            cell.navigateBtn.isHidden = !isEditable
         }
-        cell.paymentType.text = paymentArray[indexPath.row]
-        cell.defaultLbl.isHidden = defaultType == paymentArray[indexPath.row] ? false : true
-        cell.navigateBtn.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        cell.navigateBtn.tag = indexPath.row
+        if isEditable {
+            cell.defaultLbl.isHidden = true
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if paymentArray[indexPath.row] == "Mastercard 1234" {
-            Navigate.to.cardDetailsVc(self) }
+        if indexPath.row == 0 {
+            selectedId = Constant.String.defaultSelectedPM
+            selectedImage = Constant.Card.applePay
+        } else {
+            if isEditable {
+                Navigate.to.cardDetailsVc(self, customerId: UserDefault.shared.user?.stripeCusId ?? "", paymentMethod: paymentMethods[indexPath.row - 1])
+                return
+            }
+            if isNoPaymentMethodFound {
+                delegate?.addCard()
+                Navigate.to.back(self)
+                return
+            } else {
+                selectedId = paymentMethods[indexPath.row - 1].id
+                selectedImage = paymentMethods[indexPath.row - 1].brand.paymentImg
+            }
+        }
+        paymentTableView.reloadData()
+        delegate?.didSelectMethod(selectedId, image: selectedImage)
     }
 }
 
-
+extension PaymentMethodsViewController: CardDetailChangeDelegate {
+    func didDeleteCard(id: String) {
+        paymentMethods.removeAll { $0.id == id }
+        paymentTableView.reloadData()
+    }
+}

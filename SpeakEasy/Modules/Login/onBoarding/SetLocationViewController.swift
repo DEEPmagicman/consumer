@@ -10,22 +10,17 @@ import CoreLocation
 
 final class SetLocationViewController: UIViewController {
     
-    let locationManager = CLLocationManager()
-
+    private let locationManager = CLLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        locationManager.delegate = self
-        
-
     }
     
     @IBAction func onClickuseCurrentlocation(_ sender: Any) {
-        self.locationManager.requestWhenInUseAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
-//            locationManager.delegate = self
-            self.locationManager.requestAlwaysAuthorization()
+            locationManager.delegate = self
+            locationManager.requestAlwaysAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
@@ -34,17 +29,17 @@ final class SetLocationViewController: UIViewController {
     @IBAction func onClickSelectCity(_ sender: Any) {
         Navigate.to.selectCityVc(self)
     }
-    
 }
 
 extension SetLocationViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
-        let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { cityName in
-            print("\(cityName)")
-//            Navigate.to.selectCityVc(self)
+        let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { [weak self] cityName in
+            guard let self = self else { return }
+            self.locationManager.delegate = nil
+            self.locationManager.stopUpdatingHeading()
+            Navigate.to.selectCityVc(self, userLocationCity: cityName)
         }
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
     }
 }

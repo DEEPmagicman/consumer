@@ -7,14 +7,34 @@
 
 import UIKit
 
-class CardDetailsViewController: UIViewController {
+protocol CardDetailChangeDelegate: AnyObject {
+    func didDeleteCard(id: String)
+}
 
-    @IBOutlet weak var defaultBtn: UIButton!
+final class CardDetailsViewController: UIViewController {
+
+    @IBOutlet weak var expLbl: UILabel!
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var deleteBtn: UIButton!
+    @IBOutlet weak var deleteView: UIView!
+
+    var paymentMethod: PaymentMethod?
+    var customerId: String?
+    weak var delegate: CardDetailChangeDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        defaultBtn.setImage(Constant.Icon.defaultIcon, for: .normal)
-        defaultBtn.setImage(Constant.Icon.check, for: .selected)
+        if let paymentMethod = paymentMethod {
+            titleLbl.text = "\(paymentMethod.brand.capitalized) \(paymentMethod.last4)"
+            expLbl.text = "\(paymentMethod.expMonth.displayMonth)/\(paymentMethod.expYear.displayYear)"
+            deleteBtn.isHidden = false
+            deleteView.isHidden = false
+        } else {
+            titleLbl.text = Constant.String.defaultSelectedPM
+            expLbl.text = ""
+            deleteBtn.isHidden = true
+            deleteView.isHidden = true
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -22,11 +42,20 @@ class CardDetailsViewController: UIViewController {
     }
     
     @IBAction func onClickDelete(_ sender: Any) {
-        Navigate.to.back(self)
+        Loader.show()
+        PaymentPresenter.deleteMethod(customerId: customerId ?? "", methodId: paymentMethod?.id ?? "") { [weak self] isSuccess, errMsg in
+            Loader.hide()
+            guard let self = self else { return }
+            if isSuccess {
+                self.delegate?.didDeleteCard(id: self.paymentMethod?.id ?? "")
+                Navigate.to.back(self)
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
     }
-    
-    @IBAction func onClickDefault(_ sender: UIButton) {
-        defaultBtn.isSelected.toggle()
-    }
-    
 }

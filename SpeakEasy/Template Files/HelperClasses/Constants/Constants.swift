@@ -67,8 +67,6 @@ struct Constants {
     static var iTunesURL                   = "http://itunes.apple.com/us/lookup?bundleId="
     static var pagesCount                  = 0
     static var ordersCount                 = 0
-    static let publishableKey              = "pk_test_51J2z3IRFnTSsDoMtXvQAuVpt6btuZ4v76dCcXjmb3PZtEl9uDSTofSYOmsUSAZLDKzt6jyU8cVz52uOTLp5fU7yV00GX4F5sqk"
-    //"pk_test_97ITXRHK8xZovDEszT5vMx0f"
     static let biggestHeight:CGFloat       = 926.0
     static let imHungryTimeRange           = 20*60 //20 minutes
     static let CarouselScrollingSpeed      = 0.95
@@ -152,8 +150,8 @@ struct Constants {
     // Hours
     static var taoHours = [
         HoursDataSet(day: "Thursday", time: "10:00 PM - 3:00 AM"),
-        HoursDataSet(day: "Friday", time: "10:00 PM - Late"),
-        HoursDataSet(day: "Saturday", time: "10:00 PM - Late")
+        HoursDataSet(day: "Friday", time: "10:00 PM -       LATE"),
+        HoursDataSet(day: "Saturday", time: "10:00 PM -       LATE")
     ]
     static var undergroundHours = [
         HoursDataSet(day: "Wednesday", time: "11:00 PM - 4:00 AM"),

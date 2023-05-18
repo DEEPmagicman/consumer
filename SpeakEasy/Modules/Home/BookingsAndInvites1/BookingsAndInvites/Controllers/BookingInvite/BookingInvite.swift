@@ -41,7 +41,7 @@ class BookingInvite: UIViewController {
     
     
     @IBAction func onBtnClose(_ sender: UIButton) {
-        AppDelegate.shared.showHome(selectedIndex: 1)
+//        AppDelegate.shared.showHome(selectedIndex: 1)
     }
     
     @IBAction func onBtnCancelRequest(_ sender: UIButton) {
