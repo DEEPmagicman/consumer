@@ -36,6 +36,7 @@ struct Event: Codable {
     var updatedAt: String
     var floorPlanId: String?
     var eventTicket: [EventTicket]?
+    var venue: ClipVenue?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
         let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
@@ -85,5 +86,6 @@ struct Event: Codable {
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(floorPlanId, forKey: .floorPlanId)
         try container.encode(eventTicket, forKey: .eventTicket)
+        try container.encode(venue, forKey: .venue)
     }
 }

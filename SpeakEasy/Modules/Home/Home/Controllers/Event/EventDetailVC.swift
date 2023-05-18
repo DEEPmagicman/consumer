@@ -87,6 +87,9 @@ final class EventDetailVC: UIViewController {
             }
             if eventDetail != nil {
                 self.event = eventDetail
+                if let venue = eventDetail?.venue {
+                    self.venueDetails = venue
+                }
                 self.setupData()
             }
         }

@@ -405,7 +405,7 @@ final class Navigate {
     
     func mvpCitySelection(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPCitySelectionVC.self)
-        vc.citySelectionDelegate = sender as? any CitySelectionDelegate
+        vc.citySelectionDelegate = sender as? CitySelectionDelegate
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

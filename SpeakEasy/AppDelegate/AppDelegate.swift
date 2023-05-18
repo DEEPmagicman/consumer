@@ -20,19 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var isAppClipSet = false
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        guard let incomingURL = userActivity.webpageURL, let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+        guard let incomingURL = userActivity.webpageURL else {
             return true
         }
-        if let venue = queryItems.first(where: { $0.name == "v" })?.value {
-            venueUniqueId = venue
-            showHome(selectedIndex: 0, isAppClipNavigation: true)
-            return true
-        }
-        if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
-            venueUniqueId = venue
-            showHome(selectedIndex: 0, isAppClipNavigation: true)
-            return true
-        }
+        handleForURL(incomingURL)
         return true
     }
     
@@ -202,5 +193,60 @@ extension AppDelegate {
                 home.navigationController?.pushViewController(vc, animated: false)
             }
         }
+    }
+    
+    private func handleForURL(_ url: URL) {
+        if url.absoluteString.contains("event") {
+            eventNavigation(eventId: url.lastPathComponent)
+            return
+        }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
+            return
+        }
+        if let venue = queryItems.first(where: { $0.name == "v" })?.value {
+            venueUniqueId = venue
+            showHome(selectedIndex: 0, isAppClipNavigation: true)
+            return
+        }
+        if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+            venueUniqueId = venue
+            showHome(selectedIndex: 0, isAppClipNavigation: true)
+            return
+        }
+    }
+    
+    private func eventNavigation(eventId: String) {
+        let tabBarController = UITabBarController()
+        ReachabilityManager.shared.startMonitoring()
+        let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
+        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
+        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
+        let homeNavigation = UINavigationController(rootViewController: home)
+        homeNavigation.navigationBar.isHidden = true
+        var myAccount = UIViewController()
+        if UserDefault.shared.isGuest == true {
+            myAccount = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPStartScreenVC.self)
+        } else {
+            myAccount = StoryboardAndXibManager.StoryBoard.account.instantiateVC(AccountVC.self)
+        }
+        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
+        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
+        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
+        myAccountNavigation.navigationBar.isHidden = true
+
+        tabBarController.viewControllers = [homeNavigation,myAccountNavigation]
+        
+        tabBarController.selectedIndex = 0
+        
+        tabBarController.tabBar.isTranslucent = false
+        
+        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
+        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
+        tabBarControllerNavigation.navigationBar.isHidden = true
+        self.window?.rootViewController = tabBarControllerNavigation
+        
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
+        vc.eventId = eventId
+        homeNavigation.navigationController?.pushViewController(vc, animated: false)
     }
 }

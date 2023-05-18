@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol CitySelectionDelegate {
+protocol CitySelectionDelegate: AnyObject {
     func citySelected(city: String)
 }
 
@@ -17,7 +17,7 @@ class MVPCitySelectionVC: UIViewController {
     
     var arrCityList = [MVPCity]()
     var cityListDelegate = MVPPresenter()
-    var citySelectionDelegate: CitySelectionDelegate?
+    weak var citySelectionDelegate: CitySelectionDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
