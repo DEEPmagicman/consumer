@@ -23,6 +23,8 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var shareBtn: UIButton!
     @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var ticketListTableView: UITableView!
+    @IBOutlet weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet weak var artistTableView: UITableView!
     @IBOutlet weak var artistTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var lineUpView: UIView!
@@ -30,13 +32,39 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var detailLbl: UILabel!
     @IBOutlet weak var eventPolicyLbl: UILabel!
+    @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var zeroCaseView: UIView!
+    @IBOutlet weak var continueBtnBGView: UIView!
 
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
+    private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private let demoCount = 0
+    private var isNotSellingStage = false
+    private var maxTicket = 20
+    private var totalPrice: Int {
+        var total = 0
+        event?.eventTicket?.forEach {
+            if let quantity = $0.selectedTicketCount {
+                total += (($0.price ?? 0) * quantity)
+            }
+        }
+        return total
+    }
+    private var isMaxTicketReached: Bool {
+        totalSelectedTickets >= maxTicket
+    }
+    private var totalSelectedTickets: Int {
+        var total = 0
+        event?.eventTicket?.forEach {
+            if let quantity = $0.selectedTicketCount {
+                total += quantity
+            }
+        }
+        return total
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +75,13 @@ final class EventDetailVC: UIViewController {
         scrollView.delegate = self
         // TODO: add webSocket to sync tier left ticket
         // WebSocketWrapper.shared.delegate.append(self)
+        updateContinueBtn(forceRemove: true)
+        ticketListTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
+            self.ticketListTableView.layoutIfNeeded()
+        }
         artistTableView.register(UINib(nibName: "ArtistListTVC", bundle: nil), forCellReuseIdentifier: "ArtistListTVC")
         artistHeightObservation = artistTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -74,21 +109,21 @@ final class EventDetailVC: UIViewController {
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma) ?? "LATE")"
         if event?.isPausedSellingAllTickets == true {
-            continueBtn.isUserInteractionEnabled = false
-            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
             continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            isNotSellingStage = true
+            updateContinueBtn()
         } else if event?.isSoldOutAllTickets == true {
-            continueBtn.isUserInteractionEnabled = false
-            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
             continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
+            isNotSellingStage = true
+            updateContinueBtn()
         } else if event?.eventTicket?.count ?? 0 == 0 {
-            continueBtn.isUserInteractionEnabled = false
-            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
             continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            isNotSellingStage = true
+            updateContinueBtn()
         } else {
-            continueBtn.isUserInteractionEnabled = true
-            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(1)
             continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+            isNotSellingStage = false
+            updateContinueBtn(forceRemove: true)
         }
     }
     
@@ -117,6 +152,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @objc func openFullImage() {
+        updateContinueBtn(forceRemove: true)
         Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
     }
     
@@ -153,29 +189,183 @@ final class EventDetailVC: UIViewController {
     
     @IBAction private func onClickContinue(_ sender: Any) {
         if UserDefault.shared.isGuest == true {
+            updateContinueBtn(forceRemove: true)
             Navigate.to.loginMandatory(self)
             return
         }
-        Navigate.to.selectTicket(self, venueDetail: venueDetails, event: event, type: .event)
+        if let selectedTickets = event?.eventTicket?.filter({ $0.selectedTicketCount != nil }) {
+            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", uniqueId: venueDetails?.uniqueId ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
+            updateContinueBtn(forceRemove: true)
+        }
+    }
+    
+    func updateContinueBtn(forceRemove: Bool = false) {
+        if isNotSellingStage {
+            continueBtn.isUserInteractionEnabled = false
+            continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(0.5)
+            continueBtn.isHidden = false
+            continueBtnBGView.isHidden = false
+            scrollViewBottomConstraint.constant = 90
+            return
+        }
+        continueBtn.isUserInteractionEnabled = true
+        continueBtn.backgroundColor = continueBtn.backgroundColor?.withAlphaComponent(1)
+        continueBtnBGView.isHidden = true
+        DispatchQueue.main.async {
+            if forceRemove {
+                self.event?.eventTicket?.indices.forEach {
+                    self.event?.eventTicket?[$0].selectedTicketCount = nil
+                }
+                self.continueBtn.isHidden = true
+                self.scrollViewBottomConstraint.constant = 30
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                self.ticketListTableView.reloadData()
+                return
+            }
+            self.continueBtn.isHidden = false
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+        }
+    }
+    
+    @objc func minusBtnClick(_ sender: UIButton) {
+        if let totalTicket = event?.eventTicket?[sender.tag].selectedTicketCount {
+            if totalTicket > 1 {
+                event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket - 1
+                ticketListTableView.reloadData()
+                updateContinueBtn()
+            } else if totalTicket == 1 {
+                event?.eventTicket?[sender.tag].selectedTicketCount = nil
+                ticketListTableView.reloadData()
+                updateContinueBtn(forceRemove: (event?.eventTicket?.firstIndex(where: { $0.selectedTicketCount != nil })) == nil)
+            }
+        }
+    }
+    
+    @objc func plusBtnClick(_ sender: UIButton) {
+        if isMaxTicketReached {
+            Alert.showToast("Max ticket selection reached")
+            return
+        }
+        if let totalTicket = event?.eventTicket?[sender.tag].selectedTicketCount {
+            if totalTicket < maxTicket {
+                if let remaining = event?.eventTicket?[sender.tag].remainingQuantity, remaining > totalTicket {
+                    event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket + 1
+                    ticketListTableView.reloadData()
+                    updateContinueBtn()
+                }
+            } else {
+                Alert.showToast("Max ticket selection reached")
+            }
+        }
     }
 }
 
 extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        lineUpView.isHidden = demoCount == 0
-        return demoCount
+        switch tableView {
+        case ticketListTableView:
+            return event?.eventTicket?.count ?? 0
+        case artistTableView:
+            lineUpView.isHidden = demoCount == 0
+            return demoCount
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
-        cell.mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-        cell.nameLbl.text = "Martin Garrix"
-        cell.selectionStyle = .none
-        return cell
+        switch tableView {
+        case ticketListTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+            cell.ticketTypeLbl.text = event?.eventTicket?[indexPath.row].tierName
+            cell.infoLbl.text = event?.eventTicket?[indexPath.row].tierDescription
+            cell.ticketPriceLbl.text = "$\(event?.eventTicket?[indexPath.row].price ?? 0)"
+            cell.ticketPriceLbl.textColor = .white
+            cell.ticketTypeLbl.textColor = .white
+            if event?.eventTicket?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
+                cell.ticketPlusMinusView.isHidden = false
+            } else {
+                cell.ticketPlusMinusView.isHidden = true
+            }
+            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining <= 20 {
+                cell.hotVenueLbl.isHidden = false
+                if remaining == 0 {
+                    cell.hotVenueLbl.text = "Sold out"
+                } else {
+                    cell.hotVenueLbl.text = "Only \(remaining) left"
+                }
+            } else {
+                cell.hotVenueLbl.isHidden = true
+            }
+            cell.totalTicketLbl.text = "\(event?.eventTicket?[indexPath.row].selectedTicketCount ?? 0)"
+            cell.minusBtn.tag = indexPath.row
+            cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
+            cell.plusBtn.tag = indexPath.row
+            cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
+            cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, let selectedTicket = event?.eventTicket?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
+                cell.plusBtn.alpha = 0.5
+            }
+            cell.selectionStyle = .none
+            cell.layoutIfNeeded()
+            return cell
+        case artistTableView:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
+            cell.mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = "Martin Garrix"
+            cell.selectionStyle = .none
+            return cell
+        default:
+            return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch tableView {
+        case ticketListTableView:
+            if event?.eventTicket?[indexPath.row].sellingPaused == true {
+                return 0
+            }
+        default:
+            break
+        }
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.openInstagramForUsername("martingarrix")
+        switch tableView {
+        case ticketListTableView:
+            if event?.eventTicket?[indexPath.row].selectedTicketCount != nil { return }
+            if isMaxTicketReached {
+                Alert.showToast("Max ticket selection reached")
+                return
+            }
+            if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date() {
+                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm)))
+                return
+            }
+            
+            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining >= 1 {
+                event?.eventTicket?[indexPath.row].selectedTicketCount = 1
+            } else {
+                Alert.showToast("Sold out")
+                return
+            }
+            
+            continueBtn.isHidden = false
+            scrollViewBottomConstraint.constant = 90
+            ticketListTableView.reloadData()
+            if totalSelectedTickets == 0 {
+                updateContinueBtn(forceRemove: true)
+            } else {
+                updateContinueBtn()
+            }
+        case artistTableView:
+            updateContinueBtn(forceRemove: true)
+            Navigate.openInstagramForUsername("martingarrix")
+        default:
+            break
+        }
     }
 }
 
