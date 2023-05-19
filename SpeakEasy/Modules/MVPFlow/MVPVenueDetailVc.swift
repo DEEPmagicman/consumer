@@ -27,6 +27,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var headerVenueName: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var shareBtn: UIButton!
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var toNightLbl: UILabel!
     @IBOutlet weak var venuePageView: UIView!
@@ -48,6 +49,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var upcomingTableView: UITableView!
     @IBOutlet weak var upcomingTableHeight: NSLayoutConstraint!
     @IBOutlet weak var venuePolicyLbl: UILabel!
+    @IBOutlet private weak var zeroCaseView: UIView!
 
     var venueId = ""
     var venueUniqueId = ""
@@ -144,7 +146,9 @@ final class MVPVenueDetailVc: UIViewController {
                 self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
                 self.updateCloseViewVisibility()
+                self.zeroCaseView(isHidden: true)
             } else {
+                self.zeroCaseView(isHidden: false)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
             #if DEBUG
@@ -247,6 +251,11 @@ final class MVPVenueDetailVc: UIViewController {
         } else {
             closeTicketView.isHidden = true
         }
+    }
+    
+    private func zeroCaseView(isHidden: Bool) {
+        zeroCaseView.isHidden = isHidden
+        shareBtn.isHidden = !isHidden
     }
     
     @IBAction func onClickContinue(_ sender: Any) {

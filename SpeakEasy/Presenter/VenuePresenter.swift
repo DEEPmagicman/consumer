@@ -18,9 +18,8 @@ final class VenuePresenter {
                 return
             }
             do {
-                let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let venueList = try decoder.decode([Venue].self, from: data)
+                let venueList = try JSONDecoder().decode([Venue].self, from: data)
                 completion(true, nil, venueList,hasMore)
             } catch {
                 completion(false, "internal error", [], false)
@@ -45,9 +44,8 @@ final class VenuePresenter {
                 return
             }
             do {
-                let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let bottleCategoryList = try decoder.decode([BottleCategory].self, from: data)
+                let bottleCategoryList = try JSONDecoder().decode([BottleCategory].self, from: data)
                 completion(true, nil, bottleCategoryList, hasMore)
             } catch {
                 completion(false, "internal error", [], false)

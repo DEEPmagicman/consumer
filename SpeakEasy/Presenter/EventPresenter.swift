@@ -22,9 +22,8 @@ final class EventPresenter {
                 return
             }
             do {
-                let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let eventList = try decoder.decode([Event].self, from: data)
+                let eventList = try JSONDecoder().decode([Event].self, from: data)
                 completion(true, nil, eventList, hasMore)
             } catch {
                 completion(false, "internal error", [], false)
@@ -71,9 +70,8 @@ final class EventPresenter {
                 return
             }
             do {
-                let decoder = JSONDecoder()
                 let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let eventList = try decoder.decode(Event.self, from: data)
+                let eventList = try JSONDecoder().decode(Event.self, from: data)
                 completion(true, nil, eventList)
             } catch {
                 completion(false, "internal error", nil)

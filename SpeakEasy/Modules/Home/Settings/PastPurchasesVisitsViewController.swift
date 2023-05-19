@@ -9,8 +9,9 @@ import UIKit
 
 final class PastPurchasesVisitsViewController: UIViewController {
 
-    @IBOutlet weak var pastPurchasesTableView: UITableView!
-    
+    @IBOutlet private weak var pastPurchasesTableView: UITableView!
+    @IBOutlet private weak var zeroCaseView: UIView!
+
     private var bookings = [Booking]()
     
     override func viewDidLoad() {
@@ -30,6 +31,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             self.bookings = bookings
+            self.zeroCaseView.isHidden = !(bookings.count == 0)
             self.pastPurchasesTableView.reloadData()
         }
     }

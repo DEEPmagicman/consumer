@@ -21,11 +21,13 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var headerTitleLbl: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var shareBtn: UIButton!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var dressCodeView: UIView!
     @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var detailLbl: UILabel!
     @IBOutlet weak var eventPolicyLbl: UILabel!
+    @IBOutlet weak var zeroCaseView: UIView!
 
     var eventId: String?
     var venueDetails: ClipVenue?
@@ -85,14 +87,22 @@ final class EventDetailVC: UIViewController {
             guard let self = self else {
                 return
             }
-            if eventDetail != nil {
+            if eventDetail == nil {
+                self.zeroCaseView(isHidden: false)
+            } else {
                 self.event = eventDetail
                 if let venue = eventDetail?.venue {
                     self.venueDetails = venue
                 }
                 self.setupData()
+                self.zeroCaseView(isHidden: true)
             }
         }
+    }
+    
+    private func zeroCaseView(isHidden: Bool) {
+        zeroCaseView.isHidden = isHidden
+        shareBtn.isHidden = !isHidden
     }
     
     @objc func openFullImage() {
