@@ -75,13 +75,13 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func presentCommentDoneBottomSheet(_ sender: UIViewController) {
-        var configuration: NBBottomSheetConfiguration
-        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(380))
-        let viewController = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailBottomSheet.self)
-        let bottomSheetController = NBBottomSheetController(configuration: configuration)
-        bottomSheetController.present(viewController, on: sender)
-    }
+//    func presentCommentDoneBottomSheet(_ sender: UIViewController) {
+//        var configuration: NBBottomSheetConfiguration
+//        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(380))
+//        let viewController = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailBottomSheet.self)
+//        let bottomSheetController = NBBottomSheetController(configuration: configuration)
+//        bottomSheetController.present(viewController, on: sender)
+//    }
     
     func presentDateSelectionBottomSheet(_ sender: UIViewController, date: Date? = nil) {
         var configuration: NBBottomSheetConfiguration

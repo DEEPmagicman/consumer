@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+// TODO: check if being used anywhere or remove
 final class ConfirmEmailBottomSheet: UIViewController {
 
     override func viewDidLoad() {

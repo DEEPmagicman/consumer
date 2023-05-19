@@ -173,16 +173,20 @@ extension UITableView {
     }
     
     func groupStyleHeader() {
-        var frame = CGRect.zero
-        frame.size.height = .leastNormalMagnitude
-        self.tableHeaderView = UIView(frame: frame)
+        if self.tableHeaderView == nil {
+            var frame = CGRect.zero
+            frame.size.height = .leastNormalMagnitude
+            self.tableHeaderView = UIView(frame: frame)
+        }
         self.sectionHeaderHeight = 0
     }
     
     func groupStyleFooter() {
-        var frame = CGRect.zero
-        frame.size.height = .leastNormalMagnitude
-        self.tableFooterView = UIView(frame: frame)
+        if self.tableFooterView == nil {
+            var frame = CGRect.zero
+            frame.size.height = .leastNormalMagnitude
+            self.tableFooterView = UIView(frame: frame)
+        }
         self.sectionFooterHeight = 0
     }
 

@@ -12,10 +12,7 @@ final class AccountVC: UIViewController {
     @IBOutlet private weak var profileImg: UIImageView!
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var listTableView: UITableView!
-    @IBOutlet private weak var listHeight: NSLayoutConstraint!
-    @IBOutlet private weak var confirmEmailLbl: UILabel!
 
-    private var listHeightObservation: NSKeyValueObservation?
     private var onBoardingPresenter = OnBoardingPresenter()
     private var bookings = [Booking]()
     private var recommended = [Event]()
@@ -28,16 +25,10 @@ final class AccountVC: UIViewController {
         profileImg.addGestureRecognizer(gesture)
         listTableView.register(UINib(nibName: "TitleHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: "TitleHeader")
         listTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
-        listHeightObservation = listTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
-            guard let self = self else { return }
-            self.listHeight.constant = self.listTableView.contentSize.height
-            self.listTableView.layoutIfNeeded()
-        }
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickConfirmEmail))
-        confirmEmailLbl.isUserInteractionEnabled = true
-        confirmEmailLbl.addGestureRecognizer(tap)
+        listTableView.contentInset = UIEdgeInsets(top: 60, left: 0, bottom: 0, right: 0)
         listTableView.setupPadding()
         listTableView.groupStyleSpacing()
+        listTableView.tableHeaderView?.frame.size.height = 81
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,10 +63,6 @@ final class AccountVC: UIViewController {
     
     @objc private func onClickAddPhoto() {
         Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
-    }
-    
-    @objc private func onClickConfirmEmail() {
-//        Navigate.to.presentCommentDoneBottomSheet(self)
     }
     
     private func uploadProfileImg() {
