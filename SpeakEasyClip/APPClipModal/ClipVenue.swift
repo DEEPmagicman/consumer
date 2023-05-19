@@ -35,6 +35,7 @@ struct ClipVenue: Codable {
     var lng: String
     var appClipTicket: [AppClipTicket]?
     var checkInUser: Int?
+    var timezone: String?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -62,6 +63,9 @@ struct ClipVenue: Codable {
             LHS.price < RHS.price
         })
         return lowest
+    }
+    var useTimezone: String {
+        timezone?.capitalized ?? ""
     }
 
     func encode(to encoder: Encoder) throws {
@@ -91,6 +95,7 @@ struct ClipVenue: Codable {
         try container.encode(lat, forKey: .lat)
         try container.encode(lng, forKey: .lng)
         try container.encode(checkInUser, forKey: .checkInUser)
+        try container.encode(timezone, forKey: .timezone)
     }
 }
 

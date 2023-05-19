@@ -129,7 +129,9 @@ extension Events: UITableViewDataSource {
     
     func pushToEventBookingDetails(indexPath: IndexPath,index: Int) {
         let eventBookingDetailsController = EventBookingDetails()
+        
         switch indexPath.section {
+            
         case 1:
             if Constants.localizedCity == "Chicago" {
                 eventBookingDetailsController.topEventData = Constants.arrayFeaturedEventsChicago[index]
@@ -151,9 +153,10 @@ extension Events: UITableViewDataSource {
         default:
             break
         }
+        
         Utility.main.topViewController()?.navigationController?.pushViewController(eventBookingDetailsController, animated: true)
     }
-    
+
 }
 extension Events: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
