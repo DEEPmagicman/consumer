@@ -277,6 +277,8 @@
 		CE6813D729DE976400B41418 /* DetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* DetailTVC.xib */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
+		CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */; };
+		CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
@@ -877,6 +879,8 @@
 		CE6813D529DE976400B41418 /* DetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTVC.xib; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
 		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
+		CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistListTVC.swift; sourceTree = "<group>"; };
+		CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistListTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -1819,6 +1823,7 @@
 		CE2605F029E55AA400C46EFA /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				CE78CDE32A17605600FA47FC /* ArtistListTVC */,
 				CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */,
 				CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */,
 			);
@@ -2212,6 +2217,15 @@
 				CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */,
 			);
 			path = TicketDetailTVC;
+			sourceTree = "<group>";
+		};
+		CE78CDE32A17605600FA47FC /* ArtistListTVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */,
+				CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */,
+			);
+			path = ArtistListTVC;
 			sourceTree = "<group>";
 		};
 		CEA9474A288CABA600D7BB91 /* AWLineChart */ = {
@@ -4090,6 +4104,7 @@
 				E11F4B8A28C8358C008D2E30 /* HeaderView.xib in Resources */,
 				E1889D2828BBA59000E1625A /* StatusAndRewards.xib in Resources */,
 				E11F4B9E28C8358C008D2E30 /* EventBookingDetails.xib in Resources */,
+				CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */,
 				E11F4B8E28C8358C008D2E30 /* TopEventCVC.xib in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				04FDAF7E28F91DE9007129CC /* PublikAttendeesTVC.xib in Resources */,
@@ -4294,6 +4309,7 @@
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
 				BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */,
+				CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */,
 				0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */,
 				BD942F4329595F6200D52115 /* UserDefault.swift in Sources */,
 				E17DC86028C6C16500244C4F /* NFTsonSpeakEasy.swift in Sources */,

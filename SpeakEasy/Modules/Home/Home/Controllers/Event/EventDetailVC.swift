@@ -23,6 +23,9 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var shareBtn: UIButton!
     @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var artistTableView: UITableView!
+    @IBOutlet weak var artistTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var lineUpView: UIView!
     @IBOutlet weak var dressCodeView: UIView!
     @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var detailLbl: UILabel!
@@ -32,6 +35,8 @@ final class EventDetailVC: UIViewController {
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
+    private var artistHeightObservation: NSKeyValueObservation?
+    private let demoCount = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +47,12 @@ final class EventDetailVC: UIViewController {
         scrollView.delegate = self
         // TODO: add webSocket to sync tier left ticket
         // WebSocketWrapper.shared.delegate.append(self)
+        artistTableView.register(UINib(nibName: "ArtistListTVC", bundle: nil), forCellReuseIdentifier: "ArtistListTVC")
+        artistHeightObservation = artistTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.artistTableViewHeight.constant = self.artistTableView.contentSize.height
+            self.artistTableView.layoutIfNeeded()
+        }
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(openFullImage))
         mainImg.isUserInteractionEnabled = true
         mainImg.addGestureRecognizer(tap1)
@@ -146,6 +157,25 @@ final class EventDetailVC: UIViewController {
             return
         }
         Navigate.to.selectTicket(self, venueDetail: venueDetails, event: event, type: .event)
+    }
+}
+
+extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        lineUpView.isHidden = demoCount == 0
+        return demoCount
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
+        cell.mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        cell.nameLbl.text = "Martin Garrix"
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        Navigate.openInstagramForUsername("martingarrix")
     }
 }
 

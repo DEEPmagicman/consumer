@@ -416,4 +416,17 @@ final class Navigate {
             Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    static func openInstagramForUsername(_ userName: String) {
+        guard let appURL = URL(string: "instagram://user?username=\(userName)") else { return }
+        let application = UIApplication.shared
+        
+        if application.canOpenURL(appURL) {
+            application.open(appURL)
+        } else {
+            // NOTE: if Instagram app is not installed, open URL inside Safari
+            guard let webURL = URL(string: "https://instagram.com/\(userName)") else { return }
+            application.open(webURL)
+        }
+    }
 }
