@@ -69,7 +69,7 @@ extension String {
             convertDateFormatter.timeZone = .current
         }
         if useDayLightSavingTime {
-            return convertDateFormatter.string(from: oldDate.addingTimeInterval(NSTimeZone.local.daylightSavingTimeOffset()))
+            return convertDateFormatter.string(from: oldDate.addingTimeInterval(convertDateFormatter.timeZone.daylightSavingTimeOffset()))
         } else {
             return convertDateFormatter.string(from: oldDate)
         }
@@ -82,8 +82,6 @@ extension String {
         } else {
             dateFormatter.timeZone = .current
         }
-//          dateFormatter.locale = Locale(identifier: "fa-IR")
-//          dateFormatter.calendar = Calendar(identifier: .gregorian)
         dateFormatter.dateFormat = format.rawValue
         return dateFormatter.date(from: self)
     }
