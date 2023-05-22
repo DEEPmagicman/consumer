@@ -41,28 +41,23 @@ final class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickFAQ(_ sender: Any) {
-        guard let url = URL(string: APIBuilder.supportURL) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        Navigate.externalURL(APIBuilder.supportURL)
     }
     
     @IBAction func onClickCustomerSupport(_ sender: Any) {
-        guard let url = URL(string: APIBuilder.supportURL) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        Navigate.externalURL(APIBuilder.supportURL)
     }
     
     @IBAction func onClickFeedback(_ sender: Any) {
-        guard let url = URL(string: APIBuilder.supportURL) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        Navigate.externalURL(APIBuilder.supportURL)
     }
     
     @IBAction func onClickPrivacy(_ sender: Any) {
-        guard let url = URL(string: APIBuilder.privacyConsumerURL) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        Navigate.externalURL(APIBuilder.privacyConsumerURL)
     }
     
     @IBAction func onClickTermsOfService(_ sender: Any) {
-        guard let url = URL(string: APIBuilder.termsConsumerURL) else { return }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        Navigate.externalURL(APIBuilder.termsConsumerURL)
     }
     
     @IBAction func onClickLogOut(_ sender: Any) {

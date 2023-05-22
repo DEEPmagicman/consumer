@@ -429,4 +429,9 @@ final class Navigate {
             application.open(webURL)
         }
     }
+    
+    static func externalURL(_ url: String) {
+        guard let url = URL(string: url) else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
 }
