@@ -107,7 +107,7 @@ final class EventDetailVC: UIViewController {
         dressCodeLbl.text = venueDetails?.dressCode
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
-        timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
+        timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         if event?.isPausedSellingAllTickets == true {
             continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
             isNotSellingStage = true
@@ -132,7 +132,7 @@ final class EventDetailVC: UIViewController {
             zeroCaseView(isHidden: false)
             return
         }
-        EventPresenter.getEventDetail(eventId: eventId ?? "") { [weak self] isSuccess, errMsg, eventDetail in
+        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventDetail in
             guard let self = self else {
                 return
             }

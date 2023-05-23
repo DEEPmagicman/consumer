@@ -99,7 +99,6 @@ final class MVPVenueDetailVc: UIViewController {
         }
         WebSocketWrapper.shared.delegate.append(self)
         getVenueDetail()
-        getEvents()
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
@@ -151,6 +150,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.zeroCaseView(isHidden: false)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
+            self.getEvents()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
                 Alert.showToast("Venue detail updated")
@@ -163,7 +163,7 @@ final class MVPVenueDetailVc: UIViewController {
     private func getEvents() {
         Loader.show()
         // TODO: add pagination
-        EventPresenter.getEvents(venueId: venueId) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(venueId: venueId, venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -175,7 +175,7 @@ final class MVPVenueDetailVc: UIViewController {
             self.updateCloseViewVisibility()
             Loader.hide()
         }
-        EventPresenter.getEvents(venueId: venueId, time: "TODAY") { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
