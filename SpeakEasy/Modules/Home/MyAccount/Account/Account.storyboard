@@ -116,24 +116,49 @@
                                     <action selector="onClickShare:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="MbY-k8-Xv9"/>
                                 </connections>
                             </button>
+                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2hZ-lh-z18">
+                                <rect key="frame" x="16" y="209" width="361" height="434"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your purchase will appear here" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aP4-gO-vkE">
+                                        <rect key="frame" x="27" y="287.66666666666669" width="307" height="21"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstItem="aP4-gO-vkE" firstAttribute="leading" secondItem="2hZ-lh-z18" secondAttribute="leading" constant="27" id="Itc-aW-SmJ"/>
+                                    <constraint firstItem="aP4-gO-vkE" firstAttribute="centerX" secondItem="2hZ-lh-z18" secondAttribute="centerX" id="hnZ-8h-KEB"/>
+                                    <constraint firstItem="aP4-gO-vkE" firstAttribute="centerY" secondItem="2hZ-lh-z18" secondAttribute="centerY" constant="81" id="jt1-r8-RLh"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="2hZ-lh-z18" firstAttribute="leading" secondItem="W5L-a5-ZsB" secondAttribute="leading" id="8ud-gx-KJU"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="W5L-a5-ZsB" secondAttribute="bottom" id="Bcj-r1-fII"/>
                             <constraint firstItem="W5L-a5-ZsB" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="E4J-jr-r9Y"/>
+                            <constraint firstItem="2hZ-lh-z18" firstAttribute="top" secondItem="W5L-a5-ZsB" secondAttribute="top" constant="150" id="GXL-ft-vhc"/>
                             <constraint firstItem="HZk-Ro-UWU" firstAttribute="centerY" secondItem="VSz-Qe-T65" secondAttribute="centerY" id="MbQ-Jo-rlf"/>
                             <constraint firstItem="W5L-a5-ZsB" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="PBa-Df-YN5"/>
                             <constraint firstItem="VSz-Qe-T65" firstAttribute="leading" secondItem="HZk-Ro-UWU" secondAttribute="trailing" id="V8D-HM-1OA"/>
                             <constraint firstItem="W5L-a5-ZsB" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="cEj-6a-pnl"/>
                             <constraint firstItem="VSz-Qe-T65" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="eXK-Rv-sf5"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="VSz-Qe-T65" secondAttribute="trailing" constant="23" id="fjS-XI-2z4"/>
+                            <constraint firstItem="2hZ-lh-z18" firstAttribute="trailing" secondItem="W5L-a5-ZsB" secondAttribute="trailing" id="j3C-TR-6jE"/>
+                            <constraint firstItem="2hZ-lh-z18" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="yfH-Mw-71Q"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="listTableView" destination="W5L-a5-ZsB" id="Uq9-WG-tF1"/>
                         <outlet property="nameLbl" destination="YDX-LM-OK3" id="Kaq-cv-P5g"/>
                         <outlet property="profileImg" destination="RlX-2j-QRJ" id="a4y-zh-8Sd"/>
+                        <outlet property="zeroCaseView" destination="2hZ-lh-z18" id="MZF-jq-Trf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -17,6 +17,7 @@ final class MVPVenueListVc: UIViewController {
 
     @IBOutlet weak var cityNameLbl: UILabelDeviceClass!
     @IBOutlet weak var venueListTableView: UITableView!
+    @IBOutlet weak var zeroCaseView: UIView!
         
     private var openVenueList = [ClipVenue]()
     private var closeVenueList = [ClipVenue]()
@@ -80,6 +81,10 @@ final class MVPVenueListVc: UIViewController {
         fetchAllCloseVenueForMVP(withLoader: withLoader)
     }
     
+    private func checkZeroViewCase() {
+        zeroCaseView.isHidden = !(openVenueList.count == 0 && closeVenueList.count == 0)
+    }
+    
     @IBAction func onClickCityName(_ sender: Any) {
         Navigate.to.mvpCitySelection(self)
     }
@@ -107,12 +112,9 @@ final class MVPVenueListVc: UIViewController {
                 self.venueListTableView.reloadData()
                 self.refresh.endRefreshing()
             } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
+            self.checkZeroViewCase()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")
@@ -145,12 +147,9 @@ final class MVPVenueListVc: UIViewController {
                 self.venueListTableView.reloadData()
                 self.refresh.endRefreshing()
             } else {
-                if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                }
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
+            self.checkZeroViewCase()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
                 Alert.showToast("Venue detail updated")

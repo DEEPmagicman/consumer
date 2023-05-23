@@ -12,6 +12,7 @@ final class AccountVC: UIViewController {
     @IBOutlet private weak var profileImg: UIImageView!
     @IBOutlet private weak var nameLbl: UILabel!
     @IBOutlet private weak var listTableView: UITableView!
+    @IBOutlet private weak var zeroCaseView: UIView!
 
     private var onBoardingPresenter = OnBoardingPresenter()
     private var bookings = [Booking]()
@@ -50,6 +51,7 @@ final class AccountVC: UIViewController {
             guard let self = self else { return }
             self.bookings = bookings
             self.listTableView.reloadData()
+            self.checkZeroViewCase()
         }
     }
     
@@ -58,6 +60,7 @@ final class AccountVC: UIViewController {
             guard let self = self else { return }
             self.recommended = eventList
             self.listTableView.reloadSections([1], with: .automatic)
+            self.checkZeroViewCase()
         }
     }
     
@@ -91,6 +94,10 @@ final class AccountVC: UIViewController {
                 Loader.hide()
             }
         }
+    }
+    
+    private func checkZeroViewCase() {
+        zeroCaseView.isHidden = !(bookings.count == 0 && recommended.count == 0)
     }
     
     @IBAction func onClickShare(_ sender: Any) {
