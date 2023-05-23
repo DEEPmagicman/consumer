@@ -347,7 +347,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             let event = self.events[indexPath.row]
             cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = event.title
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
             if event.isPausedSellingAllTickets {
                 cell.priceLbl.text = Constant.String.salePaused
             } else if event.isSoldOutAllTickets {
@@ -363,7 +363,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             let event = self.todaysEvents[indexPath.row]
             cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = event.title
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
             if event.isPausedSellingAllTickets {
                 cell.priceLbl.text = Constant.String.salePaused
             } else if event.isSoldOutAllTickets {
