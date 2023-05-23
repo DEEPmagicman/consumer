@@ -340,7 +340,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             return cell
         case openingHoursTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
-            cell.setData(venueDetails?.openHours[indexPath.row])
+            cell.setData(venueDetails?.openHours[indexPath.row], timezone: venueDetails?.useTimezone ?? "")
             return cell
         case upcomingTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
