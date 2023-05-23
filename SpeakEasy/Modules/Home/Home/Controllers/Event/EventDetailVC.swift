@@ -128,7 +128,10 @@ final class EventDetailVC: UIViewController {
     }
     
     private func getEventDetail() {
-        if eventId ?? "" == "" { return }
+        if eventId ?? "" == "" {
+            zeroCaseView(isHidden: false)
+            return
+        }
         EventPresenter.getEventDetail(eventId: eventId ?? "") { [weak self] isSuccess, errMsg, eventDetail in
             guard let self = self else {
                 return
@@ -341,7 +344,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date() {
-                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm)))
+                Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")))
                 return
             }
             
