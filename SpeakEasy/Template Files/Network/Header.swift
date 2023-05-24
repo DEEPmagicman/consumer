@@ -18,7 +18,7 @@ struct Header {
     static func header(_ headerContentType: HeaderContentType = .json, timeZone: String? = nil) -> [String: String] {
         ["Authorization": "Bearer \(UserDefault.shared.accessToken ?? "")",
          "Content-Type": "\(headerContentType.rawValue)",
-         "timezone": timeZone ?? TimeZone.current.identifier.lowercased(),
+         "timezone": timeZone?.lowercased() ?? TimeZone.current.identifier.lowercased(),
          "app_version": Bundle.main.releaseVersionNumber,
          "build_number": Bundle.main.buildVersionNumber,
          "platform": "ios",
