@@ -37,6 +37,7 @@ struct Event: Codable {
     var floorPlanId: String?
     var eventTicket: [EventTicket]?
     var venue: ClipVenue?
+    var artists: [Artists]?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
         let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
@@ -87,5 +88,27 @@ struct Event: Codable {
         try container.encode(floorPlanId, forKey: .floorPlanId)
         try container.encode(eventTicket, forKey: .eventTicket)
         try container.encode(venue, forKey: .venue)
+    }
+}
+
+struct Artists: Codable {
+
+    var image: Flyer
+    var id: String
+    var name: String
+    var instagramUsername: String
+    var status: String
+    var createdAt: String
+    var updatedAt: String
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(image, forKey: .image)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(instagramUsername, forKey: .instagramUsername)
+        try container.encode(status, forKey: .status)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
     }
 }

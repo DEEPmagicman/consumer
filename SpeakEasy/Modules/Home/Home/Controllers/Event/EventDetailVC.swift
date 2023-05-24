@@ -41,7 +41,6 @@ final class EventDetailVC: UIViewController {
     var event: Event?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
-    private let demoCount = 0
     private var isNotSellingStage = false
     private var maxTicket = 20
     private var totalPrice: Int {
@@ -108,6 +107,7 @@ final class EventDetailVC: UIViewController {
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
+        artistTableView.reloadData()
         if event?.isPausedSellingAllTickets == true {
             continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
             isNotSellingStage = true
@@ -269,8 +269,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
         case ticketListTableView:
             return event?.eventTicket?.count ?? 0
         case artistTableView:
-            lineUpView.isHidden = demoCount == 0
-            return demoCount
+            lineUpView.isHidden = event?.artists?.count ?? 0 == 0
+            return event?.artists?.count ?? 0
         default:
             return 0
         }
@@ -314,8 +314,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         case artistTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
-            cell.mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = "Martin Garrix"
+            cell.mainImg.sd_setImage(with: URL(string: (event?.artists?[indexPath.row].image.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = event?.artists?[indexPath.row].name
             cell.selectionStyle = .none
             return cell
         default:
@@ -365,7 +365,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             }
         case artistTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.openInstagramForUsername("martingarrix")
+            Navigate.openInstagramForUsername(event?.artists?[indexPath.row].instagramUsername ?? "")
         default:
             break
         }
