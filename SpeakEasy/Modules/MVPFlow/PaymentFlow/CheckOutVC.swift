@@ -62,6 +62,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
+        
+        infoLbl.highlightBold(["terms of service", "privacy policy"], size: 12, textColor: .white, addUnderLine: true)
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
+        infoLbl.addGestureRecognizer(tap1)
+        infoLbl.isUserInteractionEnabled = true
     }
     
     private func setUpData() {
@@ -97,6 +102,16 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         alertController.addAction(okAction)
         alertController.addAction(setUpAction)
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc private func onClickInfoLabel(_ sender: UITapGestureRecognizer) {
+        if let range = infoLbl.text?.range(of: "terms of service")?.nsRange, sender.didTapAttributedTextInLabel(label: infoLbl, inRange: range) {
+            Navigate.externalURL(APIBuilder.termsConsumerURL)
+        }
+        
+        if let range = infoLbl.text?.range(of: "privacy policy")?.nsRange, sender.didTapAttributedTextInLabel(label: infoLbl, inRange: range) {
+            Navigate.externalURL(APIBuilder.privacyConsumerURL)
+        }
     }
     
     private func createBooking() {
