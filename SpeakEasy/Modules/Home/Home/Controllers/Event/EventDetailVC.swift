@@ -314,7 +314,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         case artistTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
-            cell.mainImg.sd_setImage(with: URL(string: (event?.artists?[indexPath.row].image.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.mainImg.sd_setImage(with: URL(string: (event?.artists?[indexPath.row].image?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = event?.artists?[indexPath.row].name
             cell.selectionStyle = .none
             return cell
