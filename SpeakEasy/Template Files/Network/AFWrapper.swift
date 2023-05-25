@@ -27,8 +27,7 @@ final class AFWrapper: NSObject {
                             failure: @escaping DefaultAPIFailureClosure) {
 
         if !Connectivity.isConnectedToInternet {
-            success(nil)
-            failure(nil)
+            failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
             return
         }
         

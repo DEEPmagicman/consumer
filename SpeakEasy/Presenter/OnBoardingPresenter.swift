@@ -10,7 +10,6 @@ import UIKit
 final class OnBoardingPresenter {
         
     func loginWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.loginWithPhoneURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String else {

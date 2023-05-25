@@ -19,8 +19,8 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var errorTextLbl: UILabel!
 
     var isFromLogin = false
-    private var onBoardingDelegate = OnBoardingPresenter()
-    private var settingDelegate = SettingPresenter()
+    private var onBoardingPresenter = OnBoardingPresenter()
+    private var settingPresenter = SettingPresenter()
     var countryCode = ""
     var isFromSettings = false
     
@@ -91,58 +91,51 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         if isFromLogin {
-            self.onBoardingDelegate.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
+            Loader.show()
+            onBoardingPresenter.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self = self else {
                     Loader.hide()
                     return
                 }
+                Loader.hide()
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
-                    Loader.hide()
+                } else if errorMsg == Constant.String.internetNotConnect {
+                    Alert.showToast(Constant.String.internetNotConnect)
                 } else {
-                    if errorMsg != nil {
-                        Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
-                    } else {
-                        Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                    }
-                    Loader.hide()
+                    Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 }
             }
         } else {
             if isFromSettings {
-                self.settingDelegate.changePhoneNumberApi(phone: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errMsg in
+                settingPresenter.changePhoneNumberApi(phone: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errMsg in
                     guard let self = self else {
                         Loader.hide()
                         return
                     }
                     if isSuccess {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                    } else if errMsg == Constant.String.internetNotConnect {
+                        Alert.showToast(Constant.String.internetNotConnect)
                     } else {
-                        if errMsg != nil {
-                            Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
-                        } else {
-                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                        }
+                        Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
                     Loader.hide()
                 }
             } else {
-                self.onBoardingDelegate.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg  in
+                onBoardingPresenter.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg  in
                     guard let self = self else {
                         Loader.hide()
                         return
                     }
+                    Loader.hide()
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
-                        Loader.hide()
+                    } else if errorMsg == Constant.String.internetNotConnect {
+                        Alert.showToast(Constant.String.internetNotConnect)
                     } else {
-                        if errorMsg != nil {
-                            Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
-                        } else {
-                            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-                        }
-                        Loader.hide()
+                        Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                     }
                 }
             }
