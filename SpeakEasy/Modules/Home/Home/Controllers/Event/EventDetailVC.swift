@@ -381,13 +381,11 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
 
 extension EventDetailVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        gradient?.frame = mainImg.bounds
         if scrollView.contentOffset.y > 350 {
             headerTitleLbl.isHidden = false
             headerView.backgroundColor = .black
         } else {
-            if scrollView.contentOffset.y <= 0 {
-                gradient?.frame = mainImg.bounds
-            }
             headerTitleLbl.isHidden = true
             headerView.backgroundColor = .clear
         }
