@@ -29,7 +29,7 @@ class venueTableCell: UITableViewCell {
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
         self.locationLbl.text = data.address
-        self.updatedAtLbl.text = "Updated: \(data.updatedAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) )"
+        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a)
         if let ticket = data.lowestPriceTicket {
             if ticket.price < 5 && ticket.name.lowercased().contains("general") == true {
                 coverLbl.text = "FREE"

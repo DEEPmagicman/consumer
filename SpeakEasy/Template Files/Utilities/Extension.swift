@@ -85,6 +85,33 @@ extension String {
         dateFormatter.dateFormat = format.rawValue
         return dateFormatter.date(from: self)
     }
+    
+    func displayUpdatedAgo(from: DateFormat, to: DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {
+        let oldDateFormatter = DateFormatter()
+        oldDateFormatter.dateFormat = from.rawValue
+        if isUTC {
+            oldDateFormatter.timeZone = TimeZone(identifier: "UTC")
+        } else {
+            oldDateFormatter.timeZone = .current
+        }
+        guard let oldDate = oldDateFormatter.date(from: self) else { return "No date Found" }
+        let whileAgoDate = Calendar.current.date(byAdding: .hour, value: -10, to: Date()) ?? Date()
+        if whileAgoDate > oldDate {
+            return Constant.String.updateWhileAgo
+        }
+        let convertDateFormatter = DateFormatter()
+        convertDateFormatter.dateFormat = to.rawValue
+        if customTimeZone != "", let timeZone = TimeZone(identifier: customTimeZone) {
+            convertDateFormatter.timeZone = timeZone
+        } else {
+            convertDateFormatter.timeZone = .current
+        }
+        if useDayLightSavingTime {
+            return "\(Constant.String.updated) \(convertDateFormatter.string(from: oldDate.addingTimeInterval(convertDateFormatter.timeZone.daylightSavingTimeOffset())))"
+        } else {
+            return "\(Constant.String.updated) \(convertDateFormatter.string(from: oldDate))"
+        }
+    }
 }
 
 extension Double {
