@@ -210,7 +210,7 @@
                                                             <userDefinedRuntimeAttribute type="string" keyPath="iPhoneFontWeight" value="regular"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LD9-tZ-mgQ">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LD9-tZ-mgQ">
                                                         <rect key="frame" x="0.0" y="4" width="414" height="294"/>
                                                     </imageView>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fpG-0h-c5m">
@@ -1254,7 +1254,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YtI-uD-Xwi" userLabel="ImageView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="390"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F2c-i6-z9m">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="F2c-i6-z9m">
                                                         <rect key="frame" x="0.0" y="4" width="414" height="386"/>
                                                     </imageView>
                                                 </subviews>

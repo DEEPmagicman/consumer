@@ -20,6 +20,7 @@ struct Constant {
         static let primaryBlue = UIColor(named: "primaryBlue")
         static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
         static let customGray = UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.00)
+        static let gradientColors = [UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor, UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor]
     }
     
     struct Icon {

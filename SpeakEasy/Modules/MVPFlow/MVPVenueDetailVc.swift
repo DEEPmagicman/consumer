@@ -84,9 +84,11 @@ final class MVPVenueDetailVc: UIViewController {
     }
     private var events = [Event]()
     private var todaysEvents = [Event]()
+    private var gradient: CAGradientLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        gradient = venueBgImg.setGradientColor()
         headerVenueName.isHidden = true
         headerView.backgroundColor = .clear
         scrollView.delegate = self
@@ -126,6 +128,11 @@ final class MVPVenueDetailVc: UIViewController {
             self.todaysEventTableHeight.constant = self.todaysEventTableView.contentSize.height
             self.todaysEventTableView.layoutIfNeeded()
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        gradient = venueBgImg.setGradientColor()
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -490,6 +497,9 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = false
             headerView.backgroundColor = .black
         } else {
+            if scrollView.contentOffset.y <= 0 {
+                gradient?.frame = venueBgImg.bounds
+            }
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }

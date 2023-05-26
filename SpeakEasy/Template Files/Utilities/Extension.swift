@@ -229,6 +229,24 @@ extension UIView {
     static var nib: UINib {
         UINib(nibName: "\(self)", bundle: nil)
     }
+
+    func setGradientColor(colors: [CGColor] = Constant.Color.gradientColors) -> CAGradientLayer {
+        removeGradientBackgroundColor()
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = colors
+        gradientLayer.locations = [0, 1]
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
+        gradientLayer.endPoint = CGPoint(x: 0.0, y: 0.0)
+        layer.insertSublayer(gradientLayer, at: 0)
+        gradientLayer.name = "gradientLayer"
+        return gradientLayer
+    }
+    
+    func removeGradientBackgroundColor() {
+        layer.sublayers?.filter { $0.name == "gradientLayer" }.forEach { $0.removeFromSuperlayer() }
+        layoutIfNeeded()
+    }
 }
 
 extension UITapGestureRecognizer {

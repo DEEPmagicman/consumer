@@ -39,6 +39,7 @@ final class EventDetailVC: UIViewController {
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
+    private var gradient: CAGradientLayer?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
@@ -67,6 +68,7 @@ final class EventDetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        gradient = mainImg.setGradientColor()
         getEventDetail()
         setupData()
         headerTitleLbl.isHidden = true
@@ -92,6 +94,11 @@ final class EventDetailVC: UIViewController {
         mainImg.addGestureRecognizer(tap1)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        gradient = mainImg.setGradientColor()
     }
     
     private func setupData() {
@@ -378,6 +385,9 @@ extension EventDetailVC: UIScrollViewDelegate {
             headerTitleLbl.isHidden = false
             headerView.backgroundColor = .black
         } else {
+            if scrollView.contentOffset.y <= 0 {
+                gradient?.frame = mainImg.bounds
+            }
             headerTitleLbl.isHidden = true
             headerView.backgroundColor = .clear
         }
