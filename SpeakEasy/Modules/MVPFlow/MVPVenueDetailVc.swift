@@ -493,11 +493,13 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
 
 extension MVPVenueDetailVc: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        gradient?.frame = venueBgImg.bounds
         if scrollView.contentOffset.y > 220 {
             headerVenueName.isHidden = false
             headerView.backgroundColor = .black
         } else {
+            if scrollView.contentOffset.y <= 0 {
+                gradient?.frame = venueBgImg.bounds
+            }
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }
