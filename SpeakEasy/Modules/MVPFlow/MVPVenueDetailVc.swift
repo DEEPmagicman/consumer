@@ -497,9 +497,9 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = false
             headerView.backgroundColor = .black
         } else {
-            if scrollView.contentOffset.y <= 0 {
-                gradient?.frame = venueBgImg.bounds
-            }
+//            if scrollView.contentOffset.y <= 0 {
+//                gradient?.frame = venueBgImg.bounds
+//            }
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }
