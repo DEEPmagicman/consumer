@@ -130,10 +130,10 @@ final class MVPVenueDetailVc: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        gradient = venueBgImg.setGradientColor()
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        gradient = venueBgImg.setGradientColor()
+//    }
     
     private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {

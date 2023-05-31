@@ -96,10 +96,10 @@ final class EventDetailVC: UIViewController {
         mapView.addGestureRecognizer(tap)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        gradient = mainImg.setGradientColor()
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        gradient = mainImg.setGradientColor()
+//    }
     
     private func setupData() {
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
