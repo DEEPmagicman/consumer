@@ -32,6 +32,8 @@ struct Constant {
         static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
         static let liveCover = UIImage(named: "liveCover")
         static let uploadImage = UIImage(named: "uploadImage")
+        static let checkBoxEmpty = UIImage(named: "checkBoxEmpty")
+        static let checkBoxFull = UIImage(named: "checkBoxFull")
     }
     
     struct String {

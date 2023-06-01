@@ -76,6 +76,7 @@
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locationIcon2" translatesAutoresizingMaskIntoConstraints="NO" id="Ydm-e1-W4j">
                                                 <rect key="frame" x="0.0" y="3" width="11" height="14"/>
+                                                <color key="tintColor" red="0.69019609689999994" green="0.69019609689999994" blue="0.69019609689999994" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="11" id="EIi-5B-Kjs"/>
                                                     <constraint firstAttribute="height" constant="14" id="rtl-Lt-sAo"/>

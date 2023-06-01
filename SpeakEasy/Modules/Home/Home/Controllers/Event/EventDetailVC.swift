@@ -39,7 +39,6 @@ final class EventDetailVC: UIViewController {
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
-    private var gradient: CAGradientLayer?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
@@ -68,7 +67,6 @@ final class EventDetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gradient = mainImg.setGradientColor()
         getEventDetail()
         setupData()
         headerTitleLbl.isHidden = true
@@ -95,11 +93,6 @@ final class EventDetailVC: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        gradient = mainImg.setGradientColor()
-//    }
     
     private func setupData() {
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -204,7 +197,7 @@ final class EventDetailVC: UIViewController {
             return
         }
         if let selectedTickets = event?.eventTicket?.filter({ $0.selectedTicketCount != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", uniqueId: venueDetails?.uniqueId ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
             updateContinueBtn(forceRemove: true)
         }
     }
@@ -385,9 +378,6 @@ extension EventDetailVC: UIScrollViewDelegate {
             headerTitleLbl.isHidden = false
             headerView.backgroundColor = .black
         } else {
-//            if scrollView.contentOffset.y <= 0 {
-//                gradient?.frame = mainImg.bounds
-//            }
             headerTitleLbl.isHidden = true
             headerView.backgroundColor = .clear
         }

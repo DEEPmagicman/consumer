@@ -271,7 +271,7 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venueName: venueDetails?.name ?? "", venueId: venueDetails?.id ?? "", uniqueId: venueDetails?.uniqueId ?? "", venueAttachment: venueDetails?.venueAttachment.first?.key ?? "", venueLogo: venueDetails?.logo?.key ?? "", selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
         }
     }
     
@@ -508,8 +508,9 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
 
 extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        vibeView.isHidden = (venueDetails?.venueVibes.count ?? 0) == 0
-        return venueDetails?.venueVibes.count ?? 0
+        //NOTE: Hide vibe view for now
+        vibeView.isHidden = true // (venueDetails?.venueVibes.count ?? 0) == 0
+        return 0 // venueDetails?.venueVibes.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -23,15 +23,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var paymentMethodView: UIView!
     @IBOutlet private weak var paymentMethodImg: UIImageView!
     @IBOutlet private weak var buyNowBtn: UIButton!
+    @IBOutlet private weak var policyCheckBox: UIButton!
+    @IBOutlet private weak var policyView: UIView!
+    @IBOutlet private weak var policyLbl: UILabel!
 
-    var venueAttachment = ""
-    var venueLogo = ""
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
     var totalPrice = 0
-    var venueName = ""
-    var venueId = ""
-    var uniqueId = ""
+    var venue: ClipVenue?
     var type: PaymentIntentType = .appClip
     var event: Event?
     private var paymentSheet: PaymentSheet?
@@ -67,6 +66,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
         infoLbl.addGestureRecognizer(tap1)
         infoLbl.isUserInteractionEnabled = true
+        policyCheckBox.setImage(Constant.Icon.checkBoxEmpty, for: .normal)
+        policyCheckBox.setImage(Constant.Icon.checkBoxFull, for: .selected)
     }
     
     private func setUpData() {
@@ -82,7 +83,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        venueNameLbl.text = venueName
+        venueNameLbl.text = venue?.name ?? ""
+        policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
+        policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
     }
     
     @objc private func onClickPaymentMethod() {
@@ -123,7 +126,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venueId) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -227,6 +230,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             self.buyNowBtn.alpha = 1
             self.buyNowBtn.isUserInteractionEnabled = true
         }
+    }
+
+    @IBAction private func onClickPolicyCheckBox(_ sender: UIButton) {
+        sender.isSelected.toggle()
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
@@ -372,7 +379,7 @@ extension CheckOutVC {
 extension CheckOutVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if isPaymentInitiated { return }
-        if self.navigationController?.viewControllers.last is CheckOutVC && self.uniqueId == uniqueId {
+        if self.navigationController?.viewControllers.last is CheckOutVC && venue?.uniqueId ?? "" == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
@@ -395,7 +402,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
     
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if isPaymentInitiated { return }
-        if self.navigationController?.viewControllers.last is CheckOutVC && self.uniqueId == uniqueId && type == .appClip {
+        if self.navigationController?.viewControllers.last is CheckOutVC && venue?.uniqueId ?? "" == uniqueId && type == .appClip {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
                 UIAlertAction in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in

@@ -9,8 +9,8 @@ import UIKit
 
 final class HoursTVC: UITableViewCell {
 
-    @IBOutlet weak var lblTime: UILabelDeviceClass!
-    @IBOutlet weak var lblDay: UILabelDeviceClass!
+    @IBOutlet weak var lblTime: UILabel!
+    @IBOutlet weak var lblDay: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

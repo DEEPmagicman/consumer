@@ -36,6 +36,7 @@ struct ClipVenue: Codable {
     var appClipTicket: [AppClipTicket]?
     var checkInUser: Int?
     var timezone: String?
+    var venueSettings: VenueSettings?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -96,6 +97,7 @@ struct ClipVenue: Codable {
         try container.encode(lng, forKey: .lng)
         try container.encode(checkInUser, forKey: .checkInUser)
         try container.encode(timezone, forKey: .timezone)
+        try container.encode(venueSettings, forKey: .venueSettings)
     }
 }
 
@@ -170,5 +172,21 @@ struct AppClipTicket: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}
+
+struct VenueSettings: Codable {
+
+    var optedPolicy: Bool
+    var policyText: String
+    var enabledCustomBookingSMS: Bool
+    var bookingSMSText: String
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(optedPolicy, forKey: .optedPolicy)
+        try container.encode(policyText, forKey: .policyText)
+        try container.encode(enabledCustomBookingSMS, forKey: .enabledCustomBookingSMS)
+        try container.encode(bookingSMSText, forKey: .bookingSMSText)
     }
 }
