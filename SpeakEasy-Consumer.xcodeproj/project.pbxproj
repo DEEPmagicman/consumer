@@ -308,6 +308,8 @@
 		CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
+		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
+		CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
 		CEECAA70288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */; };
 		CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */; };
 		CEECAA72288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */; };
@@ -906,6 +908,7 @@
 		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
+		CEE7A2292A28BC9C009A027F /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		CEECAA68288D8B7C007C5F9C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEECAA6B288D8B7C007C5F9C /* CalendarDateRangePickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerCell.swift; sourceTree = "<group>"; };
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
@@ -1317,6 +1320,7 @@
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
 				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
+				CEE7A2292A28BC9C009A027F /* Common.swift */,
 			);
 			path = SpeakEasyClip;
 			sourceTree = "<group>";
@@ -4283,6 +4287,7 @@
 				CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */,
 				CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
+				CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
@@ -4557,6 +4562,7 @@
 				E11F4C0028C835F3008D2E30 /* BookingDetails.swift in Sources */,
 				9D4A029028CE9E4B009CD670 /* CostSplitSelectionTVC.swift in Sources */,
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
+				CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */,
 				CE4867AE286F358800FD277E /* ProjectStructs.swift in Sources */,
 				BDCC5C2A2946F8F900595436 /* SelectVibesViewController.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,

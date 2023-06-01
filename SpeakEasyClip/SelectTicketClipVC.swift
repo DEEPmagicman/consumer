@@ -48,6 +48,7 @@ final class SelectTicketClipVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        venueBgImg.setGradientColor()
         WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
@@ -142,9 +143,7 @@ final class SelectTicketClipVC: UIViewController {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
             vc.selectedAppClipTickets = selectedTickets
             vc.totalPrice = totalPrice
-            vc.venueName = self.venueDetail?.name ?? ""
-            vc.venueAttachment = self.venueDetail?.venueAttachment.first?.key ?? ""
-            vc.venueLogo = self.venueDetail?.logo?.key ?? ""
+            vc.venue = venueDetail
             navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }

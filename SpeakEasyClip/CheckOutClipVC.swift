@@ -25,11 +25,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var errorLbl: UILabel!
     @IBOutlet private weak var applePayBtn: PKPaymentButton!
     @IBOutlet private weak var dressCodeInfoLbl: UILabel!
+    @IBOutlet private weak var policyCheckBox: UIButton!
+    @IBOutlet private weak var policyView: UIView!
+    @IBOutlet private weak var policyLbl: UILabel!
 
     var totalPrice = 1
-    var venueName = ""
-    var venueAttachment = ""
-    var venueLogo = ""
+    var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
     private var paymentIntent = ""
     private var paymentHistoryId = ""
@@ -96,6 +97,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             isApplePayNotSupported = true
             errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
         }
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
+        policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
     }
     
     deinit {
@@ -179,6 +184,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
+    @IBAction private func onClickPolicyCheckBox(_ sender: UIButton) {
+        sender.isSelected.toggle()
+    }
+    
     @IBAction private func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -244,10 +253,10 @@ extension CheckOutClipVC {
                 DispatchQueue.main.async {
                     if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
                         AppClipLoader.hideLoader()
-                        vc.venueName = self.venueName
+                        vc.venueName = self.venue?.name ?? ""
                         vc.bookingId = self.bookingId
-                        vc.venueLogo = self.venueLogo
-                        vc.venueAttachment = self.venueAttachment
+                        vc.venueLogo = self.venue?.logo?.key ?? ""
+                        vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
                         vc.selectedAppClipTickets = self.selectedAppClipTickets
                         if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                             self.navigationController?.viewControllers = [selectVC, vc]

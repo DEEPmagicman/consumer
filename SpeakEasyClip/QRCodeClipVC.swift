@@ -24,6 +24,7 @@ final class QRCodeClipVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        venueImg.setGradientColor()
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }

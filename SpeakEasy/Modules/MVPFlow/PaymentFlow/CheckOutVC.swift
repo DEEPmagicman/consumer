@@ -66,8 +66,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
         infoLbl.addGestureRecognizer(tap1)
         infoLbl.isUserInteractionEnabled = true
-        policyCheckBox.setImage(Constant.Icon.checkBoxEmpty, for: .normal)
-        policyCheckBox.setImage(Constant.Icon.checkBoxFull, for: .selected)
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
     }
     
     private func setUpData() {
