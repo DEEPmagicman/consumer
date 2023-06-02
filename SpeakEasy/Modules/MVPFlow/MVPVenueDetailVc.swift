@@ -37,13 +37,10 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var closeTicketView: UIView!
     @IBOutlet weak var tonightView: UIView!
     @IBOutlet weak var openingHoursView: UIView!
-    @IBOutlet weak var vibeView: UIView!
     @IBOutlet weak var dressCodeView: UIView!
     @IBOutlet weak var dressCodeLbl: UILabel!
     @IBOutlet weak var venuePolicyView: UIView!
     @IBOutlet weak var upcomingSectionView: UIView!
-    @IBOutlet weak var vibesCollectionView: UICollectionView!
-    @IBOutlet weak var vibeCollectionHeight: NSLayoutConstraint!
     @IBOutlet weak var openingTableHeight: NSLayoutConstraint!
     @IBOutlet weak var openingHoursTableView: UITableView!
     @IBOutlet weak var upcomingTableView: UITableView!
@@ -58,7 +55,6 @@ final class MVPVenueDetailVc: UIViewController {
     private var venueDetails: ClipVenue?
     private var maxTicket = 20
     private var ticketListHeightObservation: NSKeyValueObservation?
-    private var vibeHeightObservation: NSKeyValueObservation?
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
     private var todaysEventHeightObservation: NSKeyValueObservation?
@@ -104,12 +100,6 @@ final class MVPVenueDetailVc: UIViewController {
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         self.mapView.addGestureRecognizer(tap)
-        vibesCollectionView.register(UINib(nibName: "VibesCVC", bundle: nil), forCellWithReuseIdentifier: "VibesCVC")
-        vibeHeightObservation = vibesCollectionView.observe(\.contentSize, options: []) { [weak self] _, _ in
-            guard let self = self else { return }
-            self.vibeCollectionHeight.constant = self.vibesCollectionView.contentSize.height
-            self.vibesCollectionView.layoutIfNeeded()
-        }
         openingHoursTableView.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
         hoursHeightObservation = openingHoursTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -148,7 +138,6 @@ final class MVPVenueDetailVc: UIViewController {
                 self.venueDetails = venueDetail
                 self.setUpUI()
                 self.ticketTypeTableView.reloadData()
-                self.vibesCollectionView.reloadData()
                 self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
                 self.updateCloseViewVisibility()
@@ -503,27 +492,5 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }
-    }
-}
-
-extension MVPVenueDetailVc: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //NOTE: Hide vibe view for now
-        vibeView.isHidden = true // (venueDetails?.venueVibes.count ?? 0) == 0
-        return 0 // venueDetails?.venueVibes.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = vibesCollectionView.dequeueReusableCell(withReuseIdentifier: "VibesCVC", for: indexPath) as! VibesCVC
-        cell.lblVibes.text = venueDetails?.venueVibes[indexPath.row]
-        return cell
-    }
-}
-
-extension MVPVenueDetailVc: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (venueDetails?.venueVibes[indexPath.item].size(withAttributes:[.font: UIFont(name: "Poppins-Regular", size: 15) ?? UIFont.systemFont(ofSize:15.0)]).width ?? 0) + 16
-        let size = CGSize(width: width, height: 40.0)
-        return size
     }
 }
