@@ -219,7 +219,7 @@ final class MVPVenueDetailVc: UIViewController {
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
-        dressCodeLbl.text = venueDetails?.dressCode
+        dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {

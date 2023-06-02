@@ -100,10 +100,10 @@ final class EventDetailVC: UIViewController {
         headerTitleLbl.text = event?.title ?? "Untitle Event"
         venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
-        detailLbl.text = event?.description
-        eventPolicyLbl.text = event?.disclaimer
+        detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
+        eventPolicyLbl.text = event?.disclaimer.withEmptyPlaceHolder ?? Constant.String.dash
         locationLbl.text = venueDetails?.address
-        dressCodeLbl.text = venueDetails?.dressCode
+        dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"

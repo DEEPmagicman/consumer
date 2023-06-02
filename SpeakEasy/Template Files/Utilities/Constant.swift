@@ -71,6 +71,7 @@ struct Constant {
         static let ticketSellingWillStartAt = "Ticket selling will start at %@"
         static let checkoutText = "By buying the ticket you agree to the terms of service and privacy policy. Entry is subject to doorman discretion."
         static let coverTicketText = "Cover tickets expire in 2 hours after purchase."
+        static let dash = "-"
     }
     
     struct Font {
@@ -88,5 +89,14 @@ struct Constant {
         static let discover = UIImage(named: "discover")
         static let diners = UIImage(named: "diners")
         static let jcb = UIImage(named: "jcb")
+    }
+}
+
+extension String {
+    var withEmptyPlaceHolder: String {
+        if self.removeWhitespaces().isEmpty == true {
+            return Constant.String.dash
+        }
+        return self
     }
 }
