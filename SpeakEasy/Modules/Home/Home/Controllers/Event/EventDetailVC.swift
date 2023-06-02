@@ -43,9 +43,10 @@ final class EventDetailVC: UIViewController {
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
     private var maxTicket = 20
+    private var activeTickets: [EventTicket]?
     private var totalPrice: Int {
         var total = 0
-        event?.eventTicket?.forEach {
+        activeTickets?.forEach {
             if let quantity = $0.selectedTicketCount {
                 total += (($0.price ?? 0) * quantity)
             }
@@ -57,7 +58,7 @@ final class EventDetailVC: UIViewController {
     }
     private var totalSelectedTickets: Int {
         var total = 0
-        event?.eventTicket?.forEach {
+        activeTickets?.forEach {
             if let quantity = $0.selectedTicketCount {
                 total += quantity
             }
@@ -108,6 +109,7 @@ final class EventDetailVC: UIViewController {
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
+        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) } ?? []
         if event?.isPausedSellingAllTickets == true {
             continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
             isNotSellingStage = true
@@ -196,7 +198,7 @@ final class EventDetailVC: UIViewController {
             Navigate.to.loginMandatory(self)
             return
         }
-        if let selectedTickets = event?.eventTicket?.filter({ $0.selectedTicketCount != nil }) {
+        if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
             Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
             updateContinueBtn(forceRemove: true)
         }
@@ -216,8 +218,8 @@ final class EventDetailVC: UIViewController {
         continueBtnBGView.isHidden = true
         DispatchQueue.main.async {
             if forceRemove {
-                self.event?.eventTicket?.indices.forEach {
-                    self.event?.eventTicket?[$0].selectedTicketCount = nil
+                self.activeTickets?.indices.forEach {
+                    self.activeTickets?[$0].selectedTicketCount = nil
                 }
                 self.continueBtn.isHidden = true
                 self.scrollViewBottomConstraint.constant = 30
@@ -231,15 +233,15 @@ final class EventDetailVC: UIViewController {
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
-        if let totalTicket = event?.eventTicket?[sender.tag].selectedTicketCount {
+        if let totalTicket = activeTickets?[sender.tag].selectedTicketCount {
             if totalTicket > 1 {
-                event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket - 1
+                activeTickets?[sender.tag].selectedTicketCount = totalTicket - 1
                 ticketListTableView.reloadData()
                 updateContinueBtn()
             } else if totalTicket == 1 {
-                event?.eventTicket?[sender.tag].selectedTicketCount = nil
+                activeTickets?[sender.tag].selectedTicketCount = nil
                 ticketListTableView.reloadData()
-                updateContinueBtn(forceRemove: (event?.eventTicket?.firstIndex(where: { $0.selectedTicketCount != nil })) == nil)
+                updateContinueBtn(forceRemove: (activeTickets?.firstIndex(where: { $0.selectedTicketCount != nil })) == nil)
             }
         }
     }
@@ -249,10 +251,10 @@ final class EventDetailVC: UIViewController {
             Alert.showToast("Max ticket selection reached")
             return
         }
-        if let totalTicket = event?.eventTicket?[sender.tag].selectedTicketCount {
+        if let totalTicket = activeTickets?[sender.tag].selectedTicketCount {
             if totalTicket < maxTicket {
-                if let remaining = event?.eventTicket?[sender.tag].remainingQuantity, remaining > totalTicket {
-                    event?.eventTicket?[sender.tag].selectedTicketCount = totalTicket + 1
+                if let remaining = activeTickets?[sender.tag].remainingQuantity, remaining > totalTicket {
+                    activeTickets?[sender.tag].selectedTicketCount = totalTicket + 1
                     ticketListTableView.reloadData()
                     updateContinueBtn()
                 }
@@ -267,7 +269,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case ticketListTableView:
-            return event?.eventTicket?.count ?? 0
+            return activeTickets?.count ?? 0
         case artistTableView:
             lineUpView.isHidden = event?.artists?.count ?? 0 == 0
             return event?.artists?.count ?? 0
@@ -280,17 +282,17 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
         switch tableView {
         case ticketListTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-            cell.ticketTypeLbl.text = event?.eventTicket?[indexPath.row].tierName
-            cell.infoLbl.text = event?.eventTicket?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "$\(event?.eventTicket?[indexPath.row].price ?? 0)"
+            cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
+            cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
+            cell.ticketPriceLbl.text = "$\(activeTickets?[indexPath.row].price ?? 0)"
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
-            if event?.eventTicket?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
+            if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
                 cell.ticketPlusMinusView.isHidden = true
             }
-            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining <= 20 {
+            if let remaining = activeTickets?[indexPath.row].remainingQuantity, remaining <= 20 {
                 cell.hotVenueLbl.isHidden = false
                 if remaining == 0 {
                     cell.hotVenueLbl.text = "Sold out"
@@ -300,13 +302,13 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.hotVenueLbl.isHidden = true
             }
-            cell.totalTicketLbl.text = "\(event?.eventTicket?[indexPath.row].selectedTicketCount ?? 0)"
+            cell.totalTicketLbl.text = "\(activeTickets?[indexPath.row].selectedTicketCount ?? 0)"
             cell.minusBtn.tag = indexPath.row
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
-            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, let selectedTicket = event?.eventTicket?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
+            if let remaining = activeTickets?[indexPath.row].remainingQuantity, let selectedTicket = activeTickets?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
                 cell.plusBtn.alpha = 0.5
             }
             cell.selectionStyle = .none
@@ -326,7 +328,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableView {
         case ticketListTableView:
-            if event?.eventTicket?[indexPath.row].sellingPaused == true {
+            if activeTickets?[indexPath.row].sellingPaused == true {
                 return 0
             }
         default:
@@ -338,18 +340,18 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch tableView {
         case ticketListTableView:
-            if event?.eventTicket?[indexPath.row].selectedTicketCount != nil { return }
+            if activeTickets?[indexPath.row].selectedTicketCount != nil { return }
             if isMaxTicketReached {
                 Alert.showToast("Max ticket selection reached")
                 return
             }
-            if let startDate = event?.eventTicket?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date() {
+            if let startDate = activeTickets?[indexPath.row].beginSale, (startDate.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date() {
                 Alert.showAlertSheet(style: .alert, title: nil, message: String(format: Constant.String.ticketSellingWillStartAt, startDate.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMMMddHHmm, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")))
                 return
             }
             
-            if let remaining = event?.eventTicket?[indexPath.row].remainingQuantity, remaining >= 1 {
-                event?.eventTicket?[indexPath.row].selectedTicketCount = 1
+            if let remaining = activeTickets?[indexPath.row].remainingQuantity, remaining >= 1 {
+                activeTickets?[indexPath.row].selectedTicketCount = 1
             } else {
                 Alert.showToast("Sold out")
                 return

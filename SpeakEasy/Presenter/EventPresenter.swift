@@ -14,6 +14,7 @@ final class EventPresenter {
                      "version": "PUBLISHED",
                      "eventStatus": "APPROVED",
                      "timeVersion": time,
+                     "status": "ENABLED",
                      "orderBy": "startDateTime|asc"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             
