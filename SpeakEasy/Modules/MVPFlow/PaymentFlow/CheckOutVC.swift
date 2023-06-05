@@ -255,7 +255,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.paymentStatus {
+                self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
                     Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
@@ -297,9 +297,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (()-> Void)) {
         Loader.show()
-        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId) { isSuccess, errMsg in
+        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()
@@ -357,7 +357,7 @@ extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            paymentStatus {
+            paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
                 Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:

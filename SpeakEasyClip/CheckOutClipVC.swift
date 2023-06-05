@@ -228,6 +228,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        var param = [String: Any]()
+        if venue?.venueSettings?.optedPolicy == true {
+            param["optedPolicy"] = policyCheckBox.isSelected
+        }
+        let bodyData = try? JSONSerialization.data(
+            withJSONObject: param,
+            options: [.prettyPrinted]
+        )
+        request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in

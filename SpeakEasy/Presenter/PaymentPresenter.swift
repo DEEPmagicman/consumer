@@ -211,8 +211,12 @@ final class PaymentPresenter {
         }
     }
     
-    static func successPayment(paymentHistoryId: String, bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: nil, headers: Header.header()) { response in
+    static func successPayment(paymentHistoryId: String, bookingId: String, optedPolicy: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        var param: [String: Any]?
+        if let optedPolicy = optedPolicy {
+            param = ["optedPolicy": optedPolicy]
+        }
+        AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return
