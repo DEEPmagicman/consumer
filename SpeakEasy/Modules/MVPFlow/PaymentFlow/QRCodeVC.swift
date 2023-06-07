@@ -34,11 +34,11 @@ final class QRCodeVC: UIViewController {
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var pass: PKPass?
-    private var gradient: CAGradientLayer?
+//    private var gradient: CAGradientLayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gradient = venueImg.setGradientColor()
+//        gradient = venueImg.setGradientColor()
         getBooking(id: bookingId)
         setupData()
         addToWalletBtn.addPassButtonStyle = .blackOutline
@@ -54,10 +54,10 @@ final class QRCodeVC: UIViewController {
         eventDetailsLbl.addGestureRecognizer(tap)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        gradient = venueImg.setGradientColor()
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        gradient = venueImg.setGradientColor()
+//    }
     
     private func setupData() {
         QRImg.image = generateQRCode(from: bookingId)
