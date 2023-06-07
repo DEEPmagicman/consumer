@@ -102,7 +102,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
-                    Alert.showToast(Constant.String.internetNotConnect)
+//                    Alert.showToast(Constant.String.internetNotConnect)
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 }
@@ -118,7 +118,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
-                        Alert.showToast(Constant.String.internetNotConnect)
+//                        Alert.showToast(Constant.String.internetNotConnect)
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
@@ -136,7 +136,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else if errorMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
-                        Alert.showToast(Constant.String.internetNotConnect)
+//                        Alert.showToast(Constant.String.internetNotConnect)
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                     }
