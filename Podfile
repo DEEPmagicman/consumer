@@ -32,6 +32,7 @@ target 'SpeakEasy-Consumer' do
   pod 'Socket.IO-Client-Swift'
   pod 'NBBottomSheet', '~> 1.2'
   pod 'Firebase/RemoteConfig'
+  pod 'Firebase/Crashlytics'
 end
 
 target 'SpeakEasyClip' do
