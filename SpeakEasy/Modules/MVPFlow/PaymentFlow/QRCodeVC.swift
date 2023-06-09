@@ -75,7 +75,7 @@ final class QRCodeVC: UIViewController {
             case .singleTickedEvent:
                 venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL),completed: nil)
                 titleLbl.text = booking.event?.title
-                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 dateLbl.isHidden = false
                 venueNameLbl.text = booking.venueObject?.name
                 venueNameLbl.isHidden = false

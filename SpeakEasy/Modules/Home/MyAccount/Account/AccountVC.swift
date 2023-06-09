@@ -139,14 +139,14 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                 cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
             } else {
                 cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
-                cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+                cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
                 cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             }
             cell.priceLbl.text = "\(bookings[indexPath.row].venueObject?.name ?? ""), \(bookings[indexPath.row].venueObject?.city ?? "")"
         } else {
             cell.upcomingImage.sd_setImage(with: URL(string: (recommended[indexPath.row].flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.nameLbl.text = recommended[indexPath.row].title
-            cell.dateLbl.text = recommended[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            cell.dateLbl.text = recommended[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: recommended[indexPath.row].venue?.useTimezone ?? "")
             cell.priceLbl.text = ""
         }
         cell.priceLbl.textColor = Constant.Color.codea1Color
