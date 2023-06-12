@@ -58,7 +58,7 @@ final class RemoteConfigHelper {
     
     func openAppStore() {
         isShowingAlert = false
-        if let url = URL(string: "https://apps.apple.com/app/speakeasy-go/id1642351956") {
+        if let url = URL(string: APIBuilder.appStoreURL) {
             UIApplication.shared.open(url)
         }
     }

@@ -247,7 +247,6 @@
 		CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486769286F358700FD277E /* CLPlacemark+Extension.swift */; };
 		CE4867BA286F358800FD277E /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676A286F358700FD277E /* UITextField+Extension.swift */; };
 		CE4867BB286F358800FD277E /* ProjectEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676C286F358700FD277E /* ProjectEnums.swift */; };
-		CE4867BC286F358800FD277E /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676E286F358700FD277E /* Singleton.swift */; };
 		CE4867BD286F358800FD277E /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486770286F358700FD277E /* LanguageManager.swift */; };
 		CE4867BE286F358800FD277E /* CustomLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486771286F358700FD277E /* CustomLocale.swift */; };
 		CE4867BF286F358800FD277E /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486773286F358700FD277E /* BaseController.swift */; };
@@ -853,7 +852,6 @@
 		CE486769286F358700FD277E /* CLPlacemark+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLPlacemark+Extension.swift"; sourceTree = "<group>"; };
 		CE48676A286F358700FD277E /* UITextField+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		CE48676C286F358700FD277E /* ProjectEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectEnums.swift; sourceTree = "<group>"; };
-		CE48676E286F358700FD277E /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		CE486770286F358700FD277E /* LanguageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		CE486771286F358700FD277E /* CustomLocale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLocale.swift; sourceTree = "<group>"; };
 		CE486773286F358700FD277E /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
@@ -2021,7 +2019,6 @@
 		CE48676D286F358700FD277E /* Singleton */ = {
 			isa = PBXGroup;
 			children = (
-				CE48676E286F358700FD277E /* Singleton.swift */,
 				CE48676F286F358700FD277E /* Language Files */,
 			);
 			path = Singleton;
@@ -4369,7 +4366,6 @@
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
 				CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
-				CE4867BC286F358800FD277E /* Singleton.swift in Sources */,
 				BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */,
 				E11CE3E828C8DFBA003899C4 /* DIYCalendarCell.swift in Sources */,
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,

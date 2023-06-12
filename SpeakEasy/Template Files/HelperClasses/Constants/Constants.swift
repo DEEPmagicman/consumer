@@ -37,40 +37,40 @@ struct Constants {
 //    static let BaseSocketChatURL           = "http://192.168.0.178/chat"
 //    static let BaseSocketTrackingURL       = "http://192.168.0.178/tracking"
 //
-    static let BaseURL                   = "https://api.foodchoo.com/api/v1"
-    static let BaseMessageSendingURL     = "https://api.foodchoo.com/api/v1"
-    static let BaseSocketChatURL         = "https://api.foodchoo.com/chat"
-    static let BaseSocketTrackingURL     = "https://api.foodchoo.com/tracking"
+//    static let BaseURL                   = "https://api.foodchoo.com/api/v1"
+//    static let BaseMessageSendingURL     = "https://api.foodchoo.com/api/v1"
+//    static let BaseSocketChatURL         = "https://api.foodchoo.com/chat"
+//    static let BaseSocketTrackingURL     = "https://api.foodchoo.com/tracking"
     
-    static let BaseS3URL                   = "https://foodchooapp.s3.us-east-2.amazonaws.com/"
-    static let chatNameSpace               = "/chat"
-    static let trackingNameSpace           = "/tracking"
+//    static let BaseS3URL                   = "https://foodchooapp.s3.us-east-2.amazonaws.com/"
+//    static let chatNameSpace               = "/chat"
+//    static let trackingNameSpace           = "/tracking"
     
-    static let APP_DELEGATE                = UIApplication.shared.delegate as! AppDelegate
-    static let UIWINDOW                    = UIApplication.shared.delegate!.window!
-    static let USER_DEFAULTS               = UserDefaults.standard
-    static let SINGLETON                   = Singleton.sharedInstance
-    static let DEFAULTS_USER_KEY           = "User"
-    static var DeviceType                  = "ios"
-    static var DeviceToken                 = "No certificates"
-    static let serverDateFormat            = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    static let applicationDateFormat       = "MM/dd/yyyy"
-    static let applicationMediumDateFormat = "EEEE, MMMM d"
-    static let applicationTimeFormat       = "h:mm a"
-    static let PAGINATION_PAGE_SIZE        = 20
-    static let VERIFY_CODE_TIME_LIMIT      = 5*60
-    static var adminPhone                  = "123456"
+//    static let APP_DELEGATE                = UIApplication.shared.delegate as! AppDelegate
+//    static let UIWINDOW                    = UIApplication.shared.delegate!.window!
+//    static let USER_DEFAULTS               = UserDefaults.standard
+//    static let SINGLETON                   = Singleton.sharedInstance
+//    static let DEFAULTS_USER_KEY           = "User"
+//    static var DeviceType                  = "ios"
+//    static var DeviceToken                 = "No certificates"
+//    static let serverDateFormat            = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+//    static let applicationDateFormat       = "MM/dd/yyyy"
+//    static let applicationMediumDateFormat = "EEEE, MMMM d"
+//    static let applicationTimeFormat       = "h:mm a"
+//    static let PAGINATION_PAGE_SIZE        = 20
+//    static let VERIFY_CODE_TIME_LIMIT      = 5*60
+//    static var adminPhone                  = "123456"
     static let apiKey                      = "AIzaSyA1b6fERg2kAB_sj_Qiq1M3rVNEQBsQFJw"
-    static var apiMessage                  = ""
-    static var accessToken                 = ""
-    static var GoogleSignInClientID        = "809748310080-0mlsl24pgedskofhfmcqbgb5ksu4qgof.apps.googleusercontent.com"
-    static var iTunesURL                   = "http://itunes.apple.com/us/lookup?bundleId="
-    static var pagesCount                  = 0
-    static var ordersCount                 = 0
-    static let biggestHeight:CGFloat       = 926.0
-    static let imHungryTimeRange           = 20*60 //20 minutes
-    static let CarouselScrollingSpeed      = 0.95
-    static let templateId                  = "itmpl_U5EiAniKUzvefeUdFU7upMFv"
+//    static var apiMessage                  = ""
+//    static var accessToken                 = ""
+//    static var GoogleSignInClientID        = "809748310080-0mlsl24pgedskofhfmcqbgb5ksu4qgof.apps.googleusercontent.com"
+//    static var iTunesURL                   = "http://itunes.apple.com/us/lookup?bundleId="
+//    static var pagesCount                  = 0
+//    static var ordersCount                 = 0
+//    static let biggestHeight:CGFloat       = 926.0
+//    static let imHungryTimeRange           = 20*60 //20 minutes
+//    static let CarouselScrollingSpeed      = 0.95
+//    static let templateId                  = "itmpl_U5EiAniKUzvefeUdFU7upMFv"
     static let currency                    = "$"
     
     

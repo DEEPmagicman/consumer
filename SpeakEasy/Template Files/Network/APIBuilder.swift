@@ -264,4 +264,10 @@ extension APIBuilder {
     static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
     static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
     static let supportURL = "https://speakeasygo.com/support"
+    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
+#if DEBUG
+    static let QAWebURL = "https://speakeasy-stag-appclip.vercel.app/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+#else
+    static let QAWebURL = "https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+#endif
 }

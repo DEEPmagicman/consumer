@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import GoogleMaps
 import IQKeyboardManagerSwift
 import Firebase
 
@@ -31,7 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefault.shared.isMvp = false
         FirebaseApp.configure()
         self.application = application
-        GMSServices.provideAPIKey(Constants.apiKey)
         
         IQKeyboardManager.shared.enable = true
         
