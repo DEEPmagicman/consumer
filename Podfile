@@ -43,6 +43,7 @@ target 'SpeakEasyClip' do
   pod "FlagPhoneNumber"
   pod 'IQKeyboardManagerSwift'
   pod 'StripeApplePay'
+  pod 'StripePaymentSheet'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
 end
