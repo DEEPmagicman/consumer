@@ -94,8 +94,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
         } else {
             isApplePayNotSupported = true
             errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
@@ -104,10 +102,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -125,44 +119,17 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.dismiss(animated: true, completion: nil)
     }
     
-    @objc func checkApplePay() {
-        if isValidNo == false { return }
-        if StripeAPI.deviceSupportsApplePay() {
-            if isIntendCreated { return }
-            applePayBtn.isHidden = false
-            errorLbl.isHidden = true
-            applePayBtn.alpha = 0.5
-            applePayBtn.isUserInteractionEnabled = false
-            cardPayBtn.alpha = 0.5
-            cardPayBtn.isUserInteractionEnabled = false
-        } else if isApplePayNotSupported == false {
-            alertForWallet()
-            setUpPaymentBtn()
-            applePayBtn.alpha = 0.5
-            applePayBtn.isUserInteractionEnabled = false
-            cardPayBtn.alpha = 0.5
-            cardPayBtn.isUserInteractionEnabled = false
-        } else {
-            applePayBtn.isHidden = true
-            errorLbl.isHidden = false
-        }
-    }
-    
     private func setUpPaymentBottomSheet() {
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
         // MARK: Create a PaymentSheet instance
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
-//        configuration.customer = .init(id: UserDefault.shared.user?.stripeCusId ?? "", ephemeralKeySecret: ephemeralKey)
+        // configuration.customer = .init(id: UserDefault.shared.user?.stripeCusId ?? "", ephemeralKeySecret: ephemeralKey)
         configuration.savePaymentMethodOptInBehavior = .automatic
         // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
         // methods that complete payment after a delay, like SEPA Debit and Sofort.
         configuration.allowsDelayedPaymentMethods = true
         paymentSheet = PaymentSheet(paymentIntentClientSecret: self.paymentIntent, configuration: configuration)
-//        DispatchQueue.main.async {
-//            self.buyNowBtn.alpha = 1
-//            self.buyNowBtn.isUserInteractionEnabled = true
-//        }
     }
     
     private func addPaymentApi() {
@@ -195,8 +162,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.isIntendCreated = true
             self.paymentIntent = paymentIntentClientSecret
             self.paymentHistoryId = paymentHistoryId
-            self.setUpPaymentBtn()
             self.setUpPaymentBottomSheet()
+            self.setUpPaymentBtn()
         })
         task.resume()
     }
@@ -236,6 +203,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func applePayButtonTapped() {
+        if isApplePayNotSupported {
+            alertPopup("", "Apple pay is not supported on your device, use different payment method.")
+            return
+        }
         if isApplePayNotSupported == false && StripeAPI.deviceSupportsApplePay() == false {
             alertForWallet()
             return
@@ -261,20 +232,28 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                break
-//                self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
-//                    Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
-//                }
+                AppClipLoader.showLoader(self.view)
+                self.paymentStatus(.SUCCESS) { [weak self] in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+                            AppClipLoader.hideLoader()
+                            vc.venueName = self.venue?.name ?? ""
+                            vc.bookingId = self.bookingId
+                            vc.venueLogo = self.venue?.logo?.key ?? ""
+                            vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
+                            vc.selectedAppClipTickets = self.selectedAppClipTickets
+                            if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                                self.navigationController?.viewControllers = [selectVC, vc]
+                            }
+                        }
+                    }
+                }
             case .canceled:
                 self.isPaymentInitiated = false
-//                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
             case .failed:
                 self.isPaymentInitiated = false
-                let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.alertPopup("Alert", "Payment failed")
             }
         }
     }
@@ -330,10 +309,9 @@ extension CheckOutClipVC {
             }
         case .error:
             isPaymentInitiated = false
-            alertPopup("Alert", "Payment field")
+            alertPopup("Alert", "Payment failed")
         case .userCancellation:
             isPaymentInitiated = false
-//            alertPopup("Alert", "Payment interrupted")
         @unknown default:
             fatalError()
         }
@@ -436,7 +414,6 @@ extension CheckOutClipVC: UITextFieldDelegate {
         if isChangingFlag { return }
         if isValidNo {
             createBooking()
-            checkApplePay()
         } else {
             if textField.text?.replacingOccurrences(of: " ", with: "") != "" {
                 alertPopup("Alert", "Enter valid number")
