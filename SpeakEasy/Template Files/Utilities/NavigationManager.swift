@@ -150,29 +150,29 @@ final class Navigate {
     }
     
     func signInOptionVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(SignInOptionViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(SignInOptionViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func loginWithPhoneNumberVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithPhoneViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithPhoneViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithEmailViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithEmailViewController.self)
         vc.isFromSettings = isFromSettings
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func enterEmailPassVc(_ sender: UIViewController, email: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(EnterEmailPassViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(EnterEmailPassViewController.self)
         vc.email = email
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func resetPasswordVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(ResetPasswordViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(ResetPasswordViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -184,11 +184,6 @@ final class Navigate {
     
     func changePasswordVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(ChangePasswordViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func selectGenderVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectGenderViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

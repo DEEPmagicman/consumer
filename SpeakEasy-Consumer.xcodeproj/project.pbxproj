@@ -128,7 +128,7 @@
 		BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */; };
 		BD532A152941B20100B9E38C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A142941B20100B9E38C /* Constant.swift */; };
 		BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A162941BB9600B9E38C /* EnterNameViewController.swift */; };
-		BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0EA294836C900935275 /* Login2.storyboard */; };
+		BD7FA0EB294836C900935275 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0EA294836C900935275 /* Login.storyboard */; };
 		BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */; };
 		BD7FA0EF2948409C00935275 /* LoginWithPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */; };
 		BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */; };
@@ -140,7 +140,6 @@
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
 		BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */; };
-		BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */; };
 		BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */; };
 		BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */; };
 		BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A8295D52A200C3CBD9 /* Drink.swift */; };
@@ -730,7 +729,7 @@
 		BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberViewController.swift; sourceTree = "<group>"; };
 		BD532A142941B20100B9E38C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		BD532A162941BB9600B9E38C /* EnterNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNameViewController.swift; sourceTree = "<group>"; };
-		BD7FA0EA294836C900935275 /* Login2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login2.storyboard; sourceTree = "<group>"; };
+		BD7FA0EA294836C900935275 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
 		BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithPhoneViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithEmailViewController.swift; sourceTree = "<group>"; };
@@ -742,7 +741,6 @@
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
 		BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordViewController.swift; sourceTree = "<group>"; };
-		BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenderViewController.swift; sourceTree = "<group>"; };
 		BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfilePictureViewController.swift; sourceTree = "<group>"; };
 		BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibe.swift; sourceTree = "<group>"; };
 		BD92D2A8295D52A200C3CBD9 /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
@@ -1643,7 +1641,6 @@
 				BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */,
 				BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */,
 				BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */,
-				BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */,
 				BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */,
 				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
 				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
@@ -1671,17 +1668,17 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		BD7FA0E9294836AB00935275 /* Login2 */ = {
+		BD7FA0E9294836AB00935275 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0EA294836C900935275 /* Login2.storyboard */,
+				BD7FA0EA294836C900935275 /* Login.storyboard */,
 				BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */,
 				BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */,
 				BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */,
 				BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */,
 				BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */,
 			);
-			path = Login2;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		BD80B38B295EBC25005592A7 /* InstgramManager */ = {
@@ -2906,7 +2903,7 @@
 		E15D6B3F28BC39AB0076286C /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0E9294836AB00935275 /* Login2 */,
+				BD7FA0E9294836AB00935275 /* Login */,
 				BD3FB2482940637200BE7713 /* onBoarding */,
 				E15D6B4028BC39AB0076286C /* Splash */,
 				E15D6B4C28BC39AB0076286C /* Tutorials */,
@@ -3873,9 +3870,9 @@
 				CE48671B286F2CB000FD277E /* Frameworks */,
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
-				22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
 				CEBF8F7A2A31939900E0325D /* ShellScript */,
+				A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4080,7 +4077,7 @@
 				820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
 				E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */,
-				BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */,
+				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
 				E11F4B2F28C83564008D2E30 /* BookingRequests.xib in Resources */,
 				E16705B728CA6BB500644BF0 /* TicketRecipients.xib in Resources */,
 				82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */,
@@ -4175,23 +4172,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4212,6 +4192,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CEBF8F7A2A31939900E0325D /* ShellScript */ = {
@@ -4513,7 +4510,6 @@
 				E167058828CA6AB800644BF0 /* InviteFriendsHeaderView.swift in Sources */,
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
 				E1890C4728BD7EDD0000E406 /* StatusAndRewardsTVC.swift in Sources */,
-				BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */,
 				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
 				E1A9E76428C55D550081FB28 /* NotificationCitySelectionTVC.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
