@@ -267,7 +267,11 @@ extension APIBuilder {
     static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
 #if DEBUG
     static let QAWebURL = "https://speakeasy-stag-appclip.vercel.app/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    static let eventWebURL = "https://speakeasy-stage-web-consumer.vercel.app/event/%@"
+    static let venueWebURL = "https://speakeasy-stage-web-consumer.vercel.app/ticket?v=%@"
 #else
     static let QAWebURL = "https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    static let eventWebURL = "https://speakeasygo.com/event/%@"
+    static let venueWebURL = "https://speakeasygo.com/ticket?v=%@"
 #endif
 }

@@ -34,12 +34,16 @@ final class QRCodeVC: UIViewController {
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var pass: PKPass?
-//    private var gradient: CAGradientLayer?
+    private var gradient: CAGradientLayer?
+    private var venueImgHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        gradient = venueImg.setGradientColor()
+        gradient = venueImg.setGradientColor()
         getBooking(id: bookingId)
+        venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueImg.setGradientColor()
+        }
         setupData()
         addToWalletBtn.addPassButtonStyle = .blackOutline
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
@@ -53,11 +57,6 @@ final class QRCodeVC: UIViewController {
         eventDetailsLbl.isUserInteractionEnabled = true
         eventDetailsLbl.addGestureRecognizer(tap)
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        gradient = venueImg.setGradientColor()
-//    }
     
     private func setupData() {
         QRImg.image = generateQRCode(from: bookingId)
@@ -187,7 +186,7 @@ final class QRCodeVC: UIViewController {
 
      Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
-     Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+     Link to App: \(APIBuilder.appStoreURL)
      """
         case .singleTickedEvent, .tieredTickedEvent:
             msgText = """
@@ -197,7 +196,7 @@ final class QRCodeVC: UIViewController {
         Access your ticket here: \(String(format: APIBuilder.QAWebURL, bookingId))
 
         Download Speakeasy for easy entry at \(booking?.venueObject?.name ?? "Venue"):
-        https://apps.apple.com/us/app/speakeasy-go/id1642351956
+         \(APIBuilder.appStoreURL)
 
         Enjoy & live life LIVE!
         """
@@ -236,11 +235,3 @@ extension QRCodeVC: PKAddPassesViewControllerDelegate {
         }
     }
 }
-
-//extension QRCodeVC: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView.contentOffset.y <= 0 {
-//            gradient?.frame = venueImg.bounds
-//        }
-//    }
-//}

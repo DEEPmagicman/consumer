@@ -5,6 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>appclips:appclip.speakeasygo.com</string>
+		<string>appclips:speakeasygo.com</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>

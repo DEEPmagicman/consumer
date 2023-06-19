@@ -188,7 +188,7 @@ final class EventDetailVC: UIViewController {
         let msgText = """
  Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
 
- Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+ Link to event: \(String(format: APIBuilder.eventWebURL, eventId ?? ""))
  """
          Utility.main.shareSocialWith(text: msgText)
     }
