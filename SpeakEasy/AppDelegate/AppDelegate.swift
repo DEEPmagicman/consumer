@@ -27,7 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UserDefault.shared.isMvp = false
         FirebaseApp.configure()
         self.application = application
         
@@ -52,14 +51,9 @@ extension AppDelegate {
     }
 
     func changeRootViewController() {
-        // TODO: remove mvp flow
-        if UserDefault.shared.isMvp == true {
-            showMVP()
-            return
-        }
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
-                showHome(selectedIndex: 0)
+                setRootVC()
             } else {
                 showOnboarding(isNavigateToDetail: true)
             }
@@ -80,122 +74,9 @@ extension AppDelegate {
         }
     }
     
-    func showMVP() {
-        ReachabilityManager.shared.startMonitoring()
-        if isAppClipSet { return }
-        if UserDefault.shared.hasVisitedStartingPage {
-            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
-            let navigation = UINavigationController(rootViewController: vc)
-            navigation.navigationBar.isHidden = true
-            navigation.modalTransitionStyle = .crossDissolve
-            navigation.modalPresentationStyle = .overCurrentContext
-            self.window?.rootViewController = navigation
-            return
-        }
-        let controller = StoryboardAndXibManager.StoryBoard.home.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(MVPStartScreenVC.self)) as! MVPStartScreenVC
-        let navigation = UINavigationController(rootViewController: controller)
-        navigation.navigationBar.isHidden = true
-        navigation.modalTransitionStyle = .crossDissolve
-        navigation.modalPresentationStyle = .overCurrentContext
-        self.window?.rootViewController = navigation
-    }
-
-//    func showLogin() {
-//        let controller = LogIn()
-//        controller.isHeroEnabled = true
-//        controller.modalTransitionStyle = .crossDissolve
-//        controller.modalPresentationStyle = .overCurrentContext
-//        self.window?.rootViewController = controller
-//    }
-
-//    public func showHome(selectedIndex: Int) {
-//        let tabBarController = UITabBarController()
-//        let home = Home()
-//        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
-//        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
-//        let homeNavigation = UINavigationController(rootViewController: home)
-//        homeNavigation.navigationBar.isHidden = true
-//
-//        let bookingsAndInvites = BookingsAndInvites()
-//        bookingsAndInvites.tabBarItem.image               = UIImage(named :"BookingsAndInvites")?.withRenderingMode(.alwaysOriginal)
-//        bookingsAndInvites.tabBarItem.selectedImage       = UIImage(named :"BookingsAndInvitesSelected")?.withRenderingMode(.alwaysOriginal)
-//        let bookingsAndInvitesNavigation = UINavigationController(rootViewController: bookingsAndInvites)
-//        bookingsAndInvitesNavigation.navigationBar.isHidden = true
-//
-//        let accessPass = Wallet()
-//        accessPass.tabBarItem.image               = UIImage(named :"AccessPass")?.withRenderingMode(.alwaysOriginal)
-//        accessPass.tabBarItem.selectedImage       = UIImage(named :"AccessPassSelected")?.withRenderingMode(.alwaysOriginal)
-//        let accessPassNavigation = UINavigationController(rootViewController: accessPass)
-//        accessPassNavigation.navigationBar.isHidden = true
-//
-//        let statusAndRewards = StatusAndRewards()
-//        statusAndRewards.tabBarItem.image         = UIImage(named :"StatusAndRewards")?.withRenderingMode(.alwaysOriginal)
-//        statusAndRewards.tabBarItem.selectedImage = UIImage(named :"StatusAndRewardsSelected")?.withRenderingMode(.alwaysOriginal)
-//        let statusAndRewardsNavigation = UINavigationController(rootViewController: statusAndRewards)
-//        statusAndRewardsNavigation.navigationBar.isHidden = true
-//
-//        let myAccount = MyAccount()
-//        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
-//        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
-//        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
-//        myAccountNavigation.navigationBar.isHidden = true
-//
-//        tabBarController.viewControllers = [homeNavigation,bookingsAndInvitesNavigation,accessPassNavigation,statusAndRewardsNavigation,myAccountNavigation]
-//
-//        tabBarController.selectedIndex = selectedIndex
-//
-//        tabBarController.tabBar.isTranslucent = false
-//
-//        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-//        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
-//        tabBarControllerNavigation.navigationBar.isHidden = true
-//        self.window?.rootViewController = tabBarControllerNavigation
-//    }
-    
-    public func showHome(selectedIndex: Int, isAppClipNavigation: Bool = false) {
-        let tabBarController = UITabBarController()
-        ReachabilityManager.shared.startMonitoring()
-        let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
-        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
-        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
-        let homeNavigation = UINavigationController(rootViewController: home)
-        homeNavigation.navigationBar.isHidden = true
-        var myAccount = UIViewController()
-        if UserDefault.shared.isGuest == true {
-            myAccount = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPStartScreenVC.self)
-        } else {
-            myAccount = StoryboardAndXibManager.StoryBoard.account.instantiateVC(AccountVC.self)
-        }
-        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
-        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
-        let myAccountNavigation = UINavigationController(rootViewController: myAccount)
-        myAccountNavigation.navigationBar.isHidden = true
-
-        tabBarController.viewControllers = [homeNavigation,myAccountNavigation]
-        
-        tabBarController.selectedIndex = selectedIndex
-        
-        tabBarController.tabBar.isTranslucent = false
-        
-        tabBarController.tabBarItem.imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-        let tabBarControllerNavigation = UINavigationController(rootViewController: tabBarController)
-        tabBarControllerNavigation.navigationBar.isHidden = true
-        self.window?.rootViewController = tabBarControllerNavigation
-        
-        if isAppClipNavigation {
-            if venueUniqueId != "" {
-                let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
-                vc.venueUniqueId = venueUniqueId
-                vc.isFromAppClip = true
-                isAppClipSet = true
-                home.navigationController?.pushViewController(vc, animated: false)
-            }
-        }
-    }
-    
     private func handleForURL(_ url: URL) {
         if url.absoluteString.contains("event") {
-            eventNavigation(eventId: url.lastPathComponent)
+            setRootVC(.event, id: url.lastPathComponent)
             return
         }
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
@@ -203,17 +84,17 @@ extension AppDelegate {
         }
         if let venue = queryItems.first(where: { $0.name == "v" })?.value {
             venueUniqueId = venue
-            showHome(selectedIndex: 0, isAppClipNavigation: true)
+            setRootVC(.venue)
             return
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
             venueUniqueId = venue
-            showHome(selectedIndex: 0, isAppClipNavigation: true)
+            setRootVC(.venue)
             return
         }
     }
-    
-    private func eventNavigation(eventId: String) {
+
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "") {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -243,8 +124,21 @@ extension AppDelegate {
         tabBarControllerNavigation.navigationBar.isHidden = true
         self.window?.rootViewController = tabBarControllerNavigation
         
-        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
-        vc.eventId = eventId
-        homeNavigation.navigationController?.pushViewController(vc, animated: false)
+        switch forType {
+        case .appLaunch:
+            break
+        case .venue:
+            if venueUniqueId != "" {
+                let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
+                vc.venueUniqueId = venueUniqueId
+                vc.isFromAppClip = true
+                isAppClipSet = true
+                home.navigationController?.pushViewController(vc, animated: false)
+            }
+        case .event:
+            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
+            vc.eventId = id
+            homeNavigation.navigationController?.pushViewController(vc, animated: false)
+        }
     }
 }

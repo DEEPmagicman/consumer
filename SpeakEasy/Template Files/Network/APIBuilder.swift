@@ -261,17 +261,16 @@ extension String {
 }
 
 extension APIBuilder {
-    static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
-    static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
-    static let supportURL = "https://speakeasygo.com/support"
-    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
 #if DEBUG
-    static let QAWebURL = "https://speakeasy-stag-appclip.vercel.app/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
-    static let eventWebURL = "https://speakeasy-stage-web-consumer.vercel.app/event/%@"
-    static let venueWebURL = "https://speakeasy-stage-web-consumer.vercel.app/ticket?v=%@"
+    static let webBaseURL = "https://speakeasygo.com"
 #else
-    static let QAWebURL = "https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
-    static let eventWebURL = "https://speakeasygo.com/event/%@"
-    static let venueWebURL = "https://speakeasygo.com/ticket?v=%@"
+    static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
 #endif
+    static let privacyConsumerURL = "\(webBaseURL)/privacy-consumer"
+    static let termsConsumerURL = "\(webBaseURL)/terms-consumer"
+    static let supportURL = "\(webBaseURL)/support"
+    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
+    static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    static let eventWebURL = "\(webBaseURL)/event/%@"
+    static let venueWebURL = "\(webBaseURL)/ticket?v=%@"
 }

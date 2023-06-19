@@ -14,9 +14,7 @@ final class UserDefault: NSObject {
         case userKey = "user"
         case isLoggedInKey = "isLoggedIn"
         case isGuest = "isGuest"
-        case isMvp = "isMvp"
-        case hasVisitedStartingPage = "hasVisitedStartingPage"
-        case localCity = "Surat"
+        case localCity = "localCity"
         case defaultCitySelected = "defaultCitySelected"
         case isNotificationOnKey = "isNotificationOn"
     }
@@ -69,22 +67,6 @@ final class UserDefault: NSObject {
             return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool ?? true
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
-        }
-    }
-    
-    var isMvp: Bool? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isMvp.rawValue) as? Bool
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isMvp.rawValue)
-        }
-    }
-    
-    var hasVisitedStartingPage: Bool {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.hasVisitedStartingPage.rawValue) as? Bool) ?? false
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasVisitedStartingPage.rawValue)
         }
     }
     

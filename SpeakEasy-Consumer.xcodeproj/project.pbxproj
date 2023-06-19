@@ -540,8 +540,6 @@
 		E1A9E76E28C55D550081FB28 /* HeatMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E70F28C55D540081FB28 /* HeatMap.xib */; };
 		E1A9E79628C560BC0081FB28 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E79428C560BC0081FB28 /* Search.swift */; };
 		E1A9E79728C560BC0081FB28 /* Search.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E79528C560BC0081FB28 /* Search.xib */; };
-		E1A9E79B28C56F6D0081FB28 /* LogIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E79928C56F6D0081FB28 /* LogIn.swift */; };
-		E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E79A28C56F6D0081FB28 /* LogIn.xib */; };
 		E1A9E7C128C56FD10081FB28 /* SearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E7A028C56FD10081FB28 /* SearchTVC.swift */; };
 		E1A9E7C228C56FD10081FB28 /* SearchTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E7A128C56FD10081FB28 /* SearchTVC.xib */; };
 		E1A9E7C328C56FD10081FB28 /* SearchAndAddCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E7A328C56FD10081FB28 /* SearchAndAddCVC.xib */; };
@@ -1142,8 +1140,6 @@
 		E1A9E70F28C55D540081FB28 /* HeatMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeatMap.xib; sourceTree = "<group>"; };
 		E1A9E79428C560BC0081FB28 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		E1A9E79528C560BC0081FB28 /* Search.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Search.xib; sourceTree = "<group>"; };
-		E1A9E79928C56F6D0081FB28 /* LogIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogIn.swift; sourceTree = "<group>"; };
-		E1A9E79A28C56F6D0081FB28 /* LogIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogIn.xib; sourceTree = "<group>"; };
 		E1A9E7A028C56FD10081FB28 /* SearchTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTVC.swift; sourceTree = "<group>"; };
 		E1A9E7A128C56FD10081FB28 /* SearchTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchTVC.xib; sourceTree = "<group>"; };
 		E1A9E7A328C56FD10081FB28 /* SearchAndAddCVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAndAddCVC.xib; sourceTree = "<group>"; };
@@ -2913,7 +2909,6 @@
 				BD7FA0E9294836AB00935275 /* Login2 */,
 				BD3FB2482940637200BE7713 /* onBoarding */,
 				E15D6B4028BC39AB0076286C /* Splash */,
-				E1A9E79828C56F6D0081FB28 /* LogIn */,
 				E15D6B4C28BC39AB0076286C /* Tutorials */,
 			);
 			path = Login;
@@ -3636,15 +3631,6 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
-		E1A9E79828C56F6D0081FB28 /* LogIn */ = {
-			isa = PBXGroup;
-			children = (
-				E1A9E79928C56F6D0081FB28 /* LogIn.swift */,
-				E1A9E79A28C56F6D0081FB28 /* LogIn.xib */,
-			);
-			path = LogIn;
-			sourceTree = "<group>";
-		};
 		E1A9E79D28C56FD10081FB28 /* Friends */ = {
 			isa = PBXGroup;
 			children = (
@@ -4053,7 +4039,6 @@
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				E17DC85728C6C16500244C4F /* Wallet.xib in Resources */,
-				E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */,
 				E1A9E7CE28C56FD10081FB28 /* FriendRequest.xib in Resources */,
 				E17DC85928C6C16500244C4F /* NFTCVC.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
@@ -4629,7 +4614,6 @@
 				CE4867B8286F358800FD277E /* Dictionary+Extension.swift in Sources */,
 				E1A9E75D28C55D550081FB28 /* VenueTVC.swift in Sources */,
 				E11F4C0A28C835F3008D2E30 /* BookingStatusTVC.swift in Sources */,
-				E1A9E79B28C56F6D0081FB28 /* LogIn.swift in Sources */,
 				BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
 				E16705B928CA6BB500644BF0 /* FriendsCVC.swift in Sources */,

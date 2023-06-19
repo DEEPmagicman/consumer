@@ -139,10 +139,16 @@ final class EventDetailVC: UIViewController {
             zeroCaseView(isHidden: false)
             return
         }
+        if event == nil {
+            view.alpha = 0
+            Loader.show()
+        }
         EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventDetail in
             guard let self = self else {
                 return
             }
+            self.view.alpha = 1
+            Loader.hide()
             if eventDetail == nil {
                 self.zeroCaseView(isHidden: false)
             } else {

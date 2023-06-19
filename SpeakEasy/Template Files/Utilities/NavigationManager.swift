@@ -8,6 +8,12 @@
 import UIKit
 import NBBottomSheet
 
+enum NavigationDestination {
+    case appLaunch
+    case venue
+    case event
+}
+
 final class Navigate {
     
    static let to = Navigate()
@@ -24,11 +30,6 @@ final class Navigate {
     
     func back(_ sender: UIViewController) {
         sender.navigationController?.popViewController(animated: true)
-    }
-    
-    func startScreenViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(StartScreenViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
@@ -199,11 +200,6 @@ final class Navigate {
     func welcomeItroduceVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeItroduceViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func MVPVenueListViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
-        sender.navigationController?.viewControllers = [vc]
     }
     
     func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String) {
