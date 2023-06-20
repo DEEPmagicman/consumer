@@ -29,6 +29,7 @@ struct Booking: Codable {
     var bookingEndTime: String?
     var paymentIntent: String?
 //    var additionalSpent: Any
+    var isCompedTicket: Bool?
     var paymentStatus: String
 //    var bookingExpireDateTime: String
 //    var qrScannedDateTime: Any
@@ -77,6 +78,7 @@ struct Booking: Codable {
         case bookingEndTime = "bookingEndTime"
         case paymentIntent = "paymentIntent"
 //        case additionalSpent = "additionalSpent"
+        case isCompedTicket = "isCompedTicket"
         case paymentStatus = "paymentStatus"
 //        case bookingExpireDateTime = "bookingExpireDateTime"
 //        case qrScannedDateTime = "qrScannedDateTime"
@@ -113,6 +115,7 @@ struct Booking: Codable {
         try container.encode(bookingEndTime, forKey: .bookingEndTime)
         try container.encode(paymentIntent, forKey: .paymentIntent)
         // TODO: Add code for encoding `additionalSpent`, It was null at the time of model creation.
+        try container.encode(isCompedTicket, forKey: .isCompedTicket)
         try container.encode(paymentStatus, forKey: .paymentStatus)
 //        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
         // TODO: Add code for encoding `qrScannedDateTime`, It was null at the time of model creation.

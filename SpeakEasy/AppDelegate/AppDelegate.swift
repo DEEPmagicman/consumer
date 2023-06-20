@@ -136,9 +136,9 @@ extension AppDelegate {
                 home.navigationController?.pushViewController(vc, animated: false)
             }
         case .event:
-            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
-            vc.eventId = id
-            homeNavigation.navigationController?.pushViewController(vc, animated: false)
+            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil)
+        case .inviteLink:
+            Navigate.to.inviteVC(home, inviteId: "INL-W72VQ2")
         }
     }
 }

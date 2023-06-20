@@ -12,6 +12,7 @@ enum NavigationDestination {
     case appLaunch
     case venue
     case event
+    case inviteLink
 }
 
 final class Navigate {
@@ -222,6 +223,12 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func inviteVC(_ sender: UIViewController, inviteId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(InviteLinkVC.self)
+        vc.inviteId = inviteId
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullScreenImg(_ sender: UIViewController, imgURL: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(FullScreenImgVC.self)
         vc.imgURL = imgURL
@@ -379,11 +386,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String) {
-        let vc = EventBookingDetails()
-        vc.eventId = eventId
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
+//    func eventDetail(_ sender: UIViewController, eventId: String) {
+//        let vc = EventBookingDetails()
+//        vc.eventId = eventId
+//        sender.navigationController?.pushViewController(vc, animated: true)
+//    }
     
     func homeCitySelection(_ sender: UIViewController) {
         let vc = HomeCitySelectionVC()

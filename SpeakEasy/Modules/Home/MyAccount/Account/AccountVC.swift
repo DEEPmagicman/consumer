@@ -180,7 +180,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         case 0:
             Navigate.to.QRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
         case 1:
-            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id)
+            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id, venueDetail: nil, event: nil)
         default:
             break
         }

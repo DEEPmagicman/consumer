@@ -271,6 +271,9 @@
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
+		CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F942A4169EA0025421D /* InviteLinkVC.swift */; };
+		CE677F972A41720F0025421D /* InvitePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F962A41720F0025421D /* InvitePresenter.swift */; };
+		CE677F9A2A4177310025421D /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F992A4177310025421D /* Invite.swift */; };
 		CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* DetailTVC.swift */; };
 		CE6813D729DE976400B41418 /* DetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* DetailTVC.xib */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
@@ -871,6 +874,9 @@
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
+		CE677F942A4169EA0025421D /* InviteLinkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkVC.swift; sourceTree = "<group>"; };
+		CE677F962A41720F0025421D /* InvitePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitePresenter.swift; sourceTree = "<group>"; };
+		CE677F992A4177310025421D /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		CE6813D429DE976400B41418 /* DetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTVC.swift; sourceTree = "<group>"; };
 		CE6813D529DE976400B41418 /* DetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTVC.xib; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
@@ -1325,6 +1331,7 @@
 				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
+				CE677F962A41720F0025421D /* InvitePresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -2163,6 +2170,7 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CE677F982A4177220025421D /* Invite */,
 				CE0F423B29FBE69A0082723B /* Booking */,
 				828E9A982983CF3B000F2736 /* BottleMenuList */,
 				29868364297567FB00CB827B /* EventModels */,
@@ -2193,6 +2201,22 @@
 				CE65D67A298D24B800DE1E8A /* ClipVenue.swift */,
 			);
 			path = APPClipModal;
+			sourceTree = "<group>";
+		};
+		CE677F932A4169C70025421D /* InviteLink */ = {
+			isa = PBXGroup;
+			children = (
+				CE677F942A4169EA0025421D /* InviteLinkVC.swift */,
+			);
+			path = InviteLink;
+			sourceTree = "<group>";
+		};
+		CE677F982A4177220025421D /* Invite */ = {
+			isa = PBXGroup;
+			children = (
+				CE677F992A4177310025421D /* Invite.swift */,
+			);
+			path = Invite;
 			sourceTree = "<group>";
 		};
 		CE6813D329DE966600B41418 /* DetailTVC */ = {
@@ -3466,6 +3490,7 @@
 		E1A9E6DA28C55D540081FB28 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CE677F932A4169C70025421D /* InviteLink */,
 				CE2605F029E55AA400C46EFA /* Event */,
 				CEAE5CD829E430D000CB20E5 /* PreSold */,
 				84248DA028D3D38F00A6E260 /* AllVenues */,
@@ -4311,6 +4336,7 @@
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,
 				BDCC5C2E294739A600595436 /* ConnectSocialMediaViewController.swift in Sources */,
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
+				CE677F9A2A4177310025421D /* Invite.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
 				BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */,
 				CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */,
@@ -4396,6 +4422,7 @@
 				E16705A228CA6B3800644BF0 /* DressCodeTVC.swift in Sources */,
 				CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */,
 				E167059328CA6AB800644BF0 /* TableBookingInviteFriendsTVC.swift in Sources */,
+				CE677F972A41720F0025421D /* InvitePresenter.swift in Sources */,
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */,
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
@@ -4588,6 +4615,7 @@
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
 				CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */,
+				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
 				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,

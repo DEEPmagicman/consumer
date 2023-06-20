@@ -174,7 +174,7 @@ extension AllEvents: UICollectionViewDelegate {
                 //TO DO handle collectionview tab change
             }
         } else {
-            Navigate.to.eventDetail(self, eventId: eventList[indexPath.row].id )
+//            Navigate.to.eventDetail(self, eventId: eventList[indexPath.row].id )
         }
     }
 }

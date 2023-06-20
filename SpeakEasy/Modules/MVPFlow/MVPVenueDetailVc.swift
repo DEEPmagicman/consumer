@@ -58,6 +58,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
     private var todaysEventHeightObservation: NSKeyValueObservation?
+    private var venueImgHeightObservation: NSKeyValueObservation?
     private var from = 0
     private var hasMore = false
     private var totalPrice: Int {
@@ -85,6 +86,9 @@ final class MVPVenueDetailVc: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gradient = venueBgImg.setGradientColor()
+        venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueBgImg.setGradientColor()
+        }
         headerVenueName.isHidden = true
         headerView.backgroundColor = .clear
         scrollView.delegate = self
@@ -119,11 +123,6 @@ final class MVPVenueDetailVc: UIViewController {
             self.todaysEventTableView.layoutIfNeeded()
         }
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        gradient = venueBgImg.setGradientColor()
-//    }
     
     private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {
@@ -486,9 +485,6 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = false
             headerView.backgroundColor = .black
         } else {
-//            if scrollView.contentOffset.y <= 0 {
-//                gradient?.frame = venueBgImg.bounds
-//            }
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }

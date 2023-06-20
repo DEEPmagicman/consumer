@@ -66,8 +66,14 @@ final class QRCodeVC: UIViewController {
                 venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
                 venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
                 titleLbl.text = booking.venueObject?.name
-                dateLbl.isHidden = true
-                venueNameLbl.isHidden = true
+                if booking.isCompedTicket == true {
+                    dateLbl.isHidden = false
+                    venueNameLbl.isHidden = false
+                    dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                } else {
+                    dateLbl.isHidden = true
+                    venueNameLbl.isHidden = true
+                }
                 eventDetailsLbl.isHidden = true
                 venueImgHeightConstraint.constant = 320
                 QRToImgBottomConstraint.constant = -100
@@ -216,8 +222,13 @@ extension QRCodeVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
-        cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+        if booking?.isCompedTicket == true {
+            cell.titleLbl.text = Constant.String.compedFreeTicket
+            cell.subTitleLbl.text = Constant.String.enjoyYourFreeTicket
+        } else {
+            cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
+            cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+        }
         cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
