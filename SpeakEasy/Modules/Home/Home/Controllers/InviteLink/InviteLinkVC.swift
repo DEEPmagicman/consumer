@@ -74,6 +74,8 @@ final class InviteLinkVC: UIViewController {
         dateLbl.text = inviteObj?.date.convertDateFormat(from: .YYYYMMDD, to: .EEEMMMD)
         if let hours = inviteObj?.venue.openHours.first(where: { $0.day.capitalized == inviteObj?.date.convertDateFormat(from: .YYYYMMDD, to: .EEEE) }) {
             timingLbl.text = String(format: Constant.String.dotDoorsOpenAt, "\(hours.from.convertDateFormat(from: .HHmmss, to: .hmm_a, useDayLightSavingTime: true, customTimeZone: inviteObj?.venue.useTimezone ?? ""))")
+        } else {
+            timingLbl.text = ""
         }
         updateContinueBtn(show: true)
     }

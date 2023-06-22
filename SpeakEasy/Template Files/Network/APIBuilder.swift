@@ -272,9 +272,9 @@ extension String {
 
 extension APIBuilder {
 #if DEBUG
-    static let webBaseURL = "https://speakeasygo.com"
-#else
     static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
+#else
+    static let webBaseURL = "https://speakeasygo.com"
 #endif
     static let privacyConsumerURL = "\(webBaseURL)/privacy-consumer"
     static let termsConsumerURL = "\(webBaseURL)/terms-consumer"

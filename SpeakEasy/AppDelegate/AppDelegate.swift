@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    private var venueUniqueId = ""
     private var isAppClipSet = false
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
@@ -83,13 +82,15 @@ extension AppDelegate {
             return
         }
         if let venue = queryItems.first(where: { $0.name == "v" })?.value {
-            venueUniqueId = venue
-            setRootVC(.venue)
+            setRootVC(.venue, id: venue)
             return
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
-            venueUniqueId = venue
-            setRootVC(.venue)
+            setRootVC(.venue, id: venue)
+            return
+        }
+        if let inviteId = queryItems.first(where: { $0.name == "L" })?.value {
+            setRootVC(.inviteLink, id: inviteId)
             return
         }
     }
@@ -128,17 +129,15 @@ extension AppDelegate {
         case .appLaunch:
             break
         case .venue:
-            if venueUniqueId != "" {
-                let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
-                vc.venueUniqueId = venueUniqueId
-                vc.isFromAppClip = true
-                isAppClipSet = true
-                home.navigationController?.pushViewController(vc, animated: false)
-            }
+            let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
+            vc.venueUniqueId = id
+            vc.isFromAppClip = true
+            isAppClipSet = true
+            home.navigationController?.pushViewController(vc, animated: false)
         case .event:
             Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil)
         case .inviteLink:
-            Navigate.to.inviteVC(home, inviteId: "INL-W72VQ2")
+            Navigate.to.inviteVC(home, inviteId: id)
         }
     }
 }
