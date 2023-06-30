@@ -65,12 +65,13 @@ final class QRCodeVC: UIViewController {
             case .appClip:
                 venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
                 venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
-                titleLbl.text = booking.venueObject?.name
-                if booking.isCompedTicket == true {
+                if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
+                    titleLbl.text = inviteLink.name
                     dateLbl.isHidden = false
                     venueNameLbl.isHidden = false
-                    dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
                 } else {
+                    titleLbl.text = booking.venueObject?.name
                     dateLbl.isHidden = true
                     venueNameLbl.isHidden = true
                 }

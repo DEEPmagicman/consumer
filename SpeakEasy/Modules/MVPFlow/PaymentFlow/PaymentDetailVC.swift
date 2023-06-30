@@ -38,8 +38,13 @@ final class PaymentDetailVC: UIViewController {
     private func setUpData() {
         if let booking = booking {
             if booking.eventId == nil {
-                titleLbl.text = Constant.String.liveCoverTicket
-                dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
+                    titleLbl.text = inviteLink.name
+                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                } else {
+                    titleLbl.text = Constant.String.liveCoverTicket
+                    dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                }
                 mainImg.image = Constant.Icon.liveCover
             } else {
                 titleLbl.text = booking.event?.title ?? "Untitle Event"

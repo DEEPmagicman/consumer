@@ -134,9 +134,14 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
         if indexPath.section == 0 {
             if bookings[indexPath.row].eventId == nil {
-                cell.nameLbl.text = Constant.String.liveCoverTicket
+                if bookings[indexPath.row].isCompedTicket == true, let inviteLink = bookings[indexPath.row].inviteLink {
+                    cell.nameLbl.text = inviteLink.name
+                    cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                } else {
+                    cell.nameLbl.text = Constant.String.liveCoverTicket
+                    cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                }
                 cell.upcomingImage.image = Constant.Icon.liveCover
-                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
             } else {
                 cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
                 cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")

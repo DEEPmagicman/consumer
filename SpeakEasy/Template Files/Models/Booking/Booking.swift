@@ -31,7 +31,7 @@ struct Booking: Codable {
 //    var additionalSpent: Any
     var isCompedTicket: Bool?
     var paymentStatus: String
-//    var bookingExpireDateTime: String
+    var bookingExpireDateTime: String?
 //    var qrScannedDateTime: Any
     var createdAt: String
     var updatedAt: String
@@ -42,6 +42,7 @@ struct Booking: Codable {
     var bookingHasItem: [BookingHasItem]
     var event: Event?
     var ticketDetails: [TicketDetails]?
+    var inviteLink: InviteLink?
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
         var tickets = [BookingHasItem]()
@@ -80,7 +81,7 @@ struct Booking: Codable {
 //        case additionalSpent = "additionalSpent"
         case isCompedTicket = "isCompedTicket"
         case paymentStatus = "paymentStatus"
-//        case bookingExpireDateTime = "bookingExpireDateTime"
+        case bookingExpireDateTime = "bookingExpireDateTime"
 //        case qrScannedDateTime = "qrScannedDateTime"
         case createdAt = "createdAt"
         case updatedAt = "updatedAt"
@@ -91,6 +92,7 @@ struct Booking: Codable {
         case bookingHasItem = "bookingHasItem"
         case event = "event"
         case ticketDetails = "ticketDetails"
+        case inviteLink = "InviteLink"
     }
 
     func encode(to encoder: Encoder) throws {
@@ -117,7 +119,7 @@ struct Booking: Codable {
         // TODO: Add code for encoding `additionalSpent`, It was null at the time of model creation.
         try container.encode(isCompedTicket, forKey: .isCompedTicket)
         try container.encode(paymentStatus, forKey: .paymentStatus)
-//        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
+        try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
         // TODO: Add code for encoding `qrScannedDateTime`, It was null at the time of model creation.
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
@@ -184,5 +186,21 @@ struct TicketDetails: Codable {
         try container.encode(ticketId, forKey: .ticketId)
         try container.encode(ticketDescription, forKey: .ticketDescription)
         try container.encode(quantity, forKey: .quantity)
+    }
+}
+
+struct InviteLink: Codable {
+    
+    var id: String
+    var uniqueId: String
+    var date: String
+    var name: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(uniqueId, forKey: .uniqueId)
+        try container.encode(date, forKey: .date)
+        try container.encode(name, forKey: .name)
     }
 }
