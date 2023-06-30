@@ -47,7 +47,7 @@ final class AccountVC: UIViewController {
     }
     
     private func getTickets() {
-        PaymentPresenter.getTickets { [weak self] isSuccess, errMsg, bookings in
+        PaymentPresenter.getUpcomingTickets { [weak self] isSuccess, errMsg, bookings in
             guard let self = self else { return }
             self.bookings = bookings
             self.listTableView.reloadData()

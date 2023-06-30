@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    private var isAppClipSet = false
+    var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         guard let incomingURL = userActivity.webpageURL else {
@@ -127,17 +127,33 @@ extension AppDelegate {
         
         switch forType {
         case .appLaunch:
-            break
+            if UserDefault.shared.isGuest == false {
+                setGuestUserLastNavigation(home)
+            }
         case .venue:
             let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
             vc.venueUniqueId = id
             vc.isFromAppClip = true
-            isAppClipSet = true
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
             Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil)
         case .inviteLink:
-            Navigate.to.inviteVC(home, inviteId: id)
+            inviteLinkNav(home, id: id)
+        }
+    }
+    
+    private func setGuestUserLastNavigation(_ sender: UIViewController) {
+        if guestUserLastNavigation.0 == .inviteLink {
+            inviteLinkNav(sender, id: guestUserLastNavigation.1)
+        }
+    }
+
+    private func inviteLinkNav(_ sender: UIViewController, id: String) {
+        Navigate.to.inviteVC(sender, inviteId: id)
+        if UserDefault.shared.isGuest == true {
+            guestUserLastNavigation = (.inviteLink, id)
+        } else {
+            guestUserLastNavigation = (.appLaunch, "")
         }
     }
 }

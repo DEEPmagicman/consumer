@@ -43,7 +43,6 @@ struct APIBuilder {
     static private let changePassword = "/change-password"
     static private let appClip = "/appclip"
     static private let appClipVenue = "/appClipVenue?include=appClipTicket"
-    static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -51,8 +50,9 @@ struct APIBuilder {
     static private let appleWallet = "/apple-wallet"
     static private let method = "/method"
     static private let ticketBooking = "/ticket-booking"
-    static private let pastTickets = "/past-tickets"
-    static private let consumerTickets = "/consumer-tickets"
+    static private let past = "/past"
+    static private let upcoming = "/upcoming"
+    static private let booking = "/booking"
     static private let recommendedEvents = "/recommended-events"
     static private let deleteAccount = "/delete-account"
     static private let inviteLink = "/invite-link"
@@ -212,7 +212,7 @@ struct APIBuilder {
     }
     
     static func getBookingURL(_ bookingId: String) -> String {
-        baseURL + appClipUser + "/\(bookingId)"
+        baseURL + route + booking + "/\(bookingId)"
     }
     
     static var createCoverBookingURL: String {
@@ -224,11 +224,11 @@ struct APIBuilder {
     }
     
     static var pastTicketsURL: String {
-        baseURL + route + event + pastTickets
+        baseURL + route + booking + past
     }
     
-    static var consumerTicketsURL: String {
-        baseURL + route + event + consumerTickets
+    static var upcomingTicketsURL: String {
+        baseURL + route + booking + upcoming
     }
     
     static func addPaymentURL(_ id: String) -> String {

@@ -126,7 +126,7 @@ final class InviteLinkVC: UIViewController {
     
     @IBAction private func onClickContinue(_ sender: Any) {
         if UserDefault.shared.isGuest == true {
-            Navigate.to.loginMandatory(self)
+            Navigate.to.loginMandatory(self, guestUserLastNavigation: (.inviteLink, inviteId))
             return
         }
         Loader.show()

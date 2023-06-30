@@ -12,11 +12,19 @@ final class MVPStartScreenVC: UIViewController {
     
     @IBOutlet weak var bgImageView: UIImageView!
     
+    var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guestUserLastNavigation = (.appLaunch, "")
+    }
 
     @IBAction func onClickBtn(_ sender: Any) {
+        AppDelegate.shared.guestUserLastNavigation = guestUserLastNavigation
         UserDefault.shared.emptyData()
         AppDelegate.shared.changeRootViewController()
     }

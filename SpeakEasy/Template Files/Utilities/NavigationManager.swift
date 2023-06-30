@@ -270,8 +270,11 @@ final class Navigate {
         sender.present(vc, animated: true)
     }
     
-    func loginMandatory(_ sender: UIViewController) {
+    func loginMandatory(_ sender: UIViewController, guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")) {
         sender.tabBarController?.selectedIndex = 1
+        if let vc = (sender.tabBarController?.viewControllers?.last as? UINavigationController)?.viewControllers.first(where: { $0 is MVPStartScreenVC }) as? MVPStartScreenVC {
+            vc.guestUserLastNavigation = guestUserLastNavigation
+        }
     }
     
     func settingsVc(_ sender: UIViewController) {
