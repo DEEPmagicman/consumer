@@ -191,11 +191,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = """
- Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
-
- Link to event: \(String(format: APIBuilder.eventWebURL, eventId ?? ""))
- """
+        let msgText = "Join me for \(event?.title ?? "Event"): \(String(format: APIBuilder.eventWebURL, eventId ?? "")). Register or buy tickets on Speakeasy \(APIBuilder.appStoreURL)"
          Utility.main.shareSocialWith(text: msgText)
     }
     
