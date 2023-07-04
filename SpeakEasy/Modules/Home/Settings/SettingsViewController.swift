@@ -61,7 +61,14 @@ final class SettingsViewController: UIViewController {
     }
     
     @IBAction func onClickLogOut(_ sender: Any) {
-        UserDefault.shared.emptyData()
-        AppDelegate.shared.changeRootViewController()
+        let okAction = UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            UserDefault.shared.emptyData()
+            AppDelegate.shared.changeRootViewController()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            _ in
+        }
+        Alert.showAlertSheet(style: .alert, title: "", message: "Are you sure you want to log out?", actions: [okAction, cancelAction])
     }
 }
