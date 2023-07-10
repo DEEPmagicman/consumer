@@ -59,7 +59,7 @@ class AllEvents: BaseController {
     }
     
     @IBAction func onBtnChangeLocation(_ sender: UIButton) {
-        self.navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
+//        self.navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
     }
     @IBAction func onBtnSearch(_ sender: UIButton) {
         self.navigationController?.pushViewController(Search(), animated: true)
@@ -174,7 +174,7 @@ extension AllEvents: UICollectionViewDelegate {
                 //TO DO handle collectionview tab change
             }
         } else {
-            Navigate.to.eventDetail(self, eventId: eventList[indexPath.row].id )
+//            Navigate.to.eventDetail(self, eventId: eventList[indexPath.row].id )
         }
     }
 }

@@ -57,7 +57,7 @@ class AllVenues: BaseController {
 
     
     @IBAction func onBtnChangeLocation(_ sender: UIButton) {
-        self.navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
+//        self.navigationController?.pushViewController(HomeCitySelectionVC(), animated: true)
     }
     @IBAction func onBtnSearch(_ sender: UIButton) {
         self.navigationController?.pushViewController(Search(), animated: true)

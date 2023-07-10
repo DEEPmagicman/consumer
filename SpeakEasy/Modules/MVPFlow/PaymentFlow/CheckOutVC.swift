@@ -78,7 +78,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             purchaseImg.image = Constant.Icon.liveCover
         case .singleTickedEvent:
             titleLbl.text = event?.title ?? "Untitle Event"
-            dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+            dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         case .tieredTickedEvent:
             break

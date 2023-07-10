@@ -8,6 +8,13 @@
 import UIKit
 import NBBottomSheet
 
+enum NavigationDestination {
+    case appLaunch
+    case venue
+    case event
+    case inviteLink
+}
+
 final class Navigate {
     
    static let to = Navigate()
@@ -24,11 +31,6 @@ final class Navigate {
     
     func back(_ sender: UIViewController) {
         sender.navigationController?.popViewController(animated: true)
-    }
-    
-    func startScreenViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(StartScreenViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
@@ -149,29 +151,29 @@ final class Navigate {
     }
     
     func signInOptionVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(SignInOptionViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(SignInOptionViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func loginWithPhoneNumberVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithPhoneViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithPhoneViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(LoginWithEmailViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithEmailViewController.self)
         vc.isFromSettings = isFromSettings
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func enterEmailPassVc(_ sender: UIViewController, email: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(EnterEmailPassViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(EnterEmailPassViewController.self)
         vc.email = email
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func resetPasswordVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login2.instantiateVC(ResetPasswordViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(ResetPasswordViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -186,11 +188,6 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectGenderVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectGenderViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func welcomeVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -199,11 +196,6 @@ final class Navigate {
     func welcomeItroduceVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeItroduceViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func MVPVenueListViewController(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
-        sender.navigationController?.viewControllers = [vc]
     }
     
     func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String) {
@@ -228,6 +220,12 @@ final class Navigate {
         vc.venueDetails = venueDetail
         vc.event = event
         vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func inviteVC(_ sender: UIViewController, inviteId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(InviteLinkVC.self)
+        vc.inviteId = inviteId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -272,8 +270,11 @@ final class Navigate {
         sender.present(vc, animated: true)
     }
     
-    func loginMandatory(_ sender: UIViewController) {
+    func loginMandatory(_ sender: UIViewController, guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")) {
         sender.tabBarController?.selectedIndex = 1
+        if let vc = (sender.tabBarController?.viewControllers?.last as? UINavigationController)?.viewControllers.first(where: { $0 is MVPStartScreenVC }) as? MVPStartScreenVC {
+            vc.guestUserLastNavigation = guestUserLastNavigation
+        }
     }
     
     func settingsVc(_ sender: UIViewController) {
@@ -388,11 +389,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String) {
-        let vc = EventBookingDetails()
-        vc.eventId = eventId
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
+//    func eventDetail(_ sender: UIViewController, eventId: String) {
+//        let vc = EventBookingDetails()
+//        vc.eventId = eventId
+//        sender.navigationController?.pushViewController(vc, animated: true)
+//    }
     
     func homeCitySelection(_ sender: UIViewController) {
         let vc = HomeCitySelectionVC()

@@ -128,7 +128,7 @@
 		BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */; };
 		BD532A152941B20100B9E38C /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A142941B20100B9E38C /* Constant.swift */; };
 		BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD532A162941BB9600B9E38C /* EnterNameViewController.swift */; };
-		BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0EA294836C900935275 /* Login2.storyboard */; };
+		BD7FA0EB294836C900935275 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7FA0EA294836C900935275 /* Login.storyboard */; };
 		BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */; };
 		BD7FA0EF2948409C00935275 /* LoginWithPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */; };
 		BD7FA0F129484CBD00935275 /* LoginWithEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */; };
@@ -140,7 +140,6 @@
 		BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BD92941F80100298271 /* ConnectAccountViewController.swift */; };
 		BD829BDC2941FED900298271 /* AddEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD829BDB2941FED100298271 /* AddEmailViewController.swift */; };
 		BD908882294C7F95006DAB23 /* CreatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */; };
-		BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */; };
 		BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */; };
 		BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */; };
 		BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD92D2A8295D52A200C3CBD9 /* Drink.swift */; };
@@ -247,7 +246,6 @@
 		CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486769286F358700FD277E /* CLPlacemark+Extension.swift */; };
 		CE4867BA286F358800FD277E /* UITextField+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676A286F358700FD277E /* UITextField+Extension.swift */; };
 		CE4867BB286F358800FD277E /* ProjectEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676C286F358700FD277E /* ProjectEnums.swift */; };
-		CE4867BC286F358800FD277E /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48676E286F358700FD277E /* Singleton.swift */; };
 		CE4867BD286F358800FD277E /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486770286F358700FD277E /* LanguageManager.swift */; };
 		CE4867BE286F358800FD277E /* CustomLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486771286F358700FD277E /* CustomLocale.swift */; };
 		CE4867BF286F358800FD277E /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486773286F358700FD277E /* BaseController.swift */; };
@@ -273,6 +271,9 @@
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
+		CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F942A4169EA0025421D /* InviteLinkVC.swift */; };
+		CE677F972A41720F0025421D /* InvitePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F962A41720F0025421D /* InvitePresenter.swift */; };
+		CE677F9A2A4177310025421D /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F992A4177310025421D /* Invite.swift */; };
 		CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D429DE976400B41418 /* DetailTVC.swift */; };
 		CE6813D729DE976400B41418 /* DetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813D529DE976400B41418 /* DetailTVC.xib */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
@@ -541,8 +542,6 @@
 		E1A9E76E28C55D550081FB28 /* HeatMap.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E70F28C55D540081FB28 /* HeatMap.xib */; };
 		E1A9E79628C560BC0081FB28 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E79428C560BC0081FB28 /* Search.swift */; };
 		E1A9E79728C560BC0081FB28 /* Search.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E79528C560BC0081FB28 /* Search.xib */; };
-		E1A9E79B28C56F6D0081FB28 /* LogIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E79928C56F6D0081FB28 /* LogIn.swift */; };
-		E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E79A28C56F6D0081FB28 /* LogIn.xib */; };
 		E1A9E7C128C56FD10081FB28 /* SearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A9E7A028C56FD10081FB28 /* SearchTVC.swift */; };
 		E1A9E7C228C56FD10081FB28 /* SearchTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E7A128C56FD10081FB28 /* SearchTVC.xib */; };
 		E1A9E7C328C56FD10081FB28 /* SearchAndAddCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1A9E7A328C56FD10081FB28 /* SearchAndAddCVC.xib */; };
@@ -733,7 +732,7 @@
 		BD3FB25629407F0900BE7713 /* EnterPhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberViewController.swift; sourceTree = "<group>"; };
 		BD532A142941B20100B9E38C /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		BD532A162941BB9600B9E38C /* EnterNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterNameViewController.swift; sourceTree = "<group>"; };
-		BD7FA0EA294836C900935275 /* Login2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login2.storyboard; sourceTree = "<group>"; };
+		BD7FA0EA294836C900935275 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
 		BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithPhoneViewController.swift; sourceTree = "<group>"; };
 		BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithEmailViewController.swift; sourceTree = "<group>"; };
@@ -745,7 +744,6 @@
 		BD829BD92941F80100298271 /* ConnectAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectAccountViewController.swift; sourceTree = "<group>"; };
 		BD829BDB2941FED100298271 /* AddEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailViewController.swift; sourceTree = "<group>"; };
 		BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePasswordViewController.swift; sourceTree = "<group>"; };
-		BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGenderViewController.swift; sourceTree = "<group>"; };
 		BD90FF4C2943340400B0E20E /* SetProfilePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetProfilePictureViewController.swift; sourceTree = "<group>"; };
 		BD92D2A6295D4EC400C3CBD9 /* Vibe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibe.swift; sourceTree = "<group>"; };
 		BD92D2A8295D52A200C3CBD9 /* Drink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink.swift; sourceTree = "<group>"; };
@@ -853,7 +851,6 @@
 		CE486769286F358700FD277E /* CLPlacemark+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLPlacemark+Extension.swift"; sourceTree = "<group>"; };
 		CE48676A286F358700FD277E /* UITextField+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Extension.swift"; sourceTree = "<group>"; };
 		CE48676C286F358700FD277E /* ProjectEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectEnums.swift; sourceTree = "<group>"; };
-		CE48676E286F358700FD277E /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		CE486770286F358700FD277E /* LanguageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		CE486771286F358700FD277E /* CustomLocale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLocale.swift; sourceTree = "<group>"; };
 		CE486773286F358700FD277E /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
@@ -877,6 +874,9 @@
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
+		CE677F942A4169EA0025421D /* InviteLinkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkVC.swift; sourceTree = "<group>"; };
+		CE677F962A41720F0025421D /* InvitePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitePresenter.swift; sourceTree = "<group>"; };
+		CE677F992A4177310025421D /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		CE6813D429DE976400B41418 /* DetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTVC.swift; sourceTree = "<group>"; };
 		CE6813D529DE976400B41418 /* DetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTVC.xib; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
@@ -1144,8 +1144,6 @@
 		E1A9E70F28C55D540081FB28 /* HeatMap.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeatMap.xib; sourceTree = "<group>"; };
 		E1A9E79428C560BC0081FB28 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		E1A9E79528C560BC0081FB28 /* Search.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Search.xib; sourceTree = "<group>"; };
-		E1A9E79928C56F6D0081FB28 /* LogIn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogIn.swift; sourceTree = "<group>"; };
-		E1A9E79A28C56F6D0081FB28 /* LogIn.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LogIn.xib; sourceTree = "<group>"; };
 		E1A9E7A028C56FD10081FB28 /* SearchTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTVC.swift; sourceTree = "<group>"; };
 		E1A9E7A128C56FD10081FB28 /* SearchTVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchTVC.xib; sourceTree = "<group>"; };
 		E1A9E7A328C56FD10081FB28 /* SearchAndAddCVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAndAddCVC.xib; sourceTree = "<group>"; };
@@ -1333,6 +1331,7 @@
 				824F86EC2987D52600A9F1FD /* SettingPresenter.swift */,
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
+				CE677F962A41720F0025421D /* InvitePresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -1649,7 +1648,6 @@
 				BDCC5C2B2947058D00595436 /* SelectFavoriteDrinkViewController.swift */,
 				BDCC5C2D294739A600595436 /* ConnectSocialMediaViewController.swift */,
 				BD908881294C7F95006DAB23 /* CreatePasswordViewController.swift */,
-				BD908883294C7FC8006DAB23 /* SelectGenderViewController.swift */,
 				BDB0AADE2950233E00CD1FDA /* WelcomeViewController.swift */,
 				BDB0AAE02950235400CD1FDA /* WelcomeItroduceViewController.swift */,
 				BD80B390295EC1CB005592A7 /* InstagramWebController.swift */,
@@ -1677,17 +1675,17 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		BD7FA0E9294836AB00935275 /* Login2 */ = {
+		BD7FA0E9294836AB00935275 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0EA294836C900935275 /* Login2.storyboard */,
+				BD7FA0EA294836C900935275 /* Login.storyboard */,
 				BD7FA0EC294839DC00935275 /* SignInOptionViewController.swift */,
 				BD7FA0EE2948409C00935275 /* LoginWithPhoneViewController.swift */,
 				BD7FA0F029484CBD00935275 /* LoginWithEmailViewController.swift */,
 				BD7FA0F22948514C00935275 /* EnterEmailPassViewController.swift */,
 				BD7FA0F429485DEA00935275 /* ResetPasswordViewController.swift */,
 			);
-			path = Login2;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		BD80B38B295EBC25005592A7 /* InstgramManager */ = {
@@ -2021,7 +2019,6 @@
 		CE48676D286F358700FD277E /* Singleton */ = {
 			isa = PBXGroup;
 			children = (
-				CE48676E286F358700FD277E /* Singleton.swift */,
 				CE48676F286F358700FD277E /* Language Files */,
 			);
 			path = Singleton;
@@ -2173,6 +2170,7 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CE677F982A4177220025421D /* Invite */,
 				CE0F423B29FBE69A0082723B /* Booking */,
 				828E9A982983CF3B000F2736 /* BottleMenuList */,
 				29868364297567FB00CB827B /* EventModels */,
@@ -2203,6 +2201,22 @@
 				CE65D67A298D24B800DE1E8A /* ClipVenue.swift */,
 			);
 			path = APPClipModal;
+			sourceTree = "<group>";
+		};
+		CE677F932A4169C70025421D /* InviteLink */ = {
+			isa = PBXGroup;
+			children = (
+				CE677F942A4169EA0025421D /* InviteLinkVC.swift */,
+			);
+			path = InviteLink;
+			sourceTree = "<group>";
+		};
+		CE677F982A4177220025421D /* Invite */ = {
+			isa = PBXGroup;
+			children = (
+				CE677F992A4177310025421D /* Invite.swift */,
+			);
+			path = Invite;
 			sourceTree = "<group>";
 		};
 		CE6813D329DE966600B41418 /* DetailTVC */ = {
@@ -2913,10 +2927,9 @@
 		E15D6B3F28BC39AB0076286C /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				BD7FA0E9294836AB00935275 /* Login2 */,
+				BD7FA0E9294836AB00935275 /* Login */,
 				BD3FB2482940637200BE7713 /* onBoarding */,
 				E15D6B4028BC39AB0076286C /* Splash */,
-				E1A9E79828C56F6D0081FB28 /* LogIn */,
 				E15D6B4C28BC39AB0076286C /* Tutorials */,
 			);
 			path = Login;
@@ -3477,6 +3490,7 @@
 		E1A9E6DA28C55D540081FB28 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CE677F932A4169C70025421D /* InviteLink */,
 				CE2605F029E55AA400C46EFA /* Event */,
 				CEAE5CD829E430D000CB20E5 /* PreSold */,
 				84248DA028D3D38F00A6E260 /* AllVenues */,
@@ -3637,15 +3651,6 @@
 				E1A9E79528C560BC0081FB28 /* Search.xib */,
 			);
 			path = Search;
-			sourceTree = "<group>";
-		};
-		E1A9E79828C56F6D0081FB28 /* LogIn */ = {
-			isa = PBXGroup;
-			children = (
-				E1A9E79928C56F6D0081FB28 /* LogIn.swift */,
-				E1A9E79A28C56F6D0081FB28 /* LogIn.xib */,
-			);
-			path = LogIn;
 			sourceTree = "<group>";
 		};
 		E1A9E79D28C56FD10081FB28 /* Friends */ = {
@@ -3890,9 +3895,9 @@
 				CE48671B286F2CB000FD277E /* Frameworks */,
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
-				22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
 				CEBF8F7A2A31939900E0325D /* ShellScript */,
+				A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4056,7 +4061,6 @@
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				E17DC85728C6C16500244C4F /* Wallet.xib in Resources */,
-				E1A9E79C28C56F6D0081FB28 /* LogIn.xib in Resources */,
 				E1A9E7CE28C56FD10081FB28 /* FriendRequest.xib in Resources */,
 				E17DC85928C6C16500244C4F /* NFTCVC.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
@@ -4098,7 +4102,7 @@
 				820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */,
 				E11F4A9428C800B1008D2E30 /* AccessPass.xib in Resources */,
 				E15D6B6E28BC39AC0076286C /* Tutorials.xib in Resources */,
-				BD7FA0EB294836C900935275 /* Login2.storyboard in Resources */,
+				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
 				E11F4B2F28C83564008D2E30 /* BookingRequests.xib in Resources */,
 				E16705B728CA6BB500644BF0 /* TicketRecipients.xib in Resources */,
 				82994A94296D3B9D008CA778 /* FriendListTableViewCell.xib in Resources */,
@@ -4193,23 +4197,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		22BA3912116073D1B0C7C34E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4230,6 +4217,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CEBF8F7A2A31939900E0325D /* ShellScript */ = {
@@ -4332,6 +4336,7 @@
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,
 				BDCC5C2E294739A600595436 /* ConnectSocialMediaViewController.swift in Sources */,
 				E167056328CA442800644BF0 /* ViewEventHeader.swift in Sources */,
+				CE677F9A2A4177310025421D /* Invite.swift in Sources */,
 				E196301C28C3E596001A40AB /* OthersCVC.swift in Sources */,
 				BDCC5C2C2947058D00595436 /* SelectFavoriteDrinkViewController.swift in Sources */,
 				CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */,
@@ -4369,7 +4374,6 @@
 				CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */,
 				CEECAA71288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
-				CE4867BC286F358800FD277E /* Singleton.swift in Sources */,
 				BD92D2A7295D4EC400C3CBD9 /* Vibe.swift in Sources */,
 				E11CE3E828C8DFBA003899C4 /* DIYCalendarCell.swift in Sources */,
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,
@@ -4418,6 +4422,7 @@
 				E16705A228CA6B3800644BF0 /* DressCodeTVC.swift in Sources */,
 				CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */,
 				E167059328CA6AB800644BF0 /* TableBookingInviteFriendsTVC.swift in Sources */,
+				CE677F972A41720F0025421D /* InvitePresenter.swift in Sources */,
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */,
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
@@ -4532,7 +4537,6 @@
 				E167058828CA6AB800644BF0 /* InviteFriendsHeaderView.swift in Sources */,
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
 				E1890C4728BD7EDD0000E406 /* StatusAndRewardsTVC.swift in Sources */,
-				BD908884294C7FC9006DAB23 /* SelectGenderViewController.swift in Sources */,
 				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
 				E1A9E76428C55D550081FB28 /* NotificationCitySelectionTVC.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
@@ -4611,6 +4615,7 @@
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
 				CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */,
+				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
 				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,
@@ -4633,7 +4638,6 @@
 				CE4867B8286F358800FD277E /* Dictionary+Extension.swift in Sources */,
 				E1A9E75D28C55D550081FB28 /* VenueTVC.swift in Sources */,
 				E11F4C0A28C835F3008D2E30 /* BookingStatusTVC.swift in Sources */,
-				E1A9E79B28C56F6D0081FB28 /* LogIn.swift in Sources */,
 				BD7FA0F529485DEA00935275 /* ResetPasswordViewController.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
 				E16705B928CA6BB500644BF0 /* FriendsCVC.swift in Sources */,
@@ -4731,7 +4735,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4746,7 +4750,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.11;
+				MARKETING_VERSION = 2.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4765,7 +4769,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4780,7 +4784,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.11;
+				MARKETING_VERSION = 2.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4921,7 +4925,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 62;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4946,7 +4950,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.11;
+				MARKETING_VERSION = 2.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4966,7 +4970,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 58;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4990,7 +4994,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.11;
+				MARKETING_VERSION = 2.0.12;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";

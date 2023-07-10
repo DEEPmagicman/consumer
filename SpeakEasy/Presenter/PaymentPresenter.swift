@@ -172,8 +172,8 @@ final class PaymentPresenter {
         }
     }
     
-    static func getTickets(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking]) -> Void) {
-        AFWrapper.getRequest(APIBuilder.consumerTicketsURL, headers: Header.header()) { response in
+    static func getUpcomingTickets(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking]) -> Void) {
+        AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, headers: Header.header()) { response in
             
             guard let responseArray = response as? [[String: Any]] else {
                 completion(false, nil, [])

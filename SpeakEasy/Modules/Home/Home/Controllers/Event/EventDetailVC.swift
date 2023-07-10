@@ -110,22 +110,27 @@ final class EventDetailVC: UIViewController {
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
         activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) } ?? []
-        if event?.isPausedSellingAllTickets == true {
-            continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-            isNotSellingStage = true
-            updateContinueBtn()
-        } else if event?.isSoldOutAllTickets == true {
-            continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
-            isNotSellingStage = true
-            updateContinueBtn()
-        } else if event?.eventTicket?.count ?? 0 == 0 {
-            continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-            isNotSellingStage = true
-            updateContinueBtn()
-        } else {
-            continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+        if event?.eventTicket == nil {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
+        } else {
+            if event?.isPausedSellingAllTickets == true {
+                continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+                isNotSellingStage = true
+                updateContinueBtn()
+            } else if event?.isSoldOutAllTickets == true {
+                continueBtn.setTitle(Constant.String.soldOut.uppercased(), for: .normal)
+                isNotSellingStage = true
+                updateContinueBtn()
+            } else if event?.eventTicket?.count ?? 0 == 0 {
+                continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+                isNotSellingStage = true
+                updateContinueBtn()
+            } else {
+                continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+                isNotSellingStage = false
+                updateContinueBtn(forceRemove: true)
+            }
         }
     }
     
@@ -134,10 +139,16 @@ final class EventDetailVC: UIViewController {
             zeroCaseView(isHidden: false)
             return
         }
+        if event == nil {
+            view.alpha = 0
+            Loader.show()
+        }
         EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventDetail in
             guard let self = self else {
                 return
             }
+            self.view.alpha = 1
+            Loader.hide()
             if eventDetail == nil {
                 self.zeroCaseView(isHidden: false)
             } else {
@@ -180,11 +191,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = """
- Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
-
- Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
- """
+        let msgText = "Join me for \(event?.title ?? "Event"): \(String(format: APIBuilder.eventWebURL, eventId ?? "")). Register or buy tickets on Speakeasy \(APIBuilder.appStoreURL)"
          Utility.main.shareSocialWith(text: msgText)
     }
     

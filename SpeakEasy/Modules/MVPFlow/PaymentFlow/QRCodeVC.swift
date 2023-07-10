@@ -34,12 +34,16 @@ final class QRCodeVC: UIViewController {
     weak var delegate: QRCodeVCNavigationDelegate?
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var pass: PKPass?
-//    private var gradient: CAGradientLayer?
+    private var gradient: CAGradientLayer?
+    private var venueImgHeightObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        gradient = venueImg.setGradientColor()
+        gradient = venueImg.setGradientColor()
         getBooking(id: bookingId)
+        venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueImg.setGradientColor()
+        }
         setupData()
         addToWalletBtn.addPassButtonStyle = .blackOutline
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
@@ -54,11 +58,6 @@ final class QRCodeVC: UIViewController {
         eventDetailsLbl.addGestureRecognizer(tap)
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        gradient = venueImg.setGradientColor()
-//    }
-    
     private func setupData() {
         QRImg.image = generateQRCode(from: bookingId)
         if let booking = booking {
@@ -66,16 +65,23 @@ final class QRCodeVC: UIViewController {
             case .appClip:
                 venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
                 venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
-                titleLbl.text = booking.venueObject?.name
-                dateLbl.isHidden = true
-                venueNameLbl.isHidden = true
+                if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
+                    titleLbl.text = inviteLink.name
+                    dateLbl.isHidden = false
+                    venueNameLbl.isHidden = false
+                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                } else {
+                    titleLbl.text = booking.venueObject?.name
+                    dateLbl.isHidden = true
+                    venueNameLbl.isHidden = true
+                }
                 eventDetailsLbl.isHidden = true
                 venueImgHeightConstraint.constant = 320
                 QRToImgBottomConstraint.constant = -100
             case .singleTickedEvent:
                 venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL),completed: nil)
                 titleLbl.text = booking.event?.title
-                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
+                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 dateLbl.isHidden = false
                 venueNameLbl.text = booking.venueObject?.name
                 venueNameLbl.isHidden = false
@@ -183,21 +189,21 @@ final class QRCodeVC: UIViewController {
             msgText = """
      Thank you for checking into \(booking?.venueObject?.name ?? "Venue") with Speakeasy!
 
-     Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
+     Access Your Ticket Here: \(String(format: APIBuilder.QAWebURL, bookingId))
 
      Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
-     Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+     Link to App: \(APIBuilder.appStoreURL)
      """
         case .singleTickedEvent, .tieredTickedEvent:
             msgText = """
 
         You’re going to \(booking?.event?.title.capitalized ?? "EVENT")! \(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") has sent you a ticket:
 
-        Access your ticket here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
+        Access your ticket here: \(String(format: APIBuilder.QAWebURL, bookingId))
 
         Download Speakeasy for easy entry at \(booking?.venueObject?.name ?? "Venue"):
-        https://apps.apple.com/us/app/speakeasy-go/id1642351956
+         \(APIBuilder.appStoreURL)
 
         Enjoy & live life LIVE!
         """
@@ -217,8 +223,13 @@ extension QRCodeVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
-        cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+        if booking?.isCompedTicket == true {
+            cell.titleLbl.text = Constant.String.compedFreeTicket
+            cell.subTitleLbl.text = Constant.String.enjoyYourFreeTicket
+        } else {
+            cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
+            cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+        }
         cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
@@ -236,11 +247,3 @@ extension QRCodeVC: PKAddPassesViewControllerDelegate {
         }
     }
 }
-
-//extension QRCodeVC: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView.contentOffset.y <= 0 {
-//            gradient?.frame = venueImg.bounds
-//        }
-//    }
-//}

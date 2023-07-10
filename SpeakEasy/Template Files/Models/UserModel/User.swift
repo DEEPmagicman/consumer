@@ -39,6 +39,9 @@ struct User {
     var stripeCusId: String
     var additionalEmail: String?
     var isProfileCompleted: Bool
+    var useEmail: String {
+        email.removeWhitespaces().isEmpty ? additionalEmail ?? "" : email
+    }
     
     enum CodingKeys: String, CodingKey {
         case id = "id"

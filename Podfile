@@ -42,7 +42,6 @@ target 'SpeakEasyClip' do
   # Pods for SpeakEasyClip
   pod "FlagPhoneNumber"
   pod 'IQKeyboardManagerSwift'
-  pod 'DropDown'
   pod 'StripeApplePay'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'

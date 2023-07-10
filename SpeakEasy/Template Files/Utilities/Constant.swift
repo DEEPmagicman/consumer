@@ -71,6 +71,9 @@ struct Constant {
         static let ticketSellingWillStartAt = "Ticket selling will start at %@"
         static let checkoutText = "By buying the ticket you agree to the terms of service and privacy policy. Entry is subject to doorman discretion."
         static let coverTicketText = "Cover tickets expire in 2 hours after time of purchase."
+        static let compedFreeTicket = "Comped Free Ticket"
+        static let enjoyYourFreeTicket = "Enjoy your free ticket!"
+        static let dotDoorsOpenAt = "• Doors open at %@"
         static let dash = "-"
     }
     

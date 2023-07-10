@@ -6,6 +6,12 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+        <string>applinks:speakeasygo.com</string>
+		<string>applinks:speakeasy-stage-web-consumer.vercel.app</string>
+		<string>applinks:speakeasy-stag-appclip.vercel.app</string>
+	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
 		<string>merchant.com.speakeasy</string>

@@ -23,7 +23,6 @@ extension UIView {
     
     func removeGradientBackgroundColor() {
         layer.sublayers?.filter { $0.name == "gradientLayer" }.forEach { $0.removeFromSuperlayer() }
-        layoutIfNeeded()
     }
 }
 

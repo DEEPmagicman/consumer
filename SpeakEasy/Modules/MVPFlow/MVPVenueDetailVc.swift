@@ -58,6 +58,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var hoursHeightObservation: NSKeyValueObservation?
     private var upcomingHeightObservation: NSKeyValueObservation?
     private var todaysEventHeightObservation: NSKeyValueObservation?
+    private var venueImgHeightObservation: NSKeyValueObservation?
     private var from = 0
     private var hasMore = false
     private var totalPrice: Int {
@@ -85,6 +86,9 @@ final class MVPVenueDetailVc: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gradient = venueBgImg.setGradientColor()
+        venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueBgImg.setGradientColor()
+        }
         headerVenueName.isHidden = true
         headerView.backgroundColor = .clear
         scrollView.delegate = self
@@ -119,11 +123,6 @@ final class MVPVenueDetailVc: UIViewController {
             self.todaysEventTableView.layoutIfNeeded()
         }
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        gradient = venueBgImg.setGradientColor()
-//    }
     
     private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {
@@ -265,11 +264,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = """
- Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
-
- Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
- """
+        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueUniqueId)) Download the app to directly connect with your favorite venues & never miss out! \(APIBuilder.appStoreURL)"
          Utility.main.shareSocialWith(text: msgText)
     }
     
@@ -486,9 +481,6 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = false
             headerView.backgroundColor = .black
         } else {
-//            if scrollView.contentOffset.y <= 0 {
-//                gradient?.frame = venueBgImg.bounds
-//            }
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }

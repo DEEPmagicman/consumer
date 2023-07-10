@@ -43,7 +43,6 @@ struct APIBuilder {
     static private let changePassword = "/change-password"
     static private let appClip = "/appclip"
     static private let appClipVenue = "/appClipVenue?include=appClipTicket"
-    static private let appClipUser = "/appclip-user"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -51,10 +50,13 @@ struct APIBuilder {
     static private let appleWallet = "/apple-wallet"
     static private let method = "/method"
     static private let ticketBooking = "/ticket-booking"
-    static private let pastTickets = "/past-tickets"
-    static private let consumerTickets = "/consumer-tickets"
+    static private let past = "/past"
+    static private let upcoming = "/upcoming"
+    static private let booking = "/booking"
     static private let recommendedEvents = "/recommended-events"
     static private let deleteAccount = "/delete-account"
+    static private let inviteLink = "/invite-link"
+    static private let redeem = "/redeem"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -161,6 +163,14 @@ struct APIBuilder {
         baseURL + route + venueBottleCategory + "/\(id)"
     }
     
+    static func inviteLinkURL(_ id: String) -> String {
+        baseURL + route + inviteLink + "/\(id)"
+    }
+    
+    static func inviteRedeemURL(_ id: String) -> String {
+        baseURL + route + inviteLink + "/\(id)" + redeem
+    }
+    
     static var whoAmIURL: String {
         baseURL + route + auth + whoAmI
     }
@@ -202,7 +212,7 @@ struct APIBuilder {
     }
     
     static func getBookingURL(_ bookingId: String) -> String {
-        baseURL + appClipUser + "/\(bookingId)"
+        baseURL + route + booking + "/\(bookingId)"
     }
     
     static var createCoverBookingURL: String {
@@ -214,11 +224,11 @@ struct APIBuilder {
     }
     
     static var pastTicketsURL: String {
-        baseURL + route + event + pastTickets
+        baseURL + route + booking + past
     }
     
-    static var consumerTicketsURL: String {
-        baseURL + route + event + consumerTickets
+    static var upcomingTicketsURL: String {
+        baseURL + route + booking + upcoming
     }
     
     static func addPaymentURL(_ id: String) -> String {
@@ -261,7 +271,17 @@ extension String {
 }
 
 extension APIBuilder {
-    static let privacyConsumerURL = "https://speakeasygo.com/privacy-consumer"
-    static let termsConsumerURL = "https://speakeasygo.com/terms-consumer"
-    static let supportURL = "https://speakeasygo.com/support"
+#if DEBUG
+    static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
+#else
+    static let webBaseURL = "https://speakeasygo.com"
+#endif
+    static let privacyConsumerURL = "\(webBaseURL)/privacy-consumer"
+    static let termsConsumerURL = "\(webBaseURL)/terms-consumer"
+    static let supportURL = "\(webBaseURL)/support"
+    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
+    static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    static let eventWebURL = "\(webBaseURL)/event/%@"
+    static let venueWebURL = "\(webBaseURL)/ticket?v=%@"
+    static let invitationURL = "\(webBaseURL)?L=%@"
 }

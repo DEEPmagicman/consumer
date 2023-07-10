@@ -127,7 +127,7 @@
                                 <color key="currentPageIndicatorTintColor" red="0.56078431370000004" green="0.56078431370000004" blue="0.56078431370000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </pageControl>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="qdT-B4-dzN" secondAttribute="trailing" id="5xj-QX-Chl"/>
                             <constraint firstAttribute="trailing" secondItem="J1b-Cc-XVp" secondAttribute="trailing" constant="13" id="6fQ-eQ-Qd5"/>
@@ -153,7 +153,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
-                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="c7B-vc-KB6" firstAttribute="leading" secondItem="qFH-Tn-0Lv" secondAttribute="leading" constant="12" id="9CR-2a-sfI"/>
                     <constraint firstAttribute="trailing" secondItem="c7B-vc-KB6" secondAttribute="trailing" constant="12" id="APa-7r-guk"/>
