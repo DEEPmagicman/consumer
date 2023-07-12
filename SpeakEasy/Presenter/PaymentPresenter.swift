@@ -71,6 +71,34 @@ final class PaymentPresenter {
         }
     }
     
+    static func createCoverFreeBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+        let param = ["appclipTicket": appClipTickets,
+                     "venueId": venueId] as [String: Any]
+        AFWrapper.postRequest(APIBuilder.createCoverFreeBooing, params: param, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "")
+                return
+            }
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id)
+            } else if let booking = responseDic["booking"] as? [String: Any], let id = booking["id"] as? String {
+                completion(true, nil, id)
+            } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
+                completion(false, error, message)
+            } else {
+                completion(false, "Alert", "Booking failed")
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, "")
+                return
+            }
+            completion(false, nil, "")
+        }
+    }
+    
     static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
         AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: nil, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {

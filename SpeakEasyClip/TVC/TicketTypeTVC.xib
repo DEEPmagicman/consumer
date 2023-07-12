@@ -38,13 +38,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="$" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-7b-lRP">
-                                <rect key="frame" x="470" y="3.5" width="17" height="36.5"/>
+                                <rect key="frame" x="469.5" y="3.5" width="17.5" height="36.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="26"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="749" text="Provides general admission to the venue. subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tef-Nr-WTK">
-                                <rect key="frame" x="10" y="46" width="460" height="42"/>
+                                <rect key="frame" x="10" y="46" width="459.5" height="42"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -53,7 +53,7 @@
                                 <rect key="frame" x="250" y="102" width="0.0" height="55"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VPt-Rr-lar">
-                                        <rect key="frame" x="0.0" y="55" width="150" height="67"/>
+                                        <rect key="frame" x="0.0" y="55" width="153" height="67"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQD-0P-gij">
                                                 <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
@@ -65,16 +65,16 @@
                                                 <state key="normal" image="Ic-Minus"/>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iiV-PE-axx">
-                                                <rect key="frame" x="58" y="0.5" width="34" height="42"/>
+                                                <rect key="frame" x="58" y="0.5" width="37" height="42"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="34" id="VcN-2u-LsQ"/>
+                                                    <constraint firstAttribute="width" constant="37" id="VcN-2u-LsQ"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="30"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YSf-r1-h7M">
-                                                <rect key="frame" x="107" y="0.0" width="43" height="43"/>
+                                                <rect key="frame" x="110" y="0.0" width="43" height="43"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="43" id="5Th-PG-KJL"/>
                                                     <constraint firstAttribute="height" constant="43" id="hyD-Iy-faV"/>

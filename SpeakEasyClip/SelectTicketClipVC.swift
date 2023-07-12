@@ -27,6 +27,7 @@ final class SelectTicketClipVC: UIViewController {
     var venueDetail: ClipVenue?
     private var venueId = ""
     private var maxTicket = 20
+    private var selectedType: TicketPriceType = .FREE
     private var totalPrice: Int {
         var total = 0
         venueDetail?.appClipTicket?.forEach {
@@ -191,8 +192,32 @@ final class SelectTicketClipVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+            switch self.selectedType {
+            case .FREE:
+                self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+            case .PAID:
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+            }
         }
+    }
+    
+    private func forceRemoveFreeTicket() {
+        self.venueDetail?.appClipTicket?.indices.forEach {
+            if venueDetail?.appClipTicket?[$0].price ?? 0 < 2 && venueDetail?.appClipTicket?[$0].name.lowercased().contains("general") == true {
+                self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
+            }
+        }
+        selectedType = .PAID
+    }
+
+    private func forceRemovePaidTicket() {
+        self.venueDetail?.appClipTicket?.indices.forEach {
+            if venueDetail?.appClipTicket?[$0].price ?? 0 < 2 && venueDetail?.appClipTicket?[$0].name.lowercased().contains("general") == true {
+            } else {
+                self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
+            }
+        }
+        selectedType = .FREE
     }
 }
 
@@ -206,10 +231,14 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name
         cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
         cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
-        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+        cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
             cell.ticketPriceLbl.text = "FREE"
+            cell.plusBtn.alpha = 0.5
+            cell.plusBtn.isUserInteractionEnabled = false
         } else {
             cell.ticketPriceLbl.text = "$\(venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
+            cell.plusBtn.isUserInteractionEnabled = true
         }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
             cell.ticketPlusMinusView.isHidden = false
@@ -221,7 +250,6 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.totalTicketLbl.text = "\(venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
-        cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.appClipTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
@@ -236,8 +264,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if venueDetail?.bookingStatus != "OPEN" || venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 { return }
-        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 5 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true { return }
+        if venueDetail?.bookingStatus != "OPEN" { return }
         if venueDetail?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
         if isMaxTicketReached {
@@ -245,6 +272,11 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             return
         }
         venueDetail?.appClipTicket?[indexPath.row].selectedQuantity = 1
+        if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            forceRemovePaidTicket()
+        } else {
+            forceRemoveFreeTicket()
+        }
         ticketTypeTableView.reloadData()
         updateContinueBtn()
         continueBtn.isHidden = false

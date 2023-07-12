@@ -203,7 +203,7 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .appClip:
             cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
             cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 2 {
                 cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
             } else {
                 cell.ticketPriceLbl.text = "FREE"

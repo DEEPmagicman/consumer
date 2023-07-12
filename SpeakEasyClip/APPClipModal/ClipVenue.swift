@@ -181,6 +181,7 @@ struct VenueSettings: Codable {
     var policyText: String
     var enabledCustomBookingSMS: Bool
     var bookingSMSText: String
+    var collectNameDuringBooking: Bool?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -188,5 +189,11 @@ struct VenueSettings: Codable {
         try container.encode(policyText, forKey: .policyText)
         try container.encode(enabledCustomBookingSMS, forKey: .enabledCustomBookingSMS)
         try container.encode(bookingSMSText, forKey: .bookingSMSText)
+        try container.encodeIfPresent(collectNameDuringBooking, forKey: .collectNameDuringBooking)
     }
+}
+
+enum TicketPriceType {
+    case FREE
+    case PAID
 }
