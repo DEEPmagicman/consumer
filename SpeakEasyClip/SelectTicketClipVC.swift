@@ -58,7 +58,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket(withLoader: Bool = true) {
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/\(venueId)") else { return }
+        guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 //        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
@@ -196,7 +196,7 @@ final class SelectTicketClipVC: UIViewController {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetail?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
             }
         }
     }
@@ -230,14 +230,14 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
         cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name
         cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
-        cell.ticketPriceLbl.text = "$\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
+        cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
             cell.ticketPriceLbl.text = "FREE"
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
         } else {
-            cell.ticketPriceLbl.text = "$\(venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
+            cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(venueDetail?.appClipTicket?[indexPath.row].price ?? 0)"
             cell.plusBtn.isUserInteractionEnabled = true
         }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
