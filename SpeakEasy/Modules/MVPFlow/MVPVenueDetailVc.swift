@@ -330,7 +330,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
                 cell.plusBtn.isUserInteractionEnabled = true
             }
             if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
@@ -375,7 +375,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if event.eventTicket?.count ?? 0 == 0 {
                 cell.priceLbl.text = Constant.String.salePaused
             } else {
-                cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
+                cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
             }
             return cell
         case todaysEventTableView:
@@ -391,7 +391,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if event.eventTicket?.count ?? 0 == 0 {
                 cell.priceLbl.text = Constant.String.salePaused
             } else {
-                cell.priceLbl.text = "Starting at $\(event.lowestPriceTicket?.price ?? 0)"
+                cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
             }
             return cell
         default:
@@ -491,7 +491,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
             }
         }
     }
