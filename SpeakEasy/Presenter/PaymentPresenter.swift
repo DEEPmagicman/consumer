@@ -73,7 +73,8 @@ final class PaymentPresenter {
     
     static func createCoverFreeBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         let param = ["appclipTicket": appClipTickets,
-                     "venueId": venueId] as [String: Any]
+                     "venueId": venueId,
+                     "optedPolicy": false] as [String: Any]
         AFWrapper.postRequest(APIBuilder.createCoverFreeBooing, params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {

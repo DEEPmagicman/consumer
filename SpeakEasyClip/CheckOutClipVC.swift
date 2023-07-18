@@ -390,7 +390,8 @@ extension CheckOutClipVC {
         var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
-                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
+                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
+                     "optedPolicy": policyCheckBox.isSelected] as [String: Any]
         if venue?.venueSettings?.collectNameDuringBooking ?? false {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""

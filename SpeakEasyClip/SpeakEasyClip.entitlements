@@ -6,6 +6,7 @@
 	<array>
 		<string>appclips:appclip.speakeasygo.com</string>
 		<string>appclips:speakeasygo.com</string>
+		<string>appclips:speakeasy-stage-web-consumer.vercel.app</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
