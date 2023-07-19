@@ -49,7 +49,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         super.viewDidLoad()
         createBooking()
         WebSocketWrapper.shared.delegate.append(self)
-        totalPriceLbl.text = "$\(totalPrice)"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice)"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()
@@ -279,7 +279,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         isPaymentInitiated = true
         let merchantIdentifier = "merchant.com.speakeasy"
-        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: venue?.venueSettings?.currencyCode?.uppercased() ?? "USD")
 
         // Configure the line items on the payment request
         paymentRequest.paymentSummaryItems = [

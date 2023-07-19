@@ -23,12 +23,18 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var countryCodeTextField: FPNTextField!
     @IBOutlet private weak var phoneNumTextField: UITextField!
     @IBOutlet private weak var errorLbl: UILabel!
+    @IBOutlet private weak var firstNameView: UIView!
+    @IBOutlet private weak var lastNameView: UIView!
+    @IBOutlet private weak var firstNameTF: UITextField!
+    @IBOutlet private weak var lastNameTF: UITextField!
     @IBOutlet private weak var applePayBtn: PKPaymentButton!
     @IBOutlet private weak var dressCodeInfoLbl: UILabel!
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
     @IBOutlet private weak var policyLbl: UILabel!
-
+    @IBOutlet weak var freeTicketBtn: UIButton!
+    @IBOutlet weak var applePayView: UIView!
+    
     var totalPrice = 1
     var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
@@ -55,9 +61,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
-        
-        applePayBtn.alpha = 0.5
-        applePayBtn.isUserInteractionEnabled = false
 
         countryCodeTextField.textColor = .white
         
@@ -87,12 +90,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.showCountryPhoneCode = true
 
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
-        totalPriceLbl.text = "$\(totalPrice)"
-        applePayBtn.addTarget(self, action: #selector(applePayButtonTapped), for: .touchUpInside)
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice)"
+        applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.willEnterForegroundNotification, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(checkApplePay), name: UIApplication.didBecomeActiveNotification, object: nil)
         } else {
             isApplePayNotSupported = true
             errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
@@ -101,10 +102,19 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
+        lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
+        
+        if totalPrice == 0 {
+            applePayView.isHidden = true
+            freeTicketBtn.isHidden = false
+        } else {
+            applePayView.isHidden = false
+            freeTicketBtn.isHidden = true
+        }
+        checkValidation(isCorrectDetails: false)
+        firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+        lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -123,25 +133,52 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc func checkApplePay() {
-        if isValidNo == false { return }
+        if isValidNo == false {
+            alertPopup("Alert", "Enter valid number")
+            return
+        }
         if StripeAPI.deviceSupportsApplePay() {
-            if isIntendCreated { return }
+            if isIntendCreated {
+                DispatchQueue.main.async {
+                    self.applePayButtonTapped()
+                }
+                return
+            }
             createBooking()
             applePayBtn.isHidden = false
             errorLbl.isHidden = true
-            applePayBtn.alpha = 0.5
-            applePayBtn.isUserInteractionEnabled = false
         } else if isApplePayNotSupported == false {
             alertForWallet()
             setUpPaymentBtn()
-            applePayBtn.alpha = 0.5
-            applePayBtn.isUserInteractionEnabled = false
         } else {
             applePayBtn.isHidden = true
             errorLbl.isHidden = false
         }
     }
     
+    private func checkValidation(isCorrectDetails: Bool) {
+        freeTicketBtn.alpha = isCorrectDetails ? 1 : 0.5
+        freeTicketBtn.isUserInteractionEnabled = isCorrectDetails
+        applePayBtn.alpha = isCorrectDetails ? 1 : 0.5
+        applePayBtn.isUserInteractionEnabled = isCorrectDetails
+    }
+    
+    private func checkData() {
+        if venue?.venueSettings?.collectNameDuringBooking ?? false {
+            if firstNameTF.text != "" && lastNameTF.text != "" && isValidNo {
+                checkValidation(isCorrectDetails: true)
+            } else {
+                checkValidation(isCorrectDetails: false)
+            }
+        } else {
+            checkValidation(isCorrectDetails: isValidNo)
+        }
+    }
+    
+    @objc private func textFieldValDidChange(_ textField: UITextField) {
+        checkData()
+    }
+
     private func addPaymentApi() {
         if isIntendCreated { return }
         guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
@@ -173,6 +210,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.paymentIntent = paymentIntentClientSecret
             self.paymentHistoryId = paymentHistoryId
             self.setUpPaymentBtn()
+            DispatchQueue.main.async {
+                self.applePayButtonTapped()
+            }
         })
         task.resume()
     }
@@ -212,7 +252,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         isPaymentInitiated = true
         let merchantIdentifier = "merchant.com.speakeasy"
-        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: "USD")
+        let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: venue?.venueSettings?.currencyCode?.uppercased() ?? "USD")
         paymentRequest.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice))
         ]
@@ -244,6 +284,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         })
         task.resume()
     }
+    
+    @IBAction func onClickFreeTicket(_ sender: Any) {
+        createFreeBooking()
+    }
+    
 }
 
 extension CheckOutClipVC {
@@ -259,19 +304,7 @@ extension CheckOutClipVC {
             AppClipLoader.showLoader(view)
             paymentStatus(.SUCCESS) { [weak self] in
                 guard let self = self else { return }
-                DispatchQueue.main.async {
-                    if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
-                        AppClipLoader.hideLoader()
-                        vc.venueName = self.venue?.name ?? ""
-                        vc.bookingId = self.bookingId
-                        vc.venueLogo = self.venue?.logo?.key ?? ""
-                        vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
-                        vc.selectedAppClipTickets = self.selectedAppClipTickets
-                        if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
-                            self.navigationController?.viewControllers = [selectVC, vc]
-                        }
-                    }
-                }
+                self.navigateToQRCode()
             }
         case .error:
             isPaymentInitiated = false
@@ -291,10 +324,14 @@ extension CheckOutClipVC {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        let param = ["appclipTicket": selectedTickets,
+        var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
+        if venue?.venueSettings?.collectNameDuringBooking ?? false {
+            param["firstName"] = firstNameTF.text ?? ""
+            param["lastName"] = lastNameTF.text ?? ""
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
@@ -342,6 +379,86 @@ extension CheckOutClipVC {
         }
         task.resume()
     }
+    
+    func createFreeBooking() {
+        AppClipLoader.showLoader(self.view)
+        var selectedTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+        }
+        var param = ["appclipTicket": selectedTickets,
+                     "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
+                     "code": countryCode,
+                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
+                     "optedPolicy": policyCheckBox.isSelected] as [String: Any]
+        if venue?.venueSettings?.collectNameDuringBooking ?? false {
+            param["firstName"] = firstNameTF.text ?? ""
+            param["lastName"] = lastNameTF.text ?? ""
+        }
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        
+        guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user/free-booking") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
+                return
+            }
+            if let bookingId = json["id"] as? String {
+                self.bookingId = bookingId
+                self.navigateToQRCode()
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+                self.bookingId = bookingId
+                self.navigateToQRCode()
+            } else if let error = json["error"] as? String, let message = json["message"] as? String {
+                AppClipLoader.hideLoader()
+                self.alertPopup(error, message)
+            } else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Booking failed")
+            }
+        }
+        task.resume()
+    }
+    
+    private func navigateToQRCode() {
+        DispatchQueue.main.async {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
+                AppClipLoader.hideLoader()
+                vc.venueName = self.venue?.name ?? ""
+                vc.bookingId = self.bookingId
+                vc.venueLogo = self.venue?.logo?.key ?? ""
+                vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
+                vc.selectedAppClipTickets = self.selectedAppClipTickets
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                    self.navigationController?.viewControllers = [selectVC, vc]
+                }
+            }
+        }
+    }
 }
 
 extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
@@ -374,12 +491,8 @@ extension CheckOutClipVC: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        applePayBtn.alpha = 0.5
-        applePayBtn.isUserInteractionEnabled = false
         if isChangingFlag { return }
-        if isValidNo {
-            checkApplePay()
-        } else {
+        if !isValidNo {
             if textField.text?.replacingOccurrences(of: " ", with: "") != "" {
                 alertPopup("Alert", "Enter valid number")
             }
@@ -419,6 +532,7 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             isValidNo = isValid
+            checkData()
             isIntendCreated = false
         }
     }

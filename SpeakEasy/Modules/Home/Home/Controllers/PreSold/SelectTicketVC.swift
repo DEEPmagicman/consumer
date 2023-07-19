@@ -168,7 +168,7 @@ final class SelectTicketVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
         }
     }
 }
@@ -203,8 +203,8 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .appClip:
             cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name == "GENERALTICKET" ? "General Admission" : "VIP Skip the Line"
             cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 5 {
-                cell.ticketPriceLbl.text = "$\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 >= 2 {
+                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(venueDetails?.appClipTicket?[indexPath.row].price ?? 0)"
             } else {
                 cell.ticketPriceLbl.text = "FREE"
             }
@@ -229,7 +229,7 @@ extension SelectTicketVC: UITableViewDelegate, UITableViewDataSource {
         case .event:
              cell.ticketTypeLbl.text = event?.eventTicket?[indexPath.row].tierName
              cell.infoLbl.text = event?.eventTicket?[indexPath.row].tierDescription
-             cell.ticketPriceLbl.text = "$\(event?.eventTicket?[indexPath.row].price ?? 0)"
+             cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.eventTicket?[indexPath.row].price ?? 0)"
              cell.ticketPriceLbl.textColor = .white
              cell.ticketTypeLbl.textColor = .white
              if event?.eventTicket?[indexPath.row].selectedTicketCount ?? 0 >= 1 {

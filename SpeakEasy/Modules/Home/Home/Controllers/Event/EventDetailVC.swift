@@ -127,7 +127,7 @@ final class EventDetailVC: UIViewController {
                 isNotSellingStage = true
                 updateContinueBtn()
             } else {
-                continueBtn.setTitle("BUY NOW - STARTING AT $\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+                continueBtn.setTitle("BUY NOW - STARTING AT \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
                 isNotSellingStage = false
                 updateContinueBtn(forceRemove: true)
             }
@@ -235,7 +235,7 @@ final class EventDetailVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  $\(self.totalPrice)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
         }
     }
     
@@ -291,7 +291,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "$\(activeTickets?[indexPath.row].price ?? 0)"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(activeTickets?[indexPath.row].price ?? 0)"
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {

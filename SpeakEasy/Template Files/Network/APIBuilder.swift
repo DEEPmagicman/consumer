@@ -53,6 +53,7 @@ struct APIBuilder {
     static private let past = "/past"
     static private let upcoming = "/upcoming"
     static private let booking = "/booking"
+    static private let freeTicket = "/free-booking"
     static private let recommendedEvents = "/recommended-events"
     static private let deleteAccount = "/delete-account"
     static private let inviteLink = "/invite-link"
@@ -217,6 +218,10 @@ struct APIBuilder {
     
     static var createCoverBookingURL: String {
         baseURL + route + appClip + ticketBooking
+    }
+
+    static var createCoverFreeBooing: String {
+        baseURL + route + booking + freeTicket
     }
 
     static var createEventBookingURL: String {
