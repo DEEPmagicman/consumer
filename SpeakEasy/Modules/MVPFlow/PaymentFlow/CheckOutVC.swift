@@ -26,7 +26,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
     @IBOutlet private weak var policyLbl: UILabel!
-
+    @IBOutlet weak var subTotalView: UIView!
+    @IBOutlet weak var processingFeesView: UIView!
+    @IBOutlet weak var customFeesView: UIView!
+    @IBOutlet weak var customFeeAmount: UILabel!
+    @IBOutlet weak var subTotalAmount: UILabel!
+    @IBOutlet weak var processingFeeAmount: UILabel!
+    @IBOutlet weak var timerLbl: UILabel!
+    
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
     var totalPrice = 0
@@ -44,6 +51,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
+    var timer = Timer()
+    var count = 600
+    var lastCount = 0
+    var enterBgDate = Date()
+    var exitBgDate = Date()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +80,20 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         infoLbl.isUserInteractionEnabled = true
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        
+        timerLbl.text = "10:00"
+        customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
+        subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
+        processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
+    
+        // background event
+        NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        // foreground event
+        NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.willEnterForegroundNotification, object: nil)
+        // add these 2 notifications to prevent freeze on long Home button press and back
+        NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
     }
     
     private func setUpData() {
@@ -86,6 +112,54 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         venueNameLbl.text = venue?.name ?? ""
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
+    }
+        
+    @objc func exitBackGround() {
+        exitBgDate = Date()
+        let diff = exitBgDate.timeIntervalSince(enterBgDate)
+        enterBgDate = exitBgDate
+        count = count - Int(diff)
+    }
+    
+    @objc func enterBackGround() {
+        enterBgDate = Date()
+    }
+    
+    func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int) {
+        return (((seconds % 3600) / 60),((seconds % 3600) % 60))
+    }
+    
+    func makeTimeString(minutes: Int, seconds : Int) -> String {
+        var timeString = ""
+        timeString += String(format: "%02d", minutes)
+        timeString += ":"
+        timeString += String(format: "%02d", seconds)
+        return timeString
+    }
+    
+    func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            self.count = self.count - 1
+            if self.count <= 0 {
+                timer.invalidate()
+                self.crossTimeLimit()
+            }
+            let time = self.secondsToHoursMinutesSeconds(seconds: self.count)
+            let timeString = self.makeTimeString(minutes: time.0, seconds: time.1)
+            if self.count < 0 {
+                self.timerLbl.text = "00:00"
+            } else {
+                self.timerLbl.text = timeString
+            }
+            
+        }
+    }
+    
+    func crossTimeLimit() {
+        let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            Navigate.to.back(self)
+        }
+        Alert.showAlertSheet(style: .actionSheet, title: "Time Up!!!", message: "", actions: [okAction])
     }
     
     @objc private func onClickPaymentMethod() {
@@ -139,6 +213,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     }
                     self.bookingId = id
                     self.addPaymentApi()
+                    self.startTimer()
                 } else {
                     if errMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -167,6 +242,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     }
                     self.bookingId = id
                     self.addPaymentApi()
+                    self.startTimer()
                 } else {
                     if errMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
