@@ -5,6 +5,10 @@
 //  Created by Square Infosoft on 09/02/23.
 //
 
+protocol UpdateDetailDelegate: AnyObject {
+    func update()
+}
+
 import UIKit
 import PassKit
 import StripeApplePay
@@ -52,16 +56,18 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
     var timer = Timer()
-    var count = 600
+    var count = 60
     var lastCount = 0
     var enterBgDate = Date()
     var exitBgDate = Date()
+    var isFromApplePay = false
+    weak var updateDelegate: UpdateDetailDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         createBooking()
         WebSocketWrapper.shared.delegate.append(self)
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice)"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(Double(totalPrice))"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()
@@ -115,6 +121,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
         
     @objc func exitBackGround() {
+        if isFromApplePay {
+            isFromApplePay = false
+            return
+        }
         exitBgDate = Date()
         let diff = exitBgDate.timeIntervalSince(enterBgDate)
         enterBgDate = exitBgDate
@@ -131,7 +141,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     func makeTimeString(minutes: Int, seconds : Int) -> String {
         var timeString = ""
-        timeString += String(format: "%02d", minutes)
+        timeString += String(format: "%01d", minutes)
         timeString += ":"
         timeString += String(format: "%02d", seconds)
         return timeString
@@ -157,9 +167,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     func crossTimeLimit() {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            self.timer.invalidate()
+            self.updateDelegate?.update()
             Navigate.to.back(self)
         }
-        Alert.showAlertSheet(style: .actionSheet, title: "Time Up!!!", message: "", actions: [okAction])
+        Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
     
     @objc private func onClickPaymentMethod() {
@@ -170,7 +182,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         let title = isApplePayNotSupported ? Constant.String.notSupported : Constant.String.addCardToApplePay
         let message = isApplePayNotSupported ? Constant.String.applePayNotSupported : Constant.String.addCardToYourApplePayWallet
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let okAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            self.isFromApplePay = true
+            self.startTimer()
+        }
         let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -213,7 +228,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     }
                     self.bookingId = id
                     self.addPaymentApi()
-                    self.startTimer()
                 } else {
                     if errMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -242,7 +256,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     }
                     self.bookingId = id
                     self.addPaymentApi()
-                    self.startTimer()
                 } else {
                     if errMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -305,6 +318,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         DispatchQueue.main.async {
             self.buyNowBtn.alpha = 1
             self.buyNowBtn.isUserInteractionEnabled = true
+            self.startTimer()
         }
     }
 
@@ -313,6 +327,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
+        timer.invalidate()
+        updateDelegate?.update()
         Navigate.to.back(self)
     }
     
@@ -326,20 +342,24 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
+        timer.invalidate()
         isPaymentInitiated = true
         paymentSheet?.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
                 self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
+                    self.timer.invalidate()
                     Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
+                self.startTimer()
                 self.isPaymentInitiated = false
 //                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
 //                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
 //                self.present(alert, animated: true, completion: nil)
             case .failed:
+                self.startTimer()
                 self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
@@ -349,6 +369,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func applePayButtonTapped() {
+        isFromApplePay = true
+        timer.invalidate()
         if StripeAPI.deviceSupportsApplePay() == false {
             alertForWallet()
             return
@@ -434,14 +456,19 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
+                self.timer.invalidate()
                 Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
+            self.startTimer()
+            isFromApplePay = true
             self.isPaymentInitiated = false
             let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         case .userCancellation:
+            self.startTimer()
+            isFromApplePay = true
             self.isPaymentInitiated = false
 //            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
 //            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))

@@ -543,3 +543,9 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
         }
     }
 }
+
+extension MVPVenueDetailVc: UpdateDetailDelegate {
+    func update() {
+        updateContinueBtn(forceRemove: true)
+    }
+}

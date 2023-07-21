@@ -245,6 +245,7 @@ final class Navigate {
         vc.venue = venue
         vc.type = type
         vc.event = event
+        vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }

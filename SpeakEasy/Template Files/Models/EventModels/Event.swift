@@ -54,7 +54,7 @@ struct Event: Codable {
     var isSoldOutAllTickets: Bool {
         if eventTicket?.count == 0 { return false }
         let allTickets = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) }
-        let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) == ($0.soldUnits ?? 0)) }
+        let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) <= ($0.soldUnits ?? 0)) }
         return filterTicket?.count == allTickets?.count
     }
 
