@@ -237,7 +237,7 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Int, type: PaymentIntentType) {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket

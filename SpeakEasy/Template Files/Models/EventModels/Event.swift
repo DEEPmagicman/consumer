@@ -31,6 +31,7 @@ struct Event: Codable {
     var description: String
     var disclaimer: String
     var isTieredTicket: Bool
+    var upfront: Bool?
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
@@ -82,6 +83,7 @@ struct Event: Codable {
         try container.encode(description, forKey: .description)
         try container.encode(disclaimer, forKey: .disclaimer)
         try container.encode(isTieredTicket, forKey: .isTieredTicket)
+        try container.encode(upfront, forKey: .upfront)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)

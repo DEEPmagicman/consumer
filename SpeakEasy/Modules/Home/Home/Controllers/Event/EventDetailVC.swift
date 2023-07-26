@@ -44,11 +44,15 @@ final class EventDetailVC: UIViewController {
     private var isNotSellingStage = false
     private var maxTicket = 20
     private var activeTickets: [EventTicket]?
-    private var totalPrice: Int {
-        var total = 0
+    private var totalPrice: Double {
+        var total: Double = 0
         activeTickets?.forEach {
             if let quantity = $0.selectedTicketCount {
-                total += (($0.price ?? 0) * quantity)
+                if event?.upfront == true {
+                    total += ($0.priceWithFees * Double(quantity))
+                } else {
+                    total += (Double($0.price ?? 0) * Double(quantity))
+                }
             }
         }
         return total
@@ -236,7 +240,7 @@ final class EventDetailVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", self.totalPrice))", for: .normal)
         }
     }
     
@@ -292,7 +296,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(activeTickets?[indexPath.row].price ?? 0)"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", activeTickets?[indexPath.row].priceWithFees ?? 0))"
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {

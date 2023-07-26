@@ -34,13 +34,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var processingFeesView: UIView!
     @IBOutlet weak var customFeesView: UIView!
     @IBOutlet weak var customFeeAmount: UILabel!
+    @IBOutlet weak var customFeeNameLbl: UILabel!
     @IBOutlet weak var subTotalAmount: UILabel!
     @IBOutlet weak var processingFeeAmount: UILabel!
     @IBOutlet weak var timerLbl: UILabel!
-    
+    @IBOutlet weak var noFeeView: UIView!
+
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
-    var totalPrice = 0
+    var totalPrice: Double = 0
     var venue: ClipVenue?
     var type: PaymentIntentType = .appClip
     var event: Event?
@@ -48,6 +50,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
+    private var paymentDetail: PaymentDetail?
     private var selectedId = Constant.String.defaultSelectedPM
     private var bookingId = ""
     private var isApplePayNotSupported: Bool {
@@ -56,7 +59,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
     var timer = Timer()
-    var count = 60
+    var count = 600
     var lastCount = 0
     var enterBgDate = Date()
     var exitBgDate = Date()
@@ -66,8 +69,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         createBooking()
-        WebSocketWrapper.shared.delegate.append(self)
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(Double(totalPrice))"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", totalPrice))"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()
@@ -88,9 +90,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         
         timerLbl.text = "10:00"
-        customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
-        subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
-        processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(0.0)"
     
         // background event
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -102,13 +101,25 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
     private func setUpData() {
         switch type {
         case .appClip:
+            noFeeView.isHidden = false
             titleLbl.text = Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
         case .singleTickedEvent:
+            noFeeView.isHidden = true
             titleLbl.text = event?.title ?? "Untitle Event"
             dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -148,7 +159,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
             self.count = self.count - 1
             if self.count <= 0 {
                 timer.invalidate()
@@ -286,12 +298,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
                 self.paymentHistoryId = paymentHistoryId
                 self.ephemeralKey = ephemeralKey
+                self.paymentDetail = paymentDetail
                 self.setUpPaymentBottomSheet()
             } else {
                 if errMsg != nil {
@@ -319,6 +332,28 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             self.buyNowBtn.alpha = 1
             self.buyNowBtn.isUserInteractionEnabled = true
             self.startTimer()
+            self.displayPayment()
+        }
+    }
+    
+    private func displayPayment() {
+        switch type {
+        case .singleTickedEvent:
+            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.subTotal ?? 0))"
+            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.processingFee ?? 0))"
+            if selectedEventTicket.first?.customFee?.title ?? "" == "" {
+                customFeesView.isHidden = true
+            } else {
+                customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.customFee ?? 0))"
+                customFeeNameLbl.text = selectedEventTicket.first?.customFee?.title ?? "Custom fee"
+                customFeesView.isHidden = false
+            }
+            subTotalView.isHidden = false
+            processingFeesView.isHidden = false
+        default:
+            subTotalView.isHidden = true
+            processingFeesView.isHidden = true
+            customFeesView.isHidden = true
         }
     }
 
