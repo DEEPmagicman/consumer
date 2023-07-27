@@ -296,7 +296,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", activeTickets?[indexPath.row].priceWithFees ?? 0))"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {

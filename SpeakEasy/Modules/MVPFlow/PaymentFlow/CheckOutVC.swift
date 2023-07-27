@@ -30,15 +30,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
     @IBOutlet private weak var policyLbl: UILabel!
-    @IBOutlet weak var subTotalView: UIView!
-    @IBOutlet weak var processingFeesView: UIView!
-    @IBOutlet weak var customFeesView: UIView!
-    @IBOutlet weak var customFeeAmount: UILabel!
-    @IBOutlet weak var customFeeNameLbl: UILabel!
-    @IBOutlet weak var subTotalAmount: UILabel!
-    @IBOutlet weak var processingFeeAmount: UILabel!
-    @IBOutlet weak var timerLbl: UILabel!
-    @IBOutlet weak var noFeeView: UIView!
+    @IBOutlet private weak var subTotalView: UIView!
+    @IBOutlet private weak var processingFeesView: UIView!
+    @IBOutlet private weak var customFeesView: UIView!
+    @IBOutlet private weak var customFeeAmount: UILabel!
+    @IBOutlet private weak var customFeeNameLbl: UILabel!
+    @IBOutlet private weak var subTotalAmount: UILabel!
+    @IBOutlet private weak var processingFeeAmount: UILabel!
+    @IBOutlet private weak var timerLbl: UILabel!
+    @IBOutlet private weak var noFeeView: UIView!
 
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
@@ -58,12 +58,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
-    var timer = Timer()
-    var count = 600
-    var lastCount = 0
-    var enterBgDate = Date()
-    var exitBgDate = Date()
-    var isFromApplePay = false
+    private var timer = Timer()
+    private var count = 600
+    private var lastCount = 0
+    private var enterBgDate = Date()
+    private var exitBgDate = Date()
+    private var isFromApplePay = false
     weak var updateDelegate: UpdateDetailDelegate?
 
     override func viewDidLoad() {
@@ -89,7 +89,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         
-        timerLbl.text = "10:00"
+        let time = secondsToHoursMinutesSeconds(seconds: count)
+        timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
     
         // background event
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -119,7 +120,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
         case .singleTickedEvent:
-            noFeeView.isHidden = true
+            noFeeView.isHidden = !(event?.upfront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
             dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -151,14 +152,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     func makeTimeString(minutes: Int, seconds : Int) -> String {
-        var timeString = ""
-        timeString += String(format: "%01d", minutes)
-        timeString += ":"
-        timeString += String(format: "%02d", seconds)
-        return timeString
+        "\(String(format: "%01d", minutes)):\(String(format: "%02d", seconds))"
     }
     
-    func startTimer() {
+    private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.count = self.count - 1
@@ -173,11 +170,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             } else {
                 self.timerLbl.text = timeString
             }
-            
         }
     }
     
-    func crossTimeLimit() {
+    private func crossTimeLimit() {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
             self.timer.invalidate()
             self.updateDelegate?.update()
@@ -339,13 +335,20 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func displayPayment() {
         switch type {
         case .singleTickedEvent:
+            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.total ?? 0))"
+            if event?.upfront == true {
+                subTotalView.isHidden = true
+                processingFeesView.isHidden = true
+                customFeesView.isHidden = true
+                return
+            }
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.subTotal ?? 0))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.processingFee ?? 0))"
-            if selectedEventTicket.first?.customFee?.title ?? "" == "" {
+            if paymentDetail?.customFee ?? 0 == 0 {
                 customFeesView.isHidden = true
             } else {
                 customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.customFee ?? 0))"
-                customFeeNameLbl.text = selectedEventTicket.first?.customFee?.title ?? "Custom fee"
+                customFeeNameLbl.text = selectedEventTicket.first(where: { $0.customFee?.title ?? "" != "" })?.customFee?.title ?? "Custom fee"
                 customFeesView.isHidden = false
             }
             subTotalView.isHidden = false

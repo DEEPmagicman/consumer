@@ -38,9 +38,9 @@ struct EventTicket: Codable {
         }
         switch type {
         case .FLAT:
-            return priceWithStripeFee(Double(price ?? 0) + Double(customFee.value))
+            return priceWithStripeFee(Double(price ?? 0) + SEFee + Double(customFee.value))
         case .PERCENTAGE:
-            return priceWithStripeFee(Double(price ?? 0) + (Double(price ?? 0) * Double(customFee.value) / 100))
+            return priceWithStripeFee(Double(price ?? 0) + SEFee + (Double(price ?? 0) * Double(customFee.value) / 100))
         }
     }
     func priceWithStripeFee(_ price: Double) -> Double {
