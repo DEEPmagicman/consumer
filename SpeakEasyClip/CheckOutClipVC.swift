@@ -50,6 +50,17 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var isValidNo = false
     private var isChangingFlag = false
     private var ticketListHeightObservation: NSKeyValueObservation?
+    private var baseURL: String {
+        get {
+            #if DEBUG
+                return "https://speakeasy-stag.cmdev.cc"
+            #else
+                return "https://api.speakeasygo.com"
+            #endif
+        }
+    }
+    private var retryCount = 0
+    private var maxRetry = 3
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -181,7 +192,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
     private func addPaymentApi() {
         if isIntendCreated { return }
-        guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(bookingId)") else { return }
+        guard let url = URL(string: "\(baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var selectedTickets = [[String: Any]]()
@@ -264,13 +275,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    func paymentStatus(_ status: PaymentStatus, completion: @escaping (()-> Void)) {
-        guard let url = URL(string: "https://api.speakeasygo.com/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
+    func paymentStatus(_ status: PaymentStatus, optedPolicy: Bool, completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(baseURL)/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var param = [String: Any]()
         if venue?.venueSettings?.optedPolicy == true {
-            param["optedPolicy"] = policyCheckBox.isSelected
+            param["optedPolicy"] = optedPolicy
         }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: param,
@@ -280,7 +291,48 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
-            completion()
+            if let error = error as? NSError {
+                if self?.retryCount ?? 0 < self?.maxRetry ?? 0 {
+                    self?.retryCount += 1
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self?.paymentStatus(status, optedPolicy: optedPolicy, completion: completion)
+                    }
+                    return
+                } else {
+                    self?.failedAPI("error code:\(error.code), des:\(error.localizedDescription)")
+                    completion()
+                }
+            } else {
+                completion()
+            }
+        })
+        task.resume()
+    }
+
+    private func failedAPI(_ msg: String) {
+        guard let url = URL(string: "\(baseURL)/consumer/payment/failed") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        var param = [String: Any]()
+        
+        let msg = """
+{
+    "platform": "iOS appClip",
+    "message": "reported after 3 failed try, API test",
+    "time": \(Date()),
+    "comment": \(msg)
+}
+"""
+        param["message"] = msg
+        param["bookingId"] = bookingId
+        let bodyData = try? JSONSerialization.data(
+            withJSONObject: param,
+            options: [.prettyPrinted]
+        )
+        request.httpBody = bodyData
+        request.addValue("*/*", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
         })
         task.resume()
     }
@@ -302,7 +354,7 @@ extension CheckOutClipVC {
         switch status {
         case .success:
             AppClipLoader.showLoader(view)
-            paymentStatus(.SUCCESS) { [weak self] in
+            paymentStatus(.SUCCESS, optedPolicy: policyCheckBox.isSelected) { [weak self] in
                 guard let self = self else { return }
                 self.navigateToQRCode()
             }
@@ -343,7 +395,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user") else { return }
+        guard let userURL = URL(string: "\(baseURL)/appclip-user") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -407,7 +459,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "https://api.speakeasygo.com/appclip-user/free-booking") else { return }
+        guard let userURL = URL(string: "\(baseURL)/appclip-user/free-booking") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
