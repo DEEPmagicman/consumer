@@ -318,7 +318,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let msg = """
 {
     "platform": "iOS appClip",
-    "message": "reported after 3 failed try, API test",
+    "message": "reported after 3 failed try",
     "time": \(Date()),
     "comment": \(msg)
 }

@@ -41,12 +41,16 @@ struct AppClipLoader {
             view.addSubview(indicator)
             view.bringSubviewToFront(indicator)
             indicator.startAnimating()
+            if !UIApplication.shared.isIgnoringInteractionEvents {
+                UIApplication.shared.beginIgnoringInteractionEvents()
+            }
         }
     }
     static func hideLoader() {
         DispatchQueue.main.async {
             indicator.stopAnimating()
             indicator.removeFromSuperview()
+            UIApplication.shared.endIgnoringInteractionEvents()
         }
     }
 }
