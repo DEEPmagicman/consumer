@@ -336,6 +336,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         switch type {
         case .singleTickedEvent:
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.total ?? 0))"
+            totalPrice = paymentDetail?.total ?? 0
             if event?.upfront == true {
                 subTotalView.isHidden = true
                 processingFeesView.isHidden = true
@@ -408,7 +409,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func applePayButtonTapped() {
         isFromApplePay = true
-        timer.invalidate()
         if StripeAPI.deviceSupportsApplePay() == false {
             alertForWallet()
             return
@@ -427,8 +427,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // Initialize an STPApplePayContext instance
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
             // Present Apple Pay payment sheet
+            timer.invalidate()
             applePayContext.presentApplePay()
         } else {
+            Alert.showToast("Problem with your Apple Pay")
             // There is a problem with your Apple Pay configuration
         }
     }
