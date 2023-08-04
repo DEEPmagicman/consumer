@@ -21,7 +21,7 @@ struct Booking: Codable {
     var isCheckedIn: Bool
 //    var ticketPrice: Any
 //    var ticketQuantity: Any
-    var totalPrice: Int
+    var totalPrice: Double
 //    var note: Any
     var consumerUserId: [String]?
 //    var bookingDate: Any

@@ -264,7 +264,8 @@ final class MVPVenueDetailVc: UIViewController {
             createFreeBooking()
         case .PAID:
             if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: totalPrice, type: .appClip)
+                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: Double(totalPrice), type: .appClip)
+                updateContinueBtn(forceRemove: true)
             }
         }
     }
@@ -541,5 +542,11 @@ extension MVPVenueDetailVc: UIScrollViewDelegate {
             headerVenueName.isHidden = true
             headerView.backgroundColor = .clear
         }
+    }
+}
+
+extension MVPVenueDetailVc: UpdateDetailDelegate {
+    func update() {
+        updateContinueBtn(forceRemove: true)
     }
 }

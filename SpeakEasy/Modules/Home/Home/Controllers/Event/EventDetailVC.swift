@@ -44,11 +44,15 @@ final class EventDetailVC: UIViewController {
     private var isNotSellingStage = false
     private var maxTicket = 20
     private var activeTickets: [EventTicket]?
-    private var totalPrice: Int {
-        var total = 0
+    private var totalPrice: Double {
+        var total: Double = 0
         activeTickets?.forEach {
             if let quantity = $0.selectedTicketCount {
-                total += (($0.price ?? 0) * quantity)
+                if event?.upfront == true {
+                    total += ($0.priceWithFees * Double(quantity))
+                } else {
+                    total += (Double($0.price ?? 0) * Double(quantity))
+                }
             }
         }
         return total
@@ -109,7 +113,7 @@ final class EventDetailVC: UIViewController {
         dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
         timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
-        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) } ?? []
+        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         if event?.eventTicket == nil {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
@@ -155,6 +159,7 @@ final class EventDetailVC: UIViewController {
                 self.event = eventDetail
                 if let venue = eventDetail?.venue {
                     self.venueDetails = venue
+                    self.ticketListTableView.reloadData()
                 }
                 self.setupData()
                 self.zeroCaseView(isHidden: true)
@@ -235,7 +240,7 @@ final class EventDetailVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice)", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", self.totalPrice))", for: .normal)
         }
     }
     
@@ -291,7 +296,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(activeTickets?[indexPath.row].price ?? 0)"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
@@ -390,5 +395,12 @@ extension EventDetailVC: UIScrollViewDelegate {
             headerTitleLbl.isHidden = true
             headerView.backgroundColor = .clear
         }
+    }
+}
+
+extension EventDetailVC: UpdateDetailDelegate {
+    func update() {
+        Loader.show()
+        getEventDetail()
     }
 }

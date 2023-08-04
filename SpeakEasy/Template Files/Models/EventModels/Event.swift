@@ -31,6 +31,7 @@ struct Event: Codable {
     var description: String
     var disclaimer: String
     var isTieredTicket: Bool
+    var upfront: Bool?
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
@@ -54,7 +55,7 @@ struct Event: Codable {
     var isSoldOutAllTickets: Bool {
         if eventTicket?.count == 0 { return false }
         let allTickets = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) }
-        let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) == ($0.soldUnits ?? 0)) }
+        let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) <= ($0.soldUnits ?? 0)) }
         return filterTicket?.count == allTickets?.count
     }
 
@@ -82,6 +83,7 @@ struct Event: Codable {
         try container.encode(description, forKey: .description)
         try container.encode(disclaimer, forKey: .disclaimer)
         try container.encode(isTieredTicket, forKey: .isTieredTicket)
+        try container.encode(upfront, forKey: .upfront)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)

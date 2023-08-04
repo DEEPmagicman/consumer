@@ -122,7 +122,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String) -> Void) {
+    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
         var param = ["cart": selectedTickets] as [String: Any]
         switch type {
         case .appClip:
@@ -138,20 +138,26 @@ final class PaymentPresenter {
         AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil, "", "", "")
+                completion(false, nil, "", "", "", nil)
                 return
             }
-            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String {
-                completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey)
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any] {
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: paymentDetail, options: .prettyPrinted)
+                    let detail = try JSONDecoder().decode(PaymentDetail.self, from: data)
+                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, detail)
+                } catch {
+                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, nil)
+                }
             } else {
-                completion(false, "internal error", "", "", "")
+                completion(false, "internal error", "", "", "", nil)
             }
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, "", "", "")
+                completion(false, err.domain, "", "", "", nil)
                 return
             }
-            completion(false, nil, "", "", "")
+            completion(false, nil, "", "", "", nil)
         }
     }
     
