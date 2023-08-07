@@ -39,6 +39,7 @@ final class EventDetailVC: UIViewController {
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
+    var promoteId = ""
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
@@ -211,7 +212,7 @@ final class EventDetailVC: UIViewController {
             return
         }
         if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
             updateContinueBtn(forceRemove: true)
         }
     }

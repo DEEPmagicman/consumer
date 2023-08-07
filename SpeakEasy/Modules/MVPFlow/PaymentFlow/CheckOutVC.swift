@@ -46,6 +46,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var venue: ClipVenue?
     var type: PaymentIntentType = .appClip
     var event: Event?
+    var promoteId = ""
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
@@ -251,7 +252,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return

@@ -214,11 +214,12 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?) {
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
         vc.eventId = eventId
         vc.venueDetails = venueDetail
         vc.event = event
+        vc.promoteId = promoteId
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -237,7 +238,7 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType) {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
@@ -245,6 +246,7 @@ final class Navigate {
         vc.venue = venue
         vc.type = type
         vc.event = event
+        vc.promoteId = promoteId
         vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
