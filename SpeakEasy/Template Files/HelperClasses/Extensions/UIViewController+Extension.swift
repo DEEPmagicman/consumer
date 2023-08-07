@@ -30,8 +30,8 @@ extension UIViewController {
         Utility.main.topViewController()?.view.endEditing(true)
     }
 }
-extension UIViewController {
-    var className: String {
-        return NSStringFromClass(self.classForCoder).components(separatedBy: ".").last!;
-    }
-}
+//extension UIViewController {
+//    var className: String {
+//        return NSStringFromClass(self.classForCoder).components(separatedBy: ".").last!;
+//    }
+//}

@@ -52,6 +52,14 @@ extension String {
         return testEmail.evaluate(with: self)
     }
     
+    var validateDouble: Bool {
+        if let _ = Double(self) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     func convertDateFormat(from: DateFormat, to: DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {
         let olDateFormatter = DateFormatter()
         olDateFormatter.dateFormat = from.rawValue

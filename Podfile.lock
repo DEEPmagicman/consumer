@@ -11,7 +11,6 @@ PODS:
   - Charts/Core (4.1.0):
     - SwiftAlgorithms (~> 1.0)
   - DropDown (2.3.13)
-  - DZNEmptyDataSet (1.8.1)
   - Firebase/CoreOnly (8.15.0):
     - FirebaseCore (= 8.15.0)
   - Firebase/Crashlytics (8.15.0):
@@ -91,12 +90,6 @@ PODS:
     - NVActivityIndicatorView/Presenter (= 4.7.0)
   - NVActivityIndicatorView/Presenter (4.7.0)
   - OTPFieldView (1.0.1)
-  - PhoneNumberKit (3.3.4):
-    - PhoneNumberKit/PhoneNumberKitCore (= 3.3.4)
-    - PhoneNumberKit/UIKit (= 3.3.4)
-  - PhoneNumberKit/PhoneNumberKitCore (3.3.4)
-  - PhoneNumberKit/UIKit (3.3.4):
-    - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (2.2.0)
   - ReachabilitySwift (3)
   - SCPageControl (0.4.0)
@@ -136,7 +129,6 @@ DEPENDENCIES:
   - Alamofire (= 4.9.1)
   - Charts
   - DropDown
-  - DZNEmptyDataSet
   - Firebase/Crashlytics (= 8.15.0)
   - Firebase/RemoteConfig (= 8.15.0)
   - FlagPhoneNumber
@@ -150,7 +142,6 @@ DEPENDENCIES:
   - NBBottomSheet (~> 1.2)
   - NVActivityIndicatorView (= 4.7.0)
   - OTPFieldView
-  - PhoneNumberKit
   - ReachabilitySwift (~> 3)
   - SCPageControl
   - SDWebImage
@@ -167,7 +158,6 @@ SPEC REPOS:
     - AppAuth
     - Charts
     - DropDown
-    - DZNEmptyDataSet
     - Firebase
     - FirebaseABTesting
     - FirebaseCore
@@ -191,7 +181,6 @@ SPEC REPOS:
     - NBBottomSheet
     - NVActivityIndicatorView
     - OTPFieldView
-    - PhoneNumberKit
     - PromisesObjC
     - ReachabilitySwift
     - SCPageControl
@@ -214,7 +203,6 @@ SPEC CHECKSUMS:
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
-  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
   FirebaseABTesting: 10cbce8db9985ae2e3847ea44e9947dd18f94e10
   FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
@@ -238,7 +226,6 @@ SPEC CHECKSUMS:
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   OTPFieldView: 700a752fe62c41d1c4914c78aa500fb30d97c255
-  PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
   ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
   SCPageControl: 8a8dfbba7d7d8c66487a317cb4c4578a7e4af27a
@@ -256,6 +243,6 @@ SPEC CHECKSUMS:
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 5a4b3397a49c979d4574e7ef6a253df550f81dde
+PODFILE CHECKSUM: 19a5432ec57d2f105d25556011155e461ef92c60
 
 COCOAPODS: 1.11.3

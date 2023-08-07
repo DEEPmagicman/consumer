@@ -10,8 +10,6 @@ target 'SpeakEasy-Consumer' do
   pod 'SDWebImage'
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'
-  pod 'PhoneNumberKit'
-  pod 'DZNEmptyDataSet'
   pod 'UITextView+Placeholder'
   pod 'FSCalendar'
   pod 'IQKeyboardManagerSwift'
