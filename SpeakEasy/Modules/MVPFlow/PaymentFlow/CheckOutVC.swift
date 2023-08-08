@@ -539,7 +539,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
             if isVenueStatusUpdate {
                 Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking is closed",actions: [okAction])
             } else if isPriceUpdated {
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's price",actions: [okAction])
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
             }
         }
     }

@@ -380,7 +380,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             }
         case artistTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.openInstagramForUsername(event?.artists?[indexPath.row].instagramUsername ?? "")
+            Navigate.externalURL(event?.artists?[indexPath.row].instagramUsername ?? "")
         default:
             break
         }

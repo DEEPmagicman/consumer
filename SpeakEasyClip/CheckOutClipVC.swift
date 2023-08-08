@@ -599,7 +599,7 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             } else if isPriceUpdated {
-                alertPopup("Update", "Venue your trying to booking, updated it's price") {
+                alertPopup("Update", "The venue updated their prices") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             }
