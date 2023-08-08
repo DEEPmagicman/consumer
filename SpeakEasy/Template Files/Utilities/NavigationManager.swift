@@ -280,6 +280,12 @@ final class Navigate {
         }
     }
     
+    func login() {
+        AppDelegate.shared.guestUserLastNavigation = (.appLaunch, "")
+        UserDefault.shared.emptyData()
+        AppDelegate.shared.changeRootViewController()
+    }
+    
     func settingsVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(SettingsViewController.self)
         fullscreenPush(vc: vc)
