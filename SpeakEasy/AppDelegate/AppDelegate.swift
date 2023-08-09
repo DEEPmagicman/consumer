@@ -49,7 +49,7 @@ extension AppDelegate {
         self.window?.makeKeyAndVisible()
     }
 
-    func changeRootViewController() {
+    func changeRootViewController(forceCreateAccount: Bool = false) {
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
                 setRootVC()
@@ -57,11 +57,11 @@ extension AppDelegate {
                 showOnboarding(isNavigateToDetail: true)
             }
         } else {
-            showOnboarding()
+            showOnboarding(forceCreateAccount: forceCreateAccount)
         }
     }
     
-    func showOnboarding(isNavigateToDetail: Bool = false) {
+    func showOnboarding(isNavigateToDetail: Bool = false, forceCreateAccount: Bool = false) {
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
         let tutorialNavigation = UINavigationController(rootViewController: controller)
         tutorialNavigation.navigationBar.isHidden = true
@@ -70,6 +70,8 @@ extension AppDelegate {
         self.window?.rootViewController = tutorialNavigation
         if isNavigateToDetail, let vc = self.window?.rootViewController {
             Navigate.to.connectAccountVc(vc)
+        } else if forceCreateAccount {
+            Navigate.to.enterPhoneNumVc(controller)
         }
     }
     

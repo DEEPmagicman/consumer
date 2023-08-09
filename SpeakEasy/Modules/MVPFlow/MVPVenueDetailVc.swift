@@ -256,7 +256,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if UserDefault.shared.isGuest == true {
-            Navigate.to.login()
+            Navigate.to.login(forceCreateAccount: true)
             return
         }
         switch selectedType {

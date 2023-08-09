@@ -280,10 +280,10 @@ final class Navigate {
         }
     }
     
-    func login() {
+    func login(forceCreateAccount: Bool = false) {
         AppDelegate.shared.guestUserLastNavigation = (.appLaunch, "")
         UserDefault.shared.emptyData()
-        AppDelegate.shared.changeRootViewController()
+        AppDelegate.shared.changeRootViewController(forceCreateAccount: forceCreateAccount)
     }
     
     func settingsVc(_ sender: UIViewController) {
