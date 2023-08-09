@@ -22,7 +22,7 @@ final class MVPVenueListVc: UIViewController {
     private var openVenueList = [ClipVenue]()
     private var closeVenueList = [ClipVenue]()
     private var openFrom = 0
-    private var venueListDelegate = MVPPresenter()
+    private var presenter = MVPPresenter()
     private var openHasMore = false
     private var closeFrom = 0
     private var closeHasMore = false
@@ -93,7 +93,7 @@ final class MVPVenueListVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        venueListDelegate.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
+        presenter.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -128,7 +128,7 @@ final class MVPVenueListVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        venueListDelegate.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
+        presenter.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -272,7 +272,7 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
     }
     
     private func fetchCityList(userCity: String) {
-        self.venueListDelegate.mvpCityListAPi() { cityList, isSuccess in
+        presenter.mvpCityListAPi { cityList, isSuccess, errMsg in
             if isSuccess {
                 if let city = cityList.first(where: { $0.value == userCity }) {
                     UserDefault.shared.localCity = city.value
@@ -280,7 +280,7 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
                     self.cityNameLbl.text = UserDefault.shared.localCity
                 }
             } else {
-                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
     }

@@ -98,6 +98,7 @@ final class EventDetailVC: UIViewController {
         mainImg.addGestureRecognizer(tap1)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
+        mapView.isScrollEnabled = false
     }
     
     private func setupData() {
@@ -175,7 +176,9 @@ final class EventDetailVC: UIViewController {
     
     @objc func openFullImage() {
         updateContinueBtn(forceRemove: true)
-        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
+        Navigate.to.presentGSImageViewerController(self, imageView: mainImg)
+        // TODO: check and remove full screen vc
+//        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
     }
     
     @objc func openAppleMap() {

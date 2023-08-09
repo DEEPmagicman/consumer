@@ -6,10 +6,6 @@ PODS:
   - AppAuth/Core (1.6.0)
   - AppAuth/ExternalUserAgent (1.6.0):
     - AppAuth/Core
-  - Charts (4.1.0):
-    - Charts/Core (= 4.1.0)
-  - Charts/Core (4.1.0):
-    - SwiftAlgorithms (~> 1.0)
   - DropDown (2.3.13)
   - Firebase/CoreOnly (8.15.0):
     - FirebaseCore (= 8.15.0)
@@ -119,7 +115,6 @@ PODS:
   - StripeUICore (23.3.3):
     - StripeCore (= 23.3.3)
   - SVProgressHUD (2.2.5)
-  - SwiftAlgorithms (1.0.0)
   - SwiftInstagram (1.1.2):
     - SwiftInstagram/Core (= 1.1.2)
   - SwiftInstagram/Core (1.1.2)
@@ -127,7 +122,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (= 4.9.1)
-  - Charts
   - DropDown
   - Firebase/Crashlytics (= 8.15.0)
   - Firebase/RemoteConfig (= 8.15.0)
@@ -156,7 +150,6 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppAuth
-    - Charts
     - DropDown
     - Firebase
     - FirebaseABTesting
@@ -194,14 +187,12 @@ SPEC REPOS:
     - StripePaymentsUI
     - StripeUICore
     - SVProgressHUD
-    - SwiftAlgorithms
     - SwiftInstagram
     - "UITextView+Placeholder"
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
-  Charts: ce0768268078eee0336f122c3c4ca248e4e204c5
   DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
   FirebaseABTesting: 10cbce8db9985ae2e3847ea44e9947dd18f94e10
@@ -239,10 +230,9 @@ SPEC CHECKSUMS:
   StripePaymentsUI: f9c8a63faf4858f66e2302a717ebb7c928197f53
   StripeUICore: 784efbcb5ed1e3dc69e4179e1a8feb247d792d81
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 19a5432ec57d2f105d25556011155e461ef92c60
+PODFILE CHECKSUM: 3e2044561aa025073b88a68f2e7e670531c9eab6
 
 COCOAPODS: 1.11.3

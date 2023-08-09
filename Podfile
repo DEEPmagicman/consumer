@@ -14,7 +14,6 @@ target 'SpeakEasy-Consumer' do
   pod 'FSCalendar'
   pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
-  pod 'Charts'
   pod 'SCPageControl'
   pod 'GoogleMaps'
   pod "GSImageViewerController"

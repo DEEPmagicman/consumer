@@ -201,7 +201,6 @@
 		CAC4141928A478050007BA86 /* DatePickerColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EC28A478040007BA86 /* DatePickerColors.swift */; };
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
-		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
 		CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04049129EE6D6A00DD546D /* PaymentMethod.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
 		CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */; };
@@ -803,7 +802,6 @@
 		CAC413EC28A478040007BA86 /* DatePickerColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerColors.swift; sourceTree = "<group>"; };
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
-		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		CE04049129EE6D6A00DD546D /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -2071,7 +2069,6 @@
 		CE48678D286F358700FD277E /* ThirdParty Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */,
 				CAC413D528A478040007BA86 /* DatePicker */,
 				CAC413BF28A478040007BA86 /* Extended */,
 				CEECAA67288D8B7C007C5F9C /* CalendarDateRangePickerViewController */,
@@ -4384,7 +4381,6 @@
 				E1A9E7D528C56FD10081FB28 /* ManageFriendTVC.swift in Sources */,
 				CAC413F828A478040007BA86 /* NSAttributedString.swift in Sources */,
 				E11F4C3B28C8383A008D2E30 /* TransactionSummaryTVC.swift in Sources */,
-				CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */,
 				CE4867C2286F358800FD277E /* CollectionViewFlowLayout.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
 				82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */,

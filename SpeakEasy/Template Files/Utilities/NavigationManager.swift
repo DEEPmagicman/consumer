@@ -7,6 +7,7 @@
 
 import UIKit
 import NBBottomSheet
+import GSImageViewerController
 
 enum NavigationDestination {
     case appLaunch
@@ -236,6 +237,14 @@ final class Navigate {
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .overCurrentContext
         sender.navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func presentGSImageViewerController(_ sender: UIViewController, imageView: UIImageView) {
+        let image = imageView.image ?? Constant.Icon.uploadImage ?? UIImage()
+        let imageInfo = GSImageInfo(image: image, imageMode: .aspectFit)
+        let transitionInfo = GSTransitionInfo(fromView: imageView)
+        let imageViewer = GSImageViewerController(imageInfo: imageInfo, transitionInfo: transitionInfo)
+        sender.present(imageViewer, animated: true, completion: nil)
     }
     
     func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {

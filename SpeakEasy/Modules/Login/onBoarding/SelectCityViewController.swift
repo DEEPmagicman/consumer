@@ -21,10 +21,10 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     private var displayList = [MVPCity]()
     private var selectedCity = ""
     private var presenter = OnBoardingPresenter()
-    private var cityListDelegate = MVPPresenter()
-    private var from = 0
-    private var hasMore = false
-    private var searchText = ""
+    private var mvpPresenter = MVPPresenter()
+//    private var from = 0
+//    private var hasMore = false
+//    private var searchText = ""
     private var lastSearch = ""
     
     override func viewDidLoad() {
@@ -45,7 +45,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func fetchCityList() {
-        cityListDelegate.mvpCityListAPi() { [weak self] cityList, isSuccess in
+        mvpPresenter.mvpCityListAPi { [weak self] cityList, isSuccess, errMsg in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -62,11 +62,11 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
                 }
                 self.selectCityTableView.reloadData()
             } else {
-                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
             Loader.hide()
         }
-        
+        // TODO: check and remove old city API
 //        self.presenter.getCityListAPi(from: from, searchText: searchText) { [weak self] cityList, hasMore, isSuccess in
 //            guard let self = self else {
 //                Loader.hide()
