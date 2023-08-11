@@ -41,7 +41,7 @@ extension BookingRequests: UITextFieldDelegate {
             let allowedCharacterSet = CharacterSet.init(charactersIn: "0123456789")
             let inputText = (textField.text ?? "").replacingLastOccurrenceOfString(Constants.currency, with: "")
             
-            if !Validation.shared.validateDouble(inputText+string){
+        if !(inputText+string).validateDouble {
                 return false
             }
             

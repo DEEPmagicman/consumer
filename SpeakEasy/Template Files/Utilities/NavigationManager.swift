@@ -7,6 +7,7 @@
 
 import UIKit
 import NBBottomSheet
+import GSImageViewerController
 
 enum NavigationDestination {
     case appLaunch
@@ -214,11 +215,12 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?) {
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
         vc.eventId = eventId
         vc.venueDetails = venueDetail
         vc.event = event
+        vc.promoteId = promoteId
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -237,7 +239,15 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType) {
+    func presentGSImageViewerController(_ sender: UIViewController, imageView: UIImageView) {
+        let image = imageView.image ?? Constant.Icon.uploadImage ?? UIImage()
+        let imageInfo = GSImageInfo(image: image, imageMode: .aspectFit)
+        let transitionInfo = GSTransitionInfo(fromView: imageView)
+        let imageViewer = GSImageViewerController(imageInfo: imageInfo, transitionInfo: transitionInfo)
+        sender.present(imageViewer, animated: true, completion: nil)
+    }
+    
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
@@ -245,6 +255,7 @@ final class Navigate {
         vc.venue = venue
         vc.type = type
         vc.event = event
+        vc.promoteId = promoteId
         vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -276,6 +287,12 @@ final class Navigate {
         if let vc = (sender.tabBarController?.viewControllers?.last as? UINavigationController)?.viewControllers.first(where: { $0 is MVPStartScreenVC }) as? MVPStartScreenVC {
             vc.guestUserLastNavigation = guestUserLastNavigation
         }
+    }
+    
+    func login(forceCreateAccount: Bool = false) {
+        AppDelegate.shared.guestUserLastNavigation = (.appLaunch, "")
+        UserDefault.shared.emptyData()
+        AppDelegate.shared.changeRootViewController(forceCreateAccount: forceCreateAccount)
     }
     
     func settingsVc(_ sender: UIViewController) {
@@ -412,19 +429,6 @@ final class Navigate {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
         } else {
             Utility.main.topViewController()?.navigationController?.navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-    
-    static func openInstagramForUsername(_ userName: String) {
-        guard let appURL = URL(string: "instagram://user?username=\(userName)") else { return }
-        let application = UIApplication.shared
-        
-        if application.canOpenURL(appURL) {
-            application.open(appURL)
-        } else {
-            // NOTE: if Instagram app is not installed, open URL inside Safari
-            guard let webURL = URL(string: "https://instagram.com/\(userName)") else { return }
-            application.open(webURL)
         }
     }
     

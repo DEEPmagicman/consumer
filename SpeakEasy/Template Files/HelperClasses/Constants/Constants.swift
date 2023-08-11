@@ -1,7 +1,5 @@
 
-import Foundation
 import UIKit
-import Charts
 
 struct Global{
     static let APP_COLOR                     = UIColor(red:29/255, green:29/255, blue:29/255, alpha:1.0)

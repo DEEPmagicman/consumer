@@ -39,6 +39,7 @@ final class EventDetailVC: UIViewController {
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
+    var promoteId = ""
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
@@ -97,6 +98,7 @@ final class EventDetailVC: UIViewController {
         mainImg.addGestureRecognizer(tap1)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
+        mapView.isScrollEnabled = false
     }
     
     private func setupData() {
@@ -174,7 +176,9 @@ final class EventDetailVC: UIViewController {
     
     @objc func openFullImage() {
         updateContinueBtn(forceRemove: true)
-        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
+        Navigate.to.presentGSImageViewerController(self, imageView: mainImg)
+        // TODO: check and remove full screen vc
+//        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
     }
     
     @objc func openAppleMap() {
@@ -211,7 +215,7 @@ final class EventDetailVC: UIViewController {
             return
         }
         if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
             updateContinueBtn(forceRemove: true)
         }
     }
@@ -379,7 +383,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             }
         case artistTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.openInstagramForUsername(event?.artists?[indexPath.row].instagramUsername ?? "")
+            Navigate.externalURL(event?.artists?[indexPath.row].instagramUsername ?? "")
         default:
             break
         }

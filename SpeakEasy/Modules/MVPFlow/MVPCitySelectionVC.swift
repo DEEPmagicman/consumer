@@ -11,12 +11,12 @@ protocol CitySelectionDelegate: AnyObject {
     func citySelected(city: String)
 }
 
-class MVPCitySelectionVC: UIViewController {
+final class MVPCitySelectionVC: UIViewController {
 
     @IBOutlet weak var cityListTableView: UITableView!
     
-    var arrCityList = [MVPCity]()
-    var cityListDelegate = MVPPresenter()
+    private var cityList = [MVPCity]()
+    private var presenter = MVPPresenter()
     weak var citySelectionDelegate: CitySelectionDelegate?
     
     override func viewDidLoad() {
@@ -28,12 +28,12 @@ class MVPCitySelectionVC: UIViewController {
     
     private func fetchCityList() {
         Loader.show()
-        self.cityListDelegate.mvpCityListAPi() { cityList, isSuccess in
+        presenter.mvpCityListAPi { cityList, isSuccess, errMsg in
             if isSuccess {
-                self.arrCityList = cityList
+                self.cityList = cityList
                 self.cityListTableView.reloadData()
             } else {
-                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
             Loader.hide()
         }
@@ -47,12 +47,12 @@ class MVPCitySelectionVC: UIViewController {
 
 extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        arrCityList.count
+        cityList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CitySelectionTableCell", for: indexPath) as? CitySelectionTableCell
-        let data = arrCityList[indexPath.row]
+        let data = cityList[indexPath.row]
         cell?.lblCity.text = data.value
         cell?.imgCity.isHidden = true
         cell?.containtView.backgroundColor = .clear
@@ -62,9 +62,9 @@ extension MVPCitySelectionVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefault.shared.localCity = arrCityList[indexPath.row].value
+        UserDefault.shared.localCity = cityList[indexPath.row].value
         navigationController?.popViewController(animated: true)
         UserDefault.shared.defaultCitySelected = true
-        self.citySelectionDelegate?.citySelected(city: arrCityList[indexPath.row].value)
+        self.citySelectionDelegate?.citySelected(city: cityList[indexPath.row].value)
     }
 }

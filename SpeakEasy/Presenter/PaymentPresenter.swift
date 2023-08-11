@@ -42,12 +42,15 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
-        let param = ["isAppClipUser": false,
+    static func createEventBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], promoteId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+        var param = ["isAppClipUser": false,
                      "phone": phone,
                      "tickets": tickets,
                      "consumerUserId": userId,
                      "eventId": eventId] as [String: Any]
+        if promoteId != "" {
+            param["promotionLinkId"] = promoteId
+        }
         AFWrapper.postRequest(APIBuilder.createEventBookingURL, params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {

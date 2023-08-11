@@ -201,7 +201,6 @@
 		CAC4141928A478050007BA86 /* DatePickerColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EC28A478040007BA86 /* DatePickerColors.swift */; };
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
-		CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */; };
 		CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04049129EE6D6A00DD546D /* PaymentMethod.swift */; };
 		CE08978B2994FBE100EE6117 /* QRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08978A2994FBE100EE6117 /* QRCodeVC.swift */; };
 		CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */; };
@@ -228,10 +227,8 @@
 		CE4867A6286F358800FD277E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE48674F286F358700FD277E /* Localizable.strings */; };
 		CE4867A7286F358800FD277E /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486751286F358700FD277E /* Strings.swift */; };
 		CE4867A8286F358800FD277E /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486754286F358700FD277E /* Validator.swift */; };
-		CE4867A9286F358800FD277E /* Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486755286F358700FD277E /* Validation.swift */; };
 		CE4867AB286F358800FD277E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486757286F358700FD277E /* Utility.swift */; };
 		CE4867AC286F358800FD277E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486759286F358700FD277E /* Constants.swift */; };
-		CE4867AD286F358800FD277E /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48675B286F358700FD277E /* Enums.swift */; };
 		CE4867AE286F358800FD277E /* ProjectStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48675D286F358700FD277E /* ProjectStructs.swift */; };
 		CE4867AF286F358800FD277E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48675F286F358700FD277E /* UIApplication+Extension.swift */; };
 		CE4867B0286F358800FD277E /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486760286F358700FD277E /* UIFont+Extension.swift */; };
@@ -805,7 +802,6 @@
 		CAC413EC28A478040007BA86 /* DatePickerColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerColors.swift; sourceTree = "<group>"; };
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
-		CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		CE04049129EE6D6A00DD546D /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -833,10 +829,8 @@
 		CE486751286F358700FD277E /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		CE486752286F358700FD277E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE486754286F358700FD277E /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
-		CE486755286F358700FD277E /* Validation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
 		CE486757286F358700FD277E /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		CE486759286F358700FD277E /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		CE48675B286F358700FD277E /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		CE48675D286F358700FD277E /* ProjectStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectStructs.swift; sourceTree = "<group>"; };
 		CE48675F286F358700FD277E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		CE486760286F358700FD277E /* UIFont+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
@@ -1936,7 +1930,6 @@
 				CE48674E286F358700FD277E /* Strings */,
 				CE486753286F358700FD277E /* Utility Functions */,
 				CE486758286F358700FD277E /* Constants */,
-				CE48675A286F358700FD277E /* Enums */,
 				CE48675C286F358700FD277E /* ProjectStructs */,
 				CE48675E286F358700FD277E /* Extensions */,
 				CE48676B286F358700FD277E /* ProjectEnums */,
@@ -1970,14 +1963,6 @@
 				691574642A0CD0EF002F303A /* Stripe.swift */,
 			);
 			path = Constants;
-			sourceTree = "<group>";
-		};
-		CE48675A286F358700FD277E /* Enums */ = {
-			isa = PBXGroup;
-			children = (
-				CE48675B286F358700FD277E /* Enums.swift */,
-			);
-			path = Enums;
 			sourceTree = "<group>";
 		};
 		CE48675C286F358700FD277E /* ProjectStructs */ = {
@@ -2084,7 +2069,6 @@
 		CE48678D286F358700FD277E /* ThirdParty Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				CAF8B1CA28A4961E0043A6B1 /* BalloonMarker.swift */,
 				CAC413D528A478040007BA86 /* DatePicker */,
 				CAC413BF28A478040007BA86 /* Extended */,
 				CEECAA67288D8B7C007C5F9C /* CalendarDateRangePickerViewController */,
@@ -2175,7 +2159,6 @@
 				828E9A982983CF3B000F2736 /* BottleMenuList */,
 				29868364297567FB00CB827B /* EventModels */,
 				298683592975657200CB827B /* VenueModels */,
-				CE486755286F358700FD277E /* Validation.swift */,
 				CE4867D9286F392900FD277E /* UserModel */,
 			);
 			path = Models;
@@ -4398,7 +4381,6 @@
 				E1A9E7D528C56FD10081FB28 /* ManageFriendTVC.swift in Sources */,
 				CAC413F828A478040007BA86 /* NSAttributedString.swift in Sources */,
 				E11F4C3B28C8383A008D2E30 /* TransactionSummaryTVC.swift in Sources */,
-				CAF8B1CB28A4961E0043A6B1 /* BalloonMarker.swift in Sources */,
 				CE4867C2286F358800FD277E /* CollectionViewFlowLayout.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
 				82994A93296D3B9D008CA778 /* FriendListTableViewCell.swift in Sources */,
@@ -4609,7 +4591,6 @@
 				BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */,
 				04FDAF8928F9451A007129CC /* UserProfilePopUp.swift in Sources */,
 				BD7FA0F32948514C00935275 /* EnterEmailPassViewController.swift in Sources */,
-				CE4867A9286F358800FD277E /* Validation.swift in Sources */,
 				E1A9E80028C579690081FB28 /* MyAccount.swift in Sources */,
 				2986835F297565C500CB827B /* VenueAttachment.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
@@ -4617,7 +4598,6 @@
 				CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */,
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
-				CE4867AD286F358800FD277E /* Enums.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */,
@@ -4735,7 +4715,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4750,7 +4730,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.16;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4769,7 +4749,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4784,7 +4764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.16;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4925,7 +4905,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 77;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4950,7 +4930,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.16;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4970,7 +4950,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4994,7 +4974,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.16;
+				MARKETING_VERSION = 2.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";

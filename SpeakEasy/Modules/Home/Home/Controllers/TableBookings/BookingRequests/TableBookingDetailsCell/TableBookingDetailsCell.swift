@@ -141,7 +141,7 @@ extension TableBookingDetailsCell: UITextFieldDelegate {
         if textField.tag == 11 {
           let allowedCharacterSet = CharacterSet.init(charactersIn: "0123456789")
           let inputText = (textField.text ?? "").replacingOccurrences(of: "$", with: "").replacingOccurrences(of: ",", with: "").replacingOccurrences(of: ".", with: "")
-          if !Validation.shared.validateDouble(inputText+string){
+            if !(inputText+string).validateDouble {
             return false
           }
           let textCharacterSet = CharacterSet.init(charactersIn: inputText + string)

@@ -104,7 +104,8 @@ final class MVPVenueDetailVc: UIViewController {
         getVenueDetail()
         updateContinueBtn(forceRemove: true)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
-        self.mapView.addGestureRecognizer(tap)
+        mapView.addGestureRecognizer(tap)
+        mapView.isScrollEnabled = false
         openingHoursTableView.register(UINib(nibName: "HoursTVC", bundle: nil), forCellReuseIdentifier: "HoursTVC")
         hoursHeightObservation = openingHoursTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -256,7 +257,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if UserDefault.shared.isGuest == true {
-            Navigate.to.loginMandatory(self)
+            Navigate.to.login(forceCreateAccount: true)
             return
         }
         switch selectedType {

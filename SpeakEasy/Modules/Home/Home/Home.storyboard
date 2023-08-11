@@ -930,7 +930,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="V9o-VX-CVJ">
-                                        <rect key="frame" x="0.0" y="178" width="414" height="586"/>
+                                        <rect key="frame" x="0.0" y="178" width="414" height="636"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -955,7 +955,7 @@
                                     <constraint firstAttribute="trailing" secondItem="yVd-BV-xih" secondAttribute="trailing" constant="20" id="mjV-n2-eDN"/>
                                     <constraint firstItem="yGi-60-8pV" firstAttribute="leading" secondItem="3AA-LW-duF" secondAttribute="leading" constant="20" id="mkC-4F-tYJ"/>
                                     <constraint firstItem="d7l-QD-p2F" firstAttribute="top" secondItem="yGi-60-8pV" secondAttribute="bottom" constant="20" id="oc7-vQ-136"/>
-                                    <constraint firstAttribute="bottom" secondItem="V9o-VX-CVJ" secondAttribute="bottom" constant="50" id="tIJ-PM-5jq"/>
+                                    <constraint firstAttribute="bottom" secondItem="V9o-VX-CVJ" secondAttribute="bottom" id="tIJ-PM-5jq"/>
                                     <constraint firstItem="yVd-BV-xih" firstAttribute="top" secondItem="Ml0-OE-owb" secondAttribute="bottom" constant="25" id="uaO-Kn-8vj"/>
                                     <constraint firstAttribute="trailing" secondItem="V9o-VX-CVJ" secondAttribute="trailing" id="vaP-j9-Ta2"/>
                                 </constraints>
@@ -1382,7 +1382,7 @@
                                                                 <rect key="frame" x="0.0" y="50" width="382" height="20"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FwE-fc-ftH">
-                                                                        <rect key="frame" x="16" y="1" width="8" height="18.5"/>
+                                                                        <rect key="frame" x="16" y="1" width="7.5" height="18.5"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                                                         <color key="textColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
@@ -1878,7 +1878,7 @@
                                                                 <rect key="frame" x="0.0" y="50" width="382" height="20"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzJ-L6-vxT">
-                                                                        <rect key="frame" x="16" y="1" width="8" height="18.5"/>
+                                                                        <rect key="frame" x="16" y="1" width="7.5" height="18.5"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                                                         <color key="textColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>

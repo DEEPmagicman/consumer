@@ -42,6 +42,7 @@ final class InviteLinkVC: UIViewController {
         scrollView.delegate = self
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
+        mapView.isScrollEnabled = false
     }
     
     private func getInviteData() {
