@@ -42,6 +42,7 @@ target 'SpeakEasyClip' do
   pod 'StripeApplePay'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
+  pod 'NBBottomSheet', '~> 1.2'
 end
 
 post_install do |installer|

@@ -9,6 +9,7 @@ import UIKit
 import PassKit
 import StripeApplePay
 import FlagPhoneNumber
+import NBBottomSheet
 
 enum PaymentStatus: String {
     case SUCCESS
@@ -34,7 +35,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var policyLbl: UILabel!
     @IBOutlet weak var freeTicketBtn: UIButton!
     @IBOutlet weak var applePayView: UIView!
-    
+    @IBOutlet weak var cardPayBtn: UIButton!
+
     var totalPrice = 1
     var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
@@ -172,6 +174,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         freeTicketBtn.isUserInteractionEnabled = isCorrectDetails
         applePayBtn.alpha = isCorrectDetails ? 1 : 0.5
         applePayBtn.isUserInteractionEnabled = isCorrectDetails
+        cardPayBtn.alpha = isCorrectDetails ? 1 : 0.5
+        cardPayBtn.isUserInteractionEnabled = isCorrectDetails
     }
     
     private func checkData() {
@@ -190,7 +194,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkData()
     }
 
-    private func addPaymentApi() {
+    private func addPaymentApi(isApplePay: Bool = true) {
         if isIntendCreated { return }
         guard let url = URL(string: "\(baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
@@ -222,7 +226,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.paymentHistoryId = paymentHistoryId
             self.setUpPaymentBtn()
             DispatchQueue.main.async {
-                self.applePayButtonTapped()
+                if isApplePay {
+                    self.applePayButtonTapped()
+                } else {
+                    self.showCardBottomSheet()
+                }
             }
         })
         task.resume()
@@ -337,6 +345,27 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
+    private func showCardBottomSheet() {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(240))
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "PaymentSheetClipVC")) as? PaymentSheetClipVC {
+            vc.bookingId = bookingId
+            vc.delegate = self
+            let bottomSheetController = NBBottomSheetController(configuration: configuration)
+            bottomSheetController.present(vc, on: self)
+        }
+    }
+    
+    @IBAction func onClickCardPay(_ sender: Any) {
+        if isIntendCreated {
+            DispatchQueue.main.async {
+                self.showCardBottomSheet()
+            }
+            return
+        }
+        createBooking(isApplePay: false)
+    }
+
     @IBAction func onClickFreeTicket(_ sender: Any) {
         createFreeBooking()
     }
@@ -369,7 +398,7 @@ extension CheckOutClipVC {
         }
     }
 
-    func createBooking() {
+    func createBooking(isApplePay: Bool = true) {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
         selectedAppClipTickets.forEach {
@@ -417,10 +446,10 @@ extension CheckOutClipVC {
             }
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
-                self.addPaymentApi()
+                self.addPaymentApi(isApplePay: isApplePay)
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.bookingId = bookingId
-                self.addPaymentApi()
+                self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
                 self.alertPopup(error, message)
@@ -619,5 +648,17 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         isChangingFlag = false
+    }
+}
+
+extension CheckOutClipVC: CardPaymentDelegate {
+    func paymentSuccess() {
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+            self.paymentStatus(.SUCCESS, optedPolicy: self.policyCheckBox.isSelected) { [weak self] in
+                guard let self = self else { return }
+                self.navigateToQRCode()
+            }
+        }
     }
 }
