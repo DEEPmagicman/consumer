@@ -33,9 +33,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
     @IBOutlet private weak var policyLbl: UILabel!
-    @IBOutlet weak var freeTicketBtn: UIButton!
-    @IBOutlet weak var applePayView: UIView!
-    @IBOutlet weak var cardPayBtn: UIButton!
+    @IBOutlet private weak var freeTicketBtn: UIButton!
+    @IBOutlet private weak var freeTicketView: UIView!
+    @IBOutlet private weak var applePayView: UIView!
+    @IBOutlet private weak var cardPayView: UIView!
+    @IBOutlet private weak var cardPayBtn: UIButton!
+    @IBOutlet private weak var scrollViewBottomConstraint: NSLayoutConstraint!
 
     var totalPrice = 1
     var venue: ClipVenue?
@@ -109,7 +112,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             errorLbl.text = "Add Card to your Apple wallet & try again."
         } else {
             isApplePayNotSupported = true
-            errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
+            errorLbl.text = "Apple pay is not supported on your device, try another payment option."
         }
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
@@ -120,14 +123,24 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         
         if totalPrice == 0 {
             applePayView.isHidden = true
-            freeTicketBtn.isHidden = false
+            cardPayView.isHidden = true
+            freeTicketView.isHidden = false
         } else {
             applePayView.isHidden = false
-            freeTicketBtn.isHidden = true
+            cardPayView.isHidden = false
+            freeTicketView.isHidden = true
         }
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if totalPrice == 0 {
+            scrollViewBottomConstraint.constant = 130 - view.safeAreaInsets.bottom
+        } else {
+            scrollViewBottomConstraint.constant = 190 - view.safeAreaInsets.bottom
+        }
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -350,6 +363,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         configuration = NBBottomSheetConfiguration(sheetSize: .fixed(240))
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "PaymentSheetClipVC")) as? PaymentSheetClipVC {
             vc.bookingId = bookingId
+            vc.totalPrice = totalPrice
+            vc.currencySymbol = venue?.venueSettings?.currencySymbol ?? "$"
             vc.delegate = self
             let bottomSheetController = NBBottomSheetController(configuration: configuration)
             bottomSheetController.present(vc, on: self)

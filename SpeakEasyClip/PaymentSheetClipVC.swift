@@ -17,10 +17,12 @@ final class PaymentSheetClipVC: UIViewController {
     @IBOutlet weak var cardNumberTF: UITextField!
     @IBOutlet weak var cardTypeLbl: UILabel!
     @IBOutlet weak var dateTF: UITextField!
-    @IBOutlet weak var csvTF: UITextField!    
+    @IBOutlet weak var cvcTF: UITextField!    
     @IBOutlet weak var payBtn: UIButton!
     
     var bookingId = ""
+    var totalPrice = 0
+    var currencySymbol = "$"
     weak var delegate: CardPaymentDelegate?
 
     override func viewDidLoad() {
@@ -28,17 +30,24 @@ final class PaymentSheetClipVC: UIViewController {
         cardInfoView.layer.borderColor = UIColor.darkGray.cgColor
         cardInfoView.layer.borderWidth = 1
         cardNumberTF.addTarget(self, action: #selector(numberDidChange), for: .editingChanged)
+        cardNumberTF.delegate = self
         dateTF.delegate = self
-        csvTF.delegate = self
+        cvcTF.delegate = self
+        payBtn.setTitle("Pay \(currencySymbol)\(String(format: "%.2f", Double(totalPrice)))", for: .normal)
+        cardNumberTF.addNextButtonKeyboard(superViewCount: 2)
+        dateTF.addNextButtonKeyboard(superViewCount: 3)
+        cvcTF.addDoneButtonKeyboard()
     }
     
     private func updatePayBtn() {
-        if cardNumberTF.text?.count ?? 0 > 4, dateTF.text?.count == 5, csvTF.text?.count ?? 0 >= 3 {
-            payBtn.isUserInteractionEnabled = true
-            payBtn.alpha = 1
-        } else {
-            payBtn.isUserInteractionEnabled = false
-            payBtn.alpha = 0.5
+        DispatchQueue.main.async {
+            if self.cardNumberTF.text?.count ?? 0 > 4, self.dateTF.text?.count == 5, self.cvcTF.text?.count ?? 0 >= 3 {
+                self.payBtn.isUserInteractionEnabled = true
+                self.payBtn.alpha = 1
+            } else {
+                self.payBtn.isUserInteractionEnabled = false
+                self.payBtn.alpha = 0.5
+            }
         }
     }
     
@@ -126,15 +135,17 @@ final class PaymentSheetClipVC: UIViewController {
     }
 
     @IBAction func onClickPay(_ sender: Any) {
+        payBtn.isUserInteractionEnabled = false
+        payBtn.alpha = 0.5
         AppClipLoader.showLoader(self.view)
-        guard let url = URL(string: "https://speakeasy-stag.cmdev.cc/appclip/payment") else { return }
+        guard let url = URL(string: "https://api.speakeasygo.com/appclip/payment") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let param = ["bookingId": bookingId,
                      "number": cardNumberTF.text?.replacingOccurrences(of: " ", with: "") ?? "",
                      "exp_month": Int(dateTF.text?.prefix(2) ?? "") ?? 0,
                      "exp_year": Int(dateTF.text?.dropFirst(3) ?? "") ?? 0,
-                     "cvc": csvTF.text ?? ""] as [String: Any]
+                     "cvc": cvcTF.text ?? ""] as [String: Any]
         let bodyData = try? JSONSerialization.data(
             withJSONObject: param,
             options: [.prettyPrinted]
@@ -148,6 +159,7 @@ final class PaymentSheetClipVC: UIViewController {
             guard let data = data else {
                 AppClipLoader.hideLoader()
                 self.alertPopup("Alert", "Something went wrong")
+                self.updatePayBtn()
                 return
             }
             guard let success = String(data: data, encoding: .utf8).flatMap(Bool.init), success == true else {
@@ -158,6 +170,7 @@ final class PaymentSheetClipVC: UIViewController {
                     AppClipLoader.hideLoader()
                     self.alertPopup("Alert", "Something went wrong")
                 }
+                self.updatePayBtn()
                 return
             }
             AppClipLoader.hideLoader()
@@ -209,7 +222,14 @@ extension PaymentSheetClipVC: UITextFieldDelegate {
         let numberFiltered = compSepByCharInSet.joined(separator: "")
         
         switch textField {
-        case csvTF:
+        case cardNumberTF:
+            // NOTE: card number can have a length of 13 to 19 digits, American Express is 15 digits
+            let maxLength = 24 // (19 max digits + 4 spaces + 1 extra)
+            let currentString = (textField.text ?? "") as NSString
+            let newString = currentString.replacingCharacters(in: range, with: string)
+            
+            return newString.count <= maxLength && string == numberFiltered
+        case cvcTF:
             // NOTE: CSV length can't be more than 4
             let maxLength = 4
             let currentString = (textField.text ?? "") as NSString
@@ -248,7 +268,7 @@ extension PaymentSheetClipVC: UITextFieldDelegate {
                 }
             }
             if dateTF.text?.count == 5 {
-                csvTF.becomeFirstResponder()
+                cvcTF.becomeFirstResponder()
             }
         default:
             break

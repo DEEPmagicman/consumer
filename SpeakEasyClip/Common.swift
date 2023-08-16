@@ -37,3 +37,39 @@ struct CommonConstant {
         static let checkBoxFull = UIImage(named: "checkBoxFull")
     }    
 }
+
+extension UITextField {
+    func addNextButtonKeyboard(superViewCount: Int) {
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        let nextButton = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(self.nextButtonTapped(_:)))
+        nextButton.tag = superViewCount
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        keyboardToolbar.items = [flexibleSpace, nextButton]
+        
+        self.inputAccessoryView = keyboardToolbar
+    }
+    
+    @objc func nextButtonTapped(_ btn: UIButton) {
+        var superV = self.superview
+        for _ in 0..<btn.tag - 1 {
+            superV = superV?.superview
+        }
+        superV?.viewWithTag(self.tag + 1)?.becomeFirstResponder()
+    }
+    
+    func addDoneButtonKeyboard() {
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.doneButtonTapped))
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        keyboardToolbar.items = [flexibleSpace, doneButton]
+        
+        self.inputAccessoryView = keyboardToolbar
+    }
+    
+    @objc private func doneButtonTapped() {
+        self.resignFirstResponder()
+    }
+}
