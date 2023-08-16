@@ -18,7 +18,7 @@ final class PaymentSheetClipVC: UIViewController {
     @IBOutlet weak var cardTypeLbl: UILabel!
     @IBOutlet weak var dateTF: UITextField!
     @IBOutlet weak var cvcTF: UITextField!    
-    @IBOutlet weak var payBtn: UIButton!
+    @IBOutlet weak var payBtn: LoadingButton!
     
     var bookingId = ""
     var totalPrice = 0
@@ -135,8 +135,7 @@ final class PaymentSheetClipVC: UIViewController {
     }
 
     @IBAction func onClickPay(_ sender: Any) {
-        payBtn.isUserInteractionEnabled = false
-        payBtn.alpha = 0.5
+        payBtn.showLoading()
         AppClipLoader.showLoader(self.view)
         guard let url = URL(string: "https://api.speakeasygo.com/appclip/payment") else { return }
         var request = URLRequest(url: url)
@@ -159,7 +158,7 @@ final class PaymentSheetClipVC: UIViewController {
             guard let data = data else {
                 AppClipLoader.hideLoader()
                 self.alertPopup("Alert", "Something went wrong")
-                self.updatePayBtn()
+                self.payBtn.hideLoading()
                 return
             }
             guard let success = String(data: data, encoding: .utf8).flatMap(Bool.init), success == true else {
@@ -170,7 +169,7 @@ final class PaymentSheetClipVC: UIViewController {
                     AppClipLoader.hideLoader()
                     self.alertPopup("Alert", "Something went wrong")
                 }
-                self.updatePayBtn()
+                self.payBtn.hideLoading()
                 return
             }
             AppClipLoader.hideLoader()

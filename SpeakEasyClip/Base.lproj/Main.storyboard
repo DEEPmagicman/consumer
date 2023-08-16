@@ -340,7 +340,7 @@
                                 <rect key="frame" x="0.0" y="111" width="414" height="751"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UHj-Sj-AJZ">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="664.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="646.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZQ-jN-exb">
                                                 <rect key="frame" x="16" y="0.0" width="382" height="221.5"/>
@@ -586,13 +586,13 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NbT-p8-Lc1">
-                                                <rect key="frame" x="16" y="413.5" width="382" height="91"/>
+                                                <rect key="frame" x="16" y="413.5" width="382" height="73"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="zpk-vB-IyQ">
-                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="91"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="382" height="73"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDH-Oh-16i">
-                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="91"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="73"/>
                                                                 <string key="text">"All entry subject to doorman discretion". Patrons must adhere to venue dress code &amp; policies. Cover tickets expire in 2 hours after time of purchase. Only purchase tickets at the venue or immediately upon arrival.</string>
                                                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="13"/>
                                                                 <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -865,7 +865,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add your payment information" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GI-jV-lwX">
-                                <rect key="frame" x="43" y="8.5" width="361" height="25"/>
+                                <rect key="frame" x="43" y="8.5" width="361" height="25.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -996,7 +996,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f6E-2Q-h36">
+                            <button opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f6E-2Q-h36" customClass="LoadingButton" customModule="SpeakEasyClip" customModuleProvider="target">
                                 <rect key="frame" x="10" y="180.5" width="394" height="50"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.50588235290000005" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration">
