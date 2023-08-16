@@ -133,6 +133,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+        firstNameTF.addNextButtonKeyboard(superViewCount: 3)
+        lastNameTF.addDoneButtonKeyboard()
     }
     
     override func viewDidLayoutSubviews() {
@@ -454,7 +456,7 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Data not found")
                 return
             }
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                 AppClipLoader.hideLoader()
                 self.alertPopup("Alert", "Internal data formate error")
                 return
