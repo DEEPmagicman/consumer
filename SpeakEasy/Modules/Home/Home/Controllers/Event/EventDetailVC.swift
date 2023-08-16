@@ -200,8 +200,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = "Join me for \(event?.title ?? "Event"): \(String(format: APIBuilder.eventWebURL, eventId ?? "")). Register or buy tickets on Speakeasy \(APIBuilder.appStoreURL)"
-         Utility.main.shareSocialWith(text: msgText)
+        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, eventId ?? ""))
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
