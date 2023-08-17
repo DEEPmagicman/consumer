@@ -63,8 +63,9 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), headers: Header.header(timeZone: venueTimeZone)) { response in
+    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
+        
+        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: promotionLinkId != nil ? ["promotionLinkId": promotionLinkId ?? ""] : nil, headers: Header.header(timeZone: venueTimeZone)) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)

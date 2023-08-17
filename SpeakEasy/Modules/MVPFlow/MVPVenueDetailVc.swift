@@ -137,6 +137,9 @@ final class MVPVenueDetailVc: UIViewController {
             }
             if isSuccess {
                 self.venueDetails = venueDetail
+                if let venueId = venueDetail?.id {
+                    self.venueId = venueId
+                }
                 self.setUpUI()
                 self.ticketTypeTableView.reloadData()
                 self.openingHoursTableView.reloadData()
