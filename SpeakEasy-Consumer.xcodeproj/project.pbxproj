@@ -294,6 +294,7 @@
 		CE9AD76E29F28ECD00FA55C9 /* CustomDropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */; };
 		CE9AD76F29F28ECD00FA55C9 /* CustomDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
+		CEA4A6D92A8B4A75007E746F /* PaymentSheetClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA9474F288CABA600D7BB91 /* AWBezierConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */; };
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
@@ -890,6 +891,7 @@
 		CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomDropDownCell.xib; sourceTree = "<group>"; };
 		CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDropDownCell.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
+		CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetClipVC.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
@@ -1309,6 +1311,7 @@
 				2966E3382980F86000B5E103 /* Info.plist */,
 				2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */,
 				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
+				CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */,
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
 				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
@@ -4296,6 +4299,7 @@
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
 				CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
+				CEA4A6D92A8B4A75007E746F /* PaymentSheetClipVC.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
 			);
