@@ -152,6 +152,7 @@ final class SelectTicketClipVC: UIViewController {
             vc.venue = venueDetail
             navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
+            updateContinueBtn(forceRemove: true)
         }
     }
 
