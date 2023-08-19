@@ -9,6 +9,7 @@ import UIKit
 import PassKit
 import StripeApplePay
 import FlagPhoneNumber
+import NBBottomSheet
 
 enum PaymentStatus: String {
     case SUCCESS
@@ -32,9 +33,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
     @IBOutlet private weak var policyLbl: UILabel!
-    @IBOutlet weak var freeTicketBtn: UIButton!
-    @IBOutlet weak var applePayView: UIView!
-    
+    @IBOutlet private weak var freeTicketBtn: UIButton!
+    @IBOutlet private weak var freeTicketView: UIView!
+    @IBOutlet private weak var applePayView: UIView!
+    @IBOutlet private weak var cardPayView: UIView!
+    @IBOutlet private weak var cardPayBtn: UIButton!
+    @IBOutlet private weak var scrollViewBottomConstraint: NSLayoutConstraint!
+
     var totalPrice = 1
     var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
@@ -107,7 +112,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             errorLbl.text = "Add Card to your Apple wallet & try again."
         } else {
             isApplePayNotSupported = true
-            errorLbl.text = "Apple pay is not supported on your device, use main app to book ticket."
+            errorLbl.text = "Apple pay is not supported on your device, try another payment option."
         }
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
@@ -118,14 +123,26 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         
         if totalPrice == 0 {
             applePayView.isHidden = true
-            freeTicketBtn.isHidden = false
+            cardPayView.isHidden = true
+            freeTicketView.isHidden = false
         } else {
             applePayView.isHidden = false
-            freeTicketBtn.isHidden = true
+            cardPayView.isHidden = false
+            freeTicketView.isHidden = true
         }
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+        firstNameTF.addNextButtonKeyboard(superViewCount: 3)
+        lastNameTF.addDoneButtonKeyboard()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if totalPrice == 0 {
+            scrollViewBottomConstraint.constant = 130 - view.safeAreaInsets.bottom
+        } else {
+            scrollViewBottomConstraint.constant = 190 - view.safeAreaInsets.bottom
+        }
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -172,6 +189,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         freeTicketBtn.isUserInteractionEnabled = isCorrectDetails
         applePayBtn.alpha = isCorrectDetails ? 1 : 0.5
         applePayBtn.isUserInteractionEnabled = isCorrectDetails
+        cardPayBtn.alpha = isCorrectDetails ? 1 : 0.5
+        cardPayBtn.isUserInteractionEnabled = isCorrectDetails
     }
     
     private func checkData() {
@@ -190,7 +209,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkData()
     }
 
-    private func addPaymentApi() {
+    private func addPaymentApi(isApplePay: Bool = true) {
         if isIntendCreated { return }
         guard let url = URL(string: "\(baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
@@ -222,7 +241,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.paymentHistoryId = paymentHistoryId
             self.setUpPaymentBtn()
             DispatchQueue.main.async {
-                self.applePayButtonTapped()
+                if isApplePay {
+                    self.applePayButtonTapped()
+                } else {
+                    self.showCardBottomSheet()
+                }
             }
         })
         task.resume()
@@ -337,6 +360,29 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
+    private func showCardBottomSheet() {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(240))
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "PaymentSheetClipVC")) as? PaymentSheetClipVC {
+            vc.bookingId = bookingId
+            vc.totalPrice = totalPrice
+            vc.currencySymbol = venue?.venueSettings?.currencySymbol ?? "$"
+            vc.delegate = self
+            let bottomSheetController = NBBottomSheetController(configuration: configuration)
+            bottomSheetController.present(vc, on: self)
+        }
+    }
+    
+    @IBAction func onClickCardPay(_ sender: Any) {
+        if isIntendCreated {
+            DispatchQueue.main.async {
+                self.showCardBottomSheet()
+            }
+            return
+        }
+        createBooking(isApplePay: false)
+    }
+
     @IBAction func onClickFreeTicket(_ sender: Any) {
         createFreeBooking()
     }
@@ -369,7 +415,7 @@ extension CheckOutClipVC {
         }
     }
 
-    func createBooking() {
+    func createBooking(isApplePay: Bool = true) {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
         selectedAppClipTickets.forEach {
@@ -410,17 +456,17 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Data not found")
                 return
             }
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
                 AppClipLoader.hideLoader()
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
-                self.addPaymentApi()
+                self.addPaymentApi(isApplePay: isApplePay)
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.bookingId = bookingId
-                self.addPaymentApi()
+                self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
                 self.alertPopup(error, message)
@@ -619,5 +665,17 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         isChangingFlag = false
+    }
+}
+
+extension CheckOutClipVC: CardPaymentDelegate {
+    func paymentSuccess() {
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+            self.paymentStatus(.SUCCESS, optedPolicy: self.policyCheckBox.isSelected) { [weak self] in
+                guard let self = self else { return }
+                self.navigateToQRCode()
+            }
+        }
     }
 }

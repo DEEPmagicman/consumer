@@ -25,6 +25,8 @@ final class SelectTicketClipVC: UIViewController {
 
     var isLive = true
     var venueDetail: ClipVenue?
+    private var gradient: CAGradientLayer?
+    private var venueImgHeightObservation: NSKeyValueObservation?
     private var venueId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
@@ -49,7 +51,10 @@ final class SelectTicketClipVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        venueBgImg.setGradientColor()
+        gradient = venueBgImg.setGradientColor()
+        venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueBgImg.setGradientColor()
+        }
         WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
@@ -147,6 +152,7 @@ final class SelectTicketClipVC: UIViewController {
             vc.venue = venueDetail
             navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
+            updateContinueBtn(forceRemove: true)
         }
     }
 

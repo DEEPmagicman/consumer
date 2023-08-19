@@ -10,6 +10,7 @@ import UIKit
 final class QRCodeClipVC: UIViewController {
 
     @IBOutlet private weak var venueImg: UIImageView!
+    @IBOutlet private weak var titleLbl: UILabel!
     @IBOutlet private weak var venueLogoImg: UIImageView!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
@@ -21,6 +22,7 @@ final class QRCodeClipVC: UIViewController {
     var bookingId = ""
     var selectedAppClipTickets = [AppClipTicket]()
     private var ticketListHeightObservation: NSKeyValueObservation?
+    private var isAlertDisplayed = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,7 @@ final class QRCodeClipVC: UIViewController {
         }
         QRImg.image = generateQRCode(from: bookingId)
         loadImage()
+        titleLbl.text = "\(venueName) - Cover"
     }
     
     @IBAction func onBtnShare(_ sender: Any) {
@@ -55,15 +58,16 @@ final class QRCodeClipVC: UIViewController {
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    // NOTE: hide venue logo for now
     func loadImage() {
         DispatchQueue.global().async {
-            guard let imgUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueAttachment)"), let logoUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueLogo)") else { return }
+            guard let imgUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueAttachment)") else { return } //                    let logoUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueLogo)")
             do {
                 let imgData = try Data(contentsOf: imgUrl)
-                let logoData = try Data(contentsOf: logoUrl)
+//                let logoData = try Data(contentsOf: logoUrl)
                 DispatchQueue.main.async {
                     self.venueImg.image = UIImage(data: imgData)
-                    self.venueLogoImg.image = UIImage(data: logoData)
+//                    self.venueLogoImg.image = UIImage(data: logoData)
                 }
             } catch {}
         }
@@ -80,6 +84,15 @@ final class QRCodeClipVC: UIViewController {
             }
         }
         return nil
+    }
+    
+    @IBAction func onClickBuyAnother(_ sender: Any) {
+        if isAlertDisplayed {
+            navigationController?.popToRootViewController(animated: true)
+        } else {
+            alertPopup("", "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket.")
+            isAlertDisplayed = true
+        }
     }
 }
 
