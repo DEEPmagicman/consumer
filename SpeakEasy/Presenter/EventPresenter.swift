@@ -22,11 +22,9 @@ final class EventPresenter {
                 completion(false, nil, [], false)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode([Event].self, from: data)
+            if let eventList = [Event].parse(menu) {
                 completion(true, nil, eventList, hasMore)
-            } catch {
+            } else {
                 completion(false, "internal error", [], false)
             }
 
@@ -46,11 +44,9 @@ final class EventPresenter {
                 completion(false, nil, [])
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode([Event].self, from: data)
+            if let eventList = [Event].parse(responseArray) {
                 completion(true, nil, eventList)
-            } catch {
+            } else {
                 completion(false, "internal error", [])
             }
 
@@ -71,11 +67,9 @@ final class EventPresenter {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode(Event.self, from: data)
+            if let eventList = Event.parse(responseDic) {
                 completion(true, nil, eventList)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
 
