@@ -278,7 +278,8 @@ extension Decodable {
                                      code: 101,
                                      userInfo: ["type": "Model parsing error",
                                                 "model type": "\(self)",
-                                                "error": "\(error)"])
+                                                "error": "\(error)",
+                                                "environment": APIBuilder.webBaseURL])
             Crashlytics.crashlytics().record(error: error)
             return nil
         }
