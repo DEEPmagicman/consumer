@@ -15,12 +15,9 @@ final class MVPPresenter {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let decoder = JSONDecoder()
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let venueDetail = try decoder.decode(ClipVenue.self, from: data)
+            if let venueDetail = ClipVenue.parse(responseDic) {
                 completion(true, nil, venueDetail)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
 
@@ -42,11 +39,9 @@ final class MVPPresenter {
                 completion(false, nil, [], false)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let venueList = try JSONDecoder().decode([ClipVenue].self, from: data)
+            if let venueList = [ClipVenue].parse(menu) {
                 completion(true, nil, venueList, hasMore)
-            } catch {
+            } else {
                 completion(false, "internal error", [], false)
             }
 
@@ -66,11 +61,9 @@ final class MVPPresenter {
                 completion([], false, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: cityArray, options: .prettyPrinted)
-                let cityList = try JSONDecoder().decode([MVPCity].self, from: data)
+            if let cityList = [MVPCity].parse(cityArray) {
                 completion(cityList, true, nil)
-            } catch {
+            } else {
                 completion([], false, nil)
             }
 

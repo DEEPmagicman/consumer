@@ -229,17 +229,9 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
-            if openVenueList.count == 0 {
-                return 0
-            } else {
-                return 60
-            }
+            return openVenueList.count == 0 ? 0 : 60
         } else {
-            if closeVenueList.count == 0 {
-                return 0
-            } else {
-                return 60
-            }
+            return closeVenueList.count == 0 ? 0 : 60
         }
     }
 }

@@ -22,11 +22,9 @@ final class EventPresenter {
                 completion(false, nil, [], false)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode([Event].self, from: data)
+            if let eventList = [Event].parse(menu) {
                 completion(true, nil, eventList, hasMore)
-            } catch {
+            } else {
                 completion(false, "internal error", [], false)
             }
 
@@ -46,11 +44,9 @@ final class EventPresenter {
                 completion(false, nil, [])
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode([Event].self, from: data)
+            if let eventList = [Event].parse(responseArray) {
                 completion(true, nil, eventList)
-            } catch {
+            } else {
                 completion(false, "internal error", [])
             }
 
@@ -63,19 +59,24 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
+    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", isDiscounted: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
         
-        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: promotionLinkId.replacingOccurrences(of: " ", with: "") != "" ? ["promotionLinkId": promotionLinkId] : nil, headers: Header.header(timeZone: venueTimeZone)) { response in
+        var param = [String: Any]()
+        if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {
+            param["promotionLinkId"] = promotionLinkId
+        }
+        if let isDiscounted = isDiscounted {
+            param["isDiscounted"] = isDiscounted
+        }
+        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let eventList = try JSONDecoder().decode(Event.self, from: data)
+            if let eventList = Event.parse(responseDic) {
                 completion(true, nil, eventList)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
 

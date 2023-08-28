@@ -197,7 +197,6 @@ final class QRCodeVC: UIViewController {
      """
         case .singleTickedEvent, .tieredTickedEvent:
             msgText = """
-
         You’re going to \(booking?.event?.title.capitalized ?? "EVENT")! \(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") has sent you a ticket:
 
         Access your ticket here: \(String(format: APIBuilder.QAWebURL, bookingId))

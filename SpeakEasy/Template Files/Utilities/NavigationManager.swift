@@ -156,11 +156,6 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func loginWithPhoneNumberVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithPhoneViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithEmailViewController.self)
         vc.isFromSettings = isFromSettings
@@ -215,12 +210,13 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "", isDiscounted: String? = nil) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
         vc.eventId = eventId
         vc.venueDetails = venueDetail
         vc.event = event
         vc.promoteId = promoteId
+        vc.isDiscounted = isDiscounted
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }

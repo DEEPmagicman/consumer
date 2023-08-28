@@ -97,7 +97,7 @@ struct CustomFee: Codable {
 
     var title: String
     var type: String
-    var value: Int
+    var value: Double
     var typeEnum: CustomFeeType? {
         CustomFeeType(rawValue: type)
     }
@@ -111,7 +111,7 @@ struct CustomFee: Codable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         title = try values.decodeIfPresent(String.self, forKey: .title) ?? ""
-        value = try values.decodeIfPresent(Int.self, forKey: .value) ?? 0
+        value = try values.decodeIfPresent(Double.self, forKey: .value) ?? 0
         type = try values.decodeIfPresent(String.self, forKey: .type) ?? ""
     }
 

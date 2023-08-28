@@ -109,11 +109,9 @@ final class PaymentPresenter {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let booking = try JSONDecoder().decode(Booking.self, from: data)
+            if let booking = Booking.parse(responseDic) {
                 completion(true, nil, booking)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
         } failure: { error in
@@ -145,11 +143,9 @@ final class PaymentPresenter {
                 return
             }
             if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any] {
-                do {
-                    let data = try JSONSerialization.data(withJSONObject: paymentDetail, options: .prettyPrinted)
-                    let detail = try JSONDecoder().decode(PaymentDetail.self, from: data)
+                if let detail = PaymentDetail.parse(paymentDetail) {
                     completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, detail)
-                } catch {
+                } else {
                     completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, nil)
                 }
             } else {
@@ -171,11 +167,9 @@ final class PaymentPresenter {
                 completion(false, nil, [])
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
-                let paymentMethods = try JSONDecoder().decode([PaymentMethod].self, from: data)
+            if let paymentMethods = [PaymentMethod].parse(responseArray) {
                 completion(true, nil, paymentMethods)
-            } catch {
+            } else {
                 completion(false, "internal error", [])
             }
         } failure: { error in
@@ -194,11 +188,9 @@ final class PaymentPresenter {
                 completion(false, nil, [])
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
-                let bookings = try JSONDecoder().decode([Booking].self, from: data)
+            if let bookings = [Booking].parse(responseArray) {
                 completion(true, nil, bookings)
-            } catch {
+            } else {
                 completion(false, "internal error", [])
             }
         } failure: { error in
@@ -217,11 +209,9 @@ final class PaymentPresenter {
                 completion(false, nil, [])
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseArray, options: .prettyPrinted)
-                let bookings = try JSONDecoder().decode([Booking].self, from: data)
+            if let bookings = [Booking].parse(responseArray) {
                 completion(true, nil, bookings)
-            } catch {
+            } else {
                 completion(false, "internal error", [])
             }
         } failure: { error in

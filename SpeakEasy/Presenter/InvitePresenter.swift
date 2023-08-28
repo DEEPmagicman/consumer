@@ -16,11 +16,9 @@ final class InvitePresenter {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let invite = try JSONDecoder().decode(Invite.self, from: data)
+            if let invite = Invite.parse(responseDic) {
                 completion(true, nil, invite)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
             
@@ -48,11 +46,9 @@ final class InvitePresenter {
                 completion(false, nil, nil)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: responseDic, options: .prettyPrinted)
-                let booking = try JSONDecoder().decode(Booking.self, from: data)
+            if let booking = Booking.parse(responseDic) {
                 completion(true, nil, booking)
-            } catch {
+            } else {
                 completion(false, "internal error", nil)
             }
         } failure: { error in

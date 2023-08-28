@@ -7,6 +7,7 @@
 
 import CoreLocation
 import UIKit
+import FirebaseCrashlytics
 
 extension CLLocation {
     func getCity(completion: @escaping (String) -> Void) {
@@ -263,7 +264,24 @@ extension UITapGestureRecognizer {
 extension Range where Bound == String.Index {
     var nsRange: NSRange {
         return NSRange(location: lowerBound.encodedOffset,
-                       length: upperBound.encodedOffset -
-                           lowerBound.encodedOffset)
+                       length: upperBound.encodedOffset - lowerBound.encodedOffset)
+    }
+}
+
+extension Decodable {
+    static func parse(_ obj: Any) -> Self? {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+            return try JSONDecoder().decode(self, from: data)
+        } catch {
+            let error = NSError.init(domain: NSCocoaErrorDomain,
+                                     code: 101,
+                                     userInfo: ["type": "Model parsing error",
+                                                "model type": "\(self)",
+                                                "error": "\(error)",
+                                                "environment": APIBuilder.webBaseURL])
+            Crashlytics.crashlytics().record(error: error)
+            return nil
+        }
     }
 }

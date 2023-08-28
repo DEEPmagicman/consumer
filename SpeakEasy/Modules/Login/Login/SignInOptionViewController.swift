@@ -36,7 +36,6 @@ final class SignInOptionViewController: UIViewController {
 //    }
     
     @IBAction func onClickSignInwithPhoneNum(_ sender: Any) {
-//        Navigate.to.loginWithPhoneNumberVc(self)
         Navigate.to.enterPhoneNumVc(self, isFromLogin: true)
     }
     
@@ -56,8 +55,7 @@ final class SignInOptionViewController: UIViewController {
                 return
             }
             guard let email = user?.profile?.email,
-                  let idToken = user?.authentication.idToken
-            else {
+                  let idToken = user?.authentication.idToken else {
                 return
             }
             self.onBoardingDelegate.socialMediaLoginAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { isSuccess,errorMsg  in

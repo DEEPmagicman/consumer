@@ -17,11 +17,9 @@ final class VenuePresenter {
                 completion(false, nil, [], false)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let venueList = try JSONDecoder().decode([Venue].self, from: data)
+            if let venueList = [Venue].parse(menu) {
                 completion(true, nil, venueList,hasMore)
-            } catch {
+            } else {
                 completion(false, "internal error", [], false)
             }
 
@@ -43,11 +41,9 @@ final class VenuePresenter {
                 completion(false, nil, [], false)
                 return
             }
-            do {
-                let data = try JSONSerialization.data(withJSONObject: menu, options: .prettyPrinted)
-                let bottleCategoryList = try JSONDecoder().decode([BottleCategory].self, from: data)
+            if let bottleCategoryList = [BottleCategory].parse(menu) {
                 completion(true, nil, bottleCategoryList, hasMore)
-            } catch {
+            } else {
                 completion(false, "internal error", [], false)
             }
 
