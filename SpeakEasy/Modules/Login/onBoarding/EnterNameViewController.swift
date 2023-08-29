@@ -22,6 +22,7 @@ final class EnterNameViewController: UIViewController {
     
     private let presenter = OnBoardingPresenter()
     private let genderDropDown = DropDown()
+    var isFromApple = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,8 @@ final class EnterNameViewController: UIViewController {
         nikNameTextField.text = UserDefault.shared.user?.nickName
         DOBTextField.text = UserDefault.shared.user?.dateOfBirth
         genderTF.text = UserDefault.shared.user?.gender.capitalized
+        emailTextField.isUserInteractionEnabled = isFromApple ? false : true
+        emailTextField.alpha = isFromApple ? 0.5 : 1
         emailTextField.text = UserDefault.shared.user?.email ?? UserDefault.shared.user?.additionalEmail
         ContinueBtn.isUserInteractionEnabled = false
         ContinueBtn.alpha = 0.5
@@ -111,7 +114,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
 
 extension EnterNameViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        if firstNameTextField.text != "" && lastNameTextField.text != "" && DOBTextField.text != "" && emailTextField.text != "" && emailTextField.text?.isValidEmail == true && genderTF.text != "" {
+        if firstNameTextField.text != "" && lastNameTextField.text != "" && emailTextField.text != "" && emailTextField.text?.isValidEmail == true && genderTF.text != "" {
             ContinueBtn.isUserInteractionEnabled = true
             ContinueBtn.alpha = 1.0
         } else {

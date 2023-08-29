@@ -17,6 +17,7 @@ final class UserDefault: NSObject {
         case localCity = "localCity"
         case defaultCitySelected = "defaultCitySelected"
         case isNotificationOnKey = "isNotificationOn"
+        case hasConnectedWith = "hasConnectedWith"
     }
     
     let userDefaults = UserDefaults.standard
@@ -91,6 +92,14 @@ final class UserDefault: NSObject {
             (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
+        }
+    }
+    
+    var hasConnectedWith: String? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.hasConnectedWith.rawValue) as? String
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasConnectedWith.rawValue)
         }
     }
     
