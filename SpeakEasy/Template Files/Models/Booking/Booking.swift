@@ -39,9 +39,11 @@ struct Booking: Codable {
     var isApproved: Bool
 //    var eventTicketId: Any
 //    var eventTicketHasTierId: Any
+    var bookingType: String?
     var bookingHasItem: [BookingHasItem]
     var event: Event?
     var ticketDetails: [TicketDetails]?
+    var floorPlanTimeSlotBooking: [TimeSlot]?
     var inviteLink: InviteLink?
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
@@ -89,10 +91,12 @@ struct Booking: Codable {
         case isApproved = "isApproved"
 //        case eventTicketId = "eventTicketId"
 //        case eventTicketHasTierId = "eventTicketHasTierId"
+        case bookingType = "bookingType"
         case bookingHasItem = "bookingHasItem"
         case event = "event"
         case ticketDetails = "ticketDetails"
-        case inviteLink = "InviteLink"
+        case floorPlanTimeSlotBooking = "FloorPlanTimeSlotBooking"
+//        case inviteLink = "InviteLink"
     }
 
     func encode(to encoder: Encoder) throws {
@@ -127,9 +131,11 @@ struct Booking: Codable {
         try container.encode(isApproved, forKey: .isApproved)
         // TODO: Add code for encoding `eventTicketId`, It was null at the time of model creation.
         // TODO: Add code for encoding `eventTicketHasTierId`, It was null at the time of model creation.
+        try container.encode(bookingType, forKey: .bookingType)
         try container.encode(bookingHasItem, forKey: .bookingHasItem)
         try container.encode(event, forKey: .event)
         try container.encode(ticketDetails, forKey: .ticketDetails)
+        try container.encode(floorPlanTimeSlotBooking, forKey: .floorPlanTimeSlotBooking)
     }
 }
 
@@ -175,7 +181,7 @@ struct BookingHasItem: Codable {
 
 struct TicketDetails: Codable {
 
-    var ticketName: String
+    var ticketName: String?
     var ticketId: String
     var ticketDescription: String
     var quantity: Int

@@ -116,5 +116,6 @@ final class UserDefault: NSObject {
         isLoggedIn = false
         isGuest = true
         isNotificationOn = false
+        hasConnectedWith = nil
     }
 }

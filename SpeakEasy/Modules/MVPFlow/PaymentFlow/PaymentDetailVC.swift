@@ -24,7 +24,9 @@ final class PaymentDetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        getBooking(id: booking?.id ?? "")
+        if booking?.bookingType != "TABLE_BOOKING" {
+            getBooking(id: booking?.id ?? "")
+        }
         setUpData()
         totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.totalPrice ?? 0)"
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
@@ -41,11 +43,16 @@ final class PaymentDetailVC: UIViewController {
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
                     dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                    mainImg.image = Constant.Icon.liveCover
+                } else if booking.bookingType == "TABLE_BOOKING" {
+                    titleLbl.text = Constant.String.tableReservation
+                    dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                    mainImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL))
                 } else {
                     titleLbl.text = Constant.String.liveCoverTicket
                     dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                    mainImg.image = Constant.Icon.liveCover
                 }
-                mainImg.image = Constant.Icon.liveCover
             } else {
                 titleLbl.text = booking.event?.title ?? "Untitle Event"
                 dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")

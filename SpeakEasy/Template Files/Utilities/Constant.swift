@@ -75,6 +75,7 @@ struct Constant {
         static let enjoyYourFreeTicket = "Enjoy your free ticket!"
         static let dotDoorsOpenAt = "• Doors open at %@"
         static let dash = "-"
+        static let tableReservation = "Table Reservation"
     }
     
     struct Font {
