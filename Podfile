@@ -23,8 +23,6 @@ target 'SpeakEasy-Consumer' do
   pod 'GoogleSignIn'
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
-  pod 'StripeApplePay'
-  pod 'StripePaymentSheet'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
   pod 'NBBottomSheet', '~> 1.2'
@@ -39,10 +37,8 @@ target 'SpeakEasyClip' do
   # Pods for SpeakEasyClip
   pod "FlagPhoneNumber"
   pod 'IQKeyboardManagerSwift'
-  pod 'StripeApplePay'
   pod 'ReachabilitySwift', '~> 3'
   pod 'Socket.IO-Client-Swift'
-  pod 'NBBottomSheet', '~> 1.2'
 end
 
 post_install do |installer|
@@ -51,7 +47,7 @@ post_install do |installer|
       config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
       config.build_settings['ENABLE_BITCODE'] = 'YES'
       config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
     end
   end
 end
