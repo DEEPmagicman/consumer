@@ -9,7 +9,7 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
-import FlagPhoneNumber
+//import FlagPhoneNumber
 
 enum PaymentStatus: String {
     case SUCCESS

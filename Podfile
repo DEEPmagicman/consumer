@@ -9,7 +9,7 @@ target 'SpeakEasy-Consumer' do
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'
   pod 'UITextView+Placeholder'
-  pod 'IQKeyboardManagerSwift'
+#  pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
   pod 'SCPageControl'
   pod 'GoogleMaps'
@@ -29,8 +29,8 @@ target 'SpeakEasyClip' do
   use_frameworks!
 
   # Pods for SpeakEasyClip
-  pod "FlagPhoneNumber"
-  pod 'IQKeyboardManagerSwift'
+#  pod "FlagPhoneNumber"
+#  pod 'IQKeyboardManagerSwift'
   pod 'ReachabilitySwift', '~> 3'
 end
 

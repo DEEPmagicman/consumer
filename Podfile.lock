@@ -24,7 +24,6 @@ PODS:
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (2.3.0)
   - Hero (1.6.2)
-  - IQKeyboardManagerSwift (6.5.10)
   - JWTDecode (3.0.0)
   - NBBottomSheet (1.2.0)
   - NVActivityIndicatorView (4.7.0):
@@ -46,7 +45,6 @@ DEPENDENCIES:
   - GoogleSignIn
   - GSImageViewerController
   - Hero
-  - IQKeyboardManagerSwift
   - JWTDecode
   - NBBottomSheet (~> 1.2)
   - NVActivityIndicatorView (= 4.7.0)
@@ -68,7 +66,6 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - Hero
-    - IQKeyboardManagerSwift
     - JWTDecode
     - NBBottomSheet
     - NVActivityIndicatorView
@@ -89,7 +86,6 @@ SPEC CHECKSUMS:
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
-  IQKeyboardManagerSwift: 52962c76ab33532f15ad9f3ff4e5715eda5335bb
   JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
@@ -100,6 +96,6 @@ SPEC CHECKSUMS:
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 4d8e294004f62b27b8419fea8a3064fc65d171c2
+PODFILE CHECKSUM: da301d146302e8dfba2590f0d2c93e394058921b
 
 COCOAPODS: 1.11.3
