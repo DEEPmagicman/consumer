@@ -6,12 +6,9 @@ target 'SpeakEasy-Consumer' do
   use_frameworks!
 
   # Pods for SpeakEasy
-  pod 'Alamofire', '4.9.1'
-  pod 'SDWebImage'
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'
   pod 'UITextView+Placeholder'
-  pod 'FSCalendar'
   pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
   pod 'SCPageControl'
@@ -24,10 +21,7 @@ target 'SpeakEasy-Consumer' do
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
   pod 'ReachabilitySwift', '~> 3'
-  pod 'Socket.IO-Client-Swift'
   pod 'NBBottomSheet', '~> 1.2'
-  pod 'Firebase/RemoteConfig', '8.15.0'
-  pod 'Firebase/Crashlytics', '8.15.0'
 end
 
 target 'SpeakEasyClip' do
@@ -38,7 +32,6 @@ target 'SpeakEasyClip' do
   pod "FlagPhoneNumber"
   pod 'IQKeyboardManagerSwift'
   pod 'ReachabilitySwift', '~> 3'
-  pod 'Socket.IO-Client-Swift'
 end
 
 post_install do |installer|

@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 15/02/23.
 //
 
-import Foundation
+import UIKit
 import SocketIO
 
 protocol WebSocketCallBackDelegate: AnyObject {

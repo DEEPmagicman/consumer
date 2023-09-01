@@ -308,6 +308,13 @@
 		CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81792AA1FAC100DAD9FE /* StripeApplePay */; };
 		CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */; };
 		CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */; };
+		CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81802AA20A1D00DAD9FE /* Alamofire */; };
+		CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81832AA20A5900DAD9FE /* SDWebImage */; };
+		CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81862AA20A9600DAD9FE /* FSCalendar */; };
+		CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */; };
+		CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */; };
+		CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A02AA2110E00DAD9FE /* SocketIO */; };
+		CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A22AA2112C00DAD9FE /* SocketIO */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
 		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
@@ -1192,6 +1199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
+				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
 				6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */,
 			);
@@ -1202,8 +1210,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */,
+				CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */,
+				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
+				CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */,
 				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
+				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
+				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
+				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3876,6 +3890,7 @@
 			packageProductDependencies = (
 				CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */,
 				CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */,
+				CEDB81A22AA2112C00DAD9FE /* SocketIO */,
 			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
@@ -3891,8 +3906,6 @@
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
-				CEBF8F7A2A31939900E0325D /* ShellScript */,
-				A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3903,6 +3916,12 @@
 			packageProductDependencies = (
 				CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */,
 				CEDB81792AA1FAC100DAD9FE /* StripeApplePay */,
+				CEDB81802AA20A1D00DAD9FE /* Alamofire */,
+				CEDB81832AA20A5900DAD9FE /* SDWebImage */,
+				CEDB81862AA20A9600DAD9FE /* FSCalendar */,
+				CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */,
+				CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */,
+				CEDB81A02AA2110E00DAD9FE /* SocketIO */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -3937,6 +3956,11 @@
 			mainGroup = CE486715286F2CB000FD277E;
 			packageReferences = (
 				CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
+				CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */,
+				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -4220,42 +4244,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CEBF8F7A2A31939900E0325D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4734,7 +4722,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4749,7 +4737,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -4768,7 +4756,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4783,10 +4771,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4924,7 +4913,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 88;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4949,7 +4938,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4969,7 +4958,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4993,7 +4982,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5044,6 +5033,46 @@
 				version = 23.0.0;
 			};
 		};
+		CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = exactVersion;
+				version = 4.9.1;
+			};
+		};
+		CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = exactVersion;
+				version = 5.14.2;
+			};
+		};
+		CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = exactVersion;
+				version = 2.8.4;
+			};
+		};
+		CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 8.15.0;
+			};
+		};
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = exactVersion;
+				version = 16.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5066,6 +5095,41 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
 			productName = StripeApplePay;
+		};
+		CEDB81802AA20A1D00DAD9FE /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		CEDB81832AA20A5900DAD9FE /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		CEDB81862AA20A9600DAD9FE /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
+		};
+		CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

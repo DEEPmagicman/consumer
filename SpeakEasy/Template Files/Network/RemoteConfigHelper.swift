@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 24/04/23.
 //
 
-import Foundation
+import UIKit
 import FirebaseRemoteConfig
 
 final class RemoteConfigHelper {
