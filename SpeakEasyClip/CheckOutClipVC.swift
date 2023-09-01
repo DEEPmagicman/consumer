@@ -128,7 +128,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             freeTicketView.isHidden = false
         } else {
             applePayView.isHidden = false
-            cardPayView.isHidden = false
+            cardPayView.isHidden = !(venue?.allowCC ?? false)
             freeTicketView.isHidden = true
         }
         checkValidation(isCorrectDetails: false)

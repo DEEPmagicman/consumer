@@ -37,6 +37,7 @@ struct ClipVenue: Codable {
     var checkInUser: Int?
     var timezone: String?
     var venueSettings: VenueSettings?
+    var allowCC: Bool?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
