@@ -21,13 +21,13 @@ final class ConnectAccountViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if UserDefault.shared.hasConnectedWith != nil {
-            if UserDefault.shared.hasConnectedWith == "APPLE" {
-                Navigate.to.enterNameVc(self, isFromApple: true)
-            } else {
-                Navigate.to.enterNameVc(self)
-            }
-        }
+//        if UserDefault.shared.hasConnectedWith != nil {
+//            if UserDefault.shared.hasConnectedWith == "APPLE" {
+//                Navigate.to.enterNameVc(self, isFromApple: true)
+//            } else {
+//                Navigate.to.enterNameVc(self)
+//            }
+//        }
     }
     
     @IBAction func onClickConnectWithApple(_ sender: Any) {
@@ -63,7 +63,7 @@ final class ConnectAccountViewController: UIViewController {
                 }
                 if isSuccess {
                     UserDefault.shared.user?.email = email
-                    UserDefault.shared.hasConnectedWith = "GOOGLE"
+//                    UserDefault.shared.hasConnectedWith = "GOOGLE"
                     Navigate.to.enterNameVc(self)
                 } else {
                     if errorMsg != nil {
@@ -104,15 +104,15 @@ extension ConnectAccountViewController: ASAuthorizationControllerDelegate{
             do {
                let jwt = try decode(jwt: identityTokenString)
                let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { [weak self] isSuccess,errorMsg  in
+                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: UserDefault.shared.user?.firstName ?? "", lastName: UserDefault.shared.user?.lastName ?? "") { [weak self] isSuccess,errorMsg  in
                     guard let self = self else {
                         Loader.hide()
                         return
                     }
                     if isSuccess {
                         UserDefault.shared.user?.email = decodedBody["email"] as? String ?? ""
-                        UserDefault.shared.hasConnectedWith = "APPLE"
-                        Navigate.to.enterNameVc(self, isFromApple: true)
+//                        UserDefault.shared.hasConnectedWith = "APPLE"
+                        Navigate.to.enterNameVc(self)
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

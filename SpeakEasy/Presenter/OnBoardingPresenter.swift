@@ -320,11 +320,19 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
+    func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
      
         var param = ["email": email, "socialType": socialType, "socialId": socialId]
         if socialType == SocialType.apple.rawValue {
             param["nonce"] = nonce
+        }
+        if firstName != "" && lastName == "" {
+            param["firstName"] = firstName
+        } else if firstName == "" && lastName != "" {
+            param["lastName"] = firstName
+        } else if firstName != "" && lastName != "" {
+            param["firstName"] = firstName
+            param["lastName"] = lastName
         }
 
         Loader.show()
@@ -346,11 +354,20 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaLoginAPi(email: String,socialType: String, socialId: String, nonce: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+    func socialMediaLoginAPi(email: String,socialType: String, socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         
         var param = ["email": email, "socialType": socialType, "socialId": socialId]
         if socialType == SocialType.apple.rawValue {
             param["nonce"] = nonce
+        }
+        
+        if firstName != "" && lastName == "" {
+            param["firstName"] = firstName
+        } else if firstName == "" && lastName != "" {
+            param["lastName"] = firstName
+        } else if firstName != "" && lastName != "" {
+            param["firstName"] = firstName
+            param["lastName"] = lastName
         }
         
         Loader.show()

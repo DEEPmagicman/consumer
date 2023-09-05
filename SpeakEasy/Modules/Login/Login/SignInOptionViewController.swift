@@ -98,8 +98,12 @@ extension SignInOptionViewController: ASAuthorizationControllerDelegate{
             do {
                let jwt = try decode(jwt: identityTokenString)
                let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { isSuccess,errorMsg  in
+                self.onBoardingDelegate.socialMediaLoginAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: fullName?.givenName ?? "", lastName: fullName?.familyName ?? "" ) { isSuccess,errorMsg  in
                     if isSuccess {
+                        if fullName?.givenName ?? "" != "" {
+                            UserDefault.shared.user?.firstName = fullName?.givenName ?? ""
+                            UserDefault.shared.user?.lastName = fullName?.familyName ?? ""
+                        }
                         AppDelegate.shared.changeRootViewController()
                     } else {
                         if errorMsg != nil {

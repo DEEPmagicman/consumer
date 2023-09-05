@@ -52,10 +52,9 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterNameVc(_ sender: UIViewController, isFromApple: Bool = false) {
+    func enterNameVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
-        vc.isFromApple = isFromApple
         if let indexOfOTPVC = sender.navigationController?.viewControllers.firstIndex(where: { $0.isKind(of: VerificationCodeViewController.self) }) {
             sender.navigationController?.viewControllers.remove(at: indexOfOTPVC)
         }

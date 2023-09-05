@@ -17,7 +17,7 @@ final class UserDefault: NSObject {
         case localCity = "localCity"
         case defaultCitySelected = "defaultCitySelected"
         case isNotificationOnKey = "isNotificationOn"
-        case hasConnectedWith = "hasConnectedWith"
+//        case hasConnectedWith = "hasConnectedWith"
     }
     
     let userDefaults = UserDefaults.standard
@@ -95,13 +95,13 @@ final class UserDefault: NSObject {
         }
     }
     
-    var hasConnectedWith: String? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.hasConnectedWith.rawValue) as? String
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasConnectedWith.rawValue)
-        }
-    }
+//    var hasConnectedWith: String? {
+//        get {
+//            return UserDefaults.standard.value(forKey: UserDefaultKey.hasConnectedWith.rawValue) as? String
+//        } set {
+//            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasConnectedWith.rawValue)
+//        }
+//    }
     
     func removeInstaConnection() {
         user?.instagramId = ""
@@ -116,6 +116,6 @@ final class UserDefault: NSObject {
         isLoggedIn = false
         isGuest = true
         isNotificationOn = false
-        hasConnectedWith = nil
+//        hasConnectedWith = nil
     }
 }
