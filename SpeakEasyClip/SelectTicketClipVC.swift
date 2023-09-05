@@ -63,7 +63,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket(withLoader: Bool = true) {
-        guard let url = URL(string: "\(SharedURL.baseURL)appclip/\(venueId)") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 //        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
