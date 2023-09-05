@@ -713,6 +713,7 @@
 		4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationCitySelectionHeaderView.xib; sourceTree = "<group>"; };
 		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
+		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
 		820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsViewController.swift; sourceTree = "<group>"; };
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
@@ -1392,6 +1393,7 @@
 		2966E3292980F85E00B5E103 /* SpeakEasyClip */ = {
 			isa = PBXGroup;
 			children = (
+				69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */,
 				CEDB81F92AA21C4F00DAD9FE /* SDK */,
 				CE65D679298D248900DE1E8A /* APPClipModal */,
 				297E37352983B13A00139947 /* TVC */,
@@ -4945,7 +4947,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4964,6 +4966,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeakEasyClip/SpeakEasyClip-bridgingHeader.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4979,7 +4982,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4998,6 +5001,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeakEasyClip/SpeakEasyClip-bridgingHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -5063,7 +5067,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/squareinfosoft/Documents/Deep/SE/speakeasy-consumer-ios/SpeakEasyClip/SDK/SpeakEasyClip-bridgingHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -5120,7 +5124,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/squareinfosoft/Documents/Deep/SE/speakeasy-consumer-ios/SpeakEasyClip/SDK/SpeakEasyClip-bridgingHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -5136,7 +5140,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 91;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5166,6 +5170,7 @@
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -5181,7 +5186,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 91;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5210,6 +5215,7 @@
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
