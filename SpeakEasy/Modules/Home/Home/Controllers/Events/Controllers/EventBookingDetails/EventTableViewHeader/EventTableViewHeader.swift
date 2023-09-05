@@ -54,8 +54,8 @@ class EventTableViewHeader: UIView {
     }
     
     func setDataNew(data: Event) {
-        let imgUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.flyer?.key ?? "")"
-//        let logoUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.venue?.logo?.key ?? "")"
+        let imgUrl = "\(SharedURL.amazonStorage)\(data.flyer?.key ?? "")"
+//        let logoUrl = "\(SharedURL.amazonStorage)\(data.venue?.logo?.key ?? "")"
         self.imgEventCover.sd_setImage(with: URL( string: imgUrl), completed: nil)
 //        self.imgBrandLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.lblDescription.text = data.description

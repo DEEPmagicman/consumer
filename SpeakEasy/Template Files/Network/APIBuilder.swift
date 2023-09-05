@@ -11,11 +11,7 @@ struct APIBuilder {
     
     static private var baseURL: String {
         get {
-            #if DEBUG
-                return "https://speakeasy-stag.cmdev.cc"
-            #else
-                return "https://api.speakeasygo.com"
-            #endif
+            SharedURL.baseURL
         }
     }
     static private let route = "/consumer"
@@ -271,21 +267,19 @@ struct APIBuilder {
 
 extension String {
     var imageURL: String {
-        "https://speakeasy-storage.s3.amazonaws.com/\(self)"
+        "\(SharedURL.amazonStorage)\(self)"
     }
 }
 
 extension APIBuilder {
-#if DEBUG
-    static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
-#else
-    static let webBaseURL = "https://speakeasygo.com"
-#endif
+    static var webBaseURL: String {
+        get {
+            SharedURL.webBaseURL
+        }
+    }
     static let privacyConsumerURL = "\(webBaseURL)/privacy-consumer"
     static let termsConsumerURL = "\(webBaseURL)/terms-consumer"
     static let supportURL = "\(webBaseURL)/support"
-    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
-    static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
     static let eventWebURL = "\(webBaseURL)/event/%@"
     static let venueWebURL = "\(webBaseURL)/ticket?v=%@"
     static let invitationURL = "\(webBaseURL)?L=%@"

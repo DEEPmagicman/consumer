@@ -9,7 +9,6 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
-//import FlagPhoneNumber
 
 enum PaymentStatus: String {
     case SUCCESS
@@ -56,15 +55,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var isValidNo = false
     private var isChangingFlag = false
     private var ticketListHeightObservation: NSKeyValueObservation?
-    private var baseURL: String {
-        get {
-            #if DEBUG
-                return "https://speakeasy-stag.cmdev.cc"
-            #else
-                return "https://api.speakeasygo.com"
-            #endif
-        }
-    }
     private var retryCount = 0
     private var maxRetry = 3
 
@@ -212,7 +202,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 
     private func addPaymentApi(isApplePay: Bool = true) {
         if isIntendCreated { return }
-        guard let url = URL(string: "\(baseURL)/consumer/payment/\(bookingId)") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var selectedTickets = [[String: Any]]()
@@ -301,7 +291,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func paymentStatus(_ status: PaymentStatus, optedPolicy: Bool, completion: @escaping (()-> Void)) {
-        guard let url = URL(string: "\(baseURL)/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(paymentHistoryId)/\(bookingId)/status?status=\(status.rawValue)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var param = [String: Any]()
@@ -335,7 +325,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
 
     private func failedAPI(_ msg: String) {
-        guard let url = URL(string: "\(baseURL)/consumer/payment/failed") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/failed") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var param = [String: Any]()
@@ -465,7 +455,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(baseURL)/appclip-user") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -529,7 +519,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(baseURL)/appclip-user/free-booking") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user/free-booking") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

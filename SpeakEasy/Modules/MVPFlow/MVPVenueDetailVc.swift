@@ -295,7 +295,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueUniqueId)) Download the app to directly connect with your favorite venues & never miss out! \(APIBuilder.appStoreURL)"
+        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueUniqueId)) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
          Utility.main.shareSocialWith(text: msgText)
     }
     

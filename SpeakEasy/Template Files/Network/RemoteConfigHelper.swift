@@ -58,7 +58,7 @@ final class RemoteConfigHelper {
     
     func openAppStore() {
         isShowingAlert = false
-        if let url = URL(string: APIBuilder.appStoreURL) {
+        if let url = URL(string: SharedURL.appStoreURL) {
             UIApplication.shared.open(url)
         }
     }

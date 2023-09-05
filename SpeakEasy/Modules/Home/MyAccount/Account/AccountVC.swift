@@ -104,7 +104,7 @@ final class AccountVC: UIViewController {
         let msgText = """
  Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues.
 
- Link to App: \(APIBuilder.appStoreURL)
+ Link to App: \(SharedURL.appStoreURL)
  """
          Utility.main.shareSocialWith(text: msgText)
     }
