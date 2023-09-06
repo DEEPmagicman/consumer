@@ -58,7 +58,11 @@ final class SelectTicketClipVC: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
-        venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
+        if let id = UserDefaults.standard.value(forKey: "venueId") as? String, id != "" {
+            venueId = id
+        } else {
+            venueId = "VN-go9i" // NOTE: test Prod venue
+        }
         getEventTicket()
     }
     
