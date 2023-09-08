@@ -229,7 +229,6 @@ final class EventDetailVC: UIViewController {
                 updateContinueBtn(forceRemove: true)
             }
         }
-        
     }
     
     private func createFreeEventBooking() {
@@ -240,11 +239,10 @@ final class EventDetailVC: UIViewController {
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            
             PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else { return }
                 if isSuccess, let id = id {
-                    Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .appClip)
+                    Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }
@@ -318,7 +316,6 @@ final class EventDetailVC: UIViewController {
     }
     
     private func forceRemoveFreeTicket() {
-        
         self.activeTickets?.indices.forEach {
             if activeTickets?[$0].price ?? 0 == 0 {
                 self.activeTickets?[$0].selectedTicketCount = nil
@@ -336,8 +333,6 @@ final class EventDetailVC: UIViewController {
         }
         selectedType = .FREE
     }
-
-    
 }
 
 extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
@@ -361,13 +356,15 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
             if activeTickets?[indexPath.row].price ?? 0 == 0 {
                 cell.ticketPriceLbl.text = "FREE"
+                cell.plusBtn.alpha = 0.5
+                cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
+                cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+                cell.plusBtn.isUserInteractionEnabled = true
             }
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
-            
-            
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
@@ -388,16 +385,9 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-            cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+            
             if let remaining = activeTickets?[indexPath.row].remainingQuantity, let selectedTicket = activeTickets?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
                 cell.plusBtn.alpha = 0.5
-            }
-            if activeTickets?[indexPath.row].price == 0 {
-                cell.plusBtn.alpha = 0.5
-                cell.plusBtn.isUserInteractionEnabled = false
-            } else {
-                cell.plusBtn.alpha = 1
-                cell.plusBtn.isUserInteractionEnabled = true
             }
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
