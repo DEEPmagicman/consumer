@@ -263,6 +263,10 @@ struct APIBuilder {
     static func deleteMethod(_ customerId: String, methodId: String) -> String {
         baseURL + route + payment + method + "/\(customerId)" + "/\(methodId)"
     }
+    
+    static var freeEventTicketURL: String {
+        baseURL + route + event + freeTicket
+    }
 }
 
 extension String {

@@ -71,6 +71,7 @@ final class EventDetailVC: UIViewController {
         }
         return total
     }
+    private var selectedType: TicketPriceType = .FREE
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -214,9 +215,35 @@ final class EventDetailVC: UIViewController {
             Navigate.to.loginMandatory(self)
             return
         }
+        switch selectedType {
+        case .FREE:
+            createFreeEventBooking()
+        case .PAID:
+            if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
+                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
+                updateContinueBtn(forceRemove: true)
+            }
+        }
+        
+    }
+    
+    private func createFreeEventBooking() {
         if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
-            updateContinueBtn(forceRemove: true)
+            var tickets = [[String: Any]]()
+            selectedTickets.forEach {
+                tickets.append(["ticketId": $0.id,
+                                "ticketQuantity": $0.selectedTicketCount ?? 0])
+            }
+            Loader.show()
+            
+            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
+                guard let self = self else { return }
+                if isSuccess, let id = id {
+                    Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .appClip)
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                }
+            }
         }
     }
     
@@ -244,7 +271,12 @@ final class EventDetailVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", self.totalPrice))", for: .normal)
+            switch self.selectedType {
+            case .FREE:
+                self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+            case .PAID:
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", self.totalPrice))", for: .normal)
+            }
         }
     }
     
@@ -279,6 +311,28 @@ final class EventDetailVC: UIViewController {
             }
         }
     }
+    
+    private func forceRemoveFreeTicket() {
+        
+        self.activeTickets?.indices.forEach {
+            if activeTickets?[$0].price ?? 0 == 0 {
+                self.activeTickets?[$0].selectedTicketCount = nil
+            }
+        }
+        selectedType = .PAID
+    }
+
+    private func forceRemovePaidTicket() {
+        self.activeTickets?.indices.forEach {
+            if activeTickets?[$0].price ?? 0 == 0 {
+            } else {
+                self.self.activeTickets?[$0].selectedTicketCount = nil
+            }
+        }
+        selectedType = .FREE
+    }
+
+    
 }
 
 extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
@@ -300,9 +354,15 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
+            if activeTickets?[indexPath.row].price ?? 0 == 0 {
+                cell.ticketPriceLbl.text = "FREE"
+            } else {
+                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
+            }
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
+            
+            
             if activeTickets?[indexPath.row].selectedTicketCount ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
@@ -326,6 +386,13 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
             if let remaining = activeTickets?[indexPath.row].remainingQuantity, let selectedTicket = activeTickets?[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
                 cell.plusBtn.alpha = 0.5
+            }
+            if activeTickets?[indexPath.row].price == 0 {
+                cell.plusBtn.alpha = 0.5
+                cell.plusBtn.isUserInteractionEnabled = false
+            } else {
+                cell.plusBtn.alpha = 1
+                cell.plusBtn.isUserInteractionEnabled = true
             }
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
@@ -375,6 +442,11 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             
             continueBtn.isHidden = false
             scrollViewBottomConstraint.constant = 90
+            if activeTickets?[indexPath.row].price ?? 0 == 0 {
+                forceRemovePaidTicket()
+            } else {
+                forceRemoveFreeTicket()
+            }
             ticketListTableView.reloadData()
             if totalSelectedTickets == 0 {
                 updateContinueBtn(forceRemove: true)
