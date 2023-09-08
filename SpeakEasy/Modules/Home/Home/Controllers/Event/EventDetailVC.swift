@@ -151,14 +151,19 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
             Loader.show()
         }
-        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId, isDiscounted: isDiscounted) { [weak self] isSuccess, errMsg, eventDetail in
+        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId, isDiscounted: isDiscounted) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             guard let self = self else {
                 return
             }
             self.view.alpha = 1
             Loader.hide()
             if eventDetail == nil {
-                self.zeroCaseView(isHidden: false)
+                if errCode == 404 && self.promoteId != "" {
+                    self.promoteId = ""
+                    self.getEventDetail()
+                } else {
+                    self.zeroCaseView(isHidden: false)
+                }
             } else {
                 self.event = eventDetail
                 if let venue = eventDetail?.venue {
