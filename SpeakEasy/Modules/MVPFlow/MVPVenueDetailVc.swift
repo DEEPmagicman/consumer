@@ -380,7 +380,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if event.eventTicket?.count ?? 0 == 0 {
                 cell.priceLbl.text = Constant.String.salePaused
             } else {
-                cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
+                if event.lowestPriceTicket?.price ?? 0 == 0 {
+                    cell.priceLbl.text = "Starting from FREE"
+                } else {
+                    cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
+                }
             }
             return cell
         case todaysEventTableView:
@@ -396,7 +400,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if event.eventTicket?.count ?? 0 == 0 {
                 cell.priceLbl.text = Constant.String.salePaused
             } else {
-                cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
+                if event.lowestPriceTicket?.price ?? 0 == 0 {
+                    cell.priceLbl.text = "Starting from FREE"
+                } else {
+                    cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event.lowestPriceTicket?.price ?? 0)"
+                }
             }
             return cell
         default:
