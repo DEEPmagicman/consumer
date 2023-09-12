@@ -240,7 +240,11 @@ final class EventDetailVC: UIViewController {
             }
             Loader.show()
             PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
-                guard let self = self else { return }
+                guard let self = self else {
+                    Loader.hide()
+                    return
+                }
+                Loader.hide()
                 if isSuccess, let id = id {
                     Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
                 } else {
