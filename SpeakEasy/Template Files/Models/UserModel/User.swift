@@ -39,6 +39,7 @@ struct User {
     var stripeCusId: String
     var additionalEmail: String?
     var isProfileCompleted: Bool
+    var isSocial: Bool?
     var useEmail: String {
         email.removeWhitespaces().isEmpty ? additionalEmail ?? "" : email
     }
@@ -74,6 +75,7 @@ struct User {
         case stripeCusId = "stripeCustId"
         case additionalEmail
         case isProfileCompleted
+        case isSocial
     }
     
     init(fromDictionary dictionary: [String: Any]) {
@@ -107,6 +109,7 @@ struct User {
         self.stripeCusId = dictionary["stripeCustId"] as? String ?? ""
         self.additionalEmail = dictionary["additionalEmail"] as? String ?? ""
         self.isProfileCompleted = dictionary["isProfileCompleted"] as? Bool ?? false
+        self.isSocial = dictionary["isSocial"] as? Bool ?? false
     }
 }
 
@@ -143,6 +146,7 @@ extension User: Decodable, Encodable {
         stripeCusId = (try? values.decode(String.self, forKey: .stripeCusId)) ?? ""
         additionalEmail = (try? values.decode(String.self, forKey: .additionalEmail)) ?? ""
         isProfileCompleted = (try? values.decode(Bool.self, forKey: .isProfileCompleted)) ?? false
+        isSocial = (try? values.decode(Bool.self, forKey: .isSocial)) ?? false
     }
     
     func encode(to encoder: Encoder) throws {
@@ -177,6 +181,7 @@ extension User: Decodable, Encodable {
         try val.encode(stripeCusId, forKey: .stripeCusId)
         try val.encode(additionalEmail, forKey: .additionalEmail)
         try val.encode(isProfileCompleted, forKey: .isProfileCompleted)
+        try val.encode(isSocial, forKey: .isSocial)
     }
 }
 

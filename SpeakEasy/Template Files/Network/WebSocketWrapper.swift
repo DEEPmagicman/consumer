@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 15/02/23.
 //
 
-import Foundation
+import UIKit
 import SocketIO
 
 protocol WebSocketCallBackDelegate: AnyObject {
@@ -19,15 +19,6 @@ final class WebSocketWrapper: NSObject {
 
     private var socket: SocketIOClient?
     private var manager: SocketManager = SocketManager(socketURL: URL(string: "www.google.com")!)
-    private var webSocketURL: String {
-        get {
-            #if DEBUG
-                return "https://speakeasy-stag.cmdev.cc"
-            #else
-                return "https://api.speakeasygo.com"
-            #endif
-        }
-    }
     private var webSocketSleepTime: Double = 0.5
     private var isSocketConnected = false
     var delegate: [WebSocketCallBackDelegate] = []
@@ -70,7 +61,7 @@ final class WebSocketWrapper: NSObject {
     
     @objc func connect() {
         if !isAbleToConnect { return }
-        if let socketUrl = URL(string: webSocketURL) {
+        if let socketUrl = URL(string: SharedURL.baseURL) {
             manager = SocketManager(socketURL: socketUrl, config: [.log(true), .compress])
             socket = manager.defaultSocket
             addEventListener()

@@ -53,6 +53,8 @@ extension AppDelegate {
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
                 setRootVC()
+            } else if UserDefault.shared.user?.isSocial == true {
+                showNameVC()
             } else {
                 showOnboarding(isNavigateToDetail: true)
             }
@@ -69,11 +71,25 @@ extension AppDelegate {
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
         if isNavigateToDetail, let vc = self.window?.rootViewController {
-            Navigate.to.connectAccountVc(vc)
+            Navigate.to.connectAccountVc(controller)
         } else if forceCreateAccount {
             Navigate.to.enterPhoneNumVc(controller)
         }
     }
+    
+    func showNameVC() {
+        let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
+        let tutorialNavigation = UINavigationController(rootViewController: controller)
+        tutorialNavigation.navigationBar.isHidden = true
+        tutorialNavigation.modalTransitionStyle = .crossDissolve
+        tutorialNavigation.modalPresentationStyle = .overCurrentContext
+        Navigate.to.enterNameVc(controller)
+        self.window?.rootViewController = tutorialNavigation
+    }
+    
+    /* let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
+     sender.navigationController?.pushViewController(vc, animated: true)
+     vc.isFromApple = isFromApple*/
     
     private func handleForURL(_ url: URL) {
         if url.absoluteString.contains("event") {

@@ -6,16 +6,11 @@ target 'SpeakEasy-Consumer' do
   use_frameworks!
 
   # Pods for SpeakEasy
-  pod 'Alamofire', '4.9.1'
-  pod 'SDWebImage'
   pod 'Hero'
   pod 'NVActivityIndicatorView', '4.7.0'
   pod 'UITextView+Placeholder'
-  pod 'FSCalendar'
-  pod 'IQKeyboardManagerSwift'
   pod 'DropDown'
   pod 'SCPageControl'
-  pod 'GoogleMaps'
   pod "GSImageViewerController"
   pod "FlagPhoneNumber"
   pod 'OTPFieldView'
@@ -23,13 +18,8 @@ target 'SpeakEasy-Consumer' do
   pod 'GoogleSignIn'
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
-  pod 'StripeApplePay'
-  pod 'StripePaymentSheet'
   pod 'ReachabilitySwift', '~> 3'
-  pod 'Socket.IO-Client-Swift'
   pod 'NBBottomSheet', '~> 1.2'
-  pod 'Firebase/RemoteConfig', '8.15.0'
-  pod 'Firebase/Crashlytics', '8.15.0'
 end
 
 target 'SpeakEasyClip' do
@@ -37,12 +27,7 @@ target 'SpeakEasyClip' do
   use_frameworks!
 
   # Pods for SpeakEasyClip
-  pod "FlagPhoneNumber"
-  pod 'IQKeyboardManagerSwift'
-  pod 'StripeApplePay'
   pod 'ReachabilitySwift', '~> 3'
-  pod 'Socket.IO-Client-Swift'
-  pod 'NBBottomSheet', '~> 1.2'
 end
 
 post_install do |installer|
@@ -51,7 +36,7 @@ post_install do |installer|
       config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
       config.build_settings['ENABLE_BITCODE'] = 'YES'
       config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
     end
   end
 end

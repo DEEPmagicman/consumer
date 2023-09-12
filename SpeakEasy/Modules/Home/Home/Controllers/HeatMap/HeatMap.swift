@@ -7,11 +7,11 @@
 
 import UIKit
 import CoreLocation
-import GoogleMaps
+//import GoogleMaps
 
 class HeatMap: UIViewController {
 
-    @IBOutlet weak var mapView: GMSMapView!
+//    @IBOutlet weak var mapView: GMSMapView!
    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -30,8 +30,8 @@ extension HeatMap {
         
         let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         
-        self.mapView.animate(toLocation: location)
-        self.mapView.animate(toZoom: 12)
+//        self.mapView.animate(toLocation: location)
+//        self.mapView.animate(toZoom: 12)
     }
     private func setClevelandLocation(){
         let latitude = 41.4993
@@ -39,7 +39,7 @@ extension HeatMap {
         
         let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         
-        self.mapView.animate(toLocation: location)
-        self.mapView.animate(toZoom: 12)
+//        self.mapView.animate(toLocation: location)
+//        self.mapView.animate(toZoom: 12)
     }
 }

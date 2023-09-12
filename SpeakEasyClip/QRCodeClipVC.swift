@@ -42,11 +42,11 @@ final class QRCodeClipVC: UIViewController {
         let msgText = """
         Thank you for checking into \(venueName) with Speakeasy!
 
-        Access Your Ticket Here: https://appclip.speakeasygo.com/ticket-qrcode-generate?qrFor=booking&bookingId=\(bookingId)
+        Access Your Ticket Here: \(String(format: SharedURL.QAWebURL, bookingId))
 
         Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
-        Link to App: https://apps.apple.com/us/app/speakeasy-go/id1642351956
+        Link to App: \(SharedURL.appStoreURL)
         """
         shareSocialWith(text: msgText)
     }
@@ -61,7 +61,7 @@ final class QRCodeClipVC: UIViewController {
     // NOTE: hide venue logo for now
     func loadImage() {
         DispatchQueue.global().async {
-            guard let imgUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueAttachment)") else { return } //                    let logoUrl = URL(string: "https://speakeasy-storage.s3.amazonaws.com/\(self.venueLogo)")
+            guard let imgUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)") else { return } //                    let logoUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueLogo)")
             do {
                 let imgData = try Data(contentsOf: imgUrl)
 //                let logoData = try Data(contentsOf: logoUrl)

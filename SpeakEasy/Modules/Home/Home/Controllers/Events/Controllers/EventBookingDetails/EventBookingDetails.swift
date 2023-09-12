@@ -44,7 +44,7 @@ class EventBookingDetails: UIViewController {
     
     private func fetchEventDetail() {
         Loader.show()
-        EventPresenter.getEventDetail(eventId: self.eventId) { [weak self] isSuccess, errMsg, eventDetails in
+        EventPresenter.getEventDetail(eventId: self.eventId) { [weak self] isSuccess, errMsg, eventDetails, _ in
             guard let self = self else { return }
             if isSuccess {
                 self.eventDetail = eventDetails

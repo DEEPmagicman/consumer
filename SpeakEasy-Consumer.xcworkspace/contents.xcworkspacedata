@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:SpeakEasyClip/SDK/SpeakEasyClip-bridgingHeader.h">
+   </FileRef>
+   <FileRef
       location = "group:SpeakEasy-Consumer.xcodeproj">
    </FileRef>
    <FileRef

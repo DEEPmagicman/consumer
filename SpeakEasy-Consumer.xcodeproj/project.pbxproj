@@ -18,6 +18,7 @@
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
+		046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
 		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
@@ -293,7 +294,6 @@
 		CE9AD76E29F28ECD00FA55C9 /* CustomDropDownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */; };
 		CE9AD76F29F28ECD00FA55C9 /* CustomDropDownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
-		CEA4A6D92A8B4A75007E746F /* PaymentSheetClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA9474F288CABA600D7BB91 /* AWBezierConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */; };
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
@@ -304,6 +304,46 @@
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
 		CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */; };
+		CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */; };
+		CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81792AA1FAC100DAD9FE /* StripeApplePay */; };
+		CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */; };
+		CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */; };
+		CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81802AA20A1D00DAD9FE /* Alamofire */; };
+		CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81832AA20A5900DAD9FE /* SDWebImage */; };
+		CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81862AA20A9600DAD9FE /* FSCalendar */; };
+		CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */; };
+		CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */; };
+		CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A02AA2110E00DAD9FE /* SocketIO */; };
+		CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A22AA2112C00DAD9FE /* SocketIO */; };
+		CEDB81A62AA219D700DAD9FE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */; };
+		CEDB81A82AA21A1100DAD9FE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */; };
+		CEDB823C2AA21DD500DAD9FE /* FPNCountryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820C2AA21DCB00DAD9FE /* FPNCountryListViewController.swift */; };
+		CEDB823D2AA21DD500DAD9FE /* FPNTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820D2AA21DCB00DAD9FE /* FPNTextField.swift */; };
+		CEDB823E2AA21DD500DAD9FE /* FPNCountryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820E2AA21DCB00DAD9FE /* FPNCountryRepository.swift */; };
+		CEDB823F2AA21DD500DAD9FE /* FPNCountryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEDB82102AA21DCB00DAD9FE /* FPNCountryView.xib */; };
+		CEDB82402AA21DD500DAD9FE /* countryCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = CEDB82112AA21DCB00DAD9FE /* countryCodes.json */; };
+		CEDB82422AA21DD500DAD9FE /* NBAsYouTypeFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82152AA21DCB00DAD9FE /* NBAsYouTypeFormatter.m */; };
+		CEDB82432AA21DD500DAD9FE /* NBPhoneMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82162AA21DCB00DAD9FE /* NBPhoneMetaData.m */; };
+		CEDB82442AA21DD500DAD9FE /* NBPhoneNumberUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82172AA21DCB00DAD9FE /* NBPhoneNumberUtil.m */; };
+		CEDB82452AA21DD500DAD9FE /* NSArray+NBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82182AA21DCB00DAD9FE /* NSArray+NBAdditions.m */; };
+		CEDB82462AA21DD500DAD9FE /* NBRegExMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB821E2AA21DCB00DAD9FE /* NBRegExMatcher.m */; };
+		CEDB82472AA21DD500DAD9FE /* NBRegularExpressionCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB821F2AA21DCB00DAD9FE /* NBRegularExpressionCache.m */; };
+		CEDB82482AA21DD500DAD9FE /* NBNumberFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82202AA21DCB00DAD9FE /* NBNumberFormat.m */; };
+		CEDB82492AA21DD500DAD9FE /* NBPhoneNumberUtil+ShortNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82222AA21DCB00DAD9FE /* NBPhoneNumberUtil+ShortNumber.m */; };
+		CEDB824A2AA21DD500DAD9FE /* NBPhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82242AA21DCB00DAD9FE /* NBPhoneNumber.m */; };
+		CEDB824B2AA21DD500DAD9FE /* NBMetadataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82262AA21DCB00DAD9FE /* NBMetadataHelper.m */; };
+		CEDB824C2AA21DD500DAD9FE /* NBPhoneNumberDesc.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB822B2AA21DCB00DAD9FE /* NBPhoneNumberDesc.m */; };
+		CEDB824D2AA21DD500DAD9FE /* NBPhoneNumberDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB822D2AA21DCB00DAD9FE /* NBPhoneNumberDefines.m */; };
+		CEDB824E2AA21DD500DAD9FE /* FPNNibLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB822F2AA21DCB00DAD9FE /* FPNNibLoadingView.swift */; };
+		CEDB824F2AA21DD500DAD9FE /* FPNCountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82302AA21DCB00DAD9FE /* FPNCountryPicker.swift */; };
+		CEDB82502AA21DD500DAD9FE /* FPNCountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82312AA21DCB00DAD9FE /* FPNCountryView.swift */; };
+		CEDB82512AA21DD500DAD9FE /* FPNFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82332AA21DCB00DAD9FE /* FPNFormat.swift */; };
+		CEDB82522AA21DD500DAD9FE /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82342AA21DCB00DAD9FE /* Bundle+Extension.swift */; };
+		CEDB82532AA21DD500DAD9FE /* FPNCountryCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82352AA21DCB00DAD9FE /* FPNCountryCode.swift */; };
+		CEDB82542AA21DD500DAD9FE /* FPNTextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82362AA21DCB00DAD9FE /* FPNTextFieldDelegate.swift */; };
+		CEDB82552AA21DD500DAD9FE /* FPNOBJCCountryKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82372AA21DCB00DAD9FE /* FPNOBJCCountryKey.swift */; };
+		CEDB82562AA21DD500DAD9FE /* FPNUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82382AA21DCB00DAD9FE /* FPNUtils.swift */; };
+		CEDB82572AA21DD500DAD9FE /* FPNCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB82392AA21DCB00DAD9FE /* FPNCountry.swift */; };
 		CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE0B518299F94E5004F0DA2 /* Toast.swift */; };
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
 		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
@@ -619,6 +659,7 @@
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
+		046E586F2AA075C200FAA0F6 /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
 		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
 		0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteArtistProfileCVC.swift; sourceTree = "<group>"; };
@@ -672,6 +713,7 @@
 		4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationCitySelectionHeaderView.xib; sourceTree = "<group>"; };
 		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
+		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
 		820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsViewController.swift; sourceTree = "<group>"; };
 		820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableBookingDetailsViewController.xib; sourceTree = "<group>"; };
 		820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBookingDetailsCell.swift; sourceTree = "<group>"; };
@@ -889,7 +931,6 @@
 		CE9AD76C29F28ECD00FA55C9 /* CustomDropDownCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomDropDownCell.xib; sourceTree = "<group>"; };
 		CE9AD76D29F28ECD00FA55C9 /* CustomDropDownCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDropDownCell.swift; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
-		CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetClipVC.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA9474B288CABA600D7BB91 /* AWBezierConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWBezierConfiguration.swift; sourceTree = "<group>"; };
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
@@ -900,6 +941,46 @@
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
 		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
+		CEDB820C2AA21DCB00DAD9FE /* FPNCountryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryListViewController.swift; sourceTree = "<group>"; };
+		CEDB820D2AA21DCB00DAD9FE /* FPNTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNTextField.swift; sourceTree = "<group>"; };
+		CEDB820E2AA21DCB00DAD9FE /* FPNCountryRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryRepository.swift; sourceTree = "<group>"; };
+		CEDB82102AA21DCB00DAD9FE /* FPNCountryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FPNCountryView.xib; sourceTree = "<group>"; };
+		CEDB82112AA21DCB00DAD9FE /* countryCodes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = countryCodes.json; sourceTree = "<group>"; };
+		CEDB82142AA21DCB00DAD9FE /* NBPhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumber.h; sourceTree = "<group>"; };
+		CEDB82152AA21DCB00DAD9FE /* NBAsYouTypeFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBAsYouTypeFormatter.m; sourceTree = "<group>"; };
+		CEDB82162AA21DCB00DAD9FE /* NBPhoneMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneMetaData.m; sourceTree = "<group>"; };
+		CEDB82172AA21DCB00DAD9FE /* NBPhoneNumberUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumberUtil.m; sourceTree = "<group>"; };
+		CEDB82182AA21DCB00DAD9FE /* NSArray+NBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+NBAdditions.m"; sourceTree = "<group>"; };
+		CEDB82192AA21DCB00DAD9FE /* NBMetadataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBMetadataHelper.h; sourceTree = "<group>"; };
+		CEDB821A2AA21DCB00DAD9FE /* NBPhoneNumberDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberDefines.h; sourceTree = "<group>"; };
+		CEDB821C2AA21DCB00DAD9FE /* NBRegExMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBRegExMatcher.h; sourceTree = "<group>"; };
+		CEDB821D2AA21DCB00DAD9FE /* NBRegularExpressionCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBRegularExpressionCache.h; sourceTree = "<group>"; };
+		CEDB821E2AA21DCB00DAD9FE /* NBRegExMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBRegExMatcher.m; sourceTree = "<group>"; };
+		CEDB821F2AA21DCB00DAD9FE /* NBRegularExpressionCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBRegularExpressionCache.m; sourceTree = "<group>"; };
+		CEDB82202AA21DCB00DAD9FE /* NBNumberFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBNumberFormat.m; sourceTree = "<group>"; };
+		CEDB82212AA21DCB00DAD9FE /* NBPhoneNumberDesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberDesc.h; sourceTree = "<group>"; };
+		CEDB82222AA21DCB00DAD9FE /* NBPhoneNumberUtil+ShortNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NBPhoneNumberUtil+ShortNumber.m"; sourceTree = "<group>"; };
+		CEDB82232AA21DCB00DAD9FE /* NBAsYouTypeFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBAsYouTypeFormatter.h; sourceTree = "<group>"; };
+		CEDB82242AA21DCB00DAD9FE /* NBPhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumber.m; sourceTree = "<group>"; };
+		CEDB82252AA21DCB00DAD9FE /* NBPhoneMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneMetaData.h; sourceTree = "<group>"; };
+		CEDB82262AA21DCB00DAD9FE /* NBMetadataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBMetadataHelper.m; sourceTree = "<group>"; };
+		CEDB82272AA21DCB00DAD9FE /* NSArray+NBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+NBAdditions.h"; sourceTree = "<group>"; };
+		CEDB82282AA21DCB00DAD9FE /* NBPhoneNumberUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBPhoneNumberUtil.h; sourceTree = "<group>"; };
+		CEDB82292AA21DCB00DAD9FE /* NBGeneratedPhoneNumberMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBGeneratedPhoneNumberMetaData.h; sourceTree = "<group>"; };
+		CEDB822A2AA21DCB00DAD9FE /* NBPhoneNumberUtil+ShortNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NBPhoneNumberUtil+ShortNumber.h"; sourceTree = "<group>"; };
+		CEDB822B2AA21DCB00DAD9FE /* NBPhoneNumberDesc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumberDesc.m; sourceTree = "<group>"; };
+		CEDB822C2AA21DCB00DAD9FE /* NBNumberFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBNumberFormat.h; sourceTree = "<group>"; };
+		CEDB822D2AA21DCB00DAD9FE /* NBPhoneNumberDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBPhoneNumberDefines.m; sourceTree = "<group>"; };
+		CEDB822F2AA21DCB00DAD9FE /* FPNNibLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNNibLoadingView.swift; sourceTree = "<group>"; };
+		CEDB82302AA21DCB00DAD9FE /* FPNCountryPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryPicker.swift; sourceTree = "<group>"; };
+		CEDB82312AA21DCB00DAD9FE /* FPNCountryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryView.swift; sourceTree = "<group>"; };
+		CEDB82332AA21DCB00DAD9FE /* FPNFormat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNFormat.swift; sourceTree = "<group>"; };
+		CEDB82342AA21DCB00DAD9FE /* Bundle+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+Extension.swift"; sourceTree = "<group>"; };
+		CEDB82352AA21DCB00DAD9FE /* FPNCountryCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryCode.swift; sourceTree = "<group>"; };
+		CEDB82362AA21DCB00DAD9FE /* FPNTextFieldDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNTextFieldDelegate.swift; sourceTree = "<group>"; };
+		CEDB82372AA21DCB00DAD9FE /* FPNOBJCCountryKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNOBJCCountryKey.swift; sourceTree = "<group>"; };
+		CEDB82382AA21DCB00DAD9FE /* FPNUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNUtils.swift; sourceTree = "<group>"; };
+		CEDB82392AA21DCB00DAD9FE /* FPNCountry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountry.swift; sourceTree = "<group>"; };
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
 		CEE7A2292A28BC9C009A027F /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
@@ -1187,6 +1268,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEDB81A82AA21A1100DAD9FE /* IQKeyboardManagerSwift in Frameworks */,
+				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
+				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
+				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
 				6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1195,7 +1280,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */,
+				CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */,
+				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
+				CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */,
+				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
+				CEDB81A62AA219D700DAD9FE /* IQKeyboardManagerSwift in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
+				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
+				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
+				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1299,6 +1393,8 @@
 		2966E3292980F85E00B5E103 /* SpeakEasyClip */ = {
 			isa = PBXGroup;
 			children = (
+				69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */,
+				CEDB81F92AA21C4F00DAD9FE /* SDK */,
 				CE65D679298D248900DE1E8A /* APPClipModal */,
 				297E37352983B13A00139947 /* TVC */,
 				2966E32A2980F85E00B5E103 /* AppDelegate.swift */,
@@ -1309,7 +1405,6 @@
 				2966E3382980F86000B5E103 /* Info.plist */,
 				2966E3392980F86000B5E103 /* SpeakEasyClip.entitlements */,
 				29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */,
-				CEA4A6D82A8B4A75007E746F /* PaymentSheetClipVC.swift */,
 				29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */,
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
 				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
@@ -1803,6 +1898,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0F423C29FBE6AB0082723B /* Booking.swift */,
+				046E586F2AA075C200FAA0F6 /* TimeSlot.swift */,
 			);
 			path = Booking;
 			sourceTree = "<group>";
@@ -2255,6 +2351,109 @@
 				CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */,
 			);
 			path = MVPVenueTypeHeaderView;
+			sourceTree = "<group>";
+		};
+		CEDB81F92AA21C4F00DAD9FE /* SDK */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB82082AA21DCB00DAD9FE /* FlagPhoneNumber */,
+			);
+			path = SDK;
+			sourceTree = "<group>";
+		};
+		CEDB82082AA21DCB00DAD9FE /* FlagPhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB820B2AA21DCB00DAD9FE /* Sources */,
+			);
+			path = FlagPhoneNumber;
+			sourceTree = "<group>";
+		};
+		CEDB820B2AA21DCB00DAD9FE /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB820C2AA21DCB00DAD9FE /* FPNCountryListViewController.swift */,
+				CEDB820D2AA21DCB00DAD9FE /* FPNTextField.swift */,
+				CEDB820E2AA21DCB00DAD9FE /* FPNCountryRepository.swift */,
+				CEDB820F2AA21DCB00DAD9FE /* Resources */,
+				CEDB82132AA21DCB00DAD9FE /* libPhoneNumber */,
+				CEDB822E2AA21DCB00DAD9FE /* FPNCountryPicker */,
+				CEDB82322AA21DCB00DAD9FE /* Helpers */,
+				CEDB82392AA21DCB00DAD9FE /* FPNCountry.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		CEDB820F2AA21DCB00DAD9FE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB82102AA21DCB00DAD9FE /* FPNCountryView.xib */,
+				CEDB82112AA21DCB00DAD9FE /* countryCodes.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CEDB82132AA21DCB00DAD9FE /* libPhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB82142AA21DCB00DAD9FE /* NBPhoneNumber.h */,
+				CEDB82152AA21DCB00DAD9FE /* NBAsYouTypeFormatter.m */,
+				CEDB82162AA21DCB00DAD9FE /* NBPhoneMetaData.m */,
+				CEDB82172AA21DCB00DAD9FE /* NBPhoneNumberUtil.m */,
+				CEDB82182AA21DCB00DAD9FE /* NSArray+NBAdditions.m */,
+				CEDB82192AA21DCB00DAD9FE /* NBMetadataHelper.h */,
+				CEDB821A2AA21DCB00DAD9FE /* NBPhoneNumberDefines.h */,
+				CEDB821B2AA21DCB00DAD9FE /* Internal */,
+				CEDB82202AA21DCB00DAD9FE /* NBNumberFormat.m */,
+				CEDB82212AA21DCB00DAD9FE /* NBPhoneNumberDesc.h */,
+				CEDB82222AA21DCB00DAD9FE /* NBPhoneNumberUtil+ShortNumber.m */,
+				CEDB82232AA21DCB00DAD9FE /* NBAsYouTypeFormatter.h */,
+				CEDB82242AA21DCB00DAD9FE /* NBPhoneNumber.m */,
+				CEDB82252AA21DCB00DAD9FE /* NBPhoneMetaData.h */,
+				CEDB82262AA21DCB00DAD9FE /* NBMetadataHelper.m */,
+				CEDB82272AA21DCB00DAD9FE /* NSArray+NBAdditions.h */,
+				CEDB82282AA21DCB00DAD9FE /* NBPhoneNumberUtil.h */,
+				CEDB82292AA21DCB00DAD9FE /* NBGeneratedPhoneNumberMetaData.h */,
+				CEDB822A2AA21DCB00DAD9FE /* NBPhoneNumberUtil+ShortNumber.h */,
+				CEDB822B2AA21DCB00DAD9FE /* NBPhoneNumberDesc.m */,
+				CEDB822C2AA21DCB00DAD9FE /* NBNumberFormat.h */,
+				CEDB822D2AA21DCB00DAD9FE /* NBPhoneNumberDefines.m */,
+			);
+			path = libPhoneNumber;
+			sourceTree = "<group>";
+		};
+		CEDB821B2AA21DCB00DAD9FE /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB821C2AA21DCB00DAD9FE /* NBRegExMatcher.h */,
+				CEDB821D2AA21DCB00DAD9FE /* NBRegularExpressionCache.h */,
+				CEDB821E2AA21DCB00DAD9FE /* NBRegExMatcher.m */,
+				CEDB821F2AA21DCB00DAD9FE /* NBRegularExpressionCache.m */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		CEDB822E2AA21DCB00DAD9FE /* FPNCountryPicker */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB822F2AA21DCB00DAD9FE /* FPNNibLoadingView.swift */,
+				CEDB82302AA21DCB00DAD9FE /* FPNCountryPicker.swift */,
+				CEDB82312AA21DCB00DAD9FE /* FPNCountryView.swift */,
+			);
+			path = FPNCountryPicker;
+			sourceTree = "<group>";
+		};
+		CEDB82322AA21DCB00DAD9FE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CEDB82332AA21DCB00DAD9FE /* FPNFormat.swift */,
+				CEDB82342AA21DCB00DAD9FE /* Bundle+Extension.swift */,
+				CEDB82352AA21DCB00DAD9FE /* FPNCountryCode.swift */,
+				CEDB82362AA21DCB00DAD9FE /* FPNTextFieldDelegate.swift */,
+				CEDB82372AA21DCB00DAD9FE /* FPNOBJCCountryKey.swift */,
+				CEDB82382AA21DCB00DAD9FE /* FPNUtils.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		CEECAA67288D8B7C007C5F9C /* CalendarDateRangePickerViewController */ = {
@@ -3865,6 +4064,12 @@
 			dependencies = (
 			);
 			name = SpeakEasyClip;
+			packageProductDependencies = (
+				CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */,
+				CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */,
+				CEDB81A22AA2112C00DAD9FE /* SocketIO */,
+				CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */,
+			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
 			productType = "com.apple.product-type.application.on-demand-install-capable";
@@ -3879,8 +4084,6 @@
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
-				CEBF8F7A2A31939900E0325D /* ShellScript */,
-				A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3888,6 +4091,17 @@
 				2966E33B2980F86000B5E103 /* PBXTargetDependency */,
 			);
 			name = "SpeakEasy-Consumer";
+			packageProductDependencies = (
+				CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */,
+				CEDB81792AA1FAC100DAD9FE /* StripeApplePay */,
+				CEDB81802AA20A1D00DAD9FE /* Alamofire */,
+				CEDB81832AA20A5900DAD9FE /* SDWebImage */,
+				CEDB81862AA20A9600DAD9FE /* FSCalendar */,
+				CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */,
+				CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */,
+				CEDB81A02AA2110E00DAD9FE /* SocketIO */,
+				CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */,
+			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
 			productType = "com.apple.product-type.application";
@@ -3919,6 +4133,15 @@
 				Base,
 			);
 			mainGroup = CE486715286F2CB000FD277E;
+			packageReferences = (
+				CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
+				CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */,
+				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
+				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
+				CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -3939,8 +4162,10 @@
 				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
+				CEDB82402AA21DD500DAD9FE /* countryCodes.json in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
 				CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */,
+				CEDB823F2AA21DD500DAD9FE /* FPNCountryView.xib in Resources */,
 				CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */,
 				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
@@ -4202,42 +4427,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A11BED4A2C8894F64C37C596 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CEBF8F7A2A31939900E0325D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
-		};
 		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4284,21 +4473,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEDB824B2AA21DD500DAD9FE /* NBMetadataHelper.m in Sources */,
+				CEDB82522AA21DD500DAD9FE /* Bundle+Extension.swift in Sources */,
+				CEDB824D2AA21DD500DAD9FE /* NBPhoneNumberDefines.m in Sources */,
+				CEDB82502AA21DD500DAD9FE /* FPNCountryView.swift in Sources */,
+				CEDB82572AA21DD500DAD9FE /* FPNCountry.swift in Sources */,
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
+				CEDB82542AA21DD500DAD9FE /* FPNTextFieldDelegate.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
+				CEDB82462AA21DD500DAD9FE /* NBRegExMatcher.m in Sources */,
 				69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */,
 				691574662A0CD0EF002F303A /* Stripe.swift in Sources */,
+				CEDB82482AA21DD500DAD9FE /* NBNumberFormat.m in Sources */,
+				CEDB82422AA21DD500DAD9FE /* NBAsYouTypeFormatter.m in Sources */,
+				CEDB823C2AA21DD500DAD9FE /* FPNCountryListViewController.swift in Sources */,
+				CEDB82492AA21DD500DAD9FE /* NBPhoneNumberUtil+ShortNumber.m in Sources */,
 				CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */,
+				CEDB82552AA21DD500DAD9FE /* FPNOBJCCountryKey.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */,
+				CEDB82432AA21DD500DAD9FE /* NBPhoneMetaData.m in Sources */,
+				CEDB82532AA21DD500DAD9FE /* FPNCountryCode.swift in Sources */,
+				CEDB824A2AA21DD500DAD9FE /* NBPhoneNumber.m in Sources */,
+				CEDB823E2AA21DD500DAD9FE /* FPNCountryRepository.swift in Sources */,
 				CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */,
+				CEDB824F2AA21DD500DAD9FE /* FPNCountryPicker.swift in Sources */,
 				CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */,
+				CEDB82452AA21DD500DAD9FE /* NSArray+NBAdditions.m in Sources */,
+				CEDB82512AA21DD500DAD9FE /* FPNFormat.swift in Sources */,
+				CEDB823D2AA21DD500DAD9FE /* FPNTextField.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
 				CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */,
+				CEDB82472AA21DD500DAD9FE /* NBRegularExpressionCache.m in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
-				CEA4A6D92A8B4A75007E746F /* PaymentSheetClipVC.swift in Sources */,
+				CEDB82562AA21DD500DAD9FE /* FPNUtils.swift in Sources */,
+				CEDB824C2AA21DD500DAD9FE /* NBPhoneNumberDesc.m in Sources */,
+				CEDB824E2AA21DD500DAD9FE /* FPNNibLoadingView.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
+				CEDB82442AA21DD500DAD9FE /* NBPhoneNumberUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4552,6 +4765,7 @@
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E17DC85B28C6C16500244C4F /* TabCVC.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
+				046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */,
 				829FB89D2988F64500E89019 /* ChangePasswordViewController.swift in Sources */,
 				E11CE3E528C8DF7F003899C4 /* WeekDays.swift in Sources */,
 				E1A9E75128C55D550081FB28 /* VenuePhotoGallery.swift in Sources */,
@@ -4715,7 +4929,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4730,10 +4944,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.01;
+				MARKETING_VERSION = 3.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeakEasyClip/SpeakEasyClip-bridgingHeader.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4749,7 +4964,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
@@ -4764,10 +4979,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.01;
+				MARKETING_VERSION = 3.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "SpeakEasyClip/SpeakEasyClip-bridgingHeader.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Osize";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4905,7 +5122,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 96;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4930,11 +5147,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.01;
+				MARKETING_VERSION = 3.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4950,7 +5168,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 96;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4974,11 +5192,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.01;
+				MARKETING_VERSION = 3.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -5015,6 +5234,133 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
+			requirement = {
+				kind = exactVersion;
+				version = 23.0.0;
+			};
+		};
+		CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = exactVersion;
+				version = 4.9.1;
+			};
+		};
+		CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = exactVersion;
+				version = 5.14.2;
+			};
+		};
+		CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSCalendar";
+			requirement = {
+				kind = exactVersion;
+				version = 2.8.4;
+			};
+		};
+		CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 8.15.0;
+			};
+		};
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = exactVersion;
+				version = 16.1.0;
+			};
+		};
+		CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = exactVersion;
+				version = 6.5.10;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
+		};
+		CEDB81792AA1FAC100DAD9FE /* StripeApplePay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripeApplePay;
+		};
+		CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
+		};
+		CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripeApplePay;
+		};
+		CEDB81802AA20A1D00DAD9FE /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB817F2AA20A1D00DAD9FE /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		CEDB81832AA20A5900DAD9FE /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		CEDB81862AA20A9600DAD9FE /* FSCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */;
+			productName = FSCalendar;
+		};
+		CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CE486716286F2CB000FD277E /* Project object */;
 }

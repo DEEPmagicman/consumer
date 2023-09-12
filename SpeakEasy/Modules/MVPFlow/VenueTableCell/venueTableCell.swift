@@ -23,8 +23,8 @@ class venueTableCell: UITableViewCell {
     }
     
     func setData(data: ClipVenue) {
-        let imgUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.venueAttachment.first?.key ?? "")"
-        let logoUrl = "https://speakeasy-storage.s3.amazonaws.com/\(data.logo?.key ?? "")"
+        let imgUrl = "\(SharedURL.amazonStorage)\(data.venueAttachment.first?.key ?? "")"
+        let logoUrl = "\(SharedURL.amazonStorage)\(data.logo?.key ?? "")"
         self.venueEventImg.sd_setImage(with: URL( string: imgUrl), completed: nil)
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name

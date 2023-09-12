@@ -63,7 +63,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getEventTicket(withLoader: Bool = true) {
-        guard let url = URL(string: "https://api.speakeasygo.com/appclip/\(venueId)") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 //        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
@@ -97,8 +97,8 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func setUpUI() {
-        let imgStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueDetail?.venueAttachment.first?.key ?? "")"
-        let logoStr = "https://speakeasy-storage.s3.amazonaws.com/\(self.venueDetail?.logo?.key ?? "")"
+        let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment.first?.key ?? "")"
+        let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
         guard let imgUrl = URL(string: imgStr) else { return }
         guard let logoUrl = URL(string: logoStr) else { return }
         do {

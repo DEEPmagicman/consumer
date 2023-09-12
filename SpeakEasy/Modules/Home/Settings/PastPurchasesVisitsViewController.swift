@@ -53,11 +53,16 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
             if bookings[indexPath.row].isCompedTicket == true, let inviteLink = bookings[indexPath.row].inviteLink {
                 cell.nameLbl.text = inviteLink.name
                 cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                cell.upcomingImage.image = Constant.Icon.liveCover
+            } else if bookings[indexPath.row].bookingType == "TABLE_BOOKING" {
+                cell.nameLbl.text = Constant.String.tableReservation
+                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment.first?.key ?? "").imageURL))
             } else {
                 cell.nameLbl.text = Constant.String.liveCoverTicket
                 cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                cell.upcomingImage.image = Constant.Icon.liveCover
             }
-            cell.upcomingImage.image = Constant.Icon.liveCover
         } else {
             cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
             cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)

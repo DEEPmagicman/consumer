@@ -59,7 +59,7 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", isDiscounted: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?) -> Void) {
+    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", isDiscounted: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
         
         var param = [String: Any]()
         if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {
@@ -71,21 +71,23 @@ final class EventPresenter {
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil, nil)
+                completion(false, nil, nil, nil)
                 return
             }
-            if let eventList = Event.parse(responseDic) {
-                completion(true, nil, eventList)
+            if let error = responseDic["error"] as? String, let code = responseDic["statusCode"] as? Int {
+                completion(false, error, nil, code)
+            } else if let eventList = Event.parse(responseDic) {
+                completion(true, nil, eventList, nil)
             } else {
-                completion(false, "internal error", nil)
+                completion(false, "internal error", nil, nil)
             }
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, nil)
+                completion(false, err.domain, nil, nil)
                 return
             }
-            completion(false, nil, nil)
+            completion(false, nil, nil, nil)
         }
     }
 }

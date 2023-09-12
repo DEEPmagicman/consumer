@@ -14,3 +14,16 @@ struct Stripe {
         static let publishableKey = "pk_live_51MVrDLBuSsaUd7BTVNumpYdLm1NT3cnQF2HmwWRmedtNmDiHm20T8kwmPMSSI7lEXzSbfyXrJ2hcBqOMOJv0h0TD00krZxi0Tg"
     #endif
 }
+
+struct SharedURL {
+    #if DEBUG
+        static let baseURL = "https://speakeasy-stag.cmdev.cc"
+        static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
+    #else
+        static let baseURL = "https://api.speakeasygo.com"
+        static let webBaseURL = "https://speakeasygo.com"
+    #endif
+    static let amazonStorage = "https://speakeasy-storage.s3.amazonaws.com/"
+    static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
+    static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+}

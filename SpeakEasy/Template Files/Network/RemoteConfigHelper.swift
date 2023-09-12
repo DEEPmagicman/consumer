@@ -5,7 +5,7 @@
 //  Created by Square Infosoft on 24/04/23.
 //
 
-import Foundation
+import UIKit
 import FirebaseRemoteConfig
 
 final class RemoteConfigHelper {
@@ -58,7 +58,7 @@ final class RemoteConfigHelper {
     
     func openAppStore() {
         isShowingAlert = false
-        if let url = URL(string: APIBuilder.appStoreURL) {
+        if let url = URL(string: SharedURL.appStoreURL) {
             UIApplication.shared.open(url)
         }
     }

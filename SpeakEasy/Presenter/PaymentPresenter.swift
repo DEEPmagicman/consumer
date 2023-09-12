@@ -74,6 +74,36 @@ final class PaymentPresenter {
         }
     }
     
+    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+        
+        let param = ["isAppClipUser": false,
+                     "phone": phone,
+                     "tickets": tickets,
+                     "consumerUserId": userId,
+                     "eventId": eventId] as [String: Any]
+        
+        AFWrapper.postRequest(APIBuilder.freeEventTicketURL, params: param, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, "")
+                return
+            }
+            if let id = responseDic["id"] as? String {
+                completion(true, nil, id)
+            } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
+                completion(false, error, message)
+            } else {
+                completion(false, "Alert", "Booking failed")
+            }
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, "")
+                return
+            }
+            completion(false, nil, "")
+        }
+    }
+
+    
     static func createCoverFreeBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         let param = ["appclipTicket": appClipTickets,
                      "venueId": venueId,

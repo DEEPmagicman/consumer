@@ -21,6 +21,13 @@ final class ConnectAccountViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        if UserDefault.shared.hasConnectedWith != nil {
+//            if UserDefault.shared.hasConnectedWith == "APPLE" {
+//                Navigate.to.enterNameVc(self, isFromApple: true)
+//            } else {
+//                Navigate.to.enterNameVc(self)
+//            }
+//        }
     }
     
     @IBAction func onClickConnectWithApple(_ sender: Any) {
@@ -42,7 +49,6 @@ final class ConnectAccountViewController: UIViewController {
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
             
             if let error = error {
-//                Alert.showAlertSheet(style: .alert, title: "user Not found", message: "")
                 print(error)
                 return
             }
@@ -57,6 +63,7 @@ final class ConnectAccountViewController: UIViewController {
                 }
                 if isSuccess {
                     UserDefault.shared.user?.email = email
+//                    UserDefault.shared.hasConnectedWith = "GOOGLE"
                     Navigate.to.enterNameVc(self)
                 } else {
                     if errorMsg != nil {
@@ -84,21 +91,27 @@ final class ConnectAccountViewController: UIViewController {
 extension ConnectAccountViewController: ASAuthorizationControllerDelegate{
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
     if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
-    let userIdentifier = appleIDCredential.user
-    let fullName = appleIDCredential.fullName
-    let email = appleIDCredential.email
+//    let userIdentifier = appleIDCredential.user
+        let fullName = appleIDCredential.fullName
+        if UserDefault.shared.user?.firstName == "" {
+            UserDefault.shared.user?.firstName = fullName?.givenName ?? ""
+            UserDefault.shared.user?.lastName = fullName?.familyName ?? ""
+        }
+//        UserDefault.shared.user?.firstName = ""
+//    let email = appleIDCredential.email
         if let identityTokenData = appleIDCredential.identityToken,
             let identityTokenString = String(data: identityTokenData, encoding: .utf8) {
             do {
                let jwt = try decode(jwt: identityTokenString)
                let decodedBody = jwt.body as Dictionary<String, Any>
-                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String) { [weak self] isSuccess,errorMsg  in
+                self.onBoardingDelegate.socialMediaConnectAPi(email: decodedBody["email"] as! String, socialType: SocialType.apple.rawValue, socialId: identityTokenString, nonce: decodedBody["nonce"] as? String, firstName: UserDefault.shared.user?.firstName ?? "", lastName: UserDefault.shared.user?.lastName ?? "") { [weak self] isSuccess,errorMsg  in
                     guard let self = self else {
                         Loader.hide()
                         return
                     }
                     if isSuccess {
                         UserDefault.shared.user?.email = decodedBody["email"] as? String ?? ""
+//                        UserDefault.shared.hasConnectedWith = "APPLE"
                         Navigate.to.enterNameVc(self)
                     } else {
                         if errorMsg != nil {
