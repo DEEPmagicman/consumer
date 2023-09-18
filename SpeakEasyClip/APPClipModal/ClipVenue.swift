@@ -179,9 +179,9 @@ struct AppClipTicket: Codable {
 struct VenueSettings: Codable {
 
     var optedPolicy: Bool
-    var policyText: String
+    var policyText: String?
     var enabledCustomBookingSMS: Bool
-    var bookingSMSText: String
+    var bookingSMSText: String?
     var collectNameDuringBooking: Bool?
     var currencySymbol: String?
     var currencyCode: String?

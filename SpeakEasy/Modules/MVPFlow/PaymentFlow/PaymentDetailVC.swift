@@ -60,7 +60,7 @@ final class PaymentDetailVC: UIViewController {
             }
             venueNameLbl.text = "\(booking.venueObject?.name ?? ""), \(booking.venueObject?.city ?? "")"
         }
-        paymentMethodImg.image = booking?.paymentType.paymentImg
+        paymentMethodImg.image = booking?.paymentType?.paymentImg
         purchaseDateLbl.text = booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
     }
     

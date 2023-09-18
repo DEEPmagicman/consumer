@@ -24,12 +24,12 @@ struct Event: Codable {
     var version: String
     var eventStatus: String
     var status: String
-    var rejectReason: String
+    var rejectReason: String?
     var recurringType: String?
     var recurringTo: String?
     var recurringFrom: String?
     var description: String
-    var disclaimer: String
+    var disclaimer: String?
     var isTieredTicket: Bool
     var upfront: Bool?
     var isDeleted: Bool

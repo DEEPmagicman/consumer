@@ -110,7 +110,7 @@ final class EventDetailVC: UIViewController {
         venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
-        eventPolicyLbl.text = event?.disclaimer.withEmptyPlaceHolder ?? Constant.String.dash
+        eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         locationLbl.text = venueDetails?.address
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
