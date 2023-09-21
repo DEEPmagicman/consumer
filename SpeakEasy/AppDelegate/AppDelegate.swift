@@ -70,7 +70,7 @@ extension AppDelegate {
         tutorialNavigation.modalTransitionStyle = .crossDissolve
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
-        if isNavigateToDetail, let vc = self.window?.rootViewController {
+        if isNavigateToDetail {
             Navigate.to.connectAccountVc(controller)
         } else if forceCreateAccount {
             Navigate.to.enterPhoneNumVc(controller)
@@ -86,10 +86,6 @@ extension AppDelegate {
         Navigate.to.enterNameVc(controller)
         self.window?.rootViewController = tutorialNavigation
     }
-    
-    /* let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(EnterNameViewController.self)
-     sender.navigationController?.pushViewController(vc, animated: true)
-     vc.isFromApple = isFromApple*/
     
     private func handleForURL(_ url: URL) {
         if url.absoluteString.contains("event") {

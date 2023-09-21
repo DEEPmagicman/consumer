@@ -22,7 +22,6 @@ final class EnterNameViewController: UIViewController {
     
     private let presenter = OnBoardingPresenter()
     private let genderDropDown = DropDown()
-//    var isFromApple = Bool()
     
     override func viewDidLoad() {
         super.viewDidLoad()

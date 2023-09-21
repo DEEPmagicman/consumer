@@ -12,9 +12,9 @@ struct Booking: Codable {
     var venueObject: ClipVenue?
     var id: String
     var venueId: String
-    var phone: String
+//    var phone: String
     var eventId: String?
-    var isAppClipUser: Bool
+//    var isAppClipUser: Bool
     var paymentType: String?
 //    var appClipUserId: Any
 //    var ticketName: Any
@@ -30,13 +30,13 @@ struct Booking: Codable {
     var paymentIntent: String?
 //    var additionalSpent: Any
     var isCompedTicket: Bool?
-    var paymentStatus: String
+//    var paymentStatus: String
     var bookingExpireDateTime: String?
 //    var qrScannedDateTime: Any
     var createdAt: String
-    var updatedAt: String
+//    var updatedAt: String
     var isDeleted: Bool?
-    var isApproved: Bool
+//    var isApproved: Bool
 //    var eventTicketId: Any
 //    var eventTicketHasTierId: Any
     var bookingType: String?
@@ -64,9 +64,9 @@ struct Booking: Codable {
         case venueObject
         case id = "id"
         case venueId = "venueId"
-        case phone = "phone"
+//        case phone = "phone"
         case eventId = "eventId"
-        case isAppClipUser = "isAppClipUser"
+//        case isAppClipUser = "isAppClipUser"
         case paymentType = "paymentType"
 //        case appClipUserId = "appClipUserId"
 //        case ticketName = "ticketName"
@@ -82,13 +82,13 @@ struct Booking: Codable {
         case paymentIntent = "paymentIntent"
 //        case additionalSpent = "additionalSpent"
         case isCompedTicket = "isCompedTicket"
-        case paymentStatus = "paymentStatus"
+//        case paymentStatus = "paymentStatus"
         case bookingExpireDateTime = "bookingExpireDateTime"
 //        case qrScannedDateTime = "qrScannedDateTime"
         case createdAt = "createdAt"
-        case updatedAt = "updatedAt"
+//        case updatedAt = "updatedAt"
         case isDeleted = "isDeleted"
-        case isApproved = "isApproved"
+//        case isApproved = "isApproved"
 //        case eventTicketId = "eventTicketId"
 //        case eventTicketHasTierId = "eventTicketHasTierId"
         case bookingType = "bookingType"
@@ -104,9 +104,9 @@ struct Booking: Codable {
         try container.encode(venueObject, forKey: .venueObject)
         try container.encode(id, forKey: .id)
         try container.encode(venueId, forKey: .venueId)
-        try container.encode(phone, forKey: .phone)
+//        try container.encode(phone, forKey: .phone)
         try container.encode(eventId, forKey: .eventId)
-        try container.encode(isAppClipUser, forKey: .isAppClipUser)
+//        try container.encode(isAppClipUser, forKey: .isAppClipUser)
         try container.encode(paymentType, forKey: .paymentType)
         // TODO: Add code for encoding `appClipUserId`, It was null at the time of model creation.
         // TODO: Add code for encoding `ticketName`, It was null at the time of model creation.
@@ -122,13 +122,13 @@ struct Booking: Codable {
         try container.encode(paymentIntent, forKey: .paymentIntent)
         // TODO: Add code for encoding `additionalSpent`, It was null at the time of model creation.
         try container.encode(isCompedTicket, forKey: .isCompedTicket)
-        try container.encode(paymentStatus, forKey: .paymentStatus)
+//        try container.encode(paymentStatus, forKey: .paymentStatus)
         try container.encode(bookingExpireDateTime, forKey: .bookingExpireDateTime)
         // TODO: Add code for encoding `qrScannedDateTime`, It was null at the time of model creation.
         try container.encode(createdAt, forKey: .createdAt)
-        try container.encode(updatedAt, forKey: .updatedAt)
+//        try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(isDeleted, forKey: .isDeleted)
-        try container.encode(isApproved, forKey: .isApproved)
+//        try container.encode(isApproved, forKey: .isApproved)
         // TODO: Add code for encoding `eventTicketId`, It was null at the time of model creation.
         // TODO: Add code for encoding `eventTicketHasTierId`, It was null at the time of model creation.
         try container.encode(bookingType, forKey: .bookingType)
