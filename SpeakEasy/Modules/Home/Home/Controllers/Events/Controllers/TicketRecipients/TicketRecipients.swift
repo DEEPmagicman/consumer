@@ -64,10 +64,10 @@ class TicketRecipients: BaseController {
     }
     
     @IBAction func onBtnCode(_ sender: UIButton) {
-        let controller = MICountryPicker()
-        controller.delegate = self
-        controller.showCallingCodes = true
-        self.present(controller, animated: true, completion: nil)
+//        let controller = MICountryPicker()
+//        controller.delegate = self
+//        controller.showCallingCodes = true
+//        self.present(controller, animated: true, completion: nil)
     }
     @IBAction func onBtnGender(_ sender: UIButton) {
         self.setGenderDropDown(show: true)
@@ -75,15 +75,15 @@ class TicketRecipients: BaseController {
 }
 
 //MARK:- MICountryPickerDelegate
-extension TicketRecipients: MICountryPickerDelegate{
-    func countryPicker(_ picker: MICountryPicker, didSelectCountryWithName name: String, code: String) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    func countryPicker(_ picker: MICountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
-        self.lblCountry.text = name
-        self.lblCode.text = dialCode
-    }
-}
+//extension TicketRecipients: MICountryPickerDelegate{
+//    func countryPicker(_ picker: MICountryPicker, didSelectCountryWithName name: String, code: String) {
+//        self.dismiss(animated: true, completion: nil)
+//    }
+//    func countryPicker(_ picker: MICountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
+//        self.lblCountry.text = name
+//        self.lblCode.text = dialCode
+//    }
+//}
 //MARK: - Helper Methods
 extension TicketRecipients {
     private func registerCell(){

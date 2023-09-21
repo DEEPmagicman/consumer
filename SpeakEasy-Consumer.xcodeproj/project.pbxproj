@@ -253,9 +253,7 @@
 		CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48678F286F358700FD277E /* CMSteppedProgressBar.m */; };
 		CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486790286F358700FD277E /* CAPSPageMenu.swift */; };
 		CE4867D2286F358800FD277E /* GifAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486793286F358700FD277E /* GifAnimation.swift */; };
-		CE4867D3286F358800FD277E /* assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CE486795286F358700FD277E /* assets.bundle */; };
 		CE4867D4286F358800FD277E /* MICountryPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486796286F358700FD277E /* MICountryPicker.swift */; };
-		CE4867D5286F358800FD277E /* CallingCodes.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE486797286F358700FD277E /* CallingCodes.plist */; };
 		CE4867D6286F358800FD277E /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486799286F358700FD277E /* FlowLayout.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
 		CE4867D8286F358800FD277E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48679F286F358700FD277E /* CardView.swift */; };
@@ -4181,7 +4179,6 @@
 				4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */,
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				E16705BC28CA6BB500644BF0 /* InviteFriendsCVC.xib in Resources */,
-				CE4867D3286F358800FD277E /* assets.bundle in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				E11F4C0728C835F3008D2E30 /* Messages.xib in Resources */,
 				E11F4C1728C835F3008D2E30 /* Invites.xib in Resources */,
@@ -4370,7 +4367,6 @@
 				E166184728BED1810027C6EA /* RewardDetailsStretchyTVC.xib in Resources */,
 				E17DC86128C6C16500244C4F /* NFTsonSpeakEasy.xib in Resources */,
 				E17DC85F28C6C16500244C4F /* NFTAssets.xib in Resources */,
-				CE4867D5286F358800FD277E /* CallingCodes.plist in Resources */,
 				E11F4B8928C8358C008D2E30 /* Events.xib in Resources */,
 				E11F4C0928C835F3008D2E30 /* BookingRequestTVC.xib in Resources */,
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
