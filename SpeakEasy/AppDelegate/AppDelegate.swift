@@ -93,7 +93,18 @@ extension AppDelegate {
     
     private func handleForURL(_ url: URL) {
         if url.absoluteString.contains("event") {
-            setRootVC(.event, id: url.lastPathComponent, promoteId: (URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems?.first(where: { $0.name == "promoteId" })?.value) ?? "", isDiscounted: (URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems?.first(where: { $0.name == "isDiscounted" })?.value) ?? nil)
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
+                let promoteId = queryItems.first(where: { $0.name == "promoteId" })?.value
+                let isDiscounted = queryItems.first(where: { $0.name == "isDiscounted" })?.value
+                let bookingId = queryItems.first(where: { $0.name == "bookingId" })?.value
+                if let bookingId = bookingId {
+                    setRootVC(.booking, id: bookingId)
+                } else {
+                    setRootVC(.event, id: url.lastPathComponent, promoteId: promoteId ?? "", isDiscounted: isDiscounted ?? nil)
+                }
+            } else {
+                setRootVC(.event, id: url.lastPathComponent)
+            }
             return
         }
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
@@ -157,6 +168,8 @@ extension AppDelegate {
             Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId, isDiscounted: isDiscounted)
         case .inviteLink:
             inviteLinkNav(home, id: id)
+        case .booking:
+            Navigate.to.QRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
         }
     }
     

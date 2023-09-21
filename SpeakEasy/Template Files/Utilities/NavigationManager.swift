@@ -14,6 +14,7 @@ enum NavigationDestination {
     case venue
     case event
     case inviteLink
+    case booking
 }
 
 final class Navigate {
