@@ -35,7 +35,8 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var zeroCaseView: UIView!
     @IBOutlet weak var continueBtnBGView: UIView!
-
+    @IBOutlet weak var eventAddressView: UIView!
+    
     var eventId: String?
     var venueDetails: ClipVenue?
     var event: Event?
@@ -140,6 +141,7 @@ final class EventDetailVC: UIViewController {
                 updateContinueBtn(forceRemove: true)
             }
         }
+        eventAddressView.isHidden = !(event?.showAddress ?? true) ? true : false
     }
     
     private func getEventDetail() {
