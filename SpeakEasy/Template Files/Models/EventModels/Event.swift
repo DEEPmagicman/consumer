@@ -42,7 +42,7 @@ struct Event: Codable {
     var showAddress: Bool?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
-        let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
+        let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
         return filterTicket?.min { $0.price ?? 0 < $1.price ?? 0}
     }
     
