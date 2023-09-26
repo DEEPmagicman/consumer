@@ -22,7 +22,7 @@ struct Booking: Codable {
 //    var ticketPrice: Any
 //    var ticketQuantity: Any
     var totalPrice: Double
-//    var note: Any
+    var note: String?
     var consumerUserId: [String]?
 //    var bookingDate: Any
     var bookingStartTime: String?
@@ -74,7 +74,7 @@ struct Booking: Codable {
 //        case ticketPrice = "ticketPrice"
 //        case ticketQuantity = "ticketQuantity"
         case totalPrice = "totalPrice"
-//        case note = "note"
+        case note
         case consumerUserId = "consumerUserId"
 //        case bookingDate = "bookingDate"
         case bookingStartTime = "bookingStartTime"
@@ -96,7 +96,7 @@ struct Booking: Codable {
         case event = "event"
         case ticketDetails = "ticketDetails"
         case floorPlanTimeSlotBooking = "FloorPlanTimeSlotBooking"
-//        case inviteLink = "InviteLink"
+        case inviteLink = "InviteLink"
     }
 
     func encode(to encoder: Encoder) throws {
@@ -114,7 +114,7 @@ struct Booking: Codable {
         // TODO: Add code for encoding `ticketPrice`, It was null at the time of model creation.
         // TODO: Add code for encoding `ticketQuantity`, It was null at the time of model creation.
         try container.encode(totalPrice, forKey: .totalPrice)
-        // TODO: Add code for encoding `note`, It was null at the time of model creation.
+        try container.encode(note, forKey: .note)
         try container.encode(consumerUserId, forKey: .consumerUserId)
         // TODO: Add code for encoding `bookingDate`, It was null at the time of model creation.
         try container.encode(bookingStartTime, forKey: .bookingStartTime)

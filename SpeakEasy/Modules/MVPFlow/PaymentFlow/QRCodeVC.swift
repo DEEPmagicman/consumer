@@ -25,6 +25,8 @@ final class QRCodeVC: UIViewController {
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var addToWalletBtn: PKAddPassButton!
     @IBOutlet private weak var eventDetailsLbl: UILabel!
+    @IBOutlet private weak var noteView: UIView!
+    @IBOutlet private weak var noteLbl: UILabel!
     @IBOutlet private weak var venueImgHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var QRToImgBottomConstraint: NSLayoutConstraint!
 
@@ -74,6 +76,12 @@ final class QRCodeVC: UIViewController {
                     titleLbl.text = booking.venueObject?.name
                     dateLbl.isHidden = true
                     venueNameLbl.isHidden = true
+                }
+                if let note = booking.note, note != "" {
+                    noteView.isHidden = false
+                    noteLbl.text = note
+                } else {
+                    noteView.isHidden = true
                 }
                 eventDetailsLbl.isHidden = true
                 venueImgHeightConstraint.constant = 320
