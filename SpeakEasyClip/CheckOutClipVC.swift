@@ -22,6 +22,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var countryCodeTextField: FPNTextField!
     @IBOutlet private weak var phoneNumTextField: UITextField!
+    @IBOutlet private weak var countrySelectionView: UIView!
     @IBOutlet private weak var errorLbl: UILabel!
     @IBOutlet private weak var firstNameView: UIView!
     @IBOutlet private weak var lastNameView: UIView!
@@ -82,6 +83,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.didSelect = { [weak self] country in
             self?.countryCodeTextField.setFlag(countryCode: country.code)
         }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
+        countrySelectionView.addGestureRecognizer(tap)
         
         countryCodeTextField.flagButtonSize = CGSize(width: 44, height: 44)
         countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
@@ -149,6 +153,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @objc private func dismissCountries() {
         isChangingFlag = false
         listController.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onClickCountrySelect() {
+        fpnDisplayCountryList()
     }
     
     @objc func checkApplePay() {

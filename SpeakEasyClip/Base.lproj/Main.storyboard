@@ -366,8 +366,11 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xHV-Et-sv1">
                                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="50"/>
                                                                         <subviews>
-                                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7TY-nL-ddx" customClass="FPNTextField" customModule="SpeakEasyClip" customModuleProvider="target">
+                                                                            <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7TY-nL-ddx" customClass="FPNTextField" customModule="SpeakEasyClip" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="49.5"/>
+                                                                                <accessibility key="accessibilityConfiguration">
+                                                                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                                                                </accessibility>
                                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <textInputTraits key="textInputTraits"/>
@@ -442,13 +445,13 @@
                                                                 <rect key="frame" x="0.0" y="50" width="382" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wao-az-Bt6">
-                                                                        <rect key="frame" x="0.0" y="14.5" width="80" height="21"/>
+                                                                        <rect key="frame" x="0.0" y="14.5" width="79.5" height="21"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KKm-6J-tya">
-                                                                        <rect key="frame" x="113" y="0.0" width="269" height="49.5"/>
+                                                                        <rect key="frame" x="112.5" y="0.0" width="269.5" height="49.5"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="20"/>
                                                                         <textInputTraits key="textInputTraits" textContentType="given-name"/>
@@ -837,6 +840,7 @@
                         <outlet property="cardPayBtn" destination="JZe-bM-Cki" id="Y6h-H4-2Pw"/>
                         <outlet property="cardPayView" destination="gxd-iu-0j1" id="fzP-3Q-EmD"/>
                         <outlet property="countryCodeTextField" destination="7TY-nL-ddx" id="sbx-LS-jQG"/>
+                        <outlet property="countrySelectionView" destination="xHV-Et-sv1" id="Vga-sf-tMp"/>
                         <outlet property="dressCodeInfoLbl" destination="hDH-Oh-16i" id="KeV-gd-8f3"/>
                         <outlet property="errorLbl" destination="hXd-bf-xJc" id="3Dd-hX-Kgt"/>
                         <outlet property="firstNameTF" destination="KKm-6J-tya" id="Th5-iK-vJY"/>
