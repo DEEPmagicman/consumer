@@ -38,6 +38,7 @@ struct ClipVenue: Codable {
     var timezone: String?
     var venueSettings: VenueSettings?
     var allowCC: Bool?
+    var availableTimeSlot: Bool?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -99,6 +100,7 @@ struct ClipVenue: Codable {
         try container.encode(checkInUser, forKey: .checkInUser)
         try container.encode(timezone, forKey: .timezone)
         try container.encode(venueSettings, forKey: .venueSettings)
+        try container.encode(availableTimeSlot, forKey: .availableTimeSlot)
     }
 }
 

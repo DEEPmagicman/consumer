@@ -83,6 +83,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var events = [Event]()
     private var todaysEvents = [Event]()
     private var gradient: CAGradientLayer?
+//    private var isTableTimeSlotAvailable = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -263,14 +264,19 @@ final class MVPVenueDetailVc: UIViewController {
             Navigate.to.login(forceCreateAccount: true)
             return
         }
-        switch selectedType {
-        case .FREE:
-            createFreeBooking()
-        case .PAID:
-            if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: Double(totalPrice), type: .appClip)
-                updateContinueBtn(forceRemove: true)
+        
+        if let selected = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
+            switch selectedType {
+            case .FREE:
+                createFreeBooking()
+            case .PAID:
+                if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+                    Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: Double(totalPrice), type: .appClip)
+                    updateContinueBtn(forceRemove: true)
+                }
             }
+        } else {
+            Navigate.externalURL(String(format: APIBuilder.tableBookingURL, venueId ))
         }
     }
     
@@ -493,9 +499,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.appClipTicket?.indices.forEach {
                     self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
                 }
-                self.continueBtn.isHidden = true
+                if self.venueDetails?.availableTimeSlot ?? false {
+                    self.continueBtn.isHidden = false
+                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
+                } else {
+                    self.continueBtn.isHidden = true
+                }
                 self.scrollViewBottomConstraint.constant = 30
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
                 self.ticketTypeTableView.reloadData()
                 return
             }

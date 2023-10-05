@@ -287,4 +287,5 @@ extension APIBuilder {
     static let eventWebURL = "\(webBaseURL)/event/%@"
     static let venueWebURL = "\(webBaseURL)/ticket?v=%@"
     static let invitationURL = "\(webBaseURL)?L=%@"
+    static let tableBookingURL = "\(webBaseURL)/select-date?venueId=%@"
 }
