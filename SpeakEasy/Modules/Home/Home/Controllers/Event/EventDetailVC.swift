@@ -136,7 +136,7 @@ final class EventDetailVC: UIViewController {
                 isNotSellingStage = true
                 updateContinueBtn()
             } else {
-                continueBtn.setTitle("BUY NOW - STARTING AT \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.lowestPriceTicket?.price ?? 0)", for: .normal)
+                continueBtn.setTitle("BUY NOW - STARTING AT \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event?.lowestPriceTicket?.price ?? 0).decimalFormat(true))", for: .normal)
                 isNotSellingStage = false
                 updateContinueBtn(forceRemove: true)
             }
@@ -284,7 +284,7 @@ final class EventDetailVC: UIViewController {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", self.totalPrice))", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice.decimalFormat(true))", for: .normal)
             }
         }
     }
@@ -365,7 +365,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", event?.upfront == true ? activeTickets?[indexPath.row].priceWithFees ?? 0 : Double(activeTickets?[indexPath.row].price ?? 0)))"
+                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.upfront == true ? (activeTickets?[indexPath.row].priceWithFees ?? 0).decimalFormat(true) : Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
                 cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
                 cell.plusBtn.isUserInteractionEnabled = true
             }

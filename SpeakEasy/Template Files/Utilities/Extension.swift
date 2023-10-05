@@ -128,6 +128,20 @@ extension Double {
     var scaledValue: Double {
         self / Double(FixValue.scale)
     }
+    
+    func decimalFormat(_ valueDouble: Bool = false) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        if valueDouble {
+            if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {
+                return String(numberFormatter.string(from: NSNumber(value: newValue)) ?? "")
+            } else {
+                return "0.00"
+            }
+        } else {
+            return String(numberFormatter.string(from: NSNumber(value: self)) ?? "")
+        }
+    }
 }
 
 extension UITapGestureRecognizer {

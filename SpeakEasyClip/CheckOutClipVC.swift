@@ -101,7 +101,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.showCountryPhoneCode = true
 
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice)"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(Double(totalPrice).decimalFormat(true))"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."

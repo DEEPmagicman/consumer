@@ -70,7 +70,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         createBooking()
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", totalPrice))"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice.decimalFormat(true))"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()
@@ -336,7 +336,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func displayPayment() {
         switch type {
         case .singleTickedEvent:
-            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.total ?? 0))"
+            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
             totalPrice = paymentDetail?.total ?? 0
             if event?.upfront == true {
                 subTotalView.isHidden = true
@@ -344,12 +344,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 customFeesView.isHidden = true
                 return
             }
-            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.subTotal ?? 0))"
-            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.processingFee ?? 0))"
+            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
+            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
             if paymentDetail?.customFee ?? 0 == 0 {
                 customFeesView.isHidden = true
             } else {
-                customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(String(format: "%.2f", paymentDetail?.customFee ?? 0))"
+                customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
                 customFeeNameLbl.text = selectedEventTicket.first(where: { $0.customFee?.title ?? "" != "" })?.customFee?.title ?? "Custom fee"
                 customFeesView.isHidden = false
             }

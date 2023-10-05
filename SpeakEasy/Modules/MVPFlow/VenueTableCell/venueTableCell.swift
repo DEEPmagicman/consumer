@@ -34,7 +34,7 @@ class venueTableCell: UITableViewCell {
             if ticket.price < 2 && ticket.name.lowercased().contains("general") == true {
                 coverLbl.text = "FREE"
             } else {
-                coverLbl.text = "\(data.venueSettings?.currencySymbol ?? "$")\(ticket.price)"
+                coverLbl.text = "\(data.venueSettings?.currencySymbol ?? "$")\(Double(ticket.price).decimalFormat(true))"
             }
         } else {
             coverLbl.text = ""
