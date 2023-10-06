@@ -41,7 +41,6 @@ final class EventDetailVC: UIViewController {
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
-    var isDiscounted: String? = nil
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var artistHeightObservation: NSKeyValueObservation?
     private var isNotSellingStage = false
@@ -153,7 +152,7 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
             Loader.show()
         }
-        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId, isDiscounted: isDiscounted) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             guard let self = self else {
                 return
             }

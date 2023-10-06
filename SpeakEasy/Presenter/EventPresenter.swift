@@ -59,14 +59,11 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", isDiscounted: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
+    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
         
         var param = [String: Any]()
         if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {
             param["promotionLinkId"] = promotionLinkId
-        }
-        if let isDiscounted = isDiscounted {
-            param["isDiscounted"] = isDiscounted
         }
         AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             

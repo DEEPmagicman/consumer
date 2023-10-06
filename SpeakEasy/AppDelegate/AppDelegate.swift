@@ -91,12 +91,11 @@ extension AppDelegate {
         if url.absoluteString.contains("event") {
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
                 let promoteId = queryItems.first(where: { $0.name == "promoteId" })?.value
-                let isDiscounted = queryItems.first(where: { $0.name == "isDiscounted" })?.value
                 let bookingId = queryItems.first(where: { $0.name == "bookingId" })?.value
                 if let bookingId = bookingId {
                     setRootVC(.booking, id: bookingId)
                 } else {
-                    setRootVC(.event, id: url.lastPathComponent, promoteId: promoteId ?? "", isDiscounted: isDiscounted ?? nil)
+                    setRootVC(.event, id: url.lastPathComponent, promoteId: promoteId ?? "")
                 }
             } else {
                 setRootVC(.event, id: url.lastPathComponent)
@@ -120,7 +119,7 @@ extension AppDelegate {
         }
     }
 
-    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", isDiscounted: String? = nil) {
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "") {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -161,7 +160,7 @@ extension AppDelegate {
             vc.isFromAppClip = true
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
-            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId, isDiscounted: isDiscounted)
+            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
         case .inviteLink:
             inviteLinkNav(home, id: id)
         case .booking:
