@@ -39,7 +39,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var cardPayView: UIView!
     @IBOutlet private weak var cardPayBtn: UIButton!
     @IBOutlet private weak var scrollViewBottomConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var emailTF: UITextField!
+    @IBOutlet weak var emailView: UIView!
+    
     var totalPrice = 1
     var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
@@ -128,8 +130,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         firstNameTF.addNextButtonKeyboard(superViewCount: 3)
-        lastNameTF.addDoneButtonKeyboard()
+        lastNameTF.addNextButtonKeyboard(superViewCount: 3)
+        emailTF.addDoneButtonKeyboard()
+        emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
+        emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
     }
     
     override func viewDidLayoutSubviews() {
@@ -192,20 +198,34 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         cardPayBtn.isUserInteractionEnabled = isCorrectDetails
     }
     
-    private func checkData() {
-        if venue?.venueSettings?.collectNameDuringBooking ?? false {
-            if firstNameTF.text != "" && lastNameTF.text != "" && isValidNo {
-                checkValidation(isCorrectDetails: true)
-            } else {
-                checkValidation(isCorrectDetails: false)
-            }
-        } else {
-            checkValidation(isCorrectDetails: isValidNo)
+    private var checkAllData: Bool {
+        if isValidNo && venue?.venueSettings?.collectNameDuringBooking == false && venue?.venueSettings?.collectEmailDuringBooking == false {
+            return true
         }
+        if venue?.venueSettings?.collectNameDuringBooking == true {
+            if firstNameTF.text == "" || lastNameTF.text == "" || !isValidNo {
+                return false
+            }
+        }
+        if venue?.venueSettings?.collectEmailDuringBooking == true {
+            if venue?.venueSettings?.collectEmailDuringBookingOptional == true {
+                if emailTF.text != "" {
+                    if !isValidNo || !(emailTF.text ?? "").isValidEmail {
+                        return false
+                    }
+                }
+            } else {
+                let email = emailTF.text ?? ""
+                if !isValidNo || emailTF.text == "" || !(email.isValidEmail) {
+                    return false
+                }
+            }
+        }
+        return true
     }
     
     @objc private func textFieldValDidChange(_ textField: UITextField) {
-        checkData()
+        checkValidation(isCorrectDetails: checkAllData)
     }
 
     private func addPaymentApi(isApplePay: Bool = true) {
@@ -652,7 +672,7 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             isValidNo = isValid
-            checkData()
+            checkValidation(isCorrectDetails: checkAllData)
             isIntendCreated = false
         }
     }
@@ -687,5 +707,13 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         isChangingFlag = false
+    }
+}
+
+extension String {
+    var isValidEmail: Bool {
+        let regularExpressionForEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
+        return testEmail.evaluate(with: self)
     }
 }
