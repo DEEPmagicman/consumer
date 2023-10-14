@@ -133,12 +133,14 @@ struct PaymentDetail: Codable {
     var subTotal: Double
     var processingFee: Double
     var customFee: Double
+    var salesTax: Double?
     var total: Double
 
     private enum CodingKeys: String, CodingKey {
         case subTotal = "sub_total"
         case processingFee = "processing_fee"
         case customFee = "custom_fee"
+        case salesTax = "sales_tax"
         case total = "total"
     }
 
@@ -147,6 +149,7 @@ struct PaymentDetail: Codable {
         try container.encode(subTotal, forKey: .subTotal)
         try container.encode(processingFee, forKey: .processingFee)
         try container.encode(customFee, forKey: .customFee)
+        try container.encodeIfPresent(salesTax, forKey: .salesTax)
         try container.encode(total, forKey: .total)
     }
 }

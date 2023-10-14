@@ -42,7 +42,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var emailTF: UITextField!
     @IBOutlet weak var emailView: UIView!
     
-    var totalPrice = 1
+    var totalPrice = 1.0
     var venue: ClipVenue?
     var selectedAppClipTickets = [AppClipTicket]()
     private var paymentSheet: PaymentSheet?
@@ -468,9 +468,15 @@ extension CheckOutClipVC {
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
-        if venue?.venueSettings?.collectNameDuringBooking ?? false {
+        if venue?.venueSettings?.collectNameDuringBooking == true && venue?.venueSettings?.collectEmailDuringBooking == true {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
+            param["email"] = emailTF.text ?? ""
+        } else if venue?.venueSettings?.collectNameDuringBooking == true && venue?.venueSettings?.collectEmailDuringBooking == false {
+            param["firstName"] = firstNameTF.text ?? ""
+            param["lastName"] = lastNameTF.text ?? ""
+        } else if venue?.venueSettings?.collectNameDuringBooking == false && venue?.venueSettings?.collectEmailDuringBooking == true {
+            param["email"] = emailTF.text ?? ""
         }
         var postData = Data()
         do {

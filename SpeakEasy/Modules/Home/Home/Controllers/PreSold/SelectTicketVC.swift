@@ -25,19 +25,19 @@ final class SelectTicketVC: UIViewController {
     
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var maxTicket = 20
-    private var totalPrice: Int {
-        var total = 0
+    private var totalPrice: Double {
+        var total = 0.0
         switch type {
         case .appClip:
             venueDetails?.appClipTicket?.forEach {
                 if let quantity = $0.selectedQuantity {
-                    total += ($0.price * quantity)
+                    total += ($0.price * Double(quantity))
                 }
             }
         case .event:
             event?.eventTicket?.forEach {
                 if let quantity = $0.selectedTicketCount {
-                    total += (($0.price ?? 0) * quantity)
+                    total += (Double($0.price ?? 0) * Double(quantity))
                 }
             }
         }

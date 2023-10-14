@@ -67,10 +67,51 @@ struct ClipVenue: Codable {
         })
         return lowest
     }
+    
+    var modifiedAppClipTicket: [AppClipTicket] {
+        var ticketData = [AppClipTicket]()
+        appClipTicket?.enumerated().forEach({ index, ticket in
+            ticketData.append(ticket)
+            let taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
+            var totalCustomFee = 0.0
+            if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
+                if venueSettings?.coverTicketFeesSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketFeesSettings?.customFee ?? 0) / 100)
+                } else {
+                    totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
+                }
+            }
+            let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 1.0 + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
+            let totalProcessingFee = stripeFee + 1
+            let salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
+            var amountChargedToConsumer = 0.0
+            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+                amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
+            } else {
+                amountChargedToConsumer = ticket.price + totalCustomFee + salesTax
+            }
+            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+        })
+        return ticketData
+    }
+    
     var useTimezone: String {
         timezone?.capitalized ?? ""
     }
 
+    var SEFee: Double {
+        1.0
+    }
+    
+    func priceWithStripeFee(_ price: Double) -> Double {
+        price + stripeFee(price)
+    }
+    func stripeFee(_ price: Double) -> Double {
+        (price * 0.029) + 0.3
+    }
+
+
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(logo, forKey: .logo)
@@ -153,7 +194,7 @@ struct AppClipTicket: Codable {
     var id: String
     var venueId: String?
     var name: String
-    var price: Int
+    var price: Double
     var parentId: String?
     var status: String?
     var description: String?
@@ -189,6 +230,7 @@ struct VenueSettings: Codable {
     var collectEmailDuringBookingOptional: Bool?
     var currencySymbol: String?
     var currencyCode: String?
+    var coverTicketFeesSettings: CoverTicketFeesSettings?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -201,6 +243,29 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(collectEmailDuringBookingOptional, forKey: .collectEmailDuringBookingOptional)
         try container.encodeIfPresent(currencySymbol, forKey: .currencySymbol)
         try container.encodeIfPresent(currencyCode, forKey: .currencyCode)
+        try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
+    }
+}
+
+struct CoverTicketFeesSettings: Codable {
+    var isUpFront: Bool
+    var isProcessingFeePassToCustomer: Bool
+    var isEnableSalesTax: Bool
+    var salesTax: Double?
+    var isEnableCustomFee: Bool
+    var customFeeType: String
+    var customFee: Double
+    var customFeeName: String?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(isProcessingFeePassToCustomer, forKey: .isProcessingFeePassToCustomer)
+        try container.encode(isEnableSalesTax, forKey: .isEnableSalesTax)
+        try container.encode(salesTax, forKey: .salesTax)
+        try container.encode(isEnableCustomFee, forKey: .isEnableCustomFee)
+        try container.encode(customFeeType, forKey: .customFeeType)
+        try container.encode(customFee, forKey: .customFee)
+        try container.encode(customFeeName, forKey: .customFeeName)
     }
 }
 

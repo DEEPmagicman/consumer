@@ -62,11 +62,19 @@ final class MVPVenueDetailVc: UIViewController {
     private var venueImgHeightObservation: NSKeyValueObservation?
     private var from = 0
     private var hasMore = false
-    private var totalPrice: Int {
-        var total = 0
-        venueDetails?.appClipTicket?.forEach {
-            if let quantity = $0.selectedQuantity {
-                total += ($0.price * quantity)
+    private var totalPrice: Double {
+        var total = 0.0
+        if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+            venueDetails?.modifiedAppClipTicket.forEach {
+                if let quantity = $0.selectedQuantity {
+                    total += ($0.price * Double(quantity))
+                }
+            }
+        } else {
+            venueDetails?.appClipTicket?.forEach {
+                if let quantity = $0.selectedQuantity {
+                    total += ($0.price * Double(quantity))
+                }
             }
         }
         return total
@@ -341,7 +349,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                } else {
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
             if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {

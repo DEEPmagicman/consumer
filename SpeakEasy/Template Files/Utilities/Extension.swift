@@ -131,6 +131,7 @@ extension Double {
     
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
+        numberFormatter.minimumFractionDigits = 2
         numberFormatter.numberStyle = .decimal
         if valueDouble {
             if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {

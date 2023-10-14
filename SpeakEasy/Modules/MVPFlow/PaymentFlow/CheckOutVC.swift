@@ -39,7 +39,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var processingFeeAmount: UILabel!
     @IBOutlet private weak var timerLbl: UILabel!
     @IBOutlet private weak var noFeeView: UIView!
-
+    @IBOutlet weak var salesTexView: UIView!
+    @IBOutlet weak var salesTaxAmount: UILabel!
+    
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
     var totalPrice: Double = 0
@@ -116,7 +118,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func setUpData() {
         switch type {
         case .appClip:
-            noFeeView.isHidden = false
+            noFeeView.isHidden = !(venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == true)
             titleLbl.text = Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
@@ -356,9 +358,16 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
         default:
-            subTotalView.isHidden = true
-            processingFeesView.isHidden = true
-            customFeesView.isHidden = true
+            salesTexView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true ? false : true
+            processingFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? false : true
+            customFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
+            customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
+            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
+            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
+            totalPrice = paymentDetail?.total ?? 0
+            salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
+            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
+            customFeeNameLbl.text = venue?.venueSettings?.coverTicketFeesSettings?.customFeeName ?? "Custom fee"
         }
     }
 

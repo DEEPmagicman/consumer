@@ -30,11 +30,11 @@ final class SelectTicketClipVC: UIViewController {
     private var venueId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
-    private var totalPrice: Int {
-        var total = 0
+    private var totalPrice: Double {
+        var total = 0.0
         venueDetail?.appClipTicket?.forEach {
             if let quantity = $0.selectedQuantity {
-                total += ($0.price * quantity)
+                total += ($0.price * Double(quantity))
             }
         }
         return total
