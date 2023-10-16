@@ -147,12 +147,19 @@ final class SelectTicketClipVC: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            vc.selectedAppClipTickets = selectedTickets
-            vc.totalPrice = totalPrice
-            vc.venue = venueDetail
-            navigationController?.interactivePopGestureRecognizer?.delegate = self
-            navigationController?.pushViewController(vc, animated: true)
-            updateContinueBtn(forceRemove: true)
+            if selectedTickets.count > 0 {
+                vc.selectedAppClipTickets = selectedTickets
+                vc.totalPrice = totalPrice
+                vc.venue = venueDetail
+                navigationController?.interactivePopGestureRecognizer?.delegate = self
+                navigationController?.pushViewController(vc, animated: true)
+                updateContinueBtn(forceRemove: true)
+            } else {
+                guard let url = URL(string: "https://speakeasy-stage-web-consumer.vercel.app/select-date?venueId=\(venueDetail?.id ?? "")") else {
+                    return
+                }
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         }
     }
 
@@ -192,7 +199,12 @@ final class SelectTicketClipVC: UIViewController {
                 self.venueDetail?.appClipTicket?.indices.forEach {
                     self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
                 }
-                self.continueBtn.isHidden = true
+                if self.venueDetail?.availableTimeSlot == true {
+                    self.continueBtn.isHidden = false
+                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
+                } else {
+                    self.continueBtn.isHidden = true
+                }
                 self.scrollViewBottomConstraint.constant = 20
                 self.ticketTypeTableView.reloadData()
                 return
@@ -285,7 +297,6 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         }
         ticketTypeTableView.reloadData()
         updateContinueBtn()
-        continueBtn.isHidden = false
         scrollViewBottomConstraint.constant = 98
     }
     

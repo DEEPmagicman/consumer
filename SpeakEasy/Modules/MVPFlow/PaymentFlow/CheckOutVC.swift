@@ -358,9 +358,18 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
         default:
-            salesTexView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true ? false : true
-            processingFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? false : true
-            customFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
+            if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
+                subTotalView.isHidden = false
+                salesTexView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true ? false : true
+                processingFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? false : true
+                customFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
+
+            } else {
+                subTotalView.isHidden = true
+                salesTexView.isHidden = true
+                processingFeesView.isHidden = true
+                customFeesView.isHidden = true
+            }
             customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
