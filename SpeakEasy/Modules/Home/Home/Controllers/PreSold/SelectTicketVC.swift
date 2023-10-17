@@ -168,7 +168,7 @@ final class SelectTicketVC: UIViewController {
                 return
             }
             self.continueBtn.isHidden = false
-            self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(self.totalPrice).decimalFormat(true))", for: .normal)
+            self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
         }
     }
 }

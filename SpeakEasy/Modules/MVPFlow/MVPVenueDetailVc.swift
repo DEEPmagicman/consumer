@@ -50,6 +50,7 @@ final class MVPVenueDetailVc: UIViewController {
 
     var venueId = ""
     var venueUniqueId = ""
+    var venueTimeZone = ""
     var isFromAppClip = false
     private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
@@ -139,7 +140,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId, venueTimeZone: venueTimeZone) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -284,7 +285,7 @@ final class MVPVenueDetailVc: UIViewController {
                 }
             }
         } else {
-            Navigate.externalURL(String(format: APIBuilder.tableBookingURL, venueId ))
+            Navigate.externalURL(String(format: SharedURL.tableBookingURL, venueId ))
         }
     }
     
@@ -526,7 +527,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(self.totalPrice).decimalFormat(true))", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
     }

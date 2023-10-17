@@ -79,6 +79,9 @@ struct ClipVenue: Codable {
         var ticketData = [AppClipTicket]()
         appClipTicket?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
+            if ticket.price < 2 {
+                return
+            }
             var taxRate = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100

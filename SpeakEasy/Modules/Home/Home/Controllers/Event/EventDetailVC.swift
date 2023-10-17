@@ -283,7 +283,7 @@ final class EventDetailVC: UIViewController {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetails?.venueSettings?.currencySymbol ?? "$")\(self.totalPrice.decimalFormat(true))", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
     }

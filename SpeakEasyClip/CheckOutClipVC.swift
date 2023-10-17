@@ -41,6 +41,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var emailTF: UITextField!
     @IBOutlet weak var emailView: UIView!
+    @IBOutlet weak var subTotalView: UIView!
+    @IBOutlet weak var subTotalAmount: UILabel!
+    @IBOutlet weak var processingFeeView: UIView!
+    @IBOutlet weak var processingFeeAmount: UILabel!
+    @IBOutlet weak var customFeeView: UIView!
+    @IBOutlet weak var customFeeName: UILabel!
+    @IBOutlet weak var customFeeAmount: UILabel!
+    @IBOutlet weak var salesTextView: UIView!
+    @IBOutlet weak var salesTextAmount: UILabel!
+    @IBOutlet weak var noFeeView: UIView!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -136,6 +146,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
+        if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
+            customFeeCount()
+        }
+        noFeeView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? true : false
     }
     
     override func viewDidLayoutSubviews() {
@@ -144,6 +158,71 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         } else {
             scrollViewBottomConstraint.constant = 190 - view.safeAreaInsets.bottom
         }
+    }
+    
+    private func customFeeCount() {
+        AppClipLoader.showLoader(self.view)
+        var selectedTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                    "quantity": $0.selectedQuantity ?? 0])
+        }
+        let param = ["cart": selectedTickets,
+                     "isAppClipPayment": true,
+                     "isTieredTicket": false,
+                     "venueId": venue?.id ?? ""] as [String: Any]
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/payment/calculate-cover-fees") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
+                return
+            }
+            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double {
+                DispatchQueue.main.async {
+                    AppClipLoader.hideLoader()
+                    if self.venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
+                        self.subTotalView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
+                        self.processingFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false
+                        self.salesTextView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false
+                        self.customFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false
+                        
+                        self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
+                        self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
+                        self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
+                        self.customFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
+                        self.customFeeName.text = self.venue?.venueSettings?.coverTicketFeesSettings?.customFeeName
+                        self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
+                        self.totalPrice = total
+                    }
+                }
+            }
+        }
+        task.resume()
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {

@@ -102,7 +102,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // add these 2 notifications to prevent freeze on long Home button press and back
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
-        
+        noFeeView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? true : false
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -359,7 +359,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             processingFeesView.isHidden = false
         default:
             if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
-                subTotalView.isHidden = false
+                subTotalView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
                 salesTexView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true ? false : true
                 processingFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? false : true
                 customFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true

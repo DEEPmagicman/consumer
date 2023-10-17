@@ -32,9 +32,17 @@ final class SelectTicketClipVC: UIViewController {
     private var selectedType: TicketPriceType = .FREE
     private var totalPrice: Double {
         var total = 0.0
-        venueDetail?.appClipTicket?.forEach {
-            if let quantity = $0.selectedQuantity {
-                total += ($0.price * Double(quantity))
+        if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+            venueDetail?.modifiedAppClipTicket.forEach {
+                if let quantity = $0.selectedQuantity {
+                    total += ($0.price * Double(quantity))
+                }
+            }
+        } else {
+            venueDetail?.appClipTicket?.forEach {
+                if let quantity = $0.selectedQuantity {
+                    total += ($0.price * Double(quantity))
+                }
             }
         }
         return total
@@ -155,7 +163,7 @@ final class SelectTicketClipVC: UIViewController {
                 navigationController?.pushViewController(vc, animated: true)
                 updateContinueBtn(forceRemove: true)
             } else {
-                guard let url = URL(string: "https://speakeasy-stage-web-consumer.vercel.app/select-date?venueId=\(venueDetail?.id ?? "")") else {
+                guard let url = URL(string: "\(SharedURL.tableBookingURL)\(venueDetail?.id ?? "")") else {
                     return
                 }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -214,7 +222,7 @@ final class SelectTicketClipVC: UIViewController {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
             case .PAID:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT -  \(self.venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.totalPrice).decimalFormat(true))", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
     }
@@ -255,7 +263,13 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
         } else {
-            cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+            if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+            } else {
+                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+            }
+
+//            cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
             cell.plusBtn.isUserInteractionEnabled = true
         }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
@@ -331,6 +345,7 @@ extension SelectTicketClipVC: UIGestureRecognizerDelegate {
 extension Double {
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
+        numberFormatter.minimumFractionDigits = 2
         numberFormatter.numberStyle = .decimal
         if valueDouble {
             if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {

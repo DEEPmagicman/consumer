@@ -195,10 +195,11 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String) {
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String, venueTimeZone: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
         vc.venueId = venueId
         vc.venueUniqueId = venueUniqueId
+        vc.venueTimeZone = venueTimeZone
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

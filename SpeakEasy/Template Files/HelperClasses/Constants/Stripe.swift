@@ -26,4 +26,5 @@ struct SharedURL {
     static let amazonStorage = "https://speakeasy-storage.s3.amazonaws.com/"
     static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
     static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    static let tableBookingURL = "\(webBaseURL)/select-date?venueId=%@"
 }
