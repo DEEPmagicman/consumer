@@ -76,14 +76,17 @@ struct ClipVenue: Codable {
         var ticketData = [AppClipTicket]()
         appClipTicket?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
+            
             if ticket.price < 2 {
                 return
             }
+            
             var taxRate = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
                 taxRate = round(taxRate * 100) / 100
             }
+            
             var totalCustomFee = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
                 if venueSettings?.coverTicketFeesSettings?.customFeeType == "PERCENTAGE" {
@@ -92,23 +95,28 @@ struct ClipVenue: Codable {
                     totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
                 }
             }
+            
             var totalProcessingFee = 0.0
             if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
                 totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
             }
+            
             var salesTax = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
             }
+            
             let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
             ticketData[index].price = round(amountChargedToConsumer * 100) / 100
         })
         return ticketData
     }
+    
     var useTimezone: String {
         timezone?.capitalized ?? ""
     }
+    
     func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
         var amountTransferToSE = 0.0
         if speakEasyCharges == "TAO_PRICING" {
@@ -148,9 +156,11 @@ struct ClipVenue: Codable {
         }
         return amountTransferToSE
     }
+    
     func priceWithStripeFee(_ price: Double) -> Double {
         price + stripeFee(price)
     }
+    
     func stripeFee(_ price: Double) -> Double {
         (price * 0.029) + 0.3
     }
