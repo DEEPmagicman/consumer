@@ -39,6 +39,7 @@ struct ClipVenue: Codable {
     var venueSettings: VenueSettings?
     var allowCC: Bool?
     var availableTimeSlot: Bool?
+    var speakEasyCharges: String?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -81,6 +82,7 @@ struct ClipVenue: Codable {
             var taxRate = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
+                taxRate = round(taxRate * 100) / 100
             }
             var totalCustomFee = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
@@ -92,8 +94,8 @@ struct ClipVenue: Codable {
             }
             var totalProcessingFee = 0.0
             if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 1.0 + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
-                totalProcessingFee = stripeFee + 1
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
+                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
             }
             var salesTax = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
@@ -107,8 +109,44 @@ struct ClipVenue: Codable {
     var useTimezone: String {
         timezone?.capitalized ?? ""
     }
-    var SEFee: Double {
-        1.0
+    func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
+        var amountTransferToSE = 0.0
+        if speakEasyCharges == "TAO_PRICING" {
+            amountTransferToSE = 1
+        }
+        if speakEasyCharges == "FREE" {
+            amountTransferToSE = 0
+        }
+        if speakEasyCharges == "INCREMENTAL" {
+            if ticketPrice <= 10 {
+                amountTransferToSE = 0.5
+            } else if (ticketPrice <= 20 && ticketPrice > 10) {
+                amountTransferToSE = 1
+            } else if (ticketPrice <= 100 && ticketPrice > 20) {
+                amountTransferToSE = 2
+            } else if (ticketPrice > 100) {
+                amountTransferToSE = 5
+            }
+        }
+        if speakEasyCharges == "DIFFRENT_PRICE" {
+            if AppClipTicketGeneral.contains(ticketName) {
+                amountTransferToSE = 1
+            } else if AppClipTicketVIP.contains(ticketName) {
+                amountTransferToSE = 2
+            } else {
+                amountTransferToSE = 0.5
+            }
+        }
+        if speakEasyCharges == "TAO_PRICING" {
+            if AppClipTicketGeneral.contains(ticketName) {
+                amountTransferToSE = 0.29
+            } else if AppClipTicketVIP.contains(ticketName) {
+                amountTransferToSE = 2
+            } else {
+                amountTransferToSE = 0.5
+            }
+        }
+        return amountTransferToSE
     }
     func priceWithStripeFee(_ price: Double) -> Double {
         price + stripeFee(price)
@@ -147,6 +185,7 @@ struct ClipVenue: Codable {
         try container.encode(timezone, forKey: .timezone)
         try container.encode(venueSettings, forKey: .venueSettings)
         try container.encode(availableTimeSlot, forKey: .availableTimeSlot)
+        try container.encode(speakEasyCharges, forKey: .speakEasyCharges)
     }
 }
 
@@ -280,3 +319,27 @@ enum TicketPriceType {
     case FREE
     case PAID
 }
+
+let AppClipTicketGeneral = [
+  "GENERALTICKET",
+  "General Admission",
+  "Female General Admission",
+  "Male General Admission",
+  "General Admission - Male",
+  "General Admission - Female",
+]
+
+let AppClipTicketVIP = [
+  "SKIPLINETICKET",
+  "Skip The Line",
+  "Skip The Line-Female",
+  "Skip The Line-Male",
+  "VIP Skip the Line",
+  "Female VIP Skip the Line",
+  "Male VIP Skip the Line",
+  "Skip the Line - Male",
+  "Skip the Line - Female",
+  "VIP Skip Line",
+  "VIP Skip Line - Male",
+  "VIP Skip Line - Female",
+];
