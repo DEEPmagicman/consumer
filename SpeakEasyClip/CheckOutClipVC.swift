@@ -148,8 +148,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
         if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
             customFeeCount()
+        } else {
+            noFeeView.isHidden = false
         }
-        noFeeView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? true : false
     }
     
     override func viewDidLayoutSubviews() {
@@ -206,7 +207,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
                     if self.venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
-                        self.subTotalView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
+                        if (self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true) {
+                            self.noFeeView.isHidden = true
+                            self.subTotalView.isHidden = false
+                        } else {
+                            self.noFeeView.isHidden = false
+                            self.subTotalView.isHidden = true
+                        }
                         self.processingFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false
                         self.salesTextView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false
                         self.customFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false
@@ -792,13 +799,5 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         isChangingFlag = false
-    }
-}
-
-extension String {
-    var isValidEmail: Bool {
-        let regularExpressionForEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
-        return testEmail.evaluate(with: self)
     }
 }

@@ -61,14 +61,10 @@ struct ClipVenue: Codable {
         venueHours.filter({ $0.venueStatus == "OPEN" })
     }
     var lowestPriceTicket: AppClipTicket? {
+        var filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })
         if venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-            let filterTickets = modifiedAppClipTicket.filter({ $0.status == "ENABLED" })
-            let lowest = filterTickets.min(by: { LHS, RHS in
-                LHS.price < RHS.price
-            })
-            return lowest
+            filterTickets = modifiedAppClipTicket.filter({ $0.status == "ENABLED" })
         }
-        let filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })
         let lowest = filterTickets?.min(by: { LHS, RHS in
             LHS.price < RHS.price
         })
@@ -94,31 +90,26 @@ struct ClipVenue: Codable {
                     totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
                 }
             }
-            let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 1.0 + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
-            let totalProcessingFee = stripeFee + 1
+            var totalProcessingFee = 0.0
+            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 1.0 + totalCustomFee ) + 0.3) / (1 - taxRate * 0.029)
+                totalProcessingFee = stripeFee + 1
+            }
             var salesTax = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
             }
-            var amountChargedToConsumer = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-                amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
-            } else {
-                amountChargedToConsumer = ticket.price + totalCustomFee + salesTax
-            }
+            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
             ticketData[index].price = round(amountChargedToConsumer * 100) / 100
         })
         return ticketData
     }
-    // 3.57, 7.36
     var useTimezone: String {
         timezone?.capitalized ?? ""
     }
-
     var SEFee: Double {
         1.0
     }
-    
     func priceWithStripeFee(_ price: Double) -> Double {
         price + stripeFee(price)
     }
@@ -126,8 +117,6 @@ struct ClipVenue: Codable {
         (price * 0.029) + 0.3
     }
 
-
-    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(logo, forKey: .logo)
@@ -276,6 +265,7 @@ struct CoverTicketFeesSettings: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(isUpFront, forKey: .isUpFront)
         try container.encode(isProcessingFeePassToCustomer, forKey: .isProcessingFeePassToCustomer)
         try container.encode(isEnableSalesTax, forKey: .isEnableSalesTax)
         try container.encode(salesTax, forKey: .salesTax)

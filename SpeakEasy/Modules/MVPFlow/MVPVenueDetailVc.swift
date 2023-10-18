@@ -92,7 +92,6 @@ final class MVPVenueDetailVc: UIViewController {
     private var events = [Event]()
     private var todaysEvents = [Event]()
     private var gradient: CAGradientLayer?
-//    private var isTableTimeSlotAvailable = false
     
     override func viewDidLoad() {
         super.viewDidLoad()

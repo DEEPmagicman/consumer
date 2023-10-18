@@ -268,8 +268,6 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
             }
-
-//            cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
             cell.plusBtn.isUserInteractionEnabled = true
         }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
