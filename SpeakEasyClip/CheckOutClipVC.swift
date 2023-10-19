@@ -51,6 +51,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var salesTextView: UIView!
     @IBOutlet weak var salesTextAmount: UILabel!
     @IBOutlet weak var noFeeView: UIView!
+    @IBOutlet weak var salesTaxPr: UILabel!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -214,6 +215,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             self.noFeeView.isHidden = false
                             self.subTotalView.isHidden = true
                         }
+                        self.salesTaxPr.text = "(\(self.venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
                         self.processingFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false
                         self.salesTextView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false
                         self.customFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false
@@ -562,7 +564,9 @@ extension CheckOutClipVC {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
         } else if venue?.venueSettings?.collectNameDuringBooking == false && venue?.venueSettings?.collectEmailDuringBooking == true {
-            param["email"] = emailTF.text ?? ""
+            if emailTF.text ?? "" != "" {
+                param["email"] = emailTF.text ?? ""
+            }
         }
         var postData = Data()
         do {

@@ -119,7 +119,7 @@ struct ClipVenue: Codable {
     
     func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
         var amountTransferToSE = 0.0
-        if speakEasyCharges == "TAO_PRICING" {
+        if speakEasyCharges == "SAME_PRICE" {
             amountTransferToSE = 1
         }
         if speakEasyCharges == "FREE" {

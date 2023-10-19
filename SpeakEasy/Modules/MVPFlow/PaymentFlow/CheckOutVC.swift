@@ -41,6 +41,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var noFeeView: UIView!
     @IBOutlet weak var salesTexView: UIView!
     @IBOutlet weak var salesTaxAmount: UILabel!
+    @IBOutlet weak var salesTaxPr: UILabel!
     
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
@@ -369,6 +370,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 processingFeesView.isHidden = true
                 customFeesView.isHidden = true
             }
+            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
             customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
