@@ -147,7 +147,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
-        if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
+        if venue?.venueSettings?.coverTicketFeesSettings != nil {
             customFeeCount()
         } else {
             noFeeView.isHidden = false
@@ -219,15 +219,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                         self.processingFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false
                         self.salesTextView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false
                         self.customFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false
-                        
-                        self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
-                        self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
-                        self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
-                        self.customFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
-                        self.customFeeName.text = self.venue?.venueSettings?.coverTicketFeesSettings?.customFeeName
-                        self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
-                        self.totalPrice = total
                     }
+                    self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
+                    self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
+                    self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
+                    self.customFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
+                    self.customFeeName.text = self.venue?.venueSettings?.coverTicketFeesSettings?.customFeeName
+                    self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
+                    self.totalPrice = total
+
                 }
             }
         }
