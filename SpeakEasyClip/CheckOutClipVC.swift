@@ -556,14 +556,11 @@ extension CheckOutClipVC {
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
-        if venue?.venueSettings?.collectNameDuringBooking == true && venue?.venueSettings?.collectEmailDuringBooking == true {
+        if venue?.venueSettings?.collectNameDuringBooking == true {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
-            param["email"] = emailTF.text ?? ""
-        } else if venue?.venueSettings?.collectNameDuringBooking == true && venue?.venueSettings?.collectEmailDuringBooking == false {
-            param["firstName"] = firstNameTF.text ?? ""
-            param["lastName"] = lastNameTF.text ?? ""
-        } else if venue?.venueSettings?.collectNameDuringBooking == false && venue?.venueSettings?.collectEmailDuringBooking == true {
+        }
+        if venue?.venueSettings?.collectEmailDuringBooking == true {
             if emailTF.text ?? "" != "" {
                 param["email"] = emailTF.text ?? ""
             }
