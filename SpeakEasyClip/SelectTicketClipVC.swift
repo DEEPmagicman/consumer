@@ -22,7 +22,8 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var closeLblView: UIView!
     @IBOutlet weak var closeLbl: UILabel!
-
+    @IBOutlet weak var scroolView: UIScrollView!
+    
     var isLive = true
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?
@@ -68,6 +69,7 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         getEventTicket()
+        scroolView.contentInset = UIEdgeInsets(top: 0,left: 0, bottom: 60, right: 0)
     }
     
     private func getEventTicket(withLoader: Bool = true) {
@@ -163,7 +165,7 @@ final class SelectTicketClipVC: UIViewController {
                 navigationController?.pushViewController(vc, animated: true)
                 updateContinueBtn(forceRemove: true)
             } else {
-                guard let url = URL(string: "\(SharedURL.tableBookingURL)\(venueDetail?.id ?? "")") else {
+                guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
                     return
                 }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)

@@ -142,7 +142,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
-//        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         firstNameTF.addNextButtonKeyboard(superViewCount: 3)
         lastNameTF.addNextButtonKeyboard(superViewCount: 3)
         emailTF.addDoneButtonKeyboard()
@@ -304,6 +304,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func textFieldValDidChange(_ textField: UITextField) {
+        isIntendCreated = false
         checkValidation(isCorrectDetails: checkAllData)
     }
 
