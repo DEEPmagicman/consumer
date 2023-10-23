@@ -52,6 +52,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var salesTextAmount: UILabel!
     @IBOutlet weak var noFeeView: UIView!
     @IBOutlet weak var salesTaxPr: UILabel!
+    @IBOutlet weak var emailValidationLbl: UILabel!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -141,7 +142,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
-        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+//        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
         firstNameTF.addNextButtonKeyboard(superViewCount: 3)
         lastNameTF.addNextButtonKeyboard(superViewCount: 3)
         emailTF.addDoneButtonKeyboard()
@@ -152,6 +153,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         } else {
             noFeeView.isHidden = false
         }
+        emailValidationLbl.isHidden = true
     }
     
     override func viewDidLayoutSubviews() {
@@ -287,26 +289,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var checkAllData: Bool {
-        if isValidNo && venue?.venueSettings?.collectNameDuringBooking == false && venue?.venueSettings?.collectEmailDuringBooking == false {
+        if !isValidNo {
+            return false
+        }
+        if isValidNo && venue?.venueSettings?.collectNameDuringBooking == false {
             return true
         }
         if venue?.venueSettings?.collectNameDuringBooking == true {
             if firstNameTF.text == "" || lastNameTF.text == "" || !isValidNo {
                 return false
-            }
-        }
-        if venue?.venueSettings?.collectEmailDuringBooking == true {
-            if venue?.venueSettings?.collectEmailDuringBookingOptional == true {
-                if emailTF.text != "" {
-                    if !isValidNo || !(emailTF.text ?? "").isValidEmail {
-                        return false
-                    }
-                }
-            } else {
-                let email = emailTF.text ?? ""
-                if !isValidNo || emailTF.text == "" || !(email.isValidEmail) {
-                    return false
-                }
             }
         }
         return true
@@ -503,6 +494,24 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
+    private var validateEmail: Bool {
+        if venue?.venueSettings?.collectEmailDuringBooking == true {
+            if venue?.venueSettings?.collectEmailDuringBookingOptional == true {
+                if emailTF.text != "" {
+                    if !(emailTF.text ?? "").isValidEmail {
+                        return false
+                    }
+                }
+            } else {
+                let email = emailTF.text ?? ""
+                if emailTF.text == "" || !(email.isValidEmail) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
     @IBAction func onClickCardPay(_ sender: Any) {
         if isIntendCreated {
             DispatchQueue.main.async {
@@ -514,7 +523,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
 
     @IBAction func onClickFreeTicket(_ sender: Any) {
-        createFreeBooking()
+        
+        if !validateEmail {
+            emailValidationLbl.isHidden = false
+        } else {
+            emailValidationLbl.isHidden = true
+            createFreeBooking()
+        }
+        
     }
     
 }
@@ -546,6 +562,11 @@ extension CheckOutClipVC {
     }
 
     func createBooking(isApplePay: Bool = true) {
+        if !validateEmail {
+            emailValidationLbl.isHidden = false
+            return
+        }
+        emailValidationLbl.isHidden = true
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
         selectedAppClipTickets.forEach {
