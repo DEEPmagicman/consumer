@@ -22,7 +22,6 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var closeLblView: UIView!
     @IBOutlet weak var closeLbl: UILabel!
-    @IBOutlet weak var scroolView: UIScrollView!
     
     var isLive = true
     var venueDetail: ClipVenue?
@@ -69,7 +68,6 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         getEventTicket()
-        scroolView.contentInset = UIEdgeInsets(top: 0,left: 0, bottom: 60, right: 0)
     }
     
     private func getEventTicket(withLoader: Bool = true) {
@@ -212,14 +210,16 @@ final class SelectTicketClipVC: UIViewController {
                 if self.venueDetail?.availableTimeSlot == true {
                     self.continueBtn.isHidden = false
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
+                    self.scrollViewBottomConstraint.constant = 98
                 } else {
                     self.continueBtn.isHidden = true
+                    self.scrollViewBottomConstraint.constant = 20
                 }
-                self.scrollViewBottomConstraint.constant = 20
                 self.ticketTypeTableView.reloadData()
                 return
             }
             self.continueBtn.isHidden = false
+            self.scrollViewBottomConstraint.constant = 98
             switch self.selectedType {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
