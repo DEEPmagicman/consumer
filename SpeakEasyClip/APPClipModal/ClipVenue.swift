@@ -156,14 +156,6 @@ struct ClipVenue: Codable {
         }
         return amountTransferToSE
     }
-    
-    func priceWithStripeFee(_ price: Double) -> Double {
-        price + stripeFee(price)
-    }
-    
-    func stripeFee(_ price: Double) -> Double {
-        (price * 0.029) + 0.3
-    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

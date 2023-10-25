@@ -292,7 +292,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if !isValidNo {
             return false
         }
-        if isValidNo && venue?.venueSettings?.collectNameDuringBooking == false {
+        if venue?.venueSettings?.collectNameDuringBooking ?? false == false {
             return true
         }
         if venue?.venueSettings?.collectNameDuringBooking == true {
@@ -524,16 +524,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
 
     @IBAction func onClickFreeTicket(_ sender: Any) {
-        
         if !validateEmail {
             emailValidationLbl.isHidden = false
         } else {
             emailValidationLbl.isHidden = true
             createFreeBooking()
         }
-        
     }
-    
 }
 
 extension CheckOutClipVC {
