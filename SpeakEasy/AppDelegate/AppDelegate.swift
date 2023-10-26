@@ -90,6 +90,10 @@ extension AppDelegate {
     private func handleForURL(_ url: URL) {
         if url.absoluteString.contains("event") {
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
+                if let inviteId = queryItems.first(where: { $0.name == "L" })?.value {
+                    setRootVC(.inviteLink, id: inviteId)
+                    return
+                }
                 let promoteId = queryItems.first(where: { $0.name == "promoteId" })?.value
                 let bookingId = queryItems.first(where: { $0.name == "bookingId" })?.value
                 if let bookingId = bookingId {
