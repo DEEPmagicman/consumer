@@ -123,7 +123,7 @@ final class SelectTicketClipVC: UIViewController {
             self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
             if self.venueDetail?.bookingStatus == "OPEN" {
                 self.liveCloseLbl.text = "LIVE"
-                self.liveCloseLbl.textColor = UIColor(red: 84/255, green: 209/255, blue: 24/255, alpha: 1)
+                self.liveCloseLbl.textColor = UIColor(red: 0.00, green: 1.00, blue: 0.58, alpha: 1.00)
                 self.tonightLbl.alpha = 1
             } else {
                 self.liveCloseLbl.text = "CLOSED"
@@ -274,8 +274,10 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         }
         if venueDetail?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
             cell.ticketPlusMinusView.isHidden = false
+            cell.sideArrow.isHidden = true
         } else {
             cell.ticketPlusMinusView.isHidden = true
+            cell.sideArrow.isHidden = false
         }
         cell.minusBtn.tag = indexPath.row
         cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)

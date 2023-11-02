@@ -84,7 +84,6 @@ struct ClipVenue: Codable {
             var taxRate = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
                 taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
-                taxRate = round(taxRate * 100) / 100
             }
             
             var totalCustomFee = 0.0
