@@ -73,7 +73,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         createBooking()
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(totalPrice.decimalFormat(true))"
+        totalPriceLbl.text = "-"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()

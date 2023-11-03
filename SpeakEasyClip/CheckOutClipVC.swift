@@ -115,7 +115,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         listController.showCountryPhoneCode = true
 
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
-        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\(Double(totalPrice).decimalFormat(true))"
+        totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.0" : "-"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
@@ -148,7 +148,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
-        if venue?.venueSettings?.coverTicketFeesSettings != nil {
+        if venue?.venueSettings?.coverTicketFeesSettings != nil && totalPrice != 0 {
             customFeeCount()
         } else {
             noFeeView.isHidden = false
@@ -229,7 +229,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.customFeeName.text = self.venue?.venueSettings?.coverTicketFeesSettings?.customFeeName
                     self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
                     self.totalPrice = total
-
                 }
             }
         }

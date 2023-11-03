@@ -266,9 +266,13 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.plusBtn.isUserInteractionEnabled = false
         } else {
             if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                let price = Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true)
+                let dPrice = price.components(separatedBy: ".")[1]
+                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"
             } else {
-                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                let price = Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true)
+                let dPrice = price.components(separatedBy: ".")[1]
+                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"
             }
             cell.plusBtn.isUserInteractionEnabled = true
         }
@@ -347,7 +351,7 @@ extension SelectTicketClipVC: UIGestureRecognizerDelegate {
 extension Double {
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = !valueDouble ? 0 : 2
         numberFormatter.numberStyle = .decimal
         if valueDouble {
             if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {
