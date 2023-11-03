@@ -424,7 +424,6 @@ final class OnBoardingPresenter {
     }
     
     func getCurrentUserDetail(completion: @escaping(_ isSuccess: Bool) -> Void) {
-        Loader.show()
         AFWrapper.getRequest(APIBuilder.whoAmIURL, params: nil, headers: Header.header()) { response in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any] else {

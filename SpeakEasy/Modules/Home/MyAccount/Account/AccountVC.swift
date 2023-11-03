@@ -36,9 +36,17 @@ final class AccountVC: UIViewController {
         super.viewWillAppear(animated)
         getTickets()
         getRecommended()
-        displayData()
+        whoAmIAPI()
     }
     
+    private func whoAmIAPI() {
+        onBoardingPresenter.getCurrentUserDetail {[weak self] isSuccess in
+            guard let self = self else { return }
+            if isSuccess {
+                self.displayData()
+            }
+        }
+    }
     private func displayData() {
         profileImg.sd_setImage(with: URL(string: UserDefault.shared.user?.image.key ?? ""), placeholderImage: Constant.Icon.uploadImage) { [weak self] _, err, _, _ in
             self?.profileImg.borderWidth = err == nil ? 2 : 0
