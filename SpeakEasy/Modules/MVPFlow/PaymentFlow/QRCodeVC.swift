@@ -29,7 +29,10 @@ final class QRCodeVC: UIViewController {
     @IBOutlet private weak var noteLbl: UILabel!
     @IBOutlet private weak var venueImgHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var QRToImgBottomConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var ticketCodeView: UIView!
+    @IBOutlet weak var ticketCode: UILabel!
+    @IBOutlet weak var ticketCreatedTime: UILabel!
+    
     var bookingId = ""
     var type: PaymentIntentType = .appClip
     var booking: Booking?
@@ -41,6 +44,7 @@ final class QRCodeVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        ticketCodeView.isHidden = true
         gradient = venueImg.setGradientColor()
         getBooking(id: bookingId)
         venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
@@ -58,6 +62,15 @@ final class QRCodeVC: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEventDetail))
         eventDetailsLbl.isUserInteractionEnabled = true
         eventDetailsLbl.addGestureRecognizer(tap)
+        ticketCodeView.isHidden = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+        QRImg.isUserInteractionEnabled = true
+        QRImg.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func qrImageTapped() {
+        ticketCodeView.isHidden = false
+        QRImg.isHidden = true
     }
     
     private func setupData() {
