@@ -72,6 +72,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var retryCount = 0
     private var maxRetry = 3
+    private var bookingCode = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -617,8 +618,9 @@ extension CheckOutClipVC {
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 self.addPaymentApi(isApplePay: isApplePay)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String {
                 self.bookingId = bookingId
+                self.bookingCode = bookingCode
                 self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
@@ -704,6 +706,7 @@ extension CheckOutClipVC {
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
                 vc.selectedAppClipTickets = self.selectedAppClipTickets
+                vc.bookingCode = self.bookingCode
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                     self.navigationController?.viewControllers = [selectVC, vc]
                 }

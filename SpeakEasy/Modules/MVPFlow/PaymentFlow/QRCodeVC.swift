@@ -32,6 +32,7 @@ final class QRCodeVC: UIViewController {
     @IBOutlet weak var ticketCodeView: UIView!
     @IBOutlet weak var ticketCode: UILabel!
     @IBOutlet weak var ticketCreatedTime: UILabel!
+    @IBOutlet weak var containerView: UIView!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -63,18 +64,26 @@ final class QRCodeVC: UIViewController {
         eventDetailsLbl.isUserInteractionEnabled = true
         eventDetailsLbl.addGestureRecognizer(tap)
         ticketCodeView.isHidden = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
-        QRImg.isUserInteractionEnabled = true
-        QRImg.addGestureRecognizer(tapGesture)
+//        if booking?.venueObject?.bookingCode ?? "" != "" {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+            containerView.isUserInteractionEnabled = false
+            containerView.addGestureRecognizer(tapGesture)
+//        }
     }
     
     @objc func qrImageTapped() {
-        ticketCodeView.isHidden = false
-        QRImg.isHidden = true
+        UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
+            guard let self = self else { return }
+            self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
+            self.QRImg.isHidden = !self.QRImg.isHidden
+        })
     }
     
     private func setupData() {
         QRImg.image = generateQRCode(from: bookingId)
+        ticketCode.text = booking?.venueObject?.bookingCode ?? ""
+        ticketCreatedTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMMMddHHmm) ?? "")"
+        containerView.isUserInteractionEnabled = true
         if let booking = booking {
             switch type {
             case .appClip:

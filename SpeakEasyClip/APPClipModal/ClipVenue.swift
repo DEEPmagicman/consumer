@@ -10,6 +10,7 @@ import Foundation
 struct ClipVenue: Codable {
 
     var logo: LogoClip?
+    var bookingCode: String?
     var venueAttachment: [VenueAttachmentClip]
     var venueHours: [VenueHoursClip]
     var id: String
@@ -159,6 +160,7 @@ struct ClipVenue: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(logo, forKey: .logo)
+        try container.encode(bookingCode, forKey: .bookingCode)
         try container.encode(venueAttachment, forKey: .venueAttachment)
         try container.encode(venueHours, forKey: .venueHours)
         try container.encode(id, forKey: .id)

@@ -33,21 +33,24 @@ struct EventTicket: Codable {
         1.0
     }
     var priceWithFees: Double {
+        priceWithFee(Double(price ?? 0))
+    }
+    
+    var customFee1: Double {
         guard let customFee = customFee, let type = customFee.typeEnum else {
-            return priceWithStripeFee(Double(price ?? 0) + SEFee)
+            return 0
         }
         switch type {
         case .FLAT:
-            return priceWithStripeFee(Double(price ?? 0) + SEFee + Double(customFee.value))
+            return Double(customFee.value)
         case .PERCENTAGE:
-            return priceWithStripeFee(Double(price ?? 0) + SEFee + (Double(price ?? 0) * Double(customFee.value) / 100))
+            return (Double(price ?? 0) * Double(customFee.value) / 100)
         }
     }
-    func priceWithStripeFee(_ price: Double) -> Double {
-        price + stripeFee(price)
-    }
-    func stripeFee(_ price: Double) -> Double {
-        (price * 0.029) + 0.3
+    
+    func priceWithFee(_ price: Double) -> Double {
+        let stripeFee = (0.029 * (1 + 0) * (price + 1 + customFee1 ) + 0.3) / (1 - 0.029)
+        return price + stripeFee + SEFee + customFee1
     }
 
     func encode(to encoder: Encoder) throws {

@@ -15,7 +15,11 @@ final class QRCodeClipVC: UIViewController {
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var QRImg: UIImageView!
-
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var ticketCodeView: UIView!
+    @IBOutlet weak var ticketCode: UILabel!
+    @IBOutlet weak var ticketCreatedTime: UILabel!
+    
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
@@ -23,9 +27,12 @@ final class QRCodeClipVC: UIViewController {
     var selectedAppClipTickets = [AppClipTicket]()
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var isAlertDisplayed = false
+    var bookingCode = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        containerView.isUserInteractionEnabled = false
+        ticketCode.text = bookingCode
         venueImg.setGradientColor()
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
@@ -36,6 +43,19 @@ final class QRCodeClipVC: UIViewController {
         QRImg.image = generateQRCode(from: bookingId)
         loadImage()
         titleLbl.text = "\(venueName) - Cover"
+        ticketCodeView.isHidden = true
+//        if bookingCode != "" {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+            containerView.addGestureRecognizer(tapGesture)
+//        }
+    }
+    
+    @objc func qrImageTapped() {
+        UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
+            guard let self = self else { return }
+            self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
+            self.QRImg.isHidden = !self.QRImg.isHidden
+        })
     }
     
     @IBAction func onBtnShare(_ sender: Any) {
@@ -80,6 +100,7 @@ final class QRCodeClipVC: UIViewController {
             let transform = CGAffineTransform(scaleX: 10, y: 10)
 
             if let output = filter.outputImage?.transformed(by: transform) {
+                containerView.isUserInteractionEnabled = true
                 return UIImage(ciImage: output)
             }
         }
