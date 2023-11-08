@@ -82,8 +82,10 @@ final class QRCodeVC: UIViewController {
     private func setupData() {
         QRImg.image = generateQRCode(from: bookingId)
         ticketCode.text = booking?.venueObject?.bookingCode ?? ""
-        ticketCreatedTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMMMddHHmm) ?? "")"
-        containerView.isUserInteractionEnabled = true
+        ticketCreatedTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD) ?? "")"
+        if booking?.venueObject?.bookingCode ?? "" != "" {
+            containerView.isUserInteractionEnabled = true
+        }
         if let booking = booking {
             switch type {
             case .appClip:

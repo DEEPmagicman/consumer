@@ -266,7 +266,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.plusBtn.isUserInteractionEnabled = false
         } else {
             if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-                let price = Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true)
+                let price = venueDetail?.modifiedAppClipTicket[indexPath.row].isCustom == true ? Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true)
                 let dPrice = price.components(separatedBy: ".")[1]
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"
             } else {

@@ -73,6 +73,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var retryCount = 0
     private var maxRetry = 3
     private var bookingCode = String()
+    private var createdAT = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -618,9 +619,10 @@ extension CheckOutClipVC {
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 self.addPaymentApi(isApplePay: isApplePay)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
                 self.bookingCode = bookingCode
+                self.createdAT = createdAt
                 self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
@@ -707,6 +709,7 @@ extension CheckOutClipVC {
                 vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
                 vc.selectedAppClipTickets = self.selectedAppClipTickets
                 vc.bookingCode = self.bookingCode
+                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                     self.navigationController?.viewControllers = [selectVC, vc]
                 }

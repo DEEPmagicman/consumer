@@ -80,4 +80,27 @@ extension String {
         let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
         return testEmail.evaluate(with: self)
     }
+    
+    func convertDateFormat(from: String, to: String, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {
+        let olDateFormatter = DateFormatter()
+        olDateFormatter.dateFormat = from
+        if isUTC {
+            olDateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        } else {
+            olDateFormatter.timeZone = .current
+        }
+        guard let oldDate = olDateFormatter.date(from: self) else { return "No date Found" }
+        let convertDateFormatter = DateFormatter()
+        convertDateFormatter.dateFormat = to
+        if customTimeZone != "", let timeZone = TimeZone(identifier: customTimeZone) {
+            convertDateFormatter.timeZone = timeZone
+        } else {
+            convertDateFormatter.timeZone = .current
+        }
+        if useDayLightSavingTime {
+            return convertDateFormatter.string(from: oldDate.addingTimeInterval(convertDateFormatter.timeZone.daylightSavingTimeOffset()))
+        } else {
+            return convertDateFormatter.string(from: oldDate)
+        }
+    }
 }

@@ -28,11 +28,13 @@ final class QRCodeClipVC: UIViewController {
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var isAlertDisplayed = false
     var bookingCode = String()
+    var createdAT = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         containerView.isUserInteractionEnabled = false
         ticketCode.text = bookingCode
+        ticketCreatedTime.text = "Purchased on \(createdAT)"
         venueImg.setGradientColor()
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
@@ -100,7 +102,9 @@ final class QRCodeClipVC: UIViewController {
             let transform = CGAffineTransform(scaleX: 10, y: 10)
 
             if let output = filter.outputImage?.transformed(by: transform) {
-                containerView.isUserInteractionEnabled = true
+                if bookingCode != "" {
+                    containerView.isUserInteractionEnabled = true
+                }
                 return UIImage(ciImage: output)
             }
         }

@@ -248,6 +248,7 @@ struct AppClipTicket: Codable {
     var isDeleted: Bool?
     var createdAt: String?
     var updatedAt: String?
+    var isCustom: Bool?
     // MARK: app side parameters
     var selectedQuantity: Int?
 
@@ -263,6 +264,7 @@ struct AppClipTicket: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(isCustom, forKey: .isCustom)
     }
 }
 

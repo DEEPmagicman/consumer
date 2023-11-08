@@ -350,7 +350,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                    if venueDetails?.modifiedAppClipTicket[indexPath.row].isCustom == true {
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                    } else {
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                    }
                 } else {
                     cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
                 }
