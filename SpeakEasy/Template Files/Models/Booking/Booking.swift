@@ -182,9 +182,9 @@ struct BookingHasItem: Codable {
 struct TicketDetails: Codable {
 
     var ticketName: String?
-    var ticketId: String
-    var ticketDescription: String
-    var quantity: Int
+    var ticketId: String?
+    var ticketDescription: String?
+    var quantity: Int?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

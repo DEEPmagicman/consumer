@@ -72,6 +72,15 @@ final class QRCodeVC: UIViewController {
     }
     
     @objc func qrImageTapped() {
+        containerView.isUserInteractionEnabled = false
+        flipView()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.flipView()
+            self.containerView.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func flipView() {
         UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
             guard let self = self else { return }
             self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
@@ -133,9 +142,9 @@ final class QRCodeVC: UIViewController {
     }
     
     private func getBooking(id: String) {
-        if booking == nil {
+//        if booking == nil {
             Loader.show()
-        }
+//        }
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()
             guard let self = self else { return }

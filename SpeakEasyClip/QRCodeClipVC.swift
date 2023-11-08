@@ -53,6 +53,15 @@ final class QRCodeClipVC: UIViewController {
     }
     
     @objc func qrImageTapped() {
+        flipView()
+        containerView.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.flipView()
+            self.containerView.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func flipView() {
         UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
             guard let self = self else { return }
             self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
