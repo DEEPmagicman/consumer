@@ -166,6 +166,51 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
+    private var setSalesTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true {
+            return true
+        }
+        return false
+    }
+    
+    private var setCustomTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true {
+            return true
+        }
+        return false
+    }
+    
+    private var setProcessingTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+            return true
+        }
+        return false
+    }
+    
     private func customFeeCount() {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
@@ -208,27 +253,20 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double {
+            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["custom_fee_name"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
-                    if self.venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
-                        if (self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true) {
-                            self.noFeeView.isHidden = true
-                            self.subTotalView.isHidden = false
-                        } else {
-                            self.noFeeView.isHidden = false
-                            self.subTotalView.isHidden = true
-                        }
-                        self.salesTaxPr.text = "(\(self.venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
-                        self.processingFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false
-                        self.salesTextView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false
-                        self.customFeeView.isHidden = self.venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false
-                    }
+                    self.subTotalView.isHidden = !self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView
+                    self.salesTextView.isHidden = !self.setSalesTaxView
+                    self.processingFeeView.isHidden = !self.setProcessingTaxView
+                    self.customFeeView.isHidden = !self.setCustomTaxView
+                    self.noFeeView.isHidden = !self.subTotalView.isHidden
+                    
                     self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
                     self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
                     self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
                     self.customFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
-                    self.customFeeName.text = self.venue?.venueSettings?.coverTicketFeesSettings?.customFeeName
+                    self.customFeeName.text = customFeeName == "" ? "Custom Fee" : customFeeName
                     self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
                     self.totalPrice = total
                 }
