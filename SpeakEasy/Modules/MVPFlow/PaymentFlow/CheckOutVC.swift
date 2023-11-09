@@ -85,7 +85,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
-        infoLbl.text = "\(Constant.String.checkoutText) \(type == .appClip ? Constant.String.coverTicketText : "")"
+        infoLbl.text = Constant.String.checkoutText
+        // \(type == .appClip ? Constant.String.coverTicketText : "")"
         infoLbl.highlightBold(["terms of service", "privacy policy"], size: 12, textColor: .white, addUnderLine: true)
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
         infoLbl.addGestureRecognizer(tap1)
@@ -335,6 +336,52 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
+    private var setSalesTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true {
+            return true
+        }
+        return false
+    }
+    
+    private var setCustomTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true {
+            return true
+        }
+        return false
+    }
+    
+    private var setProcessingTaxView: Bool {
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+        }
+        
+        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            return venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+        }
+        
+        if (venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+            return true
+        }
+        return false
+    }
+
+    
     private func displayPayment() {
         switch type {
         case .singleTickedEvent:
@@ -358,18 +405,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
         default:
-            if venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
-                subTotalView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
-                salesTexView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true ? false : true
-                processingFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? false : true
-                customFeesView.isHidden = venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true ? false : true
 
-            } else {
-                subTotalView.isHidden = true
-                salesTexView.isHidden = true
-                processingFeesView.isHidden = true
-                customFeesView.isHidden = true
-            }
+            subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
+            salesTexView.isHidden = !setSalesTaxView
+            processingFeesView.isHidden = !setProcessingTaxView
+            customFeesView.isHidden = !setCustomTaxView
+            noFeeView.isHidden = !subTotalView.isHidden
+
             salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
             customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
@@ -377,7 +419,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             totalPrice = paymentDetail?.total ?? 0
             salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
-            customFeeNameLbl.text = venue?.venueSettings?.coverTicketFeesSettings?.customFeeName ?? "Custom fee"
+            customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
         }
     }
 

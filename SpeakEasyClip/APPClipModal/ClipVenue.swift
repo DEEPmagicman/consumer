@@ -65,7 +65,10 @@ struct ClipVenue: Codable {
     var lowestPriceTicket: AppClipTicket? {
         var filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })
         if venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-            filterTickets = modifiedAppClipTicket.filter({ $0.status == "ENABLED" })
+            filterTickets = modifiedAppClipTicket.filter({ $0.status == "ENABLED" && $0.isCustom != true })
+            if let customTicket = appClipTicket?.first(where: { $0.status == "ENABLED" && $0.isCustom == true }) {
+                filterTickets?.append(customTicket)
+            }
         }
         let lowest = filterTickets?.min(by: { LHS, RHS in
             LHS.price < RHS.price
@@ -280,7 +283,7 @@ struct VenueSettings: Codable {
     var currencySymbol: String?
     var currencyCode: String?
     var coverTicketFeesSettings: CoverTicketFeesSettings?
-    
+    var customCoverTicketFeesSettings: CoverTicketFeesSettings?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -294,6 +297,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(currencySymbol, forKey: .currencySymbol)
         try container.encodeIfPresent(currencyCode, forKey: .currencyCode)
         try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
+        try container.encodeIfPresent(customCoverTicketFeesSettings, forKey: .customCoverTicketFeesSettings)
     }
 }
 
