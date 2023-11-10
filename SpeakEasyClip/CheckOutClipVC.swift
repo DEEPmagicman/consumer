@@ -168,10 +168,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
         
         if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
         

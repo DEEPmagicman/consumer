@@ -223,7 +223,7 @@ final class SelectTicketClipVC: UIViewController {
             switch self.selectedType {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
-            case .PAID:
+            case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
@@ -235,17 +235,25 @@ final class SelectTicketClipVC: UIViewController {
                 self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-        selectedType = .PAID
+//        selectedType = .PAID
     }
 
     private func forceRemovePaidTicket() {
         self.venueDetail?.appClipTicket?.indices.forEach {
             if venueDetail?.appClipTicket?[$0].price ?? 0 < 2 && venueDetail?.appClipTicket?[$0].name.lowercased().contains("general") == true {
-            } else {
+            } else if venueDetail?.appClipTicket?[$0].isCustom ?? false != true {
                 self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-        selectedType = .FREE
+//        selectedType = .FREE
+    }
+    
+    private func forceRemoveCustomTicket() {
+        self.venueDetail?.appClipTicket?.indices.forEach {
+            if venueDetail?.appClipTicket?[$0].isCustom == true {
+                self.venueDetail?.appClipTicket?[$0].selectedQuantity = nil
+            }
+        }
     }
 }
 
@@ -312,8 +320,16 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         venueDetail?.appClipTicket?[indexPath.row].selectedQuantity = 1
         if venueDetail?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
             forceRemovePaidTicket()
+            forceRemoveCustomTicket()
+            selectedType = .FREE
+        } else if venueDetail?.appClipTicket?[indexPath.row].isCustom == true {
+            forceRemovePaidTicket()
+            forceRemoveFreeTicket()
+            selectedType = .CUSTOM
         } else {
             forceRemoveFreeTicket()
+            forceRemoveCustomTicket()
+            selectedType = .PAID
         }
         ticketTypeTableView.reloadData()
         updateContinueBtn()

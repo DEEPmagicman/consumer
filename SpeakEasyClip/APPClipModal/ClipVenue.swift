@@ -327,6 +327,7 @@ struct CoverTicketFeesSettings: Codable {
 enum TicketPriceType {
     case FREE
     case PAID
+    case CUSTOM
 }
 
 let AppClipTicketGeneral = [

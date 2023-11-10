@@ -277,7 +277,7 @@ final class MVPVenueDetailVc: UIViewController {
             switch selectedType {
             case .FREE:
                 createFreeBooking()
-            case .PAID:
+            case .PAID, .CUSTOM:
                 if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
                     Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: Double(totalPrice), type: .appClip)
                     updateContinueBtn(forceRemove: true)
@@ -449,8 +449,16 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 forceRemovePaidTicket()
+                forceRemoveCustomTicket()
+                selectedType = .FREE
+            } else if venueDetails?.appClipTicket?[indexPath.row].isCustom == true {
+                forceRemovePaidTicket()
+                forceRemoveFreeTicket()
+                selectedType = .CUSTOM
             } else {
                 forceRemoveFreeTicket()
+                forceRemoveCustomTicket()
+                selectedType = .PAID
             }
             ticketTypeTableView.reloadData()
             updateContinueBtn()
@@ -529,7 +537,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             switch self.selectedType {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
-            case .PAID:
+            case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
@@ -541,18 +549,27 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-        selectedType = .PAID
+//        selectedType = .PAID
     }
 
     private func forceRemovePaidTicket() {
         self.venueDetails?.appClipTicket?.indices.forEach {
             if venueDetails?.appClipTicket?[$0].price ?? 0 < 2 && venueDetails?.appClipTicket?[$0].name.lowercased().contains("general") == true {
-            } else {
+            } else if venueDetails?.appClipTicket?[$0].isCustom ?? false != true {
                 self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-        selectedType = .FREE
+//        selectedType = .FREE
     }
+    
+    private func forceRemoveCustomTicket() {
+        self.venueDetails?.appClipTicket?.indices.forEach {
+            if venueDetails?.appClipTicket?[$0].isCustom == true {
+                self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+            }
+        }
+    }
+    
 }
 
 extension MVPVenueDetailVc: WebSocketCallBackDelegate {

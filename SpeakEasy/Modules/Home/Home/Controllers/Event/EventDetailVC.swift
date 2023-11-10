@@ -224,7 +224,7 @@ final class EventDetailVC: UIViewController {
         switch selectedType {
         case .FREE:
             createFreeEventBooking()
-        case .PAID:
+        case .PAID, .CUSTOM:
             if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
                 Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
                 updateContinueBtn(forceRemove: true)
@@ -282,7 +282,7 @@ final class EventDetailVC: UIViewController {
             switch self.selectedType {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
-            case .PAID:
+            case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
