@@ -13,26 +13,41 @@ final class PastPurchasesVisitsViewController: UIViewController {
     @IBOutlet private weak var zeroCaseView: UIView!
 
     private var bookings = [Booking]()
+    private var isLoading = true
+    private var hasMany = false
+    var skipValue = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getPastPurchase()
+        getPastPurchases()
         pastPurchasesTableView.delegate = self
         pastPurchasesTableView.dataSource = self
         pastPurchasesTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        pastPurchasesTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         pastPurchasesTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 0)
         pastPurchasesTableView.setupPadding()
         pastPurchasesTableView.groupStyleSpacing()
     }
     
-    private func getPastPurchase() {
-        Loader.show()
-        PaymentPresenter.getPastTickets { [weak self] isSuccess, errMsg, bookings in
-            Loader.hide()
+    private func getPastPurchases() {
+        PaymentPresenter.getPastTicket(skip: skipValue) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self = self else { return }
-            self.bookings = bookings
-            self.zeroCaseView.isHidden = !(bookings.count == 0)
-            self.pastPurchasesTableView.reloadData()
+            if isSuccess {
+                self.isLoading = false
+                if self.skipValue == 0 {
+                    self.bookings.removeAll()
+                }
+                for booking in bookings {
+                    self.bookings.append(booking)
+                }
+                if hasMany {
+                    self.skipValue += 10
+                    print("---\(self.skipValue)")
+                }
+                self.hasMany = hasMany
+                self.zeroCaseView.isHidden = !(bookings.count == 0)
+                self.pastPurchasesTableView.reloadData()
+            }
         }
     }
     
@@ -77,33 +92,57 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
         Navigate.to.paymentDetailVC(self, booking: bookings[indexPath.row])
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let tableView = self.pastPurchasesTableView else {return}
-        
-        let visibleCells = tableView.visibleCells
-
-        if visibleCells.count == 0 {
-            return
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        guard let tableView = self.pastPurchasesTableView else {return}
+//
+//        let visibleCells = tableView.visibleCells
+//
+//        if visibleCells.count == 0 {
+//            return
+//        }
+//
+//        guard let topCell = visibleCells.first else {
+//            return
+//        }
+//
+//        for cell in visibleCells {
+//            cell.contentView.alpha = 0.9
+//        }
+//
+//        let cellHeight = topCell.frame.size.height - 1
+//        let tableViewTopPosition = tableView.frame.origin.y
+//
+//        let topCellPositionInTableView = tableView.rectForRow(at: tableView.indexPath(for: topCell)!)
+//
+//        let topCellPosition = tableView.convert(topCellPositionInTableView, to: tableView.superview).origin.y
+//
+//        let modifier: CGFloat = 1.5
+//        let topCellOpacity = 1.5 - ((tableViewTopPosition - topCellPosition) / cellHeight) * modifier
+//
+//        topCell.contentView.alpha = topCellOpacity
+//    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = self.pastPurchasesTableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterView") as? FooterView
+        footer?.loader.startAnimating()
+        return footer
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if isLoading {
+            return 50
+        } else {
+            return 0
         }
-
-        guard let topCell = visibleCells.first else {
-            return
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == (bookings.count) - 1 && hasMany && isLoading == false {
+            isLoading = true
+            DispatchQueue.main.async {
+                self.pastPurchasesTableView.reloadData()
+            }
+            getPastPurchases()
         }
-
-        for cell in visibleCells {
-            cell.contentView.alpha = 0.9
-        }
-
-        let cellHeight = topCell.frame.size.height - 1
-        let tableViewTopPosition = tableView.frame.origin.y
-        
-        let topCellPositionInTableView = tableView.rectForRow(at: tableView.indexPath(for: topCell)!)
-
-        let topCellPosition = tableView.convert(topCellPositionInTableView, to: tableView.superview).origin.y
-
-        let modifier: CGFloat = 1.5
-        let topCellOpacity = 1.5 - ((tableViewTopPosition - topCellPosition) / cellHeight) * modifier
-
-        topCell.contentView.alpha = topCellOpacity
     }
 }

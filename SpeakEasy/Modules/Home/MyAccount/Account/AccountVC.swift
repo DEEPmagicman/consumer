@@ -17,7 +17,10 @@ final class AccountVC: UIViewController {
     private var onBoardingPresenter = OnBoardingPresenter()
     private var bookings = [Booking]()
     private var recommended = [Event]()
-
+    private var isLoading = false
+    private var hasMany = false
+    var skipValue = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         displayData()
@@ -26,6 +29,7 @@ final class AccountVC: UIViewController {
         profileImg.addGestureRecognizer(gesture)
         listTableView.register(UINib(nibName: "TitleHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: "TitleHeader")
         listTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        listTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         listTableView.contentInset = UIEdgeInsets(top: 60, left: 0, bottom: 0, right: 0)
         listTableView.setupPadding()
         listTableView.groupStyleSpacing()
@@ -34,7 +38,7 @@ final class AccountVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getTickets()
+        getUpcomingTickets()
         getRecommended()
         whoAmIAPI()
     }
@@ -54,12 +58,26 @@ final class AccountVC: UIViewController {
         nameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "")"
     }
     
-    private func getTickets() {
-        PaymentPresenter.getUpcomingTickets { [weak self] isSuccess, errMsg, bookings in
+    private func getUpcomingTickets() {
+        PaymentPresenter.getUpcomingTicket(skip: skipValue) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self = self else { return }
-            self.bookings = bookings
-            self.listTableView.reloadData()
-            self.checkZeroViewCase()
+            self.isLoading = false
+            if isSuccess {
+                if self.skipValue == 0 {
+                    self.bookings.removeAll()
+                }
+                
+                for booking in bookings {
+                    self.bookings.append(booking)
+                }
+                if hasMany {
+                    self.skipValue += 10
+                }
+                self.hasMany = hasMany
+                self.bookings = bookings
+                self.checkZeroViewCase()
+                self.listTableView.reloadData()
+            }
         }
     }
     
@@ -200,6 +218,40 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             Navigate.to.QRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
         case 1:
             Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id, venueDetail: nil, event: nil)
+        default:
+            break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = self.listTableView.dequeueReusableHeaderFooterView(withIdentifier: "FooterView") as? FooterView
+        footer?.loader.startAnimating()
+        return footer
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch section {
+        case 0:
+            if isLoading {
+                return 50
+            } else {
+                return 0
+            }
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 0:
+            if indexPath.row == (bookings.count) - 1 && hasMany && isLoading == false {
+                isLoading = true
+                DispatchQueue.main.async {
+                    self.listTableView.reloadData()
+                }
+                getUpcomingTickets()
+            }
         default:
             break
         }

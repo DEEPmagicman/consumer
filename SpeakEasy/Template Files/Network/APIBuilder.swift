@@ -55,6 +55,9 @@ struct APIBuilder {
     static private let inviteLink = "/invite-link"
     static private let redeem = "/redeem"
     
+    // version
+    static let v2 = "/v2"
+    
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
     static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
@@ -224,12 +227,12 @@ struct APIBuilder {
         baseURL + route + event + ticketBooking
     }
     
-    static var pastTicketsURL: String {
-        baseURL + route + booking + past
+    static var upcomingTicketsURL: String {
+        baseURL + v2 + route + booking + upcoming
     }
     
-    static var upcomingTicketsURL: String {
-        baseURL + route + booking + upcoming
+    static var pastTicketsURL: String {
+        baseURL + v2 + route + booking + past
     }
     
     static func addPaymentURL(_ id: String) -> String {

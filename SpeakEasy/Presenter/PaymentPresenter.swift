@@ -34,7 +34,7 @@ final class PaymentPresenter {
             }
 
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, "")
                 return
             }
@@ -66,7 +66,7 @@ final class PaymentPresenter {
             }
 
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, "")
                 return
             }
@@ -95,7 +95,7 @@ final class PaymentPresenter {
                 completion(false, "Alert", "Booking failed")
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, "")
                 return
             }
@@ -125,7 +125,7 @@ final class PaymentPresenter {
             }
 
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, "")
                 return
             }
@@ -145,7 +145,7 @@ final class PaymentPresenter {
                 completion(false, "internal error", nil)
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, nil)
                 return
             }
@@ -182,7 +182,7 @@ final class PaymentPresenter {
                 completion(false, "internal error", "", "", "", nil)
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, "", "", "", nil)
                 return
             }
@@ -203,7 +203,7 @@ final class PaymentPresenter {
                 completion(false, "internal error", [])
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, [])
                 return
             }
@@ -211,45 +211,45 @@ final class PaymentPresenter {
         }
     }
     
-    static func getPastTickets(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking]) -> Void) {
-        AFWrapper.getRequest(APIBuilder.pastTicketsURL, headers: Header.header()) { response in
-            
-            guard let responseArray = response as? [[String: Any]] else {
-                completion(false, nil, [])
+    static func getPastTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
+        let param = ["skip": skip, "include": ["bookingHasItem", "event"]] as [String : Any]
+        AFWrapper.getRequest(APIBuilder.pastTicketsURL, params: param, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
+                completion(false, nil, [], false)
                 return
             }
-            if let bookings = [Booking].parse(responseArray) {
-                completion(true, nil, bookings)
+            if let bookings = [Booking].parse(booking) {
+                completion(true, nil, bookings, hasMany)
             } else {
-                completion(false, "internal error", [])
+                completion(false, "internal error", [], false)
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, [])
+            if let err = error as NSError?, err.code == 0 {
+                completion(false, err.domain, [], false)
                 return
             }
-            completion(false, nil, [])
+            completion(false, nil, [], false)
         }
     }
     
-    static func getUpcomingTickets(completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking]) -> Void) {
-        AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, headers: Header.header()) { response in
-            
-            guard let responseArray = response as? [[String: Any]] else {
-                completion(false, nil, [])
+    static func getUpcomingTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
+        let param = ["skip": skip, "include": ["bookingHasItem", "event"]] as [String : Any]
+        AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, params: param, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
+                completion(false, nil, [], false)
                 return
             }
-            if let bookings = [Booking].parse(responseArray) {
-                completion(true, nil, bookings)
+            if let bookings = [Booking].parse(booking) {
+                completion(true, nil, bookings, hasMany)
             } else {
-                completion(false, "internal error", [])
+                completion(false, "internal error", [], false)
             }
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, [])
+            if let err = error as NSError?, err.code == 0 {
+                completion(false, err.domain, [], false)
                 return
             }
-            completion(false, nil, [])
+            completion(false, nil, [], false)
         }
     }
     
@@ -261,7 +261,7 @@ final class PaymentPresenter {
             }
             completion(true, nil)
         } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
+            if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain)
                 return
             }
@@ -281,7 +281,7 @@ final class PaymentPresenter {
             }
             completion(true, nil)
         } failure: { error in
-            if let err = (error as? NSError), err.code == 0 {
+            if let err = (error as NSError?), err.code == 0 {
                 completion(false, err.domain)
                 return
             }

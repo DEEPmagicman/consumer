@@ -17,6 +17,8 @@
 		0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
+		046866532B0F280F00E498CF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046866522B0F280F00E498CF /* FooterView.swift */; };
+		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
@@ -656,6 +658,8 @@
 		0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextField.swift; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
+		046866522B0F280F00E498CF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
 		046E586F2AA075C200FAA0F6 /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 		047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistProfilePopUp.xib; sourceTree = "<group>"; };
@@ -1341,6 +1345,15 @@
 				CE9AD76829F28EC000FA55C9 /* PaymentTableViewCell.xib */,
 			);
 			path = PaymentMethodsCell;
+			sourceTree = "<group>";
+		};
+		046866512B0F27B700E498CF /* FooterView */ = {
+			isa = PBXGroup;
+			children = (
+				046866522B0F280F00E498CF /* FooterView.swift */,
+				046866542B0F284900E498CF /* FooterView.xib */,
+			);
+			path = FooterView;
 			sourceTree = "<group>";
 		};
 		047473FD28FD17190097A523 /* ArtistProfilePopUp */ = {
@@ -3955,6 +3968,7 @@
 		E1A9E7DE28C579690081FB28 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				046866512B0F27B700E498CF /* FooterView */,
 				CE3213CA29E03D6500EBC179 /* TitleHeader */,
 				0477E38428FEAA5C009C86C6 /* FavoriteArtistProfileCVC */,
 				E1A9E7DF28C579690081FB28 /* FavouriteArtistsCVC */,
@@ -4182,6 +4196,7 @@
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				E11F4C0728C835F3008D2E30 /* Messages.xib in Resources */,
 				E11F4C1728C835F3008D2E30 /* Invites.xib in Resources */,
+				046866552B0F284900E498CF /* FooterView.xib in Resources */,
 				E11F4BAC28C8358C008D2E30 /* BookingCalenderTVC.xib in Resources */,
 				84248D9F28D2A4CE00A6E260 /* All.xib in Resources */,
 				E11F4BA728C8358C008D2E30 /* VIPTableBookingCalendar.xib in Resources */,
@@ -4696,6 +4711,7 @@
 				CE6813D629DE976400B41418 /* DetailTVC.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				BD92D2A9295D52A200C3CBD9 /* Drink.swift in Sources */,
+				046866532B0F280F00E498CF /* FooterView.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				4A7CC52F28E377C200F8BA63 /* BookingInvites.swift in Sources */,
 				E11F4B2E28C83564008D2E30 /* BookingRequests.swift in Sources */,

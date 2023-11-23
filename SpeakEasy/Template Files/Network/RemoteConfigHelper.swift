@@ -9,18 +9,24 @@ import UIKit
 import FirebaseRemoteConfig
 
 final class RemoteConfigHelper {
-
+    
+    private init() {
+        let configSettings = RemoteConfigSettings()
+        configSettings.minimumFetchInterval = 0
+        remoteConfig.configSettings = configSettings
+    }
+    
     static let shared = RemoteConfigHelper()
-
+    var remoteConfig = RemoteConfig.remoteConfig()
     var iOSConsumerHardUpdateVersion: Int = 0
     var iOSConsumerSoftUpdateVersion: Int = 0
     var isShowingAlert = false
 
     func getRemoteConfigValues(showSoftUpdate: Bool = false) {
-        RemoteConfig.remoteConfig().fetch(withExpirationDuration: 300) { _, _ in
-            RemoteConfig.remoteConfig().activate { _, _ in
-                self.iOSConsumerHardUpdateVersion = Int(RemoteConfig.remoteConfig().configValue(forKey: "ios_consumer_hard_update_version").stringValue ?? "") ?? -1
-                self.iOSConsumerSoftUpdateVersion = Int(RemoteConfig.remoteConfig().configValue(forKey: "ios_consumer_soft_update_version").stringValue ?? "") ?? -1
+        remoteConfig.fetch(withExpirationDuration: 300) { _, _ in
+            self.remoteConfig.activate { _, _ in
+                self.iOSConsumerHardUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_hard_update_version").stringValue ?? "") ?? -1
+                self.iOSConsumerSoftUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_soft_update_version").stringValue ?? "") ?? -1
                 
                 if self.iOSConsumerHardUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
                     self.forceUpdateAlert()
