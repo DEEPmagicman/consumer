@@ -152,6 +152,10 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
 }
 
 extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        44
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         displayList.count
     }

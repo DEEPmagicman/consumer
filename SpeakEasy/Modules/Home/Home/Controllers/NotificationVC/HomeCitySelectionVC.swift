@@ -78,6 +78,10 @@ class HomeCitySelectionVC: UIViewController {
 }
 //MARK: - UITableViewDataSource
  extension HomeCitySelectionVC: UITableViewDataSource {
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+         44
+     }
+     
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
          return self.arrCitySelection.count
      }

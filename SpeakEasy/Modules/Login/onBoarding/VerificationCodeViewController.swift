@@ -15,16 +15,22 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var otpFieldView: OTPFieldView!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var bgImg: UIImageView!
+    @IBOutlet weak var timerLbl: UILabel!
+    @IBOutlet weak var resendBtn: UIButton!
     
     var otpText = ""
     var currectOtp: String?
     var otpRef = ""
     var phoneNum = ""
+    var countryCode = ""
     var isFromLogin = false
     var isFromSettings = false
     var isForEmail = false
     private var onBoardingDelegate = OnBoardingPresenter()
     private var settingDelegate = SettingPresenter()
+    private var timer = Timer()
+    private var count = 60
+    private var lastCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +40,11 @@ final class VerificationCodeViewController: UIViewController {
         
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
+        let time = secondsToHoursMinutesSeconds(seconds: count)
+        timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
+        startTimer()
+        resendBtn.alpha = 0.5
+        resendBtn.isUserInteractionEnabled = false
         #if DEBUG
         print("*-*\(currectOtp)")
         Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
@@ -47,7 +58,7 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             bgImg.isHidden = false
         }
-        phoneNumLbl.text = phoneNum
+        phoneNumLbl.text = "\(countryCode) \(phoneNum)"
     }
     
     private func setOtpView() {
@@ -62,7 +73,34 @@ final class VerificationCodeViewController: UIViewController {
         otpFieldView.shouldAllowIntermediateEditing = false
         otpFieldView.initializeUI()
     }
-
+    
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            self.count = self.count - 1
+            if self.count <= 0 {
+                timer.invalidate()
+                self.resendBtn.alpha = 1
+                self.resendBtn.isUserInteractionEnabled = true
+            }
+            let time = self.secondsToHoursMinutesSeconds(seconds: self.count)
+            let timeString = self.makeTimeString(minutes: time.0, seconds: time.1)
+            if self.count <= 0 {
+                self.timerLbl.text = ""
+            } else {
+                self.timerLbl.text = timeString
+            }
+        }
+    }
+    
+    func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int) {
+        return (((seconds % 3600) / 60),((seconds % 3600) % 60))
+    }
+    
+    func makeTimeString(minutes: Int, seconds : Int) -> String {
+        "in \(String(format: "%02d", seconds))s"
+    }
+    
     @IBAction func onClickEdit(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -76,6 +114,10 @@ final class VerificationCodeViewController: UIViewController {
     }
     
     @IBAction func onClickDidNotGetCode(_ sender: Any) {
+        count = 60
+        startTimer()
+        resendBtn.alpha = 0.5
+        resendBtn.isUserInteractionEnabled = false
         if isFromLogin {
             self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
                 guard let self = self else {

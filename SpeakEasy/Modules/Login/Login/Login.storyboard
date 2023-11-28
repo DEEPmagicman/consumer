@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -32,7 +32,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mainBGImg" translatesAutoresizingMaskIntoConstraints="NO" id="ZxN-RC-7qo">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.5" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mainBGImg" translatesAutoresizingMaskIntoConstraints="NO" id="ZxN-RC-7qo">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oxS-Ze-3w5">
@@ -160,7 +160,7 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="oxS-Ze-3w5" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="0l9-sX-bVG"/>
                             <constraint firstItem="ZxN-RC-7qo" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="1hl-AJ-1Rs"/>
@@ -193,7 +193,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l4K-Am-7Kd">
-                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qN4-w2-z13">
                                         <rect key="frame" x="25" y="10" width="25" height="17"/>
@@ -209,7 +209,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nza-ty-6LU">
-                                        <rect key="frame" x="20" y="52" width="207.5" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="384" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="kuP-Qg-q3p"/>
                                         </constraints>
@@ -282,6 +282,7 @@
                                     <constraint firstAttribute="trailing" secondItem="wTh-6H-U0j" secondAttribute="trailing" constant="20" id="D2w-CQ-VJb"/>
                                     <constraint firstItem="vmc-Ni-X6X" firstAttribute="leading" secondItem="l4K-Am-7Kd" secondAttribute="leading" constant="20" id="GCp-TZ-yZb"/>
                                     <constraint firstItem="wTh-6H-U0j" firstAttribute="leading" secondItem="l4K-Am-7Kd" secondAttribute="leading" constant="20" id="Gta-kr-lAA"/>
+                                    <constraint firstAttribute="trailing" secondItem="Nza-ty-6LU" secondAttribute="trailing" constant="10" id="GyB-wA-UjA"/>
                                     <constraint firstItem="vmc-Ni-X6X" firstAttribute="top" secondItem="wTh-6H-U0j" secondAttribute="bottom" constant="45" id="QnC-7U-nyl"/>
                                     <constraint firstItem="qN4-w2-z13" firstAttribute="top" secondItem="l4K-Am-7Kd" secondAttribute="top" constant="10" id="WT1-yV-Zfk"/>
                                     <constraint firstAttribute="trailing" secondItem="vmc-Ni-X6X" secondAttribute="trailing" constant="20" id="b0o-3p-0Qe"/>
@@ -330,7 +331,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MdF-lt-kcE">
-                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="peG-aU-4vS">
                                         <rect key="frame" x="25" y="10" width="25" height="17"/>
@@ -524,7 +525,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d2g-bI-jVk">
-                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="soU-U6-gVe">
                                         <rect key="frame" x="25" y="10" width="25" height="17"/>
@@ -661,7 +662,7 @@
         <image name="GoogleIcon" width="19" height="19"/>
         <image name="WelcomeBackground" width="1950" height="4220"/>
         <image name="livelifelive" width="121.5" height="24"/>
-        <image name="mainBGImg" width="1950" height="4220"/>
+        <image name="mainBGImg" width="1080" height="1350"/>
         <image name="newSpeakeasy" width="308" height="80"/>
         <namedColor name="primaryBlue">
             <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

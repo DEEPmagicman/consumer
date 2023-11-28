@@ -315,8 +315,6 @@
 		CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */; };
 		CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A02AA2110E00DAD9FE /* SocketIO */; };
 		CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A22AA2112C00DAD9FE /* SocketIO */; };
-		CEDB81A62AA219D700DAD9FE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */; };
-		CEDB81A82AA21A1100DAD9FE /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */; };
 		CEDB823C2AA21DD500DAD9FE /* FPNCountryListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820C2AA21DCB00DAD9FE /* FPNCountryListViewController.swift */; };
 		CEDB823D2AA21DD500DAD9FE /* FPNTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820D2AA21DCB00DAD9FE /* FPNTextField.swift */; };
 		CEDB823E2AA21DD500DAD9FE /* FPNCountryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB820E2AA21DCB00DAD9FE /* FPNCountryRepository.swift */; };
@@ -1270,7 +1268,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEDB81A82AA21A1100DAD9FE /* IQKeyboardManagerSwift in Frameworks */,
 				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
 				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
@@ -1287,7 +1284,6 @@
 				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
 				CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */,
 				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
-				CEDB81A62AA219D700DAD9FE /* IQKeyboardManagerSwift in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
@@ -4080,7 +4076,6 @@
 				CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */,
 				CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */,
 				CEDB81A22AA2112C00DAD9FE /* SocketIO */,
-				CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */,
 			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
@@ -4112,7 +4107,6 @@
 				CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */,
 				CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */,
 				CEDB81A02AA2110E00DAD9FE /* SocketIO */,
-				CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -4152,7 +4146,6 @@
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
-				CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -5296,14 +5289,6 @@
 				version = 16.1.0;
 			};
 		};
-		CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
-			requirement = {
-				kind = exactVersion;
-				version = 6.5.10;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5361,16 +5346,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
-		};
-		CEDB81A52AA219D700DAD9FE /* IQKeyboardManagerSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
-			productName = IQKeyboardManagerSwift;
-		};
-		CEDB81A72AA21A1100DAD9FE /* IQKeyboardManagerSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEDB81A42AA219D600DAD9FE /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
-			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

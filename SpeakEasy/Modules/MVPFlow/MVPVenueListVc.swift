@@ -15,7 +15,7 @@ import CoreLocation
 
 final class MVPVenueListVc: UIViewController {
 
-    @IBOutlet weak var cityNameLbl: UILabelDeviceClass!
+    @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var venueListTableView: UITableView!
     @IBOutlet weak var zeroCaseView: UIView!
         
@@ -28,13 +28,14 @@ final class MVPVenueListVc: UIViewController {
     private var closeHasMore = false
     private var refresh = UIRefreshControl()
     let locationManager = CLLocationManager()
+    @IBOutlet weak var cityLbl: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
         venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
         fetchAllOpenVenueForMVP()
-        fetchAllCloseVenueForMVP()
+//        fetchAllCloseVenueForMVP()
         RemoteConfigHelper.shared.getRemoteConfigValues(showSoftUpdate: true)
         // foreground event
         NotificationCenter.default.addObserver(self, selector: #selector(checkForceUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -46,6 +47,7 @@ final class MVPVenueListVc: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
         venueListTableView.setupPadding()
         cityNameLbl.text = UserDefault.shared.localCity
+        cityLbl.text = UserDefault.shared.localCity
         
         if UserDefault.shared.defaultCitySelected == false {
             self.locationManager.requestWhenInUseAuthorization()
@@ -69,7 +71,7 @@ final class MVPVenueListVc: UIViewController {
         openHasMore = false
         closeHasMore = false
         fetchAllOpenVenueForMVP()
-        fetchAllCloseVenueForMVP()
+//        fetchAllCloseVenueForMVP()
     }
     
     private func refreshData(withLoader: Bool = true) {
@@ -78,7 +80,7 @@ final class MVPVenueListVc: UIViewController {
         openHasMore = false
         closeHasMore = false
         fetchAllOpenVenueForMVP(withLoader: withLoader)
-        fetchAllCloseVenueForMVP(withLoader: withLoader)
+//        fetchAllCloseVenueForMVP(withLoader: withLoader)
     }
     
     private func checkZeroViewCase() {
@@ -99,6 +101,7 @@ final class MVPVenueListVc: UIViewController {
                 return
             }
             if isSuccess {
+                self.fetchAllCloseVenueForMVP()
                 if self.openFrom == 0 {
                     self.openVenueList.removeAll()
                 }
@@ -138,6 +141,7 @@ final class MVPVenueListVc: UIViewController {
                     self.closeVenueList.removeAll()
                 }
                 for venue in closeVenueList {
+                    self.openVenueList.append(venue)
                     self.closeVenueList.append(venue)
                 }
                 if hasMore {
@@ -162,29 +166,29 @@ final class MVPVenueListVc: UIViewController {
 
 extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+//        if section == 0 {
            return openVenueList.count
-        } else {
-           return closeVenueList.count
-        }
+//        } else {
+//           return closeVenueList.count
+//        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
         var data: ClipVenue?
-        if indexPath.section == 0 {
+//        if indexPath.section == 0 {
             data = openVenueList[indexPath.row]
-            cell.coverLbl.isHidden = false
-            cell.updatedAtLbl.isHidden = false
-        } else {
-            data = closeVenueList[indexPath.row]
-            cell.coverLbl.isHidden = true
-            cell.updatedAtLbl.isHidden = true
-        }
+//            cell.coverLbl.isHidden = false
+////            cell.updatedAtLbl.isHidden = false
+//        } else {
+//            data = closeVenueList[indexPath.row]
+//            cell.coverLbl.isHidden = true
+//            cell.updatedAtLbl.isHidden = true
+//        }
         if let data = data {
             cell.setData(data: data)
         }
@@ -192,47 +196,47 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+//        if indexPath.section == 0 {
             Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
-        } else {
-            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: closeVenueList[indexPath.row].uniqueId, venueTimeZone: closeVenueList[indexPath.row].timezone ?? "")
-        }
+//        } else {
+//            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: closeVenueList[indexPath.row].uniqueId, venueTimeZone: closeVenueList[indexPath.row].timezone ?? "")
+//        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+//        if indexPath.section == 0 {
             if indexPath.row == openVenueList.count - 1 {
                 if openHasMore {
                     fetchAllOpenVenueForMVP()
                 }
             }
-        } else {
-            if indexPath.row == closeVenueList.count - 1 {
-                if closeHasMore {
-                    fetchAllCloseVenueForMVP()
-                }
-            }
-        }
+//        } else {
+//            if indexPath.row == closeVenueList.count - 1 {
+//                if closeHasMore {
+//                    fetchAllCloseVenueForMVP()
+//                }
+//            }
+//        }
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = MVPVenueTypeHeaderView.instanceFromNib() as? MVPVenueTypeHeaderView
-        if section == 0 {
-            header?.openCloseLbl.text = "Open Tonight"
-            header?.detailLbl.text = "Venues that are currently open in your city."
-        } else {
-            header?.openCloseLbl.text = "Venues in \(UserDefault.shared.localCity)"
-            header?.detailLbl.text = "Venues in your city."
-        }
-        return header
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let header = MVPVenueTypeHeaderView.instanceFromNib() as? MVPVenueTypeHeaderView
+//        if section == 0 {
+//            header?.openCloseLbl.text = "Open Tonight"
+//            header?.detailLbl.text = "Venues that are currently open in your city."
+//        } else {
+//            header?.openCloseLbl.text = "Venues in \(UserDefault.shared.localCity)"
+//            header?.detailLbl.text = "Venues in your city."
+//        }
+//        return header
+//    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+//        if section == 0 {
             return openVenueList.count == 0 ? 0 : 60
-        } else {
-            return closeVenueList.count == 0 ? 0 : 60
-        }
+//        } else {
+//            return closeVenueList.count == 0 ? 0 : 60
+//        }
     }
 }
 
@@ -246,6 +250,7 @@ extension MVPVenueListVc: CitySelectionDelegate {
     func citySelected(city: String) {
         refreshData()
         cityNameLbl.text = UserDefault.shared.localCity
+        cityLbl.text = UserDefault.shared.localCity
     }
 }
 
@@ -270,6 +275,7 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
                     UserDefault.shared.localCity = city.value
                     self.refreshData()
                     self.cityNameLbl.text = UserDefault.shared.localCity
+                    self.cityLbl.text = UserDefault.shared.localCity
                 }
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")

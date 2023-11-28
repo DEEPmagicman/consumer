@@ -11,12 +11,14 @@ import SDWebImage
 class venueTableCell: UITableViewCell {
 
     @IBOutlet weak var venueEventImg: UIImageView!
-    @IBOutlet weak var liveLbl: UILabelDeviceClass!
+    @IBOutlet weak var liveLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var coverLbl: UILabelDeviceClass!
     @IBOutlet weak var eventNameLbl: UILabelDeviceClass!
-    @IBOutlet weak var locationLbl: UILabelDeviceClass!
-    @IBOutlet weak var updatedAtLbl: UILabelDeviceClass!
+    @IBOutlet weak var liveView: UIView!
+    @IBOutlet weak var bookNow: UILabelDeviceClass!
+    @IBOutlet weak var bookNowHeight: NSLayoutConstraint!
+//    @IBOutlet weak var updatedAtLbl: UILabelDeviceClass!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,8 +30,13 @@ class venueTableCell: UITableViewCell {
         self.venueEventImg.sd_setImage(with: URL( string: imgUrl), completed: nil)
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
-        self.locationLbl.text = data.address
-        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a)
+//        self.locationLbl.text = data.address
+//        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a)
+        let path = UIBezierPath(roundedRect: liveView.bounds, byRoundingCorners: [.topRight, .bottomLeft], cornerRadii: CGSize(width: 10, height: 10))
+        let maskLayer = CAShapeLayer()
+
+        maskLayer.path = path.cgPath
+        liveView.layer.mask = maskLayer
         if let ticket = data.lowestPriceTicket {
             if ticket.price < 2 && ticket.name.lowercased().contains("general") == true {
                 coverLbl.text = "FREE"
@@ -40,11 +47,17 @@ class venueTableCell: UITableViewCell {
             coverLbl.text = ""
         }
         if data.bookingStatus == "OPEN" {
-            self.liveLbl.text = data.displayWaitTime
-            self.liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
+            liveLbl.isHidden = false
+            liveView.isHidden = false
+            bookNow.isHidden = false
+            coverLbl.isHidden = false
+            bookNowHeight.constant = 20
         } else {
-            self.liveLbl.text = "CLOSED"
-            self.liveLbl.textColor = UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha: 1)
+            liveLbl.isHidden = true
+            liveView.isHidden = true
+            bookNow.isHidden = true
+            coverLbl.isHidden = true
+            bookNowHeight.constant = 0
         }
     }
 }

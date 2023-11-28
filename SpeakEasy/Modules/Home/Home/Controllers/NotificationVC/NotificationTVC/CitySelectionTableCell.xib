@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,15 +25,8 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVN-hF-1CZ">
                         <rect key="frame" x="0.0" y="0.0" width="618" height="60"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LocationPin" translatesAutoresizingMaskIntoConstraints="NO" id="p4J-su-aUQ">
-                                <rect key="frame" x="14" y="17" width="19" height="26"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="26" id="ADW-YN-gDA"/>
-                                    <constraint firstAttribute="width" constant="19" id="kd9-ti-qig"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York, NY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cv7-9h-vOk" customClass="UILabelDeviceClass" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="37" y="19" width="105" height="22.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York, NY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cv7-9h-vOk">
+                                <rect key="frame" x="14" y="19" width="105" height="22.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -47,17 +40,25 @@
                                     <constraint firstAttribute="height" constant="40" id="vzb-Gl-qM2"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sJg-DW-K09">
+                                <rect key="frame" x="14" y="59.5" width="590" height="0.5"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.29999999999999999" id="2Y8-Ns-OQh"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="fgz-qd-0Zq" secondAttribute="trailing" constant="12" id="2v8-Tk-9gU"/>
-                            <constraint firstItem="p4J-su-aUQ" firstAttribute="leading" secondItem="HVN-hF-1CZ" secondAttribute="leading" constant="14" id="3mu-lg-js9"/>
                             <constraint firstItem="fgz-qd-0Zq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cv7-9h-vOk" secondAttribute="trailing" constant="12" id="6t4-Bm-25l"/>
                             <constraint firstAttribute="height" constant="60" id="D0P-pl-p3m"/>
-                            <constraint firstItem="cv7-9h-vOk" firstAttribute="leading" secondItem="p4J-su-aUQ" secondAttribute="trailing" constant="4" id="IQK-IE-P3Q"/>
                             <constraint firstAttribute="bottom" secondItem="fgz-qd-0Zq" secondAttribute="bottom" constant="12" id="Iza-bE-t0N"/>
+                            <constraint firstAttribute="bottom" secondItem="sJg-DW-K09" secondAttribute="bottom" id="N74-br-daK"/>
+                            <constraint firstItem="cv7-9h-vOk" firstAttribute="leading" secondItem="HVN-hF-1CZ" secondAttribute="leading" constant="14" id="NN7-Tv-esM"/>
                             <constraint firstItem="cv7-9h-vOk" firstAttribute="centerY" secondItem="HVN-hF-1CZ" secondAttribute="centerY" id="YX3-Wk-yEo"/>
-                            <constraint firstItem="p4J-su-aUQ" firstAttribute="centerY" secondItem="HVN-hF-1CZ" secondAttribute="centerY" id="mrQ-hA-GQr"/>
+                            <constraint firstItem="sJg-DW-K09" firstAttribute="leading" secondItem="HVN-hF-1CZ" secondAttribute="leading" constant="14" id="bNu-9K-fM4"/>
+                            <constraint firstAttribute="trailing" secondItem="sJg-DW-K09" secondAttribute="trailing" constant="14" id="dqx-Xz-IvR"/>
                             <constraint firstItem="fgz-qd-0Zq" firstAttribute="top" secondItem="HVN-hF-1CZ" secondAttribute="top" constant="8" id="uaU-Jk-egb"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
@@ -90,11 +91,10 @@
                 <outlet property="imgCity" destination="fgz-qd-0Zq" id="3Zd-CN-fcS"/>
                 <outlet property="lblCity" destination="cv7-9h-vOk" id="sYl-tx-yml"/>
             </connections>
-            <point key="canvasLocation" x="194.20289855072465" y="85.379464285714278"/>
+            <point key="canvasLocation" x="194.20289855072465" y="84.375"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="LocationPin" width="16.5" height="22"/>
         <image name="New York, NY 1" width="137" height="83"/>
     </resources>
 </document>

@@ -42,7 +42,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String) {
+    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String, countryCode: String) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(VerificationCodeViewController.self)
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp ?? ""
@@ -50,6 +50,7 @@ final class Navigate {
         vc.isFromSettings = isFromSettings
         vc.isForEmail = isForEmail
         vc.phoneNum = phoneNum
+        vc.countryCode = countryCode
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

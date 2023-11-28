@@ -9,7 +9,7 @@ import UIKit
 
 class CitySelectionTableCell: UITableViewCell {
 
-    @IBOutlet weak var lblCity: UILabelDeviceClass!
+    @IBOutlet weak var lblCity: UILabel!
     @IBOutlet weak var imgCity: UIImageView!
     @IBOutlet weak var containtView: UIView!
     override func awakeFromNib() {

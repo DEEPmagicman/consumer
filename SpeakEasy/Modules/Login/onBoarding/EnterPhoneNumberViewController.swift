@@ -16,7 +16,6 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var contrySelectionView: UIView!    
-    @IBOutlet weak var errorTextLbl: UILabel!
 
     var isFromLogin = false
     private var onBoardingPresenter = OnBoardingPresenter()
@@ -99,7 +98,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                 }
                 Loader.hide()
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                    Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
 //                    Alert.showToast(Constant.String.internetNotConnect)
@@ -115,7 +114,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                         return
                     }
                     if isSuccess {
-                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
 //                        Alert.showToast(Constant.String.internetNotConnect)
@@ -133,7 +132,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                     Loader.hide()
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
-                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errorMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
 //                        Alert.showToast(Constant.String.internetNotConnect)

@@ -48,7 +48,7 @@ class LoginWithEmailViewController: UIViewController {
         if isFromSettings {
             self.settingDelegate.changeEmailApi(email: emailTextField.text ?? "") { otp, otpRef, isSuccess, errMsg in
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(self, isFromSettings: true, isForEmail: true, otp: otp, otpRef: otpRef, phoneNum: self.emailTextField.text ?? "")
+                    Navigate.to.enterVerificationCodeVc(self, isFromSettings: true, isForEmail: true, otp: otp, otpRef: otpRef, phoneNum: self.emailTextField.text ?? "", countryCode: "")
 
                 } else {
                     if errMsg != nil {
