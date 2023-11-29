@@ -47,7 +47,9 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var upcomingTableHeight: NSLayoutConstraint!
     @IBOutlet weak var venuePolicyLbl: UILabel!
     @IBOutlet private weak var zeroCaseView: UIView!
-
+    @IBOutlet weak var venuePageTitleView: UIView!
+    @IBOutlet weak var venueLogo: UIImageView!
+    
     var venueId = ""
     var venueUniqueId = ""
     var venueTimeZone = ""
@@ -217,6 +219,7 @@ final class MVPVenueDetailVc: UIViewController {
     private func setUpUI() {
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
+        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
@@ -243,10 +246,12 @@ final class MVPVenueDetailVc: UIViewController {
             updateCloseViewVisibility()
             tonightView.isHidden = true
             venuePageView.isHidden = true
+            venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
             tonightView.isHidden = false
             closeTicketView.isHidden = true
+            venuePageTitleView.isHidden = false
         }
         updatedAtLbl.text = venueDetails?.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) ?? ""
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)

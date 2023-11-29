@@ -42,6 +42,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var salesTexView: UIView!
     @IBOutlet weak var salesTaxAmount: UILabel!
     @IBOutlet weak var salesTaxPr: UILabel!
+    @IBOutlet weak var bgImage: UIImageView!
     
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
@@ -123,11 +124,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             titleLbl.text = Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
+            bgImage.image = Constant.Icon.liveCover
         case .singleTickedEvent:
             noFeeView.isHidden = !(event?.upfront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
             dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            bgImage.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         case .tieredTickedEvent:
             break
         }

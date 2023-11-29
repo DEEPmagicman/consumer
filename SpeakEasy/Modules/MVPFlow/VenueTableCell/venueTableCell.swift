@@ -34,7 +34,6 @@ class venueTableCell: UITableViewCell {
 //        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a)
         let path = UIBezierPath(roundedRect: liveView.bounds, byRoundingCorners: [.topRight, .bottomLeft], cornerRadii: CGSize(width: 10, height: 10))
         let maskLayer = CAShapeLayer()
-
         maskLayer.path = path.cgPath
         liveView.layer.mask = maskLayer
         if let ticket = data.lowestPriceTicket {

@@ -36,6 +36,7 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var zeroCaseView: UIView!
     @IBOutlet weak var continueBtnBGView: UIView!
     @IBOutlet weak var eventAddressView: UIView!
+    @IBOutlet weak var venueLogo: UIImageView!
     
     var eventId: String?
     var venueDetails: ClipVenue?
@@ -101,6 +102,7 @@ final class EventDetailVC: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
         mapView.isScrollEnabled = false
+        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
     }
     
     private func setupData() {
@@ -108,14 +110,14 @@ final class EventDetailVC: UIViewController {
         titleLbl.text = event?.title ?? "Untitle Event"
         headerTitleLbl.text = event?.title ?? "Untitle Event"
         venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
-        venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
+        venueNameLbl.text = "\(venueDetails?.name ?? "")"
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         locationLbl.text = venueDetails?.address
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
-        dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
-        timingLbl.text = "• \(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
+        dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
+        timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
         activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         if event?.eventTicket == nil {

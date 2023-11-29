@@ -22,7 +22,7 @@ final class PastPurchasesVisitsViewController: UIViewController {
         getPastPurchases()
         pastPurchasesTableView.delegate = self
         pastPurchasesTableView.dataSource = self
-        pastPurchasesTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        pastPurchasesTableView.register(UINib(nibName: "PurchaseDetailsTVC", bundle: nil), forCellReuseIdentifier: "PurchaseDetailsTVC")
         pastPurchasesTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         pastPurchasesTableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 0)
         pastPurchasesTableView.setupPadding()
@@ -61,30 +61,41 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
         bookings.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        358
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PurchaseDetailsTVC", for: indexPath) as! PurchaseDetailsTVC
         cell.selectionStyle = .none
         if bookings[indexPath.row].eventId == nil {
             if bookings[indexPath.row].isCompedTicket == true, let inviteLink = bookings[indexPath.row].inviteLink {
-                cell.nameLbl.text = inviteLink.name
-                cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
-                cell.upcomingImage.image = Constant.Icon.liveCover
+                cell.eventNameLbl.text = inviteLink.name
+                cell.monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
+                cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
             } else if bookings[indexPath.row].bookingType == "TABLE_BOOKING" {
-                cell.nameLbl.text = Constant.String.tableReservation
-                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
-                cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment.first?.key ?? "").imageURL))
+                cell.eventNameLbl.text = Constant.String.tableReservation
+                cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD)
+                cell.monthLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .MMM)
             } else {
-                cell.nameLbl.text = Constant.String.liveCoverTicket
-                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
-                cell.upcomingImage.image = Constant.Icon.liveCover
+                cell.eventNameLbl.text = Constant.String.liveCoverTicket
+                cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                cell.monthLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
             }
+            cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment.first?.key ?? "").imageURL))
+            cell.venueLogoImageView.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.logo?.key ?? "").imageURL))
+            cell.venueLogoImageView.isHidden = false
         } else {
-            cell.nameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
-            cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD)
-            cell.upcomingImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.eventNameLbl.text = bookings[indexPath.row].event?.title ?? "Untitle Event"
+            cell.dateLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
+            cell.monthLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
+            cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.venueLogoImageView.isHidden = true
         }
-        cell.priceLbl.text = "\(bookings[indexPath.row].venueObject?.name ?? ""), \(bookings[indexPath.row].venueObject?.city ?? "")"
-        cell.priceLbl.textColor = Constant.Color.codea1Color
+        cell.ticketTypeImage.image = bookings[indexPath.row].bookingType == "TABLE_BOOKING" ? UIImage(named: "ic-people-logo") : UIImage(named: "ic-ticket-logo")
+        cell.ticketCountLbl.text = "\(bookings[indexPath.row].bookingHasItem.count)"
+        cell.cityNameLbl.text = bookings[indexPath.row].venueObject?.name
+        cell.setUI()
         return cell
     }
     
