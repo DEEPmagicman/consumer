@@ -45,6 +45,7 @@ struct Booking: Codable {
     var ticketDetails: [TicketDetails]?
     var floorPlanTimeSlotBooking: [TimeSlot]?
     var inviteLink: InviteLink?
+    var fees: PaymentDetail?
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
         var tickets = [BookingHasItem]()
@@ -97,6 +98,7 @@ struct Booking: Codable {
         case ticketDetails = "ticketDetails"
         case floorPlanTimeSlotBooking = "FloorPlanTimeSlotBooking"
         case inviteLink = "InviteLink"
+        case fees
     }
 
     func encode(to encoder: Encoder) throws {
@@ -136,6 +138,7 @@ struct Booking: Codable {
         try container.encode(event, forKey: .event)
         try container.encode(ticketDetails, forKey: .ticketDetails)
         try container.encode(floorPlanTimeSlotBooking, forKey: .floorPlanTimeSlotBooking)
+        try container.encodeIfPresent(fees, forKey: .fees)
     }
 }
 

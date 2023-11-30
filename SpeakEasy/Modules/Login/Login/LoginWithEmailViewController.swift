@@ -11,7 +11,6 @@ class LoginWithEmailViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var emailTopTitle: UILabel!
     @IBOutlet weak var backBtn: UIButton!
     
@@ -36,8 +35,6 @@ class LoginWithEmailViewController: UIViewController {
             emailTopTitle.text = "Enter your email"
             backBtn.setImage(UIImage(named: "BackArrow"), for: .normal)
         }
-        
-        bgImg.isHidden = isFromSettings
     }
 
     @IBAction func onClickBack(_ sender: Any) {

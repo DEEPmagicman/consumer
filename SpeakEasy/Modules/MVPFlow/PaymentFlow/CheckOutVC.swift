@@ -456,7 +456,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             case .completed:
                 self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
                     self.timer.invalidate()
-                    Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                    Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
                 self.startTimer()
@@ -564,7 +564,7 @@ extension CheckOutVC {
         case .success:
             paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
                 self.timer.invalidate()
-                Navigate.to.QRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
             self.startTimer()

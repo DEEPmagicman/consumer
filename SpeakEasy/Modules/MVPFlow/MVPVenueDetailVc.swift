@@ -305,7 +305,7 @@ final class MVPVenueDetailVc: UIViewController {
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {
-                    Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .appClip)
+                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .appClip)
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }

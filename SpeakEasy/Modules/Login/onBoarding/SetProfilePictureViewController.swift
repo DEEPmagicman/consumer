@@ -30,7 +30,7 @@ final class SetProfilePictureViewController: UIViewController {
         
         imageView.cornerRadius = 75
         if (UserDefault.shared.user?.image.key ?? "") != "", let url = URL(string: UserDefault.shared.user?.image.key ?? "") {
-            imageView.sd_setImage(with: url, placeholderImage: Constant.Icon.uploadImage)
+            imageView.sd_setImage(with: url, placeholderImage: Constant.Icon.defaultProfile)
             continueBtn.isUserInteractionEnabled = true
             continueBtn.alpha = 1
         } else {

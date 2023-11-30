@@ -31,6 +31,7 @@ struct Constant {
         static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
         static let liveCover = UIImage(named: "liveCover")
         static let uploadImage = UIImage(named: "uploadImage")
+        static let defaultProfile = UIImage(named: "default-profile")
     }
     
     struct String {

@@ -52,7 +52,7 @@ final class AccountVC: UIViewController {
         }
     }
     private func displayData() {
-        profileImg.sd_setImage(with: URL(string: UserDefault.shared.user?.image.key ?? ""), placeholderImage: Constant.Icon.uploadImage) { [weak self] _, err, _, _ in
+        profileImg.sd_setImage(with: URL(string: UserDefault.shared.user?.image.key ?? ""), placeholderImage: Constant.Icon.defaultProfile) { [weak self] _, err, _, _ in
             self?.profileImg.borderWidth = err == nil ? 2 : 0
         }
         nameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "")"
@@ -226,7 +226,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            Navigate.to.QRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
+            Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: bookings[indexPath.row].eventId == nil ? .appClip : .singleTickedEvent)
         case 1:
             Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id, venueDetail: nil, event: nil)
         default:

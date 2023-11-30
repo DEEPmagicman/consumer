@@ -13,7 +13,6 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var countryCodeTextField: FPNTextField!
     @IBOutlet weak var continueBtn: UIButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
-    @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var contrySelectionView: UIView!    
 
@@ -58,11 +57,6 @@ final class EnterPhoneNumberViewController: UIViewController {
         contrySelectionView.addGestureRecognizer(tap)
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        bgImg.isHidden = isFromSettings
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {

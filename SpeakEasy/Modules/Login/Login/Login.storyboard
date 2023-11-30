@@ -128,7 +128,7 @@
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UV2-fH-BFq">
                                         <rect key="frame" x="20" y="801.5" width="374" height="50.5"/>
-                                        <string key="text">By tapping ‘SIGN IN’ / ‘CREATE ACCOUNT’, you agree to our Terms of Service. Learn how we process your data in our Privacy Policy </string>
+                                        <string key="text">By tapping ‘SIGN IN’ / ‘CREATE ACCOUNT’, you agree to our Terms of Service. Learn how we process your data in our Privacy Policy and Cookies Policy.</string>
                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>

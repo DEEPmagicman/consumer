@@ -259,8 +259,8 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func QRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
-        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(QRCodeVC.self)
+    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ShowQRCodeVC.self)
         vc.booking = booking
         vc.bookingId = bookingId
         vc.delegate = sender as? QRCodeVCNavigationDelegate

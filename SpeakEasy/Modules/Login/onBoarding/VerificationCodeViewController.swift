@@ -14,7 +14,6 @@ final class VerificationCodeViewController: UIViewController {
     @IBOutlet weak var phoneNumLbl: UILabel!
     @IBOutlet weak var otpFieldView: OTPFieldView!
     @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var timerLbl: UILabel!
     @IBOutlet weak var resendBtn: UIButton!
     
@@ -53,11 +52,6 @@ final class VerificationCodeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isFromSettings {
-            bgImg.isHidden = true
-        } else {
-            bgImg.isHidden = false
-        }
         phoneNumLbl.text = "\(countryCode) \(phoneNum)"
     }
     

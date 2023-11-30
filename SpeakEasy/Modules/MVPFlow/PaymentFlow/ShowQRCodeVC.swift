@@ -22,6 +22,22 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var noteView: UIView!
     @IBOutlet weak var noteLbl: UILabel!
+    @IBOutlet weak var ticketCodeView: UIView!
+    @IBOutlet weak var subTotalView: UIView!
+    @IBOutlet weak var subTotalAmount: UILabel!
+    @IBOutlet weak var processingFeeView: UIView!
+    @IBOutlet weak var processingFeeAmount: UILabel!
+    @IBOutlet weak var customFeeView: UIView!
+    @IBOutlet weak var customFeeName: UILabel!
+    @IBOutlet weak var customFeeAmount: UILabel!
+    @IBOutlet weak var salesTaxView: UIView!
+    @IBOutlet weak var salesTaxAmount: UILabel!
+    @IBOutlet weak var totalAmount: UILabel!
+    @IBOutlet weak var noFeeView: UIView!
+    @IBOutlet weak var venueLogo: UIImageView!
+    @IBOutlet weak var monthLbl: UILabel!
+    @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var eventDetailView: UIView!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -29,16 +45,48 @@ final class ShowQRCodeVC: UIViewController {
     private var pass: PKPass?
     private var ticketListHeightObservation: NSKeyValueObservation?
     weak var delegate: QRCodeVCNavigationDelegate?
+    private var venueImgHeightObservation: NSKeyValueObservation?
+    private var gradient: CAGradientLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupData()
+        ticketCodeView.isHidden = true
+        getBooking(id: bookingId)
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
+        ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        ticketListTableView.delegate = self
+        ticketListTableView.dataSource = self
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+        containerView.isUserInteractionEnabled = false
+        containerView.addGestureRecognizer(tapGesture)
+        gradient = venueImg.setGradientColor()
+        venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueImg.setGradientColor()
+        }
+    }
+    
+    @objc func qrImageTapped() {
+        containerView.isUserInteractionEnabled = false
+        flipView()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.flipView()
+            self.containerView.isUserInteractionEnabled = true
+        }
+    }
+    
+    private func flipView() {
+        UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
+            guard let self = self else { return }
+            self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
+            self.qrImage.isHidden = !self.qrImage.isHidden
+        })
     }
     
     private func setupData() {
@@ -48,20 +96,19 @@ final class ShowQRCodeVC: UIViewController {
         if booking?.venueObject?.bookingCode ?? "" != "" {
             containerView.isUserInteractionEnabled = true
         }
+        venueLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL),completed: nil)
         if let booking = booking {
             switch type {
             case .appClip:
                 venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
-//                venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
-//                    dateLbl.isHidden = false
-                    venueNameLbl.isHidden = false
-//                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                    monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
                 } else {
                     titleLbl.text = booking.venueObject?.name
-//                    dateLbl.isHidden = true
-                    venueNameLbl.isHidden = true
+                    monthLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                    dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 }
                 if let note = booking.note, note != "" {
                     noteView.isHidden = false
@@ -69,21 +116,21 @@ final class ShowQRCodeVC: UIViewController {
                 } else {
                     noteView.isHidden = true
                 }
-//                venueImgHeightConstraint.constant = 320
-//                QRToImgBottomConstraint.constant = -100
+                venueNameLbl.text = booking.venueObject?.city
+                venueLogo.isHidden = false
+                eventDetailView.isHidden = true
             case .singleTickedEvent:
-                venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL),completed: nil)
+                venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
                 titleLbl.text = booking.event?.title
-//                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
-//                dateLbl.isHidden = false
-                venueNameLbl.text = booking.venueObject?.name
-                venueNameLbl.isHidden = false
-//                venueImgHeightConstraint.constant = 390
-//                QRToImgBottomConstraint.constant = -170
+                monthLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                venueNameLbl.text = "\(booking.venueObject?.name ?? ""), \(booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
+                venueLogo.isHidden = true
+                eventDetailView.isHidden = false
             case .tieredTickedEvent:
                 break
             }
-            venueNameLbl.text = booking.venueObject?.name
+//            venueNameLbl.text = booking.venueObject?.name
         }
     }
     
@@ -150,6 +197,43 @@ final class ShowQRCodeVC: UIViewController {
                 self.present(vc, animated: true)
             }
         }
+    }
+    
+    private func getBooking(id: String) {
+        Loader.show()
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+            Loader.hide()
+            guard let self = self else { return }
+            if isSuccess {
+                self.booking = booking
+                self.setupData()
+                self.setFeeData()
+                self.ticketListTableView.reloadData()
+            } else {
+                self.eventDetailView.isHidden = true
+            }
+        }
+    }
+    
+    private func setFeeData() {
+        
+        if booking?.event?.upfront == true {
+            subTotalView.isHidden = true
+            
+        }
+        
+        subTotalView.isHidden = subTotalView.isHidden == true || booking?.fees?.subTotal == booking?.fees?.total
+        subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
+        salesTaxView.isHidden = subTotalView.isHidden == true || booking?.fees?.salesTax == 0
+        salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
+        processingFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.processingFee == 0
+        processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
+        customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
+        customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
+        customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
+        totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
+        noFeeView.isHidden = !(subTotalView.isHidden && salesTaxView.isHidden && processingFeeView.isHidden && customFeeView.isHidden)
+        totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
     }
     
     @IBAction func onClickClose(_ sender: Any) {

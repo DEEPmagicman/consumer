@@ -20,7 +20,7 @@ final class SignInOptionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy"], size: 12, textColor: .white, addUnderLine: true)
+        self.byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy", "Cookies Policy"], size: 12, textColor: .white, addUnderLine: true)
     }
     
     @IBAction func onClickSignInWithApple(_ sender: Any) {

@@ -249,7 +249,7 @@ final class EventDetailVC: UIViewController {
                 }
                 Loader.hide()
                 if isSuccess, let id = id {
-                    Navigate.to.QRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
+                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }

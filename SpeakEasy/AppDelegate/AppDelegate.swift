@@ -127,8 +127,9 @@ extension AppDelegate {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
-        home.tabBarItem.image              = UIImage(named :"Home")?.withRenderingMode(.alwaysOriginal)
-        home.tabBarItem.selectedImage      = UIImage(named :"HomeSelected")?.withRenderingMode(.alwaysOriginal)
+        home.tabBarItem.image              = UIImage(named :"ic-home")?.withRenderingMode(.alwaysOriginal)
+        home.tabBarItem.selectedImage      = UIImage(named :"ic-home1")?.withRenderingMode(.alwaysTemplate)
+        home.tabBarItem.standardAppearance?.selectionIndicatorTintColor = .white
         let homeNavigation = UINavigationController(rootViewController: home)
         homeNavigation.navigationBar.isHidden = true
         var myAccount = UIViewController()
@@ -137,8 +138,9 @@ extension AppDelegate {
         } else {
             myAccount = StoryboardAndXibManager.StoryBoard.account.instantiateVC(AccountVC.self)
         }
-        myAccount.tabBarItem.image         = UIImage(named :"MyAccount")?.withRenderingMode(.alwaysOriginal)
-        myAccount.tabBarItem.selectedImage = UIImage(named :"MyAccountSelected")?.withRenderingMode(.alwaysOriginal)
+        myAccount.tabBarItem.image         = UIImage(named :"ic-person")?.withRenderingMode(.alwaysOriginal)
+        myAccount.tabBarItem.selectedImage = UIImage(named :"ic-person1")?.withRenderingMode(.alwaysTemplate)
+        UITabBar.appearance().tintColor = .white
         let myAccountNavigation = UINavigationController(rootViewController: myAccount)
         myAccountNavigation.navigationBar.isHidden = true
 
@@ -168,7 +170,7 @@ extension AppDelegate {
         case .inviteLink:
             inviteLinkNav(home, id: id)
         case .booking:
-            Navigate.to.QRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
+            Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
         }
     }
     

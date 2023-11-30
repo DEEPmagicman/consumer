@@ -14,7 +14,7 @@ final class StartScreenViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy"], size: 12, textColor: .white, addUnderLine: true)
+        byTappingInfoLbl.highlightBold(["Terms of Service", "Privacy Policy", "Cookies Policy"], size: 12, textColor: .white, addUnderLine: true)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
         byTappingInfoLbl.addGestureRecognizer(tapGesture)
         byTappingInfoLbl.isUserInteractionEnabled = true
@@ -26,6 +26,10 @@ final class StartScreenViewController: UIViewController {
         }
         
         if let range = byTappingInfoLbl.text?.range(of: "Privacy Policy")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
+            Navigate.externalURL(APIBuilder.privacyConsumerURL)
+        }
+        
+        if let range = byTappingInfoLbl.text?.range(of: "Cookies Policy")?.nsRange, sender.didTapAttributedTextInLabel(label: byTappingInfoLbl, inRange: range) {
             Navigate.externalURL(APIBuilder.privacyConsumerURL)
         }
     }
