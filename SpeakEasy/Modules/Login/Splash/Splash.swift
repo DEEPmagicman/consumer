@@ -11,9 +11,11 @@ import Hero
 final class Splash: UIViewController {
 
     @IBOutlet weak var imgLogo: UIImageView!
+    @IBOutlet weak var logoTopConstraint: NSLayoutConstraint!
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logoTopConstraint.constant = (UIScreen.main.bounds.height / 2) - 52
         self.animateLogo()
     }
 }
@@ -22,14 +24,9 @@ final class Splash: UIViewController {
 extension Splash {
     private func animateLogo() {
         UIView.animate(withDuration: 1.0, animations: {() -> Void in
-            self.imgLogo?.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }, completion: {(_ finished: Bool) -> Void in
-            UIView.animate(withDuration: 1.0, animations: {() -> Void in
-                self.imgLogo?.transform = CGAffineTransform(scaleX: 1, y: 1)
-            }) { _ in
                 sleep(1)
                 AppDelegate.shared.changeRootViewController()
-            }
         })
     }
 }

@@ -123,13 +123,13 @@ final class MVPVenueDetailVc: UIViewController {
             self.openingTableHeight.constant = self.openingHoursTableView.contentSize.height
             self.openingHoursTableView.layoutIfNeeded()
         }
-        upcomingTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        upcomingTableView.register(UINib(nibName: "PurchaseDetailsTVC", bundle: nil), forCellReuseIdentifier: "PurchaseDetailsTVC")
         upcomingHeightObservation = upcomingTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.upcomingTableHeight.constant = self.upcomingTableView.contentSize.height
             self.upcomingTableView.layoutIfNeeded()
         }
-        todaysEventTableView.register(UINib(nibName: "DetailTVC", bundle: nil), forCellReuseIdentifier: "DetailTVC")
+        todaysEventTableView.register(UINib(nibName: "PurchaseDetailsTVC", bundle: nil), forCellReuseIdentifier: "PurchaseDetailsTVC")
         todaysEventHeightObservation = todaysEventTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.todaysEventTableHeight.constant = self.todaysEventTableView.contentSize.height
@@ -395,44 +395,58 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.setData(venueDetails?.openHours[indexPath.row], timezone: venueDetails?.useTimezone ?? "")
             return cell
         case upcomingTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PurchaseDetailsTVC", for: indexPath) as! PurchaseDetailsTVC
             let event = self.events[indexPath.row]
-            cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = event.title
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.eventNameLbl.text = event.title
+            
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            
+            
             if event.isPausedSellingAllTickets {
-                cell.priceLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused
             } else if event.isSoldOutAllTickets {
-                cell.priceLbl.text = Constant.String.soldOut
+                cell.ticketCountLbl.text = Constant.String.soldOut
             } else if event.eventTicket?.count ?? 0 == 0 {
-                cell.priceLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused
             } else {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
-                    cell.priceLbl.text = "Starting from FREE"
+                    cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))"
+                    cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
+                    cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
                 }
             }
+            cell.cityNameLbl.text = venueDetails?.name
+            cell.imageWidth.constant = 0
+            cell.setUI()
+            cell.layoutIfNeeded()
             return cell
         case todaysEventTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailTVC", for: indexPath) as! DetailTVC
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PurchaseDetailsTVC", for: indexPath) as! PurchaseDetailsTVC
             let event = self.todaysEvents[indexPath.row]
-            cell.upcomingImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = event.title
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.eventNameLbl.text = event.title
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
             if event.isPausedSellingAllTickets {
-                cell.priceLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused
             } else if event.isSoldOutAllTickets {
-                cell.priceLbl.text = Constant.String.soldOut
+                cell.ticketCountLbl.text = Constant.String.soldOut
             } else if event.eventTicket?.count ?? 0 == 0 {
-                cell.priceLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused
             } else {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
-                    cell.priceLbl.text = "Starting from FREE"
+                    cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.priceLbl.text = "Starting at \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))"
+                    cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
+                    cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
                 }
             }
+            cell.cityNameLbl.text = venueDetails?.name
+            cell.imageWidth.constant = 0
+            cell.setUI()
             return cell
         default:
             return UITableViewCell()

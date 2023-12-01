@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Splash" customModule="SpeakEasy_Consumer" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Splash" customModule="Speakeasy" customModuleProvider="target">
             <connections>
                 <outlet property="imgLogo" destination="qvI-kU-PYa" id="49z-lM-mPV"/>
+                <outlet property="logoTopConstraint" destination="dza-m1-djU" id="eMu-FK-3Gk"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -18,29 +20,36 @@
             <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="qvI-kU-PYa">
-                    <rect key="frame" x="34" y="342" width="322" height="160"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="qvI-kU-PYa" secondAttribute="height" multiplier="292:145" id="c73-JO-iOl"/>
-                    </constraints>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="newSpeakeasy" translatesAutoresizingMaskIntoConstraints="NO" id="qvI-kU-PYa">
+                    <rect key="frame" x="49" y="72" width="292" height="80"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabled" value="YES"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="isHeroEnabledForSubviews" value="YES"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="Logo"/>
                     </userDefinedRuntimeAttributes>
                 </imageView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="livelifelive" translatesAutoresizingMaskIntoConstraints="NO" id="pba-Lw-OI0">
+                    <rect key="frame" x="134.33333333333334" y="144" width="121.33333333333334" height="24"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="2"/>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" red="0.054901950060000003" green="0.054901950060000003" blue="0.054901950060000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
-                <constraint firstItem="qvI-kU-PYa" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="8b1-s9-Yfl"/>
-                <constraint firstItem="qvI-kU-PYa" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.825" id="GNu-FS-xJU"/>
+                <constraint firstItem="pba-Lw-OI0" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="76o-sS-m1o"/>
+                <constraint firstItem="qvI-kU-PYa" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="49" id="Oca-G8-vQS"/>
+                <constraint firstItem="pba-Lw-OI0" firstAttribute="top" secondItem="qvI-kU-PYa" secondAttribute="bottom" constant="-8" id="QO6-8V-QNd"/>
+                <constraint firstItem="qvI-kU-PYa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="72" id="dza-m1-djU"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qvI-kU-PYa" secondAttribute="trailing" constant="49" id="g3p-50-CvL"/>
                 <constraint firstItem="qvI-kU-PYa" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="wpW-vT-hQR"/>
             </constraints>
             <point key="canvasLocation" x="139" y="118"/>
         </view>
     </objects>
     <resources>
-        <image name="Logo" width="292" height="145"/>
+        <image name="livelifelive" width="121.33333587646484" height="24"/>
+        <image name="newSpeakeasy" width="308" height="80"/>
     </resources>
 </document>

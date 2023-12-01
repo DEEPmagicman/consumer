@@ -8,12 +8,10 @@
 import UIKit
 import CoreLocation
 
-final class SelectCityViewController: UIViewController, UITextFieldDelegate {
+final class SelectCityViewController: UIViewController {
 
     @IBOutlet weak var selectCityInfoLbl: UILabel!
     @IBOutlet weak var selectCityTableView: UITableView!
-    @IBOutlet weak var continueBtn: UIButton!
-    @IBOutlet weak var searchTextField: UITextField!
     
     private let locationManager = CLLocationManager()
     var userLocationCity = ""
@@ -22,20 +20,10 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
     private var selectedCity = ""
     private var presenter = OnBoardingPresenter()
     private var mvpPresenter = MVPPresenter()
-//    private var from = 0
-//    private var hasMore = false
-//    private var searchText = ""
-    private var lastSearch = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        continueBtn.isUserInteractionEnabled = false
-        continueBtn.alpha = 0.5
-        selectCityInfoLbl.highlightBold([Constant.String.enableLocationServices], size: 15, textColor: Constant.Color.purpleColor)
-        
         selectCityTableView.register(UINib(nibName: "CitySelectionTableCell", bundle: nil), forCellReuseIdentifier: "CitySelectionTableCell")
-        searchTextField.delegate = self
-        searchTextField.addTarget(self, action: #selector(searchFieldTextChange), for: .editingChanged)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickEnableLocation(_:)))
         selectCityInfoLbl.addGestureRecognizer(tapGesture)
@@ -57,8 +45,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
                     list.value == self.userLocationCity
                 }) {
                     self.selectedCity = self.userLocationCity
-                    self.continueBtn.isUserInteractionEnabled = true
-                    self.continueBtn.alpha = 1
+                    self.onClickContinue()
                 }
                 self.selectCityTableView.reloadData()
             } else {
@@ -66,28 +53,6 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
             }
             Loader.hide()
         }
-        // TODO: check and remove old city API
-//        self.presenter.getCityListAPi(from: from, searchText: searchText) { [weak self] cityList, hasMore, isSuccess in
-//            guard let self = self else {
-//                Loader.hide()
-//                return
-//            }
-//            if isSuccess {
-//                for city in cityList {
-//                    if city.isDeleted == false {
-//                        self.arrCityList.append(city)
-//                    }
-//                }
-//                if hasMore {
-//                    self.from = self.arrCityList.count
-//                    self.hasMore = hasMore
-//                }
-//                self.selectCityTableView.reloadData()
-//            } else {
-//                Alert.showAlertSheet(style: .alert, title: "city Not Found", message: "")
-//            }
-//            Loader.hide()
-//        }
     }
     
     @objc private func onClickEnableLocation(_ sender: UITapGestureRecognizer) {
@@ -105,29 +70,7 @@ final class SelectCityViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @objc func searchFieldTextChange() {
-        // TODO: search for city flow with API check once
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(updateSearch), object: lastSearch)
-        lastSearch = searchTextField.text ?? ""
-        self.perform(#selector(updateSearch), with: lastSearch, afterDelay: 0.5)
-    }
-    
-    @objc private func updateSearch(_ text: String) {
-//        self.from = 0
-//        self.searchText = text
-//        self.arrCityList.removeAll()
-//        self.selectCityTableView.reloadData()
-//        self.hasMore = false
-//        self.fetchCityList()
-        if text == "" {
-            displayList = arrCityList
-        } else {
-            displayList = arrCityList.filter { $0.value.lowercased().contains(text.lowercased()) }
-        }
-        selectCityTableView.reloadData()
-    }
-    
-    @IBAction func onClickContinue(_ sender: Any) {
+     func onClickContinue() {
         presenter.editUserProfileApi(city: self.selectedCity, isProfileCompleted: true) { [weak self] isSuccess,errorMsg  in
             guard let self = self else {
                 Loader.hide()
@@ -178,8 +121,9 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCity = displayList[indexPath.row].value
         selectCityTableView.reloadData()
-        continueBtn.isUserInteractionEnabled = true
-        continueBtn.alpha = 1
+        onClickContinue()
+//        continueBtn.isUserInteractionEnabled = true
+//        continueBtn.alpha = 1
     }
     
 //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

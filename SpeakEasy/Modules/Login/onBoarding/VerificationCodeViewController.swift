@@ -62,8 +62,8 @@ final class VerificationCodeViewController: UIViewController {
         otpFieldView.cursorColor = Constant.Color.purpleColor
         otpFieldView.filledBorderColor = Constant.Color.purpleColor
         otpFieldView.displayType = .underlinedBottom
-        otpFieldView.fieldSize = 40
-        otpFieldView.separatorSpace = 8
+        otpFieldView.fieldSize = 50
+        otpFieldView.separatorSpace = 9
         otpFieldView.shouldAllowIntermediateEditing = false
         otpFieldView.initializeUI()
     }

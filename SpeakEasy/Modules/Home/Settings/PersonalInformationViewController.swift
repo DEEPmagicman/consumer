@@ -6,22 +6,21 @@
 //
 
 import UIKit
-import DropDown
+//import DropDown
 
 final class PersonalInformationViewController: UIViewController {
 
     @IBOutlet weak var firstNameTF: UITextField!
     @IBOutlet weak var lastNameTF: UITextField!
-    @IBOutlet weak var nickNameTF: UITextField!
-    @IBOutlet weak var genderTF: UITextField!
     @IBOutlet weak var dateOfBirthTF: UITextField!
     @IBOutlet weak var emailTF: UITextField!
     @IBOutlet weak var phoneNumberTF: UITextField!
-    @IBOutlet weak var genderBtn: UIButton!
+    @IBOutlet weak var femaleBtn: UIButton!
+    @IBOutlet weak var maleBtn: UIButton!
+    @IBOutlet weak var otherBtn: UIButton!
     
-    private let genderDropDown = DropDown()
     private var presenter = OnBoardingPresenter()
-    
+    var gender = ""
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -30,8 +29,6 @@ final class PersonalInformationViewController: UIViewController {
         super.viewWillAppear(animated)
         firstNameTF.text = UserDefault.shared.user?.firstName
         lastNameTF.text = UserDefault.shared.user?.lastName
-        nickNameTF.text = UserDefault.shared.user?.nickName
-        genderTF.text = UserDefault.shared.user?.gender.capitalized
         dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
         if (UserDefault.shared.user?.email ?? "") == "" {
             emailTF.text =  UserDefault.shared.user?.additionalEmail
@@ -39,6 +36,19 @@ final class PersonalInformationViewController: UIViewController {
             emailTF.text = UserDefault.shared.user?.email
         }
         phoneNumberTF.text = UserDefault.shared.user?.phone
+        
+        maleBtn.setTitleColor(.white, for: .selected)
+        femaleBtn.setTitleColor(.white, for: .selected)
+        otherBtn.setTitleColor(.white, for: .selected)
+        if let userGender = UserDefault.shared.user?.gender.capitalized, userGender == "Male" {
+            maleBtn.isSelected = true
+            gender = userGender.uppercased()
+        } else {
+            femaleBtn.isSelected = UserDefault.shared.user?.gender.capitalized == "Female" ? true : false
+            gender = UserDefault.shared.user?.gender.capitalized == "Female" ? "Female".uppercased() : "Male".uppercased()
+            otherBtn.isSelected = UserDefault.shared.user?.gender.capitalized == "Other" ? true : false
+        }
+        setGenderViewUI()
     }
 
     @IBAction func onClickBack(_ sender: Any) {
@@ -50,15 +60,14 @@ final class PersonalInformationViewController: UIViewController {
             Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
             return
         }
-        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: nickNameTF.text ?? "", dob: date, gender: genderTF.text?.uppercased()) { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: "", dob: date, gender: gender) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTF.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
-                UserDefault.shared.user?.nickName = self.nickNameTF.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = date
-                UserDefault.shared.user?.gender = self.genderTF.text ?? ""
+                UserDefault.shared.user?.gender = self.gender
                 Navigate.to.back(self)
             } else {
                 if errorMsg != nil {
@@ -82,35 +91,31 @@ final class PersonalInformationViewController: UIViewController {
         Navigate.to.enterPhoneNumVc(self, isFromSettings: true)
      }
     
-    @IBAction func onClickGenderDropdown(_ sender: Any) {
-        genderSelectionDropDown()
-        genderDropDown.show()
+    @IBAction func onClickGenderSelect(_ sender: UIButton) {
+        femaleBtn.isSelected = sender.tag == 0 ? true : false
+        maleBtn.isSelected = sender.tag == 1 ? true : false
+        otherBtn.isSelected = sender.tag == 2 ? true : false
+        setGenderViewUI()
     }
     
-    private func genderSelectionDropDown() {
-        genderDropDown.anchorView = genderBtn
-        genderDropDown.bottomOffset = CGPoint(x: -8, y: genderBtn.bounds.height + 7)
-        genderDropDown.cellHeight = 40
-        genderDropDown.selectionBackgroundColor = .clear
-        genderDropDown.selectedTextColor = .white
-        genderDropDown.textColor = .white
-        genderDropDown.shadowRadius = 2
-        genderDropDown.shadowOpacity = 0.7
-        genderDropDown.shadowColor = .black
-        genderDropDown.backgroundColor = Constant.Color.code2Fcolor
-        genderDropDown.textFont = Fonts.poppinsRegular(15)
-        genderDropDown.dataSource = Constant.String.genderList
-        genderDropDown.width = genderBtn.bounds.width + 20
-        genderDropDown.cellNib = CustomDropDownCell.nib
-        genderDropDown.selectionAction = { [weak self] (index, item) in
-            self?.genderTF.text = item
+    private func setGenderViewUI() {
+        femaleBtn.backgroundColor = .clear
+        maleBtn.backgroundColor = .clear
+        otherBtn.backgroundColor = .clear
+        if femaleBtn.isSelected {
+            femaleBtn.backgroundColor = .black
+            gender = "FEMALE"
         }
-        genderDropDown.customCellConfiguration = {(index: Index, item: String, cell: DropDownCell) in
-        guard let cell = cell as? CustomDropDownCell else { return }
-            cell.optionLabel.textAlignment = .left
-            cell.separatorView.isHidden = index == Constant.String.genderList.count - 1
+        if maleBtn.isSelected {
+            maleBtn.backgroundColor = .black
+            gender = "MALE"
+        }
+        if otherBtn.isSelected {
+            otherBtn.backgroundColor = .black
+            gender = "OTHER"
         }
     }
+    
 }
 
 extension PersonalInformationViewController: DateSelectionDelegate {

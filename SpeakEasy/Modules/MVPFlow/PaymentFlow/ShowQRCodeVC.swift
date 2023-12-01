@@ -38,6 +38,11 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var monthLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var eventDetailView: UIView!
+    @IBOutlet weak var eventTicketDetailsView: UIView!
+    @IBOutlet weak var coverTicketDetailsView: UIView!
+    @IBOutlet weak var coverTicketLogo: UIImageView!
+    @IBOutlet weak var coverTicketDate: UILabel!
+    @IBOutlet weak var coverTicketCity: UILabel!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -97,6 +102,7 @@ final class ShowQRCodeVC: UIViewController {
             containerView.isUserInteractionEnabled = true
         }
         venueLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL),completed: nil)
+        coverTicketLogo.sd_setImage(with: URL(string: (booking?.venueObject?.logo?.key ?? "").imageURL),completed: nil)
         if let booking = booking {
             switch type {
             case .appClip:
@@ -117,7 +123,11 @@ final class ShowQRCodeVC: UIViewController {
                     noteView.isHidden = true
                 }
                 venueNameLbl.text = booking.venueObject?.city
+                coverTicketCity.text = "\(booking.venueObject?.name ?? ""), \(booking.venueObject?.city ?? "")"
+                coverTicketDate.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 venueLogo.isHidden = false
+                eventTicketDetailsView.isHidden = true
+                coverTicketDetailsView.isHidden = false
                 eventDetailView.isHidden = true
             case .singleTickedEvent:
                 venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -126,6 +136,8 @@ final class ShowQRCodeVC: UIViewController {
                 dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 venueNameLbl.text = "\(booking.venueObject?.name ?? ""), \(booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
                 venueLogo.isHidden = true
+                eventTicketDetailsView.isHidden = false
+                coverTicketDetailsView.isHidden = true
                 eventDetailView.isHidden = false
             case .tieredTickedEvent:
                 break

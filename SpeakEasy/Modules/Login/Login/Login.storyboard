@@ -45,7 +45,7 @@
                                         <rect key="frame" x="146.5" y="144" width="121.5" height="24"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9w2-7j-xNV">
-                                        <rect key="frame" x="48" y="725.5" width="318" height="26"/>
+                                        <rect key="frame" x="48" y="745.5" width="318" height="26"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="26" id="3EA-XI-4zd"/>
                                         </constraints>
@@ -58,7 +58,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m9j-54-p7e">
-                                        <rect key="frame" x="20" y="655.5" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="667.5" width="374" height="48"/>
                                         <color key="backgroundColor" name="primaryBlue"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="gRU-UW-Ogi"/>
@@ -78,7 +78,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="ASAuthorizationAppleIDButton" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="19s-p8-giF">
-                                        <rect key="frame" x="20" y="529.5" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="541.5" width="374" height="48"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <accessibility key="accessibilityConfiguration" identifier="ASAuthorizationAppleIDButton"/>
                                         <constraints>
@@ -103,7 +103,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zie-20-pap">
-                                        <rect key="frame" x="20" y="592.5" width="374" height="48"/>
+                                        <rect key="frame" x="20" y="604.5" width="374" height="48"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="GNJ-oZ-Qc8"/>
@@ -145,7 +145,7 @@
                                     <constraint firstItem="Zie-20-pap" firstAttribute="leading" secondItem="oxS-Ze-3w5" secondAttribute="leading" constant="20" id="Ub6-HJ-CX7"/>
                                     <constraint firstItem="01y-Bm-qyY" firstAttribute="top" secondItem="IIY-8o-JY1" secondAttribute="bottom" constant="-8" id="Xtc-NH-350"/>
                                     <constraint firstAttribute="bottom" secondItem="UV2-fH-BFq" secondAttribute="bottom" constant="44" id="YVl-7Y-fnV"/>
-                                    <constraint firstItem="UV2-fH-BFq" firstAttribute="top" secondItem="9w2-7j-xNV" secondAttribute="bottom" constant="50" id="ZgT-5x-rf1"/>
+                                    <constraint firstItem="UV2-fH-BFq" firstAttribute="top" secondItem="9w2-7j-xNV" secondAttribute="bottom" constant="30" id="ZgT-5x-rf1"/>
                                     <constraint firstAttribute="trailing" secondItem="9w2-7j-xNV" secondAttribute="trailing" constant="48" id="dZB-5N-leS"/>
                                     <constraint firstItem="9w2-7j-xNV" firstAttribute="leading" secondItem="oxS-Ze-3w5" secondAttribute="leading" constant="48" id="ilo-ok-sxv"/>
                                     <constraint firstAttribute="trailing" secondItem="m9j-54-p7e" secondAttribute="trailing" constant="20" id="lip-w6-kpx"/>
@@ -155,7 +155,7 @@
                                     <constraint firstItem="IIY-8o-JY1" firstAttribute="leading" secondItem="oxS-Ze-3w5" secondAttribute="leading" constant="49" id="rV0-b9-ggy"/>
                                     <constraint firstItem="01y-Bm-qyY" firstAttribute="centerX" secondItem="oxS-Ze-3w5" secondAttribute="centerX" id="sCb-hn-CB4"/>
                                     <constraint firstItem="m9j-54-p7e" firstAttribute="top" secondItem="Zie-20-pap" secondAttribute="bottom" constant="15" id="uEg-c4-tNR"/>
-                                    <constraint firstItem="9w2-7j-xNV" firstAttribute="top" secondItem="m9j-54-p7e" secondAttribute="bottom" constant="22" id="x67-vU-fmX"/>
+                                    <constraint firstItem="9w2-7j-xNV" firstAttribute="top" secondItem="m9j-54-p7e" secondAttribute="bottom" constant="30" id="x67-vU-fmX"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -540,7 +540,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reset Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XmY-EY-y63">
-                                        <rect key="frame" x="20" y="52" width="200" height="38"/>
+                                        <rect key="frame" x="20" y="52" width="203" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="38" id="yUV-Qi-tdw"/>
                                         </constraints>

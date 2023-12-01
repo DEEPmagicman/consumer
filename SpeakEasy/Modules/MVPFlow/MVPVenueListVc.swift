@@ -46,8 +46,8 @@ final class MVPVenueListVc: UIViewController {
         venueListTableView.addSubview(refresh)
         WebSocketWrapper.shared.delegate.append(self)
         venueListTableView.setupPadding()
-        cityNameLbl.text = UserDefault.shared.localCity
-        cityLbl.text = UserDefault.shared.localCity
+        cityNameLbl.text = UserDefault.shared.localCity.uppercased()
+        cityLbl.text = UserDefault.shared.localCity.uppercased()
         
         if UserDefault.shared.defaultCitySelected == false {
             self.locationManager.requestWhenInUseAuthorization()
@@ -249,8 +249,8 @@ extension MVPVenueListVc: WebSocketCallBackDelegate {
 extension MVPVenueListVc: CitySelectionDelegate {
     func citySelected(city: String) {
         refreshData()
-        cityNameLbl.text = UserDefault.shared.localCity
-        cityLbl.text = UserDefault.shared.localCity
+        cityNameLbl.text = UserDefault.shared.localCity.uppercased()
+        cityLbl.text = UserDefault.shared.localCity.uppercased()
     }
 }
 
@@ -274,8 +274,8 @@ extension MVPVenueListVc: CLLocationManagerDelegate {
                 if let city = cityList.first(where: { $0.value == userCity }) {
                     UserDefault.shared.localCity = city.value
                     self.refreshData()
-                    self.cityNameLbl.text = UserDefault.shared.localCity
-                    self.cityLbl.text = UserDefault.shared.localCity
+                    self.cityNameLbl.text = UserDefault.shared.localCity.uppercased()
+                    self.cityLbl.text = UserDefault.shared.localCity.uppercased()
                 }
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")

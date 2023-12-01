@@ -18,6 +18,7 @@ class PurchaseDetailsTVC: UITableViewCell {
     @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var blurView: UIView!
     @IBOutlet weak var venueLogoImageView: UIImageView!
+    @IBOutlet weak var imageWidth: NSLayoutConstraint!
     
     private var venueImgHeightObservation: NSKeyValueObservation?
     private var gradient: CAGradientLayer?
