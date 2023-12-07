@@ -32,7 +32,7 @@ final class EnterNameViewController: UIViewController {
         lastNameTextField.text = UserDefault.shared.user?.lastName
         DOBTextField.text = UserDefault.shared.user?.dateOfBirth
         if let userGender = UserDefault.shared.user?.gender.capitalized {
-            gender = userGender
+            gender = userGender.uppercased()
         }
         maleBtn.setTitleColor(.white, for: .selected)
         femaleBtn.setTitleColor(.white, for: .selected)
@@ -67,15 +67,15 @@ final class EnterNameViewController: UIViewController {
         otherBtn.backgroundColor = .clear
         if femaleBtn.isSelected {
             femaleBtn.backgroundColor = .black
-            gender = "Female"
+            gender = "FEMALE"
         }
         if maleBtn.isSelected {
             maleBtn.backgroundColor = .black
-            gender = "Male"
+            gender = "MALE"
         }
         if otherBtn.isSelected {
             otherBtn.backgroundColor = .black
-            gender = "Other"
+            gender = "OTHER"
         }
         continueBtnValidation(isValid: validateFields)
     }

@@ -18,7 +18,7 @@ struct Stripe {
 struct SharedURL {
     #if DEBUG
         static let baseURL = "https://stage.speakeasygo.com"
-        static let webBaseURL = "https://speakeasy-stage-web-consumer.vercel.app"
+        static let webBaseURL = "https://stage-consumer.speakeasygo.com"
     #else
         static let baseURL = "https://api.speakeasygo.com"
         static let webBaseURL = "https://speakeasygo.com"

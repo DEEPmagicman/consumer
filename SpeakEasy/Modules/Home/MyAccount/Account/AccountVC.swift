@@ -286,4 +286,8 @@ extension AccountVC: QRCodeVCNavigationDelegate {
     func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) {
         Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
     }
+    
+    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) {
+        Navigate.to.MVPVenueDetailViewController(self, venueId: venueId, venueUniqueId: venueUniqueId, venueTimeZone: venueTimeZone)
+    }
 }

@@ -43,6 +43,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var coverTicketLogo: UIImageView!
     @IBOutlet weak var coverTicketDate: UILabel!
     @IBOutlet weak var coverTicketCity: UILabel!
+    @IBOutlet weak var ticketTypeLbl: UILabel!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -128,7 +129,7 @@ final class ShowQRCodeVC: UIViewController {
                 venueLogo.isHidden = false
                 eventTicketDetailsView.isHidden = true
                 coverTicketDetailsView.isHidden = false
-                eventDetailView.isHidden = true
+                ticketTypeLbl.text = "Venue Details"
             case .singleTickedEvent:
                 venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
                 titleLbl.text = booking.event?.title
@@ -138,7 +139,7 @@ final class ShowQRCodeVC: UIViewController {
                 venueLogo.isHidden = true
                 eventTicketDetailsView.isHidden = false
                 coverTicketDetailsView.isHidden = true
-                eventDetailView.isHidden = false
+                ticketTypeLbl.text = "Event Details"
             case .tieredTickedEvent:
                 break
             }
@@ -253,8 +254,16 @@ final class ShowQRCodeVC: UIViewController {
     }
     
     @IBAction func onClickEventDetails(_ sender: Any) {
-        delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
-        dismiss(animated: true)
+        switch type {
+        case .appClip:
+            delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+            dismiss(animated: true)
+        case .singleTickedEvent:
+            delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
+            dismiss(animated: true)
+        case .tieredTickedEvent:
+            break
+        }
     }
     
     @IBAction func onClickNeedSupport(_ sender: Any) {

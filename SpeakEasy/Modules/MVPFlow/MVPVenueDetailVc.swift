@@ -49,6 +49,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet private weak var zeroCaseView: UIView!
     @IBOutlet weak var venuePageTitleView: UIView!
     @IBOutlet weak var venueLogo: UIImageView!
+    @IBOutlet weak var VIPTableView: UIView!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -463,6 +464,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 Alert.showToast("Max ticket selection reached")
                 return
             }
+            VIPTableView.isHidden = true
             continueBtn.isHidden = false
             scrollViewBottomConstraint.constant = 90
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
@@ -543,16 +545,19 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                     self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
                 }
                 if self.venueDetails?.availableTimeSlot ?? false {
-                    self.continueBtn.isHidden = false
+                    self.continueBtn.isHidden = true
+                    self.VIPTableView.isHidden = false
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
-                    self.continueBtn.isHidden = true
+                    self.VIPTableView.isHidden = true
+                    self.continueBtn.isHidden = false
                 }
                 self.scrollViewBottomConstraint.constant = 30
                 self.ticketTypeTableView.reloadData()
                 return
             }
             self.continueBtn.isHidden = false
+            self.VIPTableView.isHidden = true
             switch self.selectedType {
             case .FREE:
                 self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)

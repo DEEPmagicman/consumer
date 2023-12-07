@@ -50,6 +50,13 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-cam" translatesAutoresizingMaskIntoConstraints="NO" id="aqp-iq-0tT">
+                                            <rect key="frame" x="59" y="59" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="ih8-Id-BS8"/>
+                                                <constraint firstAttribute="width" constant="20" id="laB-FL-Xn5"/>
+                                            </constraints>
+                                        </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YDX-LM-OK3">
                                             <rect key="frame" x="104" y="10" width="278" height="0.0"/>
                                             <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="22"/>
@@ -83,8 +90,10 @@
                                         <constraint firstItem="YAz-Xg-Vfj" firstAttribute="bottom" secondItem="XCx-Ec-DMq" secondAttribute="bottom" constant="-1" id="fUq-9g-Ogu"/>
                                         <constraint firstItem="YDX-LM-OK3" firstAttribute="leading" secondItem="RlX-2j-QRJ" secondAttribute="trailing" constant="23" id="gkX-kK-5JV"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XCx-Ec-DMq" secondAttribute="trailing" id="ia8-QJ-24b"/>
+                                        <constraint firstItem="aqp-iq-0tT" firstAttribute="trailing" secondItem="RlX-2j-QRJ" secondAttribute="trailing" constant="-2" id="lRy-4T-OQS"/>
                                         <constraint firstItem="YDX-LM-OK3" firstAttribute="top" secondItem="RlX-2j-QRJ" secondAttribute="top" constant="10" id="mbv-ov-1Em"/>
                                         <constraint firstItem="YAz-Xg-Vfj" firstAttribute="trailing" secondItem="XCx-Ec-DMq" secondAttribute="trailing" id="nSM-8Z-jKO"/>
+                                        <constraint firstItem="aqp-iq-0tT" firstAttribute="bottom" secondItem="RlX-2j-QRJ" secondAttribute="bottom" constant="-2" id="t3P-xN-3qN"/>
                                     </constraints>
                                 </view>
                                 <connections>
@@ -168,7 +177,8 @@
     </scenes>
     <resources>
         <image name="Ic-share" width="35" height="35"/>
-        <image name="default-profile" width="150" height="150"/>
+        <image name="default-profile" width="84" height="84"/>
+        <image name="ic-cam" width="20" height="20"/>
         <image name="settingCircular" width="35" height="35"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

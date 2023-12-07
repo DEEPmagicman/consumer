@@ -606,6 +606,18 @@
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-profile" translatesAutoresizingMaskIntoConstraints="NO" id="Dos-hQ-39b">
                                                 <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="75"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </imageView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-cam" translatesAutoresizingMaskIntoConstraints="NO" id="6fT-Fu-8FJ">
+                                                <rect key="frame" x="114" y="114" width="34" height="34"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="34" id="7yf-BY-QLQ"/>
+                                                    <constraint firstAttribute="height" constant="34" id="nUa-um-Tnh"/>
+                                                </constraints>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -617,6 +629,8 @@
                                             <constraint firstItem="Dos-hQ-39b" firstAttribute="centerY" secondItem="EuU-hx-PUK" secondAttribute="centerY" id="BIx-qB-kkS"/>
                                             <constraint firstAttribute="trailing" secondItem="Dos-hQ-39b" secondAttribute="trailing" id="Srg-fB-AT9"/>
                                             <constraint firstAttribute="width" constant="150" id="UJB-40-P99"/>
+                                            <constraint firstItem="6fT-Fu-8FJ" firstAttribute="trailing" secondItem="Dos-hQ-39b" secondAttribute="trailing" constant="-2" id="ZLE-aR-xqT"/>
+                                            <constraint firstItem="6fT-Fu-8FJ" firstAttribute="bottom" secondItem="Dos-hQ-39b" secondAttribute="bottom" constant="-2" id="dX6-6x-Dfr"/>
                                             <constraint firstItem="Dos-hQ-39b" firstAttribute="centerX" secondItem="EuU-hx-PUK" secondAttribute="centerX" id="xXU-NY-grG"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -940,13 +954,13 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Didn’t get a code?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6z-yk-KT6">
-                                        <rect key="frame" x="20" y="323" width="135.5" height="21"/>
+                                        <rect key="frame" x="20" y="323" width="134" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Light" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KCR-Rd-la0">
-                                        <rect key="frame" x="159.5" y="322" width="56" height="23"/>
+                                        <rect key="frame" x="158" y="322" width="56" height="23"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="23" id="0Zt-dF-BpZ"/>
                                         </constraints>
@@ -960,7 +974,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="in 59s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jER-Eh-Dga">
-                                        <rect key="frame" x="219.5" y="323" width="44" height="21"/>
+                                        <rect key="frame" x="218" y="323" width="44" height="21"/>
                                         <fontDescription key="fontDescription" name="Poppins-Light" family="Poppins" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -1741,7 +1755,7 @@
                                                 <rect key="frame" x="0.0" y="48" width="374" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected to Spotify" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XDU-iT-8MS">
-                                                        <rect key="frame" x="30" y="8" width="181.5" height="24"/>
+                                                        <rect key="frame" x="30" y="8" width="180.5" height="24"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="17"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -1884,7 +1898,7 @@
                                                 <rect key="frame" x="0.0" y="48" width="374" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected to Instagram" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0zq-iP-uZf">
-                                                        <rect key="frame" x="30" y="8" width="212.5" height="24"/>
+                                                        <rect key="frame" x="30" y="8" width="211" height="24"/>
                                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="17"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -3169,8 +3183,9 @@
         <image name="Welcome 1 Glass" width="267.5" height="262.5"/>
         <image name="Welcome 5 Discoball" width="439.5" height="383.5"/>
         <image name="cross-IC" width="35" height="35"/>
-        <image name="default-profile" width="150" height="150"/>
+        <image name="default-profile" width="84" height="84"/>
         <image name="ic-calendar1" width="20" height="20"/>
+        <image name="ic-cam" width="20" height="20"/>
         <image name="ic-leftArrow" width="28" height="28"/>
         <image name="instagramConnect_ic" width="20" height="20"/>
         <image name="livelifelive" width="121.5" height="24"/>

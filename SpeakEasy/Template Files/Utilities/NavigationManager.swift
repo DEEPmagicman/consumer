@@ -269,6 +269,9 @@ final class Navigate {
             homeVc.present(vc, animated: true)
             homeVc.tabBarController?.selectedIndex = 1
             sender.navigationController?.viewControllers = [homeVc]
+            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
+                vc.delegate = accountVC
+            }
             return
         }
         sender.navigationController?.present(vc, animated: true)
