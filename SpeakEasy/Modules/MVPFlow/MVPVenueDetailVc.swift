@@ -401,23 +401,23 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.eventNameLbl.text = event.title
             
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
-            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD)
+            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM)
             
             
             if event.isPausedSellingAllTickets {
-                cell.ticketCountLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused.uppercased()
             } else if event.isSoldOutAllTickets {
-                cell.ticketCountLbl.text = Constant.String.soldOut
+                cell.ticketCountLbl.text = Constant.String.soldOut.uppercased()
             } else if event.eventTicket?.count ?? 0 == 0 {
-                cell.ticketCountLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused.uppercased()
             } else {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
                     cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
                     cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
                 }
+                cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
             }
             cell.cityNameLbl.text = venueDetails?.name
             cell.imageWidth.constant = 0
@@ -429,21 +429,21 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             let event = self.todaysEvents[indexPath.row]
             cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.eventNameLbl.text = event.title
-            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
-            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "")
+            cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD)
+            cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM)
             if event.isPausedSellingAllTickets {
-                cell.ticketCountLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused.uppercased()
             } else if event.isSoldOutAllTickets {
-                cell.ticketCountLbl.text = Constant.String.soldOut
+                cell.ticketCountLbl.text = Constant.String.soldOut.uppercased()
             } else if event.eventTicket?.count ?? 0 == 0 {
-                cell.ticketCountLbl.text = Constant.String.salePaused
+                cell.ticketCountLbl.text = Constant.String.salePaused.uppercased()
             } else {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
                     cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
                     cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
                 }
+                cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
             }
             cell.cityNameLbl.text = venueDetails?.name
             cell.imageWidth.constant = 0
@@ -550,9 +550,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
                     self.VIPTableView.isHidden = true
-                    self.continueBtn.isHidden = false
+                    self.continueBtn.isHidden = true
                 }
-                self.scrollViewBottomConstraint.constant = 30
+                self.scrollViewBottomConstraint.constant = 134
                 self.ticketTypeTableView.reloadData()
                 return
             }

@@ -44,6 +44,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var coverTicketDate: UILabel!
     @IBOutlet weak var coverTicketCity: UILabel!
     @IBOutlet weak var ticketTypeLbl: UILabel!
+    @IBOutlet weak var qrImageFrame: UIImageView!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -92,6 +93,7 @@ final class ShowQRCodeVC: UIViewController {
             guard let self = self else { return }
             self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
             self.qrImage.isHidden = !self.qrImage.isHidden
+            self.qrImageFrame.isHidden = !self.qrImageFrame.isHidden
         })
     }
     

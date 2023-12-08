@@ -86,7 +86,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
-        infoLbl.text = Constant.String.checkoutText
+        
+        infoLbl.text = type == .appClip ? Constant.String.checkoutTextCover : Constant.String.checkoutTextEvent
         // \(type == .appClip ? Constant.String.coverTicketText : "")"
         infoLbl.highlightBold(["terms of service", "privacy policy"], size: 12, textColor: .white, addUnderLine: true)
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
@@ -109,6 +110,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        timer.invalidate()
         WebSocketWrapper.shared.delegate.append(self)
     }
     
