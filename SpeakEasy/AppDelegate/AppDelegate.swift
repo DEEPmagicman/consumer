@@ -130,6 +130,7 @@ extension AppDelegate {
         home.tabBarItem.image              = UIImage(named :"ic-home")?.withRenderingMode(.alwaysOriginal)
         home.tabBarItem.selectedImage      = UIImage(named :"ic-home1")?.withRenderingMode(.alwaysTemplate)
         home.tabBarItem.standardAppearance?.selectionIndicatorTintColor = .white
+        home.tabBarItem.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
         let homeNavigation = UINavigationController(rootViewController: home)
         homeNavigation.navigationBar.isHidden = true
         var myAccount = UIViewController()
@@ -141,6 +142,8 @@ extension AppDelegate {
         myAccount.tabBarItem.image         = UIImage(named :"ic-person")?.withRenderingMode(.alwaysOriginal)
         myAccount.tabBarItem.selectedImage = UIImage(named :"ic-person1")?.withRenderingMode(.alwaysTemplate)
         UITabBar.appearance().tintColor = .white
+        UITabBar.appearance().backgroundColor = .red
+        myAccount.tabBarItem.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
         let myAccountNavigation = UINavigationController(rootViewController: myAccount)
         myAccountNavigation.navigationBar.isHidden = true
 

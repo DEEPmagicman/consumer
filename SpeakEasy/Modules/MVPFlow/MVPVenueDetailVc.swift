@@ -226,7 +226,7 @@ final class MVPVenueDetailVc: UIViewController {
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
-        venueNameLbl.text = "Venue - \(venueDetails?.name ?? "")"
+        venueNameLbl.text = venueDetails?.name ?? ""
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
         if venueDetails?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime
