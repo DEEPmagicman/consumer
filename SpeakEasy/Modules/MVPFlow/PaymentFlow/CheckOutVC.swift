@@ -126,7 +126,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        timer.invalidate()
+//        timer.invalidate()
         PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
         }
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
