@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
 		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
 		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
@@ -649,6 +650,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -1783,6 +1785,7 @@
 				BD942F4229595F6200D52115 /* UserDefault.swift */,
 				BD942F4629599FED00D52115 /* Loader.swift */,
 				69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */,
+				040D1FD52B28790D0057EDC6 /* BlurEffect.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -4689,6 +4692,7 @@
 				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				E11F4C1028C835F3008D2E30 /* BookingTabCVCCollectionViewCell.swift in Sources */,
 				CE4867AC286F358800FD277E /* Constants.swift in Sources */,
+				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
 				E16705BA28CA6BB500644BF0 /* TicketRecipients.swift in Sources */,
 				E11F4BAA28C8358C008D2E30 /* VIPTableBookingHeaderView.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,

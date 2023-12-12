@@ -45,6 +45,8 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var coverTicketCity: UILabel!
     @IBOutlet weak var ticketTypeLbl: UILabel!
     @IBOutlet weak var qrImageFrame: UIImageView!
+    @IBOutlet weak var discountView: UIView!
+    @IBOutlet weak var discountAmount: UILabel!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -234,9 +236,7 @@ final class ShowQRCodeVC: UIViewController {
         
         if booking?.event?.upfront == true {
             subTotalView.isHidden = true
-            
         }
-        
         subTotalView.isHidden = subTotalView.isHidden == true || booking?.fees?.subTotal == booking?.fees?.total
         subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
         salesTaxView.isHidden = subTotalView.isHidden == true || booking?.fees?.salesTax == 0
@@ -246,6 +246,8 @@ final class ShowQRCodeVC: UIViewController {
         customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
         customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
         customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
+        discountView.isHidden = subTotalView.isHidden == true || booking?.fees?.discount == 0
+        discountAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.discount ?? 0).decimalFormat(true))"
         totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
         noFeeView.isHidden = !(subTotalView.isHidden && salesTaxView.isHidden && processingFeeView.isHidden && customFeeView.isHidden)
         totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"

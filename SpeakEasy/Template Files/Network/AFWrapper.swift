@@ -187,6 +187,38 @@ final class AFWrapper: NSObject {
         debugPrint(req)
     }
     
+    static func putRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, isForceLogout: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+        
+        if !Connectivity.isConnectedToInternet {
+            success(nil)
+            failure(nil)
+            return
+        }
+        
+        let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            
+            if let responseCode = responseObject.response?.statusCode {
+                if responseCode == 200 || responseCode == 201 {
+                    success(responseObject.result.value)
+                } else if responseObject.result.value != nil {
+                    let errorResponse = errorHandling(responseObject.result.value ?? "")
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
+                } else if responseCode == 401 {
+                    if isForceLogout { forceLogout() } else { failure(responseObject.result.error) }
+                } else if responseCode >= 500 {
+                    failure(NSError(domain: "", code: 500, userInfo: [:]))
+                } else {
+                    failure(responseObject.result.error)
+                }
+            } else {
+                failure(responseObject.result.error)
+            }
+        }
+        
+        debugPrint(req)
+    }
+
+    
     static func errorHandling(_ response: Any) -> (Bool, String) {
         if let response = response as? [String: Any], let errMsg = response["message"] {
             if let stringErr = errMsg as? String {

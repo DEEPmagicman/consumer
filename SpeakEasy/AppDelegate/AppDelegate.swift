@@ -141,8 +141,8 @@ extension AppDelegate {
         }
         myAccount.tabBarItem.image         = UIImage(named :"ic-person")?.withRenderingMode(.alwaysOriginal)
         myAccount.tabBarItem.selectedImage = UIImage(named :"ic-person1")?.withRenderingMode(.alwaysTemplate)
+        myAccount.tabBarItem.standardAppearance?.selectionIndicatorTintColor = .red
         UITabBar.appearance().tintColor = .white
-        UITabBar.appearance().backgroundColor = .red
         myAccount.tabBarItem.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
         let myAccountNavigation = UINavigationController(rootViewController: myAccount)
         myAccountNavigation.navigationBar.isHidden = true

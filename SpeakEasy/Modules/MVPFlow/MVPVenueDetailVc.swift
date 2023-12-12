@@ -466,7 +466,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             }
             VIPTableView.isHidden = true
             continueBtn.isHidden = false
-            scrollViewBottomConstraint.constant = 90
+            scrollViewBottomConstraint.constant = 30
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 forceRemovePaidTicket()
@@ -547,12 +547,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if self.venueDetails?.availableTimeSlot ?? false {
                     self.continueBtn.isHidden = true
                     self.VIPTableView.isHidden = false
+                    self.scrollViewBottomConstraint.constant = 134
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
+                    self.scrollViewBottomConstraint.constant = 30
                     self.VIPTableView.isHidden = true
                     self.continueBtn.isHidden = true
                 }
-                self.scrollViewBottomConstraint.constant = 134
                 self.ticketTypeTableView.reloadData()
                 return
             }

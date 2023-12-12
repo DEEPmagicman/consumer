@@ -54,6 +54,7 @@ struct APIBuilder {
     static private let deleteAccount = "/delete-account"
     static private let inviteLink = "/invite-link"
     static private let redeem = "/redeem"
+    static private let redirect = "/redirect"
     
     // version
     static let v2 = "/v2"
@@ -269,6 +270,10 @@ struct APIBuilder {
     
     static var freeEventTicketURL: String {
         baseURL + route + event + freeTicket
+    }
+    
+    static func cancelBooking(_ bookingId: String) -> String {
+        baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
     }
 }
 

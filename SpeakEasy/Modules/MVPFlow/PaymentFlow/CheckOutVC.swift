@@ -43,6 +43,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var salesTaxAmount: UILabel!
     @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var bgImage: UIImageView!
+    @IBOutlet weak var promoCodeView: UIView!
+    @IBOutlet weak var promoCodeTF: UITextField!
+    @IBOutlet weak var applyPromoCodeBtn: UIButton!
+    @IBOutlet weak var discountView: UIView!
+    @IBOutlet weak var discountAmount: UILabel!
+    @IBOutlet weak var promoCodeAppliedLbl: UILabel!
     
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
@@ -70,6 +76,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var exitBgDate = Date()
     private var isFromApplePay = false
     weak var updateDelegate: UpdateDetailDelegate?
+    private var isPromoCodeApplied = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,7 +105,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         
         let time = secondsToHoursMinutesSeconds(seconds: count)
         timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
-    
+        validateBtn(isValid: false)
+        promoCodeTF.addTarget(self, action: #selector(promoCodeValueChange), for: .allEvents)
+        applyPromoCodeBtn.isSelected = false
+        applyPromoCodeBtn.setTitle("Remove", for: .selected)
+        applyPromoCodeBtn.setTitle("Apply Code", for: .normal)
         // background event
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.didEnterBackgroundNotification, object: nil)
         // foreground event
@@ -110,12 +121,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        timer.invalidate()
         WebSocketWrapper.shared.delegate.append(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        timer.invalidate()
+        PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
+        }
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
@@ -165,6 +178,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func startTimer() {
+        if timer != nil {
+            return
+        }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.count = self.count - 1
@@ -288,6 +304,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
         
     private func addPaymentApi() {
+        Loader.show()
         var appClipTickets = [[String: Any]]()
         switch type {
         case .appClip:
@@ -303,17 +320,33 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 self.paymentIntent = clientSecret
                 self.paymentHistoryId = paymentHistoryId
                 self.ephemeralKey = ephemeralKey
                 self.paymentDetail = paymentDetail
+                if self.isPromoCodeApplied {
+                    self.applyPromoCodeBtn.setTitle("Remove", for: .normal)
+                } else {
+                    self.applyPromoCodeBtn.setTitle("Apply Code", for: .normal)
+                }
+                self.promoCodeAppliedLbl.isHidden = self.isPromoCodeApplied ? false : true
+                self.promoCodeAppliedLbl.text = self.isPromoCodeApplied ? "Promo Code Applied." : ""
+                self.promoCodeAppliedLbl.textColor = .white
+                self.promoCodeTF.isUserInteractionEnabled = self.isPromoCodeApplied ? false : true
                 self.setUpPaymentBottomSheet()
             } else {
                 if errMsg != nil {
-                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                    if self.isPromoCodeApplied == true {
+                        self.promoCodeAppliedLbl.isHidden = false
+                        self.promoCodeAppliedLbl.text = errMsg
+                        self.promoCodeAppliedLbl.textColor = .red
+                        self.isPromoCodeApplied = false
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                    }
                 } else {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
@@ -409,6 +442,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 customFeeNameLbl.text = selectedEventTicket.first(where: { $0.customFee?.title ?? "" != "" })?.customFee?.title ?? "Custom fee"
                 customFeesView.isHidden = false
             }
+            if paymentDetail?.discount ?? 0 == 0 {
+                discountView.isHidden = true
+            } else {
+                discountView.isHidden = false
+                discountAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.discount ?? 0).decimalFormat(true))"
+            }
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
         default:
@@ -429,7 +468,25 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
         }
     }
-
+    
+    @objc func promoCodeValueChange() {
+        let valid = promoCodeTF.text ?? "" != ""
+        validateBtn(isValid: valid)
+    }
+    
+    private func validateBtn(isValid: Bool) {
+        applyPromoCodeBtn.alpha = isValid ? 1 : 0.5
+        applyPromoCodeBtn.isUserInteractionEnabled = isValid ? true : false
+    }
+    
+    @IBAction func onClickApplyCode(_ sender: Any) {
+        isPromoCodeApplied.toggle()
+        if !isPromoCodeApplied {
+            promoCodeTF.text = ""
+        }
+        addPaymentApi()
+    }
+    
     @IBAction private func onClickPolicyCheckBox(_ sender: UIButton) {
         sender.isSelected.toggle()
     }

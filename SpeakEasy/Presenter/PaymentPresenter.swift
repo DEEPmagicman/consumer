@@ -153,7 +153,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
+    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], promoCode: String? = "", type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
         var param = ["cart": selectedTickets] as [String: Any]
         switch type {
         case .appClip:
@@ -161,6 +161,9 @@ final class PaymentPresenter {
         case .singleTickedEvent:
             param["isAppClipPayment"] = false
             param["isTieredTicket"] = false
+            if promoCode != "" {
+                param["promoCode"] = promoCode
+            }
         case .tieredTickedEvent:
             param["isAppClipPayment"] = false
             param["isTieredTicket"] = true
@@ -279,6 +282,18 @@ final class PaymentPresenter {
                 completion(false, nil)
                 return
             }
+            completion(true, nil)
+        } failure: { error in
+            if let err = (error as NSError?), err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            completion(false, nil)
+        }
+    }
+    
+    static func cancelBooking(bookingId: String, completion: @escaping ( _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        AFWrapper.putRequest(APIBuilder.cancelBooking(bookingId), headers: Header.header()) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = (error as NSError?), err.code == 0 {
