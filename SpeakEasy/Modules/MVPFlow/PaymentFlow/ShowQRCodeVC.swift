@@ -236,18 +236,19 @@ final class ShowQRCodeVC: UIViewController {
         
         if booking?.event?.upfront == true {
             subTotalView.isHidden = true
+        } else {
+            subTotalView.isHidden = booking?.fees?.subTotal == booking?.fees?.total
         }
-        subTotalView.isHidden = subTotalView.isHidden == true || booking?.fees?.subTotal == booking?.fees?.total
         subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
         salesTaxView.isHidden = subTotalView.isHidden == true || booking?.fees?.salesTax == 0
         salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
         processingFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.processingFee == 0
-        processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
+        processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
         customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
         customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
         customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
         discountView.isHidden = subTotalView.isHidden == true || booking?.fees?.discount == 0
-        discountAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.discount ?? 0).decimalFormat(true))"
+        discountAmount.text = "-\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.discount ?? 0).decimalFormat(true))"
         totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
         noFeeView.isHidden = !(subTotalView.isHidden && salesTaxView.isHidden && processingFeeView.isHidden && customFeeView.isHidden)
         totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"

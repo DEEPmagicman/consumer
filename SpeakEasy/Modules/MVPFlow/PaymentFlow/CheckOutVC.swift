@@ -77,7 +77,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isFromApplePay = false
     weak var updateDelegate: UpdateDetailDelegate?
     private var isPromoCodeApplied = false
-
+    var isForCancelBooking = true
+    var isFreeTicket = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         createBooking()
@@ -117,17 +119,21 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // add these 2 notifications to prevent freeze on long Home button press and back
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
+        startTimer()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        isForCancelBooking = true
         WebSocketWrapper.shared.delegate.append(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-//        timer.invalidate()
-        PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
+        if isForCancelBooking {
+            timer.invalidate()
+            PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
+            }
         }
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
@@ -140,12 +146,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
+            promoCodeView.isHidden = true
         case .singleTickedEvent:
             noFeeView.isHidden = !(event?.upfront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
             dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             bgImage.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            promoCodeView.isHidden = false
         case .tieredTickedEvent:
             break
         }
@@ -178,9 +186,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func startTimer() {
-        if timer != nil {
-            return
-        }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.count = self.count - 1
@@ -202,12 +207,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
             self.timer.invalidate()
             self.updateDelegate?.update()
+            self.isForCancelBooking = true
             Navigate.to.back(self)
         }
         Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
     
     @objc private func onClickPaymentMethod() {
+        isForCancelBooking = false
         Navigate.to.paymentMethodsVc(self, selectedId: selectedId)
     }
     
@@ -217,7 +224,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
             self.isFromApplePay = true
-            self.startTimer()
         }
         let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
             if let url = URL(string: "wallet://") {
@@ -320,9 +326,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
+                if isFreeTicket {
+                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                } else {
+                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                }
+                self.isFreeTicket = isFreeTicket
                 self.paymentIntent = clientSecret
                 self.paymentHistoryId = paymentHistoryId
                 self.ephemeralKey = ephemeralKey
@@ -336,6 +348,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.promoCodeAppliedLbl.text = self.isPromoCodeApplied ? "Promo Code Applied." : ""
                 self.promoCodeAppliedLbl.textColor = .white
                 self.promoCodeTF.isUserInteractionEnabled = self.isPromoCodeApplied ? false : true
+                self.promoCodeTF.alpha = self.isPromoCodeApplied ? 0.5  : 1
                 self.setUpPaymentBottomSheet()
             } else {
                 if errMsg != nil {
@@ -355,6 +368,27 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
+    private func createFreeEventBooking() {
+        var tickets = [[String: Any]]()
+        selectedEventTicket.forEach {
+            tickets.append(["ticketId": $0.id,
+                            "ticketQuantity": $0.selectedTicketCount ?? 0])
+        }
+        Loader.show()
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            Loader.hide()
+            if isSuccess, let id = id {
+                Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
     private func setUpPaymentBottomSheet() {
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
         // MARK: Create a PaymentSheet instance
@@ -369,7 +403,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         DispatchQueue.main.async {
             self.buyNowBtn.alpha = 1
             self.buyNowBtn.isUserInteractionEnabled = true
-            self.startTimer()
             self.displayPayment()
         }
     }
@@ -446,7 +479,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 discountView.isHidden = true
             } else {
                 discountView.isHidden = false
-                discountAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.discount ?? 0).decimalFormat(true))"
+                discountAmount.text = "-\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.discount ?? 0).decimalFormat(true))"
             }
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
@@ -498,33 +531,34 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
-        if selectedId == Constant.String.defaultSelectedPM {
-            applePayButtonTapped()
+        if isFreeTicket {
+            createFreeEventBooking()
         } else {
-            onClickCreditCardPay()
+            if selectedId == Constant.String.defaultSelectedPM {
+                applePayButtonTapped()
+            } else {
+                onClickCreditCardPay()
+            }
         }
     }
 
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
-        timer.invalidate()
         isPaymentInitiated = true
         paymentSheet?.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
                 self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
-                    self.timer.invalidate()
+                    self.isForCancelBooking = false
                     Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
-                self.startTimer()
                 self.isPaymentInitiated = false
 //                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
 //                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
 //                self.present(alert, animated: true, completion: nil)
             case .failed:
-                self.startTimer()
                 self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
@@ -553,7 +587,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         // Initialize an STPApplePayContext instance
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
             // Present Apple Pay payment sheet
-            timer.invalidate()
             applePayContext.presentApplePay()
         } else {
             Alert.showToast("Problem with your Apple Pay")
@@ -622,18 +655,16 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
-                self.timer.invalidate()
+                self.isForCancelBooking = false
                 Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
-            self.startTimer()
             isFromApplePay = true
             self.isPaymentInitiated = false
             let alert = UIAlertController(title: "Alert", message: "Payment field", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         case .userCancellation:
-            self.startTimer()
             isFromApplePay = true
             self.isPaymentInitiated = false
 //            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)

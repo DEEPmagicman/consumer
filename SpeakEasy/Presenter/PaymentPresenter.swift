@@ -74,13 +74,16 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], bookingId: String? = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         
-        let param = ["isAppClipUser": false,
+        var param = ["isAppClipUser": false,
                      "phone": phone,
                      "tickets": tickets,
                      "consumerUserId": userId,
                      "eventId": eventId] as [String: Any]
+        if bookingId != "" {
+            param["bookingId"] = bookingId
+        }
         
         AFWrapper.postRequest(APIBuilder.freeEventTicketURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
@@ -153,7 +156,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], promoCode: String? = "", type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
+    static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], promoCode: String? = "", type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?, _ isFreeTicket: Bool) -> Void) {
         var param = ["cart": selectedTickets] as [String: Any]
         switch type {
         case .appClip:
@@ -172,24 +175,24 @@ final class PaymentPresenter {
         AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil, "", "", "", nil)
+                completion(false, nil, "", "", "", nil, false)
                 return
             }
-            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any] {
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let paymentHistoryId = responseDic["paymentHistoryId"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any], let isFreeTicket = responseDic["isFreeTicket"] as? Bool {
                 if let detail = PaymentDetail.parse(paymentDetail) {
-                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, detail)
+                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, detail, isFreeTicket)
                 } else {
-                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, nil)
+                    completion(true, nil, paymentIntentClientSecret, paymentHistoryId, ephemeralKey, nil, isFreeTicket)
                 }
             } else {
-                completion(false, "internal error", "", "", "", nil)
+                completion(false, "internal error", "", "", "", nil, false)
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain, "", "", "", nil)
+                completion(false, err.domain, "", "", "", nil, false)
                 return
             }
-            completion(false, nil, "", "", "", nil)
+            completion(false, nil, "", "", "", nil, false)
         }
     }
     

@@ -74,7 +74,6 @@ final class AccountVC: UIViewController {
                     self.skipValue += 10
                 }
                 self.hasMany = hasMany
-                self.bookings = bookings
                 self.checkZeroViewCase()
                 self.listTableView.reloadData()
             }
