@@ -50,6 +50,8 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var venuePageTitleView: UIView!
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var VIPTableView: UIView!
+    @IBOutlet weak var showMoreUpcoming: UIView!
+    @IBOutlet weak var showMoreTonightView: UIView!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -95,6 +97,10 @@ final class MVPVenueDetailVc: UIViewController {
     private var events = [Event]()
     private var todaysEvents = [Event]()
     private var gradient: CAGradientLayer?
+    private var tonightEventSkip = 0
+    private var upcomingEventSkip = 0
+    private var hasManyTonightEvent = false
+    private var hasManyUpcomingEvent = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -162,7 +168,8 @@ final class MVPVenueDetailVc: UIViewController {
                 self.zeroCaseView(isHidden: false)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            self.getEvents()
+            self.getTonightEvent()
+            self.getUpcomingEvent()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
                 Alert.showToast("Venue detail updated")
@@ -172,28 +179,46 @@ final class MVPVenueDetailVc: UIViewController {
         }
     }
     
-    private func getEvents() {
+    private func getTonightEvent() {
         Loader.show()
-        // TODO: add pagination
-        EventPresenter.getEvents(venueId: venueId, venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
-            guard let self = self else {
-                Loader.hide()
-                return
+        EventPresenter.getEvents(from: tonightEventSkip ,venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+            Loader.hide()
+            guard let self = self else { return }
+            
+            if self.tonightEventSkip == 0 {
+                self.todaysEvents.removeAll()
             }
-            self.events = eventList
-            self.upcomingSectionView.isHidden = eventList.count == 0
-            self.upcomingTableView.reloadData()
-            self.hasMore = hasMore
+            for event in eventList {
+                self.todaysEvents.append(event)
+            }
+            if hasMore {
+                self.tonightEventSkip = self.todaysEvents.count
+            }
+            self.showMoreTonightView.isHidden = hasMore ? false : true
+            self.todaysEventTableView.reloadData()
             self.updateCloseViewVisibility()
             Loader.hide()
         }
-        EventPresenter.getEvents(venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
-            guard let self = self else {
-                Loader.hide()
-                return
+    }
+    
+    private func getUpcomingEvent() {
+        Loader.show()
+        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+            Loader.hide()
+            guard let self = self else { return }
+            
+            if self.tonightEventSkip == 0 {
+                self.events.removeAll()
             }
-            self.todaysEvents = eventList
-            self.todaysEventTableView.reloadData()
+            for event in eventList {
+                self.events.append(event)
+            }
+            if hasMore {
+                self.upcomingEventSkip = self.events.count
+            }
+            self.showMoreUpcoming.isHidden = hasMore ? false : true
+            self.upcomingTableView.reloadData()
+            self.upcomingSectionView.isHidden = eventList.count == 0
             self.updateCloseViewVisibility()
             Loader.hide()
         }
@@ -321,6 +346,14 @@ final class MVPVenueDetailVc: UIViewController {
     
     @IBAction private func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
+    }
+    
+    @IBAction func onCLickShowMoreUpcoming(_ sender: Any) {
+        getUpcomingEvent()
+    }
+    
+    @IBAction func onClickShowMoreTonightEvent(_ sender: Any) {
+        getTonightEvent()
     }
 }
 
