@@ -77,7 +77,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isFromApplePay = false
     weak var updateDelegate: UpdateDetailDelegate?
     private var isPromoCodeApplied = false
-    var isForCancelBooking = true
     var isFreeTicket = false
     
     override func viewDidLoad() {
@@ -120,21 +119,20 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
         startTimer()
+        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
     }
     
+    @objc private func handleBackSwipe() {
+        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
+        cancelBooking()
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        isForCancelBooking = true
         WebSocketWrapper.shared.delegate.append(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if isForCancelBooking {
-            timer.invalidate()
-            PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
-            }
-        }
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
@@ -206,15 +204,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func crossTimeLimit() {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
             self.timer.invalidate()
+            self.cancelBooking()
             self.updateDelegate?.update()
-            self.isForCancelBooking = true
             Navigate.to.back(self)
         }
         Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
     
     @objc private func onClickPaymentMethod() {
-        isForCancelBooking = false
         Navigate.to.paymentMethodsVc(self, selectedId: selectedId)
     }
     
@@ -308,7 +305,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             break
         }
     }
-        
+    
+    private func cancelBooking() {
+        timer.invalidate()
+        PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
+        }
+    }
+    
     private func addPaymentApi() {
         Loader.show()
         var appClipTickets = [[String: Any]]()
@@ -382,6 +385,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
             Loader.hide()
             if isSuccess, let id = id {
+                self.timer.invalidate()
                 Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
@@ -472,7 +476,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 customFeesView.isHidden = true
             } else {
                 customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
-                customFeeNameLbl.text = selectedEventTicket.first(where: { $0.customFee?.title ?? "" != "" })?.customFee?.title ?? "Custom fee"
+                customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
                 customFeesView.isHidden = false
             }
             if paymentDetail?.discount ?? 0 == 0 {
@@ -526,6 +530,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     @IBAction private func onClickBack(_ sender: Any) {
         timer.invalidate()
+        cancelBooking()
         updateDelegate?.update()
         Navigate.to.back(self)
     }
@@ -550,7 +555,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             switch paymentResult {
             case .completed:
                 self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
-                    self.isForCancelBooking = false
+                    self.timer.invalidate()
                     Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                 }
             case .canceled:
@@ -655,7 +660,7 @@ extension CheckOutVC {
         switch status {
         case .success:
             paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
-                self.isForCancelBooking = false
+                self.timer.invalidate()
                 Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
             }
         case .error:
