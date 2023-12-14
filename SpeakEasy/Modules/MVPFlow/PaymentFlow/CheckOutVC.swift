@@ -333,8 +333,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 if isFreeTicket {
+                    self.paymentMethodView.isHidden = true
                     self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
                 } else {
+                    self.paymentMethodView.isHidden = false
                     self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
                 }
                 self.isFreeTicket = isFreeTicket
