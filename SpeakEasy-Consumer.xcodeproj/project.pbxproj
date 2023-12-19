@@ -5277,7 +5277,7 @@
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
 			requirement = {
 				kind = exactVersion;
-				version = 6.5.16;
+				version = 6.5.12;
 			};
 		};
 		CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
