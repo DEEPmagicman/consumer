@@ -127,6 +127,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        policyCheckBox.isSelected = true
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
         firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false

@@ -103,7 +103,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         infoLbl.isUserInteractionEnabled = true
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
-        
+        policyCheckBox.isSelected = true
         let time = secondsToHoursMinutesSeconds(seconds: count)
         timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
         validateBtn(isValid: false)
