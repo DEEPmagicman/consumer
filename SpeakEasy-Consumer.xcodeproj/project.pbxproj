@@ -81,6 +81,8 @@
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
+		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
+		69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */; };
 		820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB2296BDF4300B9E015 /* TableBookingDetailsViewController.swift */; };
 		820EEDB5296BE47B00B9E015 /* TableBookingDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 820EEDB4296BE47B00B9E015 /* TableBookingDetailsViewController.xib */; };
 		820EEDB9296BF78400B9E015 /* TableBookingDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 820EEDB7296BF78400B9E015 /* TableBookingDetailsCell.swift */; };
@@ -1276,6 +1278,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */,
 				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
 				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
@@ -1292,6 +1295,7 @@
 				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
 				CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */,
 				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
+				69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
@@ -4096,6 +4100,7 @@
 				CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */,
 				CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */,
 				CEDB81A22AA2112C00DAD9FE /* SocketIO */,
+				69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */,
 			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
@@ -4127,6 +4132,7 @@
 				CEDB81892AA20BE100DAD9FE /* FirebaseCrashlytics */,
 				CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */,
 				CEDB81A02AA2110E00DAD9FE /* SocketIO */,
+				69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -4166,6 +4172,7 @@
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
+				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -5265,6 +5272,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = exactVersion;
+				version = 6.5.16;
+			};
+		};
 		CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
@@ -5316,6 +5331,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
 		CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
