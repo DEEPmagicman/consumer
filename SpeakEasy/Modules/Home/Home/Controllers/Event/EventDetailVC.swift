@@ -103,6 +103,12 @@ final class EventDetailVC: UIViewController {
         mapView.addGestureRecognizer(tap)
         mapView.isScrollEnabled = false
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
     private func setupData() {
@@ -480,5 +486,11 @@ extension EventDetailVC: UpdateDetailDelegate {
     func update() {
         Loader.show()
         getEventDetail()
+    }
+}
+
+extension EventDetailVC: WebSocketCallBackDelegate {
+    func didUpdateEvent(eventId: String) {
+        update()
     }
 }

@@ -235,14 +235,26 @@ final class ShowQRCodeVC: UIViewController {
     private func setFeeData() {
         
         if booking?.event?.upfront == true {
-            subTotalView.isHidden = true
+            if booking?.fees?.discount == 0 {
+                subTotalView.isHidden = true
+            } else {
+                subTotalView.isHidden = false
+            }
         } else {
             subTotalView.isHidden = booking?.fees?.subTotal == booking?.fees?.total
         }
         subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
         salesTaxView.isHidden = subTotalView.isHidden == true || booking?.fees?.salesTax == 0
         salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
-        processingFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.processingFee == 0
+        if type == .appClip {
+            if booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false {
+                processingFeeView.isHidden = true
+            } else if booking?.fees?.processingFee ?? 0 == 0 {
+                processingFeeView.isHidden = true
+            } else {
+                processingFeeView.isHidden = false
+            }
+        }
         processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
         customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
         customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"

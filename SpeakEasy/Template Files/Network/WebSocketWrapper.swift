@@ -11,6 +11,8 @@ import SocketIO
 protocol WebSocketCallBackDelegate: AnyObject {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool)
     func didGenderWiseTicketChange(venueId: String, uniqueId: String)
+    func didUpdateEvent(eventId: String)
+    func didUpdateEventTicket(ticketId: String)
 }
 
 final class WebSocketWrapper: NSObject {
@@ -57,6 +59,20 @@ final class WebSocketWrapper: NSObject {
             }
             self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
         }
+        
+        socket?.on("updatedEvent") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventId = content["eventId"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
+        }
+        
+        socket?.on("updatedEventTicket") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventTicketId = content["id"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.didUpdateEventTicket(ticketId: eventTicketId) }
+        }
     }
     
     @objc func connect() {
@@ -78,4 +94,6 @@ final class WebSocketWrapper: NSObject {
 extension WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {}
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {}
+    func didUpdateEvent(eventId: String) {}
+    func didUpdateEventTicket(ticketId: String) {}
 }
