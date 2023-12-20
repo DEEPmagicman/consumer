@@ -731,6 +731,15 @@ extension CheckOutVC: WebSocketCallBackDelegate {
             Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's ticket",actions: [okAction])
         }
     }
+    
+    func didUpdateEventTicket(ticketId: String) {
+        if isPaymentInitiated { return }
+        print(ticketId)
+        if selectedEventTicket.contains(where: { $0.id == ticketId }) {
+            cancelBooking()
+            Navigate.to.back(self)
+        }
+    }
 }
 
 extension CheckOutVC: PaymentMethodVCDelegate {
