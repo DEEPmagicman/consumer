@@ -466,12 +466,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .singleTickedEvent:
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
             totalPrice = paymentDetail?.total ?? 0
-            if event?.upfront == true {
-                subTotalView.isHidden = true
-                processingFeesView.isHidden = true
-                customFeesView.isHidden = true
-                return
-            }
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
             if paymentDetail?.customFee ?? 0 == 0 {
@@ -489,6 +483,18 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
             subTotalView.isHidden = false
             processingFeesView.isHidden = false
+            if event?.upfront == true {
+                if paymentDetail?.discount ?? 0 == 0 {
+                    subTotalView.isHidden = true
+                    discountView.isHidden = true
+                } else {
+                    subTotalView.isHidden = false
+                    discountView.isHidden = false
+                }
+                processingFeesView.isHidden = true
+                customFeesView.isHidden = true
+                return
+            }
         default:
 
             subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
