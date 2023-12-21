@@ -52,6 +52,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var VIPTableView: UIView!
     @IBOutlet weak var showMoreUpcoming: UIView!
     @IBOutlet weak var showMoreTonightView: UIView!
+    @IBOutlet weak var winstonHouseNoticeView: UIView!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -163,6 +164,11 @@ final class MVPVenueDetailVc: UIViewController {
                 self.openingHoursTableView.reloadData()
                 self.updateContinueBtn(forceRemove: true)
                 self.updateCloseViewVisibility()
+                if self.isFromAppClip && venueDetail?.name == "Winston House" {
+                    self.venuePageView.isHidden = true
+                    self.venuePageTitleView.isHidden = true
+                    self.winstonHouseNoticeView.isHidden = false
+                }
                 self.zeroCaseView(isHidden: true)
             } else {
                 self.zeroCaseView(isHidden: false)

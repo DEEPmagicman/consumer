@@ -220,7 +220,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LD9-tZ-mgQ">
-                                                        <rect key="frame" x="0.0" y="5" width="414" height="293"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="298"/>
                                                     </imageView>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fpG-0h-c5m">
                                                         <rect key="frame" x="117" y="59" width="180" height="180"/>
@@ -696,12 +696,30 @@
                                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstItem="jZN-Ck-fvt" firstAttribute="leading" secondItem="S5l-AB-teO" secondAttribute="leading" id="IMF-dK-DeF"/>
+                                                            <constraint firstAttribute="bottom" secondItem="jZN-Ck-fvt" secondAttribute="bottom" constant="15" id="JlA-xw-upK"/>
                                                             <constraint firstItem="JJW-75-CSo" firstAttribute="leading" secondItem="S5l-AB-teO" secondAttribute="leading" id="PCm-h9-6aD"/>
                                                             <constraint firstAttribute="trailing" secondItem="JJW-75-CSo" secondAttribute="trailing" id="UCH-HU-h9S"/>
                                                             <constraint firstItem="JJW-75-CSo" firstAttribute="top" secondItem="S5l-AB-teO" secondAttribute="top" constant="30" id="UXX-ov-ica"/>
                                                             <constraint firstItem="jZN-Ck-fvt" firstAttribute="top" secondItem="JJW-75-CSo" secondAttribute="bottom" constant="10" id="ZtF-Ig-tB0"/>
-                                                            <constraint firstAttribute="bottom" secondItem="jZN-Ck-fvt" secondAttribute="bottom" constant="15" id="aHN-Ho-Xq8"/>
                                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jZN-Ck-fvt" secondAttribute="trailing" id="pdy-s7-dNQ"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zQW-jj-P49">
+                                                        <rect key="frame" x="0.0" y="658" width="382" height="0.0"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*Hours at Winston house may vary. Look out for the venue’s announcements on their socials!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="X8q-qo-QPA">
+                                                                <rect key="frame" x="0.0" y="0.0" width="382" height="0.0"/>
+                                                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="13"/>
+                                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="X8q-qo-QPA" firstAttribute="top" secondItem="zQW-jj-P49" secondAttribute="top" id="Bse-5f-I2p"/>
+                                                            <constraint firstAttribute="bottom" secondItem="X8q-qo-QPA" secondAttribute="bottom" id="cWR-im-zcQ"/>
+                                                            <constraint firstAttribute="trailing" secondItem="X8q-qo-QPA" secondAttribute="trailing" id="khE-rC-fKd"/>
+                                                            <constraint firstItem="X8q-qo-QPA" firstAttribute="leading" secondItem="zQW-jj-P49" secondAttribute="leading" id="qZf-ra-ZTS"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4u7-46-I1F">
@@ -1017,6 +1035,7 @@
                         <outlet property="venuePolicyLbl" destination="E5S-23-qfP" id="mmk-GD-v2v"/>
                         <outlet property="venuePolicyView" destination="sPE-KF-CvD" id="rLW-2D-1wX"/>
                         <outlet property="venueTitleNameLbl" destination="gfU-HC-wcQ" id="mLV-IX-NAN"/>
+                        <outlet property="winstonHouseNoticeView" destination="zQW-jj-P49" id="p4S-WC-Jcs"/>
                         <outlet property="zeroCaseView" destination="Uu6-uD-qVu" id="P1e-Ms-Q1K"/>
                     </connections>
                 </viewController>
