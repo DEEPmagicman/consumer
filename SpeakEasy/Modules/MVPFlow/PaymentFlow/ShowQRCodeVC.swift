@@ -7,6 +7,7 @@
 
 import UIKit
 import PassKit
+import MarqueeLabel
 
 final class ShowQRCodeVC: UIViewController {
 
@@ -19,7 +20,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var venueImg: UIImageView!
     @IBOutlet weak var venueNameLbl: UILabel!
-    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var titleLbl: MarqueeLabel!
     @IBOutlet weak var noteView: UIView!
     @IBOutlet weak var noteLbl: UILabel!
     @IBOutlet weak var ticketCodeView: UIView!

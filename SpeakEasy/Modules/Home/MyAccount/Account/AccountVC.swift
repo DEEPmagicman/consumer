@@ -84,7 +84,9 @@ final class AccountVC: UIViewController {
         EventPresenter.getRecommendedEvents { [weak self] isSuccess, errMsg, eventList in
             guard let self = self else { return }
             self.recommended = eventList
-            self.listTableView.reloadSections([1], with: .automatic)
+//            DispatchQueue.main.async {
+//                self.listTableView.reloadSections([1], with: .automatic)
+//            }
             self.checkZeroViewCase()
         }
     }
@@ -196,7 +198,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         cell.ticketCountLbl.text = "\(bookings[indexPath.row].bookingHasItem.count)"
         cell.cityNameLbl.text = bookings[indexPath.row].venueObject?.name
         cell.setUI()
-        
+        cell.eventNameLbl.restartLabel()
         return cell
     }
     

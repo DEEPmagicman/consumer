@@ -20,6 +20,7 @@ PODS:
   - GTMSessionFetcher/Core (2.3.0)
   - Hero (1.6.2)
   - JWTDecode (3.0.0)
+  - MarqueeLabel (4.3.2)
   - NBBottomSheet (1.2.0)
   - NVActivityIndicatorView (4.7.0):
     - NVActivityIndicatorView/Presenter (= 4.7.0)
@@ -40,6 +41,7 @@ DEPENDENCIES:
   - GSImageViewerController
   - Hero
   - JWTDecode
+  - MarqueeLabel (~> 4.3.0)
   - NBBottomSheet (~> 1.2)
   - NVActivityIndicatorView (= 4.7.0)
   - OTPFieldView
@@ -60,6 +62,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - Hero
     - JWTDecode
+    - MarqueeLabel
     - NBBottomSheet
     - NVActivityIndicatorView
     - OTPFieldView
@@ -79,6 +82,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
+  MarqueeLabel: 15e524a6762552bb279cb17438b8a94990269fb9
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
   NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   OTPFieldView: 700a752fe62c41d1c4914c78aa500fb30d97c255
@@ -88,6 +92,6 @@ SPEC CHECKSUMS:
   SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 84e1b520b0da355590777a75802bb30168dff4eb
+PODFILE CHECKSUM: d2b24ac0f87502633b666a85fb7b4e27329b88b9
 
 COCOAPODS: 1.14.3

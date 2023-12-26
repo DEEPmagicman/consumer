@@ -7,12 +7,13 @@
 
 import UIKit
 import MapKit
+import MarqueeLabel
 
 final class EventDetailVC: UIViewController {
 
     @IBOutlet weak var mainImg: UIImageView!
     @IBOutlet weak var venueTitleLbl: UILabel!
-    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var titleLbl: MarqueeLabel!
     @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
     @IBOutlet weak var continueBtn: UIButton!

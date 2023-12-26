@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MarqueeLabel
 
 class PurchaseDetailsTVC: UITableViewCell {
 
@@ -14,7 +15,8 @@ class PurchaseDetailsTVC: UITableViewCell {
     @IBOutlet weak var bgImage: UIImageView!
     @IBOutlet weak var monthLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
-    @IBOutlet weak var eventNameLbl: UILabel!
+//    @IBOutlet weak var eventNameLbl: UILabel!
+    @IBOutlet weak var eventNameLbl: MarqueeLabel!
     @IBOutlet weak var cityNameLbl: UILabel!
     @IBOutlet weak var blurView: UIView!
     @IBOutlet weak var venueLogoImageView: UIImageView!
