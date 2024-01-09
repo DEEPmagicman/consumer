@@ -273,6 +273,12 @@ final class Navigate {
                 vc.delegate = accountVC
             }
             return
+        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
+            accountVc.present(vc, animated: true)
+            accountVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [accountVc]
+            vc.delegate = accountVc as? AccountVC
+            return
         }
         sender.navigationController?.present(vc, animated: true)
     }
