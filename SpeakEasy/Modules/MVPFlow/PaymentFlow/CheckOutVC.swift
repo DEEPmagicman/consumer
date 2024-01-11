@@ -13,12 +13,11 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
-import MarqueeLabel
 
 final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     @IBOutlet private weak var purchaseImg: UIImageView!
-    @IBOutlet weak var titleLbl: MarqueeLabel!
+    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet private weak var dateLbl: UILabel!
     @IBOutlet private weak var venueNameLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!

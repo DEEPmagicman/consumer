@@ -89,7 +89,7 @@
                                             <constraint firstAttribute="width" constant="43" id="Pc6-FR-NWa"/>
                                         </constraints>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hxB-l7-aot" customClass="MarqueeLabel" customModule="MarqueeLabel">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hxB-l7-aot">
                                         <rect key="frame" x="59" y="3.5" width="229" height="22.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -177,9 +177,4 @@
             <point key="canvasLocation" x="131.8840579710145" y="172.43303571428569"/>
         </tableViewCell>
     </objects>
-    <designables>
-        <designable name="hxB-l7-aot">
-            <size key="intrinsicContentSize" width="9.5" height="22.5"/>
-        </designable>
-    </designables>
 </document>

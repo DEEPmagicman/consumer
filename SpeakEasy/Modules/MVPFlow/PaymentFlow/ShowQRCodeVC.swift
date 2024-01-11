@@ -7,7 +7,6 @@
 
 import UIKit
 import PassKit
-import MarqueeLabel
 
 final class ShowQRCodeVC: UIViewController {
 
@@ -20,7 +19,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var venueImg: UIImageView!
     @IBOutlet weak var venueNameLbl: UILabel!
-    @IBOutlet weak var titleLbl: MarqueeLabel!
+    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var noteView: UIView!
     @IBOutlet weak var noteLbl: UILabel!
     @IBOutlet weak var ticketCodeView: UIView!
@@ -103,7 +102,7 @@ final class ShowQRCodeVC: UIViewController {
     private func setupData() {
         qrImage.image = generateQRCode(from: bookingId)
         backupCode.text = booking?.venueObject?.bookingCode ?? ""
-        bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD) ?? "")"
+        bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if booking?.venueObject?.bookingCode ?? "" != "" {
             containerView.isUserInteractionEnabled = true
         }

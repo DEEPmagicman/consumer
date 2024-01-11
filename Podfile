@@ -20,7 +20,6 @@ target 'SpeakEasy-Consumer' do
   pod 'JWTDecode'
   pod 'ReachabilitySwift', '~> 3'
   pod 'NBBottomSheet', '~> 1.2'
-  pod 'MarqueeLabel', '~> 4.3.0'
 end
 
 target 'SpeakEasyClip' do

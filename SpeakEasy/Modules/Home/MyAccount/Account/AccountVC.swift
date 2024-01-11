@@ -198,7 +198,6 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         cell.ticketCountLbl.text = "\(bookings[indexPath.row].bookingHasItem.count)"
         cell.cityNameLbl.text = bookings[indexPath.row].venueObject?.name
         cell.setUI()
-        cell.eventNameLbl.restartLabel()
         return cell
     }
     
