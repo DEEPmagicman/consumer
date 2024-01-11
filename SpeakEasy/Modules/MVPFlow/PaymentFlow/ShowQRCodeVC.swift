@@ -254,6 +254,12 @@ final class ShowQRCodeVC: UIViewController {
             } else {
                 processingFeeView.isHidden = false
             }
+        } else {
+            if booking?.fees?.processingFee ?? 0 == 0 {
+                processingFeeView.isHidden = true
+            } else {
+                processingFeeView.isHidden = false
+            }
         }
         processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
         customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
