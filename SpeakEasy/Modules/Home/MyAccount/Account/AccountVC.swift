@@ -20,10 +20,13 @@ final class AccountVC: UIViewController {
     private var isLoading = false
     private var hasMany = false
     var skipValue = 0
+    private var refresh = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         displayData()
+        refresh.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+        listTableView.addSubview(refresh)
         let gesture = UITapGestureRecognizer(target: self, action: #selector(onClickAddPhoto))
         profileImg.isUserInteractionEnabled = true
         profileImg.addGestureRecognizer(gesture)
@@ -34,12 +37,18 @@ final class AccountVC: UIViewController {
         listTableView.setupPadding()
         listTableView.groupStyleSpacing()
         listTableView.tableHeaderView?.frame.size.height = 81
+        Loader.show()
+    }
+    
+    @objc private func refresh(_ sender: AnyObject) {
+        skipValue = 0
+        getUpcomingTickets()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getUpcomingTickets()
-        getRecommended()
+//        getRecommended()
         whoAmIAPI()
     }
     
@@ -61,6 +70,7 @@ final class AccountVC: UIViewController {
     private func getUpcomingTickets() {
         PaymentPresenter.getUpcomingTicket(skip: skipValue) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self = self else { return }
+            Loader.hide()
             self.isLoading = false
             if isSuccess {
                 if self.skipValue == 0 {
@@ -76,6 +86,7 @@ final class AccountVC: UIViewController {
                 self.hasMany = hasMany
                 self.checkZeroViewCase()
                 self.listTableView.reloadData()
+                self.refresh.endRefreshing()
             }
         }
     }
@@ -124,7 +135,7 @@ final class AccountVC: UIViewController {
     }
     
     private func checkZeroViewCase() {
-        zeroCaseView.isHidden = !(bookings.count == 0 && recommended.count == 0)
+        zeroCaseView.isHidden = !(bookings.count == 0)
     }
     
     @IBAction func onClickShare(_ sender: Any) {
@@ -172,8 +183,8 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                     cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
                 } else if bookings[indexPath.row].bookingType == "TABLE_BOOKING" {
                     cell.eventNameLbl.text = Constant.String.tableReservation
-                    cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD)
-                    cell.monthLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .MMM)
+                    cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD, isUTC: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "") ?? bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                    cell.monthLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .MMM) ?? bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM, isUTC: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
                 } else {
                     cell.eventNameLbl.text = Constant.String.liveCoverTicket
                     cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)

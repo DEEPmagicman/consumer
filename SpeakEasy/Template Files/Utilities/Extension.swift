@@ -78,17 +78,6 @@ extension String {
         }
     }
     
-    func toDate(withFormat format: DateFormat, isUTC: Bool = true)-> Date? {
-        let dateFormatter = DateFormatter()
-        if isUTC {
-            dateFormatter.timeZone = TimeZone(identifier: "UTC")            
-        } else {
-            dateFormatter.timeZone = .current
-        }
-        dateFormatter.dateFormat = format.rawValue
-        return dateFormatter.date(from: self)
-    }
-    
     func displayUpdatedAgo(from: DateFormat, to: DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {
         let oldDateFormatter = DateFormatter()
         oldDateFormatter.dateFormat = from.rawValue

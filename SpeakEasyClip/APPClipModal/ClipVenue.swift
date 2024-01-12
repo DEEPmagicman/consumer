@@ -41,6 +41,7 @@ struct ClipVenue: Codable {
     var allowCC: Bool?
     var availableTimeSlot: Bool?
     var speakEasyCharges: String?
+    var event: [Event]?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -192,6 +193,7 @@ struct ClipVenue: Codable {
         try container.encode(venueSettings, forKey: .venueSettings)
         try container.encode(availableTimeSlot, forKey: .availableTimeSlot)
         try container.encode(speakEasyCharges, forKey: .speakEasyCharges)
+        try container.encodeIfPresent(event, forKey: .event)
     }
 }
 
@@ -284,6 +286,7 @@ struct VenueSettings: Codable {
     var currencyCode: String?
     var coverTicketFeesSettings: CoverTicketFeesSettings?
     var customCoverTicketFeesSettings: CoverTicketFeesSettings?
+    var tableBookingFeesSettings: CoverTicketFeesSettings?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -298,6 +301,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(currencyCode, forKey: .currencyCode)
         try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
         try container.encodeIfPresent(customCoverTicketFeesSettings, forKey: .customCoverTicketFeesSettings)
+        try container.encodeIfPresent(tableBookingFeesSettings, forKey: .tableBookingFeesSettings)
     }
 }
 
