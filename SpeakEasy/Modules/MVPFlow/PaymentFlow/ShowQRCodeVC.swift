@@ -47,6 +47,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var qrImageFrame: UIImageView!
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var discountAmount: UILabel!
+    @IBOutlet weak var bookingTitleLbl: UILabel!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -100,9 +101,10 @@ final class ShowQRCodeVC: UIViewController {
     }
     
     private func setupData() {
+        bookingTitleLbl.text = booking?.bookingType == "APPCLIP" || booking?.bookingType == "FREE_APPCLIP" ? "Venue Cover" : "Table Reservation"
         qrImage.image = generateQRCode(from: bookingId)
         backupCode.text = booking?.venueObject?.bookingCode ?? ""
-        bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD) ?? "")"
+        bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if booking?.venueObject?.bookingCode ?? "" != "" {
             containerView.isUserInteractionEnabled = true
         }
@@ -233,35 +235,51 @@ final class ShowQRCodeVC: UIViewController {
     }
     
     private func setFeeData() {
+        totalAmount.text = "-"
+        switch booking?.bookingType ?? "" {
+        case "FREE_EVENT_TICKET", "FREE_APPCLIP":
+            totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
+        case "EVENT_TICKET":
+            if booking?.venueObject?.event?.first?.upfront == false {
+                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 ? true : false
+                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 ? true : false
+                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 ? true : false
+                discountView.isHidden = booking?.fees?.discount ?? 0 == 0 ? true : false
+                subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
+            }
+        case "APPCLIP":
+            let ticketId = booking?.bookingHasItem.first?.ticketId
+            let ticket = booking?.venueObject?.appClipTicket?.filter({$0.id == ticketId})
+            if ticket?.first?.isCustom == true {
+                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == false ? true : false
+                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == false ? true : false
+                subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
+            } else {
+                if booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
+                    processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                    salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false ? true : false
+                    customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false ? true : false
+                    subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
+                }
+            }
+        case "TABLE_BOOKING":
+            if booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isUpFront == false {
+                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0  == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isEnableSalesTax == false ? true : false
+                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isEnableCustomFee == false ? true : false
+                subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
+            }
+        default:
+            break
+        }
         
-        if booking?.event?.upfront == true {
-            if booking?.fees?.discount == 0 {
-                subTotalView.isHidden = true
-            } else {
-                subTotalView.isHidden = false
-            }
-        } else {
-            subTotalView.isHidden = booking?.fees?.subTotal == booking?.fees?.total
-        }
         subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
-        salesTaxView.isHidden = subTotalView.isHidden == true || booking?.fees?.salesTax == 0
         salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
-        if type == .appClip {
-            if booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false {
-                processingFeeView.isHidden = true
-            } else if booking?.fees?.processingFee ?? 0 == 0 {
-                processingFeeView.isHidden = true
-            } else {
-                processingFeeView.isHidden = false
-            }
-        }
         processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
-        customFeeView.isHidden = subTotalView.isHidden == true || booking?.fees?.customFee == 0
         customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
         customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
-        discountView.isHidden = subTotalView.isHidden == true || booking?.fees?.discount == 0
         discountAmount.text = "-\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.discount ?? 0).decimalFormat(true))"
-        totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
         noFeeView.isHidden = !(subTotalView.isHidden && salesTaxView.isHidden && processingFeeView.isHidden && customFeeView.isHidden)
         totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
     }

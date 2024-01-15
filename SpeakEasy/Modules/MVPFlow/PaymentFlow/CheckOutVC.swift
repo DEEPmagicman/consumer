@@ -17,7 +17,7 @@ import StripePaymentSheet
 final class CheckOutVC: UIViewController, ApplePayContextDelegate {
 
     @IBOutlet private weak var purchaseImg: UIImageView!
-    @IBOutlet private weak var titleLbl: UILabel!
+    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet private weak var dateLbl: UILabel!
     @IBOutlet private weak var venueNameLbl: UILabel!
     @IBOutlet private weak var totalPriceLbl: UILabel!
