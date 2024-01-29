@@ -191,7 +191,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
-            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.customCoverTicketFeesSettings?.isUpFront == false ? true : false
         }
         
         if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true {
