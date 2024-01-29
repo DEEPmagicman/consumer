@@ -102,10 +102,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Exz-fy-1Py">
-                                                <rect key="frame" x="16" y="342" width="102.5" height="36"/>
+                                                <rect key="frame" x="16" y="342" width="99.5" height="36"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Entry Tiers:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QYZ-Jq-wvX">
-                                                        <rect key="frame" x="0.0" y="5.5" width="102.5" height="25.5"/>
+                                                        <rect key="frame" x="0.0" y="5.5" width="99.5" height="25.5"/>
                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="18"/>
                                                         <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -322,7 +322,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checkout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sjr-8Q-gwD">
-                                        <rect key="frame" x="145" y="0.0" width="124.5" height="35"/>
+                                        <rect key="frame" x="145.5" y="0.0" width="123" height="35"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="25"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -734,7 +734,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="362" height="24"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E0h-Qs-3Ql">
-                                                                        <rect key="frame" x="0.0" y="1" width="42" height="22.5"/>
+                                                                        <rect key="frame" x="0.0" y="1" width="41" height="22.5"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>
@@ -1071,6 +1071,7 @@
                         <outlet property="policyView" destination="GvM-z7-Ilv" id="b5l-bq-v5D"/>
                         <outlet property="processingFeeAmount" destination="2Vz-8I-CV5" id="WFU-9w-zGC"/>
                         <outlet property="processingFeeView" destination="zmo-Es-Gw6" id="dkB-pV-Sh7"/>
+                        <outlet property="salesTaxName" destination="FhP-An-cTx" id="49A-3i-kX5"/>
                         <outlet property="salesTaxPr" destination="cby-e5-ecu" id="I1X-7Y-7Lt"/>
                         <outlet property="salesTextAmount" destination="f5X-XK-7zZ" id="t21-qT-Iei"/>
                         <outlet property="salesTextView" destination="ubQ-Ap-ex3" id="cqH-0h-sYy"/>
@@ -1235,14 +1236,14 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="akb-cV-p5d">
-                                <rect key="frame" x="125.5" y="846.5" width="163" height="0.5"/>
+                                <rect key="frame" x="127.5" y="846.5" width="159" height="0.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.69999999999999996" id="bpz-Uq-uQi"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ger-eU-gc6">
-                                <rect key="frame" x="125.5" y="823" width="163" height="33"/>
+                                <rect key="frame" x="127.5" y="823" width="159" height="33"/>
                                 <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="BUY ANOTHER TICKET"/>
@@ -1288,7 +1289,7 @@
     </scenes>
     <resources>
         <image name="BackArrow" width="26.5" height="19"/>
-        <image name="Ic-share" width="43" height="43"/>
+        <image name="Ic-share" width="35" height="35"/>
         <image name="checkBoxEmpty" width="22" height="22"/>
         <image name="livelifelive" width="121.5" height="24"/>
         <image name="newSpeakeasy" width="308" height="80"/>

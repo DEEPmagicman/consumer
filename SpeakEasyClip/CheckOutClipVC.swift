@@ -53,6 +53,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var noFeeView: UIView!
     @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var emailValidationLbl: UILabel!
+    @IBOutlet weak var salesTaxName: UILabel!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -256,7 +257,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["custom_fee_name"] as? String {
+            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["custom_fee_name"] as? String, let salesTaxName = json["sales_tax_name"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
                     self.subTotalView.isHidden = !self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView
@@ -272,6 +273,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.customFeeName.text = customFeeName == "" ? "Custom Fee" : customFeeName
                     self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
                     self.totalPrice = total
+                    self.salesTaxName.text = salesTaxName == "" ? "Sales Tax" : salesTaxName
                 }
             }
         }
