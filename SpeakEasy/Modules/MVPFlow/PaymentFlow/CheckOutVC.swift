@@ -49,6 +49,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var discountAmount: UILabel!
     @IBOutlet weak var promoCodeAppliedLbl: UILabel!
+    @IBOutlet weak var salesTaxName: UILabel!
     
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedEventTicket = [EventTicket]()
@@ -468,6 +469,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             totalPrice = paymentDetail?.total ?? 0
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
+            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
             if paymentDetail?.customFee ?? 0 == 0 {
                 customFeesView.isHidden = true
             } else {
@@ -511,6 +513,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
+            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
         }
     }
     

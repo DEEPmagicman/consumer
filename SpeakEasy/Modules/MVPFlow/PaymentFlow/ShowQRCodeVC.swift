@@ -48,6 +48,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var discountAmount: UILabel!
     @IBOutlet weak var bookingTitleLbl: UILabel!
+    @IBOutlet weak var salesTaxName: UILabel!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -276,6 +277,7 @@ final class ShowQRCodeVC: UIViewController {
         
         subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
         salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
+        salesTaxName.text = booking?.fees?.salesTaxName ?? "" == "" ? "Sales Tax" : booking?.fees?.salesTaxName
         processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
         customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
         customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
