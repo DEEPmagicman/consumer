@@ -145,6 +145,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
             promoCodeView.isHidden = true
+            venueNameLbl.text = venue?.name ?? ""
         case .singleTickedEvent:
             noFeeView.isHidden = !(event?.upfront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
@@ -152,10 +153,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             bgImage.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             promoCodeView.isHidden = false
+            venueNameLbl.text = (event?.customVenue != nil && venue?.venueSettings?.isOrganizer == true) ? "\(event?.customVenue?.name ?? ""), \(event?.customVenue?.address ?? "")" : "\(venue?.name ?? "")"
         case .tieredTickedEvent:
             break
         }
-        venueNameLbl.text = venue?.name ?? ""
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
     }

@@ -22,7 +22,7 @@ struct ClipVenue: Codable {
     var pinCode: String
     var code: String
     var phone: String
-    var website: String
+//    var website: String
     var description: String?
     var status: String
     var bookingStatus: String
@@ -176,7 +176,7 @@ struct ClipVenue: Codable {
         try container.encode(pinCode, forKey: .pinCode)
         try container.encode(code, forKey: .code)
         try container.encode(phone, forKey: .phone)
-        try container.encode(website, forKey: .website)
+//        try container.encode(website, forKey: .website)
         try container.encode(description, forKey: .description)
         try container.encode(status, forKey: .status)
         try container.encode(bookingStatus, forKey: .bookingStatus)
@@ -287,6 +287,7 @@ struct VenueSettings: Codable {
     var coverTicketFeesSettings: CoverTicketFeesSettings?
     var customCoverTicketFeesSettings: CoverTicketFeesSettings?
     var tableBookingFeesSettings: CoverTicketFeesSettings?
+    var isOrganizer: Bool?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -302,6 +303,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
         try container.encodeIfPresent(customCoverTicketFeesSettings, forKey: .customCoverTicketFeesSettings)
         try container.encodeIfPresent(tableBookingFeesSettings, forKey: .tableBookingFeesSettings)
+        try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
     }
 }
 

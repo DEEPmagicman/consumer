@@ -141,7 +141,7 @@ final class ShowQRCodeVC: UIViewController {
                 titleLbl.text = booking.event?.title
                 monthLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 dateLbl.text = booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
-                venueNameLbl.text = "\(booking.venueObject?.name ?? ""), \(booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
+                venueNameLbl.text = "\((booking.event?.customVenue != nil && booking.venueObject?.venueSettings?.isOrganizer == true) ? "\(booking.venueObject?.name ?? "") by \(booking.event?.customVenue?.name ?? "")" : "\(booking.venueObject?.name ?? "")") , \(booking.event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
                 venueLogo.isHidden = true
                 eventTicketDetailsView.isHidden = false
                 coverTicketDetailsView.isHidden = true

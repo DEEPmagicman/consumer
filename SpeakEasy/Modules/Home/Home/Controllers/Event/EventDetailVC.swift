@@ -37,6 +37,9 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var continueBtnBGView: UIView!
     @IBOutlet weak var eventAddressView: UIView!
     @IBOutlet weak var venueLogo: UIImageView!
+    @IBOutlet weak var organizerName: UILabel!
+    @IBOutlet weak var organizerView: UIView!
+    @IBOutlet weak var organizerLocation: UILabel!
     
     var eventId: String?
     var venueDetails: ClipVenue?
@@ -104,6 +107,7 @@ final class EventDetailVC: UIViewController {
         mapView.isScrollEnabled = false
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         WebSocketWrapper.shared.delegate.append(self)
+  //      organizerView.isHidden = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -115,8 +119,11 @@ final class EventDetailVC: UIViewController {
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event?.title ?? "Untitle Event"
         headerTitleLbl.text = event?.title ?? "Untitle Event"
-        venueTitleLbl.text = "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+        venueTitleLbl.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(venueDetails?.name ?? "") by \(event?.customVenue?.name ?? "")" : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         venueNameLbl.text = "\(venueDetails?.name ?? "")"
+        organizerName.text = event?.customVenue?.name ?? ""
+        organizerLocation.text = event?.customVenue?.address ?? ""
+        organizerView.isHidden = !(venueDetails?.venueSettings?.isOrganizer == true)
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         locationLbl.text = venueDetails?.address

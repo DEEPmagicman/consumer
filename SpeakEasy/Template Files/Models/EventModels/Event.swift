@@ -10,6 +10,7 @@ import Foundation
 struct Event: Codable {
 
     var flyer: Flyer?
+    var customVenue: CustomVenue?
     var id: String
     var eventId: String?
     var venueId: String
@@ -63,6 +64,7 @@ struct Event: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(flyer, forKey: .flyer)
+        try container.encode(customVenue, forKey: .customVenue)
         try container.encode(id, forKey: .id)
         try container.encode(eventId, forKey: .eventId)
         try container.encode(venueId, forKey: .venueId)
@@ -114,5 +116,17 @@ struct Artists: Codable {
         try container.encode(status, forKey: .status)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}
+
+struct CustomVenue: Codable {
+    
+    var name: String
+    var address: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(address, forKey: .address)
     }
 }
