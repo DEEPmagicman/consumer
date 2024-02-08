@@ -53,6 +53,15 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var showMoreUpcoming: UIView!
     @IBOutlet weak var showMoreTonightView: UIView!
     @IBOutlet weak var winstonHouseNoticeView: UIView!
+    @IBOutlet weak var venueDetailsView: UIView!
+    @IBOutlet weak var organizerView: UIView!
+    @IBOutlet weak var organizerVenueName: UILabel!
+    @IBOutlet weak var organizerVenueAddress: UILabel!
+    @IBOutlet weak var organizerVenueLogo: UIImageView!
+    @IBOutlet weak var descriptionView: UIView!
+    @IBOutlet weak var descriptionText: UILabel!
+    @IBOutlet weak var organizerVenueAddressView: UIView!
+    @IBOutlet weak var locationImg: UIImageView!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -252,10 +261,14 @@ final class MVPVenueDetailVc: UIViewController {
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
+        organizerVenueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
         locationLbl.text = venueDetails?.address
+        organizerVenueName.text = venueDetails?.name
+        organizerVenueAddress.text = venueDetails?.website ?? "" != "" ? venueDetails?.website : venueDetails?.address ?? ""
+        descriptionText.text = venueDetails?.description
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         venueNameLbl.text = venueDetails?.name ?? ""
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
@@ -287,6 +300,25 @@ final class MVPVenueDetailVc: UIViewController {
         }
         updatedAtLbl.text = venueDetails?.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) ?? ""
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
+        if venueDetails?.venueSettings?.isOrganizer == true {
+            cityNameLbl.isHidden = true
+            openingHoursView.isHidden = true
+            dressCodeView.isHidden = true
+            organizerView.isHidden = false
+            venueDetailsView.isHidden = true
+            descriptionView.isHidden = false
+        }
+        if venueDetails?.website ?? "" != "" {
+            locationImg.image = UIImage(named: "ic-link")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
+            organizerVenueAddressView.addGestureRecognizer(tap)
+        }
+    }
+    
+    @objc func onClickWebSite() {
+        if let url = URL(string: venueDetails?.website ?? "") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
     
     private func updateCloseViewVisibility() {
@@ -369,7 +401,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         case ticketTypeTableView:
             return venueDetails?.appClipTicket?.count ?? 0
         case openingHoursTableView:
-            openingHoursView.isHidden = venueDetails?.openHours.count == 0
+            openingHoursView.isHidden = (venueDetails?.openHours.count == 0 || venueDetails?.venueSettings?.isOrganizer == true)
             return venueDetails?.openHours.count ?? 0
         case upcomingTableView:
             upcomingSectionView.isHidden = events.count == 0

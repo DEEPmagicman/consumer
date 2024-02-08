@@ -30,6 +30,15 @@ final class InviteLinkVC: UIViewController {
     @IBOutlet weak var scrollViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var zeroCaseView: UIView!
     @IBOutlet weak var continueBtnBGView: UIView!
+    @IBOutlet weak var venueDetailsView: UIView!
+    @IBOutlet weak var organizerView: UIView!
+    @IBOutlet weak var organizerAddress: UILabel!
+    @IBOutlet weak var locationImg: UIImageView!
+    @IBOutlet weak var organizerAddressView: UIView!
+    @IBOutlet weak var organizerName: UILabel!
+    @IBOutlet weak var organizerImage: UIImageView!
+    @IBOutlet weak var descriptionView: UIView!
+    @IBOutlet weak var descriptionText: UILabel!
     
     var inviteId = ""
     private var inviteObj: Invite?
@@ -63,6 +72,16 @@ final class InviteLinkVC: UIViewController {
     
     private func setupData() {
         mainImg.sd_setImage(with: URL(string: (inviteObj?.venue.venueAttachment.first?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        organizerImage.sd_setImage(with: URL(string: (inviteObj?.venue.logo?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        organizerName.text = inviteObj?.venue.name
+        organizerAddress.text = inviteObj?.venue.website ?? "" != "" ? inviteObj?.venue.website : inviteObj?.venue.address
+        descriptionText.text = inviteObj?.venue.description ?? "-"
+        if inviteObj?.venue.venueSettings?.isOrganizer == true {
+            dressCodeView.isHidden = true
+            venueDetailsView.isHidden = true
+            organizerView.isHidden = false
+            descriptionView.isHidden = false
+        }
         titleLbl.text = inviteObj?.name ?? "Untitle"
         headerTitleLbl.text = inviteObj?.name ?? "Untitle"
         venueTitleLbl.text = "\(inviteObj?.venue.name ?? ""), \(inviteObj?.venue.city ?? "")"
@@ -79,6 +98,17 @@ final class InviteLinkVC: UIViewController {
             timingLbl.text = ""
         }
         updateContinueBtn(show: true)
+        if inviteObj?.venue.website ?? "" != "" {
+            locationImg.image = UIImage(named: "ic-link")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
+            organizerAddressView.addGestureRecognizer(tap)
+        }
+    }
+    
+    @objc func onClickWebSite() {
+        if let url = URL(string: inviteObj?.venue.website ?? "") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
     
     private func updateContinueBtn(show: Bool = false) {

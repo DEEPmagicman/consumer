@@ -102,6 +102,9 @@ final class ShowQRCodeVC: UIViewController {
     
     private func setupData() {
         bookingTitleLbl.text = booking?.bookingType == "APPCLIP" || booking?.bookingType == "FREE_APPCLIP" ? "Venue Cover" : "Table Reservation"
+        if booking?.bookingType == "INVITE_LINK" {
+            bookingTitleLbl.text = booking?.inviteLink?.name
+        }
         qrImage.image = generateQRCode(from: bookingId)
         backupCode.text = booking?.venueObject?.bookingCode ?? ""
         bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
@@ -135,7 +138,7 @@ final class ShowQRCodeVC: UIViewController {
                 venueLogo.isHidden = false
                 eventTicketDetailsView.isHidden = true
                 coverTicketDetailsView.isHidden = false
-                ticketTypeLbl.text = "Venue Details"
+                ticketTypeLbl.text = booking.venueObject?.venueSettings?.isOrganizer == true ? "Organizer Details" : "Venue Details"
             case .singleTickedEvent:
                 venueImg.sd_setImage(with: URL(string: (booking.event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
                 titleLbl.text = booking.event?.title

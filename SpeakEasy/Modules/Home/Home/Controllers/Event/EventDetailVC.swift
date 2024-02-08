@@ -40,6 +40,10 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var organizerName: UILabel!
     @IBOutlet weak var organizerView: UIView!
     @IBOutlet weak var organizerLocation: UILabel!
+    @IBOutlet weak var organizerLocationView: UIView!
+    @IBOutlet weak var locationImage: UIImageView!
+    @IBOutlet weak var descriptionView: UIView!
+    @IBOutlet weak var descriptionText: UILabel!
     
     var eventId: String?
     var venueDetails: ClipVenue?
@@ -122,7 +126,10 @@ final class EventDetailVC: UIViewController {
         venueTitleLbl.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(venueDetails?.name ?? "") by \(event?.customVenue?.name ?? "")" : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         venueNameLbl.text = "\(venueDetails?.name ?? "")"
         organizerName.text = event?.customVenue?.name ?? ""
-        organizerLocation.text = event?.customVenue?.address ?? ""
+        organizerLocation.text = venueDetails?.website ?? "" != "" ? venueDetails?.website : event?.customVenue?.address ?? ""
+        dressCodeView.isHidden = venueDetails?.venueSettings?.isOrganizer == true
+        descriptionView.isHidden = venueDetails?.venueSettings?.isOrganizer == false
+        descriptionText.text = venueDetails?.description ?? "-"
         organizerView.isHidden = !(venueDetails?.venueSettings?.isOrganizer == true)
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
@@ -156,6 +163,17 @@ final class EventDetailVC: UIViewController {
             }
         }
         eventAddressView.isHidden = !(event?.showAddress ?? true) ? true : false
+        if venueDetails?.website ?? "" != "" {
+            locationImage.image = UIImage(named: "ic-link")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
+            organizerLocationView.addGestureRecognizer(tap)
+        }
+    }
+    
+    @objc func onClickWebSite() {
+        if let url = URL(string: venueDetails?.website ?? "") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
     }
     
     private func getEventDetail() {
