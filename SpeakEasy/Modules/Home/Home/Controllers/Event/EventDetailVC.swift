@@ -123,19 +123,17 @@ final class EventDetailVC: UIViewController {
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event?.title ?? "Untitle Event"
         headerTitleLbl.text = event?.title ?? "Untitle Event"
-        venueTitleLbl.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(venueDetails?.name ?? "") by \(event?.customVenue?.name ?? "")" : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
-        venueNameLbl.text = "\(venueDetails?.name ?? "")"
-        organizerName.text = event?.customVenue?.name ?? ""
+        venueTitleLbl.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(event?.customVenue?.name ?? "") by \(venueDetails?.name ?? "")" : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+        organizerName.text = "\(venueDetails?.name ?? "")"
         organizerLocation.text = venueDetails?.website ?? "" != "" ? venueDetails?.website : event?.customVenue?.address ?? ""
         dressCodeView.isHidden = venueDetails?.venueSettings?.isOrganizer == true
-        descriptionView.isHidden = venueDetails?.venueSettings?.isOrganizer == false
+        descriptionView.isHidden = venueDetails?.venueSettings?.isOrganizer ?? false == false
         descriptionText.text = venueDetails?.description ?? "-"
         organizerView.isHidden = !(venueDetails?.venueSettings?.isOrganizer == true)
         detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
-        locationLbl.text = venueDetails?.address
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
-        updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
+        updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
         dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
@@ -163,6 +161,15 @@ final class EventDetailVC: UIViewController {
             }
         }
         eventAddressView.isHidden = !(event?.showAddress ?? true) ? true : false
+        if venueDetails?.venueSettings?.isOrganizer == true {
+            venueNameLbl.text = event?.customVenue?.name ?? ""
+            locationLbl.text = event?.customVenue?.address ?? "-"
+            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+        } else {
+            venueNameLbl.text = venueDetails?.name ?? ""
+            locationLbl.text = venueDetails?.address ?? "-"
+            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+        }
         if venueDetails?.website ?? "" != "" {
             locationImage.image = UIImage(named: "ic-link")
             let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
