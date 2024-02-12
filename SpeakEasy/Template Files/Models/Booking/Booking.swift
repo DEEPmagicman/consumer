@@ -46,6 +46,7 @@ struct Booking: Codable {
     var floorPlanTimeSlotBooking: [TimeSlot]?
     var inviteLink: InviteLink?
     var fees: PaymentDetail?
+    var guestList: GuestList?
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
         var tickets = [BookingHasItem]()
@@ -99,6 +100,7 @@ struct Booking: Codable {
         case floorPlanTimeSlotBooking = "FloorPlanTimeSlotBooking"
         case inviteLink = "InviteLink"
         case fees
+        case guestList
     }
 
     func encode(to encoder: Encoder) throws {
@@ -139,6 +141,7 @@ struct Booking: Codable {
         try container.encode(ticketDetails, forKey: .ticketDetails)
         try container.encode(floorPlanTimeSlotBooking, forKey: .floorPlanTimeSlotBooking)
         try container.encodeIfPresent(fees, forKey: .fees)
+        try container.encodeIfPresent(guestList, forKey: .guestList)
     }
 }
 
@@ -211,5 +214,33 @@ struct InviteLink: Codable {
         try container.encode(uniqueId, forKey: .uniqueId)
         try container.encode(date, forKey: .date)
         try container.encode(name, forKey: .name)
+    }
+}
+
+struct GuestList: Codable {
+    
+    var id: String
+    var name: String
+    var startTime: String
+    var endTime: String?
+    var description: String?
+    var category: String
+    var venueId: String
+    var createdAt: String
+    var updatedAt: String
+    var count: Int?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(startTime, forKey: .startTime)
+        try container.encode(endTime, forKey: .endTime)
+        try container.encode(description, forKey: .description)
+        try container.encode(category, forKey: .category)
+        try container.encode(venueId, forKey: .venueId)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(count, forKey: .count)
     }
 }

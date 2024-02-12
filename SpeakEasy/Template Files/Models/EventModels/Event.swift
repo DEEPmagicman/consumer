@@ -123,10 +123,24 @@ struct CustomVenue: Codable {
     
     var name: String
     var address: String
-    
+    var city: String?
+    var pinCode: String?
+    var lat: String?
+    var lng: String?
+    // MARK: App side parameter
+    var latitude: Double {
+        Double(lat ?? "0") ?? 0.0
+    }
+    var longitude: Double {
+        Double(lng ?? "0") ?? 0.0
+    }
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
         try container.encode(address, forKey: .address)
+        try container.encode(city, forKey: .city)
+        try container.encode(pinCode, forKey: .pinCode)
+        try container.encode(lat, forKey: .lat)
+        try container.encode(lng, forKey: .lng)
     }
 }

@@ -516,7 +516,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 }
                 cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
             }
-            cell.cityNameLbl.text = venueDetails?.name
+            cell.cityNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(event.customVenue?.name ?? "")" : "\(venueDetails?.name ?? "")"
             cell.imageWidth.constant = 0
             cell.setUI()
             return cell

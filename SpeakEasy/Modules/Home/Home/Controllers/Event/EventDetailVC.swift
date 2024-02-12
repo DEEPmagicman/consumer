@@ -164,7 +164,7 @@ final class EventDetailVC: UIViewController {
         if venueDetails?.venueSettings?.isOrganizer == true {
             venueNameLbl.text = event?.customVenue?.name ?? ""
             locationLbl.text = event?.customVenue?.address ?? "-"
-            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
+            updateLocationOnMap(to: CLLocationCoordinate2D(latitude: event?.customVenue?.latitude ?? 0, longitude: event?.customVenue?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
         } else {
             venueNameLbl.text = venueDetails?.name ?? ""
             locationLbl.text = venueDetails?.address ?? "-"

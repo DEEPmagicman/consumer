@@ -104,7 +104,10 @@ final class ShowQRCodeVC: UIViewController {
     private func setupData() {
         bookingTitleLbl.text = booking?.bookingType == "APPCLIP" || booking?.bookingType == "FREE_APPCLIP" ? "Venue Cover" : "Table Reservation"
         if booking?.bookingType == "INVITE_LINK" {
-            bookingTitleLbl.text = booking?.inviteLink?.name
+            bookingTitleLbl.text = booking?.inviteLink?.name ?? "-"
+            
+        } else if booking?.bookingType == "COMPED_TICKET" {
+            bookingTitleLbl.text = booking?.guestList?.name ?? "-"
         }
         qrImage.image = generateQRCode(from: bookingId)
         backupCode.text = booking?.venueObject?.bookingCode ?? ""
@@ -134,8 +137,13 @@ final class ShowQRCodeVC: UIViewController {
                     noteView.isHidden = true
                 }
                 venueNameLbl.text = booking.venueObject?.city
+                coverTicketDate.text = "-"
+                if booking.bookingType == "INVITE_LINK" || booking.bookingType == "COMPED_TICKET" {
+                    coverTicketDate.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                } else {
+                    coverTicketDate.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                }
                 coverTicketCity.text = "\(booking.venueObject?.name ?? ""), \(booking.venueObject?.city ?? "")"
-                coverTicketDate.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 venueLogo.isHidden = false
                 eventTicketDetailsView.isHidden = true
                 coverTicketDetailsView.isHidden = false
