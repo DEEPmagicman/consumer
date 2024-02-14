@@ -230,10 +230,17 @@ final class EventDetailVC: UIViewController {
     }
     
     @objc func openAppleMap() {
-        let coordinate = CLLocationCoordinate2DMake(venueDetails?.latitude ?? 0, venueDetails?.longitude ?? 0)
-        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
-        mapItem.name = venueDetails?.name
-        mapItem.openInMaps()
+        if venueDetails?.venueSettings?.isOrganizer == true {
+            let coordinate = CLLocationCoordinate2DMake(event?.customVenue?.latitude ?? 0, event?.customVenue?.longitude ?? 0)
+            let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
+            mapItem.name = event?.customVenue?.name ?? ""
+            mapItem.openInMaps()
+        } else {
+            let coordinate = CLLocationCoordinate2DMake(venueDetails?.latitude ?? 0, venueDetails?.longitude ?? 0)
+            let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinate, addressDictionary: nil))
+            mapItem.name = venueDetails?.name
+            mapItem.openInMaps()
+        }
     }
     
     func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
