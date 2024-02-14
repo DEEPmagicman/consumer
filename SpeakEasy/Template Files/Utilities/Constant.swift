@@ -75,7 +75,7 @@ struct Constant {
 //        static let coverTicketText = "Cover tickets expire in 2 hours after time of purchase."
         static let compedFreeTicket = "Comped Free Ticket"
         static let enjoyYourFreeTicket = "Enjoy your free ticket!"
-        static let dotDoorsOpenAt = "• Doors open at %@"
+        static let dotDoorsOpenAt = "• Doors open at"
         static let dash = "-"
         static let tableReservation = "Table Reservation"
     }

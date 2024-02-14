@@ -91,12 +91,8 @@ final class InviteLinkVC: UIViewController {
         locationLbl.text = inviteObj?.venue.address
         dressCodeLbl.text = inviteObj?.venue.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: inviteObj?.venue.latitude ?? 0, longitude: inviteObj?.venue.longitude ?? 0), with: inviteObj?.venue.name)
-        dateLbl.text = inviteObj?.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
-        if let hours = inviteObj?.venue.openHours.first(where: { $0.day.capitalized == inviteObj?.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEE) }) {
-            timingLbl.text = String(format: Constant.String.dotDoorsOpenAt, "\(hours.from.convertDateFormat(from: .HHmmss, to: .hmm_a, useDayLightSavingTime: true, customTimeZone: inviteObj?.venue.useTimezone ?? ""))")
-        } else {
-            timingLbl.text = ""
-        }
+        dateLbl.text = inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+        timingLbl.text = "\(Constant.String.dotDoorsOpenAt) \(inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a, customTimeZone: inviteObj?.venue.useTimezone ?? "") ?? "")"
         updateContinueBtn(show: true)
         if inviteObj?.venue.website ?? "" != "" {
             locationImg.image = UIImage(named: "ic-link")

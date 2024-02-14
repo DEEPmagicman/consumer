@@ -123,8 +123,8 @@ final class ShowQRCodeVC: UIViewController {
                 venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
-                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
-                    monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
+                    dateLbl.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                    monthLbl.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
                 } else {
                     titleLbl.text = booking.venueObject?.name
                     monthLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
@@ -139,7 +139,7 @@ final class ShowQRCodeVC: UIViewController {
                 venueNameLbl.text = booking.venueObject?.city
                 coverTicketDate.text = "-"
                 if booking.bookingType == "INVITE_LINK" || booking.bookingType == "COMPED_TICKET" {
-                    coverTicketDate.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
+                    coverTicketDate.text = "\(booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? ""), \(booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
                 } else {
                     coverTicketDate.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
                 }

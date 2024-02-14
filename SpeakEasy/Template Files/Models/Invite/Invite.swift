@@ -24,6 +24,7 @@ struct Invite: Codable {
     var createdAt: String
     var updatedAt: String
     var venue: ClipVenue
+    var guestList: GuestList?
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -42,5 +43,6 @@ struct Invite: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(venue, forKey: .venue)
+        try container.encodeIfPresent(guestList, forKey: .guestList)
     }
 }
