@@ -2812,6 +2812,97 @@
             </objects>
             <point key="canvasLocation" x="4602.898550724638" y="43.526785714285715"/>
         </scene>
+        <!--UpSellTicketVC-->
+        <scene sceneID="xQT-hz-ZJf">
+            <objects>
+                <viewController storyboardIdentifier="UpSellTicketVC" title="UpSellTicketVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qAp-ST-zx8" customClass="UpSellTicketVC" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5f7-nS-dNG">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vM5-va-UaN">
+                                <rect key="frame" x="18" y="94" width="28" height="28"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="28" id="Yj4-rE-cV7"/>
+                                    <constraint firstAttribute="height" constant="28" id="dMp-js-SF0"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="ic-leftArrow"/>
+                                <connections>
+                                    <action selector="onClickBack:" destination="CuA-eC-F38" eventType="touchUpInside" id="mQI-XR-C9f"/>
+                                    <action selector="onClickBackBtn:" destination="qAp-ST-zx8" eventType="touchUpInside" id="3Za-ME-d3X"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coat Check" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tb-xM-Xoa">
+                                <rect key="frame" x="64" y="88" width="89.5" height="21"/>
+                                <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Coat check tickets are required for each guest with coats. Please add a ticket for each guest in your party." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kVb-2R-11v">
+                                <rect key="frame" x="64" y="109" width="327" height="55"/>
+                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
+                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="highlightedColor" red="0.85098039219999999" green="0.85098039219999999" blue="0.85098039219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x9a-6p-R64">
+                                <rect key="frame" x="23" y="763" width="368" height="48"/>
+                                <color key="backgroundColor" red="0.96078431369999995" green="0.50588235290000005" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="FU4-yW-Pl6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="15"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="SKIP THIS &amp; CONTINUE TO CHECKOUT">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="24"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="onClickContinue:" destination="v5y-pb-cxD" eventType="touchUpInside" id="Flo-hA-J8v"/>
+                                    <action selector="onClickContinueBtn:" destination="qAp-ST-zx8" eventType="touchUpInside" id="iPX-qa-COX"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHs-dM-bym">
+                                <rect key="frame" x="16" y="202" width="382" height="547"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="qAp-ST-zx8" id="9jc-dM-6MC"/>
+                                    <outlet property="delegate" destination="qAp-ST-zx8" id="eus-3p-ai6"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ygj-es-d3I"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="kVb-2R-11v" firstAttribute="leading" secondItem="7tb-xM-Xoa" secondAttribute="leading" id="0CF-7G-Kvy"/>
+                            <constraint firstItem="ygj-es-d3I" firstAttribute="trailing" secondItem="kVb-2R-11v" secondAttribute="trailing" constant="23" id="2f7-Zt-CUZ"/>
+                            <constraint firstItem="SHs-dM-bym" firstAttribute="top" secondItem="kVb-2R-11v" secondAttribute="bottom" constant="38" id="5D6-pg-11s"/>
+                            <constraint firstItem="vM5-va-UaN" firstAttribute="top" secondItem="ygj-es-d3I" secondAttribute="top" constant="50" id="8Ep-rr-UNi"/>
+                            <constraint firstItem="ygj-es-d3I" firstAttribute="trailing" secondItem="x9a-6p-R64" secondAttribute="trailing" constant="23" id="8GF-YO-khe"/>
+                            <constraint firstItem="x9a-6p-R64" firstAttribute="leading" secondItem="5f7-nS-dNG" secondAttribute="leading" constant="23" id="ATc-mZ-eog"/>
+                            <constraint firstItem="7tb-xM-Xoa" firstAttribute="leading" secondItem="vM5-va-UaN" secondAttribute="trailing" constant="18" id="CPC-fg-FRR"/>
+                            <constraint firstItem="ygj-es-d3I" firstAttribute="bottom" secondItem="x9a-6p-R64" secondAttribute="bottom" constant="51" id="SfT-G8-wXL"/>
+                            <constraint firstItem="SHs-dM-bym" firstAttribute="leading" secondItem="5f7-nS-dNG" secondAttribute="leading" constant="16" id="X07-6S-ddm"/>
+                            <constraint firstItem="x9a-6p-R64" firstAttribute="top" secondItem="SHs-dM-bym" secondAttribute="bottom" constant="14" id="XvP-XR-0pk"/>
+                            <constraint firstItem="vM5-va-UaN" firstAttribute="leading" secondItem="ygj-es-d3I" secondAttribute="leading" constant="18" id="ZSM-pO-WCt"/>
+                            <constraint firstItem="kVb-2R-11v" firstAttribute="top" secondItem="7tb-xM-Xoa" secondAttribute="bottom" id="fOb-pi-Bvs"/>
+                            <constraint firstItem="7tb-xM-Xoa" firstAttribute="top" secondItem="vM5-va-UaN" secondAttribute="top" constant="-6" id="i2E-aE-0gQ"/>
+                            <constraint firstAttribute="trailing" secondItem="SHs-dM-bym" secondAttribute="trailing" constant="16" id="p1E-ot-XXT"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="continueBtn" destination="x9a-6p-R64" id="3FP-cg-pwW"/>
+                        <outlet property="ticketTypeTableView" destination="SHs-dM-bym" id="hJK-cq-Rez"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6IS-5a-nWq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5514" y="44"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ArrowRight" width="8.5" height="6"/>

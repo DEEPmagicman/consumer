@@ -125,6 +125,7 @@
 		84248DA928D3D66200A6E260 /* FeaturedVenue.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248DA728D3D66200A6E260 /* FeaturedVenue.xib */; };
 		84248DAE28D3DEE200A6E260 /* TabVenueCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248DAC28D3DEE200A6E260 /* TabVenueCVC.swift */; };
 		84248DAF28D3DEE200A6E260 /* TabVenueCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */; };
+		92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */; };
 		9D4A028B28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */; };
 		9D4A028C28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */; };
 		9D4A029028CE9E4B009CD670 /* CostSplitSelectionTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */; };
@@ -766,6 +767,7 @@
 		84248DA728D3D66200A6E260 /* FeaturedVenue.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeaturedVenue.xib; sourceTree = "<group>"; };
 		84248DAC28D3DEE200A6E260 /* TabVenueCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVenueCVC.swift; sourceTree = "<group>"; };
 		84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabVenueCVC.xib; sourceTree = "<group>"; };
+		92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellTicketVC.swift; sourceTree = "<group>"; };
 		9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasy_Consumer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectedBookingTVC.swift; sourceTree = "<group>"; };
 		9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectedBookingTVC.xib; sourceTree = "<group>"; };
@@ -1720,6 +1722,14 @@
 				84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */,
 			);
 			path = TabVenuesCVC;
+			sourceTree = "<group>";
+		};
+		92C9616F2B8F4CCD00D2EBC1 /* UpSell */ = {
+			isa = PBXGroup;
+			children = (
+				92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */,
+			);
+			path = UpSell;
 			sourceTree = "<group>";
 		};
 		9D4A028728CE9B91009CD670 /* TVC */ = {
@@ -3707,6 +3717,7 @@
 		E1A9E6DA28C55D540081FB28 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				92C9616F2B8F4CCD00D2EBC1 /* UpSell */,
 				CE677F932A4169C70025421D /* InviteLink */,
 				CE2605F029E55AA400C46EFA /* Event */,
 				CEAE5CD829E430D000CB20E5 /* PreSold */,
@@ -4568,6 +4579,7 @@
 				E11F4BAB28C8358C008D2E30 /* BookingCalenderTVC.swift in Sources */,
 				CE31687129DC274D00242CBF /* ConfirmEmailVC.swift in Sources */,
 				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
+				92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */,
 				E1A9E7F628C579690081FB28 /* FriendsListCVC.swift in Sources */,
 				E167055C28CA442800644BF0 /* SelectedTicketTVC.swift in Sources */,
 				E1A9E7D728C56FD10081FB28 /* ManageFriends.swift in Sources */,

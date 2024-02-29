@@ -78,6 +78,9 @@ struct Constant {
         static let dotDoorsOpenAt = "• Doors open at"
         static let dash = "-"
         static let tableReservation = "Table Reservation"
+        static let maxTicketSelectionReached = "Max ticket selection reached"
+        static let skipAndContinueBtnTitle = "SKIP THIS & CONTINUE TO CHECKOUT"
+        static let continueBtnTitle = "CONTINUE TO CHECKOUT"
     }
     
     struct Font {
