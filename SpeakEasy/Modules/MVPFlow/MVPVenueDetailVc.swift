@@ -62,6 +62,10 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var descriptionText: UILabel!
     @IBOutlet weak var organizerVenueAddressView: UIView!
     @IBOutlet weak var locationImg: UIImageView!
+    @IBOutlet weak var continueBtnView: UIView!
+    @IBOutlet weak var addOnsView: UIView!
+    @IBOutlet weak var buyUpsellBtn: UIButton!
+    @IBOutlet weak var checkOutIndicator: UIActivityIndicatorView!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -152,6 +156,8 @@ final class MVPVenueDetailVc: UIViewController {
             self.todaysEventTableHeight.constant = self.todaysEventTableView.contentSize.height
             self.todaysEventTableView.layoutIfNeeded()
         }
+        checkOutIndicator.startAnimating()
+        checkOutIndicator.isHidden = true
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -313,6 +319,8 @@ final class MVPVenueDetailVc: UIViewController {
             let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
+        addOnsView.isHidden = false
+        buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Buy Upsell", for: .normal)
     }
     
     @objc func onClickWebSite() {
@@ -336,6 +344,10 @@ final class MVPVenueDetailVc: UIViewController {
         shareBtn.isHidden = !isHidden
     }
     
+    @IBAction func onClickBuyUpSell(_ sender: Any) {
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
+    }
+    
     @IBAction func onClickContinue(_ sender: Any) {
         if UserDefault.shared.isGuest == true {
             Navigate.to.login(forceCreateAccount: true)
@@ -347,13 +359,35 @@ final class MVPVenueDetailVc: UIViewController {
             case .FREE:
                 createFreeBooking()
             case .PAID, .CUSTOM:
-                if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-                    Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], totalPrice: Double(totalPrice), type: .appClip)
-                    updateContinueBtn(forceRemove: true)
-                }
+                getUpSellItems()
             }
         } else {
             Navigate.externalURL(String(format: SharedURL.tableBookingURL, venueId ))
+        }
+    }
+    
+    private func selectedTickets() {
+        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], selectedAddOnsItem: [], totalPrice: Double(totalPrice), type: .appClip)
+            updateContinueBtn(forceRemove: true)
+        }
+    }
+    
+    private func getUpSellItems() {
+        checkOutIndicator.isHidden = false
+        continueBtn.setTitle("", for: .normal)
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+            guard let self = self else { return }
+            if isSuccess {
+                if total != 0 {
+                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails)
+                    self.updateContinueBtn(forceRemove: true)
+                } else {
+                    self.selectedTickets()
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
         }
     }
     
@@ -536,7 +570,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 return
             }
             VIPTableView.isHidden = true
-            continueBtn.isHidden = false
+            continueBtnView.isHidden = false
             scrollViewBottomConstraint.constant = 30
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
@@ -610,25 +644,26 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func updateContinueBtn(forceRemove: Bool = false) {
+        self.checkOutIndicator.isHidden = true
         DispatchQueue.main.async {
             if forceRemove {
                 self.venueDetails?.appClipTicket?.indices.forEach {
                     self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
                 }
                 if self.venueDetails?.availableTimeSlot ?? false {
-                    self.continueBtn.isHidden = true
+                    self.continueBtnView.isHidden = true
                     self.VIPTableView.isHidden = false
                     self.scrollViewBottomConstraint.constant = 134
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
                     self.scrollViewBottomConstraint.constant = 30
                     self.VIPTableView.isHidden = true
-                    self.continueBtn.isHidden = true
+                    self.continueBtnView.isHidden = true
                 }
                 self.ticketTypeTableView.reloadData()
                 return
             }
-            self.continueBtn.isHidden = false
+            self.continueBtnView.isHidden = false
             self.VIPTableView.isHidden = true
             switch self.selectedType {
             case .FREE:

@@ -245,10 +245,11 @@ final class Navigate {
         sender.present(imageViewer, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
+        vc.selectedAddOnsItem = selectedAddOnsItem
         vc.totalPrice = totalPrice
         vc.venue = venue
         vc.type = type
@@ -428,6 +429,14 @@ final class Navigate {
     func mvpCitySelection(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPCitySelectionVC.self)
         vc.citySelectionDelegate = sender as? CitySelectionDelegate
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?) {
+        let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(UpSellTicketVC.self)
+        vc.upSellTicket = upSellTicket
+        vc.hasMany = hasMany
+        vc.venueDetails = venueDetails
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

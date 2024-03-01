@@ -287,6 +287,7 @@ struct VenueSettings: Codable {
     var coverTicketFeesSettings: CoverTicketFeesSettings?
     var customCoverTicketFeesSettings: CoverTicketFeesSettings?
     var tableBookingFeesSettings: CoverTicketFeesSettings?
+    var addOnsBookingFeesSettings: CoverTicketFeesSettings?
     var isOrganizer: Bool?
 
     func encode(to encoder: Encoder) throws {
@@ -303,6 +304,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
         try container.encodeIfPresent(customCoverTicketFeesSettings, forKey: .customCoverTicketFeesSettings)
         try container.encodeIfPresent(tableBookingFeesSettings, forKey: .tableBookingFeesSettings)
+        try container.encodeIfPresent(addOnsBookingFeesSettings, forKey: .addOnsBookingFeesSettings)
         try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
     }
 }
@@ -316,6 +318,8 @@ struct CoverTicketFeesSettings: Codable {
     var customFeeType: String
     var customFee: Double
     var customFeeName: String?
+    var pageTitle: String?
+    var description: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -327,6 +331,8 @@ struct CoverTicketFeesSettings: Codable {
         try container.encode(customFeeType, forKey: .customFeeType)
         try container.encode(customFee, forKey: .customFee)
         try container.encode(customFeeName, forKey: .customFeeName)
+        try container.encodeIfPresent(pageTitle, forKey: .pageTitle)
+        try container.encodeIfPresent(description, forKey: .description)
     }
 }
 

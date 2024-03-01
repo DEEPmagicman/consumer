@@ -75,4 +75,28 @@ final class MVPPresenter {
             completion([], false, nil)
         }
     }
+    
+    static func getUpSellItem(venueId: String, skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
+        let param = ["skip": skip,"include": "addOns"] as [String: Any]
+        
+        AFWrapper.getRequest(APIBuilder.getAddOnsAPI(venueId), params: param, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool, let total = responseDic["total"] as? Int else {
+                completion(false, nil, [], false, 0)
+                return
+            }
+            if let venueList = [UpSellTicket].parse(menu) {
+                completion(true, nil, venueList, hasMore, total)
+            } else {
+                completion(false, "internal error", [], false, 0)
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [], false, 0)
+                return
+            }
+            completion(false, nil, [],false, 0)
+        }
+    }
 }

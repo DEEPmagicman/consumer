@@ -55,6 +55,7 @@ struct APIBuilder {
     static private let inviteLink = "/invite-link"
     static private let redeem = "/redeem"
     static private let redirect = "/redirect"
+    static private let addOns = "/add-ons"
     
     // version
     static let v2 = "/v2"
@@ -248,6 +249,14 @@ struct APIBuilder {
         return url
     }
     
+    static func successAddOnsPaymentURL(_ bookingId: String, paymentFrom: String? = nil) -> String {
+        var url = baseURL + route + payment + addOns  + "/" + bookingId + statusSuccess
+        if let paymentFrom = paymentFrom {
+            url += "&paymentType=\(paymentFrom.replacingOccurrences(of: " ", with: "%20"))"
+        }
+        return url
+    }
+    
     static var mvpCityListURL: String {
         baseURL + mvpCity
     }
@@ -274,6 +283,14 @@ struct APIBuilder {
     
     static func cancelBooking(_ bookingId: String) -> String {
         baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
+    }
+    
+    static func getAddOnsAPI(_ venueId: String) -> String {
+        baseURL + route + "/\(venueId)" + addOns
+    }
+    
+    static var addOnsPaymentIntent: String {
+        baseURL + route + payment + addOns
     }
 }
 
