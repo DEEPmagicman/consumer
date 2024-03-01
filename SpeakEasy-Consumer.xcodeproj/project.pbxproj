@@ -125,6 +125,11 @@
 		84248DA928D3D66200A6E260 /* FeaturedVenue.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248DA728D3D66200A6E260 /* FeaturedVenue.xib */; };
 		84248DAE28D3DEE200A6E260 /* TabVenueCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84248DAC28D3DEE200A6E260 /* TabVenueCVC.swift */; };
 		84248DAF28D3DEE200A6E260 /* TabVenueCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */; };
+		920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */; };
+		920B4D062B90AF8300C07402 /* CustomPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920B4D042B90AF8300C07402 /* CustomPagerViewCell.swift */; };
+		920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920B4D052B90AF8300C07402 /* CustomPagerViewCell.xib */; };
+		925067EF2B919FFD00841621 /* TicketCountTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925067ED2B919FFD00841621 /* TicketCountTVC.swift */; };
+		925067F02B919FFD00841621 /* TicketCountTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 925067EE2B919FFD00841621 /* TicketCountTVC.xib */; };
 		92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */; };
 		9D4A028B28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */; };
 		9D4A028C28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */; };
@@ -767,6 +772,11 @@
 		84248DA728D3D66200A6E260 /* FeaturedVenue.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeaturedVenue.xib; sourceTree = "<group>"; };
 		84248DAC28D3DEE200A6E260 /* TabVenueCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabVenueCVC.swift; sourceTree = "<group>"; };
 		84248DAD28D3DEE200A6E260 /* TabVenueCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabVenueCVC.xib; sourceTree = "<group>"; };
+		920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanQRCodeVC.swift; sourceTree = "<group>"; };
+		920B4D042B90AF8300C07402 /* CustomPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPagerViewCell.swift; sourceTree = "<group>"; };
+		920B4D052B90AF8300C07402 /* CustomPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomPagerViewCell.xib; sourceTree = "<group>"; };
+		925067ED2B919FFD00841621 /* TicketCountTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketCountTVC.swift; sourceTree = "<group>"; };
+		925067EE2B919FFD00841621 /* TicketCountTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketCountTVC.xib; sourceTree = "<group>"; };
 		92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellTicketVC.swift; sourceTree = "<group>"; };
 		9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasy_Consumer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectedBookingTVC.swift; sourceTree = "<group>"; };
@@ -1724,6 +1734,25 @@
 			path = TabVenuesCVC;
 			sourceTree = "<group>";
 		};
+		920B4CFF2B909F8000C07402 /* QRCodeCVC */ = {
+			isa = PBXGroup;
+			children = (
+				925067EC2B919F9C00841621 /* TicketCountTVC */,
+				920B4D042B90AF8300C07402 /* CustomPagerViewCell.swift */,
+				920B4D052B90AF8300C07402 /* CustomPagerViewCell.xib */,
+			);
+			path = QRCodeCVC;
+			sourceTree = "<group>";
+		};
+		925067EC2B919F9C00841621 /* TicketCountTVC */ = {
+			isa = PBXGroup;
+			children = (
+				925067ED2B919FFD00841621 /* TicketCountTVC.swift */,
+				925067EE2B919FFD00841621 /* TicketCountTVC.xib */,
+			);
+			path = TicketCountTVC;
+			sourceTree = "<group>";
+		};
 		92C9616F2B8F4CCD00D2EBC1 /* UpSell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1928,6 +1957,7 @@
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
+				920B4CFF2B909F8000C07402 /* QRCodeCVC */,
 				045D04C52B1739B000B68D9E /* PurchasesTVC */,
 				CE6813D829DEEEB300B41418 /* TicketDetailTVC */,
 				CE0E87482994C61000F2B2E9 /* Payment.storyboard */,
@@ -1935,6 +1965,7 @@
 				CE08978A2994FBE100EE6117 /* QRCodeVC.swift */,
 				CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */,
 				049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */,
+				920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -4223,6 +4254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */,
 				E1A9E7D628C56FD10081FB28 /* ManageFriends.xib in Resources */,
 				E1A9E7C328C56FD10081FB28 /* SearchAndAddCVC.xib in Resources */,
 				4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */,
@@ -4387,6 +4419,7 @@
 				CAC4140A28A478050007BA86 /* MonthCollectionViewCell.xib in Resources */,
 				CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */,
 				E1A9E7F528C579690081FB28 /* FriendsListCVC.xib in Resources */,
+				925067F02B919FFD00841621 /* TicketCountTVC.xib in Resources */,
 				E167059028CA6AB800644BF0 /* FriendTVC.xib in Resources */,
 				E11F4C0B28C835F3008D2E30 /* BookingStatusTVC.xib in Resources */,
 				84248DA428D3D3B400A6E260 /* AllVenues.xib in Resources */,
@@ -4656,6 +4689,7 @@
 				E17DC97228C6D01700244C4F /* Main.swift in Sources */,
 				CAC413F328A478040007BA86 /* Date.swift in Sources */,
 				BD942F4729599FED00D52115 /* Loader.swift in Sources */,
+				925067EF2B919FFD00841621 /* TicketCountTVC.swift in Sources */,
 				E11F4C0228C835F3008D2E30 /* Messages.swift in Sources */,
 				CAC4140028A478040007BA86 /* UILabel.swift in Sources */,
 				E11F4B9D28C8358C008D2E30 /* ViewEventTicketTVC.swift in Sources */,
@@ -4723,6 +4757,7 @@
 				E16705BA28CA6BB500644BF0 /* TicketRecipients.swift in Sources */,
 				E11F4BAA28C8358C008D2E30 /* VIPTableBookingHeaderView.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
+				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
 				CE4867BA286F358800FD277E /* UITextField+Extension.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
 				E1A9E7D128C56FD10081FB28 /* SearchAndAddTVC.swift in Sources */,
@@ -4790,6 +4825,7 @@
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
 				E1890C4728BD7EDD0000E406 /* StatusAndRewardsTVC.swift in Sources */,
 				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
+				920B4D062B90AF8300C07402 /* CustomPagerViewCell.swift in Sources */,
 				E1A9E76428C55D550081FB28 /* NotificationCitySelectionTVC.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
 				CE4867C4286F358800FD277E /* RoundedCorners.swift in Sources */,
