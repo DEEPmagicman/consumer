@@ -273,7 +273,7 @@ final class EventDetailVC: UIViewController {
             createFreeEventBooking()
         case .PAID, .CUSTOM:
             if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
+                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
                 updateContinueBtn(forceRemove: true)
             }
         }

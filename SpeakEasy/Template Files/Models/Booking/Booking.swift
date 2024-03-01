@@ -244,3 +244,56 @@ struct GuestList: Codable {
         try container.encode(count, forKey: .count)
     }
 }
+
+struct UpSellTicket: Codable {
+    
+    var id: String
+    var doormanId: String
+    var addOnsId: String
+    var price: Int
+    var status: String
+    var isDeleted: Bool
+    var createdAt: String
+    var updatedAt: String
+    var addOns: AddOns
+    // MARK: app side parameters
+    var selectedQuantity: Int?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(doormanId, forKey: .doormanId)
+        try container.encode(addOnsId, forKey: .addOnsId)
+        try container.encode(price, forKey: .price)
+        try container.encode(status, forKey: .status)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(addOns, forKey: .addOns)
+    }
+}
+
+struct AddOns: Codable {
+    
+    var id: String
+    var name: String
+    var description: String
+    var venueId: String
+    var status: String
+    var isDeleted: Bool
+    var createdAt: String
+    var updatedAt: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(description, forKey: .description)
+        try container.encode(venueId, forKey: .venueId)
+        try container.encode(status, forKey: .status)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+    }
+    
+}

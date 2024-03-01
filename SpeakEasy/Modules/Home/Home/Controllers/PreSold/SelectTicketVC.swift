@@ -94,7 +94,7 @@ final class SelectTicketVC: UIViewController {
 
     @IBAction func onClickContinue(_ sender: Any) {
         if let selectedTickets = event?.eventTicket?.filter({ $0.selectedTicketCount != nil }) {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, event: event, totalPrice: Double(totalPrice), type: .singleTickedEvent)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: Double(totalPrice), type: .singleTickedEvent)
         }
     }
     
