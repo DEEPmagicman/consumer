@@ -349,7 +349,7 @@ final class PaymentPresenter {
     
     static func successAddOnsPayment(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         
-        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: ["bookingId": bookingId, "status": "SUCCESS"], headers: Header.header()) { response in
+        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: ["bookingId": bookingId], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return

@@ -253,8 +253,9 @@ struct APIBuilder {
         return url
     }
     
+    
     static func successAddOnsPaymentURL(_ bookingId: String) -> String {
-        baseURL + route + payment + addOns  + "/\(bookingId)" + status
+        return baseURL + route + payment + addOns  + "/" + bookingId + statusSuccess
     }
     
     static var mvpCityListURL: String {
