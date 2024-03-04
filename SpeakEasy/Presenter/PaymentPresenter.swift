@@ -156,6 +156,26 @@ final class PaymentPresenter {
         }
     }
     
+    static func getAddOnsBooking(venueId: String, addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
+        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(venueId, addOnsBookingId), params: ["include": "AddOnsBookingHasItem.addons"], headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, nil)
+                return
+            }
+            if let booking = AddOnsBooking.parse(responseDic) {
+                completion(true, nil, booking)
+            } else {
+                completion(false, "internal error", nil)
+            }
+        } failure: { error in
+            if let err = error as NSError?, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            completion(false, nil, nil)
+        }
+    }
+    
     static func getPaymentIntent(bookingId: String, selectedTickets: [[String: Any]], promoCode: String? = "", type: PaymentIntentType, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ paymentHistoryId: String, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?, _ isFreeTicket: Bool) -> Void) {
         var param = ["cart": selectedTickets] as [String: Any]
         switch type {
@@ -329,7 +349,7 @@ final class PaymentPresenter {
     
     static func successAddOnsPayment(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         
-        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: ["bookingId": bookingId], headers: Header.header()) { response in
+        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: ["bookingId": bookingId, "status": "SUCCESS"], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return

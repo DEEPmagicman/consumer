@@ -50,6 +50,27 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var discountAmount: UILabel!
     @IBOutlet weak var promoCodeAppliedLbl: UILabel!
     @IBOutlet weak var salesTaxName: UILabel!
+    @IBOutlet weak var addOnsListHeight: NSLayoutConstraint!
+    @IBOutlet weak var ticketListView: UIView!
+    @IBOutlet weak var addOnsView: UIView!
+    @IBOutlet weak var totalView: UIView!
+    @IBOutlet weak var addOnsSubTotalView: UIView!
+    @IBOutlet weak var addOnsSubTotalAmount: UILabel!
+    @IBOutlet weak var addOnsProcessingFeeView: UIView!
+    @IBOutlet weak var addOnsProcessingFeeAmount: UILabel!
+    @IBOutlet private weak var addOnsCustomFeesView: UIView!
+    @IBOutlet private weak var addOnsCustomFeeAmount: UILabel!
+    @IBOutlet private weak var addOnsCustomFeeNameLbl: UILabel!
+    @IBOutlet weak var addOnsSalesTaxName: UILabel!
+    @IBOutlet weak var addOnsSalesTaxAmount: UILabel!
+    @IBOutlet weak var addOnsSalesTaxView: UIView!
+    @IBOutlet weak var addOnsNoFeeView: UIView!
+    @IBOutlet weak var addOnsTotalView: UIView!
+    @IBOutlet weak var addOnsTotal: UILabel!
+    @IBOutlet weak var mainTotalAmount: UILabel!
+    @IBOutlet weak var addOnsTableView: UITableView!
+    @IBOutlet weak var addOnsPaymentMethodView: UIView!
+    @IBOutlet weak var addOnsSeparatorHeight: NSLayoutConstraint!
     
     var selectedAppClipTickets = [AppClipTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
@@ -64,6 +85,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var paymentHistoryId = ""
     private var ephemeralKey = ""
     private var paymentDetail: PaymentDetail?
+    private var addOnsPaymentDetails: PaymentDetail?
     private var selectedId = Constant.String.defaultSelectedPM
     private var bookingId = ""
     private var isApplePayNotSupported: Bool {
@@ -71,6 +93,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     private var isPaymentInitiated = false
     private var ticketListHeightObservation: NSKeyValueObservation?
+    private var addOnsListHeightObservation: NSKeyValueObservation?
     private var timer = Timer()
     private var count = 600
     private var lastCount = 0
@@ -88,19 +111,36 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         } else {
             getAddOnsPaymentIntent(bookingId: "")
         }
+        
+        ticketListView.isHidden = (selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
+        addOnsView.isHidden = (selectedAppClipTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
+        totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
+        addOnsPaymentMethodView.isHidden = !(ticketListView.isHidden)
+        addOnsTotal.text = "-"
+        mainTotalAmount.text = "-"
         totalPriceLbl.text = "-"
         buyNowBtn.alpha = 0.5
         buyNowBtn.isUserInteractionEnabled = false
         setUpData()
+        addOnsTableView.delegate = self
+        addOnsTableView.dataSource = self
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        addOnsTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
+        
+        addOnsListHeightObservation = addOnsTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.addOnsListHeight.constant = self.addOnsTableView.contentSize.height
+            self.addOnsTableView.layoutIfNeeded()
+        }
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
         paymentMethodView.addGestureRecognizer(tap)
-        
+        let tap2 = UITapGestureRecognizer(target: self, action: #selector(onClickPaymentMethod))
+        addOnsPaymentMethodView.addGestureRecognizer(tap2)
         infoLbl.text = type == .appClip ? Constant.String.checkoutTextCover : Constant.String.checkoutTextEvent
         // \(type == .appClip ? Constant.String.coverTicketText : "")"
         infoLbl.highlightBold(["terms of service", "privacy policy"], size: 12, textColor: .white, addUnderLine: true)
@@ -337,6 +377,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             break
         }
         PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
+            Loader.hide()
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
                 if isFreeTicket {
@@ -381,25 +422,24 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
-            Loader.hide()
         }
     }
     
     private func getAddOnsPaymentIntent(bookingId: String) {
+        Loader.show()
         var addOnsItems = [[String: Any]]()
         selectedAddOnsItem.forEach {
             addOnsItems.append(["id": $0.id,
                                 "addOnsId": $0.addOns.id,
                                 "quantity": $0.selectedQuantity ?? 0])
         }
-        Loader.show()
         PaymentPresenter.addOnsPaymentIntent(bookingId: bookingId, venueId: venue?.id ?? "", addOnsItems: addOnsItems) { isSuccess, errMsg, clientSecret, ephemeralKey, paymentDetail in
             Loader.hide()
             if isSuccess {
+                self.addOnsPaymentDetails = paymentDetail
                 self.bookingId = bookingId
                 self.paymentIntent = clientSecret ?? ""
                 self.ephemeralKey = ephemeralKey
-                self.paymentDetail = paymentDetail
                 self.setUpPaymentBottomSheet()
             } else {
                 Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
@@ -531,7 +571,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 return
             }
         default:
-
+            setAddOnsData()
+            ticketListView.isHidden = selectedAppClipTickets.count == 0
+            addOnsSeparatorHeight.constant = selectedAppClipTickets.count != 0 ? 0.1 : 1
+            addOnsPaymentMethodView.isHidden = selectedAppClipTickets.count != 0
+            addOnsView.isHidden = selectedAddOnsItem.count == 0
+            totalView.isHidden = selectedAppClipTickets.count == 0 || selectedAddOnsItem.count == 0
             subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
             salesTexView.isHidden = !setSalesTaxView
             processingFeesView.isHidden = !setProcessingTaxView
@@ -542,12 +587,42 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             customFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.customFee ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
-            totalPrice = paymentDetail?.total ?? 0
+            totalPrice = ((paymentDetail?.total ?? 0) + (addOnsPaymentDetails?.total ?? 0))
+            mainTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((totalPrice).decimalFormat(true))"
             salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
             salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
         }
+    }
+    
+    private var setAddOnsSalesTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true ? true : false
+    }
+    
+    private var setAddOnsProcessingTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+    }
+    
+    private var setAddOnsCustomTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true ? true : false
+    }
+    
+    private func setAddOnsData() {
+        addOnsSubTotalView.isHidden = !setAddOnsSalesTaxView && !setAddOnsProcessingTaxView && !setAddOnsCustomTaxView
+        addOnsSalesTaxView.isHidden = !setAddOnsSalesTaxView
+        addOnsProcessingFeeView.isHidden = !setAddOnsProcessingTaxView
+        addOnsCustomFeesView.isHidden = !setAddOnsCustomTaxView
+        addOnsNoFeeView.isHidden = !addOnsSubTotalView.isHidden
+        
+        addOnsCustomFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.customFee ?? 0).decimalFormat(true))"
+        addOnsProcessingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.processingFee ?? 0).decimalFormat(true))"
+        addOnsTotal.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.total ?? 0).decimalFormat(true))"
+//        totalPrice = addOnsPaymentDetails?.total ?? 0
+        addOnsSalesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.salesTax ?? 0).decimalFormat(true))"
+        addOnsSubTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.subTotal ?? 0).decimalFormat(true))"
+        addOnsCustomFeeNameLbl.text = addOnsPaymentDetails?.customFeeName ?? "Custom fee"
+        addOnsSalesTaxName.text = addOnsPaymentDetails?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
     }
     
     @objc func promoCodeValueChange() {
@@ -601,11 +676,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
                     if self.selectedAddOnsItem.count == 0 {
                         self.timer.invalidate()
-                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                        if self.type == .appClip {
+                            Navigate.to.scanQR(self, bookingId: self.bookingId)
+                        } else {
+                            Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                        }
                     } else {
                         self.addOnsPaymentSuccess {
                             self.timer.invalidate()
-                            Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId)
                         }
                     }
                 }
@@ -687,7 +766,7 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch type {
         case .appClip:
-            return selectedAppClipTickets.count
+            return tableView == ticketListTableView ? selectedAppClipTickets.count : selectedAddOnsItem.count
         case .singleTickedEvent:
             return selectedEventTicket.count
         case .tieredTickedEvent:
@@ -699,9 +778,9 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         switch type {
         case .appClip:
-            cell.titleLbl.text = selectedAppClipTickets[indexPath.row].name
-            cell.subTitleLbl.text = selectedAppClipTickets[indexPath.row].description
-            cell.quantityLbl.text = "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x"
+            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns.name
+            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns.description
+            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         case .singleTickedEvent:
             cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
             cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
@@ -729,11 +808,16 @@ extension CheckOutVC {
             paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
                 if self.selectedAddOnsItem.count == 0 {
                     self.timer.invalidate()
-                    Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                    if self.type == .appClip {
+                        Navigate.to.scanQR(self, bookingId: self.bookingId)
+                    } else {
+                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                    }
                 } else {
                     self.addOnsPaymentSuccess {
                         self.timer.invalidate()
-                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId)
+//                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                     }
                 }
             }

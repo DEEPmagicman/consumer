@@ -432,6 +432,30 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
+        vc.isAddOnsAvailable = isAddOnsAvailable
+        vc.bookingId = bookingId
+        vc.booking = booking
+        vc.delegate = sender as? QRCodeVCNavigationDelegate
+        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+            homeVc.present(vc, animated: true)
+            homeVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [homeVc]
+            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
+                vc.delegate = accountVC
+            }
+            return
+        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
+            accountVc.present(vc, animated: true)
+            accountVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [accountVc]
+            vc.delegate = accountVc as? AccountVC
+            return
+        }
+        sender.navigationController?.present(vc, animated: true)
+    }
+    
     func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(UpSellTicketVC.self)
         vc.upSellTicket = upSellTicket

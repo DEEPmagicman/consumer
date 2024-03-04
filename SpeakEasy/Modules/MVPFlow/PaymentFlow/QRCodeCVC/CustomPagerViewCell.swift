@@ -18,19 +18,18 @@ class CustomPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
     
-    var appClipTickets : [AppClipTicket] = []
+    var booking: Booking?
+    var addOnsBooking: AddOnsBooking?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        
         ticketsTableView.delegate = self
         ticketsTableView.dataSource = self
-        ticketsTableView.register(UINib(nibName: "TicketCountTVC", bundle: nil), forCellReuseIdentifier: "TicketCountTVC")
+        ticketsTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
         containerView.addGestureRecognizer(tapGesture)
-        
     }
     
     
@@ -55,21 +54,23 @@ class CustomPagerViewCell: FSPagerViewCell {
 
 extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return appClipTickets.count
+        return booking != nil ? booking?.uniqueTickets.count ?? 0 : addOnsBooking?.addOnsBookingHasItem.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketCountTVC", for: indexPath) as! TicketCountTVC
-        cell.ticketNameLbl.text = appClipTickets[indexPath.row].name
-        cell.infoLbl.text = appClipTickets[indexPath.row].description
-        if let quantity = appClipTickets[indexPath.row].selectedQuantity {
-            cell.ticketCountLbl.text = "\(quantity)x"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+        cell.contentView.backgroundColor = .clear
+        if booking != nil {
+            cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
+            cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
+            
+            cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
+        } else {
+            cell.subTitleLbl.text = addOnsBooking?.addOnsBookingHasItem[indexPath.row].addons.description ?? ""
+            cell.titleLbl.text = addOnsBooking?.addOnsBookingHasItem[indexPath.row].addons.name ?? ""
+            cell.quantityLbl.text = "1x"
         }
         cell.selectionStyle = .none
-        
-        if indexPath.row == appClipTickets.count - 1 {
-            cell.separatorView.isHidden = true
-        }
         
         return cell
     }

@@ -109,7 +109,14 @@ final class ShowQRCodeVC: UIViewController {
         } else if booking?.bookingType == "COMPED_TICKET" {
             bookingTitleLbl.text = booking?.guestList?.name ?? "-"
         }
-        qrImage.image = generateQRCode(from: bookingId)
+        
+        let string = """
+    {
+        "id": "\(bookingId)",
+        "type": "BOOKING"
+    }
+"""
+        qrImage.image = generateQRCode(from: string)
         backupCode.text = booking?.venueObject?.bookingCode ?? ""
         bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if booking?.venueObject?.bookingCode ?? "" != "" {
@@ -161,7 +168,7 @@ final class ShowQRCodeVC: UIViewController {
             case .tieredTickedEvent:
                 break
             }
-//            venueNameLbl.text = booking.venueObject?.name
+            //            venueNameLbl.text = booking.venueObject?.name
         }
     }
     

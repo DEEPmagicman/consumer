@@ -18,7 +18,12 @@ class UpSellTicketVC: UIViewController {
     private var isMaxTicketReached = false
     private var maxTicket = 20
     var upSellTicket = [UpSellTicket]()
-    
+    var selectedAppClipTicket: [AppClipTicket] {
+        venueDetails?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
+    }
+    var selectedAddOns: [UpSellTicket] {
+        upSellTicket.filter({$0.selectedQuantity ?? 0 != 0})
+    }
     var hasMany = false
     var isLoading = false
     
@@ -36,10 +41,16 @@ class UpSellTicketVC: UIViewController {
     }
     
     private func updateContinueBtn() {
-        if self.upSellTicket.allSatisfy({ $0.selectedQuantity ?? 0 == 0 }) {
-            continueBtn.setTitle(Constant.String.skipAndContinueBtnTitle, for: .normal)
-        }else{
+        if selectedAppClipTicket.count == 0 {
             continueBtn.setTitle(Constant.String.continueBtnTitle, for: .normal)
+            continueBtn.alpha = selectedAddOns.count == 0 ? 0.5 : 1
+            continueBtn.isUserInteractionEnabled = selectedAddOns.count == 0 ? false : true
+        } else {
+            if selectedAddOns.count == 0 {
+                continueBtn.setTitle(Constant.String.skipAndContinueBtnTitle, for: .normal)
+            } else {
+                continueBtn.setTitle(Constant.String.continueBtnTitle, for: .normal)
+            }
         }
     }
     
@@ -47,11 +58,8 @@ class UpSellTicketVC: UIViewController {
         Navigate.to.back(self)
     }
     
-    @IBAction func onClickContinueBtn(_ sender: Any) {
-        let selectedAddOns = upSellTicket.filter({$0.selectedQuantity ?? 0 != 0})
-        let selectedTicket = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
-        
-        Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip)
+    @IBAction func onClickContinueBtn(_ sender: Any) {        
+        Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip)
         upSellTicket.indices.forEach {
             upSellTicket[$0].selectedQuantity = nil
         }

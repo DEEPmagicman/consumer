@@ -47,6 +47,7 @@ struct Booking: Codable {
     var inviteLink: InviteLink?
     var fees: PaymentDetail?
     var guestList: GuestList?
+    var addOnsBookingId: String?
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
         var tickets = [BookingHasItem]()
@@ -101,6 +102,7 @@ struct Booking: Codable {
         case inviteLink = "InviteLink"
         case fees
         case guestList
+        case addOnsBookingId
     }
 
     func encode(to encoder: Encoder) throws {
@@ -142,6 +144,7 @@ struct Booking: Codable {
         try container.encode(floorPlanTimeSlotBooking, forKey: .floorPlanTimeSlotBooking)
         try container.encodeIfPresent(fees, forKey: .fees)
         try container.encodeIfPresent(guestList, forKey: .guestList)
+        try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
     }
 }
 
@@ -296,4 +299,40 @@ struct AddOns: Codable {
         try container.encode(updatedAt, forKey: .updatedAt)
     }
     
+}
+
+struct AddOnsBooking: Codable {
+    var fees: PaymentDetail?
+    var venueId: String
+    var bookingId: String
+    var addOnsBookingHasItem: [AddOnsBookingHasItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case fees
+        case venueId
+        case bookingId
+        case addOnsBookingHasItem = "AddOnsBookingHasItem"
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(fees, forKey: .fees)
+        try container.encode(venueId, forKey: .venueId)
+        try container.encode(bookingId, forKey: .bookingId)
+        try container.encode(addOnsBookingHasItem, forKey: .addOnsBookingHasItem)
+    }
+}
+
+struct AddOnsBookingHasItem: Codable {
+    
+    var addons: AddOns
+    var addOnsBookingId: String
+    var addonsId: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(addons, forKey: .addons)
+        try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
+        try container.encode(addonsId, forKey: .addonsId)
+    }
 }
