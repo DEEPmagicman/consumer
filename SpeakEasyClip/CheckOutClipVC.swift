@@ -54,6 +54,24 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var emailValidationLbl: UILabel!
     @IBOutlet weak var salesTaxName: UILabel!
+    @IBOutlet weak var addOnsTableView: UITableView!
+    @IBOutlet weak var addOnsTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var addOnsSubTotalView: UIView!
+    @IBOutlet weak var addOnsSubTotalAmount: UILabel!
+    @IBOutlet weak var addOnsProcessingView: UIView!
+    @IBOutlet weak var addOnsProcessingAmount: UILabel!
+    @IBOutlet weak var addOnsCustomFeeView: UIView!
+    @IBOutlet weak var addOnsCustomFeeAmount: UILabel!
+    @IBOutlet weak var addOnsCustomFeeName: UILabel!
+    @IBOutlet weak var addOnsSalesTaxView: UIView!
+    @IBOutlet weak var addOnsSalesTaxAmount: UILabel!
+    @IBOutlet weak var addOnsSalesTaxeName: UILabel!
+    @IBOutlet weak var addOnsTotalView: UIView!
+    @IBOutlet weak var addOnsTotalAmount: UILabel!
+    @IBOutlet weak var addOnsNOFeeView: UIView!
+    @IBOutlet weak var addOnsView: UIView!
+    @IBOutlet weak var totalView: UIView!
+    @IBOutlet weak var grandTotalAmount: UILabel!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -71,11 +89,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var isValidNo = false
     private var isChangingFlag = false
     private var ticketListHeightObservation: NSKeyValueObservation?
+    private var addOnsHeightObservation: NSKeyValueObservation?
     private var retryCount = 0
     private var maxRetry = 3
     private var bookingCode = String()
     private var createdAT = String()
-
+    private var addOnsPaymentDetails: PaymentDetail?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
@@ -86,7 +106,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
-
+        
+        addOnsTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        addOnsHeightObservation = addOnsTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.addOnsTableViewHeight.constant = self.addOnsTableView.contentSize.height
+            self.addOnsTableView.layoutIfNeeded()
+        }
+        totalView.isHidden = true
+        addOnsView.isHidden = true
+        
         countryCodeTextField.textColor = .white
         
         phoneNumTextField.delegate = self
@@ -213,6 +242,35 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             return true
         }
         return false
+    }
+    
+    private var setAddOnsSalesTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true ? true : false
+    }
+    
+    private var setAddOnsProcessingTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+    }
+    
+    private var setAddOnsCustomTaxView: Bool {
+        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true ? true : false
+    }
+    
+    private func setAddOnsData() {
+        addOnsSubTotalView.isHidden = !setAddOnsSalesTaxView && !setAddOnsProcessingTaxView && !setAddOnsCustomTaxView
+        addOnsSalesTaxView.isHidden = !setAddOnsSalesTaxView
+        addOnsProcessingView.isHidden = !setAddOnsProcessingTaxView
+        addOnsCustomFeeView.isHidden = !setAddOnsCustomTaxView
+        addOnsNOFeeView.isHidden = !addOnsSubTotalView.isHidden
+        
+        addOnsCustomFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.customFee ?? 0).decimalFormat(true))"
+        addOnsProcessingAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.processingFee ?? 0).decimalFormat(true))"
+        addOnsTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.total ?? 0).decimalFormat(true))"
+//        totalPrice = addOnsPaymentDetails?.total ?? 0
+        addOnsSalesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.salesTax ?? 0).decimalFormat(true))"
+        addOnsSubTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.subTotal ?? 0).decimalFormat(true))"
+        addOnsCustomFeeName.text = addOnsPaymentDetails?.customFeeName ?? "Custom fee"
+        addOnsSalesTaxeName.text = addOnsPaymentDetails?.salesTaxName ?? "" == "" ? "Sales Tax" : addOnsPaymentDetails?.salesTaxName
     }
     
     private func customFeeCount() {

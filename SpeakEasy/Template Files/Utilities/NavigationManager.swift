@@ -432,11 +432,13 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil) {
+    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId
         vc.booking = booking
+        vc.isOnlyAddOnAvailable = isOnlyAddOnAvailable
+        vc.venueId = venueId
         vc.delegate = sender as? QRCodeVCNavigationDelegate
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)

@@ -106,7 +106,6 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.selectionStyle = .none
-        
         return cell
     }
     

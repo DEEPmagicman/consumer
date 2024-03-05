@@ -22,10 +22,12 @@ class ScanQRCodeVC: UIViewController {
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
     var bookingId = String()
-    var qrImage = UIImage()
-    var addOnsQR = UIImage()
+    var qrImage:UIImage? = nil
+    var addOnsQR:UIImage? = nil
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
+    var isOnlyAddOnAvailable = false
+    var venueId = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,25 +36,22 @@ class ScanQRCodeVC: UIViewController {
         setPageController()
         let attributedString = NSAttributedString(string: "Buy another ticket", attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
         buyAnotherTicket.setAttributedTitle(attributedString, for: .normal)
-        let string = """
-    {
-        "id": "\(bookingId)",
-        "type": "BOOKING"
-    }
-"""
-        qrImage = generateQRCode(from: string) ?? UIImage()
         
-        let string1 = """
-    {
-        "id": "\(bookingId)",
-        "type": "ADD_ON"
-    }
-"""
-        addOnsQR = generateQRCode(from: string1) ?? UIImage()
-        getBooking(id: bookingId)
+        if isOnlyAddOnAvailable {
+            getAddOnsBooking()
+        } else {
+            let string = """
+        {
+            "id": "\(bookingId)",
+            "type": "BOOKING"
+        }
+    """
+            qrImage = generateQRCode(from: string) ?? UIImage()
+            getBooking(id: bookingId)
+        }
     }
     
-    func setPageController(){
+    func setPageController() {
         pagerView.delegate = self
         pagerView.dataSource = self
         //        pagerView.itemSize = CGSize(width: 200, height: 180)
@@ -64,8 +63,9 @@ class ScanQRCodeVC: UIViewController {
     }
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
-        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
-        dismiss(animated: true)
+        pagerView.reloadData()
+//        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+//        dismiss(animated: true)
     }
     
     private func getBooking(id: String) {
@@ -91,18 +91,26 @@ class ScanQRCodeVC: UIViewController {
                 DispatchQueue.main.async {
                     self.pagerView.reloadData()
                 }
-            } else {
-                
+                self.setPageController()
             }
         }
     }
     
     private func getAddOnsBooking() {
         Loader.show()
-        PaymentPresenter.getAddOnsBooking(venueId: booking?.venueId ?? "", addOnsBookingId: booking?.addOnsBookingId ?? "") { isSuccess, errMsg, booking in
+        let bookingId = booking != nil ? booking?.addOnsBookingId ?? "" : bookingId
+        let venueId = booking != nil ? booking?.venueId ?? "" : venueId
+        PaymentPresenter.getAddOnsBooking(venueId: venueId, addOnsBookingId: bookingId) { isSuccess, errMsg, booking in
             Loader.hide()
             if isSuccess {
                 self.addOnsBooking = booking
+                let string1 = """
+            {
+                "id": "\(booking?.id ?? "")",
+                "type": "ADD_ON"
+            }
+        """
+                self.addOnsQR = self.generateQRCode(from: string1) ?? UIImage()
                 DispatchQueue.main.async {
                     self.pagerView.reloadData()
                 }
@@ -134,12 +142,20 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         
         cell.backupCode.text = booking?.venueObject?.bookingCode ?? ""
         cell.bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
-        if index == 0 {
-            cell.booking = booking
-        } else {
+        if isOnlyAddOnAvailable {
             cell.addOnsBooking = addOnsBooking
+            if index == 0 {
+                cell.qrImage.image = addOnsQR
+            }
+            
+        } else {
+            if index == 0 {
+                cell.booking = booking
+            } else {
+                cell.addOnsBooking = addOnsBooking
+            }
+            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
         }
-        cell.qrImage.image = index == 0 ? qrImage : addOnsQR
         cell.ticketsTableView.reloadData()
         return cell
     }

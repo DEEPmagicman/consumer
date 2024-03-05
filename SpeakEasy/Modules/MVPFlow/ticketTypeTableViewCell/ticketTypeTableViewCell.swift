@@ -9,14 +9,14 @@ import UIKit
 
 class ticketTypeTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var ticketTypeLbl: UILabelDeviceClass!
-    @IBOutlet weak var infoLbl: UILabelDeviceClass!
-    @IBOutlet weak var ticketPriceLbl: UILabelDeviceClass!
+    @IBOutlet weak var ticketTypeLbl: UILabel!
+    @IBOutlet weak var infoLbl: UILabel!
+    @IBOutlet weak var ticketPriceLbl: UILabel!
     @IBOutlet weak var ticketPlusMinusView: UIView!
     @IBOutlet weak var minusBtn: UIButton!
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var totalTicketLbl: UILabel!
-    @IBOutlet weak var hotVenueLbl: UILabelDeviceClass!
+    @IBOutlet weak var hotVenueLbl: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

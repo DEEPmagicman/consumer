@@ -28,6 +28,11 @@
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
 		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
 		0477E38C28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */; };
+		04862C112B96FE3300836598 /* UpSellClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04862C102B96FE3300836598 /* UpSellClipVC.swift */; };
+		04862C132B9719A500836598 /* ticketTypeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82847A8529828BA600611DC4 /* ticketTypeTableViewCell.xib */; };
+		04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A8429828BA600611DC4 /* ticketTypeTableViewCell.swift */; };
+		04862C152B971C2400836598 /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
+		04862C162B971CED00836598 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
@@ -683,6 +688,7 @@
 		0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfilePopUp.swift; sourceTree = "<group>"; };
 		0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteArtistProfileCVC.swift; sourceTree = "<group>"; };
 		0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteArtistProfileCVC.xib; sourceTree = "<group>"; };
+		04862C102B96FE3300836598 /* UpSellClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellClipVC.swift; sourceTree = "<group>"; };
 		049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowQRCodeVC.swift; sourceTree = "<group>"; };
 		04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesTVC.xib; sourceTree = "<group>"; };
 		04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesTVC.swift; sourceTree = "<group>"; };
@@ -1453,6 +1459,7 @@
 				29AEDD9B29826C3400E8E1E9 /* QRCodeClipVC.swift */,
 				CE31C0DF2990C0CA00D04956 /* Helper.swift */,
 				CEE7A2292A28BC9C009A027F /* Common.swift */,
+				04862C102B96FE3300836598 /* UpSellClipVC.swift */,
 			);
 			path = SpeakEasyClip;
 			sourceTree = "<group>";
@@ -4236,6 +4243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
+				04862C132B9719A500836598 /* ticketTypeTableViewCell.xib in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
 				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
@@ -4556,11 +4564,13 @@
 				CEDB824B2AA21DD500DAD9FE /* NBMetadataHelper.m in Sources */,
 				CEDB82522AA21DD500DAD9FE /* Bundle+Extension.swift in Sources */,
 				CEDB824D2AA21DD500DAD9FE /* NBPhoneNumberDefines.m in Sources */,
+				04862C112B96FE3300836598 /* UpSellClipVC.swift in Sources */,
 				CEDB82502AA21DD500DAD9FE /* FPNCountryView.swift in Sources */,
 				CEDB82572AA21DD500DAD9FE /* FPNCountry.swift in Sources */,
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				04AC62AF2B51434D0034A9D3 /* EventTicket.swift in Sources */,
 				CEDB82542AA21DD500DAD9FE /* FPNTextFieldDelegate.swift in Sources */,
+				04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				CEDB82462AA21DD500DAD9FE /* NBRegExMatcher.m in Sources */,
 				69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */,
@@ -4574,6 +4584,7 @@
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */,
 				CEDB82432AA21DD500DAD9FE /* NBPhoneMetaData.m in Sources */,
+				04862C162B971CED00836598 /* TimeSlot.swift in Sources */,
 				CEDB82532AA21DD500DAD9FE /* FPNCountryCode.swift in Sources */,
 				CEDB824A2AA21DD500DAD9FE /* NBPhoneNumber.m in Sources */,
 				CEDB823E2AA21DD500DAD9FE /* FPNCountryRepository.swift in Sources */,
@@ -4596,6 +4607,7 @@
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				29AEDD9C29826C3400E8E1E9 /* QRCodeClipVC.swift in Sources */,
 				CEDB82442AA21DD500DAD9FE /* NBPhoneNumberUtil.m in Sources */,
+				04862C152B971C2400836598 /* Booking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,6 +22,7 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var closeLblView: UIView!
     @IBOutlet weak var closeLbl: UILabel!
+    @IBOutlet weak var upSellView: UIView!
     
     var isLive = true
     var venueDetail: ClipVenue?
@@ -154,23 +155,38 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+//        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+//            if selectedTickets.count > 0 {
+//                vc.selectedAppClipTickets = selectedTickets
+//                vc.totalPrice = totalPrice
+//                vc.venue = venueDetail
+//                navigationController?.interactivePopGestureRecognizer?.delegate = self
+//                navigationController?.pushViewController(vc, animated: true)
+//                updateContinueBtn(forceRemove: true)
+//            } else {
+//                guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
+//                    return
+//                }
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//            }
+//        }
+        upSellTicket()
+    }
+    
+    private func upSellTicket() {
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
             if selectedTickets.count > 0 {
-                vc.selectedAppClipTickets = selectedTickets
-                vc.totalPrice = totalPrice
                 vc.venue = venueDetail
                 navigationController?.interactivePopGestureRecognizer?.delegate = self
                 navigationController?.pushViewController(vc, animated: true)
-                updateContinueBtn(forceRemove: true)
-            } else {
-                guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
-                    return
-                }
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
     }
-
+    
+    @IBAction func onClickUpsellBtn(_ sender: Any) {
+        
+    }
+    
     @objc func minusBtnClick(_ sender: UIButton) {
         if let totalTicket = venueDetail?.appClipTicket?[sender.tag].selectedQuantity {
             if totalTicket > 1 {
