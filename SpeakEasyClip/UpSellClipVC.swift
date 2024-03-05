@@ -13,6 +13,7 @@ final class UpSellClipVC: UIViewController {
     @IBOutlet weak var upSellDescription: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var continueBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -21,12 +22,33 @@ final class UpSellClipVC: UIViewController {
         getUpSellTicket(withLoader: true)
         upSellTitle.text = venue?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "UpSell"
         upSellDescription.text = venue?.venueSettings?.addOnsBookingFeesSettings?.description ?? "-"
+        updateContinueBtn()
     }
     
     var upSellTicket = [UpSellTicket]()
     private var isMaxTicketReached = false
     private var maxTicket = 20
     var venue: ClipVenue?
+    var selectedAddOns: [UpSellTicket] {
+        upSellTicket.filter({$0.selectedQuantity ?? 0 != 0})
+    }
+    var selectedAppClipTicket: [AppClipTicket] {
+        venue?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
+    }
+    
+    private func updateContinueBtn() {
+        if selectedAppClipTicket.count == 0 {
+            continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+            continueBtn.alpha = selectedAddOns.count == 0 ? 0.5 : 1
+            continueBtn.isUserInteractionEnabled = selectedAddOns.count == 0 ? false : true
+        } else {
+            if selectedAddOns.count == 0 {
+                continueBtn.setTitle("SKIP THIS & CONTINUE TO CHECKOUT", for: .normal)
+            } else {
+                continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+            }
+        }
+    }
     
     private func getUpSellTicket(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(venue?.id ?? "")/add-ons") else { return }
@@ -70,7 +92,14 @@ final class UpSellClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
+                vc.selectedAppClipTickets = selectedAppClipTicket
+                vc.selectedAddOnsItem = selectedAddOns
+                vc.venue = venue
+                navigationController?.interactivePopGestureRecognizer?.delegate = self
+                navigationController?.pushViewController(vc, animated: true)
+                updateContinueBtn()
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -110,7 +139,7 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
                 quantity = quantity + 1
                 self.upSellTicket[indexPath.row].selectedQuantity = quantity
             }
-//            updateContinueBtn()
+            updateContinueBtn()
             tableView.reloadData()
         }
     }
@@ -120,11 +149,11 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
             if totalTicket > 1 {
                 upSellTicket[sender.tag].selectedQuantity = totalTicket - 1
                 tableView.reloadData()
-//                updateContinueBtn()
+                updateContinueBtn()
             } else if totalTicket == 1 {
                 upSellTicket[sender.tag].selectedQuantity = nil
                 tableView.reloadData()
-//                updateContinueBtn()
+                updateContinueBtn()
             }
         }
     }
@@ -137,10 +166,16 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
             if totalTicket < maxTicket {
                 upSellTicket[sender.tag].selectedQuantity = totalTicket + 1
                 tableView.reloadData()
-//                updateContinueBtn()
+                updateContinueBtn()
             } else {
                 return
             }
         }
+    }
+}
+
+extension UpSellClipVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        true
     }
 }

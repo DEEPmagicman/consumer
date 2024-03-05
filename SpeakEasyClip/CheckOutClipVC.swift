@@ -72,6 +72,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsView: UIView!
     @IBOutlet weak var totalView: UIView!
     @IBOutlet weak var grandTotalAmount: UILabel!
+    @IBOutlet weak var ticketListView: UIView!
     
     var totalPrice = 1.0
     var venue: ClipVenue?
@@ -95,10 +96,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var bookingCode = String()
     private var createdAT = String()
     private var addOnsPaymentDetails: PaymentDetail?
+    var selectedAddOnsItem = [UpSellTicket]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
+        
+        ticketListView.isHidden = (selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
+        addOnsView.isHidden = (selectedAppClipTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
+        totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
         
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
@@ -113,8 +119,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.addOnsTableViewHeight.constant = self.addOnsTableView.contentSize.height
             self.addOnsTableView.layoutIfNeeded()
         }
-        totalView.isHidden = true
-        addOnsView.isHidden = true
+//        totalView.isHidden = true
+//        addOnsView.isHidden = true
         
         countryCodeTextField.textColor = .white
         
@@ -266,11 +272,80 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         addOnsCustomFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.customFee ?? 0).decimalFormat(true))"
         addOnsProcessingAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.processingFee ?? 0).decimalFormat(true))"
         addOnsTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.total ?? 0).decimalFormat(true))"
-//        totalPrice = addOnsPaymentDetails?.total ?? 0
         addOnsSalesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.salesTax ?? 0).decimalFormat(true))"
         addOnsSubTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.subTotal ?? 0).decimalFormat(true))"
         addOnsCustomFeeName.text = addOnsPaymentDetails?.customFeeName ?? "Custom fee"
         addOnsSalesTaxeName.text = addOnsPaymentDetails?.salesTaxName ?? "" == "" ? "Sales Tax" : addOnsPaymentDetails?.salesTaxName
+    }
+    
+    private func getAddOnsPaymentIntent(bookingId: String) {
+        AppClipLoader.showLoader(self.view)
+        var addOnsItems = [[String: Any]]()
+        selectedAddOnsItem.forEach {
+            addOnsItems.append(["id": $0.id,
+                                "addOnsId": $0.addOns?.id ?? "",
+                                "quantity": $0.selectedQuantity ?? 0])
+        }
+        var param = [String: Any]()
+        param["addOnsItems"] = addOnsItems
+        param["venueId"] = venue?.id ?? ""
+        param["phone"] = "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
+        param["code"] = countryCode
+        if bookingId != "" {
+            param["bookingId"] = bookingId
+        }
+        
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/payment/add-ons") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
+                return
+            }
+            
+            if let paymentDetail = json["fees"] as? [String: Any], let subTotal = paymentDetail["sub_total"] as? Double, let processingFee = paymentDetail["processing_fee"] as? Double, let customFee = paymentDetail["custom_fee"] as? Double, let salesTax = paymentDetail["sales_tax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["custom_fee_name"] as? String, let salesTaxName = paymentDetail["sales_tax_name"] as? String {
+                DispatchQueue.main.async {
+                    AppClipLoader.hideLoader()
+                    self.addOnsSubTotalView.isHidden = !self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView
+                    self.addOnsSalesTaxView.isHidden = !self.setAddOnsSalesTaxView
+                    self.addOnsProcessingView.isHidden = !self.setAddOnsProcessingTaxView
+                    self.addOnsCustomFeeView.isHidden = !self.setAddOnsCustomTaxView
+                    self.addOnsNOFeeView.isHidden = !self.addOnsSubTotalView.isHidden
+                    
+                    self.addOnsSubTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
+                    self.addOnsProcessingAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
+                    self.addOnsSalesTaxAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
+                    self.addOnsCustomFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
+                    self.addOnsCustomFeeName.text = customFeeName == "" ? "Custom Fee" : customFeeName
+                    self.addOnsTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
+                    self.addOnsSalesTaxeName.text = salesTaxName == "" ? "Sales Tax" : salesTaxName
+                }
+            }
+        }
+        task.resume()
     }
     
     private func customFeeCount() {
@@ -821,14 +896,16 @@ extension CheckOutClipVC {
 
 extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       selectedAppClipTickets.count
+       return tableView == ticketListTableView ? selectedAppClipTickets.count : selectedAddOnsItem.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = selectedAppClipTickets[indexPath.row].name
-        cell.subTitleLbl.text = selectedAppClipTickets[indexPath.row].description
-        cell.quantityLbl.text = "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x"
+        
+        cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+        cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
+        cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear

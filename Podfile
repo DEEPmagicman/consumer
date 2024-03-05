@@ -29,6 +29,7 @@ target 'SpeakEasyClip' do
 
   # Pods for SpeakEasyClip
   pod 'ReachabilitySwift', '~> 3'
+  pod 'FSPagerView'
 end
 
 post_install do |installer|

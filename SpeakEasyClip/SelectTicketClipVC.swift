@@ -185,21 +185,30 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-//        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-//            if selectedTickets.count > 0 {
-//                vc.selectedAppClipTickets = selectedTickets
-//                vc.totalPrice = totalPrice
-//                vc.venue = venueDetail
-//                navigationController?.interactivePopGestureRecognizer?.delegate = self
-//                navigationController?.pushViewController(vc, animated: true)
-//                updateContinueBtn(forceRemove: true)
-//            } else {
-//                guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
-//                    return
-//                }
-//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//            }
-//        }
+        if upSellTickets.count <= 0 {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+                if selectedTickets.count > 0 {
+                    vc.selectedAppClipTickets = selectedTickets
+                    vc.totalPrice = totalPrice
+                    vc.venue = venueDetail
+                    navigationController?.interactivePopGestureRecognizer?.delegate = self
+                    navigationController?.pushViewController(vc, animated: true)
+                    updateContinueBtn(forceRemove: true)
+                } else {
+                    guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+        } else {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
+                vc.venue = venueDetail
+                vc.upSellTicket = upSellTickets
+                navigationController?.interactivePopGestureRecognizer?.delegate = self
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
     
     @objc private func upSellTicket() {
