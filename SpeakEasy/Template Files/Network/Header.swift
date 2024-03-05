@@ -15,14 +15,17 @@ enum HeaderContentType: String {
 
 struct Header {
 
-    static func header(_ headerContentType: HeaderContentType = .json, timeZone: String? = nil) -> [String: String] {
-        ["Authorization": "Bearer \(UserDefault.shared.accessToken ?? "")",
+    static func header(_ headerContentType: HeaderContentType = .json, timeZone: String? = nil, doormanId: String = "") -> [String: String] {
+        var header = ["Authorization": "Bearer \(UserDefault.shared.accessToken ?? "")",
          "Content-Type": "\(headerContentType.rawValue)",
          "timezone": timeZone?.lowercased() ?? TimeZone.current.identifier.lowercased(),
          "app_version": Bundle.main.releaseVersionNumber,
          "build_number": Bundle.main.buildVersionNumber,
          "platform": "ios",
-         "app_bundle_id": Bundle.main.bundleIdentifier ?? "invalid bundle id"
-        ]
+         "app_bundle_id": Bundle.main.bundleIdentifier ?? "invalid bundle id"]
+        if doormanId != "" {
+            header["doorman"] = doormanId
+        }
+        return header
     }
 }

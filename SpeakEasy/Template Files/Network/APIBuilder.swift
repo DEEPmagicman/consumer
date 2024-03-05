@@ -57,6 +57,8 @@ struct APIBuilder {
     static private let redirect = "/redirect"
     static private let addOns = "/add-ons"
     static private let status = "/status"
+    static private let deepLink = "/deep-link"
+
     // version
     static let v2 = "/v2"
     
@@ -163,6 +165,10 @@ struct APIBuilder {
     
     static func bottleListURL(_ id: String) -> String {
         baseURL + route + venueBottleCategory + "/\(id)"
+    }
+    
+    static func deepLinkURL(_ id: String) -> String {
+        baseURL + route + deepLink + "/\(id)"
     }
     
     static func inviteLinkURL(_ id: String) -> String {

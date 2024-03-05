@@ -71,6 +71,7 @@ final class MVPVenueDetailVc: UIViewController {
     var venueUniqueId = ""
     var venueTimeZone = ""
     var isFromAppClip = false
+    var doormanId = ""
     private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
     private var maxTicket = 20
@@ -166,7 +167,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId, venueTimeZone: venueTimeZone) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId, venueTimeZone: venueTimeZone, doormanId: doormanId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -403,7 +404,7 @@ final class MVPVenueDetailVc: UIViewController {
     private func getUpSellItems() {
         checkOutIndicator.isHidden = false
         continueBtn.setTitle("", for: .normal)
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {

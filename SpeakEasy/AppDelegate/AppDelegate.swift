@@ -109,8 +109,19 @@ extension AppDelegate {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
             return
         }
-        if let venue = queryItems.first(where: { $0.name == "v" })?.value {
-            setRootVC(.venue, id: venue)
+        if let value = queryItems.first(where: { $0.name == "v" })?.value {
+            if value.contains("VN") {
+                setRootVC(.venue, id: value)
+            } else {
+                VenuePresenter.getDeepLinkData(value) { isSuccess, errMsg, doormanId, venueId in
+                    if isSuccess, let value = venueId, let doormanId = doormanId {
+                        self.setRootVC(.venue, id: value, doormanId: doormanId)
+                    } else {
+                        
+                    }
+                    return
+                }
+            }
             return
         }
         if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
@@ -123,7 +134,7 @@ extension AppDelegate {
         }
     }
 
-    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "") {
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "") {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -167,6 +178,7 @@ extension AppDelegate {
             let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
             vc.venueUniqueId = id
             vc.isFromAppClip = true
+            vc.doormanId = doormanId
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
             Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)

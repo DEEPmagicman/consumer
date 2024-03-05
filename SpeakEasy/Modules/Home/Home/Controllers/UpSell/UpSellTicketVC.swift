@@ -90,8 +90,8 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name
-        cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description
+        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
+        cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
         cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {

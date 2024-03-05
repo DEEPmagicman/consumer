@@ -55,4 +55,24 @@ final class VenuePresenter {
             completion(false, nil, [], false)
         }
     }
+    
+    static func getDeepLinkData(_ id: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ doormanId: String?, _ venueId: String?) -> Void) {
+        Loader.show()
+        AFWrapper.getRequest(APIBuilder.deepLinkURL(id), params: nil, headers: Header.header()) { response in
+            
+            guard let responseDic = response as? [String: Any], let venueId = responseDic["venueId"] as? String, let doormanId = responseDic["doormanId"] as? String else {
+                completion(false, nil, nil, nil)
+                return
+            }
+            
+            completion(true, nil, doormanId, venueId)
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil, nil)
+                return
+            }
+            completion(false, nil, nil, nil)
+        }
+    }
 }

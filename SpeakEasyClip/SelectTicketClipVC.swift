@@ -29,6 +29,8 @@ final class SelectTicketClipVC: UIViewController {
     private var gradient: CAGradientLayer?
     private var venueImgHeightObservation: NSKeyValueObservation?
     private var venueId = ""
+    private var deepLink = ""
+    private var doormanId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
     private var upSellTickets = [UpSellTicket]()
@@ -69,14 +71,45 @@ final class SelectTicketClipVC: UIViewController {
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
-        getEventTicket()
+        deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
+        if venueId == "" {
+            getEventTicket()
+        } else {
+            getDeepLinkData()
+        }
+    }
+    
+    private func getDeepLinkData() {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/deep-link/\(self.deepLink)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                return
+            }
+            self.venueId = json["venueId"] as? String ?? ""
+            UserDefaults.standard.setValue(self.venueId, forKey: "venueId")
+            
+            self.doormanId = json["doormanId"] as? String ?? ""
+            UserDefaults.standard.setValue(self.doormanId, forKey: "doormanId")
+            
+            self.getEventTicket()
+        }.resume()
     }
     
     private func getAddOns() {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(self.venueDetail?.id ?? "")/add-ons?include=addOns") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
+        if doormanId != "" {
+            request.addValue(doormanId, forHTTPHeaderField: "doorman")
+        }
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
@@ -104,6 +137,10 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        
+        if doormanId != "" {
+            request.addValue(doormanId, forHTTPHeaderField: "doorman")
+        }
 //        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
 //        request.addValue("app_version", forHTTPHeaderField: Bundle.main.releaseVersionNumber)
 //        request.addValue("build_number", forHTTPHeaderField: Bundle.main.buildVersionNumber)
@@ -111,7 +148,9 @@ final class SelectTicketClipVC: UIViewController {
 //        request.addValue("app_bundle_id", forHTTPHeaderField: Bundle.main.bundleIdentifier ?? "invalid bundle id")
 
         if withLoader {
-            AppClipLoader.showLoader(self.view)
+            DispatchQueue.main.async {
+                AppClipLoader.showLoader(self.view)
+            }
         }
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
