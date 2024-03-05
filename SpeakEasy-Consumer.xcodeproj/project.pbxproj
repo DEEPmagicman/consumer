@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
+		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
+		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
 		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
 		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
@@ -669,6 +671,8 @@
 
 /* Begin PBXFileReference section */
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
+		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
+		04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerViewTVC.xib; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -1485,6 +1489,8 @@
 			children = (
 				297E37362983B16200139947 /* TicketTypeTVC.swift */,
 				297E37372983B16200139947 /* TicketTypeTVC.xib */,
+				04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */,
+				04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */,
 			);
 			path = TVC;
 			sourceTree = "<group>";
@@ -4245,6 +4251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */,
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
 				04862C132B9719A500836598 /* ticketTypeTableViewCell.xib in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
@@ -4606,6 +4613,7 @@
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
 				CEDB82562AA21DD500DAD9FE /* FPNUtils.swift in Sources */,
 				CEDB824C2AA21DD500DAD9FE /* NBPhoneNumberDesc.m in Sources */,
+				04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */,
 				CEDB824E2AA21DD500DAD9FE /* FPNNibLoadingView.swift in Sources */,
 				04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,

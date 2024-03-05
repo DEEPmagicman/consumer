@@ -1771,6 +1771,7 @@
                     <connections>
                         <outlet property="pageControl" destination="qU8-5g-EcF" id="qO0-im-9GR"/>
                         <outlet property="pagerView" destination="YDK-mo-bJu" id="5IR-8m-Xf5"/>
+                        <outlet property="venueImg" destination="04U-Hh-e8W" id="G1p-1Y-ftG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LqG-Pu-gHU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

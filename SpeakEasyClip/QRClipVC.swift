@@ -15,16 +15,39 @@ final class QRClipVC: UIViewController {
     var venueName = ""
     var bookingId = ""
     private var isAlertDisplayed = false
+    var isAddOnsAvailable = false
+    var bookingCode = String()
+    var createdAT = String()
+    var appClipTicket = [AppClipTicket]()
+    var selectedAddOns = [UpSellTicket]()
+    var qrImage:UIImage? = nil
+    var addOnsQR:UIImage? = nil
+    
     @IBOutlet weak var pageControl: FSPageControl!
+    @IBOutlet weak var venueImg: UIImageView!
     @IBOutlet weak var pagerView: FSPagerView!{
         didSet {
-            self.pagerView.register(UINib(nibName: "CustomPagerViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
+            self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadImage()
+        let string = """
+                {
+                    "id": "\(bookingId)",
+                    "type": "BOOKING"
+                }
+        """
+        let string1 = """
+                {
+                    "id": "\(bookingId)",
+                    "type": "ADD_ON"
+                }
+        """
+        qrImage = generateQRCode(from: string)
+        addOnsQR = generateQRCode(from: string1)
     }
     
     func loadImage() {
@@ -34,7 +57,7 @@ final class QRClipVC: UIViewController {
                 let imgData = try Data(contentsOf: imgUrl)
 //                let logoData = try Data(contentsOf: logoUrl)
                 DispatchQueue.main.async {
-//                    self.venueImg.image = UIImage(data: imgData)
+                    self.venueImg.image = UIImage(data: imgData)
 //                    self.venueLogoImg.image = UIImage(data: logoData)
                 }
             } catch {}
@@ -69,4 +92,45 @@ final class QRClipVC: UIViewController {
             isAlertDisplayed = true
         }
     }
+    
+    func generateQRCode(from string: String) -> UIImage? {
+        let data = string.data(using: String.Encoding.ascii)
+        if let filter = CIFilter(name: "CIQRCodeGenerator") {
+            filter.setValue(data, forKey: "inputMessage")
+            let transform = CGAffineTransform(scaleX: 10, y: 10)
+
+            if let output = filter.outputImage?.transformed(by: transform) {
+                return UIImage(ciImage: output)
+            }
+        }
+        return nil
+    }
+    
 }
+
+extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
+    func numberOfItems(in pagerView: FSPagerView) -> Int {
+        return isAddOnsAvailable ? 2 : 1
+    }
+
+    func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
+        let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
+
+        cell.backupCode.text = bookingCode
+        cell.bookingDateTime.text = "Purchased on \(createdAT)"
+
+            if index == 0 {
+                cell.uniqueTickets = appClipTicket
+            } else {
+                cell.addOnsBookingHasItem = selectedAddOns
+            }
+            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
+            cell.ticketsTableView.reloadData()
+        return cell
+    }
+    
+    func pagerViewDidScroll(_ pagerView: FSPagerView) {
+        pageControl.currentPage = pagerView.currentIndex
+    }
+}
+

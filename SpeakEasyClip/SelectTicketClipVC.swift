@@ -73,10 +73,12 @@ final class SelectTicketClipVC: UIViewController {
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
         if venueId == "" {
-            getEventTicket()
-        } else {
             getDeepLinkData()
+        } else {
+            getEventTicket()
         }
+        
+        upSellView.isHidden = true
     }
     
     private func getDeepLinkData() {
@@ -125,7 +127,7 @@ final class SelectTicketClipVC: UIViewController {
             do {
                 self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
                 DispatchQueue.main.async {
-                    self.upSellView.isHidden = self.upSellTickets.count <= 0
+//                    self.upSellView.isHidden = self.upSellTickets.count <= 0
                 }
             } catch (let error) {
                 print(error)
