@@ -258,7 +258,7 @@ struct UpSellTicket: Codable {
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
-    var addOns: AddOns
+    var addOns: AddOns?
     // MARK: app side parameters
     var selectedQuantity: Int?
     
@@ -272,7 +272,7 @@ struct UpSellTicket: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(addOns, forKey: .addOns)
+        try container.encodeIfPresent(addOns, forKey: .addOns)
     }
 }
 

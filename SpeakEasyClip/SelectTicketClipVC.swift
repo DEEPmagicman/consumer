@@ -31,6 +31,7 @@ final class SelectTicketClipVC: UIViewController {
     private var venueId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
+    private var upSellTickets = [UpSellTicket]()
     private var totalPrice: Double {
         var total = 0.0
         if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
@@ -71,6 +72,34 @@ final class SelectTicketClipVC: UIViewController {
         getEventTicket()
     }
     
+    private func getAddOns() {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(self.venueDetail?.id ?? "")/add-ons?include=addOns") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                return
+            }
+            let decoder = JSONDecoder()
+            let addOns = json["list"] as? [[String: Any]]
+            guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                AppClipLoader.hideLoader()
+                return
+            }
+            do {
+                self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                DispatchQueue.main.async {
+                    self.upSellView.isHidden = self.upSellTickets.count <= 0
+                }
+            } catch (let error) {
+                print(error)
+            }
+        }.resume()
+    }
+    
     private func getEventTicket(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
@@ -98,6 +127,7 @@ final class SelectTicketClipVC: UIViewController {
             self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
             UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
             self.setUpUI()
+            self.getAddOns()
             DispatchQueue.main.async {
                 self.updateContinueBtn(forceRemove: true)
                 AppClipLoader.hideLoader()
@@ -170,21 +200,21 @@ final class SelectTicketClipVC: UIViewController {
 //                UIApplication.shared.open(url, options: [:], completionHandler: nil)
 //            }
 //        }
-        upSellTicket()
     }
     
-    private func upSellTicket() {
-        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            if selectedTickets.count > 0 {
+    @objc private func upSellTicket() {
+        if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
+//            if selectedTickets.count > 0 {
                 vc.venue = venueDetail
+                vc.upSellTicket = upSellTickets
                 navigationController?.interactivePopGestureRecognizer?.delegate = self
                 navigationController?.pushViewController(vc, animated: true)
-            }
+//            }
         }
     }
     
     @IBAction func onClickUpsellBtn(_ sender: Any) {
-        
+        upSellTicket()
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {

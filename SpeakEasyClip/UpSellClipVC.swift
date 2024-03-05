@@ -19,6 +19,8 @@ final class UpSellClipVC: UIViewController {
         tableView.dataSource = self
         tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         getUpSellTicket(withLoader: true)
+        upSellTitle.text = venue?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "UpSell"
+        upSellDescription.text = venue?.venueSettings?.addOnsBookingFeesSettings?.description ?? "-"
     }
     
     var upSellTicket = [UpSellTicket]()
@@ -78,13 +80,14 @@ final class UpSellClipVC: UIViewController {
 
 extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        upSellTicket.count
+        tableView.backgroundColor = .black
+        return upSellTicket.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns.name
-        cell.infoLbl.text = upSellTicket[indexPath.row].addOns.description
+        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
+        cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
         cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
