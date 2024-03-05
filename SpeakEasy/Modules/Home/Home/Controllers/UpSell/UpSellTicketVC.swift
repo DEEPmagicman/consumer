@@ -38,6 +38,7 @@ class UpSellTicketVC: UIViewController {
         ticketTypeTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell Items"
         upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.description ?? ""
+        updateContinueBtn()
     }
     
     private func updateContinueBtn() {
@@ -60,9 +61,6 @@ class UpSellTicketVC: UIViewController {
     
     @IBAction func onClickContinueBtn(_ sender: Any) {        
         Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip)
-        upSellTicket.indices.forEach {
-            upSellTicket[$0].selectedQuantity = nil
-        }
     }
         
     private func getUpsellTicket() {
@@ -92,8 +90,8 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns.name
-        cell.infoLbl.text = upSellTicket[indexPath.row].addOns.description
+        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name
+        cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description
         cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {

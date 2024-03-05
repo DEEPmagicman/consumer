@@ -118,6 +118,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addOnsView.isHidden = true
         gradient = venueBgImg.setGradientColor()
         venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
             self?.gradient = self?.venueBgImg.setGradientColor()
@@ -158,6 +159,7 @@ final class MVPVenueDetailVc: UIViewController {
         }
         checkOutIndicator.startAnimating()
         checkOutIndicator.isHidden = true
+        
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -264,6 +266,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func setUpUI() {
+        getUpsellTicket()
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
@@ -297,6 +300,7 @@ final class MVPVenueDetailVc: UIViewController {
             updateCloseViewVisibility()
             tonightView.isHidden = true
             venuePageView.isHidden = true
+            addOnsView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
@@ -319,7 +323,6 @@ final class MVPVenueDetailVc: UIViewController {
             let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
-        addOnsView.isHidden = false
         buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Buy Upsell", for: .normal)
     }
     
@@ -327,6 +330,27 @@ final class MVPVenueDetailVc: UIViewController {
         if let url = URL(string: venueDetails?.website ?? "") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
+    }
+    
+    private func getUpsellTicket() {
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+            guard let self = self else { return }
+            Loader.hide()
+            if isSuccess {
+                if self.venueDetails?.appClipTicket?.allSatisfy({ ticket in
+                    ticket.status == "DISABLED"
+                }) == false {
+                    self.addOnsView.isHidden = upSellItem.count == 0
+                }
+//                self.addOnsView.isHidden = upSellItem.count == 0
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    private func getUpsellData() {
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
     }
     
     private func updateCloseViewVisibility() {
@@ -345,6 +369,9 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickBuyUpSell(_ sender: Any) {
+        forceRemoveFreeTicket()
+        forceRemoveCustomTicket()
+        forceRemovePaidTicket()
         Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
     }
     

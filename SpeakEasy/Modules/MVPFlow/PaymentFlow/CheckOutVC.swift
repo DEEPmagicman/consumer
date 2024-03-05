@@ -115,6 +115,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         ticketListView.isHidden = (selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
         addOnsView.isHidden = (selectedAppClipTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
         totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
+        if selectedEventTicket.count != 0 {
+            addOnsView.isHidden = true
+            totalView.isHidden = true
+        }
         addOnsPaymentMethodView.isHidden = !(ticketListView.isHidden)
         addOnsTotal.text = "-"
         mainTotalAmount.text = "-"
@@ -186,7 +190,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         switch type {
         case .appClip:
             noFeeView.isHidden = (venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == true) ? false : (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true)
-            titleLbl.text = Constant.String.liveCoverTicket
+            titleLbl.text = selectedAddOnsItem.count != 0 && selectedAppClipTickets.count == 0 ? Constant.String.upSellTicket : Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
@@ -430,7 +434,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         var addOnsItems = [[String: Any]]()
         selectedAddOnsItem.forEach {
             addOnsItems.append(["id": $0.id,
-                                "addOnsId": $0.addOns.id,
+                                "addOnsId": $0.addOns?.id,
                                 "quantity": $0.selectedQuantity ?? 0])
         }
         PaymentPresenter.addOnsPaymentIntent(bookingId: bookingId, venueId: venue?.id ?? "", addOnsItems: addOnsItems) { isSuccess, errMsg, clientSecret, ephemeralKey, paymentDetail, bookingId  in
@@ -787,8 +791,8 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         switch type {
         case .appClip:
-            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns.name
-            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns.description
+            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
             cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         case .singleTickedEvent:
             cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
