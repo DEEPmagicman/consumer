@@ -87,7 +87,6 @@
 		4A89D44128D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A89D43F28D11E42002525CA /* ViewEventTicketConfirmInvitedPeopleTVC.xib */; };
 		4AC11D9728C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC11D9628C93EBF0065F670 /* NotificationCitySelectionHeaderView.swift */; };
 		4AC11D9928C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AC11D9828C93F0C0065F670 /* NotificationCitySelectionHeaderView.xib */; };
-		6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
 		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
@@ -706,7 +705,6 @@
 		04FDAF8428F920EB007129CC /* PublikAttendeesProfileCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesProfileCVC.swift; sourceTree = "<group>"; };
 		04FDAF8728F9451A007129CC /* UserProfilePopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePopUp.swift; sourceTree = "<group>"; };
 		04FDAF8828F9451A007129CC /* UserProfilePopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserProfilePopUp.xib; sourceTree = "<group>"; };
-		21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasyClip.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip.release.xcconfig"; sourceTree = "<group>"; };
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2966E32C2980F85E00B5E103 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -799,7 +797,6 @@
 		9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectedBookingTVC.xib; sourceTree = "<group>"; };
 		9D4A028E28CE9E4B009CD670 /* CostSplitSelectionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectionTVC.swift; sourceTree = "<group>"; };
 		9D4A028F28CE9E4B009CD670 /* CostSplitSelectionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CostSplitSelectionTVC.xib; sourceTree = "<group>"; };
-		A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasyClip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.release.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.release.xcconfig"; sourceTree = "<group>"; };
 		BD1008D92940C188003B4931 /* VerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeViewController.swift; sourceTree = "<group>"; };
 		BD3DB01E2952DBB3005B5987 /* Main1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main1.swift; sourceTree = "<group>"; };
@@ -1032,7 +1029,6 @@
 		CEECAA6C288D8B7C007C5F9C /* CalendarDateRangePickerHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerHeaderView.swift; sourceTree = "<group>"; };
 		CEECAA6D288D8B7C007C5F9C /* CalendarDateRangePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarDateRangePickerViewController.swift; sourceTree = "<group>"; };
 		CEECAA6E288D8B7C007C5F9C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasyClip.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip.debug.xcconfig"; sourceTree = "<group>"; };
 		DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
 		E11CE3E228C8DF7F003899C4 /* WeekDays.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeekDays.xib; sourceTree = "<group>"; };
 		E11CE3E328C8DF7F003899C4 /* WeekDays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
@@ -1317,7 +1313,6 @@
 				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
 				CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */,
-				6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1451,7 +1446,6 @@
 			children = (
 				CE0A750C2B9854760013381D /* FSPagerView.framework */,
 				9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */,
-				A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1901,8 +1895,6 @@
 			children = (
 				DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */,
 				A9A09E54736FC9544F9277C4 /* Pods-SpeakEasy-Consumer.release.xcconfig */,
-				D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */,
-				21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -4157,7 +4149,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2966E3402980F86000B5E103 /* Build configuration list for PBXNativeTarget "SpeakEasyClip" */;
 			buildPhases = (
-				34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */,
 				2966E3242980F85E00B5E103 /* Sources */,
 				2966E3252980F85E00B5E103 /* Frameworks */,
 				2966E3262980F85E00B5E103 /* Resources */,
@@ -4246,10 +4237,10 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
-				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
-				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
-				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */,
+				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView.git" */,
+				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift.git" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -4516,28 +4507,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		34AB08637FDF8FF6719B26EB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SpeakEasyClip-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
@@ -5035,7 +5004,6 @@
 /* Begin XCBuildConfiguration section */
 		2966E33E2980F86000B5E103 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D4FEAA3BE2BCC99CC4E8F95A /* Pods-SpeakEasyClip.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -5071,7 +5039,6 @@
 		};
 		2966E33F2980F86000B5E103 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 21D7FFCDBDD671D5EBD8A35D /* Pods-SpeakEasyClip.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -5352,7 +5319,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+		69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
 			requirement = {
@@ -5360,7 +5327,7 @@
 				version = 6.5.12;
 			};
 		};
-		CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */ = {
+		CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSPagerView.git";
 			requirement = {
@@ -5368,7 +5335,7 @@
 				kind = branch;
 			};
 		};
-		CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+		CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
 			requirement = {
@@ -5416,7 +5383,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -5429,32 +5396,32 @@
 /* Begin XCSwiftPackageProductDependency section */
 		69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */;
 			productName = IQKeyboardManagerSwift;
 		};
 		69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */;
 			productName = IQKeyboardManagerSwift;
 		};
 		CECDD9E92B986ABC007E94A7 /* FSPagerView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */;
+			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView.git" */;
 			productName = FSPagerView;
 		};
 		CECDD9EB2B986B58007E94A7 /* FSPagerView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */;
+			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView.git" */;
 			productName = FSPagerView;
 		};
 		CECDD9EF2B986DFC007E94A7 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift.git" */;
 			productName = Reachability;
 		};
 		CECDD9F12B986E02007E94A7 /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift.git" */;
 			productName = Reachability;
 		};
 		CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */ = {
@@ -5504,12 +5471,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

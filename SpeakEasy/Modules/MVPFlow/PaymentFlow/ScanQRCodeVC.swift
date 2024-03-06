@@ -26,13 +26,15 @@ class ScanQRCodeVC: UIViewController {
     var addOnsQR:UIImage? = nil
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
+    var addOnsBookingId: String?
     var isOnlyAddOnAvailable = false
     var venueId = String()
+    var venueNameText: String? = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
-        venueName.text = "-"
+        venueName.text = venueNameText ?? "-"
         setPageController()
         let attributedString = NSAttributedString(string: "Buy another ticket", attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
         buyAnotherTicket.setAttributedTitle(attributedString, for: .normal)
@@ -64,8 +66,8 @@ class ScanQRCodeVC: UIViewController {
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
         pagerView.reloadData()
-//        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
-//        dismiss(animated: true)
+        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+        dismiss(animated: true)
     }
     
     private func getBooking(id: String) {
@@ -77,7 +79,6 @@ class ScanQRCodeVC: UIViewController {
                 self.booking = booking
                 self.venueName.text = booking?.venueObject?.name ?? ""
                 self.isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
-        
                 if booking?.addOnsBookingId ?? "" != "" {
                     self.getAddOnsBooking()
                     let string1 = """
@@ -98,10 +99,11 @@ class ScanQRCodeVC: UIViewController {
     
     private func getAddOnsBooking() {
         Loader.show()
-        let bookingId = booking != nil ? booking?.addOnsBookingId ?? "" : bookingId
+        let bookingId = booking != nil ? booking?.addOnsBookingId ?? "" : addOnsBookingId ?? ""
         let venueId = booking != nil ? booking?.venueId ?? "" : venueId
-        PaymentPresenter.getAddOnsBooking(venueId: venueId, addOnsBookingId: bookingId) { isSuccess, errMsg, booking in
+        PaymentPresenter.getAddOnsBooking(venueId: venueId, addOnsBookingId: bookingId) {[weak self] isSuccess, errMsg, booking in
             Loader.hide()
+            guard let self = self else { return }
             if isSuccess {
                 self.addOnsBooking = booking
                 let string1 = """
@@ -144,6 +146,8 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if isOnlyAddOnAvailable {
             cell.addOnsBooking = addOnsBooking
+            cell.backupCode.text = addOnsBooking?.venue.bookingCode ?? ""
+            cell.bookingDateTime.text = "Purchased on \(addOnsBooking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
             if index == 0 {
                 cell.qrImage.image = addOnsQR
             }

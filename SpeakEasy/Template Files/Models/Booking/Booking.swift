@@ -253,7 +253,7 @@ struct UpSellTicket: Codable {
     var id: String
     var doormanId: String
     var addOnsId: String
-    var price: Int
+    var price: Double
     var status: String
     var isDeleted: Bool
     var createdAt: String
@@ -261,6 +261,56 @@ struct UpSellTicket: Codable {
     var addOns: AddOns?
     // MARK: app side parameters
     var selectedQuantity: Int?
+    var modifiedPrice: Double {
+        var updatedPrice = 0.0
+        
+        var taxRate = 0.0
+//        if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
+//            taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
+//        }
+        
+        return updatedPrice
+    }
+    
+//    var modifiedAppClipTicket: [AppClipTicket] {
+//        var ticketData = [AppClipTicket]()
+//        appClipTicket?.enumerated().forEach({ index, ticket in
+//            ticketData.append(ticket)
+//
+//            if ticket.price < 2 {
+//                return
+//            }
+//
+//            var taxRate = 0.0
+//            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
+//                taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
+//            }
+//
+//            var totalCustomFee = 0.0
+//            if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
+//                if venueSettings?.coverTicketFeesSettings?.customFeeType == "PERCENTAGE" {
+//                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketFeesSettings?.customFee ?? 0) / 100)
+//                } else {
+//                    totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
+//                }
+//            }
+//
+//            var totalProcessingFee = 0.0
+//            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+//                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+//                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
+//            }
+//
+//            var salesTax = 0.0
+//            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
+//                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
+//            }
+//
+//            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
+//            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+//        })
+//        return ticketData
+//    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -303,10 +353,12 @@ struct AddOns: Codable {
 
 struct AddOnsBooking: Codable {
     var fees: PaymentDetail?
-    var id: String
-    var venueId: String
+    var id: String?
+    var venueId: String?
     var bookingId: String?
-    var addOnsBookingHasItem: [AddOnsBookingHasItem]
+    var addOnsBookingHasItem: [AddOnsBookingHasItem]?
+    var venue: AddOnVenue
+    var createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case fees
@@ -314,6 +366,8 @@ struct AddOnsBooking: Codable {
         case venueId
         case bookingId
         case addOnsBookingHasItem = "AddOnsBookingHasItem"
+        case venue
+        case createdAt
     }
     
     func encode(to encoder: Encoder) throws {
@@ -323,6 +377,8 @@ struct AddOnsBooking: Codable {
         try container.encode(venueId, forKey: .venueId)
         try container.encode(bookingId, forKey: .bookingId)
         try container.encode(addOnsBookingHasItem, forKey: .addOnsBookingHasItem)
+        try container.encodeIfPresent(venue, forKey: .venue)
+        try container.encode(createdAt, forKey: .createdAt)
     }
 }
 
@@ -338,4 +394,8 @@ struct AddOnsBookingHasItem: Codable {
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encode(addonsId, forKey: .addonsId)
     }
+}
+
+struct AddOnVenue: Codable {
+    var bookingCode: String
 }
