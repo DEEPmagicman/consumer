@@ -6,36 +6,34 @@
 //
 
 import Foundation
-import ReachabilitySwift
+import Reachability
 
 final class ReachabilityManager: NSObject {
 
     static let shared = ReachabilityManager()
 
     var isNetworkAvailable: Bool {
-        reachabilityStatus != .notReachable
+        reachabilityStatus != .unavailable
     }
-    var reachabilityStatus: Reachability.NetworkStatus = .notReachable
-    let reachability = Reachability()!
+    var reachabilityStatus: Reachability.Connection = .unavailable
+    let reachability = try! Reachability()
 
     @objc func reachabilityChanged(notification: Notification) {
         DispatchQueue.main.async {
             let reachability = notification.object as! Reachability
-            switch reachability.currentReachabilityStatus {
-            case .notReachable:
+            switch reachability.connection {
+            case .unavailable:
                 print("Network became unreachable")
-                self.reachabilityStatus = .notReachable
+                self.reachabilityStatus = .unavailable
                 WebSocketWrapper.shared.disConnect()
-            case .reachableViaWiFi:
+            case .wifi:
                 print("Network reachable through WiFi")
-                self.reachabilityStatus = .reachableViaWiFi
+                self.reachabilityStatus = .wifi
                 WebSocketWrapper.shared.setUpWebSocket()
-            case .reachableViaWWAN:
+            case .cellular:
                 print("Network reachable through Cellular Data")
-                self.reachabilityStatus = .reachableViaWWAN
+                self.reachabilityStatus = .cellular
                 WebSocketWrapper.shared.setUpWebSocket()
-            @unknown default:
-                break
             }
         }
     }
@@ -43,7 +41,7 @@ final class ReachabilityManager: NSObject {
     func startMonitoring() {
         NotificationCenter.default.addObserver(self,
             selector: #selector(self.reachabilityChanged),
-            name: ReachabilityChangedNotification,
+            name: Notification.Name.reachabilityChanged,
             object: reachability)
         do {
             try reachability.startNotifier()
@@ -53,6 +51,6 @@ final class ReachabilityManager: NSObject {
     }
     
     func removeReachabilityObserver() {
-        NotificationCenter.default.removeObserver(self, name: ReachabilityChangedNotification, object: reachability)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
     }
 }

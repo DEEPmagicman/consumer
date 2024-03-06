@@ -324,6 +324,10 @@
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
 		CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */; };
 		CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */; };
+		CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9E92B986ABC007E94A7 /* FSPagerView */; };
+		CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EB2B986B58007E94A7 /* FSPagerView */; };
+		CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EF2B986DFC007E94A7 /* Reachability */; };
+		CECDD9F22B986E02007E94A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9F12B986E02007E94A7 /* Reachability */; };
 		CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */; };
 		CED07E9C29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */; };
 		CED07E9E29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */; };
@@ -885,6 +889,7 @@
 		CE08978A2994FBE100EE6117 /* QRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeVC.swift; sourceTree = "<group>"; };
 		CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigHelper.swift; sourceTree = "<group>"; };
+		CE0A750C2B9854760013381D /* FSPagerView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSPagerView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
 		CE0F423C29FBE6AB0082723B /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
@@ -1307,9 +1312,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */,
+				CECDD9F22B986E02007E94A7 /* Reachability in Frameworks */,
 				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
 				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
+				CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */,
 				6711AE7B2F7AF49972B93C65 /* Pods_SpeakEasyClip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1319,11 +1326,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */,
+				CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */,
 				CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */,
 				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
 				CEDB818A2AA20BE100DAD9FE /* FirebaseCrashlytics in Frameworks */,
 				CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */,
 				69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */,
+				CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
@@ -1440,6 +1449,7 @@
 		2618555335F8CF7D7AAA33CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE0A750C2B9854760013381D /* FSPagerView.framework */,
 				9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */,
 				A24AC7E0A925696A73006EC3 /* Pods_SpeakEasyClip.framework */,
 			);
@@ -4151,7 +4161,6 @@
 				2966E3242980F85E00B5E103 /* Sources */,
 				2966E3252980F85E00B5E103 /* Frameworks */,
 				2966E3262980F85E00B5E103 /* Resources */,
-				F5A9C1FBB2A1DF37C2D57E28 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4163,6 +4172,8 @@
 				CEDB817D2AA1FB2D00DAD9FE /* StripeApplePay */,
 				CEDB81A22AA2112C00DAD9FE /* SocketIO */,
 				69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */,
+				CECDD9E92B986ABC007E94A7 /* FSPagerView */,
+				CECDD9F12B986E02007E94A7 /* Reachability */,
 			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
@@ -4195,6 +4206,8 @@
 				CEDB818B2AA20BE100DAD9FE /* FirebaseRemoteConfig */,
 				CEDB81A02AA2110E00DAD9FE /* SocketIO */,
 				69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */,
+				CECDD9EB2B986B58007E94A7 /* FSPagerView */,
+				CECDD9EF2B986DFC007E94A7 /* Reachability */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -4235,6 +4248,8 @@
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
+				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -4545,23 +4560,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F5A9C1FBB2A1DF37C2D57E28 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasyClip/Pods-SpeakEasyClip-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -5045,8 +5043,9 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 843432T6P5;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy Go!";
@@ -5060,7 +5059,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.1;
+				MARKETING_VERSION = 4.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -5080,8 +5079,9 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 843432T6P5;
+				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasyClip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy Go!";
@@ -5095,7 +5095,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.1;
+				MARKETING_VERSION = 4.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -5238,7 +5238,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5263,7 +5263,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.1;
+				MARKETING_VERSION = 4.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5284,7 +5284,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 113;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5308,7 +5308,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.1;
+				MARKETING_VERSION = 4.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5358,6 +5358,22 @@
 			requirement = {
 				kind = exactVersion;
 				version = 6.5.12;
+			};
+		};
+		CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/WenchaoD/FSPagerView.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		CEDB81762AA1FA9B00DAD9FE /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
@@ -5420,6 +5436,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		CECDD9E92B986ABC007E94A7 /* FSPagerView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */;
+			productName = FSPagerView;
+		};
+		CECDD9EB2B986B58007E94A7 /* FSPagerView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */;
+			productName = FSPagerView;
+		};
+		CECDD9EF2B986DFC007E94A7 /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			productName = Reachability;
+		};
+		CECDD9F12B986E02007E94A7 /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			productName = Reachability;
 		};
 		CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */ = {
 			isa = XCSwiftPackageProductDependency;
