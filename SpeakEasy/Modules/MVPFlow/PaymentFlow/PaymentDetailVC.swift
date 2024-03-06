@@ -47,7 +47,7 @@ final class PaymentDetailVC: UIViewController {
                 } else if booking.bookingType == "TABLE_BOOKING" {
                     titleLbl.text = Constant.String.tableReservation
                     dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
-                    mainImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL))
+                    mainImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL))
                 } else {
                     titleLbl.text = Constant.String.liveCoverTicket
                     dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)

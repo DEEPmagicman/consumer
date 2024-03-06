@@ -82,7 +82,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
                 cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
                 cell.monthLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
             }
-            cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment.first?.key ?? "").imageURL))
+            cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment?.first?.key ?? "").imageURL))
             cell.venueLogoImageView.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.logo?.key ?? "").imageURL))
             cell.venueLogoImageView.isHidden = false
         } else {

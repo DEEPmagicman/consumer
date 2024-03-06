@@ -45,7 +45,7 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var descriptionView: UIView!
     @IBOutlet weak var descriptionText: UILabel!
     
-    var eventId: String?
+    var eventId: Int?
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
@@ -184,7 +184,7 @@ final class EventDetailVC: UIViewController {
     }
     
     private func getEventDetail() {
-        if eventId ?? "" == "" {
+        if eventId ?? 0 == 0 {
             zeroCaseView(isHidden: false)
             return
         }
@@ -192,7 +192,7 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
             Loader.show()
         }
-        EventPresenter.getEventDetail(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+        EventPresenter.getEventDetail(eventId: eventId ?? 0 , venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             guard let self = self else {
                 return
             }
@@ -287,7 +287,7 @@ final class EventDetailVC: UIViewController {
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return

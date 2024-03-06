@@ -25,7 +25,7 @@ class venueTableCell: UITableViewCell {
     }
     
     func setData(data: ClipVenue) {
-        let imgUrl = "\(SharedURL.amazonStorage)\(data.venueAttachment.first?.key ?? "")"
+        let imgUrl = "\(SharedURL.amazonStorage)\(data.venueAttachment?.first?.key ?? "")"
         let logoUrl = "\(SharedURL.amazonStorage)\(data.logo?.key ?? "")"
         self.venueEventImg.sd_setImage(with: URL( string: imgUrl), completed: nil)
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)

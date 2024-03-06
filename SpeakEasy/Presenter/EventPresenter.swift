@@ -8,7 +8,7 @@
 import Foundation
 
 final class EventPresenter {
-    static func getEvents(from: Int? = 0, venueId: String, time: String = "FUTURE", venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
+    static func getEvents(from: Int? = 0, venueId: Int, time: String = "FUTURE", venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
         let param = ["skip": from ?? 0,
                      "venueId": venueId,
                      "version": "PUBLISHED",
@@ -16,7 +16,7 @@ final class EventPresenter {
                      "timeVersion": time,
                      "status": "ENABLED",
                      "orderBy": "startDateTime|asc"] as [String : Any]
-        AFWrapper.getRequest(APIBuilder.eventURL(includes: ["eventTicket"]), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
+        AFWrapper.getRequest(APIBuilder.`eventURL`(includes: ["eventTicket"]), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -59,7 +59,7 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
+    static func getEventDetail(eventId: Int, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
         
         var param = [String: Any]()
         if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {

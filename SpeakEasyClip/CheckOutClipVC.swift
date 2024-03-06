@@ -749,7 +749,7 @@ extension CheckOutClipVC {
                 vc.venueName = self.venue?.name ?? ""
                 vc.bookingId = self.bookingId
                 vc.venueLogo = self.venue?.logo?.key ?? ""
-                vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
+                vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
                 vc.selectedAppClipTickets = self.selectedAppClipTickets
                 vc.bookingCode = self.bookingCode
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")

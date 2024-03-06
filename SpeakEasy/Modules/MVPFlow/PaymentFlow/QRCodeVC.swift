@@ -10,8 +10,8 @@ import SDWebImage
 import PassKit
 
 protocol QRCodeVCNavigationDelegate: AnyObject {
-    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?)
-    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String)
+    func navigateToEventDetail(eventId: Int, venueDetail: ClipVenue?, event: Event?)
+    func navigateToVenueDetail(venueId: Int, venueUniqueId: String, venueTimeZone: String)
 }
 
 final class QRCodeVC: UIViewController {
@@ -99,7 +99,7 @@ final class QRCodeVC: UIViewController {
         if let booking = booking {
             switch type {
             case .appClip:
-                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
                 venueLogoImg.sd_setImage(with: URL(string: (booking.venueObject?.logo?.key ?? "").imageURL),completed: nil)
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
@@ -138,7 +138,7 @@ final class QRCodeVC: UIViewController {
     }
     
     @objc private func onClickEventDetail() {
-        delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
+        delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? 0, venueDetail: booking?.venueObject, event: booking?.event)
         dismiss(animated: true)
     }
     

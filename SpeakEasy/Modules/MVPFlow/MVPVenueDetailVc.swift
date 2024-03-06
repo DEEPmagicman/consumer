@@ -67,7 +67,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var buyUpsellBtn: UIButton!
     @IBOutlet weak var checkOutIndicator: UIActivityIndicatorView!
     
-    var venueId = ""
+    var venueId = 0
     var venueUniqueId = ""
     var venueTimeZone = ""
     var isFromAppClip = false
@@ -164,7 +164,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId, venueTimeZone: venueTimeZone) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueId, venueTimeZone: venueTimeZone) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -264,7 +264,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func setUpUI() {
-        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         organizerVenueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
@@ -399,7 +399,7 @@ final class MVPVenueDetailVc: UIViewController {
                                 "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverFreeBooking(appClipTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverFreeBooking(appClipTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id in
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {
@@ -590,10 +590,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             updateContinueBtn()
         case upcomingTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
+            Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? 0, venueDetail: venueDetails, event: events[indexPath.row])
         case todaysEventTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].eventId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
+            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].eventId ?? 0, venueDetail: venueDetails, event: todaysEvents[indexPath.row])
         default:
             break
         }

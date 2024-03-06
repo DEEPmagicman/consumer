@@ -14,7 +14,7 @@ enum PaymentIntentType {
 }
 
 final class PaymentPresenter {
-    static func createCoverBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+    static func createCoverBooking(appClipTickets: [[String: Any]], venueId: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         let param = ["appclipTicket": appClipTickets,
                      "venueId": venueId] as [String: Any]
         AFWrapper.postRequest(APIBuilder.createCoverBookingURL, params: param, headers: Header.header()) { response in
@@ -42,7 +42,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], promoteId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+    static func createEventBooking(eventId: Int, phone: String, userId: String, tickets: [[String: Any]], promoteId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         var param = ["isAppClipUser": false,
                      "phone": phone,
                      "tickets": tickets,
@@ -74,7 +74,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventFreeBooking(eventId: String, phone: String, userId: String, tickets: [[String: Any]], bookingId: String? = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+    static func createEventFreeBooking(eventId: Int, phone: String, userId: String, tickets: [[String: Any]], bookingId: String? = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         
         var param = ["isAppClipUser": false,
                      "phone": phone,
@@ -107,7 +107,7 @@ final class PaymentPresenter {
     }
 
     
-    static func createCoverFreeBooking(appClipTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
+    static func createCoverFreeBooking(appClipTickets: [[String: Any]], venueId: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String?) -> Void) {
         let param = ["appclipTicket": appClipTickets,
                      "venueId": venueId,
                      "optedPolicy": false] as [String: Any]
@@ -216,7 +216,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func addOnsPaymentIntent(bookingId: String?, venueId: String, addOnsItems: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
+    static func addOnsPaymentIntent(bookingId: String?, venueId: Int, addOnsItems: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
         var param = ["addOnsItems": addOnsItems] as [String: Any]
         param["venueId"] = venueId
         param["phone"] = UserDefault.shared.user?.phone

@@ -11,21 +11,21 @@ struct ClipVenue: Codable {
 
     var logo: LogoClip?
     var bookingCode: String?
-    var venueAttachment: [VenueAttachmentClip]
-    var venueHours: [VenueHoursClip]
-    var id: String
+    var venueAttachment: [VenueAttachmentClip]?
+    var venueHours: [VenueHoursClip]?
+    var id: Int
     var uniqueId: String
     var name: String
     var address: String
     var dressCode: String?
     var city: String
-    var pinCode: String
+    var pinCode: String?
     var code: String
     var phone: String
     var website: String
     var description: String?
     var status: String
-    var bookingStatus: String
+    var bookingStatus: String?
     var venueVibes: [String]
     var isDeleted: Bool
     var isEnabledGenderBasedTicket: Bool?
@@ -61,7 +61,7 @@ struct ClipVenue: Codable {
         }
     }
     var openHours: [VenueHoursClip] {
-        venueHours.filter({ $0.venueStatus == "OPEN" })
+        venueHours?.filter({ $0.venueStatus == "OPEN" }) ?? []
     }
     var lowestPriceTicket: AppClipTicket? {
         var filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })

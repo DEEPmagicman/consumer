@@ -66,7 +66,7 @@ class UpSellTicketVC: UIViewController {
     }
         
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? "", skip: upSellTicket.count) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? 0, skip: upSellTicket.count) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {

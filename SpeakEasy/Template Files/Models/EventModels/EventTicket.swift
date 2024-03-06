@@ -9,8 +9,8 @@ import Foundation
 
 struct EventTicket: Codable {
 
-    var id: String
-    var eventId: String?
+    var id: Int?
+    var eventId: Int?
     var tierName: String
     var price: Int?
     var issuedUnits: Int?
@@ -19,7 +19,7 @@ struct EventTicket: Codable {
     var soldUnits: Int?
     var customFee: CustomFee?
     var status: String
-    var tierDescription: String
+    var tierDescription: String?
     var isDeleted: Bool
     var sellingPaused: Bool
     var createdAt: String
@@ -76,7 +76,7 @@ struct EventTicket: Codable {
 
 struct EventTicketHasTier: Codable {
 
-    var id: String
+    var id: Int
     var eventId: String
     var price: Int
     var issuedUnits: Int

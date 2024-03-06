@@ -190,7 +190,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                     cell.dateLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
                     cell.monthLbl.text = bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
                 }
-                cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment.first?.key ?? "").imageURL))
+                cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.venueAttachment?.first?.key ?? "").imageURL))
                 cell.venueLogoImageView.sd_setImage(with: URL(string: (bookings[indexPath.row].venueObject?.logo?.key ?? "").imageURL))
                 cell.venueLogoImageView.isHidden = false
             } else {
@@ -298,11 +298,11 @@ extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDele
 }
 
 extension AccountVC: QRCodeVCNavigationDelegate {
-    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) {
+    func navigateToEventDetail(eventId: Int, venueDetail: ClipVenue?, event: Event?) {
         Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
     }
     
-    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) {
+    func navigateToVenueDetail(venueId: Int, venueUniqueId: String, venueTimeZone: String) {
         Navigate.to.MVPVenueDetailViewController(self, venueId: venueId, venueUniqueId: venueUniqueId, venueTimeZone: venueTimeZone)
     }
 }

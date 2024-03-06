@@ -298,7 +298,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venue?.id ?? 0) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -326,7 +326,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -433,7 +433,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                 "addOnsId": $0.addOns.id,
                                 "quantity": $0.selectedQuantity ?? 0])
         }
-        PaymentPresenter.addOnsPaymentIntent(bookingId: bookingId, venueId: venue?.id ?? "", addOnsItems: addOnsItems) { isSuccess, errMsg, clientSecret, ephemeralKey, paymentDetail in
+        PaymentPresenter.addOnsPaymentIntent(bookingId: bookingId, venueId: venue?.id ?? 0, addOnsItems: addOnsItems) { isSuccess, errMsg, clientSecret, ephemeralKey, paymentDetail in
             Loader.hide()
             if isSuccess {
                 self.addOnsPaymentDetails = paymentDetail
@@ -454,7 +454,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                             "ticketQuantity": $0.selectedTicketCount ?? 0])
         }
         Loader.show()
-        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id in
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -882,7 +882,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
         }
     }
     
-    func didUpdateEventTicket(ticketId: String) {
+    func didUpdateEventTicket(ticketId: Int) {
         if isPaymentInitiated { return }
         print(ticketId)
         if selectedEventTicket.contains(where: { $0.id == ticketId }) {

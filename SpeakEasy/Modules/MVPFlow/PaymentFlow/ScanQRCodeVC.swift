@@ -64,7 +64,7 @@ class ScanQRCodeVC: UIViewController {
     }
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
-        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
         dismiss(animated: true)
     }
     

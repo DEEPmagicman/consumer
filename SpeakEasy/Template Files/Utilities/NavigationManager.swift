@@ -196,7 +196,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String, venueTimeZone: String) {
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: Int, venueUniqueId: String, venueTimeZone: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
         vc.venueId = venueId
         vc.venueUniqueId = venueUniqueId
@@ -213,7 +213,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
+    func eventDetail(_ sender: UIViewController, eventId: Int, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
         vc.eventId = eventId
         vc.venueDetails = venueDetail

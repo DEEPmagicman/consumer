@@ -11,9 +11,9 @@ struct Event: Codable {
 
     var flyer: Flyer?
     var customVenue: CustomVenue?
-    var id: String
-    var eventId: String?
-    var venueId: String
+    var id: Int
+    var eventId: Int?
+    var venueId: Int
     var title: String
     var date: String?
     var startDateTime: String

@@ -157,7 +157,7 @@ struct APIBuilder {
         baseURL + route + event + recommendedEvents
     }
 
-    static func eventDetailURL(_ id: String) -> String {
+    static func eventDetailURL(_ id: Int) -> String {
         baseURL + route + event + "/\(id)"
     }
     
@@ -205,12 +205,15 @@ struct APIBuilder {
         baseURL + route + auth + changePassword
     }
     
-    static func MVPVenueDetailURL(_ id: String) -> String{
-        baseURL + appClip + "/\(id)"
+    static func MVPVenueDetailURL(_ id: Int) -> String{
+        baseURL + route + venue + "/\(id)" + "?include=venueAttachment&include=venueHours"
     }
     
     static var MVPVenueListURL: String {
         baseURL + route + venue + appClipVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
+    }
+    static var MVPVenueURL: String {
+        baseURL + route  + venue + "?include=venueAttachment&include=venueHours" + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     
     static func getBookingURL(_ bookingId: String) -> String {
@@ -286,7 +289,7 @@ struct APIBuilder {
         baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
     }
     
-    static func getAddOnsAPI(_ venueId: String) -> String {
+    static func getAddOnsAPI(_ venueId: Int) -> String {
         baseURL + route + "/\(venueId)" + addOns
     }
     

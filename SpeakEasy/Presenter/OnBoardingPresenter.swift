@@ -433,7 +433,15 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             let user = User(fromDictionary: userDic)
-            UserDefault.shared.user = user
+            if let encryptedUserData = user as? Data,
+                let decryptedData = try? decrypt(data: encryptedUserData, key: EncryptKeys.key, iv: EncryptKeys.iv) {
+                if let decryptedUser = try? JSONDecoder().decode(User.self, from: decryptedData) {
+                    UserDefault.shared.user = decryptedUser
+                } else {
+                    print("Decrypted data does not represent a valid User object")
+                }
+            }
+
             UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["": ""])
             completion(true)
         } failure: { error in
@@ -455,3 +463,5 @@ final class OnBoardingPresenter {
         }
     }
 }
+
+

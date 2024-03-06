@@ -71,7 +71,7 @@ final class InviteLinkVC: UIViewController {
     }
     
     private func setupData() {
-        mainImg.sd_setImage(with: URL(string: (inviteObj?.venue.venueAttachment.first?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        mainImg.sd_setImage(with: URL(string: (inviteObj?.venue.venueAttachment?.first?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         organizerImage.sd_setImage(with: URL(string: (inviteObj?.venue.logo?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         organizerName.text = inviteObj?.venue.name
         organizerAddress.text = inviteObj?.venue.website ?? "" != "" ? inviteObj?.venue.website : inviteObj?.venue.address

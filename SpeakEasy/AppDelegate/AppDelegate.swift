@@ -169,7 +169,8 @@ extension AppDelegate {
             vc.isFromAppClip = true
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
-            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
+            print("abc")
+//            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
         case .inviteLink:
             inviteLinkNav(home, id: id)
         case .booking:

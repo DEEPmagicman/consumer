@@ -127,7 +127,7 @@ final class ShowQRCodeVC: UIViewController {
         if let booking = booking {
             switch type {
             case .appClip:
-                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment.first?.key ?? "").imageURL),completed: nil)
+                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
                     dateLbl.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
@@ -311,10 +311,10 @@ final class ShowQRCodeVC: UIViewController {
     @IBAction func onClickEventDetails(_ sender: Any) {
         switch type {
         case .appClip:
-            delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+            delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
             dismiss(animated: true)
         case .singleTickedEvent:
-            delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? "", venueDetail: booking?.venueObject, event: booking?.event)
+            delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? 0, venueDetail: booking?.venueObject, event: booking?.event)
             dismiss(animated: true)
         case .tieredTickedEvent:
             break

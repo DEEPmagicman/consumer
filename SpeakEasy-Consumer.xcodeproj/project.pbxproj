@@ -130,6 +130,7 @@
 		920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 920B4D052B90AF8300C07402 /* CustomPagerViewCell.xib */; };
 		925067EF2B919FFD00841621 /* TicketCountTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 925067ED2B919FFD00841621 /* TicketCountTVC.swift */; };
 		925067F02B919FFD00841621 /* TicketCountTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 925067EE2B919FFD00841621 /* TicketCountTVC.xib */; };
+		9257CAA12B988DD4009CE697 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
 		92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */; };
 		9D4A028B28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */; };
 		9D4A028C28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D4A028A28CE9D1C009CD670 /* CostSplitSelectedBookingTVC.xib */; };
@@ -777,6 +778,7 @@
 		920B4D052B90AF8300C07402 /* CustomPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomPagerViewCell.xib; sourceTree = "<group>"; };
 		925067ED2B919FFD00841621 /* TicketCountTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketCountTVC.swift; sourceTree = "<group>"; };
 		925067EE2B919FFD00841621 /* TicketCountTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketCountTVC.xib; sourceTree = "<group>"; };
+		9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptDecrypt.swift; sourceTree = "<group>"; };
 		92C961702B8F4DAC00D2EBC1 /* UpSellTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellTicketVC.swift; sourceTree = "<group>"; };
 		9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpeakEasy_Consumer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D4A028928CE9D1C009CD670 /* CostSplitSelectedBookingTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostSplitSelectedBookingTVC.swift; sourceTree = "<group>"; };
@@ -1833,6 +1835,7 @@
 				BD942F4629599FED00D52115 /* Loader.swift */,
 				69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */,
 				040D1FD52B28790D0057EDC6 /* BlurEffect.swift */,
+				9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -4832,6 +4835,7 @@
 				0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */,
 				CAC4140128A478040007BA86 /* UIApplication.swift in Sources */,
 				4A7CC54928E3870400F8BA63 /* SubmitRequestTVC.swift in Sources */,
+				9257CAA12B988DD4009CE697 /* EncryptDecrypt.swift in Sources */,
 				2986835D297565A800CB827B /* Logo.swift in Sources */,
 				CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */,
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,

@@ -105,7 +105,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func setUpUI() {
-        let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment.first?.key ?? "")"
+        let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
         let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
         guard let imgUrl = URL(string: imgStr) else { return }
         guard let logoUrl = URL(string: logoStr) else { return }
