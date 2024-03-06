@@ -82,6 +82,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var paymentIntent = ""
     private var paymentHistoryId = ""
     private var bookingId = ""
+    private var addOnsBookingId = ""
     private var isIntendCreated = false
     private var isApplePayNotSupported = false
     private var isPaymentInitiated = false
@@ -190,7 +191,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
         if venue?.venueSettings?.coverTicketFeesSettings != nil && totalPrice != 0 {
             customFeeCount()
-            getCalculatedAddOnsFee()
+            if selectedAddOnsItem.count != 0 {
+                getCalculatedAddOnsFee()
+            }
         } else {
             noFeeView.isHidden = false
         }
@@ -348,8 +351,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func getAddOnsPaymentIntent(bookingId: String) {
-        AppClipLoader.showLoader(self.view)
+    private func getAddOnsPaymentIntent(bookingId: String, isApplePay: Bool) {
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+//        AppClipLoader.showLoader(self.view)
         var addOnsItems = [[String: Any]]()
         selectedAddOnsItem.forEach {
             addOnsItems.append(["id": $0.id,
@@ -359,7 +365,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var param = [String: Any]()
         param["addOnsItems"] = addOnsItems
         param["venueId"] = venue?.id ?? ""
-        param["phone"] = "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
+        DispatchQueue.main.async {
+            param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
+        }
         param["code"] = countryCode
         if bookingId != "" {
             param["bookingId"] = bookingId
@@ -396,22 +404,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             
-            if let paymentDetail = json["fees"] as? [String: Any], let subTotal = paymentDetail["sub_total"] as? Double, let processingFee = paymentDetail["processing_fee"] as? Double, let customFee = paymentDetail["custom_fee"] as? Double, let salesTax = paymentDetail["sales_tax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["custom_fee_name"] as? String, let salesTaxName = paymentDetail["sales_tax_name"] as? String {
+            if let paymentIntent = json["clientSecret"] as? String, let addOnsBookingId = json["bookingId"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
-                    self.addOnsSubTotalView.isHidden = !self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView
-                    self.addOnsSalesTaxView.isHidden = !self.setAddOnsSalesTaxView
-                    self.addOnsProcessingView.isHidden = !self.setAddOnsProcessingTaxView
-                    self.addOnsCustomFeeView.isHidden = !self.setAddOnsCustomTaxView
-                    self.addOnsNOFeeView.isHidden = !self.addOnsSubTotalView.isHidden
-                    
-                    self.addOnsSubTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
-                    self.addOnsProcessingAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
-                    self.addOnsSalesTaxAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
-                    self.addOnsCustomFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
-                    self.addOnsCustomFeeName.text = customFeeName == "" ? "Custom Fee" : customFeeName
-                    self.addOnsTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
-                    self.addOnsSalesTaxeName.text = salesTaxName == "" ? "Sales Tax" : salesTaxName
+                    self.isIntendCreated = true
+                    self.addOnsBookingId = addOnsBookingId
+                    self.paymentIntent = paymentIntent
+                    self.setUpPaymentBottomSheet()
+                    self.setUpPaymentBtn()
+                    DispatchQueue.main.async {
+                        if isApplePay {
+                            self.applePayButtonTapped()
+                        } else {
+                            self.onClickCreditCardPay()
+                        }
+                    }
                 }
             }
         }
@@ -583,16 +590,20 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.alertPopup("Alert", "Payment Initialisation issue")
                 return
             }
-            self.isIntendCreated = true
             self.paymentIntent = paymentIntentClientSecret
             self.paymentHistoryId = paymentHistoryId
-            self.setUpPaymentBottomSheet()
-            self.setUpPaymentBtn()
-            DispatchQueue.main.async {
-                if isApplePay {
-                    self.applePayButtonTapped()
-                } else {
-                    self.onClickCreditCardPay()
+            if self.selectedAddOnsItem.count != 0 {
+                self.getAddOnsPaymentIntent(bookingId: self.bookingId, isApplePay: isApplePay)
+            } else {
+                self.isIntendCreated = true
+                self.setUpPaymentBottomSheet()
+                self.setUpPaymentBtn()
+                DispatchQueue.main.async {
+                    if isApplePay {
+                        self.applePayButtonTapped()
+                    } else {
+                        self.onClickCreditCardPay()
+                    }
                 }
             }
         })
@@ -636,7 +647,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: venue?.venueSettings?.currencyCode?.uppercased() ?? "USD")
         paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice))
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: (totalPrice + totalAddOnPrice)))
         ]
         paymentRequest.requiredBillingContactFields = []
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
@@ -679,7 +690,42 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         })
         task.resume()
     }
-
+    
+    func addOnsPaymentSuccess(_ status: PaymentStatus, completion: @escaping (()-> Void)) {
+        retryCount = 0
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/add-ons/\(addOnsBookingId)/status?status=\(status.rawValue)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        var param = [String: Any]()
+        
+        param["bookingId"] = addOnsBookingId
+        let bodyData = try? JSONSerialization.data(
+            withJSONObject: param,
+            options: [.prettyPrinted]
+        )
+        request.httpBody = bodyData
+        request.addValue("*/*", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
+            if let error = error as? NSError {
+                if self?.retryCount ?? 0 < self?.maxRetry ?? 0 {
+                    self?.retryCount += 1
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self?.addOnsPaymentSuccess(status, completion: completion)
+                    }
+                    return
+                } else {
+                    self?.failedAPI("error code:\(error.code), des:\(error.localizedDescription)")
+                    completion()
+                }
+            } else {
+                completion()
+            }
+        })
+        task.resume()
+    }
+    
     private func failedAPI(_ msg: String) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/failed") else { return }
         var request = URLRequest(url: url)
@@ -731,7 +777,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     AppClipLoader.showLoader(self.view)
                     self.paymentStatus(.SUCCESS, optedPolicy: self.policyCheckBox.isSelected) { [weak self] in
                         guard let self = self else { return }
-                        self.navigateToQRCode()
+                        if self.selectedAddOnsItem.count != 0 {
+                            self.addOnsPaymentSuccess(.SUCCESS) {
+                                self.navigateToQR()
+                            }
+                        } else {
+                            self.navigateToQR()
+                        }
                     }
                 }
             case .canceled:
@@ -794,7 +846,13 @@ extension CheckOutClipVC {
             AppClipLoader.showLoader(view)
             paymentStatus(.SUCCESS, optedPolicy: policyCheckBox.isSelected) { [weak self] in
                 guard let self = self else { return }
-                self.navigateToQRCode()
+                if self.selectedAddOnsItem.count != 0 {
+                    self.addOnsPaymentSuccess(.SUCCESS) {
+                        self.navigateToQR()
+                    }
+                } else {
+                    self.navigateToQR()
+                }
             }
         case .error:
             isPaymentInitiated = false
@@ -955,6 +1013,26 @@ extension CheckOutClipVC {
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
                 vc.selectedAppClipTickets = self.selectedAppClipTickets
+                vc.bookingCode = self.bookingCode
+                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                    self.navigationController?.viewControllers = [selectVC, vc]
+                }
+            }
+        }
+    }
+    
+    private func navigateToQR() {
+        DispatchQueue.main.async {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRClipVC")) as? QRClipVC {
+                AppClipLoader.hideLoader()
+                vc.venueName = self.venue?.name ?? ""
+                vc.bookingId = self.bookingId
+                vc.addOnBookingId = self.addOnsBookingId
+                vc.venueLogo = self.venue?.logo?.key ?? ""
+                vc.venueAttachment = self.venue?.venueAttachment.first?.key ?? ""
+                vc.appClipTicket = self.selectedAppClipTickets
+                vc.selectedAddOns = self.selectedAddOnsItem
                 vc.bookingCode = self.bookingCode
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {

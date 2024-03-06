@@ -14,8 +14,9 @@ final class QRClipVC: UIViewController {
     var venueLogo = ""
     var venueName = ""
     var bookingId = ""
+    var addOnBookingId = ""
     private var isAlertDisplayed = false
-    var isAddOnsAvailable = false
+//    var isAddOnsAvailable = false
     var bookingCode = String()
     var createdAT = String()
     var appClipTicket = [AppClipTicket]()
@@ -34,6 +35,7 @@ final class QRClipVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadImage()
+        setPageController()
         let string = """
                 {
                     "id": "\(bookingId)",
@@ -42,26 +44,35 @@ final class QRClipVC: UIViewController {
         """
         let string1 = """
                 {
-                    "id": "\(bookingId)",
+                    "id": "\(addOnBookingId)",
                     "type": "ADD_ON"
                 }
         """
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
+        pagerView.reloadData()
     }
     
     func loadImage() {
         DispatchQueue.global().async {
-            guard let imgUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)") else { return } //                    let logoUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueLogo)")
+            guard let imgUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)") else { return }
             do {
                 let imgData = try Data(contentsOf: imgUrl)
-//                let logoData = try Data(contentsOf: logoUrl)
                 DispatchQueue.main.async {
                     self.venueImg.image = UIImage(data: imgData)
-//                    self.venueLogoImg.image = UIImage(data: logoData)
                 }
             } catch {}
         }
+    }
+    
+    func setPageController() {
+        pagerView.delegate = self
+        pagerView.dataSource = self
+        pageControl.numberOfPages = selectedAddOns.count != 0 ? 2 : 1
+        pageControl.backgroundColor = .clear
+        pageControl.itemSpacing = 8
+        pageControl.contentHorizontalAlignment = .center
+        pageControl.contentInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     }
     
     @IBAction func onClickShare(_ sender: Any) {
@@ -110,7 +121,7 @@ final class QRClipVC: UIViewController {
 
 extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     func numberOfItems(in pagerView: FSPagerView) -> Int {
-        return isAddOnsAvailable ? 2 : 1
+        return selectedAddOns.count != 0 ? 2 : 1
     }
 
     func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
