@@ -460,11 +460,12 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true)
     }
     
-    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?) {
+    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(UpSellTicketVC.self)
         vc.upSellTicket = upSellTicket
         vc.hasMany = hasMany
         vc.venueDetails = venueDetails
+        vc.doormanId = doormanId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

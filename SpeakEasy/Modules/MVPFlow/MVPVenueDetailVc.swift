@@ -334,7 +334,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -351,7 +351,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpsellData() {
-        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     private func updateCloseViewVisibility() {
@@ -373,7 +373,7 @@ final class MVPVenueDetailVc: UIViewController {
         forceRemoveFreeTicket()
         forceRemoveCustomTicket()
         forceRemovePaidTicket()
-        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
@@ -408,7 +408,7 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {
-                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails)
+                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: doormanId)
                     self.updateContinueBtn(forceRemove: true)
                 } else {
                     self.selectedTickets()

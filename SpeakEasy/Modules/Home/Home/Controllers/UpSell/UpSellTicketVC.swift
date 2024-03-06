@@ -15,6 +15,7 @@ class UpSellTicketVC: UIViewController {
     @IBOutlet weak var upSellDescription: UILabel!
     
     var venueDetails: ClipVenue?
+    var doormanId = ""
     private var isMaxTicketReached = false
     private var maxTicket = 20
     var upSellTicket = [UpSellTicket]()
@@ -99,7 +100,7 @@ class UpSellTicketVC: UIViewController {
     }
         
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? "", skip: upSellTicket.count) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? "", skip: upSellTicket.count, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
