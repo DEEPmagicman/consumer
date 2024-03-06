@@ -103,6 +103,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     weak var updateDelegate: UpdateDetailDelegate?
     private var isPromoCodeApplied = false
     var isFreeTicket = false
+    var addOnsBookingId: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -441,9 +442,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             Loader.hide()
             if isSuccess {
                 self.addOnsPaymentDetails = paymentDetail
-                if self.bookingId == "" {
-                    self.bookingId = bookingId
-                }
+                self.addOnsBookingId = bookingId
                 self.paymentIntent = clientSecret ?? ""
                 self.ephemeralKey = ephemeralKey
                 self.setUpPaymentBottomSheet()
@@ -744,6 +743,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (()-> Void)) {
         Loader.show()
+        print("--- - \(bookingId)")
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
@@ -760,7 +760,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func addOnsPaymentSuccess(completion: @escaping (()-> Void)) {
         Loader.show()
-        PaymentPresenter.successAddOnsPayment(bookingId: bookingId) { isSuccess, errMsg in
+        print("---addons - \(self.addOnsBookingId)")
+        PaymentPresenter.successAddOnsPayment(bookingId: addOnsBookingId ?? "") { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()

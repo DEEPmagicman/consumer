@@ -117,7 +117,7 @@ extension AppDelegate {
                     if isSuccess, let value = venueId, let doormanId = doormanId {
                         self.setRootVC(.venue, id: value, doormanId: doormanId)
                     } else {
-                        
+                        self.setRootVC()
                     }
                     return
                 }
