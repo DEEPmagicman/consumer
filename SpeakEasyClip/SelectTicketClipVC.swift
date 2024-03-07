@@ -73,9 +73,9 @@ final class SelectTicketClipVC: UIViewController {
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
         if venueId == "" {
-            getDeepLinkData()
-        } else {
             getEventTicket()
+        } else {
+            getDeepLinkData()
         }
         
         upSellView.isHidden = true
@@ -119,18 +119,22 @@ final class SelectTicketClipVC: UIViewController {
                 return
             }
             let decoder = JSONDecoder()
-            let addOns = json["list"] as? [[String: Any]]
-            guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+            if let addOns = json["list"] as? [[String: Any]] {
+                guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                do {
+                    self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                    DispatchQueue.main.async {
+                        //                    self.upSellView.isHidden = self.upSellTickets.count <= 0
+                    }
+                } catch (let error) {
+                    print(error)
+                }
+            } else {
                 AppClipLoader.hideLoader()
                 return
-            }
-            do {
-                self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
-                DispatchQueue.main.async {
-//                    self.upSellView.isHidden = self.upSellTickets.count <= 0
-                }
-            } catch (let error) {
-                print(error)
             }
         }.resume()
     }
