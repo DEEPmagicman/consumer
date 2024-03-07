@@ -27,7 +27,7 @@ class UpSellTicketVC: UIViewController {
     }
     var hasMany = false
     var isLoading = false
-    var modifiedAppClipTicket: [UpSellTicket] {
+    var modifiedUpSellTicket: [UpSellTicket] {
         var ticketData = [UpSellTicket]()
         upSellTicket.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
@@ -48,8 +48,8 @@ class UpSellTicketVC: UIViewController {
             
             var totalProcessingFee = 0.0
             if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 1 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + 1
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 0.5 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + 0.5
             }
             
             var salesTax = 0.0
@@ -129,9 +129,9 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
         if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == true {
-            cell.ticketPriceLbl.text = "$\(modifiedAppClipTicket[indexPath.row].price)"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(modifiedUpSellTicket[indexPath.row].price)"
         } else {
-            cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(upSellTicket[indexPath.row].price)"
         }
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {

@@ -36,6 +36,42 @@ final class UpSellClipVC: UIViewController {
         venue?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
     }
     
+    var modifiedUpSellTicket: [UpSellTicket] {
+        var ticketData = [UpSellTicket]()
+        upSellTicket.enumerated().forEach({ index, ticket in
+            ticketData.append(ticket)
+            
+            var taxRate = 0.0
+            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+                taxRate = (venue?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0) / 100
+            }
+            
+            var totalCustomFee = 0.0
+            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true {
+                if venue?.venueSettings?.addOnsBookingFeesSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venue?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0) / 100)
+                } else {
+                    totalCustomFee = (venue?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0)
+                }
+            }
+            
+            var totalProcessingFee = 0.0
+            if venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 0.5 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + 0.5
+            }
+            
+            var salesTax = 0.0
+            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
+            }
+            
+            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
+            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+        })
+        return ticketData
+    }
+    
     private func updateContinueBtn() {
         if selectedAppClipTicket.count == 0 {
             continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
@@ -117,7 +153,11 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
-        cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
+        if venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == true {
+            cell.ticketPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((modifiedUpSellTicket[indexPath.row].price).decimalFormat(true))"
+        } else {
+            cell.ticketPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].price).decimalFormat(true))"
+        }
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
             cell.totalTicketLbl.text = "\(quantity)"

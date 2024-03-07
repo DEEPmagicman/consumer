@@ -16,7 +16,7 @@ enum PaymentStatus: String {
 }
 
 final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
-
+    
     @IBOutlet private weak var totalPriceLbl: UILabel!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
@@ -65,6 +65,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsCustomFeeName: UILabel!
     @IBOutlet weak var addOnsSalesTaxView: UIView!
     @IBOutlet weak var addOnsSalesTaxAmount: UILabel!
+    @IBOutlet weak var addOnsSalesTaxPr: UILabel!
     @IBOutlet weak var addOnsSalesTaxeName: UILabel!
     @IBOutlet weak var addOnsTotalView: UIView!
     @IBOutlet weak var addOnsTotalAmount: UILabel!
@@ -210,7 +211,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
         
@@ -256,15 +256,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setAddOnsSalesTaxView: Bool {
-        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true ? true : false
+        addOnsSalesTaxPr.text = "(\(venue?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0.0)%)"
+        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
     }
     
     private var setAddOnsProcessingTaxView: Bool {
-        return venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
     }
     
     private var setAddOnsCustomTaxView: Bool {
-        return venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true ? true : false
+        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
     }
     
     private func setAddOnsData() {

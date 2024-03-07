@@ -261,56 +261,6 @@ struct UpSellTicket: Codable {
     var addOns: AddOns?
     // MARK: app side parameters
     var selectedQuantity: Int?
-    var modifiedPrice: Double {
-        var updatedPrice = 0.0
-        
-        var taxRate = 0.0
-//        if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
-//            taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
-//        }
-        
-        return updatedPrice
-    }
-    
-//    var modifiedAppClipTicket: [AppClipTicket] {
-//        var ticketData = [AppClipTicket]()
-//        appClipTicket?.enumerated().forEach({ index, ticket in
-//            ticketData.append(ticket)
-//
-//            if ticket.price < 2 {
-//                return
-//            }
-//
-//            var taxRate = 0.0
-//            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
-//                taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
-//            }
-//
-//            var totalCustomFee = 0.0
-//            if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
-//                if venueSettings?.coverTicketFeesSettings?.customFeeType == "PERCENTAGE" {
-//                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketFeesSettings?.customFee ?? 0) / 100)
-//                } else {
-//                    totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
-//                }
-//            }
-//
-//            var totalProcessingFee = 0.0
-//            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-//                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-//                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
-//            }
-//
-//            var salesTax = 0.0
-//            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
-//                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
-//            }
-//
-//            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
-//            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
-//        })
-//        return ticketData
-//    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

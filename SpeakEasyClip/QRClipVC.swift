@@ -31,6 +31,7 @@ final class QRClipVC: UIViewController {
             self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
     }
+    @IBOutlet weak var venueLogoImg: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

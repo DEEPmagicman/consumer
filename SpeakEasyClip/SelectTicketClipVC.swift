@@ -73,9 +73,9 @@ final class SelectTicketClipVC: UIViewController {
         venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
         deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
         if venueId == "" {
-            getEventTicket()
-        } else {
             getDeepLinkData()
+        } else {
+            getEventTicket()
         }
         
         upSellView.isHidden = true

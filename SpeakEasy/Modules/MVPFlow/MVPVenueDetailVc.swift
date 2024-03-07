@@ -408,7 +408,7 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {
-                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: doormanId)
+                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: self.doormanId)
                     self.updateContinueBtn(forceRemove: true)
                 } else {
                     self.selectedTickets()
