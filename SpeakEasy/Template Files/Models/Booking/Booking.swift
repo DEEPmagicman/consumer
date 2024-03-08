@@ -11,7 +11,7 @@ struct Booking: Codable {
 
     var venueObject: ClipVenue?
     var id: String
-    var venueId: String
+    var venueId: Int
 //    var phone: String
     var eventId: String?
 //    var isAppClipUser: Bool
@@ -253,12 +253,12 @@ struct UpSellTicket: Codable {
     var id: String
     var doormanId: String
     var addOnsId: String
-    var price: Int
+    var price: Double
     var status: String
     var isDeleted: Bool
     var createdAt: String
     var updatedAt: String
-    var addOns: AddOns
+    var addOns: AddOns?
     // MARK: app side parameters
     var selectedQuantity: Int?
     
@@ -272,7 +272,7 @@ struct UpSellTicket: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(addOns, forKey: .addOns)
+        try container.encodeIfPresent(addOns, forKey: .addOns)
     }
 }
 
@@ -303,23 +303,32 @@ struct AddOns: Codable {
 
 struct AddOnsBooking: Codable {
     var fees: PaymentDetail?
-    var venueId: String
-    var bookingId: String
-    var addOnsBookingHasItem: [AddOnsBookingHasItem]
+    var id: String?
+    var venueId: String?
+    var bookingId: String?
+    var addOnsBookingHasItem: [AddOnsBookingHasItem]?
+    var venue: AddOnVenue
+    var createdAt: String
     
     enum CodingKeys: String, CodingKey {
         case fees
+        case id
         case venueId
         case bookingId
         case addOnsBookingHasItem = "AddOnsBookingHasItem"
+        case venue
+        case createdAt
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(fees, forKey: .fees)
+        try container.encode(id, forKey: .id)
         try container.encode(venueId, forKey: .venueId)
         try container.encode(bookingId, forKey: .bookingId)
         try container.encode(addOnsBookingHasItem, forKey: .addOnsBookingHasItem)
+        try container.encodeIfPresent(venue, forKey: .venue)
+        try container.encode(createdAt, forKey: .createdAt)
     }
 }
 
@@ -335,4 +344,8 @@ struct AddOnsBookingHasItem: Codable {
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encode(addonsId, forKey: .addonsId)
     }
+}
+
+struct AddOnVenue: Codable {
+    var bookingCode: String
 }

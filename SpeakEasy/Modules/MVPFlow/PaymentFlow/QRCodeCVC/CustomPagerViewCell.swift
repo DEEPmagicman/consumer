@@ -54,7 +54,7 @@ class CustomPagerViewCell: FSPagerViewCell {
 
 extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return booking != nil ? booking?.uniqueTickets.count ?? 0 : addOnsBooking?.addOnsBookingHasItem.count ?? 0
+        return booking != nil ? booking?.uniqueTickets.count ?? 0 : addOnsBooking?.addOnsBookingHasItem?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -66,8 +66,8 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
             
             cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         } else {
-            cell.subTitleLbl.text = addOnsBooking?.addOnsBookingHasItem[indexPath.row].addons.description ?? ""
-            cell.titleLbl.text = addOnsBooking?.addOnsBookingHasItem[indexPath.row].addons.name ?? ""
+            cell.subTitleLbl.text = addOnsBooking?.addOnsBookingHasItem?[indexPath.row].addons.description ?? ""
+            cell.titleLbl.text = addOnsBooking?.addOnsBookingHasItem?[indexPath.row].addons.name ?? ""
             cell.quantityLbl.text = "1x"
         }
         cell.selectionStyle = .none

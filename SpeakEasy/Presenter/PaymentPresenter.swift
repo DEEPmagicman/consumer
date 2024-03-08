@@ -156,8 +156,8 @@ final class PaymentPresenter {
         }
     }
     
-    static func getAddOnsBooking(venueId: String, addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(venueId, addOnsBookingId), params: ["include": "AddOnsBookingHasItem.addons"], headers: Header.header()) { response in
+    static func getAddOnsBooking(venueId: Int, addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
+        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(venueId, addOnsBookingId), params: ["include": ["AddOnsBookingHasItem.addons", "venue"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
@@ -216,7 +216,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func addOnsPaymentIntent(bookingId: String?, venueId: Int, addOnsItems: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?) -> Void) {
+    static func addOnsPaymentIntent(bookingId: String?, venueId: Int, addOnsItems: [[String: Any]], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ clientSecret: String?, _ ephemeralKey: String, _ paymentDetail: PaymentDetail?, _ bookingId: String) -> Void) {
         var param = ["addOnsItems": addOnsItems] as [String: Any]
         param["venueId"] = venueId
         param["phone"] = UserDefault.shared.user?.phone
@@ -227,24 +227,24 @@ final class PaymentPresenter {
         AFWrapper.postRequest(APIBuilder.addOnsPaymentIntent, params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
-                completion(false, nil, "", "", nil)
+                completion(false, nil, "", "", nil, "")
                 return
             }
-            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any] {
+            if let paymentIntentClientSecret = responseDic["clientSecret"] as? String, let ephemeralKey = responseDic["ephemeralKey"] as? String, let paymentDetail = responseDic["payment_detail"] as? [String: Any], let bookingId = responseDic["bookingId"] as? String{
                 if let detail = PaymentDetail.parse(paymentDetail) {
-                    completion(true, nil, paymentIntentClientSecret, ephemeralKey, detail)
+                    completion(true, nil, paymentIntentClientSecret, ephemeralKey, detail, bookingId)
                 } else {
-                    completion(true, nil, paymentIntentClientSecret, ephemeralKey, nil)
+                    completion(true, nil, paymentIntentClientSecret, ephemeralKey, nil, "")
                 }
             } else {
-                completion(false, "internal error", "", "", nil)
+                completion(false, "internal error", "", "", nil, "")
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain, "", "", nil)
+                completion(false, err.domain, "", "", nil, "")
                 return
             }
-            completion(false, nil, "", "", nil)
+            completion(false, nil, "", "", nil, "")
         }
     }
     

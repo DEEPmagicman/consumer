@@ -18,17 +18,7 @@ target 'SpeakEasy-Consumer' do
   pod 'GoogleSignIn'
   pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
-  pod 'ReachabilitySwift', '~> 3'
   pod 'NBBottomSheet', '~> 1.2'
-  pod 'FSPagerView'
-end
-
-target 'SpeakEasyClip' do
-  # Comment the next line if you don't want to use dynamic frameworks
-  use_frameworks!
-
-  # Pods for SpeakEasyClip
-  pod 'ReachabilitySwift', '~> 3'
 end
 
 post_install do |installer|

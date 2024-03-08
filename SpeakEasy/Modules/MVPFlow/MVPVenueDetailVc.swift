@@ -71,6 +71,7 @@ final class MVPVenueDetailVc: UIViewController {
     var venueUniqueId = ""
     var venueTimeZone = ""
     var isFromAppClip = false
+    var doormanId = ""
     private let presenter = MVPPresenter()
     private var venueDetails: ClipVenue?
     private var maxTicket = 20
@@ -118,6 +119,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addOnsView.isHidden = true
         gradient = venueBgImg.setGradientColor()
         venueImgHeightObservation = venueBgImg.observe(\.bounds, options: []) { [weak self] _, _ in
             self?.gradient = self?.venueBgImg.setGradientColor()
@@ -158,13 +160,14 @@ final class MVPVenueDetailVc: UIViewController {
         }
         checkOutIndicator.startAnimating()
         checkOutIndicator.isHidden = true
+        
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueId, venueTimeZone: venueTimeZone) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueId, venueTimeZone: venueTimeZone, doormanId: doormanId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -265,6 +268,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func setUpUI() {
         venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
+        getUpsellTicket()
         logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         organizerVenueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
@@ -297,6 +301,7 @@ final class MVPVenueDetailVc: UIViewController {
             updateCloseViewVisibility()
             tonightView.isHidden = true
             venuePageView.isHidden = true
+            addOnsView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
@@ -319,7 +324,6 @@ final class MVPVenueDetailVc: UIViewController {
             let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
-        addOnsView.isHidden = false
         buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Buy Upsell", for: .normal)
     }
     
@@ -327,6 +331,27 @@ final class MVPVenueDetailVc: UIViewController {
         if let url = URL(string: venueDetails?.website ?? "") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
+    }
+    
+    private func getUpsellTicket() {
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+            guard let self = self else { return }
+            Loader.hide()
+            if isSuccess {
+                if self.venueDetails?.appClipTicket?.allSatisfy({ ticket in
+                    ticket.status == "DISABLED"
+                }) == false {
+                    self.addOnsView.isHidden = upSellItem.count == 0
+                }
+//                self.addOnsView.isHidden = upSellItem.count == 0
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    private func getUpsellData() {
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     private func updateCloseViewVisibility() {
@@ -345,7 +370,10 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickBuyUpSell(_ sender: Any) {
-        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails)
+        forceRemoveFreeTicket()
+        forceRemoveCustomTicket()
+        forceRemovePaidTicket()
+        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
@@ -376,11 +404,11 @@ final class MVPVenueDetailVc: UIViewController {
     private func getUpSellItems() {
         checkOutIndicator.isHidden = false
         continueBtn.setTitle("", for: .normal)
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {
-                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails)
+                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: self.doormanId)
                     self.updateContinueBtn(forceRemove: true)
                 } else {
                     self.selectedTickets()

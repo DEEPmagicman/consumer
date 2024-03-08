@@ -432,12 +432,16 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil) {
+    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: Int = 0, addOnsBookingId: String, venueName: String? = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId
         vc.booking = booking
+        vc.isOnlyAddOnAvailable = isOnlyAddOnAvailable
+        vc.venueId = venueId
         vc.delegate = sender as? QRCodeVCNavigationDelegate
+        vc.addOnsBookingId = addOnsBookingId
+        vc.venueNameText = venueName
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)
             homeVc.tabBarController?.selectedIndex = 1
@@ -456,11 +460,12 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true)
     }
     
-    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?) {
+    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(UpSellTicketVC.self)
         vc.upSellTicket = upSellTicket
         vc.hasMany = hasMany
         vc.venueDetails = venueDetails
+        vc.doormanId = doormanId
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -15,6 +15,7 @@ class UpSellTicketVC: UIViewController {
     @IBOutlet weak var upSellDescription: UILabel!
     
     var venueDetails: ClipVenue?
+    var doormanId = ""
     private var isMaxTicketReached = false
     private var maxTicket = 20
     var upSellTicket = [UpSellTicket]()
@@ -26,6 +27,41 @@ class UpSellTicketVC: UIViewController {
     }
     var hasMany = false
     var isLoading = false
+    var modifiedUpSellTicket: [UpSellTicket] {
+        var ticketData = [UpSellTicket]()
+        upSellTicket.enumerated().forEach({ index, ticket in
+            ticketData.append(ticket)
+            
+            var taxRate = 0.0
+            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+                taxRate = (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0) / 100
+            }
+            
+            var totalCustomFee = 0.0
+            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true {
+                if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0) / 100)
+                } else {
+                    totalCustomFee = (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0)
+                }
+            }
+            
+            var totalProcessingFee = 0.0
+            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 0.5 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + 0.5
+            }
+            
+            var salesTax = 0.0
+            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
+            }
+            
+            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
+            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+        })
+        return ticketData
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +74,7 @@ class UpSellTicketVC: UIViewController {
         ticketTypeTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell Items"
         upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.description ?? ""
+        updateContinueBtn()
     }
     
     private func updateContinueBtn() {
@@ -60,13 +97,11 @@ class UpSellTicketVC: UIViewController {
     
     @IBAction func onClickContinueBtn(_ sender: Any) {        
         Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip)
-        upSellTicket.indices.forEach {
-            upSellTicket[$0].selectedQuantity = nil
-        }
     }
         
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? 0, skip: upSellTicket.count) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        
+        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? 0, skip: upSellTicket.count, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -92,9 +127,13 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns.name
-        cell.infoLbl.text = upSellTicket[indexPath.row].addOns.description
-        cell.ticketPriceLbl.text = "$\(upSellTicket[indexPath.row].price)"
+        cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
+        cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
+        if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == true {
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(modifiedUpSellTicket[indexPath.row].price)"
+        } else {
+            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(upSellTicket[indexPath.row].price)"
+        }
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
             cell.totalTicketLbl.text = "\(quantity)"
@@ -106,7 +145,6 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.selectionStyle = .none
-        
         return cell
     }
     

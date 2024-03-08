@@ -11,6 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     var venueId = ""
+    var deepLinkId = ""
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
@@ -19,10 +20,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
                     return
                 }
-                if let venue = queryItems.first(where: { $0.name == "v" })?.value {
-                    venueId = venue
-                    UserDefaults.standard.setValue(venue, forKey: "venueId")
-                    return
+                if let value = queryItems.first(where: { $0.name == "v" })?.value {
+                    if value.contains("VN") {
+                        venueId = value
+                        UserDefaults.standard.setValue(value, forKey: "venueId")
+                        return
+                    } else {
+                        deepLinkId = value
+                        UserDefaults.standard.setValue(deepLinkId, forKey: "deepLinkId")
+                        return
+                    }
                 }
                 if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
                     venueId = venue

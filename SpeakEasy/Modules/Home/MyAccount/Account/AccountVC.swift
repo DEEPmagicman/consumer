@@ -238,7 +238,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.section {
         case 0:
             if bookings[indexPath.row].eventId == nil {
-                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row])
+                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
             } else {
                 Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
             }
