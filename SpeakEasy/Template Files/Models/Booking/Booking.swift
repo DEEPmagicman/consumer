@@ -309,6 +309,20 @@ struct AddOnsBooking: Codable {
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
     var venue: AddOnVenue
     var createdAt: String
+    // MARK: app side parameters
+    var uniqueTickets: [AddOnsBookingHasItem] {
+        var tickets = [AddOnsBookingHasItem]()
+        addOnsBookingHasItem?.forEach { ticket in
+            if let index = tickets.firstIndex(where: { $0.addonsId == ticket.addonsId }), let quantity = tickets[index].selectedQuantity {
+                tickets[index].selectedQuantity = quantity + 1
+            } else {
+                var ticket = ticket
+                ticket.selectedQuantity = 1
+                tickets.append(ticket)
+            }
+        }
+        return tickets
+    }
     
     enum CodingKeys: String, CodingKey {
         case fees
@@ -337,6 +351,8 @@ struct AddOnsBookingHasItem: Codable {
     var addons: AddOns
     var addOnsBookingId: String
     var addonsId: String
+    // MARK: app side parameters
+    var selectedQuantity: Int? = nil
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -348,4 +364,7 @@ struct AddOnsBookingHasItem: Codable {
 
 struct AddOnVenue: Codable {
     var bookingCode: String
+    var id: String
+    var uniqueId: String
+    var timezone: String?
 }

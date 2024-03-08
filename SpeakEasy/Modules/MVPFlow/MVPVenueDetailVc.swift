@@ -480,33 +480,34 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name
-            cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
+            let ticket = venueDetails?.appClipTicket?[indexPath.row]
+            cell.ticketTypeLbl.text = ticket?.customName ?? "" == "" ? ticket?.name : ticket?.customName
+            cell.infoLbl.text = ticket?.description
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            if ticket?.price ?? 0 < 2 && ticket?.name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
                     if venueDetails?.modifiedAppClipTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                     } else {
                         cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
-            if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
+            if venueDetails?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
                 cell.ticketTypeLbl.textColor = .white
             } else {
                 cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             }
-            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
+            if ticket?.selectedQuantity ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
                 cell.ticketPlusMinusView.isHidden = true
@@ -520,7 +521,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-            cell.totalTicketLbl.text = "\(venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
+            cell.totalTicketLbl.text = "\(ticket?.selectedQuantity ?? 0)"
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell

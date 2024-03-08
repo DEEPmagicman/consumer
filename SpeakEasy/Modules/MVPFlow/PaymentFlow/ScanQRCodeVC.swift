@@ -34,7 +34,7 @@ class ScanQRCodeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
-        venueName.text = venueNameText ?? "-"
+        venueName.text = venueNameText ?? "" == "" ? "-" : venueNameText
         setPageController()
         let attributedString = NSAttributedString(string: "Buy another ticket", attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
         buyAnotherTicket.setAttributedTitle(attributedString, for: .normal)
@@ -66,7 +66,9 @@ class ScanQRCodeVC: UIViewController {
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
         pagerView.reloadData()
-        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+        let uniqueId = addOnsBooking != nil ? addOnsBooking?.venue.uniqueId ?? "" : booking?.venueObject?.uniqueId ?? ""
+        let timeZone = addOnsBooking != nil ? addOnsBooking?.venue.timezone ?? "" : booking?.venueObject?.timezone ?? ""
+        delegate?.navigateToVenueDetail(venueId: venueId, venueUniqueId: uniqueId, venueTimeZone: timeZone)
         dismiss(animated: true)
     }
     

@@ -101,10 +101,10 @@ struct ClipVenue: Codable {
             }
             
             var totalProcessingFee = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
-            }
+//            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+//                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+//                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
+//            }
             
             var salesTax = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
@@ -246,6 +246,7 @@ struct AppClipTicket: Codable {
     var id: String
     var venueId: String?
     var name: String
+    var customName: String?
     var price: Double
     var parentId: String?
     var status: String?
@@ -262,6 +263,7 @@ struct AppClipTicket: Codable {
         try container.encode(id, forKey: .id)
         try container.encode(venueId, forKey: .venueId)
         try container.encode(name, forKey: .name)
+        try container.encode(customName, forKey: .customName)
         try container.encode(price, forKey: .price)
         try container.encode(parentId, forKey: .parentId)
         try container.encode(status, forKey: .status)

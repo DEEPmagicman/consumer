@@ -792,7 +792,12 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         switch type {
         case .appClip:
-            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
+            if tableView == ticketListTableView {
+                cell.titleLbl.text = selectedAppClipTickets[indexPath.row].customName ?? "" == "" ? selectedAppClipTickets[indexPath.row].name : selectedAppClipTickets[indexPath.row].customName
+            } else {
+                cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
+            }
+//            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
             cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
             cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         case .singleTickedEvent:

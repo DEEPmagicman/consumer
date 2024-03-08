@@ -230,7 +230,14 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if upSellTickets.count <= 0 {
+        if upSellTickets.count > 0 && selectedType != .FREE {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
+                vc.venue = venueDetail
+                vc.upSellTicket = upSellTickets
+                navigationController?.interactivePopGestureRecognizer?.delegate = self
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        } else {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC, let selectedTickets = venueDetail?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
                 if selectedTickets.count > 0 {
                     vc.selectedAppClipTickets = selectedTickets
@@ -245,13 +252,6 @@ final class SelectTicketClipVC: UIViewController {
                     }
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
-            }
-        } else {
-            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
-                vc.venue = venueDetail
-                vc.upSellTicket = upSellTickets
-                navigationController?.interactivePopGestureRecognizer?.delegate = self
-                navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
@@ -364,7 +364,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
-        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].name
+        cell.ticketTypeLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].customName ?? "" == "" ? self.venueDetail?.appClipTicket?[indexPath.row].name : self.venueDetail?.appClipTicket?[indexPath.row].customName
         cell.infoLbl.text = self.venueDetail?.appClipTicket?[indexPath.row].description
         cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1

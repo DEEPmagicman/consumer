@@ -61,13 +61,13 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         cell.contentView.backgroundColor = .clear
         if uniqueTickets.count != 0 {
-            cell.titleLbl.text = uniqueTickets[indexPath.row].name
+            cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].name : uniqueTickets[indexPath.row].customName
             cell.subTitleLbl.text = uniqueTickets[indexPath.row].description
             cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         } else {
             cell.subTitleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.description
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name
-            cell.quantityLbl.text = "1x"
+            cell.quantityLbl.text = "\(addOnsBookingHasItem[indexPath.row].selectedQuantity ?? 0)x"
         }
         cell.selectionStyle = .none
         

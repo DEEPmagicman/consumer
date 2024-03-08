@@ -1052,8 +1052,12 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        
-        cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+        if tableView == ticketListTableView {
+            cell.titleLbl.text = selectedAppClipTickets[indexPath.row].customName ?? "" == "" ? selectedAppClipTickets[indexPath.row].name : selectedAppClipTickets[indexPath.row].customName
+        } else {
+            cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name
+        }
+//        cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
         cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
         cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
