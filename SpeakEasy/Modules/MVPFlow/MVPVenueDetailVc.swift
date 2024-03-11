@@ -334,7 +334,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -404,7 +404,7 @@ final class MVPVenueDetailVc: UIViewController {
     private func getUpSellItems() {
         checkOutIndicator.isHidden = false
         continueBtn.setTitle("", for: .normal)
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {
@@ -431,7 +431,7 @@ final class MVPVenueDetailVc: UIViewController {
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {
-                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .appClip)
+                    Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }

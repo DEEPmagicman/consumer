@@ -223,8 +223,8 @@ struct APIBuilder {
         baseURL + route + booking + "/\(bookingId)"
     }
     
-    static func addOnBookingAPI(_ venueId: String, _ bookingId: String) -> String {
-        baseURL + route + "/\(venueId)" + addOns + "/\(bookingId)"
+    static func addOnBookingAPI(_ bookingId: String) -> String {
+        baseURL + route + addOns + "/\(bookingId)"
     }
     
     static var createCoverBookingURL: String {
@@ -292,8 +292,8 @@ struct APIBuilder {
         baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
     }
     
-    static func getAddOnsAPI(_ venueId: String) -> String {
-        baseURL + route + "/\(venueId)" + addOns
+    static var getAddOnsAPI: String {
+        baseURL + route + addOns
     }
     
     static var addOnsPaymentIntent: String {

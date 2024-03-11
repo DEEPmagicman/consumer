@@ -7,6 +7,7 @@
 
 import UIKit
 import FSPagerView
+import PassKit
 
 class ScanQRCodeVC: UIViewController {
     
@@ -18,6 +19,7 @@ class ScanQRCodeVC: UIViewController {
             self.pagerView.register(UINib(nibName: "CustomPagerViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
     }
+    @IBOutlet weak var addToWalletBtn: PKAddPassButton!
     
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
@@ -30,6 +32,7 @@ class ScanQRCodeVC: UIViewController {
     var isOnlyAddOnAvailable = false
     var venueId = String()
     var venueNameText: String? = ""
+    private var pass: PKPass?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +53,54 @@ class ScanQRCodeVC: UIViewController {
     """
             qrImage = generateQRCode(from: string) ?? UIImage()
             getBooking(id: bookingId)
+        }
+        addToWalletBtn.addPassButtonStyle = .blackOutline
+        addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
+    }
+    
+    @objc private func addToWalletBtnTapped() {
+        var url = URL(string: "")
+        url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
+        
+        guard let url = url else { return }
+        let pkl = PKPassLibrary()
+        if let pass = pass {
+            if pkl.containsPass(pass) {
+                Alert.showToast("Ticket already Added", vc: self)
+            } else {
+                presentAddPKPass(pass)
+            }
+            return
+        }
+        Loader.show()
+        URLSession.shared.fetchData(at: url) { [weak self] data, error in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            if let data = data {
+                do {
+                    let pass = try PKPass(data: data)
+                    Loader.hide()
+                    self.presentAddPKPass(pass)
+                    self.pass = pass
+                } catch {
+                    Loader.hide()
+                    Alert.showAlertSheet(style: .alert, title: "Incorrect data", message: "")
+                }
+            } else {
+                Loader.hide()
+                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    private func presentAddPKPass(_ pass: PKPass) {
+        if let vc = PKAddPassesViewController(pass: pass) {
+            DispatchQueue.main.async {
+                vc.delegate = self
+                self.present(vc, animated: true)
+            }
         }
     }
     
@@ -102,8 +153,7 @@ class ScanQRCodeVC: UIViewController {
     private func getAddOnsBooking() {
         Loader.show()
         let bookingId = booking != nil ? booking?.addOnsBookingId ?? "" : addOnsBookingId ?? ""
-        let venueId = booking != nil ? booking?.venueId ?? "" : venueId
-        PaymentPresenter.getAddOnsBooking(venueId: venueId, addOnsBookingId: bookingId) {[weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getAddOnsBooking(addOnsBookingId: bookingId) {[weak self] isSuccess, errMsg, booking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
@@ -143,7 +193,6 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
     
     func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! CustomPagerViewCell
-        
         cell.backupCode.text = booking?.venueObject?.bookingCode ?? ""
         cell.bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if isOnlyAddOnAvailable {
@@ -153,7 +202,7 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
             if index == 0 {
                 cell.qrImage.image = addOnsQR
             }
-            
+            addToWalletBtn.isHidden = true
         } else {
             if index == 0 {
                 cell.booking = booking
@@ -161,6 +210,7 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
                 cell.addOnsBooking = addOnsBooking
             }
             cell.qrImage.image = index == 0 ? qrImage : addOnsQR
+            addToWalletBtn.isHidden = index == 0 ? false : true
         }
         cell.ticketsTableView.reloadData()
         return cell
@@ -171,3 +221,12 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
     }
 }
 
+extension ScanQRCodeVC: PKAddPassesViewControllerDelegate {
+    func addPassesViewControllerDidFinish(_ controller: PKAddPassesViewController) {
+        controller.dismiss(animated: true)
+        let pkl = PKPassLibrary()
+        if let pass = pass, pkl.containsPass(pass) {
+            Alert.showToast("Ticket added to wallet", vc: self)
+        }
+    }
+}

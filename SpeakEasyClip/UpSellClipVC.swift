@@ -57,8 +57,8 @@ final class UpSellClipVC: UIViewController {
             
             var totalProcessingFee = 0.0
             if venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 0.5 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + 0.5
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "") + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "")
             }
             
             var salesTax = 0.0
@@ -70,6 +70,18 @@ final class UpSellClipVC: UIViewController {
             ticketData[index].price = round(amountChargedToConsumer * 100) / 100
         })
         return ticketData
+    }
+    
+    func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
+        var amountTransferToSE = 0.0
+        if AppClipTicketGeneral.contains(ticketName) {
+            amountTransferToSE = 1
+        } else if AppClipTicketVIP.contains(ticketName) {
+            amountTransferToSE = 2
+        } else {
+            amountTransferToSE = 0.5
+        }
+        return amountTransferToSE
     }
     
     private func updateContinueBtn() {

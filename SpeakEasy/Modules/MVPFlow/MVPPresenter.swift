@@ -76,10 +76,10 @@ final class MVPPresenter {
         }
     }
     
-    static func getUpSellItem(venueId: String, skip: Int, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
+    static func getUpSellItem(skip: Int, doormanId: String = "", venueId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
         let param = ["skip": skip,"include": "addOns"] as [String: Any]
         
-        AFWrapper.getRequest(APIBuilder.getAddOnsAPI(venueId), params: param, headers: Header.header(doormanId: doormanId)) { response in
+        AFWrapper.getRequest(APIBuilder.getAddOnsAPI, params: param, headers: Header.header(doormanId: doormanId, venueId: venueId)) { response in
             
             guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool, let total = responseDic["total"] as? Int else {
                 completion(false, nil, [], false, 0)

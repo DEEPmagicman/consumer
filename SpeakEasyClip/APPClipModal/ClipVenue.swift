@@ -101,10 +101,10 @@ struct ClipVenue: Codable {
             }
             
             var totalProcessingFee = 0.0
-//            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
-//                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-//                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
-//            }
+            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
+            }
             
             var salesTax = 0.0
             if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
