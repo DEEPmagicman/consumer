@@ -32,7 +32,7 @@ class EventBookingDetails: UIViewController {
     var topEventData: TopEventDataSet?
     var attendeeData: AttendeeProfile?
     var totalTicket = 0
-    var eventId = 0
+    var eventId = ""
     var eventDetail: Event?
     
     override func viewDidLoad() {

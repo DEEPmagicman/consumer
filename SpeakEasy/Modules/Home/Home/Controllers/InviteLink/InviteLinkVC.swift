@@ -161,7 +161,7 @@ final class InviteLinkVC: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
-                Navigate.to.showQRCode(self, booking: booking, bookingId: booking?.id ?? "", type: .appClip)
+                Navigate.to.showQRCode(self, booking: booking, bookingId: booking?.id ?? 0, type: .appClip)
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }

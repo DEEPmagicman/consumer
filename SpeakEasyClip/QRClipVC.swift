@@ -13,13 +13,13 @@ final class QRClipVC: UIViewController {
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
-    var bookingId = ""
+    var bookingId = 0
     var addOnBookingId = ""
     private var isAlertDisplayed = false
 //    var isAddOnsAvailable = false
     var bookingCode = String()
     var createdAT = String()
-    var appClipTicket = [AppClipTicket]()
+    var appClipTicket = [CoverTicket]()
     var selectedAddOns = [UpSellTicket]()
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil

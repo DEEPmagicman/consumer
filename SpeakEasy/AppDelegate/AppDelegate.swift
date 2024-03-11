@@ -186,7 +186,8 @@ extension AppDelegate {
         case .inviteLink:
             inviteLinkNav(home, id: id)
         case .booking:
-            Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
+            print("abc")
+//            Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
         }
     }
     

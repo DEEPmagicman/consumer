@@ -21,7 +21,7 @@ class ScanQRCodeVC: UIViewController {
     
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
-    var bookingId = String()
+    var bookingId = Int()
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil
     var booking: Booking?
@@ -65,12 +65,13 @@ class ScanQRCodeVC: UIViewController {
     }
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
-        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+//        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+        delegate?.navigateToVenueDetail(venueId: booking?.venueId ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: "asia/kolkata")
         pagerView.reloadData()
         dismiss(animated: true)
     }
     
-    private func getBooking(id: String) {
+    private func getBooking(id: Int) {
         Loader.show()
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()

@@ -72,7 +72,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsPaymentMethodView: UIView!
     @IBOutlet weak var addOnsSeparatorHeight: NSLayoutConstraint!
     
-    var selectedAppClipTickets = [AppClipTicket]()
+    var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
     var selectedEventTicket = [EventTicket]()
     var totalPrice: Double = 0
@@ -82,12 +82,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var promoteId = ""
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
-    private var paymentHistoryId = ""
+    private var paymentHistoryId = 0
     private var ephemeralKey = ""
     private var paymentDetail: PaymentDetail?
     private var addOnsPaymentDetails: PaymentDetail?
     private var selectedId = Constant.String.defaultSelectedPM
-    private var bookingId = ""
+    private var bookingId = 0
     private var isApplePayNotSupported: Bool {
         !PKPaymentAuthorizationViewController.canMakePayments()
     }
@@ -107,14 +107,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if selectedAppClipTickets.count != 0 || selectedEventTicket.count != 0 {
+        if selectedCoverTickets.count != 0 || selectedEventTicket.count != 0 {
             createBooking()
         } else {
-            getAddOnsPaymentIntent(bookingId: "")
+            getAddOnsPaymentIntent(bookingId: 0)
         }
         
-        ticketListView.isHidden = (selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
-        addOnsView.isHidden = (selectedAppClipTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
+        ticketListView.isHidden = (selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
+        addOnsView.isHidden = (selectedCoverTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
         totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
         if selectedEventTicket.count != 0 {
             addOnsView.isHidden = true
@@ -191,7 +191,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         switch type {
         case .appClip:
             noFeeView.isHidden = (venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == true) ? false : (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true)
-            titleLbl.text = selectedAddOnsItem.count != 0 && selectedAppClipTickets.count == 0 ? Constant.String.upSellTicket : Constant.String.liveCoverTicket
+            titleLbl.text = selectedAddOnsItem.count != 0 && selectedCoverTickets.count == 0 ? Constant.String.upSellTicket : Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
@@ -298,12 +298,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         var tickets = [[String: Any]]()
         switch type {
         case .appClip:
-            selectedAppClipTickets.forEach {
+            selectedCoverTickets.forEach {
                 tickets.append(["ticketId": $0.id,
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverBooking(appClipTickets: tickets, venueId: venue?.id ?? 0) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? 0) { [weak self] isSuccess, errMsg, id,message  in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -331,7 +331,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id, message  in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -366,22 +366,22 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func addPaymentApi() {
         Loader.show()
-        var appClipTickets = [[String: Any]]()
+        var coverTickets = [[String: Any]]()
         switch type {
         case .appClip:
-            selectedAppClipTickets.forEach {
-                appClipTickets.append(["ticketId": $0.id,
+            selectedCoverTickets.forEach {
+                coverTickets.append(["ticketId": $0.id,
                                        "quantity": $0.selectedQuantity ?? 0])
             }
         case .singleTickedEvent:
             selectedEventTicket.forEach {
-                appClipTickets.append(["ticketId": $0.id,
+                coverTickets.append(["ticketId": $0.id,
                                        "quantity": $0.selectedTicketCount ?? 0])
             }
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: appClipTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
             Loader.hide()
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
@@ -430,7 +430,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func getAddOnsPaymentIntent(bookingId: String) {
+    private func getAddOnsPaymentIntent(bookingId: Int) {
         Loader.show()
         var addOnsItems = [[String: Any]]()
         selectedAddOnsItem.forEach {
@@ -459,7 +459,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                             "ticketQuantity": $0.selectedTicketCount ?? 0])
         }
         Loader.show()
-        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id in
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id,message  in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -493,12 +493,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setSalesTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
@@ -510,11 +510,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setCustomTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
         
@@ -525,11 +525,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setProcessingTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             return venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
         
@@ -577,11 +577,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
         default:
             setAddOnsData()
-            ticketListView.isHidden = selectedAppClipTickets.count == 0
-            addOnsSeparatorHeight.constant = selectedAppClipTickets.count != 0 ? 0.1 : 1
-            addOnsPaymentMethodView.isHidden = selectedAppClipTickets.count != 0
+            ticketListView.isHidden = selectedCoverTickets.count == 0
+            addOnsSeparatorHeight.constant = selectedCoverTickets.count != 0 ? 0.1 : 1
+            addOnsPaymentMethodView.isHidden = selectedCoverTickets.count != 0
             addOnsView.isHidden = selectedAddOnsItem.count == 0
-            totalView.isHidden = selectedAppClipTickets.count == 0 || selectedAddOnsItem.count == 0
+            totalView.isHidden = selectedCoverTickets.count == 0 || selectedAddOnsItem.count == 0
             subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
             salesTexView.isHidden = !setSalesTaxView
             processingFeesView.isHidden = !setProcessingTaxView
@@ -678,7 +678,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                if self.selectedAppClipTickets.count == 0 && self.selectedAddOnsItem.count != 0 {
+                if self.selectedCoverTickets.count == 0 && self.selectedAddOnsItem.count != 0 {
                     self.addOnsPaymentSuccess {
                         self.timer.invalidate()
                         Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
@@ -780,7 +780,7 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch type {
         case .appClip:
-            return tableView == ticketListTableView ? selectedAppClipTickets.count : selectedAddOnsItem.count
+            return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
         case .singleTickedEvent:
             return selectedEventTicket.count
         case .tieredTickedEvent:
@@ -792,9 +792,9 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         switch type {
         case .appClip:
-            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
-            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
-            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+            cell.titleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
+            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         case .singleTickedEvent:
             cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
             cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
@@ -819,7 +819,7 @@ extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            if selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0 {
+            if selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0 {
                 addOnsPaymentSuccess {
                     self.timer.invalidate()
                     Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")

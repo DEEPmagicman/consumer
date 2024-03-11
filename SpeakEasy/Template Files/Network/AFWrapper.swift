@@ -65,8 +65,9 @@ final class AFWrapper: NSObject {
         
         var parameters: Parameters?
         if let params = params {
-            parameters = isJsonEncoding ? params.encrypted() : params
+            parameters =  params.encrypted() 
         }
+        
         
         let req = Alamofire.request(strURL, method: .post, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseString { response in
             

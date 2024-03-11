@@ -34,7 +34,7 @@ struct ClipVenue: Codable {
     var bookingWaiting: String?
     var lat: String
     var lng: String
-    var appClipTicket: [AppClipTicket]?
+    var coverTicket: [CoverTicket]?
     var checkInUser: Int?
     var timezone: String?
     var venueSettings: VenueSettings?
@@ -63,11 +63,11 @@ struct ClipVenue: Codable {
     var openHours: [VenueHoursClip] {
         venueHours?.filter({ $0.venueStatus == "OPEN" }) ?? []
     }
-    var lowestPriceTicket: AppClipTicket? {
-        var filterTickets = appClipTicket?.filter({ $0.status == "ENABLED" })
+    var lowestPriceTicket: CoverTicket? {
+        var filterTickets = coverTicket?.filter({ $0.status == "ENABLED" })
         if venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-            filterTickets = modifiedAppClipTicket.filter({ $0.status == "ENABLED" && $0.isCustom != true })
-            if let customTicket = appClipTicket?.first(where: { $0.status == "ENABLED" && $0.isCustom == true }) {
+            filterTickets = modifiedCoverTicket.filter({ $0.status == "ENABLED" && $0.isCustom != true })
+            if let customTicket = coverTicket?.first(where: { $0.status == "ENABLED" && $0.isCustom == true }) {
                 filterTickets?.append(customTicket)
             }
         }
@@ -77,9 +77,9 @@ struct ClipVenue: Codable {
         return lowest
     }
     
-    var modifiedAppClipTicket: [AppClipTicket] {
-        var ticketData = [AppClipTicket]()
-        appClipTicket?.enumerated().forEach({ index, ticket in
+    var modifiedCoverTicket: [CoverTicket] {
+        var ticketData = [CoverTicket]()
+        coverTicket?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
             
             if ticket.price < 2 {
@@ -141,18 +141,18 @@ struct ClipVenue: Codable {
             }
         }
         if speakEasyCharges == "DIFFRENT_PRICE" {
-            if AppClipTicketGeneral.contains(ticketName) {
+            if CoverTicketGeneral.contains(ticketName) {
                 amountTransferToSE = 1
-            } else if AppClipTicketVIP.contains(ticketName) {
+            } else if CoverTicketVIP.contains(ticketName) {
                 amountTransferToSE = 2
             } else {
                 amountTransferToSE = 0.5
             }
         }
         if speakEasyCharges == "TAO_PRICING" {
-            if AppClipTicketGeneral.contains(ticketName) {
+            if CoverTicketGeneral.contains(ticketName) {
                 amountTransferToSE = 0.29
-            } else if AppClipTicketVIP.contains(ticketName) {
+            } else if CoverTicketVIP.contains(ticketName) {
                 amountTransferToSE = 2
             } else {
                 amountTransferToSE = 0.5
@@ -241,13 +241,13 @@ struct VenueHoursClip: Codable {
     }
 }
 
-struct AppClipTicket: Codable {
+struct CoverTicket: Codable {
 
-    var id: String
-    var venueId: String?
+    var id: Int
+    var venueId: Int?
     var name: String
     var price: Double
-    var parentId: String?
+    var parentId: Int?
     var status: String?
     var description: String?
     var isDeleted: Bool?
@@ -342,7 +342,7 @@ enum TicketPriceType {
     case CUSTOM
 }
 
-let AppClipTicketGeneral = [
+let CoverTicketGeneral = [
   "GENERALTICKET",
   "General Admission",
   "Female General Admission",
@@ -351,7 +351,7 @@ let AppClipTicketGeneral = [
   "General Admission - Female",
 ]
 
-let AppClipTicketVIP = [
+let CoverTicketVIP = [
   "SKIPLINETICKET",
   "Skip The Line",
   "Skip The Line-Female",

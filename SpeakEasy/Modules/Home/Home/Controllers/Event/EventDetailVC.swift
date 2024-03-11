@@ -45,7 +45,7 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var descriptionView: UIView!
     @IBOutlet weak var descriptionText: UILabel!
     
-    var eventId: Int?
+    var eventId = ""
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
@@ -137,7 +137,7 @@ final class EventDetailVC: UIViewController {
         dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
-        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) /*&& (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0) */} ?? []
         if event?.eventTicket == nil {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
@@ -184,7 +184,7 @@ final class EventDetailVC: UIViewController {
     }
     
     private func getEventDetail() {
-        if eventId ?? 0 == 0 {
+        if eventId  == "" {
             zeroCaseView(isHidden: false)
             return
         }
@@ -192,7 +192,7 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
             Loader.show()
         }
-        EventPresenter.getEventDetail(eventId: eventId ?? 0 , venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+        EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             guard let self = self else {
                 return
             }
@@ -273,7 +273,7 @@ final class EventDetailVC: UIViewController {
             createFreeEventBooking()
         case .PAID, .CUSTOM:
             if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-                Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
+                Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
                 updateContinueBtn(forceRemove: true)
             }
         }
@@ -287,7 +287,7 @@ final class EventDetailVC: UIViewController {
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
                 guard let self = self else {
                     Loader.hide()
                     return

@@ -10,7 +10,7 @@ import Foundation
 struct Booking: Codable {
 
     var venueObject: ClipVenue?
-    var id: String
+    var id: Int
     var venueId: Int
 //    var phone: String
     var eventId: String?
@@ -18,10 +18,10 @@ struct Booking: Codable {
     var paymentType: String?
 //    var appClipUserId: Any
 //    var ticketName: Any
-    var isCheckedIn: Bool
+    var isCheckedIn: Bool?
 //    var ticketPrice: Any
 //    var ticketQuantity: Any
-    var totalPrice: Double
+    var totalPrice: Int?
     var note: String?
     var consumerUserId: [String]?
 //    var bookingDate: Any
@@ -116,10 +116,10 @@ struct Booking: Codable {
         try container.encode(paymentType, forKey: .paymentType)
         // TODO: Add code for encoding `appClipUserId`, It was null at the time of model creation.
         // TODO: Add code for encoding `ticketName`, It was null at the time of model creation.
-        try container.encode(isCheckedIn, forKey: .isCheckedIn)
+        try container.encodeIfPresent(isCheckedIn, forKey: .isCheckedIn)
         // TODO: Add code for encoding `ticketPrice`, It was null at the time of model creation.
         // TODO: Add code for encoding `ticketQuantity`, It was null at the time of model creation.
-        try container.encode(totalPrice, forKey: .totalPrice)
+        try container.encodeIfPresent(totalPrice, forKey: .totalPrice)
         try container.encode(note, forKey: .note)
         try container.encode(consumerUserId, forKey: .consumerUserId)
         // TODO: Add code for encoding `bookingDate`, It was null at the time of model creation.
@@ -150,12 +150,12 @@ struct Booking: Codable {
 
 struct BookingHasItem: Codable {
 
-    var id: String
-    var ticketId: String
+    var id: Int
+    var ticketId: Int
     var ticketName: String?
     var ticketPrice: Int
-    var isCheckedIn: Bool
-    var bookingId: String
+    var isCheckedIn: Int?
+    var bookingId: Int
     var isDeleted: Bool?
     var createdAt: String
     var updatedAt: String
@@ -180,7 +180,7 @@ struct BookingHasItem: Codable {
         try container.encode(ticketId, forKey: .ticketId)
         try container.encode(ticketName, forKey: .ticketName)
         try container.encode(ticketPrice, forKey: .ticketPrice)
-        try container.encode(isCheckedIn, forKey: .isCheckedIn)
+        try container.encodeIfPresent(isCheckedIn, forKey: .isCheckedIn)
         try container.encode(bookingId, forKey: .bookingId)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
@@ -191,7 +191,7 @@ struct BookingHasItem: Codable {
 struct TicketDetails: Codable {
 
     var ticketName: String?
-    var ticketId: String?
+    var ticketId: Int?
     var ticketDescription: String?
     var quantity: Int?
 
@@ -305,7 +305,7 @@ struct AddOnsBooking: Codable {
     var fees: PaymentDetail?
     var id: String?
     var venueId: String?
-    var bookingId: String?
+    var bookingId: Int?
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
     var venue: AddOnVenue
     var createdAt: String

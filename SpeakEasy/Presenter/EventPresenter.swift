@@ -59,7 +59,7 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: Int, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
+    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
         
         var param = [String: Any]()
         if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {

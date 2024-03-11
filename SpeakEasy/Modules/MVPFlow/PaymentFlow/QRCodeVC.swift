@@ -10,7 +10,7 @@ import SDWebImage
 import PassKit
 
 protocol QRCodeVCNavigationDelegate: AnyObject {
-    func navigateToEventDetail(eventId: Int, venueDetail: ClipVenue?, event: Event?)
+    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?)
     func navigateToVenueDetail(venueId: Int, venueUniqueId: String, venueTimeZone: String)
 }
 
@@ -35,7 +35,7 @@ final class QRCodeVC: UIViewController {
     @IBOutlet weak var ticketCreatedTime: UILabel!
     @IBOutlet weak var containerView: UIView!
     
-    var bookingId = ""
+    var bookingId = 0
     var type: PaymentIntentType = .appClip
     var booking: Booking?
     weak var delegate: QRCodeVCNavigationDelegate?
@@ -90,7 +90,7 @@ final class QRCodeVC: UIViewController {
     }
     
     private func setupData() {
-        QRImg.image = generateQRCode(from: bookingId)
+//        QRImg.image = generateQRCode(from: bookingId)
         ticketCode.text = booking?.venueObject?.bookingCode ?? ""
         ticketCreatedTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD) ?? "")"
         if booking?.venueObject?.bookingCode ?? "" != "" {
@@ -138,11 +138,11 @@ final class QRCodeVC: UIViewController {
     }
     
     @objc private func onClickEventDetail() {
-        delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? 0, venueDetail: booking?.venueObject, event: booking?.event)
+        delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "" , venueDetail: booking?.venueObject, event: booking?.event)
         dismiss(animated: true)
     }
     
-    private func getBooking(id: String) {
+    private func getBooking(id: Int) {
 //        if booking == nil {
             Loader.show()
 //        }
@@ -163,9 +163,9 @@ final class QRCodeVC: UIViewController {
         var url = URL(string: "")
         switch type {
         case .appClip:
-            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
+            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? 0))
         case .singleTickedEvent:
-            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
+            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? 0))
         case .tieredTickedEvent:
             break
         }

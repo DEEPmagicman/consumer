@@ -23,8 +23,8 @@ final class QRCodeClipVC: UIViewController {
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
-    var bookingId = ""
-    var selectedAppClipTickets = [AppClipTicket]()
+    var bookingId = 0
+    var selectedCoverTickets = [CoverTicket]()
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var isAlertDisplayed = false
     var bookingCode = String()
@@ -42,7 +42,7 @@ final class QRCodeClipVC: UIViewController {
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
             self.ticketListTableView.layoutIfNeeded()
         }
-        QRImg.image = generateQRCode(from: bookingId)
+//  #remove comment #      QRImg.image = generateQRCode(from: bookingId)
         loadImage()
         titleLbl.text = "\(venueName) - Cover"
         ticketCodeView.isHidden = true
@@ -132,14 +132,14 @@ final class QRCodeClipVC: UIViewController {
 
 extension QRCodeClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       selectedAppClipTickets.count
+       selectedCoverTickets.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        cell.titleLbl.text = selectedAppClipTickets[indexPath.row].name
-        cell.subTitleLbl.text = selectedAppClipTickets[indexPath.row].description
-        cell.quantityLbl.text = "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x"
+        cell.titleLbl.text = selectedCoverTickets[indexPath.row].name
+        cell.subTitleLbl.text = selectedCoverTickets[indexPath.row].description
+        cell.quantityLbl.text = "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear

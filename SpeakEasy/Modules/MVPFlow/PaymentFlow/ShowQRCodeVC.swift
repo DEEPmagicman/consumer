@@ -50,7 +50,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var bookingTitleLbl: UILabel!
     @IBOutlet weak var salesTaxName: UILabel!
     
-    var bookingId = ""
+    var bookingId = 0
     var type: PaymentIntentType = .appClip
     var booking: Booking?
     private var pass: PKPass?
@@ -189,9 +189,9 @@ final class ShowQRCodeVC: UIViewController {
         var url = URL(string: "")
         switch type {
         case .appClip:
-            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
+            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? 0))
         case .singleTickedEvent:
-            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
+            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? 0))
         case .tieredTickedEvent:
             break
         }
@@ -237,7 +237,7 @@ final class ShowQRCodeVC: UIViewController {
         }
     }
     
-    private func getBooking(id: String) {
+    private func getBooking(id: Int) {
         Loader.show()
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()
@@ -268,7 +268,7 @@ final class ShowQRCodeVC: UIViewController {
             }
         case "APPCLIP":
             let ticketId = booking?.bookingHasItem.first?.ticketId
-            let ticket = booking?.venueObject?.appClipTicket?.filter({$0.id == ticketId})
+            let ticket = booking?.venueObject?.coverTicket?.filter({$0.id == ticketId})
             if ticket?.first?.isCustom == true {
                 processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
                 salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == false ? true : false
@@ -314,7 +314,7 @@ final class ShowQRCodeVC: UIViewController {
             delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
             dismiss(animated: true)
         case .singleTickedEvent:
-            delegate?.navigateToEventDetail(eventId: booking?.event?.eventId ?? 0, venueDetail: booking?.venueObject, event: booking?.event)
+            delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "" , venueDetail: booking?.venueObject, event: booking?.event)
             dismiss(animated: true)
         case .tieredTickedEvent:
             break

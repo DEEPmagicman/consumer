@@ -213,7 +213,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func eventDetail(_ sender: UIViewController, eventId: Int, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
+    func eventDetail(_ sender: UIViewController, eventId: String, venueDetail: ClipVenue?, event: Event?, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(EventDetailVC.self)
         vc.eventId = eventId
         vc.venueDetails = venueDetail
@@ -245,9 +245,9 @@ final class Navigate {
         sender.present(imageViewer, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedCoverTickets: [CoverTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
-        vc.selectedAppClipTickets = selectedAppClipTickets
+        vc.selectedCoverTickets = selectedCoverTickets
         vc.selectedEventTicket = selectedEventTicket
         vc.selectedAddOnsItem = selectedAddOnsItem
         vc.totalPrice = totalPrice
@@ -260,7 +260,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
+    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: Int, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ShowQRCodeVC.self)
         vc.booking = booking
         vc.bookingId = bookingId
@@ -432,7 +432,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: Int = 0, addOnsBookingId: String, venueName: String? = "") {
+    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: Int, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: Int = 0, addOnsBookingId: String, venueName: String? = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId

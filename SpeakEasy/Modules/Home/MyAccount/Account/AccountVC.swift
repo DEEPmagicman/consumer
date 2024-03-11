@@ -243,7 +243,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                 Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
             }
         case 1:
-            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].id, venueDetail: nil, event: nil)
+            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
         default:
             break
         }
@@ -298,7 +298,7 @@ extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDele
 }
 
 extension AccountVC: QRCodeVCNavigationDelegate {
-    func navigateToEventDetail(eventId: Int, venueDetail: ClipVenue?, event: Event?) {
+    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) {
         Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
     }
     

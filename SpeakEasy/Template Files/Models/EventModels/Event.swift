@@ -12,7 +12,7 @@ struct Event: Codable {
     var flyer: Flyer?
     var customVenue: CustomVenue?
     var id: Int
-    var eventId: Int?
+    var uniqueId: String?
     var venueId: Int
     var title: String
     var date: String?
@@ -66,7 +66,7 @@ struct Event: Codable {
         try container.encode(flyer, forKey: .flyer)
         try container.encode(customVenue, forKey: .customVenue)
         try container.encode(id, forKey: .id)
-        try container.encode(eventId, forKey: .eventId)
+        try container.encode(uniqueId, forKey: .uniqueId)
         try container.encode(venueId, forKey: .venueId)
         try container.encode(title, forKey: .title)
         try container.encode(date, forKey: .date)

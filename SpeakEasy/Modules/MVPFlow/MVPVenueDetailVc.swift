@@ -86,13 +86,13 @@ final class MVPVenueDetailVc: UIViewController {
     private var totalPrice: Double {
         var total = 0.0
         if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-            venueDetails?.modifiedAppClipTicket.forEach {
+            venueDetails?.modifiedCoverTicket.forEach {
                 if let quantity = $0.selectedQuantity {
                     total += ($0.price * Double(quantity))
                 }
             }
         } else {
-            venueDetails?.appClipTicket?.forEach {
+            venueDetails?.coverTicket?.forEach {
                 if let quantity = $0.selectedQuantity {
                     total += ($0.price * Double(quantity))
                 }
@@ -102,7 +102,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     private var isMaxTicketReached: Bool {
         var total = 0
-        venueDetails?.appClipTicket?.forEach {
+        venueDetails?.coverTicket?.forEach {
             if let quantity = $0.selectedQuantity {
                 total += quantity
             }
@@ -295,7 +295,7 @@ final class MVPVenueDetailVc: UIViewController {
             liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 18)
             liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
         }
-        if venueDetails?.appClipTicket?.allSatisfy({ ticket in
+        if venueDetails?.coverTicket?.allSatisfy({ ticket in
             ticket.status == "DISABLED"
         }) == true {
             updateCloseViewVisibility()
@@ -338,7 +338,7 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
-                if self.venueDetails?.appClipTicket?.allSatisfy({ ticket in
+                if self.venueDetails?.coverTicket?.allSatisfy({ ticket in
                     ticket.status == "DISABLED"
                 }) == false {
                     self.addOnsView.isHidden = upSellItem.count == 0
@@ -355,7 +355,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func updateCloseViewVisibility() {
-        if (events.count == 0 && todaysEvents.count == 0 && (venueDetails?.appClipTicket?.allSatisfy({ ticket in
+        if (events.count == 0 && todaysEvents.count == 0 && (venueDetails?.coverTicket?.allSatisfy({ ticket in
             ticket.status == "DISABLED"
         }) == true)) {
             closeTicketView.isHidden = false
@@ -382,7 +382,7 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         
-        if let selected = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
+        if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             switch selectedType {
             case .FREE:
                 createFreeBooking()
@@ -395,8 +395,8 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func selectedTickets() {
-        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedTickets, selectedEventTicket: [], selectedAddOnsItem: [], totalPrice: Double(totalPrice), type: .appClip)
+        if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedTickets, selectedEventTicket: [], selectedAddOnsItem: [], totalPrice: Double(totalPrice), type: .appClip)
             updateContinueBtn(forceRemove: true)
         }
     }
@@ -420,14 +420,14 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func createFreeBooking() {
-        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+        if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
             var tickets = [[String: Any]]()
             selectedTickets.forEach {
                 tickets.append(["ticketId": $0.id,
                                 "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverFreeBooking(appClipTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id, message in
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {
@@ -461,7 +461,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case ticketTypeTableView:
-            return venueDetails?.appClipTicket?.count ?? 0
+            return venueDetails?.coverTicket?.count ?? 0
         case openingHoursTableView:
             openingHoursView.isHidden = (venueDetails?.openHours.count == 0 || venueDetails?.venueSettings?.isOrganizer == true)
             return venueDetails?.openHours.count ?? 0
@@ -480,33 +480,33 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-            cell.ticketTypeLbl.text = venueDetails?.appClipTicket?[indexPath.row].name
-            cell.infoLbl.text = venueDetails?.appClipTicket?[indexPath.row].description
+            cell.ticketTypeLbl.text = venueDetails?.coverTicket?[indexPath.row].name
+            cell.infoLbl.text = venueDetails?.coverTicket?[indexPath.row].description
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
-                    if venueDetails?.modifiedAppClipTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                    if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
                     } else {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true))"
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
-            if venueDetails?.bookingStatus == "OPEN" && venueDetails?.appClipTicket?[indexPath.row].status == "ENABLED" {
+            if /*venueDetails?.bookingStatus == "OPEN" && */venueDetails?.coverTicket?[indexPath.row].status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
                 cell.ticketTypeLbl.textColor = .white
             } else {
                 cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             }
-            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
+            if venueDetails?.coverTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
                 cell.ticketPlusMinusView.isHidden = true
@@ -520,7 +520,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-            cell.totalTicketLbl.text = "\(venueDetails?.appClipTicket?[indexPath.row].selectedQuantity ?? 0)"
+            cell.totalTicketLbl.text = "\(venueDetails?.coverTicket?[indexPath.row].selectedQuantity ?? 0)"
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell
@@ -590,9 +590,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch tableView {
         case ticketTypeTableView:
-            if venueDetails?.bookingStatus != "OPEN" { return }
-            if venueDetails?.appClipTicket?[indexPath.row].status != "ENABLED" { return }
-            if venueDetails?.appClipTicket?[indexPath.row].selectedQuantity != nil { return }
+//            if venueDetails?.bookingStatus != "OPEN" { return }
+            if venueDetails?.coverTicket?[indexPath.row].status != "ENABLED" { return }
+            if venueDetails?.coverTicket?[indexPath.row].selectedQuantity != nil { return }
             if isMaxTicketReached {
                 Alert.showToast("Max ticket selection reached")
                 return
@@ -600,12 +600,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             VIPTableView.isHidden = true
             continueBtnView.isHidden = false
             scrollViewBottomConstraint.constant = 30
-            venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
+            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 forceRemovePaidTicket()
                 forceRemoveCustomTicket()
                 selectedType = .FREE
-            } else if venueDetails?.appClipTicket?[indexPath.row].isCustom == true {
+            } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
                 forceRemovePaidTicket()
                 forceRemoveFreeTicket()
                 selectedType = .CUSTOM
@@ -618,10 +618,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             updateContinueBtn()
         case upcomingTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: events[indexPath.row].eventId ?? 0, venueDetail: venueDetails, event: events[indexPath.row])
+            Navigate.to.eventDetail(self, eventId: events[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
         case todaysEventTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].eventId ?? 0, venueDetail: venueDetails, event: todaysEvents[indexPath.row])
+            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
         default:
             break
         }
@@ -630,7 +630,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch tableView {
         case ticketTypeTableView:
-            if venueDetails?.appClipTicket?[indexPath.row].status == "DISABLED" {
+            if venueDetails?.coverTicket?[indexPath.row].status == "DISABLED" {
                 return 0
             }
             return UITableView.automaticDimension
@@ -642,15 +642,15 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
-        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+        if let totalTicket = venueDetails?.coverTicket?[sender.tag].selectedQuantity {
             if totalTicket > 1 {
-                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket - 1
+                venueDetails?.coverTicket?[sender.tag].selectedQuantity = totalTicket - 1
                 ticketTypeTableView.reloadData()
                 updateContinueBtn()
             } else if totalTicket == 1 {
-                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = nil
+                venueDetails?.coverTicket?[sender.tag].selectedQuantity = nil
                 ticketTypeTableView.reloadData()
-                updateContinueBtn(forceRemove: (venueDetails?.appClipTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
+                updateContinueBtn(forceRemove: (venueDetails?.coverTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
             }
         }
     }
@@ -660,9 +660,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             Alert.showToast("Max ticket selection reached")
             return
         }
-        if let totalTicket = venueDetails?.appClipTicket?[sender.tag].selectedQuantity {
+        if let totalTicket = venueDetails?.coverTicket?[sender.tag].selectedQuantity {
             if totalTicket < maxTicket {
-                venueDetails?.appClipTicket?[sender.tag].selectedQuantity = totalTicket + 1
+                venueDetails?.coverTicket?[sender.tag].selectedQuantity = totalTicket + 1
                 ticketTypeTableView.reloadData()
                 updateContinueBtn()
             } else {
@@ -675,8 +675,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         self.checkOutIndicator.isHidden = true
         DispatchQueue.main.async {
             if forceRemove {
-                self.venueDetails?.appClipTicket?.indices.forEach {
-                    self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+                self.venueDetails?.coverTicket?.indices.forEach {
+                    self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
                 }
                 if self.venueDetails?.availableTimeSlot ?? false {
                     self.continueBtnView.isHidden = true
@@ -703,28 +703,28 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     private func forceRemoveFreeTicket() {
-        self.venueDetails?.appClipTicket?.indices.forEach {
-            if venueDetails?.appClipTicket?[$0].price ?? 0 < 2 && venueDetails?.appClipTicket?[$0].name.lowercased().contains("general") == true {
-                self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+        self.venueDetails?.coverTicket?.indices.forEach {
+            if venueDetails?.coverTicket?[$0].price ?? 0 < 2 && venueDetails?.coverTicket?[$0].name.lowercased().contains("general") == true {
+                self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
 //        selectedType = .PAID
     }
 
     private func forceRemovePaidTicket() {
-        self.venueDetails?.appClipTicket?.indices.forEach {
-            if venueDetails?.appClipTicket?[$0].price ?? 0 < 2 && venueDetails?.appClipTicket?[$0].name.lowercased().contains("general") == true {
-            } else if venueDetails?.appClipTicket?[$0].isCustom ?? false != true {
-                self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+        self.venueDetails?.coverTicket?.indices.forEach {
+            if venueDetails?.coverTicket?[$0].price ?? 0 < 2 && venueDetails?.coverTicket?[$0].name.lowercased().contains("general") == true {
+            } else if venueDetails?.coverTicket?[$0].isCustom ?? false != true {
+                self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
 //        selectedType = .FREE
     }
     
     private func forceRemoveCustomTicket() {
-        self.venueDetails?.appClipTicket?.indices.forEach {
-            if venueDetails?.appClipTicket?[$0].isCustom == true {
-                self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
+        self.venueDetails?.coverTicket?.indices.forEach {
+            if venueDetails?.coverTicket?[$0].isCustom == true {
+                self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
     }

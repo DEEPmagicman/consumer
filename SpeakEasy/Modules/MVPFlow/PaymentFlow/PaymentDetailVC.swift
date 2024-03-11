@@ -25,10 +25,10 @@ final class PaymentDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if booking?.bookingType != "TABLE_BOOKING" {
-            getBooking(id: booking?.id ?? "")
+            getBooking(id: booking?.id ?? 0)
         }
         setUpData()
-        totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.totalPrice.decimalFormat(true) ?? "")"
+        totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.totalPrice)"
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -64,7 +64,7 @@ final class PaymentDetailVC: UIViewController {
         purchaseDateLbl.text = booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
     }
     
-    private func getBooking(id: String) {
+    private func getBooking(id: Int) {
         if booking == nil {
             Loader.show()
         }

@@ -32,8 +32,8 @@ final class UpSellClipVC: UIViewController {
     var selectedAddOns: [UpSellTicket] {
         upSellTicket.filter({$0.selectedQuantity ?? 0 != 0})
     }
-    var selectedAppClipTicket: [AppClipTicket] {
-        venue?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
+    var selectedAppClipTicket: [CoverTicket] {
+        venue?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
     }
     
     var modifiedUpSellTicket: [UpSellTicket] {
@@ -129,7 +129,7 @@ final class UpSellClipVC: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
-                vc.selectedAppClipTickets = selectedAppClipTicket
+                vc.selectedCoverTickets = selectedAppClipTicket
                 vc.selectedAddOnsItem = selectedAddOns
                 vc.venue = venue
                 navigationController?.interactivePopGestureRecognizer?.delegate = self

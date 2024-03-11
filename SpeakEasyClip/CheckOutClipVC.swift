@@ -78,11 +78,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
     var venue: ClipVenue?
-    var selectedAppClipTickets = [AppClipTicket]()
+    var selectedCoverTickets = [CoverTicket]()
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
-    private var bookingId = ""
+    private var bookingId = 0
     private var addOnsBookingId = ""
     private var isIntendCreated = false
     private var isApplePayNotSupported = false
@@ -105,8 +105,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
         
-        ticketListView.isHidden = (selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
-        addOnsView.isHidden = (selectedAppClipTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
+        ticketListView.isHidden = (selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
+        addOnsView.isHidden = (selectedCoverTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
         totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
         
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
@@ -210,11 +210,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setSalesTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
@@ -226,11 +227,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setCustomTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
         
@@ -241,11 +242,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setProcessingTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
         }
         
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
             return venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
         }
         
@@ -352,7 +353,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func getAddOnsPaymentIntent(bookingId: String, isApplePay: Bool) {
+    private func getAddOnsPaymentIntent(bookingId: Int, isApplePay: Bool) {
         DispatchQueue.main.async {
             AppClipLoader.showLoader(self.view)
         }
@@ -370,7 +371,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
         }
         param["code"] = countryCode
-        if bookingId != "" {
+        if bookingId != 0 {
             param["bookingId"] = bookingId
         }
         
@@ -429,7 +430,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func customFeeCount() {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
-        selectedAppClipTickets.forEach {
+        selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
                                     "quantity": $0.selectedQuantity ?? 0])
         }
@@ -570,7 +571,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         var selectedTickets = [[String: Any]]()
-        selectedAppClipTickets.forEach {
+        selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
                                    "quantity": $0.selectedQuantity ?? 0])
         }
@@ -874,11 +875,11 @@ extension CheckOutClipVC {
         emailValidationLbl.isHidden = true
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
-        selectedAppClipTickets.forEach {
+        selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        var param = ["appclipTicket": selectedTickets,
+        var param = ["coverTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
@@ -922,10 +923,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? String {
+            if let bookingId = json["id"] as? Int {
                 self.bookingId = bookingId
                 self.addPaymentApi(isApplePay: isApplePay)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
                 self.bookingCode = bookingCode
                 self.createdAT = createdAt
@@ -944,11 +945,11 @@ extension CheckOutClipVC {
     func createFreeBooking() {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
-        selectedAppClipTickets.forEach {
+        selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        var param = ["appclipTicket": selectedTickets,
+        var param = ["coverTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
@@ -988,10 +989,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? String {
+            if let bookingId = json["id"] as? Int {
                 self.bookingId = bookingId
                 self.navigateToQRCode()
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int {
                 self.bookingId = bookingId
                 self.navigateToQRCode()
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
@@ -1013,7 +1014,7 @@ extension CheckOutClipVC {
                 vc.bookingId = self.bookingId
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
-                vc.selectedAppClipTickets = self.selectedAppClipTickets
+                vc.selectedCoverTickets = self.selectedCoverTickets
                 vc.bookingCode = self.bookingCode
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
@@ -1032,7 +1033,7 @@ extension CheckOutClipVC {
                 vc.addOnBookingId = self.addOnsBookingId
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
-                vc.appClipTicket = self.selectedAppClipTickets
+                vc.appClipTicket = self.selectedCoverTickets
                 vc.selectedAddOns = self.selectedAddOnsItem
                 vc.bookingCode = self.bookingCode
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
@@ -1046,16 +1047,19 @@ extension CheckOutClipVC {
 
 extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return tableView == ticketListTableView ? selectedAppClipTickets.count : selectedAddOnsItem.count
+       return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         
-        cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
-        cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
-        cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+        cell.titleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+        cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
+        cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+        cell.titleLbl.text = selectedCoverTickets[indexPath.row].name
+        cell.subTitleLbl.text = selectedCoverTickets[indexPath.row].description
+        cell.quantityLbl.text = "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear

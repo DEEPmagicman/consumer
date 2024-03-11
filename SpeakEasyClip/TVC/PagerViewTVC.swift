@@ -18,7 +18,7 @@ class PagerViewTVC: FSPagerViewCell {
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
     
-    var uniqueTickets = [AppClipTicket]()
+    var uniqueTickets = [CoverTicket]()
     var addOnsBookingHasItem = [UpSellTicket]()
     
     override func awakeFromNib() {
