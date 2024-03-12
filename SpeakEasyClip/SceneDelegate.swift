@@ -20,6 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
                     return
                 }
+                
+                UserDefaults.standard.resetDefaults()
+                
                 if let value = queryItems.first(where: { $0.name == "v" })?.value {
                     if value.contains("VN") {
                         venueId = value

@@ -16,3 +16,13 @@ extension Bundle {
         infoDictionary?["CFBundleVersion"] as? String ?? ""
     }
 }
+
+extension UserDefaults {
+    func resetDefaults() {
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+    }
+}
