@@ -246,6 +246,7 @@ struct CoverTicket: Codable {
     var id: Int
     var venueId: Int?
     var name: String
+    var customName: String?
     var price: Double
     var parentId: Int?
     var status: String?
@@ -262,6 +263,7 @@ struct CoverTicket: Codable {
         try container.encode(id, forKey: .id)
         try container.encode(venueId, forKey: .venueId)
         try container.encode(name, forKey: .name)
+        try container.encode(customName, forKey: .customName)
         try container.encode(price, forKey: .price)
         try container.encode(parentId, forKey: .parentId)
         try container.encode(status, forKey: .status)

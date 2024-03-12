@@ -148,7 +148,7 @@ final class MVPPresenter {
 //        }
 //    }
     
-    static func getUpSellItem(venueId: Int, skip: Int, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
+    static func getUpSellItem(skip: Int, doormanId: String = "", venueId: Int = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
         let param = ["skip": skip,"include": "addOns"] as [String: Any]
         
         AFWrapper.getRequest(APIBuilder.getAddOnsAPI(venueId), params: param, headers: Header.header(doormanId: doormanId)) { response in

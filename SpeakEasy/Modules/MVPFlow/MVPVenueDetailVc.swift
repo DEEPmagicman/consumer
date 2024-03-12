@@ -334,7 +334,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -404,7 +404,7 @@ final class MVPVenueDetailVc: UIViewController {
     private func getUpSellItems() {
         checkOutIndicator.isHidden = false
         continueBtn.setTitle("", for: .normal)
-        MVPPresenter.getUpSellItem(venueId: venueId, skip: 0, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
             guard let self = self else { return }
             if isSuccess {
                 if total != 0 {
@@ -431,7 +431,7 @@ final class MVPVenueDetailVc: UIViewController {
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {
-                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .appClip)
+                    Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }
@@ -480,33 +480,34 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
         switch tableView {
         case ticketTypeTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
-            cell.ticketTypeLbl.text = venueDetails?.coverTicket?[indexPath.row].name
-            cell.infoLbl.text = venueDetails?.coverTicket?[indexPath.row].description
+            let ticket = venueDetails?.coverTicket?[indexPath.row]
+            cell.ticketTypeLbl.text = ticket?.customName ?? "" == "" ? ticket?.name : ticket?.customName
+            cell.infoLbl.text = ticket?.description
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
-            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            if ticket?.price ?? 0 < 2 && ticket?.name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                     } else {
                         cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true))"
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
-            if /*venueDetails?.bookingStatus == "OPEN" && */venueDetails?.coverTicket?[indexPath.row].status == "ENABLED" {
+            if venueDetails?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
                 cell.ticketTypeLbl.textColor = .white
             } else {
                 cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             }
-            if venueDetails?.coverTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
+            if ticket?.selectedQuantity ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
                 cell.ticketPlusMinusView.isHidden = true
@@ -520,7 +521,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-            cell.totalTicketLbl.text = "\(venueDetails?.coverTicket?[indexPath.row].selectedQuantity ?? 0)"
+            cell.totalTicketLbl.text = "\(ticket?.selectedQuantity ?? 0)"
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell

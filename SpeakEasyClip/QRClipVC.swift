@@ -23,6 +23,7 @@ final class QRClipVC: UIViewController {
     var selectedAddOns = [UpSellTicket]()
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil
+    @IBOutlet weak var venueNameLbl: UILabel!
     
     @IBOutlet weak var pageControl: FSPageControl!
     @IBOutlet weak var venueImg: UIImageView!
@@ -31,11 +32,12 @@ final class QRClipVC: UIViewController {
             self.pagerView.register(UINib(nibName: "PagerViewTVC", bundle: nil), forCellWithReuseIdentifier: "cell")
         }
     }
-    @IBOutlet weak var venueLogoImg: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadImage()
+        venueImg.setGradientColor()
+        venueNameLbl.text = venueName
         setPageController()
         let string = """
                 {

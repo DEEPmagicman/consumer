@@ -16,7 +16,6 @@ class UpSellTicketVC: UIViewController {
     
     var venueDetails: ClipVenue?
     var doormanId = ""
-    private var isMaxTicketReached = false
     private var maxTicket = 20
     var upSellTicket = [UpSellTicket]()
     var selectedCoverTicket: [CoverTicket] {
@@ -48,8 +47,8 @@ class UpSellTicketVC: UIViewController {
             
             var totalProcessingFee = 0.0
             if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + 0.5 + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + 0.5
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "") + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "")
             }
             
             var salesTax = 0.0
@@ -61,6 +60,28 @@ class UpSellTicketVC: UIViewController {
             ticketData[index].price = round(amountChargedToConsumer * 100) / 100
         })
         return ticketData
+    }
+    
+    func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
+        var amountTransferToSE = 0.0
+        if CoverTicketGeneral.contains(ticketName) {
+            amountTransferToSE = 1
+        } else if CoverTicketVIP.contains(ticketName) {
+            amountTransferToSE = 2
+        } else {
+            amountTransferToSE = 0.5
+        }
+        return amountTransferToSE
+    }
+    
+    private var isMaxTicketReached: Bool {
+        var total = 0
+        upSellTicket.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += quantity
+            }
+        }
+        return total >= maxTicket
     }
     
     override func viewDidLoad() {
@@ -103,8 +124,7 @@ class UpSellTicketVC: UIViewController {
     }
         
     private func getUpsellTicket() {
-        
-        MVPPresenter.getUpSellItem(venueId: venueDetails?.id ?? 0, skip: upSellTicket.count, doormanId: doormanId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(skip: upSellTicket.count, doormanId: doormanId, venueId: venueDetails?.id ?? 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -152,6 +172,10 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isMaxTicketReached {
+            Alert.showToast(Constant.String.maxTicketSelectionReached)
+            return
+        }
         if (tableView.cellForRow(at: indexPath) as? ticketTypeTableViewCell) != nil {
             if  upSellTicket[indexPath.row].selectedQuantity == nil || upSellTicket[indexPath.row].selectedQuantity == 0 {
                 var quantity = upSellTicket[indexPath.row].selectedQuantity ?? 0

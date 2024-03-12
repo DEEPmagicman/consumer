@@ -1053,13 +1053,15 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        
-        cell.titleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
+
+        if tableView == ticketListTableView {
+            cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
+        } else {
+            cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name
+        }
+//        cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name
         cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
         cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
-        cell.titleLbl.text = selectedCoverTickets[indexPath.row].name
-        cell.subTitleLbl.text = selectedCoverTickets[indexPath.row].description
-        cell.quantityLbl.text = "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear
