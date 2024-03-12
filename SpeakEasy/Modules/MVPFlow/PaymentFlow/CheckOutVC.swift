@@ -26,6 +26,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
     @IBOutlet private weak var paymentMethodView: UIView!
     @IBOutlet private weak var paymentMethodImg: UIImageView!
+    @IBOutlet weak var addOnsPaymentMethodImg: UIImageView!
     @IBOutlet private weak var buyNowBtn: UIButton!
     @IBOutlet private weak var policyCheckBox: UIButton!
     @IBOutlet private weak var policyView: UIView!
@@ -191,7 +192,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         switch type {
         case .appClip:
             noFeeView.isHidden = (venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == true) ? false : (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true)
-            titleLbl.text = selectedAddOnsItem.count != 0 && selectedAppClipTickets.count == 0 ? Constant.String.upSellTicket : Constant.String.liveCoverTicket
+            titleLbl.text = selectedAddOnsItem.count != 0 && selectedAppClipTickets.count == 0 ? (venue?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? Constant.String.upSellTicket) : Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
@@ -921,11 +922,13 @@ extension CheckOutVC: PaymentMethodVCDelegate {
     func didSelectMethod(_ id: String, image: UIImage?) {
         selectedId = id
         paymentMethodImg.image = image
+        addOnsPaymentMethodImg.image = image
     }
     
     func addCard() {
         selectedId = Constant.String.addNewCard
         paymentMethodImg.image = Constant.Card.cardIc
+        addOnsPaymentMethodImg.image = Constant.Card.cardIc
         DispatchQueue.main.async {
             self.onClickCreditCardPay()
         }

@@ -62,7 +62,7 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
         cell.contentView.backgroundColor = .clear
         if booking != nil {
             cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
-            cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketName
+            cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketCustomName ?? "" == "" ? booking?.uniqueTickets[indexPath.row].ticketName : booking?.uniqueTickets[indexPath.row].ticketCustomName
             
             cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         } else {

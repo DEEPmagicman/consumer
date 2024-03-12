@@ -32,6 +32,7 @@ struct APIBuilder {
     static private let city = "/common-data/city"
     static private let venue = "/venue"
     static private let event = "/event"
+    static private let tickets = "/tickets"
     static private let venueBottleCategory = "/venueBottleCategory"
     static private let whoAmI = "/who-am-i"
     static private let changeEmail = "/change-email"
@@ -161,6 +162,10 @@ struct APIBuilder {
 
     static func eventDetailURL(_ id: String) -> String {
         baseURL + route + event + "/\(id)"
+    }
+    
+    static func getTicketPasswordAPI(_ eventId: String) -> String {
+        baseURL + route + event + "/\(eventId)" + tickets
     }
     
     static func bottleListURL(_ id: String) -> String {

@@ -56,6 +56,7 @@ class ScanQRCodeVC: UIViewController {
         }
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
+        addToWalletBtn.isHidden = isOnlyAddOnAvailable ? true : false
     }
     
     @objc private func addToWalletBtnTapped() {
@@ -202,18 +203,24 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
             if index == 0 {
                 cell.qrImage.image = addOnsQR
             }
-            addToWalletBtn.isHidden = true
         } else {
             if index == 0 {
                 cell.booking = booking
             } else {
                 cell.addOnsBooking = addOnsBooking
             }
-            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
-            addToWalletBtn.isHidden = index == 0 ? false : true
+            DispatchQueue.main.async {
+                cell.qrImage.image = index == 0 ? self.qrImage : self.addOnsQR
+            }
         }
         cell.ticketsTableView.reloadData()
         return cell
+    }
+    
+    func pagerView(_ pagerView: FSPagerView, didEndDisplaying cell: FSPagerViewCell, forItemAt index: Int) {
+        if !isOnlyAddOnAvailable {
+            addToWalletBtn.isHidden = index == 0 ? true : false
+        }
     }
     
     func pagerViewDidScroll(_ pagerView: FSPagerView) {

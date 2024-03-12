@@ -159,6 +159,7 @@ struct BookingHasItem: Codable {
     var isDeleted: Bool?
     var createdAt: String
     var updatedAt: String
+    var ticketCustomName: String?
     // MARK: app side parameters
     var selectedQuantity: Int? = nil
 
@@ -172,6 +173,7 @@ struct BookingHasItem: Codable {
         case isDeleted = "isDeleted"
         case createdAt = "createdAt"
         case updatedAt = "updatedAt"
+        case ticketCustomName
     }
 
     func encode(to encoder: Encoder) throws {
@@ -185,6 +187,7 @@ struct BookingHasItem: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(ticketCustomName, forKey: .ticketCustomName)
     }
 }
 

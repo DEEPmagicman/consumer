@@ -106,12 +106,13 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getAddOns() {
-        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(self.venueDetail?.id ?? "")/add-ons?include=addOns") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons?include=addOns") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
+        request.addValue(venueDetail?.id ?? "", forHTTPHeaderField: "venue")
         URLSession.shared.dataTask(with: request) { data, respons, error in
             guard let data = data,
                   let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
