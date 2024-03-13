@@ -77,8 +77,6 @@ final class SelectTicketClipVC: UIViewController {
         } else {
             getVenueDetailsWithTickets()
         }
-        
-        upSellView.isHidden = true
     }
     
     private func getDeepLinkData() {
@@ -131,7 +129,7 @@ final class SelectTicketClipVC: UIViewController {
                     do {
                         self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
                         DispatchQueue.main.async {
-//                            self.upSellView.isHidden = self.upSellTickets.count <= 0
+                            self.upSellView.isHidden = self.upSellTickets.count <= 0
                         }
                     } catch (let error) {
                         print(error)
@@ -277,6 +275,10 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickUpsellBtn(_ sender: Any) {
+        forceRemoveFreeTicket()
+        forceRemoveCustomTicket()
+        forceRemovePaidTicket()
+        ticketTypeTableView.reloadData()
         upSellTicket()
     }
     

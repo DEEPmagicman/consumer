@@ -217,14 +217,11 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         return cell
     }
     
-    func pagerView(_ pagerView: FSPagerView, didEndDisplaying cell: FSPagerViewCell, forItemAt index: Int) {
-        if !isOnlyAddOnAvailable {
-            addToWalletBtn.isHidden = index == 0 ? true : false
-        }
-    }
-    
     func pagerViewDidScroll(_ pagerView: FSPagerView) {
         pageControl.currentPage = pagerView.currentIndex
+        if !isOnlyAddOnAvailable {
+            addToWalletBtn.isHidden = pagerView.currentIndex == 0 ? false : true
+        }
     }
 }
 
