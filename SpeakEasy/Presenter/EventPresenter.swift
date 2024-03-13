@@ -87,4 +87,27 @@ final class EventPresenter {
             completion(false, nil, nil, nil)
         }
     }
+    
+    static func getEventTicketByPassWord(eventId: String, venueTimeZone: String? = nil, password: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ ticket: [EventTicket]?) -> Void) {
+        
+        AFWrapper.getRequest(APIBuilder.getTicketPasswordAPI(eventId), params: ["password": password], headers: Header.header(timeZone: venueTimeZone)) { response in
+            
+            guard let responseArray = response as? [[String: Any]] else {
+                completion(false, nil, [])
+                return
+            }
+            if let tickets = [EventTicket].parse(responseArray) {
+                completion(true, nil, tickets)
+            } else {
+                completion(false, "internal error", [])
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+            completion(false, nil, [])
+        }
+    }
 }

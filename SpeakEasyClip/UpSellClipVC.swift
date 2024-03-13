@@ -57,8 +57,8 @@ final class UpSellClipVC: UIViewController {
             
             var totalProcessingFee = 0.0
             if venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "") + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.addOns?.name ?? "")
+                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                totalProcessingFee = stripeFee + SEFee(ticket.price)
             }
             
             var salesTax = 0.0
@@ -72,13 +72,31 @@ final class UpSellClipVC: UIViewController {
         return ticketData
     }
     
-    func SEFee(_ ticketPrice: Double, ticketName: String) -> Double {
+    func SEFee(_ ticketPrice: Double) -> Double {
         var amountTransferToSE = 0.0
-        if CoverTicketGeneral.contains(ticketName) {
+
+        if venue?.speakEasyCharges == "SAME_PRICE" {
             amountTransferToSE = 1
-        } else if CoverTicketVIP.contains(ticketName) {
-            amountTransferToSE = 2
-        } else {
+        }
+        if venue?.speakEasyCharges == "FREE" {
+            amountTransferToSE = 0
+        }
+        if venue?.speakEasyCharges == "INCREMENTAL" {
+            if ticketPrice <= 10 {
+                amountTransferToSE = 0.5
+            } else if (ticketPrice <= 20 && ticketPrice > 10) {
+                amountTransferToSE = 1
+            } else if (ticketPrice <= 100 && ticketPrice > 20) {
+                amountTransferToSE = 2
+            } else if (ticketPrice > 100) {
+                amountTransferToSE = 5
+            }
+        }
+        if venue?.speakEasyCharges == "DIFFRENT_PRICE" {
+            amountTransferToSE = 0.5
+        }
+        if venue?.speakEasyCharges == "TAO_PRICING" {
+
             amountTransferToSE = 0.5
         }
         return amountTransferToSE

@@ -8,7 +8,7 @@
 import Foundation
 
 struct ClipVenue: Codable {
-
+    
     var logo: LogoClip?
     var bookingCode: String?
     var venueAttachment: [VenueAttachmentClip]?
@@ -160,7 +160,7 @@ struct ClipVenue: Codable {
         }
         return amountTransferToSE
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(logo, forKey: .logo)
@@ -198,11 +198,11 @@ struct ClipVenue: Codable {
 }
 
 struct LogoClip: Codable {
-
+    
     var key: String
     var name: String
     var description: String
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(key, forKey: .key)
@@ -212,11 +212,11 @@ struct LogoClip: Codable {
 }
 
 struct VenueAttachmentClip: Codable {
-
+    
     var key: String
     var name: String
     var description: String
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(key, forKey: .key)
@@ -226,12 +226,12 @@ struct VenueAttachmentClip: Codable {
 }
 
 struct VenueHoursClip: Codable {
-
+    
     var day: String
     var venueStatus: String
     var from: String
     var to: String
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(day, forKey: .day)
@@ -242,7 +242,6 @@ struct VenueHoursClip: Codable {
 }
 
 struct CoverTicket: Codable {
-
     var id: Int
     var venueId: Int?
     var name: String
@@ -257,7 +256,7 @@ struct CoverTicket: Codable {
     var isCustom: Bool?
     // MARK: app side parameters
     var selectedQuantity: Int?
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -276,7 +275,7 @@ struct CoverTicket: Codable {
 }
 
 struct VenueSettings: Codable {
-
+    
     var optedPolicy: Bool
     var policyText: String?
     var enabledCustomBookingSMS: Bool
@@ -291,7 +290,7 @@ struct VenueSettings: Codable {
     var tableBookingFeesSettings: CoverTicketFeesSettings?
     var addOnsBookingFeesSettings: CoverTicketFeesSettings?
     var isOrganizer: Bool?
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(optedPolicy, forKey: .optedPolicy)

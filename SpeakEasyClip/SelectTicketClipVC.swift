@@ -75,7 +75,7 @@ final class SelectTicketClipVC: UIViewController {
         if venueId == "" {
             getDeepLinkData()
         } else {
-            getEventTicket()
+            getVenueDetailsWithTickets()
         }
         
         upSellView.isHidden = true
@@ -89,57 +89,59 @@ final class SelectTicketClipVC: UIViewController {
         DispatchQueue.main.async {
             AppClipLoader.showLoader(self.view)
         }
+        
         URLSession.shared.dataTask(with: request) { data, respons, error in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                AppClipLoader.hideLoader()
-                return
+            DispatchQueue.main.async {
+                guard let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                self.venueId = json["venueId"] as? String ?? ""
+                self.doormanId = json["doormanId"] as? String ?? ""
+                self.getVenueDetailsWithTickets()
             }
-            self.venueId = json["venueId"] as? String ?? ""
-            UserDefaults.standard.setValue(self.venueId, forKey: "venueId")
-            
-            self.doormanId = json["doormanId"] as? String ?? ""
-            UserDefaults.standard.setValue(self.doormanId, forKey: "doormanId")
-            
-            self.getEventTicket()
         }.resume()
     }
     
     private func getAddOns() {
-        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(self.venueDetail?.id ?? 0)/add-ons?include=addOns") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons?include=addOns") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
+        request.addValue("\(venueDetail?.id ?? 0)", forHTTPHeaderField: "venue")
         URLSession.shared.dataTask(with: request) { data, respons, error in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+            DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
-                return
-            }
-            let decoder = JSONDecoder()
-            if let addOns = json["list"] as? [[String: Any]] {
-                guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
-                    AppClipLoader.hideLoader()
+                
+                guard let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                     return
                 }
-                do {
-                    self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
-                    DispatchQueue.main.async {
-                        //                    self.upSellView.isHidden = self.upSellTickets.count <= 0
+                
+                let decoder = JSONDecoder()
+                
+                if let addOns = json["list"] as? [[String: Any]] {
+                    guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                        return
                     }
-                } catch (let error) {
-                    print(error)
+                    
+                    do {
+                        self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                        DispatchQueue.main.async {
+//                            self.upSellView.isHidden = self.upSellTickets.count <= 0
+                        }
+                    } catch (let error) {
+                        print(error)
+                    }
                 }
-            } else {
-                AppClipLoader.hideLoader()
-                return
             }
         }.resume()
     }
     
-    private func getEventTicket(withLoader: Bool = true) {
+    private func getVenueDetailsWithTickets(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -158,41 +160,47 @@ final class SelectTicketClipVC: UIViewController {
                 AppClipLoader.showLoader(self.view)
             }
         }
+        
         URLSession.shared.dataTask(with: request) { data, respons, error in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                AppClipLoader.hideLoader()
-                return
-            }
-            let decoder = JSONDecoder()
-            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
-                AppClipLoader.hideLoader()
-                return
-            }
-            self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
-            UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
-            self.setUpUI()
-            self.getAddOns()
             DispatchQueue.main.async {
-                self.updateContinueBtn(forceRemove: true)
                 AppClipLoader.hideLoader()
+                
+                guard let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    return
+                }
+                
+                let decoder = JSONDecoder()
+                
+                guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+                    return
+                }
+                
+                self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+                UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
+                
+                self.setUpUI()
+                self.getAddOns()
+                self.updateContinueBtn(forceRemove: true)
             }
         }.resume()
     }
     
     private func setUpUI() {
-        let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
-        let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
-        guard let imgUrl = URL(string: imgStr) else { return }
-        guard let logoUrl = URL(string: logoStr) else { return }
-        do {
-            let imgData = try Data(contentsOf: imgUrl)
-            let logoData = try Data(contentsOf: logoUrl)
-            DispatchQueue.main.async {
-                self.venueBgImg.image = UIImage(data: imgData)
-                self.logoImg.image = UIImage(data: logoData)
-            }
-        } catch {}
+        DispatchQueue.global(qos: .background).async {
+            let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
+            let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
+            guard let imgUrl = URL(string: imgStr) else { return }
+            guard let logoUrl = URL(string: logoStr) else { return }
+            do {
+                let imgData = try Data(contentsOf: imgUrl)
+                let logoData = try Data(contentsOf: logoUrl)
+                DispatchQueue.main.async {
+                    self.venueBgImg.image = UIImage(data: imgData)
+                    self.logoImg.image = UIImage(data: logoData)
+                }
+            } catch {}
+        }
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
@@ -447,13 +455,13 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 extension SelectTicketClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
         if uniqueId == self.venueId {
-            getEventTicket(withLoader: false)
+            getVenueDetailsWithTickets(withLoader: false)
         }
     }
     
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if uniqueId == self.venueId {
-            getEventTicket(withLoader: false)
+            getVenueDetailsWithTickets(withLoader: false)
         }
     }
 }

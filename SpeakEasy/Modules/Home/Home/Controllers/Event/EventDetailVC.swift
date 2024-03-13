@@ -44,6 +44,9 @@ final class EventDetailVC: UIViewController {
     @IBOutlet weak var locationImage: UIImageView!
     @IBOutlet weak var descriptionView: UIView!
     @IBOutlet weak var descriptionText: UILabel!
+    @IBOutlet weak var unLockTicketView: UIView!
+    @IBOutlet weak var unLockBtn: UIButton!
+    @IBOutlet weak var unLockTF: UITextField!
     
     var eventId = ""
     var venueDetails: ClipVenue?
@@ -80,6 +83,7 @@ final class EventDetailVC: UIViewController {
         return total
     }
     private var selectedType: TicketPriceType = .FREE
+    private var eventTicketId = [Int]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,12 +115,20 @@ final class EventDetailVC: UIViewController {
         mapView.isScrollEnabled = false
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
         WebSocketWrapper.shared.delegate.append(self)
+        unLockTF.addTarget(self, action: #selector(unLockPassword), for: .allEvents)
+        unLockBtn.alpha = 0.5
+        unLockBtn.isUserInteractionEnabled = false
   //      organizerView.isHidden = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
+    @objc func unLockPassword() {
+        unLockBtn.alpha = unLockTF.text ?? "" == "" ? 0.5 : 1
+        unLockBtn.isUserInteractionEnabled = unLockTF.text ?? "" == "" ? false : true
     }
     
     private func setupData() {
@@ -211,6 +223,11 @@ final class EventDetailVC: UIViewController {
                     self.venueDetails = venue
                     self.ticketListTableView.reloadData()
                 }
+                let ticket = self.event?.eventTicket ?? []
+                ticket.forEach({tic in
+                    self.eventTicketId.append(tic.id ?? 0)
+                })
+                self.unLockTicketView.isHidden = (self.event?.totalTickets == self.event?.eventTicket?.count ?? 0)
                 self.setupData()
                 self.zeroCaseView(isHidden: true)
             }
@@ -260,6 +277,35 @@ final class EventDetailVC: UIViewController {
     
     @IBAction private func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
+    }
+    
+    @IBAction func onClickUnLock(_ sender: Any) {
+        getTicketByPassWord()
+    }
+    
+    private func getTicketByPassWord() {
+        EventPresenter.getEventTicketByPassWord(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
+            if isSuccess {
+                let tickets = ticket ?? []
+                for tics in tickets {
+                    if self.eventTicketId.contains(where: { $0 == tics.id}) == false {
+                        self.eventTicketId.append(tics.id ?? 0)
+                    }
+                }
+                self.unLockTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
+                let tics = tickets.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)}
+                if tics.count != 0 {
+                    for data in tics {
+                        if self.activeTickets?.contains(where: {$0.id == data.id}) == false {
+                            self.activeTickets?.append(data)
+                        }
+                    }
+                    self.ticketListTableView.reloadData()
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
     }
     
     @IBAction private func onClickContinue(_ sender: Any) {
