@@ -9,7 +9,7 @@ import Foundation
 
 struct User {
     
-    var id: String
+    var id: Int
     var uniqueId: String
     var firstName: String
     var lastName: String
@@ -79,7 +79,7 @@ struct User {
     }
     
     init(fromDictionary dictionary: [String: Any]) {
-        self.id = dictionary["id"] as? String ?? ""
+        self.id = dictionary["id"] as? Int ?? 0
         self.uniqueId = dictionary["uniqueId"] as? String ?? ""
         self.firstName = dictionary["firstName"] as? String ?? ""
         self.lastName = dictionary["lastName"] as? String ?? ""
@@ -116,7 +116,7 @@ struct User {
 extension User: Decodable, Encodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        id = (try? values.decode(String.self, forKey: .id)) ?? ""
+        id = (try? values.decode(Int.self, forKey: .id)) ?? 0
         uniqueId = (try? values.decode(String.self, forKey: .uniqueId)) ?? ""
         firstName = (try? values.decode(String.self, forKey: .firstName)) ?? ""
         lastName = (try? values.decode(String.self, forKey: .lastName)) ?? ""

@@ -43,7 +43,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventBooking(eventId: Int, phone: String, userId: String, tickets: [[String: Any]], promoteId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: Int?, _ message: String?) -> Void) {
+    static func createEventBooking(eventId: Int, phone: String, userId: Int, tickets: [[String: Any]], promoteId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: Int?, _ message: String?) -> Void) {
         var param = ["isAppClipUser": false,
                      "phone": phone,
                      "tickets": tickets,
@@ -75,7 +75,7 @@ final class PaymentPresenter {
         }
     }
     
-    static func createEventFreeBooking(eventId: Int, phone: String, userId: String, tickets: [[String: Any]], bookingId: Int? = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: Int?, _ message:String?) -> Void) {
+    static func createEventFreeBooking(eventId: Int, phone: String, userId: Int, tickets: [[String: Any]], bookingId: Int? = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: Int?, _ message:String?) -> Void) {
         
         var param = ["isAppClipUser": false,
                      "phone": phone,
@@ -250,26 +250,48 @@ final class PaymentPresenter {
         }
     }
     
+    
+    
     static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
-
         AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in
-            guard let responseArray = response as? [[String: Any]] else {
-                completion(false, nil, [])
-                return
-            }
-            if let paymentMethods = [PaymentMethod].parse(responseArray) {
-                completion(true, nil, paymentMethods)
+            if let responseArray = response as? [[String: Any]] {
+                if let paymentMethods = [PaymentMethod].parse(responseArray) {
+                    completion(true, nil, paymentMethods)
+                } else {
+                    completion(false, "Internal error", [])
+                }
             } else {
-                completion(false, "internal error", [])
+                completion(true, nil, [])
             }
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain, [])
-                return
+            } else {
+                completion(false, nil, [])
             }
-            completion(false, nil, [])
         }
     }
+    
+//    static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
+//
+//        AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in
+//            guard let responseArray = response as? [[String: Any]] else {
+//                completion(false, nil, [])
+//                return
+//            }
+//            if let paymentMethods = [PaymentMethod].parse(responseArray) {
+//                completion(true, nil, paymentMethods)
+//            } else {
+//                completion(false, "internal error", [])
+//            }
+//        } failure: { error in
+//            if let err = error as NSError?, err.code == 0 {
+//                completion(false, err.domain, [])
+//                return
+//            }
+//            completion(false, nil, [])
+//        }
+//    }
     
     static func getPastTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
         let param = ["skip": skip, "include": ["bookingHasItem", "event"]] as [String : Any]

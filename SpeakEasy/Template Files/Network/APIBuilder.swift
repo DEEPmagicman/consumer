@@ -38,8 +38,8 @@ struct APIBuilder {
     static private let changeEmail = "/change-email"
     static private let changePhone = "/change-phone"
     static private let changePassword = "/change-password"
-    static private let appClip = "/cover"
-    static private let appClipVenue = "/appClipVenue?include=coverTicket"
+    static private let cover = "/cover"
+    static private let coverVenue = "/CoverVenue?include=coverTicket"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -221,7 +221,7 @@ struct APIBuilder {
     }
     
     static var MVPVenueListURL: String {
-        baseURL + route + venue + appClipVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
+        baseURL + route + venue + coverVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     static var MVPVenueURL: String {
         baseURL + route  + venue + "?include=venueAttachment&include=venueHours" + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
@@ -237,7 +237,7 @@ struct APIBuilder {
     }
     
     static var createCoverBookingURL: String {
-        baseURL + route + appClip + ticketBooking
+        baseURL + route + cover + ticketBooking
     }
 
     static var createCoverFreeBooing: String {
@@ -278,7 +278,7 @@ struct APIBuilder {
     }
     
     static func appClipAppleWallet(_ bookingId: Int) -> String {
-        baseURL + appClip + "/\(bookingId)" + appleWallet
+        baseURL + cover + "/\(bookingId)" + appleWallet
     }
     
     static func eventAppleWallet(_ bookingId: Int) -> String {

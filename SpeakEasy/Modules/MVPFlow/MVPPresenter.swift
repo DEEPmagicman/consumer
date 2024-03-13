@@ -35,7 +35,7 @@ final class MVPPresenter {
     func getVenueListForMVP(from: Int, status: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue], _ hasMore: Bool) -> Void) {
         let param = ["skip": from, "bookingStatus": status] as [String : Any]
         
-        AFWrapper.getRequest(APIBuilder.MVPVenueURL, params: param, headers: Header.header(), success: { response in
+        AFWrapper.getRequest(APIBuilder.MVPVenueListURL, params: param, headers: Header.header(), success: { response in
             if let responseDict = response as? [String: Any] {
                 do {
                     guard let venueArray = responseDict["list"] as? [[String: Any]],

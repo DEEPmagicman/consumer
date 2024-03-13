@@ -102,7 +102,7 @@ struct Event: Codable {
 struct Artists: Codable {
 
     var image: Flyer?
-    var id: String
+    var id: Int
     var name: String
     var instagramUsername: String
     var status: String

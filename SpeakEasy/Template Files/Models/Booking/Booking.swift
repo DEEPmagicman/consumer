@@ -13,7 +13,7 @@ struct Booking: Codable {
     var id: Int
     var venueId: Int
 //    var phone: String
-    var eventId: String?
+    var eventId: Int?
 //    var isAppClipUser: Bool
     var paymentType: String?
 //    var appClipUserId: Any

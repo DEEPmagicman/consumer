@@ -166,8 +166,9 @@ final class AFWrapper: NSObject {
         
         debugPrint(req)
     }
-
-    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
+    
+    
+    static func multipart(_ strURL: String, imageData: Data?, imageName: String, imageParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
                           success: @escaping DefaultAPISuccessClosure,
                           failure: @escaping DefaultAPIFailureClosure) {
         
@@ -176,23 +177,31 @@ final class AFWrapper: NSObject {
             failure(nil)
             return
         }
-        Alamofire.upload(multipartFormData: { (multipartParam) in
-            for param in params {
-                if param.key == fileParamKey, let data = fileData {
-                    multipartParam.append(data, withName: param.key, fileName: fileName, mimeType: ".\((fileName as NSString).pathExtension)")
-                } else {
-                    multipartParam.append(Data((param.value as? String ?? "").utf8), withName: param.key)
+        
+        var multipartParams = params
+        multipartParams = multipartParams.encrypted() ?? params
+        
+        Alamofire.upload(multipartFormData: { (multipartData) in
+            if let imageData = imageData {
+                multipartData.append(imageData, withName: imageParamKey, fileName: imageName, mimeType: "image/jpeg")
+            }
+            
+            for (key, value) in multipartParams {
+                if let stringValue = value as? String, let data = stringValue.data(using: .utf8) {
+                    multipartData.append(data, withName: key)
                 }
             }
         }, to: strURL, method: method, headers: headers) { (result) in
             switch result {
             case .success(let upload, _, _):
-                let req = upload.responseJSON { (response) in
+                let req = upload.responseString { response in
                     if let responseCode = response.response?.statusCode {
-                        if responseCode == 200 {
-                            success(response.result.value)
-                        } else if responseCode == 201 {
-                            success(response.result.value)
+                        if responseCode == 200 || responseCode == 201 {
+                            guard let encryptedResponse = response.result.value else {
+                                return
+                            }
+                            let decryptedResponse = encryptedResponse.decrypted()
+                            success(decryptedResponse)
                         } else if responseCode == 401 {
                             forceLogout()
                         } else {
@@ -208,6 +217,49 @@ final class AFWrapper: NSObject {
             }
         }
     }
+
+
+//    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
+//                          success: @escaping DefaultAPISuccessClosure,
+//                          failure: @escaping DefaultAPIFailureClosure) {
+//
+//        if !Connectivity.isConnectedToInternet {
+//            success(nil)
+//            failure(nil)
+//            return
+//        }
+//        Alamofire.upload(multipartFormData: { (multipartParam) in
+//            for param in params {
+//                if param.key == fileParamKey, let data = fileData {
+//                    multipartParam.append(data, withName: param.key, fileName: fileName, mimeType: ".\((fileName as NSString).pathExtension)")
+//                } else {
+//                    multipartParam.append(Data((param.value as? String ?? "").utf8), withName: param.key)
+//                }
+//            }
+//        }, to: strURL, method: method, headers: headers) { (result) in
+//            switch result {
+//            case .success(let upload, _, _):
+//                let req = upload.responseJSON { (response) in
+//                    if let responseCode = response.response?.statusCode {
+//                        if responseCode == 200 {
+//                            success(response.result.value)
+//                        } else if responseCode == 201 {
+//                            success(response.result.value)
+//                        } else if responseCode == 401 {
+//                            forceLogout()
+//                        } else {
+//                            failure(response.result.error)
+//                        }
+//                    } else {
+//                        failure(response.result.error)
+//                    }
+//                }
+//                debugPrint(req)
+//            case .failure(let error):
+//                failure(error)
+//            }
+//        }
+//    }
     
     
     //    static func getRequest(_ strURL:String, params: [String: Any]? = nil, headers: [String: String]?,
@@ -292,9 +344,9 @@ final class AFWrapper: NSObject {
             return
         }
         
-        var parameters: [String: Any]? = params?.encrypted()
+//        var parameters: [String: Any]? = params?.encrypted()
         
-        let req = Alamofire.request(strURL, method: .get, parameters: parameters, headers: headers).responseString(queue: nil, encoding: .utf8) { response in
+        let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseString(queue: nil, encoding: .utf8) { response in
             switch response.result {
             case .success(let value):
                 if let responseCode = response.response?.statusCode {
@@ -461,18 +513,38 @@ final class AFWrapper: NSObject {
         debugPrint(req)
     }
     
-    static func errorHandling(_ response: Any) -> (Bool, String) {
-        if let response = response as? [String: Any], let errMsg = response["message"] {
-            if let stringErr = errMsg as? String {
-                return (true, stringErr)
-            } else if let arrayErr = errMsg as? [String], let stringErr = arrayErr.first {
-                return (true, stringErr)
-            }
-            return (false, "")
-        } else {
+//    static func errorHandling(_ response: Any) -> (Bool, String) {
+//        if let response = response as? [String: Any], let errMsg = response["message"] {
+//            if let stringErr = errMsg as? String {
+//                return (true, stringErr)
+//            } else if let arrayErr = errMsg as? [String], let stringErr = arrayErr.first {
+//                return (true, stringErr)
+//            }
+//            return (false, "")
+//        } else {
+//            return (false, "")
+//        }
+//    }
+    
+    static func errorHandling(_ response: String?) -> (Bool, String) {
+        guard let jsonString = response else {
             return (false, "")
         }
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            return (false, "")
+        }
+        do {
+            if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                if let errMsg = json["message"] as? String {
+                    return (true, errMsg)
+                }
+            }
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+        return (false, "")
     }
+
     
     static func forceLogout() {
         CustomLoader.sharedInstance.stopAnimation()

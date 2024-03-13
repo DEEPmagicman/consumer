@@ -263,22 +263,50 @@ final class OnBoardingPresenter {
         }
     }
     
-    func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl:String, _ isSuccess: Bool) -> Void) {
+    
+    func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl: String, _ isSuccess: Bool) -> Void) {
         Loader.show()
-        let param = ["file": image] as [String: Any]
-        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
+        
+        guard let imageData = image.jpegData(compressionQuality: 1) else {
+            completion("", false)
+            Loader.hide()
+            return
+        }
+        let param = ["file": ""]
+        AFWrapper.multipart(APIBuilder.uploadPhotoURL, imageData: imageData, imageName: "\(UUID().uuidString).jpg", imageParamKey: "file", params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
                 completion("", false)
+                Loader.hide()
                 return
             }
+            
             completion(imgUrl, true)
-
+            Loader.hide()
         } failure: { error in
             completion("", false)
+            Loader.hide()
             print(error ?? "")
         }
     }
+
+    
+//    func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl:String, _ isSuccess: Bool) -> Void) {
+//        Loader.show()
+//        let param = ["file": image] as [String: Any]
+//        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
+//
+//            guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
+//                completion("", false)
+//                return
+//            }
+//            completion(imgUrl, true)
+//
+//        } failure: { error in
+//            completion("", false)
+//            print(error ?? "")
+//        }
+//    }
     
     func getVibesListAPi(from:Int? = 0, completion: @escaping(_ vibeList: [Vibe],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
         Loader.show()
@@ -433,10 +461,11 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             let user = User(fromDictionary: userDic)
+            UserDefault.shared.user = user
             if let encryptedUserData = user as? Data,
                 let decryptedData = try? decrypt(data: encryptedUserData, key: EncryptKeys.key, iv: EncryptKeys.iv) {
                 if let decryptedUser = try? JSONDecoder().decode(User.self, from: decryptedData) {
-                    UserDefault.shared.user = decryptedUser
+                    
                 } else {
                     print("Decrypted data does not represent a valid User object")
                 }

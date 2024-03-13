@@ -390,7 +390,7 @@ final class MVPVenueDetailVc: UIViewController {
                 getUpSellItems()
             }
         } else {
-            Navigate.externalURL(String(format: SharedURL.tableBookingURL, venueId ))
+            Navigate.externalURL(String(format: SharedURL.tableBookingURL, "\(venueId)" ))
         }
     }
     

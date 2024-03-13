@@ -332,7 +332,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id, message  in
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? 0, tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id, message  in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -460,7 +460,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                             "ticketQuantity": $0.selectedTicketCount ?? 0])
         }
         Loader.show()
-        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id,message  in
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? 0, tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id,message  in
             guard let self = self else {
                 Loader.hide()
                 return

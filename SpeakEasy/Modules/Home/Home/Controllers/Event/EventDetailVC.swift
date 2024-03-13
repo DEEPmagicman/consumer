@@ -333,7 +333,7 @@ final class EventDetailVC: UIViewController {
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
+            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? 0, tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
                 guard let self = self else {
                     Loader.hide()
                     return
