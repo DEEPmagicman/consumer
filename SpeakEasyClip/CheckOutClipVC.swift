@@ -364,9 +364,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var param = [String: Any]()
         param["addOnsItems"] = addOnsItems
         param["venueId"] = venue?.id ?? ""
-        DispatchQueue.main.async {
-            param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
-        }
+        param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
         param["code"] = countryCode
         if bookingId != "" {
             param["bookingId"] = bookingId
@@ -619,7 +617,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.paymentIntent = paymentIntentClientSecret
             self.paymentHistoryId = paymentHistoryId
             if self.selectedAddOnsItem.count != 0 {
-                self.getAddOnsPaymentIntent(bookingId: self.bookingId, isApplePay: isApplePay)
+                DispatchQueue.main.async {
+                    self.getAddOnsPaymentIntent(bookingId: self.bookingId, isApplePay: isApplePay)
+                }
             } else {
                 self.isIntendCreated = true
                 self.setUpPaymentBottomSheet()
