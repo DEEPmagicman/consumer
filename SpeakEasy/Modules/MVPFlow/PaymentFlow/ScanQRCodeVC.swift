@@ -20,6 +20,7 @@ class ScanQRCodeVC: UIViewController {
         }
     }
     @IBOutlet weak var addToWalletBtn: PKAddPassButton!
+    @IBOutlet weak var swipeLbl: UILabel!
     
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
@@ -44,6 +45,7 @@ class ScanQRCodeVC: UIViewController {
         
         if isOnlyAddOnAvailable {
             getAddOnsBooking()
+            swipeLbl.isHidden = true
         } else {
             let string = """
         {
@@ -53,6 +55,7 @@ class ScanQRCodeVC: UIViewController {
     """
             qrImage = generateQRCode(from: string) ?? UIImage()
             getBooking(id: bookingId)
+            swipeLbl.isHidden = isAddOnsAvailable ? false : true
         }
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)

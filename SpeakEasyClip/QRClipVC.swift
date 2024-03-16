@@ -16,7 +16,6 @@ final class QRClipVC: UIViewController {
     var bookingId = ""
     var addOnBookingId = ""
     private var isAlertDisplayed = false
-//    var isAddOnsAvailable = false
     var bookingCode = String()
     var createdAT = String()
     var appClipTicket = [AppClipTicket]()
@@ -26,7 +25,7 @@ final class QRClipVC: UIViewController {
     var isOnlyAddOnsAvailable = false
     
     @IBOutlet weak var venueNameLbl: UILabel!
-    
+    @IBOutlet weak var swipeLbl: UILabel!
     @IBOutlet weak var pageControl: FSPageControl!
     @IBOutlet weak var venueImg: UIImageView!
     @IBOutlet weak var pagerView: FSPagerView!{
@@ -53,6 +52,7 @@ final class QRClipVC: UIViewController {
                     "type": "ADD_ON"
                 }
         """
+        swipeLbl.isHidden = (isOnlyAddOnsAvailable || selectedAddOns.count == 0) ? true : false
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
