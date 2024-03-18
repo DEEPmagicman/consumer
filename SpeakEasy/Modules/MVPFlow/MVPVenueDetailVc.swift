@@ -292,6 +292,7 @@ final class MVPVenueDetailVc: UIViewController {
             toNightLbl.alpha = 0.5
             updatedAtLbl.isHidden = true
             liveLbl.text = "CLOSED"
+            addOnsView.isHidden = true
             liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 18)
             liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
         }
@@ -301,7 +302,6 @@ final class MVPVenueDetailVc: UIViewController {
             updateCloseViewVisibility()
             tonightView.isHidden = true
             venuePageView.isHidden = true
-            addOnsView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
@@ -338,12 +338,9 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
-                if self.venueDetails?.appClipTicket?.allSatisfy({ ticket in
-                    ticket.status == "DISABLED"
-                }) == false {
+                if venueDetails?.bookingStatus == "OPEN" {
                     self.addOnsView.isHidden = upSellItem.count == 0
                 }
-//                self.addOnsView.isHidden = upSellItem.count == 0
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
