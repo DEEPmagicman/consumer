@@ -16,15 +16,16 @@ final class QRClipVC: UIViewController {
     var bookingId = 0
     var addOnBookingId = ""
     private var isAlertDisplayed = false
-//    var isAddOnsAvailable = false
     var bookingCode = String()
     var createdAT = String()
     var appClipTicket = [CoverTicket]()
     var selectedAddOns = [UpSellTicket]()
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil
-    @IBOutlet weak var venueNameLbl: UILabel!
+    var isOnlyAddOnsAvailable = false
     
+    @IBOutlet weak var venueNameLbl: UILabel!
+    @IBOutlet weak var swipeLbl: UILabel!
     @IBOutlet weak var pageControl: FSPageControl!
     @IBOutlet weak var venueImg: UIImageView!
     @IBOutlet weak var pagerView: FSPagerView!{
@@ -51,6 +52,7 @@ final class QRClipVC: UIViewController {
                     "type": "ADD_ON"
                 }
         """
+        swipeLbl.isHidden = (isOnlyAddOnsAvailable || selectedAddOns.count == 0) ? true : false
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
@@ -71,7 +73,8 @@ final class QRClipVC: UIViewController {
     func setPageController() {
         pagerView.delegate = self
         pagerView.dataSource = self
-        pageControl.numberOfPages = selectedAddOns.count != 0 ? 2 : 1
+        
+        pageControl.numberOfPages = (isOnlyAddOnsAvailable || selectedAddOns.count == 0) ? 1 : 2
         pageControl.backgroundColor = .clear
         pageControl.itemSpacing = 8
         pageControl.contentHorizontalAlignment = .center
@@ -124,7 +127,7 @@ final class QRClipVC: UIViewController {
 
 extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     func numberOfItems(in pagerView: FSPagerView) -> Int {
-        return selectedAddOns.count != 0 ? 2 : 1
+        return (isOnlyAddOnsAvailable || selectedAddOns.count == 0) ? 1 : 2
     }
 
     func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
@@ -132,7 +135,13 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
 
         cell.backupCode.text = bookingCode
         cell.bookingDateTime.text = "Purchased on \(createdAT)"
-
+        
+        if isOnlyAddOnsAvailable {
+            if index == 0 {
+                cell.qrImage.image = addOnsQR
+                cell.addOnsBookingHasItem = selectedAddOns
+            }
+        } else {
             if index == 0 {
                 cell.uniqueTickets = appClipTicket
             } else {
@@ -140,6 +149,7 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
             }
             cell.qrImage.image = index == 0 ? qrImage : addOnsQR
             cell.ticketsTableView.reloadData()
+        }
         return cell
     }
     
