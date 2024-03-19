@@ -25,8 +25,8 @@ final class UpSellClipVC: UIViewController {
         updateContinueBtn()
     }
     
+    var bookingType: TicketPriceType = .PAID
     var upSellTicket = [UpSellTicket]()
-    private var isMaxTicketReached = false
     private var maxTicket = 20
     var venue: ClipVenue?
     var selectedAddOns: [UpSellTicket] {
@@ -34,6 +34,16 @@ final class UpSellClipVC: UIViewController {
     }
     var selectedAppClipTicket: [AppClipTicket] {
         venue?.appClipTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
+    }
+    
+    private var isMaxTicketReached: Bool {
+        var total = 0
+        upSellTicket.forEach {
+            if let quantity = $0.selectedQuantity {
+                total += quantity
+            }
+        }
+        return total >= maxTicket
     }
     
     var modifiedUpSellTicket: [UpSellTicket] {
@@ -107,7 +117,11 @@ final class UpSellClipVC: UIViewController {
             continueBtn.isUserInteractionEnabled = selectedAddOns.count == 0 ? false : true
         } else {
             if selectedAddOns.count == 0 {
-                continueBtn.setTitle("SKIP THIS & CONTINUE TO CHECKOUT", for: .normal)
+                if bookingType == .FREE {
+                    continueBtn.setTitle("SKIP THIS & GET MY FREE TICKET", for: .normal)
+                } else {
+                    continueBtn.setTitle("SKIP THIS & CONTINUE TO CHECKOUT", for: .normal)
+                }
             } else {
                 continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
@@ -157,12 +171,13 @@ final class UpSellClipVC: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
-                vc.selectedAppClipTickets = selectedAppClipTicket
-                vc.selectedAddOnsItem = selectedAddOns
-                vc.venue = venue
-                navigationController?.interactivePopGestureRecognizer?.delegate = self
-                navigationController?.pushViewController(vc, animated: true)
-                updateContinueBtn()
+            vc.selectedAppClipTickets = selectedAppClipTicket
+            vc.selectedAddOnsItem = selectedAddOns
+            vc.venue = venue
+            vc.bookingType = bookingType
+            navigationController?.interactivePopGestureRecognizer?.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
+            updateContinueBtn()
         }
     }
     
@@ -201,6 +216,10 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if isMaxTicketReached {
+            self.alertPopup("Alert", "Max ticket selection reached")
+            return
+        }
         if (tableView.cellForRow(at: indexPath) as? ticketTypeTableViewCell) != nil {
             if  upSellTicket[indexPath.row].selectedQuantity == nil || upSellTicket[indexPath.row].selectedQuantity == 0 {
                 var quantity = upSellTicket[indexPath.row].selectedQuantity ?? 0

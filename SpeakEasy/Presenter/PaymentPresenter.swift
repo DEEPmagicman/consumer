@@ -347,9 +347,12 @@ final class PaymentPresenter {
         }
     }
     
-    static func successAddOnsPayment(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        
-        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: ["bookingId": bookingId], headers: Header.header()) { response in
+    static func successAddOnsPayment(bookingId: String, mainBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        var param = ["bookingId": bookingId]
+        if mainBookingId != "" {
+            param["mainBookingId"] = mainBookingId
+        }
+        AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil)
                 return

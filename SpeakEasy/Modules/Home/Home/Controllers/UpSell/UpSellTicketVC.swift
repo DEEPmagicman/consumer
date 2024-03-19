@@ -26,6 +26,7 @@ class UpSellTicketVC: UIViewController {
     }
     var hasMany = false
     var isLoading = false
+    var bookingType: TicketPriceType = .FREE
     var modifiedUpSellTicket: [UpSellTicket] {
         var ticketData = [UpSellTicket]()
         upSellTicket.enumerated().forEach({ index, ticket in
@@ -121,7 +122,11 @@ class UpSellTicketVC: UIViewController {
             continueBtn.isUserInteractionEnabled = selectedAddOns.count == 0 ? false : true
         } else {
             if selectedAddOns.count == 0 {
-                continueBtn.setTitle(Constant.String.skipAndContinueBtnTitle, for: .normal)
+                if bookingType == .FREE {
+                    continueBtn.setTitle(Constant.String.skipAndGetMyFreeTicket, for: .normal)
+                } else {
+                    continueBtn.setTitle(Constant.String.skipAndContinueBtnTitle, for: .normal)
+                }
             } else {
                 continueBtn.setTitle(Constant.String.continueBtnTitle, for: .normal)
             }
@@ -132,8 +137,12 @@ class UpSellTicketVC: UIViewController {
         Navigate.to.back(self)
     }
     
-    @IBAction func onClickContinueBtn(_ sender: Any) {        
-        Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip)
+    @IBAction func onClickContinueBtn(_ sender: Any) {
+        if selectedAddOns.count != 0 {
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
+        } else {
+            createFreeBooking()
+        }
     }
         
     private func getUpsellTicket() {
@@ -151,6 +160,26 @@ class UpSellTicketVC: UIViewController {
                 }
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    private func createFreeBooking() {
+        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+            var tickets = [[String: Any]]()
+            selectedTickets.forEach {
+                tickets.append(["ticketId": $0.id,
+                                "ticketQuantity": $0.selectedQuantity ?? 0])
+            }
+            Loader.show()
+            PaymentPresenter.createCoverFreeBooking(appClipTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id in
+                Loader.hide()
+                guard let self = self else { return }
+                if isSuccess, let id = id {
+                    Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                }
             }
         }
     }

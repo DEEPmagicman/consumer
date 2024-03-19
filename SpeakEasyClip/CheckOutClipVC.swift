@@ -101,6 +101,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var addOnsPaymentDetails: PaymentDetail?
     var selectedAddOnsItem = [UpSellTicket]()
     var isOnlyAddOnsAvailable = false
+    var bookingType: TicketPriceType = .PAID
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,7 +172,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         
-        if totalPrice == 0 {
+        if totalPrice == 0 && selectedAddOnsItem.count == 0 {
             applePayView.isHidden = true
             cardPayView.isHidden = true
             freeTicketView.isHidden = false
@@ -179,6 +180,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             applePayView.isHidden = false
             cardPayView.isHidden = !(venue?.allowCC ?? false)
             freeTicketView.isHidden = true
+        }
+        if bookingType == .FREE {
+            applePayView.isHidden = selectedAddOnsItem.count == 0
+            cardPayView.isHidden = selectedAddOnsItem.count == 0
+            freeTicketView.isHidden = !(selectedAddOnsItem.count == 0)
         }
         checkValidation(isCorrectDetails: false)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
@@ -210,6 +216,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
         
@@ -505,6 +512,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.totalPrice = total
                     self.salesTaxName.text = salesTaxName == "" ? "Sales Tax" : salesTaxName
                     self.grandTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((self.totalAddOnPrice + self.totalPrice).decimalFormat(true))"
+                    if self.bookingType == .FREE {
+                        self.subTotalView.isHidden = true
+                        self.customFeeView.isHidden = true
+                        self.salesTextView.isHidden = true
+                    }
                 }
             }
         }
@@ -542,11 +554,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 }
                 return
             }
-            if selectedAppClipTickets.count == 0 {
+            if bookingType == .FREE && selectedAddOnsItem.count != 0 {
                 getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
             } else {
-                createBooking()
+                if selectedAppClipTickets.count == 0 {
+                    getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+                } else {
+                    createBooking()
+                }
             }
+            
             applePayBtn.isHidden = false
             errorLbl.isHidden = true
         } else if isApplePayNotSupported == false {
@@ -725,6 +742,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var param = [String: Any]()
         
         param["bookingId"] = addOnsBookingId
+        if bookingType == .FREE {
+            param["mainBookingId"] = bookingId
+        }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: param,
             options: [.prettyPrinted]
@@ -801,22 +821,34 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             case .completed:
                 DispatchQueue.main.async {
                     AppClipLoader.showLoader(self.view)
-                    if self.selectedAppClipTickets.count == 0 {
-                        self.addOnsPaymentSuccess(.SUCCESS) {
-                            self.getAddOnsBooking {
-                                AppClipLoader.hideLoader()
-                                self.navigateToQR()
+                    
+                    if self.bookingType == .FREE {
+                        self.createFreeBookingWithAddOns {
+                            self.addOnsPaymentSuccess(.SUCCESS) {
+                                self.getAddOnsBooking {
+                                    AppClipLoader.hideLoader()
+                                    self.navigateToQR()
+                                }
                             }
                         }
                     } else {
-                        self.paymentStatus(.SUCCESS, optedPolicy: self.policyCheckBox.isSelected) { [weak self] in
-                            guard let self = self else { return }
-                            if self.selectedAddOnsItem.count != 0 {
-                                self.addOnsPaymentSuccess(.SUCCESS) {
+                        if self.selectedAppClipTickets.count == 0 {
+                            self.addOnsPaymentSuccess(.SUCCESS) {
+                                self.getAddOnsBooking {
+                                    AppClipLoader.hideLoader()
                                     self.navigateToQR()
                                 }
-                            } else {
-                                self.navigateToQR()
+                            }
+                        } else {
+                            self.paymentStatus(.SUCCESS, optedPolicy: self.policyCheckBox.isSelected) { [weak self] in
+                                guard let self = self else { return }
+                                if self.selectedAddOnsItem.count != 0 {
+                                    self.addOnsPaymentSuccess(.SUCCESS) {
+                                        self.navigateToQR()
+                                    }
+                                } else {
+                                    self.navigateToQR()
+                                }
                             }
                         }
                     }
@@ -855,10 +887,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             }
             return
         }
-        if selectedAppClipTickets.count == 0 {
-            getAddOnsPaymentIntent(bookingId: "", isApplePay: false)
+        
+        if bookingType == .FREE && selectedAddOnsItem.count != 0 {
+            getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
         } else {
-            createBooking(isApplePay: false)
+            if selectedAppClipTickets.count == 0 {
+                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+            } else {
+                createBooking()
+            }
         }
     }
 
@@ -883,22 +920,33 @@ extension CheckOutClipVC {
         switch status {
         case .success:
             AppClipLoader.showLoader(view)
-            if selectedAppClipTickets.count == 0 {
-                self.addOnsPaymentSuccess(.SUCCESS) {
-                    self.getAddOnsBooking {
-                        AppClipLoader.hideLoader()
-                        self.navigateToQR()
+            if bookingType == .FREE {
+                createFreeBookingWithAddOns {
+                    self.addOnsPaymentSuccess(.SUCCESS) {
+                        self.getAddOnsBooking {
+                            AppClipLoader.hideLoader()
+                            self.navigateToQR()
+                        }
                     }
                 }
             } else {
-                paymentStatus(.SUCCESS, optedPolicy: policyCheckBox.isSelected) { [weak self] in
-                    guard let self = self else { return }
-                    if self.selectedAddOnsItem.count != 0 {
-                        self.addOnsPaymentSuccess(.SUCCESS) {
+                if selectedAppClipTickets.count == 0 {
+                    self.addOnsPaymentSuccess(.SUCCESS) {
+                        self.getAddOnsBooking {
+                            AppClipLoader.hideLoader()
                             self.navigateToQR()
                         }
-                    } else {
-                        self.navigateToQR()
+                    }
+                } else {
+                    paymentStatus(.SUCCESS, optedPolicy: policyCheckBox.isSelected) { [weak self] in
+                        guard let self = self else { return }
+                        if self.selectedAddOnsItem.count != 0 {
+                            self.addOnsPaymentSuccess(.SUCCESS) {
+                                self.navigateToQR()
+                            }
+                        } else {
+                            self.navigateToQR()
+                        }
                     }
                 }
             }
@@ -907,7 +955,7 @@ extension CheckOutClipVC {
             alertPopup("Alert", "Payment failed")
         case .userCancellation:
             isPaymentInitiated = false
-//            alertPopup("Alert", "Payment interrupted")
+            //            alertPopup("Alert", "Payment interrupted")
         }
     }
 
@@ -1035,10 +1083,75 @@ extension CheckOutClipVC {
             }
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
-                self.navigateToQRCode()
+                self.navigateToQR()
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
+                self.bookingId = bookingId
+                self.navigateToQR()
+                self.createdAT = createdAt
+            } else if let error = json["error"] as? String, let message = json["message"] as? String {
+                AppClipLoader.hideLoader()
+                self.alertPopup(error, message)
+            } else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Booking failed")
+            }
+        }
+        task.resume()
+    }
+    
+    func createFreeBookingWithAddOns(completion: @escaping (()-> Void)) {
+        AppClipLoader.showLoader(self.view)
+        var selectedTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+        }
+        var param = ["appclipTicket": selectedTickets,
+                     "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
+                     "code": countryCode,
+                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
+                     "optedPolicy": policyCheckBox.isSelected] as [String: Any]
+        if venue?.venueSettings?.collectNameDuringBooking ?? false {
+            param["firstName"] = firstNameTF.text ?? ""
+            param["lastName"] = lastNameTF.text ?? ""
+        }
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user/free-booking") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Internal data formate error")
+                return
+            }
+            if let bookingId = json["id"] as? String {
+                self.bookingId = bookingId
+                completion()
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.bookingId = bookingId
-                self.navigateToQRCode()
+                completion()
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
                 self.alertPopup(error, message)

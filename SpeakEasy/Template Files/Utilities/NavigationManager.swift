@@ -245,7 +245,7 @@ final class Navigate {
         sender.present(imageViewer, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "") {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "", bookingType: TicketPriceType = .PAID) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedAppClipTickets = selectedAppClipTickets
         vc.selectedEventTicket = selectedEventTicket
@@ -255,6 +255,7 @@ final class Navigate {
         vc.type = type
         vc.event = event
         vc.promoteId = promoteId
+        vc.bookingType = bookingType
         vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -460,12 +461,13 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true)
     }
     
-    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String) {
+    func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String, bookingType: TicketPriceType = .PAID) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(UpSellTicketVC.self)
         vc.upSellTicket = upSellTicket
         vc.hasMany = hasMany
         vc.venueDetails = venueDetails
         vc.doormanId = doormanId
+        vc.bookingType = bookingType
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

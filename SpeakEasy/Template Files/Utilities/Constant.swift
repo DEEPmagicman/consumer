@@ -81,6 +81,7 @@ struct Constant {
         static let tableReservation = "Table Reservation"
         static let maxTicketSelectionReached = "Max ticket selection reached"
         static let skipAndContinueBtnTitle = "SKIP THIS & CONTINUE TO CHECKOUT"
+        static let skipAndGetMyFreeTicket = "SKIP THIS & GET MY FREE TICKET"
         static let continueBtnTitle = "CONTINUE TO CHECKOUT"
     }
     
