@@ -454,12 +454,14 @@ final class OnBoardingPresenter {
     func getCurrentUserDetail(completion: @escaping(_ isSuccess: Bool) -> Void) {
         AFWrapper.getRequest(APIBuilder.whoAmIURL, params: nil, headers: Header.header()) { response in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any] else {
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any]? else {
                 completion(false)
                 return
             }
             let imageDic = userDic["image"] as? [String: Any]
-            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            if let sessionDic = sessionDic {
+                UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            }
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
             if let encryptedUserData = user as? Data,

@@ -39,7 +39,7 @@ struct APIBuilder {
     static private let changePhone = "/change-phone"
     static private let changePassword = "/change-password"
     static private let cover = "/cover"
-    static private let coverVenue = "/CoverVenue?include=coverTicket"
+    static private let coverVenue = "/CoverVenue?include=coverTicket&"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -185,7 +185,7 @@ struct APIBuilder {
     }
     
     static var whoAmIURL: String {
-        baseURL + route + auth + whoAmI
+        baseURL + route + auth + whoAmI + "?include=image"
     }
     
     static var changeEmailURL: String {

@@ -64,7 +64,7 @@ struct Booking: Codable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case venueObject
+        case venueObject = "venue"
         case id = "id"
         case venueId = "venueId"
 //        case phone = "phone"

@@ -49,7 +49,11 @@ final class ConnectAccountViewController: UIViewController {
                   let idToken = user?.authentication.idToken else {
                 return
             }
-            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId: idToken) { [weak self] isSuccess, errorMsg  in
+            
+            let tokenParts = idToken.components(separatedBy: ".")
+            let firstPart = tokenParts[0]
+
+            self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId:firstPart ) { [weak self] isSuccess, errorMsg  in
                 guard let self = self else {
                     Loader.hide()
                     return
