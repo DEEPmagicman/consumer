@@ -105,10 +105,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isPromoCodeApplied = false
     var isFreeTicket = false
     var addOnsBookingId: String?
+    var bookingType: TicketPriceType = .FREE
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if selectedCoverTickets.count != 0 || selectedEventTicket.count != 0 {
+        if (selectedAppClipTickets.count != 0 || selectedEventTicket.count != 0) && bookingType != .FREE {
             createBooking()
         } else {
             getAddOnsPaymentIntent(bookingId: 0)
@@ -121,7 +122,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             addOnsView.isHidden = true
             totalView.isHidden = true
         }
+        paymentMethodView.isHidden = bookingType == .FREE
+        
         addOnsPaymentMethodView.isHidden = !(ticketListView.isHidden)
+        if bookingType == .FREE {
+            addOnsPaymentMethodView.isHidden = false
+        }
         addOnsTotal.text = "-"
         mainTotalAmount.text = "-"
         totalPriceLbl.text = "-"
@@ -578,9 +584,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
         default:
             setAddOnsData()
-            ticketListView.isHidden = selectedCoverTickets.count == 0
-            addOnsSeparatorHeight.constant = selectedCoverTickets.count != 0 ? 0.1 : 1
-            addOnsPaymentMethodView.isHidden = selectedCoverTickets.count != 0
+            ticketListView.isHidden = selectedAppClipTickets.count == 0
+            addOnsSeparatorHeight.constant = selectedAppClipTickets.count != 0 ? 0.1 : 1
+            addOnsPaymentMethodView.isHidden = selectedAppClipTickets.count != 0
+            if bookingType == .FREE {
+                addOnsPaymentMethodView.isHidden = false
+            }
             addOnsView.isHidden = selectedAddOnsItem.count == 0
             totalView.isHidden = selectedCoverTickets.count == 0 || selectedAddOnsItem.count == 0
             subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
@@ -599,6 +608,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             customFeeNameLbl.text = paymentDetail?.customFeeName ?? "Custom fee"
             salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
+            if bookingType == .FREE {
+                subTotalView.isHidden = true
+                salesTexView.isHidden = true
+                processingFeesView.isHidden = true
+                customFeesView.isHidden = true
+            }
         }
     }
     
@@ -679,33 +694,40 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                if self.selectedCoverTickets.count == 0 && self.selectedAddOnsItem.count != 0 {
-                    self.addOnsPaymentSuccess {
-                        self.timer.invalidate()
-                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                
+                if self.bookingType == .FREE {
+                    self.createFreeBooking {
+                        self.addOnsPaymentSuccess {
+                            self.timer.invalidate()
+                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                        }
                     }
                 } else {
-                    self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
-                        if self.selectedAddOnsItem.count == 0 {
+                    if self.selectedAppClipTickets.count == 0 && self.selectedAddOnsItem.count != 0 {
+                        self.addOnsPaymentSuccess {
                             self.timer.invalidate()
-                            if self.type == .appClip {
-                                Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
-                            } else {
-                                Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
-                            }
-                        } else {
-                            self.addOnsPaymentSuccess {
+                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                        }
+                    } else {
+                        self.paymentStatus(optedPolicy: self.venue?.venueSettings?.optedPolicy == true ? self.policyCheckBox.isSelected : nil) {
+                            if self.selectedAddOnsItem.count == 0 {
                                 self.timer.invalidate()
-                                Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
+                                if self.type == .appClip {
+                                    Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                                } else {
+                                    Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                                }
+                            } else {
+                                self.addOnsPaymentSuccess {
+                                    self.timer.invalidate()
+                                    Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
+                                }
                             }
                         }
                     }
                 }
             case .canceled:
                 self.isPaymentInitiated = false
-//                let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-//                self.present(alert, animated: true, completion: nil)
             case .failed:
                 self.isPaymentInitiated = false
                 let alert = UIAlertController(title: "Alert", message: "Payment failed", preferredStyle: .alert)
@@ -761,8 +783,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func addOnsPaymentSuccess(completion: @escaping (()-> Void)) {
         Loader.show()
-        print("---addons - \(self.addOnsBookingId)")
-        PaymentPresenter.successAddOnsPayment(bookingId: addOnsBookingId ?? "") { isSuccess, errMsg in
+        var mainBookingId = ""
+        if bookingType == .FREE {
+            mainBookingId = bookingId
+        }
+        PaymentPresenter.successAddOnsPayment(bookingId: addOnsBookingId ?? "", mainBookingId: mainBookingId) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
                 completion()
@@ -772,6 +797,25 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 } else {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
+            }
+        }
+    }
+    
+    private func createFreeBooking(completion: @escaping (()-> Void)) {
+        var appClipTickets = [[String: Any]]()
+        selectedAppClipTickets.forEach {
+            appClipTickets.append(["ticketId": $0.id,
+                                   "quantity": $0.selectedQuantity ?? 0])
+        }
+        Loader.show()
+        PaymentPresenter.createCoverFreeBooking(appClipTickets: appClipTickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id in
+            Loader.hide()
+            guard let self = self else { return }
+            if isSuccess, let id = id {
+                self.bookingId = id
+                completion()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
     }
@@ -798,9 +842,8 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
             }
-//            cell.titleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].name : selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
-            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
-            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedAppClipTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
+            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedAppClipTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         case .singleTickedEvent:
             cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
             cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
@@ -825,30 +868,38 @@ extension CheckOutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            if selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0 {
-                addOnsPaymentSuccess {
-                    self.timer.invalidate()
-                    Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+            if bookingType == .FREE {
+                self.createFreeBooking {
+                    self.addOnsPaymentSuccess {
+                        self.timer.invalidate()
+                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                    }
                 }
             } else {
-                paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
-                    if self.selectedAddOnsItem.count == 0 {
+                if selectedAppClipTickets.count == 0 && selectedAddOnsItem.count != 0 {
+                    self.addOnsPaymentSuccess {
                         self.timer.invalidate()
-                        if self.type == .appClip {
-                            Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
-                        } else {
-                            Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
-                        }
-                    } else {
-                        self.addOnsPaymentSuccess {
+                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                    }
+                } else {
+                    paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? policyCheckBox.isSelected : nil) {
+                        if self.selectedAddOnsItem.count == 0 {
                             self.timer.invalidate()
-                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
-    //                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                            if self.type == .appClip {
+                                Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                            } else {
+                                Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                            }
+                        } else {
+                            self.addOnsPaymentSuccess {
+                                self.timer.invalidate()
+                                Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
+                                //                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+                            }
                         }
                     }
                 }
             }
-            
         case .error:
             isFromApplePay = true
             self.isPaymentInitiated = false

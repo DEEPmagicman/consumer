@@ -23,6 +23,7 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var closeLblView: UIView!
     @IBOutlet weak var closeLbl: UILabel!
     @IBOutlet weak var upSellView: UIView!
+    @IBOutlet weak var upSellBtn: UIButton!
     
     var isLive = true
     var venueDetail: ClipVenue?
@@ -77,6 +78,7 @@ final class SelectTicketClipVC: UIViewController {
         } else {
             getVenueDetailsWithTickets()
         }
+        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
     }
     
     private func getDeepLinkData() {
@@ -147,11 +149,6 @@ final class SelectTicketClipVC: UIViewController {
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
-//        request.addValue("timezone", forHTTPHeaderField: TimeZone.current.identifier.lowercased())
-//        request.addValue("app_version", forHTTPHeaderField: Bundle.main.releaseVersionNumber)
-//        request.addValue("build_number", forHTTPHeaderField: Bundle.main.buildVersionNumber)
-//        request.addValue("platform", forHTTPHeaderField: "ios")
-//        request.addValue("app_bundle_id", forHTTPHeaderField: Bundle.main.bundleIdentifier ?? "invalid bundle id")
 
         if withLoader {
             DispatchQueue.main.async {
@@ -228,6 +225,7 @@ final class SelectTicketClipVC: UIViewController {
                 self.liveCloseLbl.isHidden = true
                 self.tonightLbl.isHidden = true
             }
+            self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
         }
     }
     
@@ -236,10 +234,11 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
-        if upSellTickets.count > 0 && selectedType != .FREE {
+        if upSellTickets.count > 0 {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
                 vc.venue = venueDetail
                 vc.upSellTicket = upSellTickets
+                vc.bookingType = selectedType
                 navigationController?.interactivePopGestureRecognizer?.delegate = self
                 navigationController?.pushViewController(vc, animated: true)
             }
@@ -332,7 +331,11 @@ final class SelectTicketClipVC: UIViewController {
             self.scrollViewBottomConstraint.constant = 98
             switch self.selectedType {
             case .FREE:
-                self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                if self.upSellView.isHidden == true {
+                    self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                } else {
+                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                }
             case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }

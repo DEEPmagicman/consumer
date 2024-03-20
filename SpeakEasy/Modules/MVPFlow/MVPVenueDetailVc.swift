@@ -292,6 +292,7 @@ final class MVPVenueDetailVc: UIViewController {
             toNightLbl.alpha = 0.5
             updatedAtLbl.isHidden = true
             liveLbl.text = "CLOSED"
+            addOnsView.isHidden = true
             liveLbl.font = UIFont(name: "Poppins-SemiBold", size: 18)
             liveLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
         }
@@ -301,7 +302,6 @@ final class MVPVenueDetailVc: UIViewController {
             updateCloseViewVisibility()
             tonightView.isHidden = true
             venuePageView.isHidden = true
-            addOnsView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
@@ -338,20 +338,13 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
-                if self.venueDetails?.coverTicket?.allSatisfy({ ticket in
-                    ticket.status == "DISABLED"
-                }) == false {
+                if venueDetails?.bookingStatus == "OPEN" {
                     self.addOnsView.isHidden = upSellItem.count == 0
                 }
-//                self.addOnsView.isHidden = upSellItem.count == 0
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
-    }
-    
-    private func getUpsellData() {
-        Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
     private func updateCloseViewVisibility() {
@@ -382,13 +375,8 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         
-        if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
-            switch selectedType {
-            case .FREE:
-                createFreeBooking()
-            case .PAID, .CUSTOM:
-                getUpSellItems()
-            }
+        if let selected = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
+            getUpSellItems()
         } else {
             Navigate.externalURL(String(format: SharedURL.tableBookingURL, "\(venueId)" ))
         }
@@ -402,19 +390,23 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpSellItems() {
-        checkOutIndicator.isHidden = false
-        continueBtn.setTitle("", for: .normal)
-        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
-            guard let self = self else { return }
-            if isSuccess {
-                if total != 0 {
-                    Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: self.doormanId)
-                    self.updateContinueBtn(forceRemove: true)
+        if addOnsView.isHidden == true && selectedType == .FREE {
+            createFreeBooking()
+        } else {
+            checkOutIndicator.isHidden = false
+            continueBtn.setTitle("", for: .normal)
+            MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, total in
+                guard let self = self else { return }
+                if isSuccess {
+                    if total != 0 {
+                        Navigate.to.upSellTicketVC(self, upSellTicket: upSellItem, hasMany: hasMore, venueDetails: self.venueDetails, doormanId: self.doormanId, bookingType: selectedType)
+                        self.updateContinueBtn(forceRemove: true)
+                    } else {
+                        self.selectedTickets()
+                    }
                 } else {
-                    self.selectedTickets()
+                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }
-            } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
     }
@@ -696,7 +688,11 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             self.VIPTableView.isHidden = true
             switch self.selectedType {
             case .FREE:
-                self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                if self.addOnsView.isHidden == true {
+                    self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                } else {
+                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                }
             case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
