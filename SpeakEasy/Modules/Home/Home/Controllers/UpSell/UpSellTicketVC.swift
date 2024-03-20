@@ -140,7 +140,7 @@ class UpSellTicketVC: UIViewController {
     
     @IBAction func onClickContinueBtn(_ sender: Any) {
         if selectedAddOns.count != 0 {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
         } else {
             createFreeBooking()
         }
@@ -166,14 +166,14 @@ class UpSellTicketVC: UIViewController {
     }
     
     private func createFreeBooking() {
-        if let selectedTickets = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }) {
+        if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
             var tickets = [[String: Any]]()
             selectedTickets.forEach {
                 tickets.append(["ticketId": $0.id,
                                 "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverFreeBooking(appClipTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id in
+            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id,message   in
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {

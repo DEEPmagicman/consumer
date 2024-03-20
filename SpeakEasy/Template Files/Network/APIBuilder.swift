@@ -40,6 +40,7 @@ struct APIBuilder {
     static private let changePassword = "/change-password"
     static private let cover = "/cover"
     static private let coverVenue = "/CoverVenue?include=coverTicket&"
+//    static private let coverVenue = "?include=coverTicket&include=venueAttachment&include=logo&include=venueSettings"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -223,6 +224,9 @@ struct APIBuilder {
     static var MVPVenueListURL: String {
         baseURL + route + venue + coverVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
+//    static var MVPVenueListURL: String {
+//        baseURL + route + venue + "?include=venueAttachment" + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
+//    }
     static var MVPVenueURL: String {
         baseURL + route  + venue + "?include=venueAttachment&include=venueHours" + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
@@ -249,7 +253,7 @@ struct APIBuilder {
     }
     
     static var upcomingTicketsURL: String {
-        baseURL + v2 + route + booking + upcoming + "?include=bookingHasItem"
+        baseURL + v2 + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment"
     }
     
     static var pastTicketsURL: String {
@@ -301,8 +305,8 @@ struct APIBuilder {
         baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
     }
     
-    static func getAddOnsAPI(_ venueId: Int) -> String {
-        baseURL + route + "/\(venueId)" + addOns
+    static var getAddOnsAPI: String {
+        baseURL + route + addOns
     }
     
     static var addOnsPaymentIntent: String {

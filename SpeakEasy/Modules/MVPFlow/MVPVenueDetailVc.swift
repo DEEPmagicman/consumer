@@ -375,7 +375,7 @@ final class MVPVenueDetailVc: UIViewController {
             return
         }
         
-        if let selected = venueDetails?.appClipTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
+        if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()
         } else {
             Navigate.externalURL(String(format: SharedURL.tableBookingURL, "\(venueId)" ))

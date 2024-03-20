@@ -173,7 +173,7 @@ final class UpSellClipVC: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CheckOutClipVC")) as? CheckOutClipVC {
-            vc.selectedAppClipTickets = selectedAppClipTicket
+            vc.selectedCoverTickets = selectedAppClipTicket
             vc.selectedAddOnsItem = selectedAddOns
             vc.venue = venue
             vc.bookingType = bookingType

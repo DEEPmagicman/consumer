@@ -215,7 +215,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setSalesTaxView: Bool {
-        if selectedAppClipTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
         }
@@ -555,10 +555,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+                getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
             } else {
-                if selectedAppClipTickets.count == 0 {
-                    getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+                if selectedCoverTickets.count == 0 {
+                    getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
                 } else {
                     createBooking()
                 }
@@ -832,7 +832,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             }
                         }
                     } else {
-                        if self.selectedAppClipTickets.count == 0 {
+                        if self.selectedCoverTickets.count == 0 {
                             self.addOnsPaymentSuccess(.SUCCESS) {
                                 self.getAddOnsBooking {
                                     AppClipLoader.hideLoader()
@@ -889,10 +889,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-            getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+            getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
         } else {
-            if selectedAppClipTickets.count == 0 {
-                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+            if selectedCoverTickets.count == 0 {
+                getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
             } else {
                 createBooking()
             }
@@ -930,7 +930,7 @@ extension CheckOutClipVC {
                     }
                 }
             } else {
-                if selectedAppClipTickets.count == 0 {
+                if selectedCoverTickets.count == 0 {
                     self.addOnsPaymentSuccess(.SUCCESS) {
                         self.getAddOnsBooking {
                             AppClipLoader.hideLoader()
@@ -1081,10 +1081,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? String {
+            if let bookingId = json["id"] as? Int {
                 self.bookingId = bookingId
                 self.navigateToQR()
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
                 self.navigateToQR()
                 self.createdAT = createdAt
@@ -1102,7 +1102,7 @@ extension CheckOutClipVC {
     func createFreeBookingWithAddOns(completion: @escaping (()-> Void)) {
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
-        selectedAppClipTickets.forEach {
+        selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
@@ -1146,10 +1146,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? String {
+            if let bookingId = json["id"] as? Int {
                 self.bookingId = bookingId
                 completion()
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int {
                 self.bookingId = bookingId
                 completion()
             } else if let error = json["error"] as? String, let message = json["message"] as? String {

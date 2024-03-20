@@ -245,7 +245,7 @@ final class Navigate {
         sender.present(imageViewer, animated: true, completion: nil)
     }
     
-    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedAppClipTickets: [AppClipTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "", bookingType: TicketPriceType = .PAID) {
+    func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedCoverTickets: [CoverTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "", bookingType: TicketPriceType = .PAID) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedCoverTickets = selectedCoverTickets
         vc.selectedEventTicket = selectedEventTicket

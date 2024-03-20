@@ -315,7 +315,7 @@ final class PaymentPresenter {
     }
     
     static func getUpcomingTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
-        let param = ["skip": skip, "include": ["bookingHasItem", "event"], "orderBy": "createdAt|desc"] as [String : Any]
+        let param = ["skip": skip, "include": ["bookingHasItem", "event","venue"], "orderBy": "createdAt|desc"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)
@@ -371,10 +371,10 @@ final class PaymentPresenter {
         }
     }
     
-    static func successAddOnsPayment(bookingId: String, mainBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    static func successAddOnsPayment(bookingId: String, mainBookingId: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         var param = ["bookingId": bookingId]
-        if mainBookingId != "" {
-            param["mainBookingId"] = mainBookingId
+        if mainBookingId != 0 {
+            param["mainBookingId"] = "\(mainBookingId)"
         }
         AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
