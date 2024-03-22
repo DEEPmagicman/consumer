@@ -217,8 +217,11 @@ struct APIBuilder {
         baseURL + route + auth + changePassword
     }
     
-    static func MVPVenueDetailURL(_ id: Int) -> String{
-        baseURL + route + venue + "/\(id)" + "?include=venueAttachment&include=venueHours&include=coverTicket"
+//    static func MVPVenueDetailURL(_ id: Int) -> String{
+//        baseURL + route + venue + "/\(id)" + "?include=venueAttachment&include=venueHours&include=coverTicket&include=logo"
+//    }
+    static func MVPVenueDetailURL(_ id: String) -> String{
+        baseURL + cover + "/\(id)"
     }
     
     static var MVPVenueListURL: String {
@@ -253,8 +256,8 @@ struct APIBuilder {
     }
     
     static var upcomingTicketsURL: String {
-        baseURL + v2 + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment"
-    }
+          baseURL + v2 + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment&include=venue.logo"
+      }
     
     static var pastTicketsURL: String {
         baseURL + v2 + route + booking + past

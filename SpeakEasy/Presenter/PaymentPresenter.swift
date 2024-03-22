@@ -253,7 +253,7 @@ final class PaymentPresenter {
     
     
     static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
-        AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.customerMethod(customerId),isForCard: true, params: nil, headers: Header.header()) { response in
             if let responseArray = response as? [[String: Any]] {
                 if let paymentMethods = [PaymentMethod].parse(responseArray) {
                     completion(true, nil, paymentMethods)

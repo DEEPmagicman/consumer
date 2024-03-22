@@ -195,7 +195,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
-        if venue?.venueSettings?.coverTicketFeesSettings != nil && totalPrice != 0 {
+        if venue?.venueSettings?.coverTicketSettings != nil && totalPrice != 0 {
             customFeeCount()
             if selectedAddOnsItem.count != 0 {
                 getCalculatedAddOnsFee()
@@ -216,16 +216,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketFeesSettings?.salesTax ?? 0.0)%)"
-            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true ? true : false
+            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
+            return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
-            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
+            return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
-        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == true {
+        if (venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true {
             return true
         }
         return false
@@ -233,14 +233,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setCustomTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
-            return venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true ? true : false
+            return venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true ? true : false
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
-            return venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+            return venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
-        if (venue?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == true {
+        if (venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true {
             return true
         }
         return false
@@ -248,30 +248,30 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private var setProcessingTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
-            return venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true ? true : false
+            return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true ? true : false
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
-            return venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false ? true : false
+            return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.customCoverTicketSettings?.isUpFront == false ? true : false
         }
         
-        if (venue?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketFeesSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+        if (venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true {
             return true
         }
         return false
     }
     
     private var setAddOnsSalesTaxView: Bool {
-        addOnsSalesTaxPr.text = "(\(venue?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0.0)%)"
-        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
+        addOnsSalesTaxPr.text = "(\(venue?.venueSettings?.addOnsBookingSettings?.salesTax ?? 0.0)%)"
+        return (venue?.venueSettings?.addOnsBookingSettings?.isEnableSalesTax ?? true && venue?.venueSettings?.addOnsBookingSettings?.isUpFront == false) ? true : false
     }
     
     private var setAddOnsProcessingTaxView: Bool {
-        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
+        return (venue?.venueSettings?.addOnsBookingSettings?.isProcessingFeePassToCustomer ?? true && venue?.venueSettings?.addOnsBookingSettings?.isUpFront == false) ? true : false
     }
     
     private var setAddOnsCustomTaxView: Bool {
-        return (venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee ?? true && venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == false) ? true : false
+        return (venue?.venueSettings?.addOnsBookingSettings?.isEnableCustomFee ?? true && venue?.venueSettings?.addOnsBookingSettings?.isUpFront == false) ? true : false
     }
     
     private func setAddOnsData() {

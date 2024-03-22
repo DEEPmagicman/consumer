@@ -270,23 +270,23 @@ final class ShowQRCodeVC: UIViewController {
             let ticketId = booking?.bookingHasItem.first?.ticketId
             let ticket = booking?.venueObject?.coverTicket?.filter({$0.id == ticketId})
             if ticket?.first?.isCustom == true {
-                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
-                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isEnableSalesTax == false ? true : false
-                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketFeesSettings?.isEnableCustomFee == false ? true : false
+                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == false ? true : false
+                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == false ? true : false
                 subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
             } else {
-                if booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isUpFront == false {
-                    processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
-                    salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == false ? true : false
-                    customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == false ? true : false
+                if booking?.venueObject?.venueSettings?.coverTicketSettings?.isUpFront == false {
+                    processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                    salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketSettings?.isEnableSalesTax == false ? true : false
+                    customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.coverTicketSettings?.isEnableCustomFee == false ? true : false
                     subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
                 }
             }
         case "TABLE_BOOKING":
-            if booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isUpFront == false {
-                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isProcessingFeePassToCustomer == false  ? true : false
-                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0  == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isEnableSalesTax == false ? true : false
-                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.tableBookingFeesSettings?.isEnableCustomFee == false ? true : false
+            if booking?.venueObject?.venueSettings?.posTransactionSettings?.isUpFront == false {
+                processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.posTransactionSettings?.isProcessingFeePassToCustomer == false  ? true : false
+                salesTaxView.isHidden = booking?.fees?.salesTax ?? 0  == 0 || booking?.venueObject?.venueSettings?.posTransactionSettings?.isEnableSalesTax == false ? true : false
+                customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 || booking?.venueObject?.venueSettings?.posTransactionSettings?.isEnableCustomFee == false ? true : false
                 subTotalView.isHidden = processingFeeView.isHidden && salesTaxView.isHidden && customFeeView.isHidden && discountView.isHidden ? true : false
             }
         default:

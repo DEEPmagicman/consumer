@@ -85,7 +85,7 @@ final class MVPVenueDetailVc: UIViewController {
     private var hasMore = false
     private var totalPrice: Double {
         var total = 0.0
-        if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+        if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
             venueDetails?.modifiedCoverTicket.forEach {
                 if let quantity = $0.selectedQuantity {
                     total += ($0.price * Double(quantity))
@@ -167,7 +167,7 @@ final class MVPVenueDetailVc: UIViewController {
         if withLoader {
             Loader.show()
         }
-        presenter.getVenuesDetailForaMVP(venueId: venueId, venueTimeZone: venueTimeZone, doormanId: doormanId) { [weak self] isSuccess, errMsg, venueDetail in
+        presenter.getVenuesDetailForaMVP(venueId: venueUniqueId, venueTimeZone: venueTimeZone, doormanId: doormanId) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -282,7 +282,7 @@ final class MVPVenueDetailVc: UIViewController {
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         venueNameLbl.text = venueDetails?.name ?? ""
         venuePolicyLbl.text = String(format: Constant.String.venuePolicy, venueDetails?.name ?? "venue")
-        if venueDetails?.bookingStatus == "OPEN" {
+        if venueDetails?.venueSettings?.bookingStatus == "OPEN" {
             liveLbl.text = venueDetails?.displayWaitTime
             liveLbl.textColor = UIColor(red: 0/255, green: 255/255, blue: 148/255, alpha: 1)
             updatedAtLbl.isHidden = false
@@ -324,7 +324,7 @@ final class MVPVenueDetailVc: UIViewController {
             let tap = UITapGestureRecognizer(target: self, action: #selector(onClickWebSite))
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
-        buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Buy Upsell", for: .normal)
+        buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Buy Upsell", for: .normal)
     }
     
     @objc func onClickWebSite() {
@@ -338,7 +338,7 @@ final class MVPVenueDetailVc: UIViewController {
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
-                if venueDetails?.bookingStatus == "OPEN" {
+                if venueDetails?.venueSettings?.bookingStatus == "OPEN" {
                     self.addOnsView.isHidden = upSellItem.count == 0
                 }
             } else {
@@ -481,7 +481,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+                if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
                         cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                     } else {
@@ -492,7 +492,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
-            if venueDetails?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
+            if venueDetails?.venueSettings?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
                 cell.ticketTypeLbl.textColor = .white
             } else {
@@ -583,7 +583,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch tableView {
         case ticketTypeTableView:
-//            if venueDetails?.bookingStatus != "OPEN" { return }
+            if venueDetails?.venueSettings?.bookingStatus != "OPEN" { return }
             if venueDetails?.coverTicket?[indexPath.row].status != "ENABLED" { return }
             if venueDetails?.coverTicket?[indexPath.row].selectedQuantity != nil { return }
             if isMaxTicketReached {

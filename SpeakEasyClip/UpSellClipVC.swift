@@ -20,8 +20,8 @@ final class UpSellClipVC: UIViewController {
         tableView.dataSource = self
         tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         getUpSellTicket(withLoader: true)
-        upSellTitle.text = venue?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "UpSell"
-        upSellDescription.text = venue?.venueSettings?.addOnsBookingFeesSettings?.description ?? "-"
+        upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
+        upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
         updateContinueBtn()
     }
     
@@ -52,27 +52,27 @@ final class UpSellClipVC: UIViewController {
             ticketData.append(ticket)
             
             var taxRate = 0.0
-            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
-                taxRate = (venue?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0) / 100
+            if venue?.venueSettings?.addOnsBookingSettings?.isEnableSalesTax == true {
+                taxRate = (venue?.venueSettings?.addOnsBookingSettings?.salesTax ?? 0) / 100
             }
             
             var totalCustomFee = 0.0
-            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true {
-                if venue?.venueSettings?.addOnsBookingFeesSettings?.customFeeType == "PERCENTAGE" {
-                    totalCustomFee = (ticketData[index].price * (venue?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0) / 100)
+            if venue?.venueSettings?.addOnsBookingSettings?.isEnableCustomFee == true {
+                if venue?.venueSettings?.addOnsBookingSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venue?.venueSettings?.addOnsBookingSettings?.customFee ?? 0) / 100)
                 } else {
-                    totalCustomFee = (venue?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0)
+                    totalCustomFee = (venue?.venueSettings?.addOnsBookingSettings?.customFee ?? 0)
                 }
             }
             
             var totalProcessingFee = 0.0
-            if venue?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
+            if venue?.venueSettings?.addOnsBookingSettings?.isProcessingFeePassToCustomer == true {
                 let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
                 totalProcessingFee = stripeFee + SEFee(ticket.price)
             }
             
             var salesTax = 0.0
-            if venue?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+            if venue?.venueSettings?.addOnsBookingSettings?.isEnableSalesTax == true {
                 salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
             }
             
@@ -198,7 +198,7 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
-        if venue?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == true {
+        if venue?.venueSettings?.addOnsBookingSettings?.isUpFront == true {
             cell.ticketPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((modifiedUpSellTicket[indexPath.row].price).decimalFormat(true))"
         } else {
             cell.ticketPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].price).decimalFormat(true))"

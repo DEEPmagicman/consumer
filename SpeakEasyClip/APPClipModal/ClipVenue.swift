@@ -65,7 +65,7 @@ struct ClipVenue: Codable {
     }
     var lowestPriceTicket: CoverTicket? {
         var filterTickets = coverTicket?.filter({ $0.status == "ENABLED" })
-        if venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+        if venueSettings?.coverTicketSettings?.isUpFront == true {
             filterTickets = modifiedCoverTicket.filter({ $0.status == "ENABLED" && $0.isCustom != true })
             if let customTicket = coverTicket?.first(where: { $0.status == "ENABLED" && $0.isCustom == true }) {
                 filterTickets?.append(customTicket)
@@ -87,27 +87,27 @@ struct ClipVenue: Codable {
             }
             
             var taxRate = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
-                taxRate = (venueSettings?.coverTicketFeesSettings?.salesTax ?? 0) / 100
+            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
+                taxRate = (venueSettings?.coverTicketSettings?.salesTax ?? 0) / 100
             }
             
             var totalCustomFee = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isEnableCustomFee == true {
-                if venueSettings?.coverTicketFeesSettings?.customFeeType == "PERCENTAGE" {
-                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketFeesSettings?.customFee ?? 0) / 100)
+            if venueSettings?.coverTicketSettings?.isEnableCustomFee == true {
+                if venueSettings?.coverTicketSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketSettings?.customFee ?? 0) / 100)
                 } else {
-                    totalCustomFee = (venueSettings?.coverTicketFeesSettings?.customFee ?? 0)
+                    totalCustomFee = (venueSettings?.coverTicketSettings?.customFee ?? 0)
                 }
             }
             
             var totalProcessingFee = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isProcessingFeePassToCustomer == true {
+            if venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true {
                 let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
                 totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
             }
             
             var salesTax = 0.0
-            if venueSettings?.coverTicketFeesSettings?.isEnableSalesTax == true {
+            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
                 salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
             }
             
@@ -188,6 +188,7 @@ struct ClipVenue: Codable {
         try container.encode(bookingWaiting, forKey: .bookingWaiting)
         try container.encode(lat, forKey: .lat)
         try container.encode(lng, forKey: .lng)
+        try container.encode(coverTicket, forKey: .coverTicket)
         try container.encode(checkInUser, forKey: .checkInUser)
         try container.encode(timezone, forKey: .timezone)
         try container.encode(venueSettings, forKey: .venueSettings)
@@ -285,11 +286,12 @@ struct VenueSettings: Codable {
     var collectEmailDuringBookingOptional: Bool?
     var currencySymbol: String?
     var currencyCode: String?
-    var coverTicketFeesSettings: CoverTicketFeesSettings?
-    var customCoverTicketFeesSettings: CoverTicketFeesSettings?
-    var tableBookingFeesSettings: CoverTicketFeesSettings?
-    var addOnsBookingFeesSettings: CoverTicketFeesSettings?
+    var coverTicketSettings: CoverTicketFeesSettings?
+    var customCoverTicketSettings: CoverTicketFeesSettings?
+    var posTransactionSettings: CoverTicketFeesSettings?
+    var addOnsBookingSettings: CoverTicketFeesSettings?
     var isOrganizer: Bool?
+    var bookingStatus: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -302,25 +304,31 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(collectEmailDuringBookingOptional, forKey: .collectEmailDuringBookingOptional)
         try container.encodeIfPresent(currencySymbol, forKey: .currencySymbol)
         try container.encodeIfPresent(currencyCode, forKey: .currencyCode)
-        try container.encodeIfPresent(coverTicketFeesSettings, forKey: .coverTicketFeesSettings)
-        try container.encodeIfPresent(customCoverTicketFeesSettings, forKey: .customCoverTicketFeesSettings)
-        try container.encodeIfPresent(tableBookingFeesSettings, forKey: .tableBookingFeesSettings)
-        try container.encodeIfPresent(addOnsBookingFeesSettings, forKey: .addOnsBookingFeesSettings)
+        try container.encodeIfPresent(coverTicketSettings, forKey: .coverTicketSettings)
+        try container.encodeIfPresent(customCoverTicketSettings, forKey: .customCoverTicketSettings)
+        try container.encodeIfPresent(posTransactionSettings, forKey: .posTransactionSettings)
+        try container.encodeIfPresent(addOnsBookingSettings, forKey: .addOnsBookingSettings)
         try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
+        try container.encode(bookingStatus, forKey: .bookingStatus)
     }
 }
 
 struct CoverTicketFeesSettings: Codable {
-    var isUpFront: Bool
-    var isProcessingFeePassToCustomer: Bool
-    var isEnableSalesTax: Bool
-    var salesTax: Double?
-    var isEnableCustomFee: Bool
-    var customFeeType: String
-    var customFee: Double
-    var customFeeName: String?
-    var pageTitle: String?
-    var description: String?
+      var id: Int
+      var isUpFront: Bool
+      var isProcessingFeePassToCustomer: Bool
+      var isEnableSalesTax: Bool
+      var salesTaxName: String?
+      var salesTax: Double
+      var isEnableCustomFee: Bool
+      var customFeeType: String
+      var customFeeName: String
+      var customFee: Double
+      var isCustomFeeTaxable: Bool?
+      var isProcessingFeeTaxable: Bool?
+      var subjectToTax: Bool?
+      var pageTitle: String?
+      var description: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

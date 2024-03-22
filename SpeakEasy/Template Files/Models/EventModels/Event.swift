@@ -64,7 +64,7 @@ struct Event: Codable {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(flyer, forKey: .flyer)
+        try container.encodeIfPresent(flyer, forKey: .flyer)
         try container.encode(customVenue, forKey: .customVenue)
         try container.encode(id, forKey: .id)
         try container.encode(uniqueId, forKey: .uniqueId)

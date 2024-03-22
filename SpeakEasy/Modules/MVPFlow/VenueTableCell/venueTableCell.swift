@@ -45,7 +45,7 @@ class venueTableCell: UITableViewCell {
         } else {
             coverLbl.text = ""
         }
-        if data.bookingStatus == "OPEN" {
+        if data.venueSettings?.bookingStatus == "OPEN" {
             liveLbl.isHidden = false
             liveView.isHidden = false
             bookNow.isHidden = false

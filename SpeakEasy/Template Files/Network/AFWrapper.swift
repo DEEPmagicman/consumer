@@ -338,7 +338,7 @@ final class AFWrapper: NSObject {
     //        }
     //    }
     
-    static func getRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func getRequest(_ strURL: String,isForCard:Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         if !Connectivity.isConnectedToInternet {
             failure(nil)
             return
@@ -354,8 +354,13 @@ final class AFWrapper: NSObject {
                         guard let responseInString = response.result.value else {
                             return
                         }
-                        let decryptedResponse = responseInString.decrypted()
-                        success(decryptedResponse ?? [:])
+                        if isForCard{
+                            let decryptedResponse = responseInString.decryptedArry()
+                            success(decryptedResponse ?? [:])
+                        }else{
+                            let decryptedResponse = responseInString.decrypted()
+                            success(decryptedResponse ?? [:])
+                        }
                     } else if responseCode == 401 {
                         forceLogout()
                     } else {

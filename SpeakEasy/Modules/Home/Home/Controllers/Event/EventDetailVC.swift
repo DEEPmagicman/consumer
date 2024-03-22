@@ -149,7 +149,7 @@ final class EventDetailVC: UIViewController {
         dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
-        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) /*&& (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0) */} ?? []
+        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0) } ?? []
         if event?.eventTicket == nil {
             isNotSellingStage = false
             updateContinueBtn(forceRemove: true)
@@ -329,7 +329,7 @@ final class EventDetailVC: UIViewController {
         if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
             var tickets = [[String: Any]]()
             selectedTickets.forEach {
-                tickets.append(["ticketId": $0.id,
+                tickets.append(["ticketId": $0.id ?? 0,
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()

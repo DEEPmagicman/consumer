@@ -8,7 +8,7 @@
 import Foundation
 
 final class MVPPresenter {
-    func getVenuesDetailForaMVP(venueId: Int, venueTimeZone: String? = nil, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
+    func getVenuesDetailForaMVP(venueId: String, venueTimeZone: String? = nil, doormanId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueDetail: ClipVenue?) -> Void) {
         AFWrapper.getRequest(APIBuilder.MVPVenueDetailURL(venueId),params: nil, headers: Header.header( timeZone: venueTimeZone, doormanId: doormanId)) { response in
             
             guard let responseDic = response as? [String: Any] else {

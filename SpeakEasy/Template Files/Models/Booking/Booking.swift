@@ -253,9 +253,9 @@ struct GuestList: Codable {
 
 struct UpSellTicket: Codable {
     
-    var id: String
-    var doormanId: String
-    var addOnsId: String
+    var id: Int
+    var doormanId: Int
+    var addOnsId: Int
     var price: Double
     var status: String
     var isDeleted: Bool

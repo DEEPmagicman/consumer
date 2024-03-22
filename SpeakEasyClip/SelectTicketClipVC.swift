@@ -37,7 +37,7 @@ final class SelectTicketClipVC: UIViewController {
     private var upSellTickets = [UpSellTicket]()
     private var totalPrice: Double {
         var total = 0.0
-        if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+        if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
             venueDetail?.modifiedCoverTicket.forEach {
                 if let quantity = $0.selectedQuantity {
                     total += ($0.price * Double(quantity))
@@ -78,7 +78,7 @@ final class SelectTicketClipVC: UIViewController {
         } else {
             getVenueDetailsWithTickets()
         }
-        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
+        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
     }
     
     private func getDeepLinkData() {
@@ -225,7 +225,7 @@ final class SelectTicketClipVC: UIViewController {
                 self.liveCloseLbl.isHidden = true
                 self.tonightLbl.isHidden = true
             }
-            self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
+            self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
         }
     }
     
@@ -386,7 +386,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
         } else {
-            if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
+            if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
                 let dPrice = price.components(separatedBy: ".")[1]
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"

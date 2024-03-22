@@ -33,27 +33,27 @@ class UpSellTicketVC: UIViewController {
             ticketData.append(ticket)
             
             var taxRate = 0.0
-            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
-                taxRate = (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.salesTax ?? 0) / 100
+            if venueDetails?.venueSettings?.addOnsBookingSettings?.isEnableSalesTax == true {
+                taxRate = (venueDetails?.venueSettings?.addOnsBookingSettings?.salesTax ?? 0) / 100
             }
             
             var totalCustomFee = 0.0
-            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableCustomFee == true {
-                if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFeeType == "PERCENTAGE" {
-                    totalCustomFee = (ticketData[index].price * (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0) / 100)
+            if venueDetails?.venueSettings?.addOnsBookingSettings?.isEnableCustomFee == true {
+                if venueDetails?.venueSettings?.addOnsBookingSettings?.customFeeType == "PERCENTAGE" {
+                    totalCustomFee = (ticketData[index].price * (venueDetails?.venueSettings?.addOnsBookingSettings?.customFee ?? 0) / 100)
                 } else {
-                    totalCustomFee = (venueDetails?.venueSettings?.addOnsBookingFeesSettings?.customFee ?? 0)
+                    totalCustomFee = (venueDetails?.venueSettings?.addOnsBookingSettings?.customFee ?? 0)
                 }
             }
             
             var totalProcessingFee = 0.0
-            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isProcessingFeePassToCustomer == true {
+            if venueDetails?.venueSettings?.addOnsBookingSettings?.isProcessingFeePassToCustomer == true {
                 let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
                 totalProcessingFee = stripeFee + SEFee(ticket.price)
             }
             
             var salesTax = 0.0
-            if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isEnableSalesTax == true {
+            if venueDetails?.venueSettings?.addOnsBookingSettings?.isEnableSalesTax == true {
                 salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
             }
             
@@ -111,8 +111,8 @@ class UpSellTicketVC: UIViewController {
         
         ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         ticketTypeTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
-        upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell Items"
-        upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingFeesSettings?.description ?? ""
+        upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell Items"
+        upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingSettings?.description ?? ""
         updateContinueBtn()
     }
     
@@ -195,7 +195,7 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
-        if venueDetails?.venueSettings?.addOnsBookingFeesSettings?.isUpFront == true {
+        if venueDetails?.venueSettings?.addOnsBookingSettings?.isUpFront == true {
             cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((modifiedUpSellTicket[indexPath.row].price).decimalFormat(true))"
         } else {
             cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].price).decimalFormat(true))"

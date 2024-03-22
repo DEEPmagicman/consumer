@@ -181,13 +181,11 @@ extension AppDelegate {
             vc.doormanId = doormanId
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
-            print("abc")
-//            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
+            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
         case .inviteLink:
             inviteLinkNav(home, id: id)
         case .booking:
-            print("abc")
-//            Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
+            Navigate.to.showQRCode(home, booking: nil, bookingId: Int(id) ?? 0, type: .singleTickedEvent)
         }
     }
     
