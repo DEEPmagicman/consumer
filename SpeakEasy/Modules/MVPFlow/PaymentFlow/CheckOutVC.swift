@@ -699,7 +699,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     self.createFreeBooking {
                         self.addOnsPaymentSuccess {
                             self.timer.invalidate()
-                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                            Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: false, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
                         }
                     }
                 } else {
@@ -805,7 +805,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         var appClipTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
             appClipTickets.append(["ticketId": $0.id,
-                                   "quantity": $0.selectedQuantity ?? 0])
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
         }
         Loader.show()
         PaymentPresenter.createCoverFreeBooking(coverTickets: appClipTickets, venueId: venue?.id ?? 0) { [weak self] isSuccess, errMsg, id,message  in
@@ -872,7 +872,7 @@ extension CheckOutVC {
                 self.createFreeBooking {
                     self.addOnsPaymentSuccess {
                         self.timer.invalidate()
-                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: true, venueId: self.venue?.id ?? 0, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+                        Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, isOnlyAddOnAvailable: false, venueId: self.venue?.id ?? "", addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
                     }
                 }
             } else {
