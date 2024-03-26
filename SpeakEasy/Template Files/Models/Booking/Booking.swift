@@ -281,10 +281,10 @@ struct UpSellTicket: Codable {
 
 struct AddOns: Codable {
     
-    var id: String
+    var id: Int
     var name: String
     var description: String
-    var venueId: String
+    var venueId: Int
     var status: String
     var isDeleted: Bool
     var createdAt: String

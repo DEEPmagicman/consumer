@@ -228,17 +228,22 @@ struct VenueAttachmentClip: Codable {
 
 struct VenueHoursClip: Codable {
     
+    var id: Int?
     var day: String
     var venueStatus: String
     var from: String
     var to: String
+    var venueId: Int?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
         try container.encode(day, forKey: .day)
         try container.encode(venueStatus, forKey: .venueStatus)
         try container.encode(from, forKey: .from)
         try container.encode(to, forKey: .to)
+        try container.encode(venueId, forKey: .venueId)
+        
     }
 }
 

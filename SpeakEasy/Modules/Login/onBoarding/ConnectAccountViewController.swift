@@ -50,6 +50,7 @@ final class ConnectAccountViewController: UIViewController {
                 return
             }
             
+            //devide token
             let tokenParts = idToken.components(separatedBy: ".")
             let firstPart = tokenParts[0]
 
