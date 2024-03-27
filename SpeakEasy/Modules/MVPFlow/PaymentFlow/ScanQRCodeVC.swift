@@ -111,7 +111,6 @@ class ScanQRCodeVC: UIViewController {
     func setPageController() {
         pagerView.delegate = self
         pagerView.dataSource = self
-        //        pagerView.itemSize = CGSize(width: 200, height: 180)
         pageControl.numberOfPages = isAddOnsAvailable ? 2 : 1
         pageControl.backgroundColor = .clear
         pageControl.itemSpacing = 8
@@ -136,6 +135,7 @@ class ScanQRCodeVC: UIViewController {
                 self.booking = booking
                 self.venueName.text = booking?.venueObject?.name ?? ""
                 self.isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
+                self.swipeLbl.isHidden = self.isAddOnsAvailable ? false : true
                 if booking?.addOnsBookingId ?? "" != "" {
                     self.getAddOnsBooking()
                     let string1 = """

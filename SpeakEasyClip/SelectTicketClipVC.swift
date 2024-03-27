@@ -386,6 +386,10 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.ticketPriceLbl.text = "FREE"
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
+        } else if venueDetail?.appClipTicket?[indexPath.row].isCustom == true && venueDetail?.appClipTicket?[indexPath.row].price ?? 0 == 0 {
+            cell.ticketPriceLbl.text = "FREE"
+            cell.plusBtn.alpha = 0.5
+            cell.plusBtn.isUserInteractionEnabled = false
         } else {
             if venueDetail?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedAppClipTicket[indexPath.row].isCustom == true ? Double(venueDetail?.appClipTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedAppClipTicket[indexPath.row].price ?? 0).decimalFormat(true)
@@ -439,7 +443,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else if venueDetail?.appClipTicket?[indexPath.row].isCustom == true {
             forceRemovePaidTicket()
             forceRemoveFreeTicket()
-            selectedType = .CUSTOM
+            selectedType = venueDetail?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
         } else {
             forceRemoveFreeTicket()
             forceRemoveCustomTicket()

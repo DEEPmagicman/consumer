@@ -514,6 +514,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.grandTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((self.totalAddOnPrice + self.totalPrice).decimalFormat(true))"
                     if self.bookingType == .FREE {
                         self.subTotalView.isHidden = true
+                        self.processingFeeView.isHidden = true
                         self.customFeeView.isHidden = true
                         self.salesTextView.isHidden = true
                     }
@@ -894,7 +895,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             if selectedAppClipTickets.count == 0 {
                 getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
             } else {
-                createBooking()
+                createBooking(isApplePay: false)
             }
         }
     }

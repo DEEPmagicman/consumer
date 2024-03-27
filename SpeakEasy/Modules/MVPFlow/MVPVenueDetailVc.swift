@@ -480,6 +480,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.ticketPriceLbl.text = "FREE"
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
+            } else if ticket?.isCustom == true && ticket?.price ?? 0 == 0 {
+                cell.ticketPriceLbl.text = "FREE"
+                cell.plusBtn.alpha = 0.5
+                cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketFeesSettings?.isUpFront == true {
                     if venueDetails?.modifiedAppClipTicket[indexPath.row].isCustom == true {
@@ -601,7 +605,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if venueDetails?.appClipTicket?[indexPath.row].isCustom == true {
                 forceRemovePaidTicket()
                 forceRemoveFreeTicket()
-                selectedType = .CUSTOM
+                selectedType = venueDetails?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
             } else {
                 forceRemoveFreeTicket()
                 forceRemoveCustomTicket()
@@ -687,13 +691,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             self.continueBtnView.isHidden = false
             self.VIPTableView.isHidden = true
             switch self.selectedType {
-            case .FREE:
+            case .FREE, .CUSTOM:
                 if self.addOnsView.isHidden == true {
                     self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
                 } else {
                     self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
                 }
-            case .PAID, .CUSTOM:
+            case .PAID:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
@@ -705,7 +709,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-//        selectedType = .PAID
     }
 
     private func forceRemovePaidTicket() {
@@ -715,7 +718,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.appClipTicket?[$0].selectedQuantity = nil
             }
         }
-//        selectedType = .FREE
     }
     
     private func forceRemoveCustomTicket() {
