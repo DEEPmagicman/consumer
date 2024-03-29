@@ -66,6 +66,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var addOnsView: UIView!
     @IBOutlet weak var buyUpsellBtn: UIButton!
     @IBOutlet weak var checkOutIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
     var venueId = ""
     var venueUniqueId = ""
@@ -595,8 +596,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 return
             }
             VIPTableView.isHidden = true
+            stackViewBottomConstraint.constant = 30
             continueBtnView.isHidden = false
-            scrollViewBottomConstraint.constant = 30
+            scrollViewBottomConstraint.constant = 70
             venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 forceRemovePaidTicket()
@@ -678,11 +680,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if self.venueDetails?.availableTimeSlot ?? false {
                     self.continueBtnView.isHidden = true
                     self.VIPTableView.isHidden = false
-                    self.scrollViewBottomConstraint.constant = 134
+                    self.stackViewBottomConstraint.constant = 0
+                    self.scrollViewBottomConstraint.constant = 80
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
-                    self.scrollViewBottomConstraint.constant = 30
+                    self.scrollViewBottomConstraint.constant = 70
                     self.VIPTableView.isHidden = true
+                    self.stackViewBottomConstraint.constant = 30
                     self.continueBtnView.isHidden = true
                 }
                 self.ticketTypeTableView.reloadData()
@@ -690,6 +694,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             }
             self.continueBtnView.isHidden = false
             self.VIPTableView.isHidden = true
+            self.stackViewBottomConstraint.constant = 30
             switch self.selectedType {
             case .FREE, .CUSTOM:
                 if self.addOnsView.isHidden == true {
