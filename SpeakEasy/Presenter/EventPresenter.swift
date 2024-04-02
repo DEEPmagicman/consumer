@@ -88,6 +88,29 @@ final class EventPresenter {
         }
     }
     
+    static func eventTicketCheckIn(bookingId: String, ticketIds: [String], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        
+        let param = ["bookingId" : bookingId,
+                     "ticketIds": ticketIds] as [String: Any]
+        
+        AFWrapper.patchRequest(APIBuilder.eventCheckInAPI, params: param, headers: Header.header()) { (response) in
+            
+            guard let responseDic = response as? Bool else {
+                completion(false, nil)
+                return
+            }
+            completion(responseDic, nil)
+
+        } failure: { (error) in
+            if let err = (error as? NSError), err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            print(error ?? "")
+            completion(false, nil)
+        }
+    }
+    
     static func getEventTicketByPassWord(eventId: String, venueTimeZone: String? = nil, password: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ ticket: [EventTicket]?) -> Void) {
         
         AFWrapper.getRequest(APIBuilder.getTicketPasswordAPI(eventId), params: ["password": password], headers: Header.header(timeZone: venueTimeZone)) { response in

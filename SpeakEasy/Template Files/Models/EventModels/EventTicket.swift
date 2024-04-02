@@ -30,7 +30,8 @@ struct EventTicket: Codable {
         (issuedUnits ?? 0) - (soldUnits ?? 0)
     }
     var SEFee: Double {
-        1.0
+        return ((price ?? 0) <= 10) ? (Double(price ?? 0) * 0.1) : 1
+
     }
     var priceWithFees: Double {
         priceWithFee(Double(price ?? 0))

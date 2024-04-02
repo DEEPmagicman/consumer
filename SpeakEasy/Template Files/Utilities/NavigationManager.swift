@@ -80,14 +80,6 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-//    func presentCommentDoneBottomSheet(_ sender: UIViewController) {
-//        var configuration: NBBottomSheetConfiguration
-//        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(380))
-//        let viewController = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailBottomSheet.self)
-//        let bottomSheetController = NBBottomSheetController(configuration: configuration)
-//        bottomSheetController.present(viewController, on: sender)
-//    }
-    
     func presentDateSelectionBottomSheet(_ sender: UIViewController, date: Date? = nil) {
         var configuration: NBBottomSheetConfiguration
         configuration = NBBottomSheetConfiguration(sheetSize: .fixed(310))
@@ -95,6 +87,17 @@ final class Navigate {
         vc.delegate = sender as? DateSelectionDelegate
         vc.date = date
         let bottomSheetController = NBBottomSheetController(configuration: configuration)
+        bottomSheetController.present(vc, on: sender)
+    }
+    
+    func presentCheckInBottomSheet(_ sender: UIViewController, ticketId: [String], bookingId: String) {
+        var configuration: NBBottomSheetConfiguration
+        configuration = NBBottomSheetConfiguration(sheetSize: .fixed(500))
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckInBottomSheet.self)
+        let bottomSheetController = NBBottomSheetController(configuration: configuration)
+        vc.delegate = sender as? DateSelectionDelegate
+        vc.bookingId = bookingId
+        vc.ticketId = ticketId
         bottomSheetController.present(vc, on: sender)
     }
     

@@ -18,6 +18,7 @@
 		0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */; };
 		0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */; };
 		0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */; };
+		044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */; };
@@ -684,6 +685,7 @@
 		0436D093295984890087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextFieldWithIcon.swift; sourceTree = "<group>"; };
 		0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+fixCaretPosition.swift"; sourceTree = "<group>"; };
 		0436D0952959848A0087D3DB /* SkyFloatingLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyFloatingLabelTextField.swift; sourceTree = "<group>"; };
+		044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInBottomSheet.swift; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDetailsTVC.swift; sourceTree = "<group>"; };
@@ -1984,6 +1986,7 @@
 				CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */,
 				049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */,
 				920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */,
+				044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -4744,6 +4747,7 @@
 				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				E11F4C1028C835F3008D2E30 /* BookingTabCVCCollectionViewCell.swift in Sources */,
 				CE4867AC286F358800FD277E /* Constants.swift in Sources */,
+				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
 				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
 				E16705BA28CA6BB500644BF0 /* TicketRecipients.swift in Sources */,
 				E11F4BAA28C8358C008D2E30 /* VIPTableBookingHeaderView.swift in Sources */,

@@ -49,6 +49,9 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var discountAmount: UILabel!
     @IBOutlet weak var bookingTitleLbl: UILabel!
     @IBOutlet weak var salesTaxName: UILabel!
+    @IBOutlet weak var tapToCheckInView: UIView!
+    @IBOutlet weak var tapToCheckInBtn: UIButton!
+    @IBOutlet weak var addToWalletView: UIView!
     
     var bookingId = ""
     var type: PaymentIntentType = .appClip
@@ -80,6 +83,28 @@ final class ShowQRCodeVC: UIViewController {
         gradient = venueImg.setGradientColor()
         venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
             self?.gradient = self?.venueImg.setGradientColor()
+        }
+    }
+    
+    private func setCheckInViewUI() {
+        
+        if type == .singleTickedEvent {
+            tapToCheckInView.isHidden = booking?.event?.allowGuestCheckin == true ? false : true
+            addToWalletView.isHidden = booking?.event?.allowGuestCheckin == true ? true : false
+        } else {
+            tapToCheckInView.isHidden = true
+            addToWalletView.isHidden = false
+        }
+        
+        if booking?.isCheckedIn == true {
+            tapToCheckInBtn.isUserInteractionEnabled = false
+            tapToCheckInView.backgroundColor = UIColor(red: 1, green: 0.92, blue: 0.23, alpha: 0.25)
+            tapToCheckInBtn.setTitleColor(.red, for: .normal)
+            tapToCheckInBtn.setTitle("ALREADY CHECKED IN", for: .normal)
+        } else {
+            tapToCheckInView.backgroundColor = UIColor(red: 1, green: 0.92, blue: 0.23, alpha: 1)
+            tapToCheckInBtn.setTitleColor(.black, for: .normal)
+            tapToCheckInBtn.setTitle("TAP TO CHECK IN TICKET", for: .normal)
         }
     }
     
@@ -244,6 +269,7 @@ final class ShowQRCodeVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 self.booking = booking
+                self.setCheckInViewUI()
                 self.setupData()
                 self.setFeeData()
                 self.ticketListTableView.reloadData()
@@ -324,6 +350,15 @@ final class ShowQRCodeVC: UIViewController {
     @IBAction func onClickNeedSupport(_ sender: Any) {
         Navigate.externalURL(APIBuilder.supportURL)
     }
+    
+    @IBAction func onClickTapToCkeckIn(_ sender: Any) {
+        var ticketId = [String]()
+        let tickets = booking?.bookingHasItem ?? []
+        tickets.forEach { tic in
+            ticketId.append(tic.id)
+        }
+        Navigate.to.presentCheckInBottomSheet(self, ticketId: ticketId, bookingId: bookingId)
+    }
 }
 
 extension ShowQRCodeVC: UITableViewDelegate, UITableViewDataSource {
@@ -356,5 +391,12 @@ extension ShowQRCodeVC: PKAddPassesViewControllerDelegate {
         if let pass = pass, pkl.containsPass(pass) {
             Alert.showToast("Ticket added to wallet", vc: self)
         }
+    }
+}
+
+extension ShowQRCodeVC: DateSelectionDelegate {
+    func checkInStatusChange() {
+        booking?.isCheckedIn = true
+        setCheckInViewUI()
     }
 }

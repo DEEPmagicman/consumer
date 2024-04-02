@@ -9,6 +9,12 @@ import UIKit
 
 protocol DateSelectionDelegate: AnyObject {
     func selectedDate(date: Date)
+    func checkInStatusChange()
+}
+
+extension DateSelectionDelegate {
+    func selectedDate(date: Date) {}
+    func checkInStatusChange() {}
 }
 
 final class DateSelectionBottomSheet: UIViewController {
