@@ -161,7 +161,7 @@ final class MVPVenueDetailVc: UIViewController {
         }
         checkOutIndicator.startAnimating()
         checkOutIndicator.isHidden = true
-        
+        tonightView.isHidden = true
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -193,7 +193,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.zeroCaseView(isHidden: false)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            self.getTonightEvent()
+//            self.getTonightEvent()
             self.getUpcomingEvent()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
@@ -219,7 +219,7 @@ final class MVPVenueDetailVc: UIViewController {
             if hasMore {
                 self.tonightEventSkip = self.todaysEvents.count
             }
-            self.showMoreTonightView.isHidden = hasMore ? false : true
+//            self.showMoreTonightView.isHidden = hasMore ? false : true
             self.todaysEventTableView.reloadData()
             self.updateCloseViewVisibility()
             Loader.hide()
@@ -228,7 +228,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getUpcomingEvent() {
         Loader.show()
-        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, time: "UPCOMING", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
             Loader.hide()
             guard let self = self else { return }
             
@@ -301,12 +301,12 @@ final class MVPVenueDetailVc: UIViewController {
             ticket.status == "DISABLED"
         }) == true {
             updateCloseViewVisibility()
-            tonightView.isHidden = true
+//            tonightView.isHidden = true
             venuePageView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
-            tonightView.isHidden = false
+//            tonightView.isHidden = false
             closeTicketView.isHidden = true
             venuePageTitleView.isHidden = false
         }
