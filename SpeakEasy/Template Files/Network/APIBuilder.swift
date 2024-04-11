@@ -60,6 +60,7 @@ struct APIBuilder {
     static private let addOns = "/add-ons"
     static private let status = "/status"
     static private let deepLink = "/deep-link"
+    static private let checkin = "/checkin"
 
     // version
     static let v2 = "/v2"
@@ -309,6 +310,10 @@ struct APIBuilder {
     
     static var addOnsPaymentIntent: String {
         baseURL + route + payment + addOns
+    }
+    
+    static var eventCheckInAPI: String {
+        baseURL + route + booking + tickets + checkin
     }
 }
 

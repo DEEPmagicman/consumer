@@ -24,7 +24,9 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var closeLbl: UILabel!
     @IBOutlet weak var upSellView: UIView!
     @IBOutlet weak var upSellBtn: UIButton!
-    
+    @IBOutlet weak var VIPTableBookingView: UIView!    
+    @IBOutlet weak var tableBookNowBtn: UIButton!
+
     var isLive = true
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?
@@ -79,6 +81,9 @@ final class SelectTicketClipVC: UIViewController {
             getVenueDetailsWithTickets()
         }
         upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
+        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
+        tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
+        tableBookNowBtn.layer.borderWidth = 1
     }
     
     private func getDeepLinkData() {
@@ -233,6 +238,13 @@ final class SelectTicketClipVC: UIViewController {
         tableViewHeight.constant = ticketTypeTableView.contentSize.height
     }
     
+    @IBAction func onClickTableBook(_ sender: Any) {
+        guard let url = URL(string: String(format: SharedURL.tableBookingURL, venueDetail?.id ?? "")) else {
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     @IBAction func onClickContinue(_ sender: Any) {
         if upSellTickets.count > 0 {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "UpSellClipVC")) as? UpSellClipVC {
@@ -318,15 +330,17 @@ final class SelectTicketClipVC: UIViewController {
                 }
                 if self.venueDetail?.availableTimeSlot == true {
                     self.continueBtn.isHidden = false
-                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
-                    self.scrollViewBottomConstraint.constant = 98
+                    self.VIPTableBookingView.isHidden = false
+                    self.scrollViewBottomConstraint.constant = 128
                 } else {
+                    self.VIPTableBookingView.isHidden = true
                     self.continueBtn.isHidden = true
                     self.scrollViewBottomConstraint.constant = 20
                 }
                 self.ticketTypeTableView.reloadData()
                 return
             }
+            self.VIPTableBookingView.isHidden = true
             self.continueBtn.isHidden = false
             self.scrollViewBottomConstraint.constant = 98
             switch self.selectedType {
@@ -385,6 +399,10 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.ticketPriceLbl.text = "FREE"
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
+        } else if venueDetail?.appClipTicket?[indexPath.row].isCustom == true && venueDetail?.appClipTicket?[indexPath.row].price ?? 0 == 0 {
+            cell.ticketPriceLbl.text = "FREE"
+            cell.plusBtn.alpha = 0.5
+            cell.plusBtn.isUserInteractionEnabled = false
         } else {
             if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
@@ -438,7 +456,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true {
             forceRemovePaidTicket()
             forceRemoveFreeTicket()
-            selectedType = .CUSTOM
+            selectedType = venueDetail?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
         } else {
             forceRemoveFreeTicket()
             forceRemoveCustomTicket()

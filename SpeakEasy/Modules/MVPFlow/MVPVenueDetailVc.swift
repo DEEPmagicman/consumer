@@ -66,6 +66,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var addOnsView: UIView!
     @IBOutlet weak var buyUpsellBtn: UIButton!
     @IBOutlet weak var checkOutIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
     var venueId = 0
     var venueUniqueId = ""
@@ -160,7 +161,7 @@ final class MVPVenueDetailVc: UIViewController {
         }
         checkOutIndicator.startAnimating()
         checkOutIndicator.isHidden = true
-        
+        tonightView.isHidden = true
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -192,7 +193,7 @@ final class MVPVenueDetailVc: UIViewController {
                 self.zeroCaseView(isHidden: false)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            self.getTonightEvent()
+//            self.getTonightEvent()
             self.getUpcomingEvent()
             #if DEBUG
             if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueDetailVc {
@@ -218,7 +219,7 @@ final class MVPVenueDetailVc: UIViewController {
             if hasMore {
                 self.tonightEventSkip = self.todaysEvents.count
             }
-            self.showMoreTonightView.isHidden = hasMore ? false : true
+//            self.showMoreTonightView.isHidden = hasMore ? false : true
             self.todaysEventTableView.reloadData()
             self.updateCloseViewVisibility()
             Loader.hide()
@@ -227,7 +228,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getUpcomingEvent() {
         Loader.show()
-        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, time: "UPCOMING", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
             Loader.hide()
             guard let self = self else { return }
             
@@ -300,12 +301,12 @@ final class MVPVenueDetailVc: UIViewController {
             ticket.status == "DISABLED"
         }) == true {
             updateCloseViewVisibility()
-            tonightView.isHidden = true
+//            tonightView.isHidden = true
             venuePageView.isHidden = true
             venuePageTitleView.isHidden = true
         } else {
             venuePageView.isHidden = false
-            tonightView.isHidden = false
+//            tonightView.isHidden = false
             closeTicketView.isHidden = true
             venuePageTitleView.isHidden = false
         }
@@ -480,6 +481,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.ticketPriceLbl.text = "FREE"
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
+            } else if ticket?.isCustom == true && ticket?.price ?? 0 == 0 {
+                cell.ticketPriceLbl.text = "FREE"
+                cell.plusBtn.alpha = 0.5
+                cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
@@ -591,17 +596,21 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 return
             }
             VIPTableView.isHidden = true
+            stackViewBottomConstraint.constant = 30
             continueBtnView.isHidden = false
             scrollViewBottomConstraint.constant = 30
             venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
+            scrollViewBottomConstraint.constant = 70
+            venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
+            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 forceRemovePaidTicket()
                 forceRemoveCustomTicket()
                 selectedType = .FREE
             } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
                 forceRemovePaidTicket()
                 forceRemoveFreeTicket()
-                selectedType = .CUSTOM
+                selectedType = venueDetails?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
             } else {
                 forceRemoveFreeTicket()
                 forceRemoveCustomTicket()
@@ -674,11 +683,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if self.venueDetails?.availableTimeSlot ?? false {
                     self.continueBtnView.isHidden = true
                     self.VIPTableView.isHidden = false
-                    self.scrollViewBottomConstraint.constant = 134
+                    self.stackViewBottomConstraint.constant = 0
+                    self.scrollViewBottomConstraint.constant = 80
                     self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
                 } else {
-                    self.scrollViewBottomConstraint.constant = 30
+                    self.scrollViewBottomConstraint.constant = 70
                     self.VIPTableView.isHidden = true
+                    self.stackViewBottomConstraint.constant = 30
                     self.continueBtnView.isHidden = true
                 }
                 self.ticketTypeTableView.reloadData()
@@ -686,14 +697,15 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             }
             self.continueBtnView.isHidden = false
             self.VIPTableView.isHidden = true
+            self.stackViewBottomConstraint.constant = 30
             switch self.selectedType {
-            case .FREE:
+            case .FREE, .CUSTOM:
                 if self.addOnsView.isHidden == true {
                     self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
                 } else {
                     self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
                 }
-            case .PAID, .CUSTOM:
+            case .PAID:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
@@ -705,7 +717,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
-//        selectedType = .PAID
     }
 
     private func forceRemovePaidTicket() {
@@ -715,7 +726,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
-//        selectedType = .FREE
     }
     
     private func forceRemoveCustomTicket() {

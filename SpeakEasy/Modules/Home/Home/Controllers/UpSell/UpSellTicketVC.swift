@@ -141,6 +141,8 @@ class UpSellTicketVC: UIViewController {
     @IBAction func onClickContinueBtn(_ sender: Any) {
         if selectedAddOns.count != 0 {
             Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
+        if selectedAddOns.count != 0 || bookingType != .FREE {
+            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
         } else {
             createFreeBooking()
         }
