@@ -10,10 +10,10 @@ import Foundation
 struct Booking: Codable {
 
     var venueObject: ClipVenue?
-    var id: Int
-    var venueId: Int
+    var id: String
+    var venueId: String
 //    var phone: String
-    var eventId: Int?
+    var eventId: String?
 //    var isAppClipUser: Bool
     var paymentType: String?
 //    var appClipUserId: Any
@@ -21,7 +21,7 @@ struct Booking: Codable {
     var isCheckedIn: Bool?
 //    var ticketPrice: Any
 //    var ticketQuantity: Any
-    var totalPrice: Int?
+    var totalPrice: Double?
     var note: String?
     var consumerUserId: [String]?
 //    var bookingDate: Any
@@ -150,12 +150,12 @@ struct Booking: Codable {
 
 struct BookingHasItem: Codable {
 
-    var id: Int
-    var ticketId: Int
+    var id: String
+    var ticketId: String
     var ticketName: String?
-    var ticketPrice: Int
+    var ticketPrice: Double
     var isCheckedIn: Int?
-    var bookingId: Int
+    var bookingId: String
     var isDeleted: Bool?
     var createdAt: String
     var updatedAt: String
@@ -194,7 +194,7 @@ struct BookingHasItem: Codable {
 struct TicketDetails: Codable {
 
     var ticketName: String?
-    var ticketId: Int?
+    var ticketId: String?
     var ticketDescription: String?
     var quantity: Int?
 
@@ -253,9 +253,9 @@ struct GuestList: Codable {
 
 struct UpSellTicket: Codable {
     
-    var id: Int
-    var doormanId: Int
-    var addOnsId: Int
+    var id: String
+    var doormanId: String
+    var addOnsId: String
     var price: Double
     var status: String
     var isDeleted: Bool
@@ -281,10 +281,10 @@ struct UpSellTicket: Codable {
 
 struct AddOns: Codable {
     
-    var id: Int
+    var id: String
     var name: String
     var description: String
-    var venueId: Int
+    var venueId: String
     var status: String
     var isDeleted: Bool
     var createdAt: String
@@ -308,7 +308,7 @@ struct AddOnsBooking: Codable {
     var fees: PaymentDetail?
     var id: String?
     var venueId: String?
-    var bookingId: Int?
+    var bookingId: String?
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
     var venue: AddOnVenue
     var createdAt: String
@@ -316,7 +316,7 @@ struct AddOnsBooking: Codable {
     var uniqueTickets: [AddOnsBookingHasItem] {
         var tickets = [AddOnsBookingHasItem]()
         addOnsBookingHasItem?.forEach { ticket in
-            if let index = tickets.firstIndex(where: { $0.addonsId == ticket.addonsId }), let quantity = tickets[index].selectedQuantity {
+            if let index = tickets.firstIndex(where: { $0.addOnsId == ticket.addOnsId }), let quantity = tickets[index].selectedQuantity {
                 tickets[index].selectedQuantity = quantity + 1
             } else {
                 var ticket = ticket
@@ -325,16 +325,6 @@ struct AddOnsBooking: Codable {
             }
         }
         return tickets
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case fees
-        case id
-        case venueId
-        case bookingId
-        case addOnsBookingHasItem = "AddOnsBookingHasItem"
-        case venue
-        case createdAt
     }
     
     func encode(to encoder: Encoder) throws {
@@ -351,17 +341,17 @@ struct AddOnsBooking: Codable {
 
 struct AddOnsBookingHasItem: Codable {
     
-    var addons: AddOns
+    var addOns: AddOns
     var addOnsBookingId: String
-    var addonsId: String
+    var addOnsId: String
     // MARK: app side parameters
     var selectedQuantity: Int? = nil
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(addons, forKey: .addons)
+        try container.encode(addOns, forKey: .addOns)
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
-        try container.encode(addonsId, forKey: .addonsId)
+        try container.encode(addOnsId, forKey: .addOnsId)
     }
 }
 

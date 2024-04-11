@@ -33,7 +33,8 @@ final class MVPPresenter {
     
     
     func getVenueListForMVP(from: Int, status: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue], _ hasMore: Bool) -> Void) {
-        let param = ["skip": from, "bookingStatus": status] as [String : Any]
+        let param = ["skip": from, 
+                     "bookingStatus": status] as [String : Any]
         
         AFWrapper.getRequest(APIBuilder.MVPVenueListURL, params: param, headers: Header.header(), success: { response in
             if let responseDict = response as? [String: Any] {
@@ -87,7 +88,7 @@ final class MVPPresenter {
         })
     }
 
-    static func getUpSellItem(skip: Int, doormanId: String = "", venueId: Int = 0, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
+    static func getUpSellItem(skip: Int, doormanId: String = "", venueId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ upSellItem: [UpSellTicket],_ hasMore: Bool, _ total: Int) -> Void) {
         let param = ["skip": skip,"include": "addOns"] as [String: Any]
         
         AFWrapper.getRequest(APIBuilder.getAddOnsAPI, params: param, headers: Header.header(doormanId: doormanId ,venueId: venueId)) { response in

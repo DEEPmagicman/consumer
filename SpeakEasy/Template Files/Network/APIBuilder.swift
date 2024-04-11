@@ -230,7 +230,7 @@ struct APIBuilder {
         baseURL + route  + venue + "?include=venueAttachment&include=venueHours" + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
     }
     
-    static func getBookingURL(_ bookingId: Int) -> String {
+    static func getBookingURL(_ bookingId: String) -> String {
         baseURL + route + booking + "/\(bookingId)"
     }
     
@@ -259,11 +259,11 @@ struct APIBuilder {
         baseURL + v2 + route + booking + past
     }
     
-    static func addPaymentURL(_ id: Int) -> String {
+    static func addPaymentURL(_ id: String) -> String {
         baseURL + route + payment + "/\(id)"
     }
     
-    static func successPaymentURL(_ paymentHistoryId: Int, _ id: Int, paymentFrom: String? = nil) -> String {
+    static func successPaymentURL(_ paymentHistoryId: String, _ id: String, paymentFrom: String? = nil) -> String {
         var url = baseURL + route + payment + "/" + "\(paymentHistoryId)" + "/" + "\(id)" + statusSuccess
         if let paymentFrom = paymentFrom {
             url += "&paymentType=\(paymentFrom.replacingOccurrences(of: " ", with: "%20"))"
@@ -280,11 +280,11 @@ struct APIBuilder {
         baseURL + mvpCity
     }
     
-    static func appClipAppleWallet(_ bookingId: Int) -> String {
+    static func appClipAppleWallet(_ bookingId: String) -> String {
         baseURL + cover + "/\(bookingId)" + appleWallet
     }
     
-    static func eventAppleWallet(_ bookingId: Int) -> String {
+    static func eventAppleWallet(_ bookingId: String) -> String {
         baseURL + route + event + "/\(bookingId)" + appleWallet
     }
     
@@ -300,7 +300,7 @@ struct APIBuilder {
         baseURL + route + event + freeTicket
     }
     
-    static func cancelBooking(_ bookingId: Int) -> String {
+    static func cancelBooking(_ bookingId: String) -> String {
         baseURL + route + event + "/\(bookingId)" + redirect + ticketBooking
     }
     

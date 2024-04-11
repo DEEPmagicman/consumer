@@ -66,8 +66,8 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
             
             cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         } else {
-            cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addons.description ?? ""
-            cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addons.name ?? ""
+            cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.description ?? ""
+            cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.name ?? ""
             cell.quantityLbl.text = "\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
         }
         cell.selectionStyle = .none

@@ -15,7 +15,7 @@ enum HeaderContentType: String {
 
 struct Header {
 
-    static func header(_ headerContentType: HeaderContentType = .json, timeZone: String? = nil, doormanId: String = "", venueId: Int = 0) -> [String: String] {
+    static func header(_ headerContentType: HeaderContentType = .json, timeZone: String? = nil, doormanId: String = "", venueId: String = "") -> [String: String] {
         var header = ["Authorization": "Bearer \(UserDefault.shared.accessToken ?? "")",
          "Content-Type": "\(headerContentType.rawValue)",
          "timezone": timeZone?.lowercased() ?? TimeZone.current.identifier.lowercased(),
@@ -26,7 +26,7 @@ struct Header {
         if doormanId != "" {
             header["doorman"] = doormanId
         }
-        if venueId != 0 {
+        if venueId != "" {
             header["venue"] = String(venueId)
         }
         return header

@@ -71,7 +71,6 @@ final class MVPVenueListVc: UIViewController {
         openHasMore = false
         closeHasMore = false
         fetchAllOpenVenueForMVP()
-//        fetchAllCloseVenueForMVP()
     }
     
     private func refreshData(withLoader: Bool = true) {
@@ -80,7 +79,6 @@ final class MVPVenueListVc: UIViewController {
         openHasMore = false
         closeHasMore = false
         fetchAllOpenVenueForMVP(withLoader: withLoader)
-//        fetchAllCloseVenueForMVP(withLoader: withLoader)
     }
     
     private func checkZeroViewCase() {

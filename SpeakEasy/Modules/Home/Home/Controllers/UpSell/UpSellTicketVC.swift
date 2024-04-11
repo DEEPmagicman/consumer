@@ -139,17 +139,14 @@ class UpSellTicketVC: UIViewController {
     }
     
     @IBAction func onClickContinueBtn(_ sender: Any) {
-        if selectedAddOns.count != 0 {
+        if selectedAddOns.count != 0 || bookingType != .FREE {
             Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
-            if selectedAddOns.count != 0 || bookingType != .FREE {
-                Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
-            } else {
-                createFreeBooking()
-            }
+        } else {
+            createFreeBooking()
         }
     }
         private func getUpsellTicket() {
-            MVPPresenter.getUpSellItem(skip: upSellTicket.count, doormanId: doormanId, venueId: venueDetails?.id ?? 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+            MVPPresenter.getUpSellItem(skip: upSellTicket.count, doormanId: doormanId, venueId: venueDetails?.id ?? "") {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
                 guard let self = self else { return }
                 Loader.hide()
                 if isSuccess {
@@ -175,7 +172,7 @@ class UpSellTicketVC: UIViewController {
                                     "ticketQuantity": $0.selectedQuantity ?? 0])
                 }
                 Loader.show()
-                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id,message   in
+                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id,message   in
                     Loader.hide()
                     guard let self = self else { return }
                     if isSuccess, let id = id {

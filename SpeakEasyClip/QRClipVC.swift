@@ -13,7 +13,7 @@ final class QRClipVC: UIViewController {
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
-    var bookingId = 0
+    var bookingId = ""
     var addOnBookingId = ""
     private var isAlertDisplayed = false
     var bookingCode = String()

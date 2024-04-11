@@ -8,7 +8,7 @@
 import Foundation
 
 final class EventPresenter {
-    static func getEvents(from: Int? = 0, venueId: Int, time: String = "FUTURE", venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
+    static func getEvents(from: Int? = 0, venueId: String, time: String = "FUTURE", venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
         let param = ["skip": from ?? 0,
                      "venueId": venueId,
                      "version": "PUBLISHED",

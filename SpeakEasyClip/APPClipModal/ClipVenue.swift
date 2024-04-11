@@ -13,7 +13,7 @@ struct ClipVenue: Codable {
     var bookingCode: String?
     var venueAttachment: [VenueAttachmentClip]?
     var venueHours: [VenueHoursClip]?
-    var id: Int
+    var id: String
     var uniqueId: String
     var name: String
     var address: String
@@ -228,12 +228,12 @@ struct VenueAttachmentClip: Codable {
 
 struct VenueHoursClip: Codable {
     
-    var id: Int?
+    var id: String?
     var day: String
     var venueStatus: String
     var from: String
     var to: String
-    var venueId: Int?
+    var venueId: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -248,20 +248,23 @@ struct VenueHoursClip: Codable {
 }
 
 struct CoverTicket: Codable {
-    var id: Int
-    var venueId: Int?
+    var id: String
+    var venueId: String?
     var name: String
     var customName: String?
     var price: Double
-    var parentId: Int?
+    var parentId: String?
     var status: String?
     var description: String?
     var isDeleted: Bool?
     var createdAt: String?
     var updatedAt: String?
-    var isCustom: Bool?
+    var coverType: String?
     // MARK: app side parameters
     var selectedQuantity: Int?
+    var isCustom: Bool {
+        coverType == "CUSTOM"
+    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -276,7 +279,7 @@ struct CoverTicket: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(isCustom, forKey: .isCustom)
+        try container.encode(coverType, forKey: .coverType)
     }
 }
 
@@ -319,7 +322,7 @@ struct VenueSettings: Codable {
 }
 
 struct CoverTicketFeesSettings: Codable {
-      var id: Int
+      var id: String
       var isUpFront: Bool
       var isProcessingFeePassToCustomer: Bool
       var isEnableSalesTax: Bool

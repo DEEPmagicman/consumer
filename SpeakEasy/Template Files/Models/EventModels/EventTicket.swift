@@ -9,8 +9,8 @@ import Foundation
 
 struct EventTicket: Codable {
 
-    var id: Int?
-    var eventId: Int?
+    var id: String?
+    var eventId: String?
     var tierName: String
     var price: Int?
     var issuedUnits: Int?
@@ -77,9 +77,9 @@ struct EventTicket: Codable {
 
 struct EventTicketHasTier: Codable {
 
-    var id: Int
+    var id: String
     var eventId: String
-    var price: Int
+    var price: Double
     var issuedUnits: Int
     var isDeleted: Bool
     var createdAt: String
@@ -142,17 +142,6 @@ struct PaymentDetail: Codable {
     var customFeeName: String?
     var discount: Double?
     var salesTaxName: String?
-    
-    private enum CodingKeys: String, CodingKey {
-        case subTotal = "sub_total"
-        case processingFee = "processing_fee"
-        case customFee = "custom_fee"
-        case salesTax = "sales_tax"
-        case total = "total"
-        case customFeeName = "custom_fee_name"
-        case discount
-        case salesTaxName = "sales_tax_name"
-    }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

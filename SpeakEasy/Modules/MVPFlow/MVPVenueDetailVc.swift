@@ -68,7 +68,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var checkOutIndicator: UIActivityIndicatorView!
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
-    var venueId = 0
+    var venueId = ""
     var venueUniqueId = ""
     var venueTimeZone = ""
     var isFromAppClip = false
@@ -420,7 +420,7 @@ final class MVPVenueDetailVc: UIViewController {
                                 "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id, message in
+            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, message in
                 Loader.hide()
                 guard let self = self else { return }
                 if isSuccess, let id = id {

@@ -302,7 +302,7 @@ extension AccountVC: QRCodeVCNavigationDelegate {
         Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
     }
     
-    func navigateToVenueDetail(venueId: Int, venueUniqueId: String, venueTimeZone: String) {
+    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) {
         Navigate.to.MVPVenueDetailViewController(self, venueId: venueId, venueUniqueId: venueUniqueId, venueTimeZone: venueTimeZone)
     }
 }

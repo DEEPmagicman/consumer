@@ -82,7 +82,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var paymentSheet: PaymentSheet?
     private var paymentIntent = ""
     private var paymentHistoryId = ""
-    private var bookingId = 0
+    private var bookingId = ""
     private var addOnsBookingId = ""
     private var isIntendCreated = false
     private var isApplePayNotSupported = false
@@ -358,7 +358,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func getAddOnsPaymentIntent(bookingId: Int, isApplePay: Bool) {
+    private func getAddOnsPaymentIntent(bookingId: String, isApplePay: Bool) {
         DispatchQueue.main.async {
             AppClipLoader.showLoader(self.view)
         }
@@ -373,7 +373,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         param["venueId"] = venue?.id ?? ""
         param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
         param["code"] = countryCode
-        if bookingId != 0 {
+        if bookingId != "" {
             param["bookingId"] = bookingId
         }
         
@@ -556,10 +556,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-                getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
+                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
             } else {
                 if selectedCoverTickets.count == 0 {
-                    getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
+                    getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
                 } else {
                     createBooking()
                 }
@@ -890,10 +890,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-            getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
+            getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
         } else {
             if selectedCoverTickets.count == 0 {
-                getAddOnsPaymentIntent(bookingId: 0, isApplePay: true)
+                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
             } else {
                 createBooking(isApplePay: false)
             }
@@ -1016,10 +1016,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? Int {
+            if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 self.addPaymentApi(isApplePay: isApplePay)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
                 self.bookingCode = bookingCode
                 self.createdAT = createdAt
@@ -1082,10 +1082,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? Int {
+            if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 self.navigateToQR()
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int, let createdAt = booking["createdAt"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
                 self.navigateToQR()
                 self.createdAT = createdAt
@@ -1147,10 +1147,10 @@ extension CheckOutClipVC {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let bookingId = json["id"] as? Int {
+            if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 completion()
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? Int {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.bookingId = bookingId
                 completion()
             } else if let error = json["error"] as? String, let message = json["message"] as? String {

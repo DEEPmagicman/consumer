@@ -199,7 +199,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: Int, venueUniqueId: String, venueTimeZone: String) {
+    func MVPVenueDetailViewController(_ sender: UIViewController, venueId: String, venueUniqueId: String, venueTimeZone: String) {
         let vc = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueDetailVc.self)
         vc.venueId = venueId
         vc.venueUniqueId = venueUniqueId
@@ -264,7 +264,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: Int, type: PaymentIntentType) {
+    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ShowQRCodeVC.self)
         vc.booking = booking
         vc.bookingId = bookingId
@@ -436,7 +436,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: Int, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: Int = 0, addOnsBookingId: String, venueName: String? = "") {
+    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: String = "", addOnsBookingId: String, venueName: String? = "") {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId

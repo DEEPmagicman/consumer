@@ -11,7 +11,7 @@ import PassKit
 
 protocol QRCodeVCNavigationDelegate: AnyObject {
     func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?)
-    func navigateToVenueDetail(venueId: Int, venueUniqueId: String, venueTimeZone: String)
+    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String)
 }
 
 final class QRCodeVC: UIViewController {
@@ -35,7 +35,7 @@ final class QRCodeVC: UIViewController {
     @IBOutlet weak var ticketCreatedTime: UILabel!
     @IBOutlet weak var containerView: UIView!
     
-    var bookingId = 0
+    var bookingId = ""
     var type: PaymentIntentType = .appClip
     var booking: Booking?
     weak var delegate: QRCodeVCNavigationDelegate?
@@ -142,7 +142,7 @@ final class QRCodeVC: UIViewController {
         dismiss(animated: true)
     }
     
-    private func getBooking(id: Int) {
+    private func getBooking(id: String) {
 //        if booking == nil {
             Loader.show()
 //        }
@@ -163,9 +163,9 @@ final class QRCodeVC: UIViewController {
         var url = URL(string: "")
         switch type {
         case .appClip:
-            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? 0))
+            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
         case .singleTickedEvent:
-            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? 0))
+            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
         case .tieredTickedEvent:
             break
         }

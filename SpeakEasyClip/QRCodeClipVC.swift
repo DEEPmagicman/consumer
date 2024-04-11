@@ -23,7 +23,7 @@ final class QRCodeClipVC: UIViewController {
     var venueAttachment = ""
     var venueLogo = ""
     var venueName = ""
-    var bookingId = 0
+    var bookingId = ""
     var selectedCoverTickets = [CoverTicket]()
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var isAlertDisplayed = false

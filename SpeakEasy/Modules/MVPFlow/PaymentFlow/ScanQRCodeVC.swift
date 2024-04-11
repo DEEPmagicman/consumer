@@ -24,14 +24,14 @@ class ScanQRCodeVC: UIViewController {
     
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false
-    var bookingId = Int()
+    var bookingId = String()
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
     var addOnsBookingId: String?
     var isOnlyAddOnAvailable = false
-    var venueId = Int()
+    var venueId = String()
     var venueNameText: String? = ""
     private var pass: PKPass?
     
@@ -64,7 +64,7 @@ class ScanQRCodeVC: UIViewController {
     
     @objc private func addToWalletBtnTapped() {
         var url = URL(string: "")
-        url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? 0))
+        url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
         
         guard let url = url else { return }
         let pkl = PKPassLibrary()
@@ -120,7 +120,7 @@ class ScanQRCodeVC: UIViewController {
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
 //        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
-        delegate?.navigateToVenueDetail(venueId: booking?.venueId ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: "asia/kolkata")
+        delegate?.navigateToVenueDetail(venueId: booking?.venueId ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: "asia/kolkata")
         pagerView.reloadData()
         let uniqueId = addOnsBooking != nil ? addOnsBooking?.venue.uniqueId ?? "" : booking?.venueObject?.uniqueId ?? ""
         let timeZone = addOnsBooking != nil ? addOnsBooking?.venue.timezone ?? "" : booking?.venueObject?.timezone ?? ""
@@ -128,7 +128,7 @@ class ScanQRCodeVC: UIViewController {
         dismiss(animated: true)
     }
     
-    private func getBooking(id: Int) {
+    private func getBooking(id: String) {
         Loader.show()
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()

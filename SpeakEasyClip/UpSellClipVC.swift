@@ -131,7 +131,7 @@ final class UpSellClipVC: UIViewController {
     }
     
     private func getUpSellTicket(withLoader: Bool = true) {
-        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(venue?.id ?? 0)/add-ons") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(venue?.id ?? "")/add-ons") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         

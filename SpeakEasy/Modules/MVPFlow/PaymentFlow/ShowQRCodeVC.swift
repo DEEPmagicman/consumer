@@ -53,7 +53,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBOutlet weak var tapToCheckInBtn: UIButton!
     @IBOutlet weak var addToWalletView: UIView!
     
-    var bookingId = 0
+    var bookingId = ""
     var type: PaymentIntentType = .appClip
     var booking: Booking?
     private var pass: PKPass?
@@ -214,9 +214,9 @@ final class ShowQRCodeVC: UIViewController {
         var url = URL(string: "")
         switch type {
         case .appClip:
-            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? 0))
+            url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
         case .singleTickedEvent:
-            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? 0))
+            url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
         case .tieredTickedEvent:
             break
         }
@@ -262,7 +262,7 @@ final class ShowQRCodeVC: UIViewController {
         }
     }
     
-    private func getBooking(id: Int) {
+    private func getBooking(id: String) {
         Loader.show()
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
             Loader.hide()
@@ -337,7 +337,7 @@ final class ShowQRCodeVC: UIViewController {
     @IBAction func onClickEventDetails(_ sender: Any) {
         switch type {
         case .appClip:
-            delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
+            delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
             dismiss(animated: true)
         case .singleTickedEvent:
             delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "" , venueDetail: booking?.venueObject, event: booking?.event)

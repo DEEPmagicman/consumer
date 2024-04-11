@@ -85,7 +85,7 @@ final class EventDetailVC: UIViewController {
         return total
     }
     private var selectedType: TicketPriceType = .FREE
-    private var eventTicketId = [Int]()
+    private var eventTicketId = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -245,7 +245,7 @@ final class EventDetailVC: UIViewController {
                 }
                 let ticket = self.event?.eventTicket ?? []
                 ticket.forEach({tic in
-                    self.eventTicketId.append(tic.id ?? 0)
+                    self.eventTicketId.append(tic.id ?? "")
                 })
                 self.unLockTicketView.isHidden = (self.event?.totalTickets == self.event?.eventTicket?.count ?? 0)
                 self.setupData()
@@ -292,7 +292,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, eventId ?? ""))
+        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, eventId))
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
@@ -304,13 +304,13 @@ final class EventDetailVC: UIViewController {
     }
     
     private func getTicketByPassWord() {
-        EventPresenter.getEventTicketByPassWord(eventId: eventId ?? "", venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
+        EventPresenter.getEventTicketByPassWord(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
             if isSuccess {
                 self.invalidPasswordLbl.isHidden = !(ticket?.count ?? 0 == 0)
                 let tickets = ticket ?? []
                 for tics in tickets {
                     if self.eventTicketId.contains(where: { $0 == tics.id}) == false {
-                        self.eventTicketId.append(tics.id ?? 0)
+                        self.eventTicketId.append(tics.id ?? "")
                     }
                 }
                 self.unLockTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
@@ -357,7 +357,7 @@ final class EventDetailVC: UIViewController {
                                 "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? 0, phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? 0, tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
+            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
                 guard let self = self else {
                     Loader.hide()
                     return

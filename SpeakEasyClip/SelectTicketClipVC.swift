@@ -115,7 +115,7 @@ final class SelectTicketClipVC: UIViewController {
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
-        request.addValue("\(venueDetail?.id ?? 0)", forHTTPHeaderField: "venue")
+        request.addValue(venueDetail?.id ?? "", forHTTPHeaderField: "venue")
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()

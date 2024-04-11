@@ -11,9 +11,9 @@ struct Event: Codable {
 
     var flyer: Flyer?
     var customVenue: CustomVenue?
-    var id: Int
+    var id: String
     var uniqueId: String?
-    var venueId: Int
+    var venueId: String
     var title: String
     var date: String?
     var startDateTime: String
@@ -105,7 +105,7 @@ struct Event: Codable {
 struct Artists: Codable {
 
     var image: Flyer?
-    var id: Int
+    var id: String
     var name: String
     var instagramUsername: String
     var status: String
