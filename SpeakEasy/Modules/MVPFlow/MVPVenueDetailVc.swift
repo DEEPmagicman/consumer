@@ -601,16 +601,14 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             scrollViewBottomConstraint.constant = 30
             venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-            scrollViewBottomConstraint.constant = 70
-            venueDetails?.appClipTicket?[indexPath.row].selectedQuantity = 1
-            if venueDetails?.appClipTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.appClipTicket?[indexPath.row].name.lowercased().contains("general") == true {
+                scrollViewBottomConstraint.constant = 70
                 forceRemovePaidTicket()
                 forceRemoveCustomTicket()
                 selectedType = .FREE
             } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
                 forceRemovePaidTicket()
                 forceRemoveFreeTicket()
-                selectedType = venueDetails?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
+                selectedType = venueDetails?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
             } else {
                 forceRemoveFreeTicket()
                 forceRemoveCustomTicket()

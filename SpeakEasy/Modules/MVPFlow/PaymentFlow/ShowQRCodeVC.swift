@@ -355,9 +355,9 @@ final class ShowQRCodeVC: UIViewController {
         var ticketId = [String]()
         let tickets = booking?.bookingHasItem ?? []
         tickets.forEach { tic in
-            ticketId.append(tic.id)
+            ticketId.append("\(tic.id)")
         }
-        Navigate.to.presentCheckInBottomSheet(self, ticketId: ticketId, bookingId: bookingId)
+        Navigate.to.presentCheckInBottomSheet(self, ticketId: ticketId, bookingId: "\(bookingId)")
     }
 }
 

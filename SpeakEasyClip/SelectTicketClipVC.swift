@@ -81,7 +81,6 @@ final class SelectTicketClipVC: UIViewController {
             getVenueDetailsWithTickets()
         }
         upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
-        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingFeesSettings?.pageTitle ?? "Upsell")", for: .normal)
         tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
         tableBookNowBtn.layer.borderWidth = 1
     }
@@ -399,7 +398,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             cell.ticketPriceLbl.text = "FREE"
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
-        } else if venueDetail?.appClipTicket?[indexPath.row].isCustom == true && venueDetail?.appClipTicket?[indexPath.row].price ?? 0 == 0 {
+        } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true && venueDetail?.coverTicket?[indexPath.row].price ?? 0 == 0 {
             cell.ticketPriceLbl.text = "FREE"
             cell.plusBtn.alpha = 0.5
             cell.plusBtn.isUserInteractionEnabled = false
@@ -456,7 +455,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true {
             forceRemovePaidTicket()
             forceRemoveFreeTicket()
-            selectedType = venueDetail?.appClipTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
+            selectedType = venueDetail?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
         } else {
             forceRemoveFreeTicket()
             forceRemoveCustomTicket()

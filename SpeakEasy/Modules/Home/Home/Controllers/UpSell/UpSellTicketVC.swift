@@ -141,52 +141,52 @@ class UpSellTicketVC: UIViewController {
     @IBAction func onClickContinueBtn(_ sender: Any) {
         if selectedAddOns.count != 0 {
             Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
-        if selectedAddOns.count != 0 || bookingType != .FREE {
-            Navigate.to.checkOutVC(self, venue: venueDetails, selectedAppClipTickets: selectedAppClipTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
-        } else {
-            createFreeBooking()
-        }
-    }
-        
-    private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(skip: upSellTicket.count, doormanId: doormanId, venueId: venueDetails?.id ?? 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
-            guard let self = self else { return }
-            Loader.hide()
-            if isSuccess {
-                self.isLoading = false
-                for item in upSellItem {
-                    self.upSellTicket.append(item)
-                }
-                self.hasMany = hasMore
-                DispatchQueue.main.async {
-                    self.ticketTypeTableView.reloadData()
-                }
+            if selectedAddOns.count != 0 || bookingType != .FREE {
+                Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
             } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                createFreeBooking()
             }
         }
     }
-    
-    private func createFreeBooking() {
-        if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
-            var tickets = [[String: Any]]()
-            selectedTickets.forEach {
-                tickets.append(["ticketId": $0.id,
-                                "ticketQuantity": $0.selectedQuantity ?? 0])
-            }
-            Loader.show()
-            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id,message   in
-                Loader.hide()
+        private func getUpsellTicket() {
+            MVPPresenter.getUpSellItem(skip: upSellTicket.count, doormanId: doormanId, venueId: venueDetails?.id ?? 0) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
                 guard let self = self else { return }
-                if isSuccess, let id = id {
-                    Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                Loader.hide()
+                if isSuccess {
+                    self.isLoading = false
+                    for item in upSellItem {
+                        self.upSellTicket.append(item)
+                    }
+                    self.hasMany = hasMore
+                    DispatchQueue.main.async {
+                        self.ticketTypeTableView.reloadData()
+                    }
                 } else {
                     Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                 }
             }
         }
+        
+        private func createFreeBooking() {
+            if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
+                var tickets = [[String: Any]]()
+                selectedTickets.forEach {
+                    tickets.append(["ticketId": $0.id,
+                                    "ticketQuantity": $0.selectedQuantity ?? 0])
+                }
+                Loader.show()
+                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? 0) { [weak self] isSuccess, errMsg, id,message   in
+                    Loader.hide()
+                    guard let self = self else { return }
+                    if isSuccess, let id = id {
+                        Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                    } else {
+                        Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                    }
+                }
+            }
+        }
     }
-}
 
 extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
