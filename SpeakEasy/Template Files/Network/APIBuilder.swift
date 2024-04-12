@@ -219,7 +219,7 @@ struct APIBuilder {
     }
     
     static func MVPVenueDetailURL(_ id: String) -> String{
-        baseURL + cover + "/\(id)"
+        baseURL + route + cover + "/\(id)"
     }
     
     static var MVPVenueListURL: String {

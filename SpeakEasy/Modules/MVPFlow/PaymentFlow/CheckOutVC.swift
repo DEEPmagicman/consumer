@@ -500,12 +500,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setSalesTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
@@ -517,11 +517,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setCustomTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             return venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
@@ -532,11 +532,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setProcessingTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             return venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
