@@ -96,7 +96,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var addOnsHeightObservation: NSKeyValueObservation?
     private var retryCount = 0
     private var maxRetry = 3
-    private var bookingCode = String()
+//    private var bookingCode = String()
     private var createdAT = String()
     private var addOnsPaymentDetails: PaymentDetail?
     var selectedAddOnsItem = [UpSellTicket]()
@@ -215,12 +215,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setSalesTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
@@ -232,11 +232,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setCustomTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             return venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
@@ -247,11 +247,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setProcessingTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == true }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
             return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true ? true : false
         }
         
-        if selectedCoverTickets.allSatisfy({ $0.isCustom ?? false == false }) {
+        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
             return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.customCoverTicketSettings?.isUpFront == false ? true : false
         }
         
@@ -335,7 +335,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             }
             AppClipLoader.hideLoader()
             
-            if let subTotal = paymentDetail["sub_total"] as? Double, let processingFee = paymentDetail["processing_fee"] as? Double, let customFee = paymentDetail["custom_fee"] as? Double, let salesTax = paymentDetail["sales_tax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["custom_fee_name"] as? String, let salesTaxName = paymentDetail["sales_tax_name"] as? String {
+            if let subTotal = paymentDetail["subTotal"] as? Double, let processingFee = paymentDetail["processingFee"] as? Double, let customFee = paymentDetail["customFee"] as? Double, let salesTax = paymentDetail["salesTax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["customFeeName"] as? String, let salesTaxName = paymentDetail["salesTaxName"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
                     self.addOnsSubTotalView.isHidden = !self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView
@@ -344,6 +344,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.addOnsCustomFeeView.isHidden = !self.setAddOnsCustomTaxView
                     self.addOnsNOFeeView.isHidden = !self.addOnsSubTotalView.isHidden
                     self.totalAddOnPrice = total
+                    self.addOnsProcessingView.isHidden = processingFee == 0
+                    self.addOnsSubTotalView.isHidden = subTotal == total
+                    
                     self.addOnsSubTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
                     self.addOnsProcessingAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
                     self.addOnsSalesTaxAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
@@ -494,7 +497,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.alertPopup("Alert", "Internal data formate error")
                 return
             }
-            if let subTotal = json["sub_total"] as? Double, let processingFee = json["processing_fee"] as? Double, let customFee = json["custom_fee"] as? Double, let salesTax = json["sales_tax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["custom_fee_name"] as? String, let salesTaxName = json["sales_tax_name"] as? String {
+            if let subTotal = json["subTotal"] as? Double, let processingFee = json["processingFee"] as? Double, let customFee = json["customFee"] as? Double, let salesTax = json["salesTax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["customFeeName"] as? String, let salesTaxName = json["salesTaxName"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
                     self.subTotalView.isHidden = !self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView
@@ -502,6 +505,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.processingFeeView.isHidden = !self.setProcessingTaxView
                     self.customFeeView.isHidden = !self.setCustomTaxView
                     self.noFeeView.isHidden = !self.subTotalView.isHidden
+                    self.processingFeeView.isHidden = processingFee == 0
+                    self.subTotalView.isHidden = subTotal == total
                     
                     self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
                     self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
@@ -519,6 +524,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                         self.salesTextView.isHidden = true
                     }
                 }
+            } else {
+                AppClipLoader.hideLoader()
+                alertPopup("Alert", "Something went wrong")
             }
         }
         task.resume()
@@ -972,7 +980,7 @@ extension CheckOutClipVC {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        var param = ["coverTicket": selectedTickets,
+        var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
@@ -996,7 +1004,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/booking/create") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -1019,9 +1027,8 @@ extension CheckOutClipVC {
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 self.addPaymentApi(isApplePay: isApplePay)
-            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let venueObj = booking["venueObject"] as? [String: Any], let bookingCode = venueObj["bookingCode"] as? String, let createdAt = booking["createdAt"] as? String {
+            } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
-                self.bookingCode = bookingCode
                 self.createdAT = createdAt
                 self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
@@ -1042,7 +1049,7 @@ extension CheckOutClipVC {
             selectedTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
-        var param = ["coverTicket": selectedTickets,
+        var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
                      "code": countryCode,
                      "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
@@ -1062,7 +1069,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user/free-booking") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/booking/appclip/free-booking") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -1173,7 +1180,7 @@ extension CheckOutClipVC {
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
                 vc.selectedCoverTickets = self.selectedCoverTickets
-                vc.bookingCode = self.bookingCode
+                vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                     self.navigationController?.viewControllers = [selectVC, vc]

@@ -25,7 +25,7 @@ struct ClipVenue: Codable {
     var website: String
     var description: String?
     var status: String
-    var bookingStatus: String?
+//    var bookingStatus: String?
     var venueVibes: [String]
     var isDeleted: Bool
     var isEnabledGenderBasedTicket: Bool?
@@ -179,7 +179,7 @@ struct ClipVenue: Codable {
         try container.encode(website, forKey: .website)
         try container.encode(description, forKey: .description)
         try container.encode(status, forKey: .status)
-        try container.encode(bookingStatus, forKey: .bookingStatus)
+//        try container.encode(bookingStatus, forKey: .bookingStatus)
         try container.encode(venueVibes, forKey: .venueVibes)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(isEnabledGenderBasedTicket, forKey: .isEnabledGenderBasedTicket)

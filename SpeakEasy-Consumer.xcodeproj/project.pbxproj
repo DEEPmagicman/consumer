@@ -324,7 +324,6 @@
 		CEA94750288CABA600D7BB91 /* AWLineChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474C288CABA600D7BB91 /* AWLineChart.swift */; };
 		CEA94751288CABA600D7BB91 /* AWCenterTextLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */; };
 		CEA94752288CABA600D7BB91 /* AWLineChartExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */; };
-		CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */; };
 		CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9E92B986ABC007E94A7 /* FSPagerView */; };
 		CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EB2B986B58007E94A7 /* FSPagerView */; };
 		CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EF2B986DFC007E94A7 /* Reachability */; };
@@ -980,7 +979,6 @@
 		CEA9474C288CABA600D7BB91 /* AWLineChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChart.swift; sourceTree = "<group>"; };
 		CEA9474D288CABA600D7BB91 /* AWCenterTextLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWCenterTextLayer.swift; sourceTree = "<group>"; };
 		CEA9474E288CABA600D7BB91 /* AWLineChartExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWLineChartExtensions.swift; sourceTree = "<group>"; };
-		CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketVC.swift; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
 		CED07E9B29AC95F7004EBBC5 /* MVPVenueTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueTypeHeaderView.swift; sourceTree = "<group>"; };
 		CED07E9D29AC960F004EBBC5 /* MVPVenueTypeHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MVPVenueTypeHeaderView.xib; sourceTree = "<group>"; };
@@ -2439,7 +2437,6 @@
 		CEAE5CD829E430D000CB20E5 /* PreSold */ = {
 			isa = PBXGroup;
 			children = (
-				CEAE5CD929E430E800CB20E5 /* SelectTicketVC.swift */,
 			);
 			path = PreSold;
 			sourceTree = "<group>";
@@ -4900,7 +4897,6 @@
 				2986835F297565C500CB827B /* VenueAttachment.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				820EEDB3296BDF4300B9E015 /* TableBookingDetailsViewController.swift in Sources */,
-				CEAE5CDA29E430E800CB20E5 /* SelectTicketVC.swift in Sources */,
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				E11F4C0628C835F3008D2E30 /* ReceiverTVC.swift in Sources */,
 				E11F4BA628C8358C008D2E30 /* EventTableViewHeader.swift in Sources */,

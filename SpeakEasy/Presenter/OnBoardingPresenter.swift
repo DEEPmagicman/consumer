@@ -214,7 +214,7 @@ final class OnBoardingPresenter {
         if let password = password, password != "" {
             param["password"] = password
         }
-        if let dob = dob, dob != "" {
+        if let dob = dob, dob != "No date Found" {
             param["dob"] = dob
         }
         if let gender = gender {
@@ -272,8 +272,8 @@ final class OnBoardingPresenter {
             Loader.hide()
             return
         }
-        let param = ["file": ""]
-        AFWrapper.multipart(APIBuilder.uploadPhotoURL, imageData: imageData, imageName: "\(UUID().uuidString).jpg", imageParamKey: "file", params: param, headers: Header.header()) { response in
+        let param = ["file": image] as [String: Any]
+        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
                 completion("", false)

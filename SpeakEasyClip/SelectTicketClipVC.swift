@@ -146,7 +146,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getVenueDetailsWithTickets(withLoader: Bool = true) {
-        guard let url = URL(string: "\(SharedURL.baseURL)/appclip/\(venueId)") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
@@ -204,7 +204,7 @@ final class SelectTicketClipVC: UIViewController {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
             self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
-            if self.venueDetail?.bookingStatus == "OPEN" {
+            if self.venueDetail?.venueSettings?.bookingStatus == "OPEN" {
                 self.liveCloseLbl.text = "LIVE"
                 self.liveCloseLbl.textColor = UIColor(red: 0.00, green: 1.00, blue: 0.58, alpha: 1.00)
                 self.tonightLbl.alpha = 1
@@ -426,7 +426,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
         cell.totalTicketLbl.text = "\(venueDetail?.coverTicket?[indexPath.row].selectedQuantity ?? 0)"
-        if self.venueDetail?.bookingStatus == "OPEN" && self.venueDetail?.coverTicket?[indexPath.row].status == "ENABLED" {
+        if self.venueDetail?.venueSettings?.bookingStatus == "OPEN" && self.venueDetail?.coverTicket?[indexPath.row].status == "ENABLED" {
             cell.ticketPriceLbl.textColor = .white
             cell.ticketTypeLbl.textColor = .white
 
@@ -440,7 +440,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if venueDetail?.bookingStatus != "OPEN" { return }
+        if venueDetail?.venueSettings?.bookingStatus != "OPEN" { return }
         if venueDetail?.coverTicket?[indexPath.row].status != "ENABLED" { return }
         if venueDetail?.coverTicket?[indexPath.row].selectedQuantity != nil { return }
         if isMaxTicketReached {

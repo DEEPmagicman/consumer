@@ -29,7 +29,7 @@ final class PersonalInformationViewController: UIViewController {
         super.viewWillAppear(animated)
         firstNameTF.text = UserDefault.shared.user?.firstName
         lastNameTF.text = UserDefault.shared.user?.lastName
-        dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
+        dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth ?? "" == "" ? "Select date of birth" : UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
         if (UserDefault.shared.user?.email ?? "") == "" {
             emailTF.text =  UserDefault.shared.user?.additionalEmail
         } else {
@@ -60,6 +60,7 @@ final class PersonalInformationViewController: UIViewController {
             Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
             return
         }
+        
         presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: "", dob: date, gender: gender) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }
