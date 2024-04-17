@@ -21,6 +21,7 @@ class ScanQRCodeVC: UIViewController {
     }
     @IBOutlet weak var addToWalletBtn: PKAddPassButton!
     @IBOutlet weak var swipeLbl: UILabel!
+    @IBOutlet weak var bgImage: UIImageView!
     
     weak var delegate: QRCodeVCNavigationDelegate?
     var isAddOnsAvailable = false

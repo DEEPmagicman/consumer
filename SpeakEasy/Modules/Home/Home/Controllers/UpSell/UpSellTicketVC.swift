@@ -139,6 +139,10 @@ class UpSellTicketVC: UIViewController {
     }
     
     @IBAction func onClickContinueBtn(_ sender: Any) {
+        if UserDefault.shared.isGuest == true {
+            Navigate.to.loginMandatory(self)
+            return
+        }
         if selectedAddOns.count != 0 || bookingType != .FREE {
             Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: selectedCoverTicket, selectedEventTicket: [], selectedAddOnsItem: selectedAddOns, totalPrice: 0, type: .appClip, bookingType: bookingType)
         } else {

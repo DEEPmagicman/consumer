@@ -252,7 +252,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.customCoverTicketSettings?.isUpFront == false ? true : false
+            return venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
         if (venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true {
@@ -267,7 +267,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var setAddOnsProcessingTaxView: Bool {
-        return (venue?.venueSettings?.addOnsBookingSettings?.isProcessingFeePassToCustomer ?? true && venue?.venueSettings?.addOnsBookingSettings?.isUpFront == false) ? true : false
+        return (venue?.venueSettings?.addOnsBookingSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.addOnsBookingSettings?.isUpFront == false) ? true : false
     }
     
     private var setAddOnsCustomTaxView: Bool {
@@ -338,14 +338,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             if let subTotal = paymentDetail["subTotal"] as? Double, let processingFee = paymentDetail["processingFee"] as? Double, let customFee = paymentDetail["customFee"] as? Double, let salesTax = paymentDetail["salesTax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["customFeeName"] as? String, let salesTaxName = paymentDetail["salesTaxName"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
-                    self.addOnsSubTotalView.isHidden = !self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView
-                    self.addOnsSalesTaxView.isHidden = !self.setAddOnsSalesTaxView
+                    self.addOnsSubTotalView.isHidden = (!self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView) || (subTotal == total)
+                    self.addOnsSalesTaxView.isHidden = (!self.setAddOnsSalesTaxView) || (processingFee == 0)
                     self.addOnsProcessingView.isHidden = !self.setAddOnsProcessingTaxView
                     self.addOnsCustomFeeView.isHidden = !self.setAddOnsCustomTaxView
                     self.addOnsNOFeeView.isHidden = !self.addOnsSubTotalView.isHidden
                     self.totalAddOnPrice = total
-                    self.addOnsProcessingView.isHidden = processingFee == 0
-                    self.addOnsSubTotalView.isHidden = subTotal == total
+//                    self.addOnsProcessingView.isHidden = processingFee == 0
+//                    self.addOnsSubTotalView.isHidden = subTotal == total
                     
                     self.addOnsSubTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
                     self.addOnsProcessingAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
@@ -500,14 +500,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             if let subTotal = json["subTotal"] as? Double, let processingFee = json["processingFee"] as? Double, let customFee = json["customFee"] as? Double, let salesTax = json["salesTax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["customFeeName"] as? String, let salesTaxName = json["salesTaxName"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
-                    self.subTotalView.isHidden = !self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView
+                    self.subTotalView.isHidden = (!self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView) || (subTotal == total)
                     self.salesTextView.isHidden = !self.setSalesTaxView
-                    self.processingFeeView.isHidden = !self.setProcessingTaxView
+                    self.processingFeeView.isHidden = !self.setProcessingTaxView || processingFee == 0
                     self.customFeeView.isHidden = !self.setCustomTaxView
                     self.noFeeView.isHidden = !self.subTotalView.isHidden
-                    self.processingFeeView.isHidden = processingFee == 0
-                    self.subTotalView.isHidden = subTotal == total
-                    
                     self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
                     self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
                     self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"

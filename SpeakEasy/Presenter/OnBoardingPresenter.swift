@@ -215,7 +215,9 @@ final class OnBoardingPresenter {
             param["password"] = password
         }
         if let dob = dob, dob != "No date Found" {
-            param["dob"] = dob
+            if dob != "" {
+                param["dob"] = dob
+            }
         }
         if let gender = gender {
             param["gender"] = gender
