@@ -181,7 +181,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                     cell.eventNameLbl.text = inviteLink.name
                     cell.monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
                     cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
-                } else if bookings[indexPath.row].bookingType == "TABLE_BOOKING" {
+                } else if bookings[indexPath.row].bookingType == "TABLE" {
                     cell.eventNameLbl.text = Constant.String.tableReservation
                     cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD, isUTC: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "") ?? bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
                     cell.monthLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .MMM) ?? bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM, isUTC: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
@@ -205,7 +205,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             cell.eventNameLbl.text = recommended[indexPath.row].title
             cell.dateLbl.text = recommended[indexPath.row].startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD, useDayLightSavingTime: true, customTimeZone: recommended[indexPath.row].venue?.useTimezone ?? "")
         }
-        cell.ticketTypeImage.image = bookings[indexPath.row].bookingType == "TABLE_BOOKING" ? UIImage(named: "ic-people-logo") : UIImage(named: "ic-ticket-logo")
+        cell.ticketTypeImage.image = bookings[indexPath.row].bookingType == "TABLE" ? UIImage(named: "ic-people-logo") : UIImage(named: "ic-ticket-logo")
         cell.ticketCountLbl.text = "\(bookings[indexPath.row].bookingHasItem.count)"
         cell.cityNameLbl.text = bookings[indexPath.row].venueObject?.name
         cell.setUI()

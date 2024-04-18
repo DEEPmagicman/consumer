@@ -138,7 +138,7 @@ final class PaymentPresenter {
     }
     
     static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink", "bookingHasItem"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink", "bookingHasItem", "venue", "event", "fees"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
@@ -337,10 +337,6 @@ final class PaymentPresenter {
     
     static func deleteMethod(customerId: String, methodId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         AFWrapper.deleteRequest(APIBuilder.deleteMethod(customerId, methodId: methodId), headers: Header.header()) { response in
-            guard let responseArray = response as? [String: Any] else {
-                completion(false, nil)
-                return
-            }
             completion(true, nil)
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
@@ -357,10 +353,6 @@ final class PaymentPresenter {
             param = ["optedPolicy": optedPolicy]
         }
         AFWrapper.postRequest(APIBuilder.successPaymentURL(paymentHistoryId, bookingId), params: param, headers: Header.header()) { response in
-            guard let responseDic = response as? [String: Any] else {
-                completion(false, nil)
-                return
-            }
             completion(true, nil)
         } failure: { error in
             if let err = (error as NSError?), err.code == 0 {
@@ -377,10 +369,6 @@ final class PaymentPresenter {
             param["mainBookingId"] = mainBookingId
         }
         AFWrapper.postRequest(APIBuilder.successAddOnsPaymentURL(bookingId), params: param, headers: Header.header()) { response in
-            guard let responseDic = response as? [String: Any] else {
-                completion(false, nil)
-                return
-            }
             completion(true, nil)
         } failure: { error in
             if let err = (error as NSError?), err.code == 0 {
