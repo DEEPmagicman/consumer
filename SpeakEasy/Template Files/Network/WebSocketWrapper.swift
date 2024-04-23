@@ -5,14 +5,20 @@
 //  Created by Square Infosoft on 15/02/23.
 //
 
+import Foundation
 import UIKit
 import SocketIO
 
 protocol WebSocketCallBackDelegate: AnyObject {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool)
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool)
     func didGenderWiseTicketChange(venueId: String, uniqueId: String)
     func didUpdateEvent(eventId: String)
     func didUpdateEventTicket(ticketId: String)
+    
+    func updateTicketPrice(ticket: [CoverTicket])
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket])
+    func updateVenueStatus(venueId: String, venueStatus: String)
+    
 }
 
 final class WebSocketWrapper: NSObject {
@@ -37,12 +43,43 @@ final class WebSocketWrapper: NSObject {
         connect()
     }
     
-    private func addEventListener() {
-        socket?.on("venueListEvent") { data, ack in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String, let isWaitingTime = content["isWaitingTime"] as? Bool, let isVenueStatus = content["isVenueStatus"] as? Bool, let isPriceUpdate = content["isPriceUpdate"] as? Bool else {
+    @objc func setArrData() {
+        socket?.on("COVER_TICKET") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [[String: Any]] else {
                 return
             }
-            self.delegate.forEach { $0.didValueChange(venueId: venueId, uniqueId: uniqueId, isPriceUpdated: isPriceUpdate, isVenueStatusUpdate: isVenueStatus, isWaitTimeUpdated: isWaitingTime) }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: content, options: .prettyPrinted)
+                let tickets = try decoder.decode([CoverTicket].self, from: data)
+                self.delegate.forEach { $0.updateTicketPrice(ticket: tickets) }
+            } catch {
+                return
+            }
+        }
+        
+        socket?.on("ADDONS_TICKET") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [[String: Any]] else {
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: content, options: .prettyPrinted)
+                let tickets = try decoder.decode([UpSellTicket].self, from: data)
+                self.delegate.forEach { $0.updateAddOnsTicketPrice(ticket: tickets) }
+            } catch {
+                return
+            }
+        }
+    }
+    
+    private func addEventListener() {
+        
+        socket?.on("VENUE") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let venueStatus = content["venueStatus"] as? String else {
+                return
+            }
+            self.delegate.forEach { $0.updateVenueStatus(venueId: venueId, venueStatus: venueStatus) }
         }
         
         socket?.on(clientEvent: .connect) { _, _ in
@@ -53,8 +90,8 @@ final class WebSocketWrapper: NSObject {
             self.isSocketConnected = false
         }
         
-        socket?.on("updatedDoormanSettings") { data, ack in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let uniqueId = content["uniqueId"] as? String else {
+        socket?.on("DOORMAN_SETTINGS") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["id"] as? String, let uniqueId = content["uniqueId"] as? String else {
                 return
             }
             self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
@@ -81,6 +118,7 @@ final class WebSocketWrapper: NSObject {
             manager = SocketManager(socketURL: socketUrl, config: [.log(true), .compress])
             socket = manager.defaultSocket
             addEventListener()
+            setArrData()
             socket?.connect()
         }
     }
@@ -92,8 +130,12 @@ final class WebSocketWrapper: NSObject {
 }
 
 extension WebSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {}
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {}
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {}
     func didUpdateEvent(eventId: String) {}
     func didUpdateEventTicket(ticketId: String) {}
+    func updateVenueStatus(venueId: String, venueStatus: String) {}
+    func updateTicketPrice(ticket: [CoverTicket]) {}
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {}
 }
+

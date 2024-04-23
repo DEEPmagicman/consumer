@@ -737,8 +737,17 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension MVPVenueDetailVc: WebSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
-        if self.venueUniqueId == uniqueId {
+    
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if ticket.first?.venueId == self.venueId {
+            getVenueDetail(withLoader: false)
+            updateContinueBtn(forceRemove: true)
+            ticketTypeTableView.reloadData()
+        }
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        if self.venueId == venueId {
             getVenueDetail(withLoader: false)
             updateContinueBtn(forceRemove: true)
         }
@@ -749,6 +758,10 @@ extension MVPVenueDetailVc: WebSocketCallBackDelegate {
             getVenueDetail(withLoader: false)
             updateContinueBtn(forceRemove: true)
         }
+    }
+    
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        getUpsellTicket()
     }
 }
 

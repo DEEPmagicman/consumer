@@ -203,7 +203,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             purchaseImg.image = Constant.Icon.liveCover
             bgImage.image = Constant.Icon.liveCover
             promoCodeView.isHidden = true
-            venueNameLbl.text = venue?.name ?? ""
+            venueNameLbl.text = "\(venue?.name ?? ""), \(venue?.city ?? "")"
         case .singleTickedEvent:
             noFeeView.isHidden = !(event?.upfront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
@@ -909,15 +909,12 @@ extension CheckOutVC {
         case .userCancellation:
             isFromApplePay = true
             self.isPaymentInitiated = false
-//            let alert = UIAlertController(title: "Alert", message: "Payment interrupted", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
-//            present(alert, animated: true, completion: nil)
         }
     }
 }
 
 extension CheckOutVC: WebSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {
         if isPaymentInitiated { return }
         if self.navigationController?.viewControllers.last is CheckOutVC && venue?.uniqueId ?? "" == uniqueId {
             let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
@@ -932,12 +929,74 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            if isVenueStatusUpdate {
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking is closed",actions: [okAction])
-            } else if isPriceUpdated {
+            if isPriceUpdated {
                 Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
             }
         }
+    }
+    
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if isPaymentInitiated { return }
+        if selectedCoverTickets.count == 0 { return }
+        var coverTickets = [CoverTicket]()
+        ticket.forEach({ tick in
+            coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
+        })
+        if coverTickets.count != 0 {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueDetailVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+        }
+    }
+    
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        if isPaymentInitiated { return }
+        if selectedAddOnsItem.count == 0 { return }
+        var upSellTickets = [UpSellTicket]()
+        ticket.forEach({ tick in
+            upSellTickets = selectedAddOnsItem.filter({ $0.id == tick.id})
+        })
+        if upSellTickets.count != 0 {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueListVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: MVPVenueDetailVc.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+        }
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                viewC.isKind(of: MVPVenueListVc.self)
+            }) {
+                self.navigationController?.popToViewController(vc, animated: true)
+            } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                viewC.isKind(of: MVPVenueDetailVc.self)
+            }) {
+                self.navigationController?.popToViewController(vc, animated: true)
+            }
+        }
+        Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking",actions: [okAction])
     }
     
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {

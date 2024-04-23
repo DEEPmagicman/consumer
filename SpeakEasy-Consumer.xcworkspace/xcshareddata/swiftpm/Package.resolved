@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
       "state" : {
-        "revision" : "43aaef65e0c665daadf848761d560e446d350d3d",
-        "version" : "1.22.4"
+        "revision" : "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
+        "version" : "1.22.5"
       }
     },
     {
@@ -142,7 +142,7 @@
       "location" : "https://github.com/ashleymills/Reachability.swift.git",
       "state" : {
         "branch" : "master",
-        "revision" : "7b7018a69c84ea94ac2a38dff626e16ea81d1db9"
+        "revision" : "57da4b1270cab7c2228919eabc0e4e1bf93e48ea"
       }
     },
     {

@@ -1293,17 +1293,22 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
 }
 
 extension CheckOutClipVC: WebSocketCallBackDelegate {
-    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool, isVenueStatusUpdate: Bool, isWaitTimeUpdated: Bool) {
+    func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {
         if isPaymentInitiated { return }
         if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
-            if isVenueStatusUpdate {
-                alertPopup("Update", "Venue your trying to booking is closed") {
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-            } else if isPriceUpdated {
+            if isPriceUpdated {
                 alertPopup("Update", "The venue updated their prices") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
+            }
+        }
+    }
+    
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        if isPaymentInitiated { return }
+        if navigationController?.viewControllers.last is CheckOutClipVC && venueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
+            alertPopup("Update", "Venue your trying to booking is closed") {
+                self.navigationController?.popToRootViewController(animated: true)
             }
         }
     }

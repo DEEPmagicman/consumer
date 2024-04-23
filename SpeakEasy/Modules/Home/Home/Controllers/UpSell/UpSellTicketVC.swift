@@ -116,6 +116,16 @@ class UpSellTicketVC: UIViewController {
         updateContinueBtn()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
     private func updateContinueBtn() {
         if selectedCoverTicket.count == 0 {
             continueBtn.setTitle(Constant.String.continueBtnTitle, for: .normal)
@@ -285,5 +295,12 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
             }
             getUpsellTicket()
         }
+    }
+}
+
+extension UpSellTicketVC: WebSocketCallBackDelegate {
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        upSellTicket.removeAll()
+        getUpsellTicket()
     }
 }
