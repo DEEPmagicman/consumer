@@ -13,7 +13,7 @@ protocol WebSocketCallBackDelegate: AnyObject {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool)
     func didGenderWiseTicketChange(venueId: String, uniqueId: String)
     func didUpdateEvent(eventId: String)
-    func didUpdateEventTicket(ticketId: String)
+    func didUpdateEventTicket(ticket: EventTicket)
     
     func updateTicketPrice(ticket: [CoverTicket])
     func updateAddOnsTicketPrice(ticket: [UpSellTicket])
@@ -37,8 +37,6 @@ final class WebSocketWrapper: NSObject {
     
     func setUpWebSocket() {
         NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.didEnterBackgroundNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.willEnterForegroundNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(disConnect), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connect), name: UIApplication.didBecomeActiveNotification, object: nil)
         connect()
     }
@@ -67,6 +65,20 @@ final class WebSocketWrapper: NSObject {
                 let data = try JSONSerialization.data(withJSONObject: content, options: .prettyPrinted)
                 let tickets = try decoder.decode([UpSellTicket].self, from: data)
                 self.delegate.forEach { $0.updateAddOnsTicketPrice(ticket: tickets) }
+            } catch {
+                return
+            }
+        }
+        
+        socket?.on("EVENT_TICKET") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any] else {
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: content, options: .prettyPrinted)
+                let tickets = try decoder.decode(EventTicket.self, from: data)
+                self.delegate.forEach { $0.didUpdateEventTicket(ticket: tickets) }
             } catch {
                 return
             }
@@ -103,13 +115,6 @@ final class WebSocketWrapper: NSObject {
             }
             self.delegate.forEach { $0.didUpdateEvent(eventId: eventId) }
         }
-        
-        socket?.on("updatedEventTicket") { data, ack in
-            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventTicketId = content["id"] as? String else {
-                return
-            }
-            self.delegate.forEach { $0.didUpdateEventTicket(ticketId: eventTicketId) }
-        }
     }
     
     @objc func connect() {
@@ -133,7 +138,7 @@ extension WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {}
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {}
     func didUpdateEvent(eventId: String) {}
-    func didUpdateEventTicket(ticketId: String) {}
+    func didUpdateEventTicket(ticket: EventTicket) {}
     func updateVenueStatus(venueId: String, venueStatus: String) {}
     func updateTicketPrice(ticket: [CoverTicket]) {}
     func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {}

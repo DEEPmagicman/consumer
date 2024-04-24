@@ -481,10 +481,22 @@ extension SelectTicketClipVC: WebSocketCallBackDelegate {
         }
     }
     
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if ticket.first?.venueId == self.venueDetail?.id {
+            getVenueDetailsWithTickets(withLoader: false)
+            updateContinueBtn(forceRemove: true)
+            ticketTypeTableView.reloadData()
+        }
+    }
+    
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if uniqueId == self.venueId {
             getVenueDetailsWithTickets(withLoader: false)
         }
+    }
+    
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        getAddOns()
     }
 }
 

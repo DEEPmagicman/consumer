@@ -14,17 +14,6 @@ final class UpSellClipVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var continueBtn: UIButton!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
-        getUpSellTicket(withLoader: true)
-        upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
-        upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
-        updateContinueBtn()
-    }
-    
     var bookingType: TicketPriceType = .PAID
     var upSellTicket = [UpSellTicket]()
     private var maxTicket = 20
@@ -111,7 +100,28 @@ final class UpSellClipVC: UIViewController {
         }
         return amountTransferToSE
     }
-
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        getUpSellTicket(withLoader: true)
+        upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
+        upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
+        updateContinueBtn()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
     private func updateContinueBtn() {
         if selectedAppClipTicket.count == 0 {
             continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
@@ -155,17 +165,11 @@ final class UpSellClipVC: UIViewController {
                 AppClipLoader.hideLoader()
                 return
             }
-            let decoder = JSONDecoder()
             guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
                 AppClipLoader.hideLoader()
                 return
             }
-//            let ticketData = venueData ["list"]
-//            self.venueDetail = try? decoder.decode([UpSellTicket].self, from: venueData)
-//            UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
-//            self.setUpUI()
             DispatchQueue.main.async {
-//                self.updateContinueBtn(forceRemove: true)
                 AppClipLoader.hideLoader()
             }
         }.resume()
@@ -266,5 +270,12 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
 extension UpSellClipVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         true
+    }
+}
+
+extension UpSellClipVC: WebSocketCallBackDelegate {
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        upSellTicket.removeAll()
+        getUpSellTicket(withLoader: false)
     }
 }

@@ -339,8 +339,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
                     self.addOnsSubTotalView.isHidden = (!self.setAddOnsSalesTaxView && !self.setAddOnsProcessingTaxView && !self.setAddOnsCustomTaxView) || (subTotal == total)
-                    self.addOnsSalesTaxView.isHidden = (!self.setAddOnsSalesTaxView) || (processingFee == 0)
-                    self.addOnsProcessingView.isHidden = !self.setAddOnsProcessingTaxView
+                    self.addOnsSalesTaxView.isHidden = !self.setAddOnsSalesTaxView
+                    self.addOnsProcessingView.isHidden = (!self.setAddOnsProcessingTaxView) || (processingFee == 0)
                     self.addOnsCustomFeeView.isHidden = !self.setAddOnsCustomTaxView
                     self.addOnsNOFeeView.isHidden = !self.addOnsSubTotalView.isHidden
                     self.totalAddOnPrice = total
@@ -1298,6 +1298,38 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
         if navigationController?.viewControllers.last is CheckOutClipVC && uniqueId == UserDefaults.standard.value(forKey: "venueId") as? String ?? "" {
             if isPriceUpdated {
                 alertPopup("Update", "The venue updated their prices") {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
+        }
+    }
+    
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        if isPaymentInitiated { return }
+        if selectedCoverTickets.count == 0 { return }
+        var coverTickets = [CoverTicket]()
+        ticket.forEach({ tick in
+            coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
+        })
+        if coverTickets.count != 0 {
+            if navigationController?.viewControllers.last is CheckOutClipVC {
+                alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
+        }
+    }
+    
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        if isPaymentInitiated { return }
+        if selectedAddOnsItem.count == 0 { return }
+        var upSellTickets = [UpSellTicket]()
+        ticket.forEach({ tick in
+            upSellTickets = selectedAddOnsItem.filter({ $0.id == tick.id})
+        })
+        if upSellTickets.count != 0 {
+            if navigationController?.viewControllers.last is CheckOutClipVC {
+                alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
                     self.navigationController?.popToRootViewController(animated: true)
                 }
             }

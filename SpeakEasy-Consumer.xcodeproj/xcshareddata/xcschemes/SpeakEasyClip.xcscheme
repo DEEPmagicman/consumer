@@ -53,7 +53,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://speakeasy-stage-web-consumer.vercel.app/ticket?v=VN-f9u5"
+            value = "https://speakeasy-stage-web-consumer.vercel.app/ticket?v=VN-pi5m"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

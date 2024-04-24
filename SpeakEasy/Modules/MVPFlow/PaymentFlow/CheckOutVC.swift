@@ -1018,12 +1018,25 @@ extension CheckOutVC: WebSocketCallBackDelegate {
         }
     }
     
-    func didUpdateEventTicket(ticketId: String) {
+    func didUpdateEventTicket(ticket: EventTicket) {
         if isPaymentInitiated { return }
-        print(ticketId)
-        if selectedEventTicket.contains(where: { $0.id == ticketId }) {
-            cancelBooking()
-            Navigate.to.back(self)
+        if selectedEventTicket.count == 0 { return }
+        let eventTickets = selectedEventTicket.filter({ $0.id == ticket.id})
+        if eventTickets.count != 0 {
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
+                UIAlertAction in
+                self.cancelBooking()
+                if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: EventDetailVC.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
+                    viewC.isKind(of: EventDetailVC.self)
+                }) {
+                    self.navigationController?.popToViewController(vc, animated: true)
+                }
+            }
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Event updated it's ticket price",actions: [okAction])
         }
     }
 }
