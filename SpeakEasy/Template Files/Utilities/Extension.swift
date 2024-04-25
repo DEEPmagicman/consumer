@@ -287,8 +287,11 @@ extension Decodable {
 
 extension Dictionary {
     func encrypted() -> [String: Any]? {
-        guard let params = self as? [String: Any] else {
+        guard var params = self as? [String: Any] else {
             return nil
+        }
+        if params["file"] as? UIImage != nil {
+            params["file"] = ""
         }
         do {
             let paramData = try JSONSerialization.data(withJSONObject: params)

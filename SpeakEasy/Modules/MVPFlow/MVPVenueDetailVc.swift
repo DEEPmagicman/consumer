@@ -697,13 +697,13 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             self.VIPTableView.isHidden = true
             self.stackViewBottomConstraint.constant = 30
             switch self.selectedType {
-            case .FREE, .CUSTOM:
+            case .FREE:
                 if self.addOnsView.isHidden == true {
                     self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
                 } else {
                     self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
                 }
-            case .PAID:
+            case .PAID, .CUSTOM:
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }

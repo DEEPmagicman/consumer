@@ -24,7 +24,7 @@ final class PaymentDetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if booking?.bookingType != "TABLE_BOOKING" {
+        if booking?.bookingType != "TABLE" {
             getBooking(id: booking?.id ?? "")
         }
         setUpData()

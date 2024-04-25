@@ -45,6 +45,7 @@ struct Booking: Codable {
     var ticketDetails: [TicketDetails]?
     var floorPlanTimeSlotBooking: [TimeSlot]?
     var inviteLink: InviteLink?
+    var inviteLinkId: String?
     var fees: PaymentDetail?
     var guestList: GuestList?
     var addOnsBookingId: String?
@@ -99,7 +100,8 @@ struct Booking: Codable {
         case event = "event"
         case ticketDetails = "ticketDetails"
         case floorPlanTimeSlotBooking = "FloorPlanTimeSlotBooking"
-        case inviteLink = "InviteLink"
+        case inviteLink
+        case inviteLinkId
         case fees
         case guestList
         case addOnsBookingId
@@ -142,6 +144,8 @@ struct Booking: Codable {
         try container.encode(event, forKey: .event)
         try container.encode(ticketDetails, forKey: .ticketDetails)
         try container.encode(floorPlanTimeSlotBooking, forKey: .floorPlanTimeSlotBooking)
+        try container.encodeIfPresent(inviteLink, forKey: .inviteLink)
+        try container.encodeIfPresent(inviteLinkId, forKey: .inviteLinkId)
         try container.encodeIfPresent(fees, forKey: .fees)
         try container.encodeIfPresent(guestList, forKey: .guestList)
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)

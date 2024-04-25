@@ -38,6 +38,7 @@ class ScanQRCodeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bgImage.sd_setImage(with: URL(string: (booking?.venueObject?.venueAttachment?.first?.key ?? "").imageURL))
         isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
         venueName.text = venueNameText ?? "" == "" ? "-" : venueNameText
         setPageController()

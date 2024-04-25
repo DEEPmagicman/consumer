@@ -46,7 +46,7 @@ final class EnterNameViewController: UIViewController {
         lastNameTextField.isUserInteractionEnabled = UserDefault.shared.user?.lastName ?? "" != "" ? false : true
         lastNameTextField.alpha = UserDefault.shared.user?.lastName ?? "" != "" ? 0.7 : 1
         
-        emailTextField.text = UserDefault.shared.user?.email ?? UserDefault.shared.user?.additionalEmail
+        emailTextField.text = UserDefault.shared.user?.email
         ContinueBtn.isUserInteractionEnabled = false
         ContinueBtn.alpha = 0.5
         textFieldDidChangeSelection(firstNameTextField)
@@ -118,14 +118,14 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: "", dob: DOBTextField.text, gender: gender, additionalEmail: emailTextField.text ?? "") { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: "", email: emailTextField.text ?? "", dob: DOBTextField.text, gender: gender) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = self.DOBTextField.text ?? ""
-                UserDefault.shared.user?.additionalEmail = self.emailTextField.text ?? ""
+                UserDefault.shared.user?.email = self.emailTextField.text ?? ""
                 UserDefault.shared.user?.gender = self.gender
                 Navigate.to.SetProfilePicVc(self)
             } else {

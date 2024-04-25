@@ -30,11 +30,7 @@ final class PersonalInformationViewController: UIViewController {
         firstNameTF.text = UserDefault.shared.user?.firstName
         lastNameTF.text = UserDefault.shared.user?.lastName
         dateOfBirthTF.text = UserDefault.shared.user?.dateOfBirth ?? "" == "" ? "Select date of birth" : UserDefault.shared.user?.dateOfBirth.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
-        if (UserDefault.shared.user?.email ?? "") == "" {
-            emailTF.text =  UserDefault.shared.user?.additionalEmail
-        } else {
-            emailTF.text = UserDefault.shared.user?.email
-        }
+        emailTF.text = UserDefault.shared.user?.email
         phoneNumberTF.text = UserDefault.shared.user?.phone
         
         maleBtn.setTitleColor(.white, for: .selected)

@@ -128,9 +128,10 @@ final class ShowQRCodeVC: UIViewController {
     
     private func setupData() {
         bookingTitleLbl.text = booking?.bookingType == "APPCLIP" || booking?.bookingType == "FREE_APPCLIP" ? "Venue Cover" : "Table Reservation"
-        if booking?.bookingType == "INVITE_LINK" {
-            bookingTitleLbl.text = booking?.inviteLink?.name ?? "-"
-            
+        if booking?.bookingType == "COVER" {
+            if booking?.inviteLinkId ?? "" != "" {
+                bookingTitleLbl.text = booking?.inviteLink?.name ?? "-"
+            }
         } else if booking?.bookingType == "COMPED_TICKET" {
             bookingTitleLbl.text = booking?.guestList?.name ?? "-"
         }
@@ -284,8 +285,8 @@ final class ShowQRCodeVC: UIViewController {
         switch booking?.bookingType ?? "" {
         case "FREE_EVENT_TICKET", "FREE_APPCLIP":
             totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
-        case "EVENT_TICKET":
-            if booking?.venueObject?.event?.first?.upfront == false {
+        case "EVENT":
+            if booking?.event?.upfront == false {
                 processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 ? true : false
                 salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 ? true : false
                 customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 ? true : false
