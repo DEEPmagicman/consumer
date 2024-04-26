@@ -327,15 +327,15 @@ final class SelectTicketClipVC: UIViewController {
                 self.venueDetail?.coverTicket?.indices.forEach {
                     self.venueDetail?.coverTicket?[$0].selectedQuantity = nil
                 }
-                if self.venueDetail?.availableTimeSlot == true {
-                    self.continueBtn.isHidden = false
-                    self.VIPTableBookingView.isHidden = false
-                    self.scrollViewBottomConstraint.constant = 128
-                } else {
+//                if self.venueDetail?.availableTimeSlot == true {
+//                    self.continueBtn.isHidden = false
+//                    self.VIPTableBookingView.isHidden = false
+//                    self.scrollViewBottomConstraint.constant = 128
+//                } else {
                     self.VIPTableBookingView.isHidden = true
                     self.continueBtn.isHidden = true
                     self.scrollViewBottomConstraint.constant = 20
-                }
+//                }
                 self.ticketTypeTableView.reloadData()
                 return
             }

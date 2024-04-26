@@ -678,18 +678,18 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.coverTicket?.indices.forEach {
                     self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
                 }
-                if self.venueDetails?.availableTimeSlot ?? false {
-                    self.continueBtnView.isHidden = true
-                    self.VIPTableView.isHidden = false
-                    self.stackViewBottomConstraint.constant = 0
-                    self.scrollViewBottomConstraint.constant = 80
-                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
-                } else {
+//                if self.venueDetails?.availableTimeSlot ?? false {
+//                    self.continueBtnView.isHidden = true
+//                    self.VIPTableView.isHidden = false
+//                    self.stackViewBottomConstraint.constant = 0
+//                    self.scrollViewBottomConstraint.constant = 80
+//                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
+//                } else {
                     self.scrollViewBottomConstraint.constant = 70
                     self.VIPTableView.isHidden = true
                     self.stackViewBottomConstraint.constant = 30
                     self.continueBtnView.isHidden = true
-                }
+//                }
                 self.ticketTypeTableView.reloadData()
                 return
             }
