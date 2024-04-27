@@ -145,16 +145,16 @@ final class UpSellClipVC: UIViewController {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        var param = ["include": "addOns"] as [String: Any]
-        param["isAppClipPayment"] = true
-        let bodyData = try? JSONSerialization.data(
-            withJSONObject: param,
-            options: [.prettyPrinted]
-        )
+//        var param = ["include": "addOns"] as [String: Any]
+//        param["isAppClipPayment"] = true
+//        let bodyData = try? JSONSerialization.data(
+//            withJSONObject: param,
+//            options: [.prettyPrinted]
+//        )
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        request.httpBody = bodyData
+//        request.httpBody = bodyData
         
         if withLoader {
             AppClipLoader.showLoader(self.view)

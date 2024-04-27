@@ -119,19 +119,33 @@ final class SelectTicketClipVC: UIViewController {
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
-                
+                let decoder = JSONDecoder()
+#if DEBUG
                 guard let data = data,
                       let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                     return
                 }
-                
-                let decoder = JSONDecoder()
-                
                 if let addOns = json["list"] as? [[String: Any]] {
                     guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
                         return
                     }
-                    
+                    do {
+                        self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                        DispatchQueue.main.async {
+                            self.upSellView.isHidden = self.upSellTickets.count <= 0
+                        }
+                    } catch (let error) {
+                        print(error)
+                    }
+                
+            }
+#else
+                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                let json =  response.decrypted() ?? [:]
+                if let addOns = json["list"] as? [[String: Any]] {
+                    guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                        return
+                    }
                     do {
                         self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
                         DispatchQueue.main.async {
@@ -141,6 +155,7 @@ final class SelectTicketClipVC: UIViewController {
                         print(error)
                     }
                 }
+#endif
             }
         }.resume()
     }
@@ -163,19 +178,24 @@ final class SelectTicketClipVC: UIViewController {
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
-                
+                let decoder = JSONDecoder()
+#if DEBUG
                 guard let data = data,
                       let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                     return
                 }
-                
-                let decoder = JSONDecoder()
-                
                 guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
                     return
                 }
-                
                 self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+#else
+                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                let json =  response.decrypted() ?? [:]
+                guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+                    return
+                }
+                self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+#endif
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 
                 self.setUpUI()

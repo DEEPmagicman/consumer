@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
+		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
 		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
 		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
@@ -4564,6 +4565,7 @@
 				CEDB82552AA21DD500DAD9FE /* FPNOBJCCountryKey.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */,
+				041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */,
 				CEDB82432AA21DD500DAD9FE /* NBPhoneMetaData.m in Sources */,
 				04862C162B971CED00836598 /* TimeSlot.swift in Sources */,
 				CEDB82532AA21DD500DAD9FE /* FPNCountryCode.swift in Sources */,
