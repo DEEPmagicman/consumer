@@ -11,7 +11,7 @@ struct Booking: Codable {
 
     var venueObject: ClipVenue?
     var id: String
-    var venueId: String
+    var venueId: String?
 //    var phone: String
     var eventId: String?
 //    var isAppClipUser: Bool

@@ -294,7 +294,7 @@ final class PaymentPresenter {
 //    }
     
     static func getPastTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
-        let param = ["skip": skip, "include": ["bookingHasItem", "event"]] as [String : Any]
+        let param = ["skip": skip, "include": ["bookingHasItem", "event", "fees", "venue"]] as [String : Any]
         AFWrapper.getRequest(APIBuilder.pastTicketsURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)

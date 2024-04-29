@@ -91,6 +91,7 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
             cell.monthLbl.text = bookings[indexPath.row].event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM, useDayLightSavingTime: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "")
             cell.bgImage.sd_setImage(with: URL(string: (bookings[indexPath.row].event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.venueLogoImageView.isHidden = true
+            cell.cityNameLbl.text = bookings[indexPath.row].venueObject?.city ?? ""
         }
         cell.ticketTypeImage.image = bookings[indexPath.row].bookingType == "TABLE_BOOKING" ? UIImage(named: "ic-people-logo") : UIImage(named: "ic-ticket-logo")
         cell.ticketCountLbl.text = "\(bookings[indexPath.row].bookingHasItem.count)"

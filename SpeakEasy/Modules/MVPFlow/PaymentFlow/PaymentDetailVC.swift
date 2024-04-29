@@ -28,7 +28,7 @@ final class PaymentDetailVC: UIViewController {
             getBooking(id: booking?.id ?? "")
         }
         setUpData()
-        totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.totalPrice ?? 0)"
+        totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.fees?.total ?? 0)"
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
@@ -44,7 +44,7 @@ final class PaymentDetailVC: UIViewController {
                     titleLbl.text = inviteLink.name
                     dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
                     mainImg.image = Constant.Icon.liveCover
-                } else if booking.bookingType == "TABLE_BOOKING" {
+                } else if booking.bookingType == "TABLE" {
                     titleLbl.text = Constant.String.tableReservation
                     dateLbl.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
                     mainImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL))

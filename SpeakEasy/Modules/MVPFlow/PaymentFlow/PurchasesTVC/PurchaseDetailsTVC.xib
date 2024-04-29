@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -67,7 +67,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sUF-ec-x7i">
-                                <rect key="frame" x="16" y="302" width="288" height="46"/>
+                                <rect key="frame" x="16" y="294.5" width="288" height="53.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="kyv-EJ-and">
                                         <rect key="frame" x="0.0" y="0.0" width="43" height="53.5"/>
@@ -101,7 +101,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jTo-X1-Pc0">
-                                        <rect key="frame" x="59" y="26" width="8.5" height="20"/>
+                                        <rect key="frame" x="59" y="26" width="8.5" height="27.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="14"/>
                                         <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -115,6 +115,7 @@
                                     <constraint firstItem="jTo-X1-Pc0" firstAttribute="top" secondItem="hxB-l7-aot" secondAttribute="bottom" id="KBA-ex-DIF"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jTo-X1-Pc0" secondAttribute="trailing" id="TxL-x2-t5y"/>
                                     <constraint firstAttribute="trailing" secondItem="hxB-l7-aot" secondAttribute="trailing" id="VYK-xv-0VI"/>
+                                    <constraint firstAttribute="bottom" secondItem="kyv-EJ-and" secondAttribute="bottom" id="bwk-Jc-ptr"/>
                                     <constraint firstItem="hxB-l7-aot" firstAttribute="leading" secondItem="kyv-EJ-and" secondAttribute="trailing" constant="16" id="qWw-4X-tZt"/>
                                     <constraint firstItem="kyv-EJ-and" firstAttribute="leading" secondItem="sUF-ec-x7i" secondAttribute="leading" id="sGH-w0-NAe"/>
                                     <constraint firstItem="jTo-X1-Pc0" firstAttribute="leading" secondItem="kyv-EJ-and" secondAttribute="trailing" constant="16" id="xS2-ap-W9l"/>
