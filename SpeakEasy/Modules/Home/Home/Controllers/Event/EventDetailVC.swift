@@ -463,8 +463,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
         case ticketListTableView:
             return activeTickets?.count ?? 0
         case artistTableView:
-            lineUpView.isHidden = event?.artists?.count ?? 0 == 0
-            return event?.artists?.count ?? 0
+            lineUpView.isHidden = event?.eventHasArtist?.count ?? 0 == 0
+            return event?.eventHasArtist?.count ?? 0
         default:
             return 0
         }
@@ -516,8 +516,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         case artistTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
-            cell.mainImg.sd_setImage(with: URL(string: (event?.artists?[indexPath.row].image?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = event?.artists?[indexPath.row].name
+            cell.mainImg.sd_setImage(with: URL(string: (event?.eventHasArtist?[indexPath.row].artist.artistImage?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = event?.eventHasArtist?[indexPath.row].artist.name
             cell.selectionStyle = .none
             return cell
         default:
@@ -572,7 +572,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             }
         case artistTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.externalURL(event?.artists?[indexPath.row].instagramUsername ?? "")
+            Navigate.externalURL(event?.eventHasArtist?[indexPath.row].artist.instagramUsername ?? "")
         default:
             break
         }

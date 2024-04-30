@@ -39,7 +39,7 @@ struct Event: Codable {
     var floorPlanId: String?
     var eventTicket: [EventTicket]?
     var venue: ClipVenue?
-    var artists: [Artists]?
+    var eventHasArtist: [ArtistData]?
     var showAddress: Bool?
     var totalTickets: Int?
     var allowGuestCheckin: Bool?
@@ -96,31 +96,36 @@ struct Event: Codable {
         try container.encode(floorPlanId, forKey: .floorPlanId)
         try container.encode(eventTicket, forKey: .eventTicket)
         try container.encode(venue, forKey: .venue)
+        try container.encode(eventHasArtist, forKey: .eventHasArtist)
         try container.encode(showAddress, forKey: .showAddress)
         try container.encode(totalTickets, forKey: .totalTickets)
         try container.encode(allowGuestCheckin, forKey: .allowGuestCheckin)
     }
 }
 
+struct ArtistData: Codable {
+    var artist: Artists
+}
+
 struct Artists: Codable {
 
-    var image: Flyer?
     var id: String
     var name: String
     var instagramUsername: String
     var status: String
     var createdAt: String
     var updatedAt: String
-
+    var artistImage: Flyer?
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(image, forKey: .image)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(instagramUsername, forKey: .instagramUsername)
         try container.encode(status, forKey: .status)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(artistImage, forKey: .artistImage)
     }
 }
 
