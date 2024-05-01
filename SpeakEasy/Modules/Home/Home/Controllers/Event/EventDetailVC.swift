@@ -86,7 +86,8 @@ final class EventDetailVC: UIViewController {
     }
     private var selectedType: TicketPriceType = .FREE
     private var eventTicketId = [String]()
-
+    private var artists = [ArtistData]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         event?.eventTicket?.removeAll()
@@ -251,6 +252,7 @@ final class EventDetailVC: UIViewController {
                 self.setupData()
                 self.zeroCaseView(isHidden: true)
             }
+            artists = event?.eventHasArtist?.filter( { $0.artist.status == "ENALED" }) ?? []
         }
     }
     
@@ -463,8 +465,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
         case ticketListTableView:
             return activeTickets?.count ?? 0
         case artistTableView:
-            lineUpView.isHidden = event?.eventHasArtist?.count ?? 0 == 0
-            return event?.eventHasArtist?.count ?? 0
+            lineUpView.isHidden = artists.count == 0
+            return artists.count
         default:
             return 0
         }
@@ -516,8 +518,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         case artistTableView:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistListTVC", for: indexPath) as! ArtistListTVC
-            cell.mainImg.sd_setImage(with: URL(string: (event?.eventHasArtist?[indexPath.row].artist.artistImage?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-            cell.nameLbl.text = event?.eventHasArtist?[indexPath.row].artist.name
+            cell.mainImg.sd_setImage(with: URL(string: (artists[indexPath.row].artist.artistImage?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+            cell.nameLbl.text = artists[indexPath.row].artist.name
             cell.selectionStyle = .none
             return cell
         default:

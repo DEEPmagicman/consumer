@@ -52,11 +52,8 @@ final class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickSave(_ sender: Any) {
-        guard let date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) else {
-            Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
-            return
-        }
-        
+        var date = dateOfBirthTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
+        if date == "No date Found" { date = "" }
         presenter.editUserProfileApi(fName: firstNameTF.text ?? "", lName: lastNameTF.text ?? "", nickName: "", dob: date, gender: gender) { [weak self] isSuccess,errorMsg  in
             Loader.hide()
             guard let self = self else { return }

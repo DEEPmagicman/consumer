@@ -121,8 +121,6 @@ class ScanQRCodeVC: UIViewController {
     }
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
-//        delegate?.navigateToVenueDetail(venueId: booking?.venueObject?.id ?? 0, venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: booking?.venueObject?.timezone ?? "")
-//        delegate?.navigateToVenueDetail(venueId: booking?.venueId ?? "", venueUniqueId: booking?.venueObject?.uniqueId ?? "", venueTimeZone: "asia/kolkata")
         pagerView.reloadData()
         let uniqueId = addOnsBooking != nil ? addOnsBooking?.venue.uniqueId ?? "" : booking?.venueObject?.uniqueId ?? ""
         let timeZone = addOnsBooking != nil ? addOnsBooking?.venue.timezone ?? "" : booking?.venueObject?.timezone ?? ""
@@ -140,6 +138,7 @@ class ScanQRCodeVC: UIViewController {
                 self.venueName.text = booking?.venueObject?.name ?? ""
                 self.isAddOnsAvailable = booking?.addOnsBookingId ?? "" != "" ? true : false
                 self.swipeLbl.isHidden = self.isAddOnsAvailable ? false : true
+                self.bgImage.sd_setImage(with: URL(string: (booking?.venueObject?.venueAttachment?.first?.key ?? "").imageURL))
                 if booking?.addOnsBookingId ?? "" != "" {
                     self.getAddOnsBooking()
                     let string1 = """
@@ -166,6 +165,7 @@ class ScanQRCodeVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 self.addOnsBooking = booking
+                bgImage.sd_setImage(with: URL(string: (booking?.venue.venueAttachment?.first?.key ?? "").imageURL))
                 let string1 = """
             {
                 "id": "\(booking?.id ?? "")",
@@ -173,9 +173,7 @@ class ScanQRCodeVC: UIViewController {
             }
         """
                 self.addOnsQR = self.generateQRCode(from: string1) ?? UIImage()
-                DispatchQueue.main.async {
-                    self.pagerView.reloadData()
-                }
+                self.pagerView.reloadData()
             }
         }
     }
