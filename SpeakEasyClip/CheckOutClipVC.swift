@@ -144,7 +144,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         countryCodeTextField.flagButtonSize = CGSize(width: 44, height: 44)
         countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         countryCodeTextField.displayMode = .list
-
+        
         let items = [
             UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
             UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
@@ -153,9 +153,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
         
         listController.showCountryPhoneCode = true
-
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
-        totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.0" : "-"
+        totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.00" : "-"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again."
@@ -493,7 +492,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     }
                     json = response.decrypted() ?? [:]
 #endif
-                    
                     self.createdAT = json["createdAt"] as? String ?? ""
                     completion()
                 }
@@ -656,6 +654,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var checkAllData: Bool {
         if !isValidNo {
             return false
+        }
+        if venue?.venueSettings?.collectNameDuringBooking ?? false == false {
+            return true
         }
         if venue?.venueSettings?.collectNameDuringBooking ?? false == false {
             return true
