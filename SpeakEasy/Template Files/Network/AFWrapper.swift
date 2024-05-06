@@ -31,11 +31,31 @@ final class AFWrapper: NSObject {
             return
         }
         
+#if DEBUG
+        let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+        
+                        if let responseCode = responseObject.response?.statusCode {
+                            if responseCode == 200 || responseCode == 201 {
+                                success(responseObject.result.value)
+                            } else if shouldForceLogout && responseCode == 401 {
+                                forceLogout()
+                            } else if responseObject.result.value != nil {
+                                let errorResponse = errorHandling(responseObject.result.value ?? "")
+                                failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
+                            } else {
+                                failure(responseObject.result.error)
+                            }
+                        } else {
+                            failure(responseObject.result.error)
+                        }
+                    }
+#else
+        
+        
         var parameters: Parameters?
         if let params = params {
             parameters =  params.encrypted() 
         }
-        
         
         let req = Alamofire.request(strURL, method: .post, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseString { response in
             
@@ -58,7 +78,7 @@ final class AFWrapper: NSObject {
                 failure(response.result.error)
             }
         }
-        
+#endif
         debugPrint(req)
     }
     
@@ -103,6 +123,24 @@ final class AFWrapper: NSObject {
             return
         }
         
+#if DEBUG
+        let req = Alamofire.request(strURL, method: .patch, parameters: params, encoding: JSONEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            if let responseCode = responseObject.response?.statusCode {
+                if responseCode == 200 || responseCode == 201 {
+                    success(responseObject.result.value)
+                } else if responseCode == 401 {
+                    forceLogout()
+                } else if responseObject.result.value != nil {
+                    let errorResponse = errorHandling(responseObject.result.value ?? "")
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
+                } else {
+                    failure(responseObject.result.error)
+                }
+            } else {
+                failure(responseObject.result.error)
+            }
+        }
+#else
         var parameters: Parameters?
         if let params = params {
             parameters = params.encrypted()
@@ -129,7 +167,7 @@ final class AFWrapper: NSObject {
                 failure(response.result.error)
             }
         }
-        
+#endif
         debugPrint(req)
     }
     
@@ -209,13 +247,45 @@ final class AFWrapper: NSObject {
     static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
                           success: @escaping DefaultAPISuccessClosure,
                           failure: @escaping DefaultAPIFailureClosure) {
-
+        
         if !Connectivity.isConnectedToInternet {
             success(nil)
             failure(nil)
             return
         }
-        
+#if DEBUG
+        Alamofire.upload(multipartFormData: { (multipartParam) in
+            for param in params {
+                if param.key == fileParamKey, let data = fileData {
+                    multipartParam.append(data, withName: param.key, fileName: fileName, mimeType: ".\((fileName as NSString).pathExtension)")
+                } else {
+                    multipartParam.append(Data((param.value as? String ?? "").utf8), withName: param.key)
+                }
+            }
+        }, to: strURL, method: method, headers: headers) { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                let req = upload.responseJSON { (response) in
+                    if let responseCode = response.response?.statusCode {
+                        if responseCode == 200 {
+                            success(response.result.value)
+                        } else if responseCode == 201 {
+                            success(response.result.value)
+                        } else if responseCode == 401 {
+                            forceLogout()
+                        } else {
+                            failure(response.result.error)
+                        }
+                    } else {
+                        failure(response.result.error)
+                    }
+                }
+                debugPrint(req)
+            case .failure(let error):
+                failure(error)
+            }
+        }
+#else
         var multipartParams = params
         multipartParams = multipartParams.encrypted() ?? params
         
@@ -255,6 +325,7 @@ final class AFWrapper: NSObject {
                 failure(error)
             }
         }
+#endif
     }
 
     static func getRequest(_ strURL: String,isForCard:Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
@@ -262,7 +333,24 @@ final class AFWrapper: NSObject {
             failure(nil)
             return
         }
-        
+#if DEBUG
+        let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseJSON { responseObject in
+            if let responseCode = responseObject.response?.statusCode {
+                if responseCode == 200 || responseCode == 201 {
+                    success(responseObject.result.value)
+                } else if responseCode == 401 {
+                    forceLogout()
+                } else if responseObject.result.value != nil {
+                    let errorResponse = errorHandling(responseObject.result.value ?? "")
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
+                } else {
+                    failure(responseObject.result.error)
+                }
+            } else {
+                failure(responseObject.result.error)
+            }
+        }
+#else
         let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseString(queue: nil, encoding: .utf8) { response in
             switch response.result {
             case .success(let value):
@@ -295,6 +383,7 @@ final class AFWrapper: NSObject {
                 failure(error)
             }
         }
+#endif
         debugPrint(req)
     }
     
@@ -335,9 +424,9 @@ final class AFWrapper: NSObject {
             failure(nil)
             return
         }
-        
+//        #if DEBUG
+//        #else
         var encryptedParams = params
-        // Encrypting parameters
         encryptedParams = encryptedParams?.encrypted()
         
         let req = Alamofire.request(strURL, method: .delete, parameters: encryptedParams, headers: headers).responseString { (response) in
@@ -358,7 +447,7 @@ final class AFWrapper: NSObject {
                 failure(response.result.error)
             }
         }
-        
+//        #endif
         debugPrint(req)
     }
     
@@ -369,7 +458,26 @@ final class AFWrapper: NSObject {
             failure(nil)
             return
         }
-        
+#if DEBUG
+        let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            if let responseCode = responseObject.response?.statusCode {
+                if responseCode == 200 || responseCode == 201 {
+                    success(responseObject.result.value)
+                } else if responseObject.result.value != nil {
+                    let errorResponse = errorHandling(responseObject.result.value ?? "")
+                    failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
+                } else if responseCode == 401 {
+                    if isForceLogout { forceLogout() } else { failure(responseObject.result.error) }
+                } else if responseCode >= 500 {
+                    failure(NSError(domain: "", code: 500, userInfo: [:]))
+                } else {
+                    failure(responseObject.result.error)
+                }
+            } else {
+                failure(responseObject.result.error)
+            }
+        }
+#else
         var parameters: Parameters?
         if let params = params {
             parameters = params.encrypted()
@@ -398,7 +506,7 @@ final class AFWrapper: NSObject {
                 failure(response.result.error)
             }
         }
-        
+#endif
         debugPrint(req)
     }
 //    
@@ -446,7 +554,19 @@ final class AFWrapper: NSObject {
 //            }
 //        }
     
-    static func errorHandling(_ response: String?) -> (Bool, String) {
+    static func errorHandling(_ response: Any?) -> (Bool, String) {
+#if DEBUG
+        if let response = response as? [String: Any], let errMsg = response["message"] {
+            if let stringErr = errMsg as? String {
+                return (true, stringErr)
+            } else if let arrayErr = errMsg as? [String], let stringErr = arrayErr.first {
+                return (true, stringErr)
+            }
+            return (false, "")
+        } else {
+            return (false, "")
+        }
+#else
         guard let jsonString = response else {
             return (false, "")
         }
@@ -463,6 +583,7 @@ final class AFWrapper: NSObject {
             print("Error decoding JSON: \(error)")
         }
         return (false, "")
+#endif
     }
 
     

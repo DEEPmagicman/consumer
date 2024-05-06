@@ -9,6 +9,19 @@ import UIKit
 import FSPagerView
 import PassKit
 
+extension UIView {
+    
+    func setVerticalGradient(colors: [CGColor]) {
+        removeGradientBackgroundColor()
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.frame = self.bounds
+        gradientLayer.name = "gradientLayer"
+        self.layer.insertSublayer(gradientLayer, at: 0)
+    }
+}
+
 class ScanQRCodeVC: UIViewController {
     
     @IBOutlet weak var venueName: UILabel!
