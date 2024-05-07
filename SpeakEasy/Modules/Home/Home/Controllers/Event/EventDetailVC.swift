@@ -294,7 +294,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, eventId))
+        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, venueDetails?.city.replacingOccurrences(of: " ", with: "-") ?? "", venueDetails?.name.replacingOccurrences(of: " ", with: "-") ?? "", event?.title.replacingOccurrences(of: " ", with: "-") ?? "", eventId))
     }
     
     @IBAction private func onClickBack(_ sender: Any) {
