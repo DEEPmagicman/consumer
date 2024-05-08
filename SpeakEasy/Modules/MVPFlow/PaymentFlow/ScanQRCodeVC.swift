@@ -74,7 +74,7 @@ class ScanQRCodeVC: UIViewController { //
         }
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
-        addToWalletBtn.isHidden = isOnlyAddOnAvailable ? true : false
+        addToWalletBtn.isHidden = true
     }
     
     @objc private func addToWalletBtnTapped() {
@@ -237,9 +237,9 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
     
     func pagerViewDidScroll(_ pagerView: FSPagerView) {
         pageControl.currentPage = pagerView.currentIndex
-        if !isOnlyAddOnAvailable {
-            addToWalletBtn.isHidden = pagerView.currentIndex == 0 ? false : true
-        }
+//        if !isOnlyAddOnAvailable {
+//            addToWalletBtn.isHidden = pagerView.currentIndex == 0 ? false : true
+//        }
     }
 }
 
