@@ -225,12 +225,10 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
         }
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
-        Loader.show()
             guard let self = self else {
                 return
             }
             self.view.alpha = 1
-            Loader.hide()
             if eventDetail == nil {
                 if errCode == 404 && self.promoteId != "" {
                     self.promoteId = ""
@@ -294,7 +292,7 @@ final class EventDetailVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, venueDetails?.city.replacingOccurrences(of: " ", with: "-") ?? "", venueDetails?.name.replacingOccurrences(of: " ", with: "-") ?? "", event?.title.replacingOccurrences(of: " ", with: "-") ?? "", eventId))
+        Utility.main.shareSocialWith(text: String(format: APIBuilder.eventWebURL, venueDetails?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "", event?.title.lowercased().replacingOccurrences(of: " ", with: "-") ?? "", eventId))
     }
     
     @IBAction private func onClickBack(_ sender: Any) {

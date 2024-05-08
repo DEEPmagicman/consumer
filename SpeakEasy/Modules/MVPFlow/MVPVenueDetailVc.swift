@@ -433,7 +433,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueDetails?.city ?? "", venueDetails?.name ?? "Venue", venueUniqueId)) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
+        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueDetails?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "Venue", venueUniqueId)) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
          Utility.main.shareSocialWith(text: msgText)
     }
     

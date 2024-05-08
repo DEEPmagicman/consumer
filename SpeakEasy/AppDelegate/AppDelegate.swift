@@ -109,6 +109,39 @@ extension AppDelegate {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
             return
         }
+        
+        if let value = queryItems.first(where: { $0.name == "vid" })?.value {
+            if value.contains("VN") {
+                setRootVC(.venue, id: value)
+            } else {
+                VenuePresenter.getDeepLinkData(value) { isSuccess, errMsg, doormanId, venueId in
+                    if isSuccess, let value = venueId, let doormanId = doormanId {
+                        self.setRootVC(.venue, id: value, doormanId: doormanId)
+                    } else {
+                        self.setRootVC()
+                    }
+                    return
+                }
+            }
+            return
+        }
+        
+        if let value = queryItems.first(where: { $0.name == "iid" })?.value {
+            setRootVC(.inviteLink, id: value)
+            return
+        }
+        
+        if let value = queryItems.first(where: { $0.name == "pid" })?.value {
+            let eventId = queryItems.first(where: { $0.name == "eid" })?.value ?? ""
+            setRootVC(.event, id: eventId, promoteId: value)
+            return
+        }
+        
+        if let value = queryItems.first(where: { $0.name == "eid" })?.value {
+            setRootVC(.event, id: value)
+            return
+        }
+        
         if let value = queryItems.first(where: { $0.name == "v" })?.value {
             if value.contains("VN") {
                 setRootVC(.venue, id: value)
