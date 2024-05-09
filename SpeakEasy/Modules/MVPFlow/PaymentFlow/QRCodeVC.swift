@@ -231,7 +231,7 @@ final class QRCodeVC: UIViewController {
             msgText = """
      Thank you for checking into \(booking?.venueObject?.name ?? "Venue") with Speakeasy!
 
-     Access Your Ticket Here: \(String(format: SharedURL.QAWebURL, bookingId))
+     Access Your Ticket Here: \(String(format: "SharedURL.QAWebURL", bookingId))
 
      Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
@@ -241,7 +241,7 @@ final class QRCodeVC: UIViewController {
             msgText = """
         You’re going to \(booking?.event?.title.capitalized ?? "EVENT")! \(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") has sent you a ticket:
 
-        Access your ticket here: \(String(format: SharedURL.QAWebURL, bookingId))
+        Access your ticket here: \(String(format: "SharedURL.QAWebURL", bookingId))
 
         Download Speakeasy for easy entry at \(booking?.venueObject?.name ?? "Venue"):
          \(SharedURL.appStoreURL)

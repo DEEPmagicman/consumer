@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 final class SelectTicketClipVC: UIViewController {
     
@@ -64,6 +63,7 @@ final class SelectTicketClipVC: UIViewController {
         }
         return total >= maxTicket
     }
+    var venueImageData = Data()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -207,23 +207,22 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func setUpUI() {
-        venueBgImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(venueDetail?.venueAttachment?.first?.key ?? "")"))
-        logoImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(venueDetail?.logo?.key ?? "")"))
-        
-//        DispatchQueue.global(qos: .background).async {
-//            let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
-//            let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
-//            guard let imgUrl = URL(string: imgStr) else { return }
-//            guard let logoUrl = URL(string: logoStr) else { return }
-//            do {
-//                let imgData = try Data(contentsOf: imgUrl)
-//                let logoData = try Data(contentsOf: logoUrl)
-//                DispatchQueue.main.async {
-//                    self.venueBgImg.image = UIImage(data: imgData)
-//                    self.logoImg.image = UIImage(data: logoData)
-//                }
-//            } catch {}
-//        }
+        DispatchQueue.global(qos: .background).async {
+            let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
+            let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
+            guard let imgUrl = URL(string: imgStr) else { return }
+            guard let logoUrl = URL(string: logoStr) else { return }
+            do {
+                let imgData = try Data(contentsOf: imgUrl)
+                let logoData = try Data(contentsOf: logoUrl)
+                DispatchQueue.main.async {
+                    self.venueBgImg.image = UIImage(data: imgData)
+                    self.venueImageData = imgData
+                    UserDefaults.standard.setValue(imgData, forKey: "venueImageData")
+                    self.logoImg.image = UIImage(data: logoData)
+                }
+            } catch {}
+        }
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
@@ -274,6 +273,7 @@ final class SelectTicketClipVC: UIViewController {
                 vc.venue = venueDetail
                 vc.upSellTicket = upSellTickets
                 vc.bookingType = selectedType
+                vc.venueImageData = venueImageData
                 navigationController?.interactivePopGestureRecognizer?.delegate = self
                 navigationController?.pushViewController(vc, animated: true)
             }
@@ -283,6 +283,7 @@ final class SelectTicketClipVC: UIViewController {
                     vc.selectedCoverTickets = selectedTickets
                     vc.totalPrice = totalPrice
                     vc.venue = venueDetail
+                    vc.venueImageData = venueImageData
                     navigationController?.interactivePopGestureRecognizer?.delegate = self
                     navigationController?.pushViewController(vc, animated: true)
                     updateContinueBtn(forceRemove: true)
@@ -301,6 +302,7 @@ final class SelectTicketClipVC: UIViewController {
 //            if selectedTickets.count > 0 {
                 vc.venue = venueDetail
                 vc.upSellTicket = upSellTickets
+                vc.venueImageData = venueImageData
                 navigationController?.interactivePopGestureRecognizer?.delegate = self
                 navigationController?.pushViewController(vc, animated: true)
 //            }

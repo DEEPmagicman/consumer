@@ -101,6 +101,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var selectedAddOnsItem = [UpSellTicket]()
     var isOnlyAddOnsAvailable = false
     var bookingType: TicketPriceType = .PAID
+    var venueImageData = Data()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -1340,6 +1341,7 @@ extension CheckOutClipVC {
                 vc.selectedAddOns = self.selectedAddOnsItem
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
+                vc.venueImageData = self.venueImageData
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                     self.navigationController?.viewControllers = [selectVC, vc]

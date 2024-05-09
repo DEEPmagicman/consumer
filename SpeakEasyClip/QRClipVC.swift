@@ -7,7 +7,7 @@
 
 import UIKit
 import FSPagerView
-import SDWebImage
+//import SDWebImage
 
 final class QRClipVC: UIViewController {
     
@@ -24,6 +24,7 @@ final class QRClipVC: UIViewController {
     var qrImage:UIImage? = nil
     var addOnsQR:UIImage? = nil
     var isOnlyAddOnsAvailable = false
+    var venueImageData = Data()
     
     @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var swipeLbl: UILabel!
@@ -60,7 +61,10 @@ final class QRClipVC: UIViewController {
     }
     
     func loadImage() {
-        venueImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)"))
+        if let data = UserDefaults.standard.value(forKey: "venueImageData") as? Data {
+            venueImg.image = UIImage(data: data)
+        }
+//        venueImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)"))
     }
     
     func setPageController() {

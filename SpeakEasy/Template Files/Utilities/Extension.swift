@@ -106,6 +106,23 @@ extension String {
     }
 }
 
+extension Date {
+    func startOfMonth() -> Date {
+        return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: self)))!
+    }
+    func endOfMonth() -> Date {
+        return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth())!
+    }
+    
+    var age: Int{
+        let now = Date()
+        let calendar = Calendar.current
+
+        let ageComponents = calendar.dateComponents([.year], from: self, to: now)
+        return ageComponents.year ?? 0
+    }
+}
+
 extension Double {
     // For reducing value as per scale down value
     var scaledValue: Double {

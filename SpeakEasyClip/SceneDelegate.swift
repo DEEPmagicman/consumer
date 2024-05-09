@@ -24,21 +24,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 UserDefaults.standard.resetDefaults()
                 
                 if let value = queryItems.first(where: { $0.name == "v" })?.value {
-                    if value.contains("VN") {
-                        venueId = value
-                        UserDefaults.standard.setValue(value, forKey: "venueId")
-                        return
-                    } else {
-                        deepLinkId = value
-                        UserDefaults.standard.setValue(deepLinkId, forKey: "deepLinkId")
-                        return
-                    }
+                    checkForDeepLink(value)
+                    return
                 }
                 if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
                     venueId = venue
                     UserDefaults.standard.setValue(venue, forKey: "venueId")
                 }
+                if let venue = queryItems.first(where: { $0.name == "vid" })?.value {
+                    checkForDeepLink(venue)
+                    return
+                }
             }
+        }
+    }
+    
+    func checkForDeepLink(_ value: String) {
+        if value.contains("VN") {
+            venueId = value
+            UserDefaults.standard.setValue(value, forKey: "venueId")
+            
+        } else {
+            deepLinkId = value
+            UserDefaults.standard.setValue(deepLinkId, forKey: "deepLinkId")
         }
     }
 

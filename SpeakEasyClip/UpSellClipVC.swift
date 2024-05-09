@@ -24,6 +24,7 @@ final class UpSellClipVC: UIViewController {
     var selectedAppClipTicket: [CoverTicket] {
         venue?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0}) ?? []
     }
+    var venueImageData = Data()
     
     private var isMaxTicketReached: Bool {
         var total = 0
@@ -181,6 +182,7 @@ final class UpSellClipVC: UIViewController {
             vc.selectedAddOnsItem = selectedAddOns
             vc.venue = venue
             vc.bookingType = bookingType
+            vc.venueImageData = venueImageData
             navigationController?.interactivePopGestureRecognizer?.delegate = self
             navigationController?.pushViewController(vc, animated: true)
             updateContinueBtn()
