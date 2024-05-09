@@ -7,6 +7,7 @@
 
 import UIKit
 import FSPagerView
+import SDWebImage
 
 final class QRClipVC: UIViewController {
     
@@ -59,15 +60,7 @@ final class QRClipVC: UIViewController {
     }
     
     func loadImage() {
-        DispatchQueue.global().async {
-            guard let imgUrl = URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)") else { return }
-            do {
-                let imgData = try Data(contentsOf: imgUrl)
-                DispatchQueue.main.async {
-                    self.venueImg.image = UIImage(data: imgData)
-                }
-            } catch {}
-        }
+        venueImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)"))
     }
     
     func setPageController() {
@@ -83,14 +76,14 @@ final class QRClipVC: UIViewController {
     
     @IBAction func onClickShare(_ sender: Any) {
         let msgText = """
-        Thank you for checking into \(venueName) with Speakeasy!
+            Thank you for checking into \(venueName) with Speakeasy!
 
-        Access Your Ticket Here: \(String(format: SharedURL.QAWebURL, bookingId))
+            Access Your Ticket Here: \(isOnlyAddOnsAvailable ? String(format: SharedURL.addOnsShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), addOnBookingId) : String(format: SharedURL.coverShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), bookingId))
 
-        Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
+            Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
 
-        Link to App: \(SharedURL.appStoreURL)
-        """
+            Link to App: \(SharedURL.appStoreURL)
+            """
         shareSocialWith(text: msgText)
     }
     

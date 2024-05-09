@@ -28,6 +28,7 @@
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
+		047286882BECA55700446FD5 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 047286872BECA55700446FD5 /* SDWebImage */; };
 		047473FF28FD17B50097A523 /* ArtistProfilePopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047473FE28FD17B50097A523 /* ArtistProfilePopUp.xib */; };
 		0474740128FD17CA0097A523 /* ArtistProfilePopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474740028FD17CA0097A523 /* ArtistProfilePopUp.swift */; };
 		0477E38B28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477E38928FEBDFA009C86C6 /* FavoriteArtistProfileCVC.swift */; };
@@ -1313,6 +1314,7 @@
 				69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */,
 				CECDD9F22B986E02007E94A7 /* Reachability in Frameworks */,
 				CEDB817E2AA1FB2D00DAD9FE /* StripeApplePay in Frameworks */,
+				047286882BECA55700446FD5 /* SDWebImage in Frameworks */,
 				CEDB81A32AA2112C00DAD9FE /* SocketIO in Frameworks */,
 				CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */,
 				CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */,
@@ -4169,6 +4171,7 @@
 				69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */,
 				CECDD9E92B986ABC007E94A7 /* FSPagerView */,
 				CECDD9F12B986E02007E94A7 /* Reachability */,
+				047286872BECA55700446FD5 /* SDWebImage */,
 			);
 			productName = SpeakEasyClip;
 			productReference = 2966E3282980F85E00B5E103 /* SpeakEasyClip.app */;
@@ -5017,7 +5020,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5052,7 +5055,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -5211,7 +5214,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5257,7 +5260,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5400,6 +5403,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		047286872BECA55700446FD5 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
 		69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;

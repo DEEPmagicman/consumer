@@ -1327,24 +1327,6 @@ extension CheckOutClipVC {
         task.resume()
     }
     
-    private func navigateToQRCode() {
-        DispatchQueue.main.async {
-            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRCodeClipVC")) as? QRCodeClipVC {
-                AppClipLoader.hideLoader()
-                vc.venueName = self.venue?.name ?? ""
-                vc.bookingId = self.bookingId
-                vc.venueLogo = self.venue?.logo?.key ?? ""
-                vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
-                vc.selectedCoverTickets = self.selectedCoverTickets
-                vc.bookingCode = self.venue?.bookingCode ?? ""
-                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
-                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
-                    self.navigationController?.viewControllers = [selectVC, vc]
-                }
-            }
-        }
-    }
-    
     private func navigateToQR() {
         DispatchQueue.main.async {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRClipVC")) as? QRClipVC {

@@ -142,6 +142,31 @@ extension AppDelegate {
             return
         }
         
+        if let value = queryItems.first(where: { $0.name == "bid" })?.value {
+            if url.absoluteString.contains("event") {
+                setRootVC(.booking, id: value)
+            } else {
+                setRootVC(.addOns, id: value)
+            }
+            return
+        }
+        
+        if let value = queryItems.first(where: { $0.name == "aid" })?.value {
+            setRootVC(.addOns, addOnsId: value)
+            return
+        }
+        
+//        if self.type == .appClip {
+//            Navigate.to.scanQR(self, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "", venueName: self.venue?.name ?? "")
+//        } else {
+//            Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
+//        }
+        
+//        - https://speakeasygo.com/tao-chicago/cover/booking?bid=dde569c4-41ec-4cf1-bcaa-2729d5b7ebe5
+//        - https://speakeasygo.com/tao-chicago/table/booking?bid=3243-df34r34-5vrwer25-43ref234523
+        
+//        - https://speakeasygo.com/tao-chicago/addons/booking?aid=3243-df34r34-5vrwer25-43ref234523
+        
         if let value = queryItems.first(where: { $0.name == "v" })?.value {
             if value.contains("VN") {
                 setRootVC(.venue, id: value)
@@ -167,7 +192,7 @@ extension AppDelegate {
         }
     }
 
-    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "") {
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "") {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -219,6 +244,8 @@ extension AppDelegate {
             inviteLinkNav(home, id: id)
         case .booking:
             Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
+        case .addOns:
+            Navigate.to.scanQR(home, bookingId: id, addOnsBookingId: addOnsId, venueName: "")
         }
     }
     

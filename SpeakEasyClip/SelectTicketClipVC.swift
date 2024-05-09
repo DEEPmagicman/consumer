@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 final class SelectTicketClipVC: UIViewController {
     
@@ -206,20 +207,23 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func setUpUI() {
-        DispatchQueue.global(qos: .background).async {
-            let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
-            let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
-            guard let imgUrl = URL(string: imgStr) else { return }
-            guard let logoUrl = URL(string: logoStr) else { return }
-            do {
-                let imgData = try Data(contentsOf: imgUrl)
-                let logoData = try Data(contentsOf: logoUrl)
-                DispatchQueue.main.async {
-                    self.venueBgImg.image = UIImage(data: imgData)
-                    self.logoImg.image = UIImage(data: logoData)
-                }
-            } catch {}
-        }
+        venueBgImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(venueDetail?.venueAttachment?.first?.key ?? "")"))
+        logoImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(venueDetail?.logo?.key ?? "")"))
+        
+//        DispatchQueue.global(qos: .background).async {
+//            let imgStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.venueAttachment?.first?.key ?? "")"
+//            let logoStr = "\(SharedURL.amazonStorage)\(self.venueDetail?.logo?.key ?? "")"
+//            guard let imgUrl = URL(string: imgStr) else { return }
+//            guard let logoUrl = URL(string: logoStr) else { return }
+//            do {
+//                let imgData = try Data(contentsOf: imgUrl)
+//                let logoData = try Data(contentsOf: logoUrl)
+//                DispatchQueue.main.async {
+//                    self.venueBgImg.image = UIImage(data: imgData)
+//                    self.logoImg.image = UIImage(data: logoData)
+//                }
+//            } catch {}
+//        }
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
             self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."

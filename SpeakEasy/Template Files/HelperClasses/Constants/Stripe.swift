@@ -21,11 +21,12 @@ struct SharedURL {
         static let webBaseURL = "https://dev-consumer.speakeasygo.com"
     #else
         static let baseURL = "https://production.speakeasygo.com"
-//        static let baseURL = "https://api.speakeasygo.com"
         static let webBaseURL = "https://production-consumer.speakeasygo.com"
     #endif
-    static let amazonStorage = "https://speakeasy-storage.s3.amazonaws.com/"
+    static let amazonStorage = "https://media.speakeasygo.com/"
     static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"
-    static let QAWebURL = "\(webBaseURL)/ticket-qrcode-generate?qrFor=booking&bookingId=%@"
+    
+    static let coverShareURL = "\(webBaseURL)/%@/cover/booking?bid=%@"
+    static let addOnsShareURL = "\(webBaseURL)/%@/addons/booking?aid=%@"
     static let tableBookingURL = "\(webBaseURL)/select-date?venueId=%@"
 }
