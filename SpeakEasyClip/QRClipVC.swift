@@ -61,10 +61,7 @@ final class QRClipVC: UIViewController {
     }
     
     func loadImage() {
-        if let data = UserDefaults.standard.value(forKey: "venueImageData") as? Data {
-            venueImg.image = UIImage(data: data)
-        }
-//        venueImg.sd_setImage(with: URL(string: "\(SharedURL.amazonStorage)\(self.venueAttachment)"))
+        venueImg.image = UIImage(data: VenueImageManager.shared.venueImage)
     }
     
     func setPageController() {

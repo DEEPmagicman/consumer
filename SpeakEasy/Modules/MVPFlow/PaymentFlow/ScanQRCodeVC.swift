@@ -178,6 +178,7 @@ class ScanQRCodeVC: UIViewController { //
             guard let self = self else { return }
             if isSuccess {
                 self.addOnsBooking = booking
+                self.venueName.text = booking?.venue.name ?? "-"
                 bgImage.sd_setImage(with: URL(string: (booking?.venue.venueAttachment?.first?.key ?? "").imageURL))
                 let string1 = """
             {

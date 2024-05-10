@@ -218,7 +218,7 @@ final class SelectTicketClipVC: UIViewController {
                 DispatchQueue.main.async {
                     self.venueBgImg.image = UIImage(data: imgData)
                     self.venueImageData = imgData
-                    UserDefaults.standard.setValue(imgData, forKey: "venueImageData")
+                    VenueImageManager.shared.venueImage = imgData
                     self.logoImg.image = UIImage(data: logoData)
                 }
             } catch {}
@@ -547,4 +547,12 @@ extension Double {
         }
     }
 
+}
+
+class VenueImageManager {
+    static let shared = VenueImageManager()
+    
+    var venueImage = Data()
+    
+    init() {}
 }

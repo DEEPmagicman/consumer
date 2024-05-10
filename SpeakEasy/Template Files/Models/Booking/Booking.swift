@@ -322,5 +322,6 @@ struct AddOnVenue: Codable {
     var id: String
     var uniqueId: String
     var timezone: String?
+    var name: String?
     var venueAttachment: [VenueAttachmentClip]?
 }

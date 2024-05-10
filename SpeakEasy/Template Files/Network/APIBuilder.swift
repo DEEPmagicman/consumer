@@ -40,7 +40,6 @@ struct APIBuilder {
     static private let changePassword = "/change-password"
     static private let cover = "/cover"
     static private let coverVenue = "/CoverVenue?include=coverTicket&"
-//    static private let coverVenue = "?include=coverTicket&include=venueAttachment&include=logo&include=venueSettings"
     static private let payment = "/payment"
     static private let statusSuccess = "/status?status=SUCCESS"
     static private let mvpCity = "/common-data/venueCitys"
@@ -61,9 +60,6 @@ struct APIBuilder {
     static private let status = "/status"
     static private let deepLink = "/deep-link"
     static private let checkin = "/checkin"
-
-    // version
-    static let v2 = "/v2"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -252,11 +248,11 @@ struct APIBuilder {
     }
     
     static var upcomingTicketsURL: String {
-          baseURL + v2 + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment&include=venue.logo"
+          baseURL + route + booking + upcoming + "?include=bookingHasItem&include=venue.venueAttachment&include=venue.logo"
       }
     
     static var pastTicketsURL: String {
-        baseURL + v2 + route + booking + past
+        baseURL + route + booking + past
     }
     
     static func addPaymentURL(_ id: String) -> String {
