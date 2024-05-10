@@ -225,6 +225,7 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
         }
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+            Loader.hide()
             guard let self = self else {
                 return
             }
