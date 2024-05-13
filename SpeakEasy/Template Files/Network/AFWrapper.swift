@@ -123,7 +123,15 @@ final class AFWrapper: NSObject {
                         return
                     }
                     let decryptedResponse = encryptedResponse.decrypted()
-                    success(decryptedResponse)
+                    let decryptedArrResponse = encryptedResponse.decryptedArry()
+                    let decryptedBoolResponse = encryptedResponse.decryptedBool()
+                    if let response = decryptedResponse {
+                        success(response)
+                    } else if decryptedArrResponse != nil {
+                        success(decryptedArrResponse)
+                    } else {
+                        success(decryptedBoolResponse)
+                    }
                 }  else if responseCode == 401 {
                     forceLogout()
                 } else if response.result.value != nil {

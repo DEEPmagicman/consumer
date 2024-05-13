@@ -396,8 +396,8 @@ extension ShowQRCodeVC: PKAddPassesViewControllerDelegate {
 }
 
 extension ShowQRCodeVC: DateSelectionDelegate {
-    func checkInStatusChange() {
-        booking?.isCheckedIn = true
+    func checkInStatusChange(checkInData : [BookingHasCheckIn]) {
+        booking?.bookingHasCheckIn = checkInData
         setCheckInViewUI()
     }
 }

@@ -88,26 +88,27 @@ final class EventPresenter {
         }
     }
     
-    static func eventTicketCheckIn(bookingId: String, ticketIds: [String], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    static func eventTicketCheckIn(bookingId: String, ticketIds: [String], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ chekInData: [BookingHasCheckIn]?) -> Void) {
         
         let param = ["bookingId" : bookingId,
                      "ticketIds": ticketIds] as [String: Any]
         
         AFWrapper.patchRequest(APIBuilder.eventCheckInAPI, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? Bool else {
-                completion(false, nil)
+            guard let responseDic = response as? [String: Any], let checkInData = responseDic["bookingHasCheckIn"] as? [[String: Any]] else {
+                completion(false, nil, nil)
                 return
             }
-            completion(responseDic, nil)
-
+            if let data = [BookingHasCheckIn].parse(checkInData) {
+                completion(true, nil, data)
+            }
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
-                completion(false, err.domain)
+                completion(false, err.domain, nil)
                 return
             }
             print(error ?? "")
-            completion(false, nil)
+            completion(false, nil, nil)
         }
     }
     

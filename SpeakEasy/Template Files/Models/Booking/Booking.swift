@@ -14,7 +14,6 @@ struct Booking: Codable {
     var venueId: String?
     var eventId: String?
     var paymentType: String?
-    var isCheckedIn: Bool?
     var totalPrice: Double?
     var note: String?
     var consumerUserId: [String]?
@@ -35,6 +34,8 @@ struct Booking: Codable {
     var fees: PaymentDetail?
     var guestList: GuestList?
     var addOnsBookingId: String?
+    var bookingHasCheckIn: [BookingHasCheckIn]?
+    
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
         var tickets = [BookingHasItem]()
@@ -49,6 +50,9 @@ struct Booking: Codable {
         }
         return tickets
     }
+    var isCheckedIn: Bool {
+        bookingHasCheckIn?.first?.bookingItemCheckIn.count ?? 0 == 0 ? false : true
+    }
     
     private enum CodingKeys: String, CodingKey {
         case venueObject = "venue"
@@ -56,7 +60,6 @@ struct Booking: Codable {
         case venueId = "venueId"
         case eventId = "eventId"
         case paymentType = "paymentType"
-        case isCheckedIn = "isCheckedIn"
         case totalPrice = "totalPrice"
         case note
         case consumerUserId = "consumerUserId"
@@ -77,6 +80,7 @@ struct Booking: Codable {
         case fees
         case guestList
         case addOnsBookingId
+        case bookingHasCheckIn
     }
 
     func encode(to encoder: Encoder) throws {
@@ -86,7 +90,6 @@ struct Booking: Codable {
         try container.encode(venueId, forKey: .venueId)
         try container.encode(eventId, forKey: .eventId)
         try container.encode(paymentType, forKey: .paymentType)
-        try container.encodeIfPresent(isCheckedIn, forKey: .isCheckedIn)
         try container.encodeIfPresent(totalPrice, forKey: .totalPrice)
         try container.encode(note, forKey: .note)
         try container.encode(consumerUserId, forKey: .consumerUserId)
@@ -107,6 +110,7 @@ struct Booking: Codable {
         try container.encodeIfPresent(fees, forKey: .fees)
         try container.encodeIfPresent(guestList, forKey: .guestList)
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
+        try container.encodeIfPresent(bookingHasCheckIn, forKey: .bookingHasCheckIn)
     }
 }
 
@@ -324,4 +328,52 @@ struct AddOnVenue: Codable {
     var timezone: String?
     var name: String?
     var venueAttachment: [VenueAttachmentClip]?
+}
+
+struct BookingHasCheckIn: Codable {
+    
+    var id: String
+    var bookingId: String
+    var consumerUserId: String
+    var lastCheckIn: String
+    var status: String
+    var createdAt: String
+    var updatedAt: String
+    var isDeleted: Bool
+    var bookingItemCheckIn: [BookingCheckIn]
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(bookingId, forKey: .bookingId)
+        try container.encode(consumerUserId, forKey: .consumerUserId)
+        try container.encode(lastCheckIn, forKey: .lastCheckIn)
+        try container.encode(status, forKey: .status)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(bookingItemCheckIn, forKey: .bookingItemCheckIn)
+    }
+}
+
+struct BookingCheckIn: Codable {
+    
+    var id: String
+    var bookingHasCheckInId: String
+    var bookingHasItemId: String
+    var checkInDate: String
+    var createdAt: String
+    var updatedAt: String
+    var isDeleted: Bool
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(bookingHasCheckInId, forKey: .bookingHasCheckInId)
+        try container.encode(bookingHasItemId, forKey: .bookingHasItemId)
+        try container.encode(checkInDate, forKey: .checkInDate)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(isDeleted, forKey: .isDeleted)
+    }
 }

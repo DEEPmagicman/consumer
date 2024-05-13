@@ -138,7 +138,7 @@ final class PaymentPresenter {
     }
     
     static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "fees", "event.flyer", "venue.venueSettings"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "fees", "event.flyer", "venue.venueSettings", "bookingHasCheckIn.bookingItemCheckIn"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
@@ -271,27 +271,6 @@ final class PaymentPresenter {
             }
         }
     }
-    
-//    static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
-//
-//        AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in
-//            guard let responseArray = response as? [[String: Any]] else {
-//                completion(false, nil, [])
-//                return
-//            }
-//            if let paymentMethods = [PaymentMethod].parse(responseArray) {
-//                completion(true, nil, paymentMethods)
-//            } else {
-//                completion(false, "internal error", [])
-//            }
-//        } failure: { error in
-//            if let err = error as NSError?, err.code == 0 {
-//                completion(false, err.domain, [])
-//                return
-//            }
-//            completion(false, nil, [])
-//        }
-//    }
     
     static func getPastTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
         let param = ["skip": skip, "include": ["bookingHasItem", "event", "fees", "venue"]] as [String : Any]

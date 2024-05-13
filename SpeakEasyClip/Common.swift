@@ -170,6 +170,23 @@ extension String {
             return nil
         }
     }
+    
+    func decryptedBool() -> Bool? {
+        guard let encryptedData = Data(base64Encoded: self) else {
+            return nil
+        }
+        do {
+            let decryptedData = try decrypt(data: encryptedData, key: EncryptKeys.key, iv: EncryptKeys.iv)
+            guard let responseStr = try JSONSerialization.jsonObject(with: decryptedData, options: .fragmentsAllowed) as? String,
+                  let responseDic = try JSONSerialization.jsonObject(with: responseStr.data(using: .utf8)!, options: .fragmentsAllowed) as? Bool else {
+                return nil
+            }
+            return responseDic
+        } catch {
+            print("Error decrypting response: \(error)")
+            return nil
+        }
+    }
 }
 
 

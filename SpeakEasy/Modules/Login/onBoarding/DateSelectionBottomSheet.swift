@@ -9,12 +9,12 @@ import UIKit
 
 protocol DateSelectionDelegate: AnyObject {
     func selectedDate(date: Date)
-    func checkInStatusChange()
+    func checkInStatusChange(checkInData: [BookingHasCheckIn])
 }
 
 extension DateSelectionDelegate {
     func selectedDate(date: Date) {}
-    func checkInStatusChange() {}
+    func checkInStatusChange(checkInData: [BookingHasCheckIn]) {}
 }
 
 final class DateSelectionBottomSheet: UIViewController {

@@ -25,9 +25,9 @@ final class CheckInBottomSheet: UIViewController {
     @IBAction func onClickCheckIn(_ sender: Any) {
         loader.isHidden = false
         checkInBtn.isHidden = true
-        EventPresenter.eventTicketCheckIn(bookingId: bookingId, ticketIds: ticketId) { isSuccess, errMsg in
+        EventPresenter.eventTicketCheckIn(bookingId: bookingId, ticketIds: ticketId) { isSuccess, errMsg, checkInData in
             if isSuccess {
-                self.delegate?.checkInStatusChange()
+                self.delegate?.checkInStatusChange(checkInData: checkInData ?? [])
                 self.dismiss(animated: true)
             } else {
                 if errMsg != nil {
