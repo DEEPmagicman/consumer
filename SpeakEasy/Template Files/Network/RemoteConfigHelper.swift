@@ -21,19 +21,51 @@ final class RemoteConfigHelper {
     var iOSConsumerHardUpdateVersion: Int = 0
     var iOSConsumerSoftUpdateVersion: Int = 0
     var isShowingAlert = false
-
+    var isMaintenanceiOSConsumer = false
+    
     func getRemoteConfigValues(showSoftUpdate: Bool = false) {
-        remoteConfig.fetch(withExpirationDuration: 300) { _, _ in
+        
+        updateConfigValue {
+            if self.isMaintenanceiOSConsumer {
+                self.checkMaintenanceStatus()
+            } else if self.iOSConsumerHardUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
+                self.forceUpdateAlert()
+            } else if self.iOSConsumerSoftUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
+                if showSoftUpdate == false { return }
+                self.softUpdateAlert()
+            }
+        }
+        
+//        remoteConfig.fetch(withExpirationDuration: 300) { _, _ in
+//            self.remoteConfig.activate { _, _ in
+//                self.iOSConsumerHardUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_hard_update_version").stringValue ?? "") ?? -1
+//                self.iOSConsumerSoftUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_soft_update_version").stringValue ?? "") ?? -1
+//                
+//                if self.iOSConsumerHardUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
+//                    self.forceUpdateAlert()
+//                } else if self.iOSConsumerSoftUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
+//                    if showSoftUpdate == false { return }
+//                    self.softUpdateAlert()
+//                }
+//            }
+//        }
+    }
+    
+    func updateConfigValue(completion: (() -> Void)? = nil) {
+        self.remoteConfig.fetch { _, _ in
             self.remoteConfig.activate { _, _ in
                 self.iOSConsumerHardUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_hard_update_version").stringValue ?? "") ?? -1
                 self.iOSConsumerSoftUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_soft_update_version").stringValue ?? "") ?? -1
-                
-                if self.iOSConsumerHardUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
-                    self.forceUpdateAlert()
-                } else if self.iOSConsumerSoftUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
-                    if showSoftUpdate == false { return }
-                    self.softUpdateAlert()
-                }
+                self.isMaintenanceiOSConsumer = self.remoteConfig.configValue(forKey: "is_maintenance_ios_consumer", source: .remote).boolValue
+                completion?()
+            }
+        }
+    }
+    
+    func checkMaintenanceStatus() {
+        DispatchQueue.main.async {
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                appDelegate.showMaintenanceVC()
             }
         }
     }

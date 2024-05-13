@@ -40,6 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         .portrait
     }
+    
+    func showMaintenanceVC() {
+        let vc = MaintenanceVC(nibName: "MaintenanceVC", bundle: nil)
+        self.window?.rootViewController = vc
+    }
 }
 //MARK: - Application flow
 extension AppDelegate {

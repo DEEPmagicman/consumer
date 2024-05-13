@@ -40,6 +40,8 @@
 		04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A8429828BA600611DC4 /* ticketTypeTableViewCell.swift */; };
 		04862C152B971C2400836598 /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
 		04862C182B975F9000836598 /* QRClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04862C172B975F9000836598 /* QRClipVC.swift */; };
+		048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 048CF2532BF22EC500F0D0D7 /* MaintenanceVC.xib */; };
+		048CF2552BF22EC500F0D0D7 /* MaintenanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048CF2522BF22EC500F0D0D7 /* MaintenanceVC.swift */; };
 		049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
@@ -700,6 +702,8 @@
 		0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteArtistProfileCVC.xib; sourceTree = "<group>"; };
 		04862C102B96FE3300836598 /* UpSellClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellClipVC.swift; sourceTree = "<group>"; };
 		04862C172B975F9000836598 /* QRClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRClipVC.swift; sourceTree = "<group>"; };
+		048CF2522BF22EC500F0D0D7 /* MaintenanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceVC.swift; sourceTree = "<group>"; };
+		048CF2532BF22EC500F0D0D7 /* MaintenanceVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceVC.xib; sourceTree = "<group>"; };
 		049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowQRCodeVC.swift; sourceTree = "<group>"; };
 		04FDAF7D28F91DE9007129CC /* PublikAttendeesTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublikAttendeesTVC.xib; sourceTree = "<group>"; };
 		04FDAF7F28F91DFF007129CC /* PublikAttendeesTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublikAttendeesTVC.swift; sourceTree = "<group>"; };
@@ -1422,6 +1426,15 @@
 				0477E38A28FEBDFA009C86C6 /* FavoriteArtistProfileCVC.xib */,
 			);
 			path = FavoriteArtistProfileCVC;
+			sourceTree = "<group>";
+		};
+		048CF2502BF22E6300F0D0D7 /* Maintenance */ = {
+			isa = PBXGroup;
+			children = (
+				048CF2522BF22EC500F0D0D7 /* MaintenanceVC.swift */,
+				048CF2532BF22EC500F0D0D7 /* MaintenanceVC.xib */,
+			);
+			path = Maintenance;
 			sourceTree = "<group>";
 		};
 		04FDAF8128F9204B007129CC /* PublikAttendeesProfileCVC */ = {
@@ -2359,6 +2372,7 @@
 		CE4867E7286F7DC500FD277E /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				048CF2502BF22E6300F0D0D7 /* Maintenance */,
 				0436D083295966B40087D3DB /* Settings */,
 				E11F4A7A28C800B1008D2E30 /* AccessPass */,
 				E1A9E6D328C55D540081FB28 /* Home */,
@@ -4433,6 +4447,7 @@
 				E11F4B8D28C8358C008D2E30 /* TopEventsTVC.xib in Resources */,
 				E1A9E74E28C55D550081FB28 /* VenuePhotoGallery.xib in Resources */,
 				E167056228CA442800644BF0 /* ViewEventHeader.xib in Resources */,
+				048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */,
 				CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */,
 				E1A9E79728C560BC0081FB28 /* Search.xib in Resources */,
 				828F38332971569C00DEE305 /* VipBookingInviteNew.xib in Resources */,
@@ -4926,6 +4941,7 @@
 				CAC4141228A478050007BA86 /* DaysCollectionViewCell.swift in Sources */,
 				E11F4C0D28C835F3008D2E30 /* ChatHeadTVC.swift in Sources */,
 				BD3FB2512940690D00BE7713 /* IdentifierHelper.swift in Sources */,
+				048CF2552BF22EC500F0D0D7 /* MaintenanceVC.swift in Sources */,
 				CE4867B4286F358800FD277E /* UIButton+Extension.swift in Sources */,
 				CE9AD76B29F28EC000FA55C9 /* PaymentTableViewCell.swift in Sources */,
 				E11F4BF928C835F3008D2E30 /* BookingsCVC.swift in Sources */,
