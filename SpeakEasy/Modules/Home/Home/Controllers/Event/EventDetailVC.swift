@@ -248,10 +248,10 @@ final class EventDetailVC: UIViewController {
                     self.eventTicketId.append(tic.id ?? "")
                 })
                 self.unLockTicketView.isHidden = (self.event?.totalTickets == self.event?.eventTicket?.count ?? 0)
+                self.artists = self.event?.eventHasArtist?.filter( { $0.artist.status == "ENABLED" }) ?? []
                 self.setupData()
                 self.zeroCaseView(isHidden: true)
             }
-            artists = event?.eventHasArtist?.filter( { $0.artist.status == "ENALED" }) ?? []
         }
     }
     

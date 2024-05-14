@@ -35,20 +35,6 @@ final class RemoteConfigHelper {
                 self.softUpdateAlert()
             }
         }
-        
-//        remoteConfig.fetch(withExpirationDuration: 300) { _, _ in
-//            self.remoteConfig.activate { _, _ in
-//                self.iOSConsumerHardUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_hard_update_version").stringValue ?? "") ?? -1
-//                self.iOSConsumerSoftUpdateVersion = Int(self.remoteConfig.configValue(forKey: "ios_consumer_soft_update_version").stringValue ?? "") ?? -1
-//                
-//                if self.iOSConsumerHardUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
-//                    self.forceUpdateAlert()
-//                } else if self.iOSConsumerSoftUpdateVersion > Int(Bundle.main.releaseVersionNumber.replacingOccurrences(of: ".", with: "")) ?? 0 {
-//                    if showSoftUpdate == false { return }
-//                    self.softUpdateAlert()
-//                }
-//            }
-//        }
     }
     
     func updateConfigValue(completion: (() -> Void)? = nil) {
