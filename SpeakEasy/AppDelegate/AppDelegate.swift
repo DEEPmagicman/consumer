@@ -53,7 +53,7 @@ extension AppDelegate {
         self.window?.rootViewController = controller
         self.window?.makeKeyAndVisible()
     }
-
+    
     func changeRootViewController(forceCreateAccount: Bool = false) {
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
@@ -105,6 +105,10 @@ extension AppDelegate {
         
         if url.absoluteString.contains("event") {
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
+                if let value = queryItems.first(where: { $0.name == "eid" })?.value {
+                    setRootVC(.event, id: value)
+                    return
+                }
                 if let inviteId = queryItems.first(where: { $0.name == "L" })?.value {
                     setRootVC(.inviteLink, id: inviteId)
                     return
@@ -186,7 +190,7 @@ extension AppDelegate {
             return
         }
     }
-
+    
     private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "") {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
@@ -210,7 +214,7 @@ extension AppDelegate {
         myAccount.tabBarItem.imageInsets = UIEdgeInsets(top: 8, left: 0, bottom: -8, right: 0)
         let myAccountNavigation = UINavigationController(rootViewController: myAccount)
         myAccountNavigation.navigationBar.isHidden = true
-
+        
         tabBarController.viewControllers = [homeNavigation,myAccountNavigation]
         
         tabBarController.selectedIndex = 0
@@ -249,7 +253,7 @@ extension AppDelegate {
             inviteLinkNav(sender, id: guestUserLastNavigation.1)
         }
     }
-
+    
     private func inviteLinkNav(_ sender: UIViewController, id: String) {
         Navigate.to.inviteVC(sender, inviteId: id)
         if UserDefault.shared.isGuest == true {
