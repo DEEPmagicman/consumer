@@ -97,11 +97,18 @@ final class SelectTicketClipVC: UIViewController {
         
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
+                var json = [String: Any]()
+#if DEBUG
                 guard let data = data,
                       let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                     AppClipLoader.hideLoader()
                     return
                 }
+#else
+                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                json =  response.decrypted() ?? [:]
+#endif
+                
                 self.venueId = json["venueId"] as? String ?? ""
                 self.doormanId = json["doormanId"] as? String ?? ""
                 self.getVenueDetailsWithTickets()
