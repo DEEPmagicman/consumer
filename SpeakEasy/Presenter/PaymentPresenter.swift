@@ -138,7 +138,7 @@ final class PaymentPresenter {
     }
     
     static func getBooking(bookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: Booking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "fees", "event.flyer", "venue.venueSettings", "bookingHasCheckIn.bookingItemCheckIn"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.getBookingURL(bookingId), params: ["include": ["inviteLink.guestList", "bookingHasItem", "venue.venueAttachment", "event.customVenue", "fees", "event.flyer", "venue.venueSettings", "bookingHasCheckIn.bookingItemCheckIn", "venue.logo"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return
@@ -294,7 +294,7 @@ final class PaymentPresenter {
     }
     
     static func getUpcomingTicket(skip: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void) {
-        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "venue"], "orderBy": "createdAt|desc"] as [String : Any]
+        let param = ["skip": skip, "include": ["bookingHasItem", "event.customVenue", "event.flyer", "venue", "inviteLink.guestList"], "orderBy": "createdAt|desc"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.upcomingTicketsURL, params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let booking = responseDic["list"] as? [[String: Any]], let hasMany = responseDic["hasMany"] as? Bool else {
                 completion(false, nil, [], false)

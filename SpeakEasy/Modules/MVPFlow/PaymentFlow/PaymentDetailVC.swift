@@ -42,7 +42,7 @@ final class PaymentDetailVC: UIViewController {
             if booking.eventId == nil {
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
-                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
+                    dateLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMddyyyy)
                     mainImg.image = Constant.Icon.liveCover
                 } else if booking.bookingType == "TABLE" {
                     titleLbl.text = Constant.String.tableReservation

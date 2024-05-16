@@ -153,7 +153,6 @@ final class ShowQRCodeVC: UIViewController {
         if let booking = booking {
             switch type {
             case .appClip:
-                venueImg.sd_setImage(with: URL(string: (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
                 if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                     titleLbl.text = inviteLink.name
                     dateLbl.text = booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
@@ -170,12 +169,7 @@ final class ShowQRCodeVC: UIViewController {
                     noteView.isHidden = true
                 }
                 venueNameLbl.text = booking.venueObject?.city
-                coverTicketDate.text = "-"
-                if booking.bookingType == "INVITE_LINK" || booking.bookingType == "COMPED_TICKET" {
-                    coverTicketDate.text = "\(booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? ""), \(booking.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a, customTimeZone: booking.venueObject?.useTimezone ?? "") ?? "")"
-                } else {
-                    coverTicketDate.text = booking.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: booking.venueObject?.useTimezone ?? "")
-                }
+                coverTicketDate.text = "\(booking.inviteLink?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, customTimeZone: booking.venueObject?.timezone ?? "") ?? "")"
                 coverTicketCity.text = "\(booking.venueObject?.name ?? ""), \(booking.venueObject?.city ?? "")"
                 venueLogo.isHidden = false
                 eventTicketDetailsView.isHidden = true
@@ -194,7 +188,6 @@ final class ShowQRCodeVC: UIViewController {
             case .tieredTickedEvent:
                 break
             }
-            //            venueNameLbl.text = booking.venueObject?.name
         }
     }
     
@@ -203,7 +196,7 @@ final class ShowQRCodeVC: UIViewController {
         if let filter = CIFilter(name: "CIQRCodeGenerator") {
             filter.setValue(data, forKey: "inputMessage")
             let transform = CGAffineTransform(scaleX: 10, y: 10)
-
+            
             if let output = filter.outputImage?.transformed(by: transform) {
                 return UIImage(ciImage: output)
             }

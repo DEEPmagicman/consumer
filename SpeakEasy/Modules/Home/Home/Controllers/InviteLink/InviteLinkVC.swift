@@ -86,12 +86,12 @@ final class InviteLinkVC: UIViewController {
         headerTitleLbl.text = inviteObj?.name ?? "Untitle"
         venueTitleLbl.text = "\(inviteObj?.venue.name ?? ""), \(inviteObj?.venue.city ?? "")"
         venueNameLbl.text = "Venue - \(inviteObj?.venue.name ?? "")"
-        detailLbl.text = inviteObj?.description.withEmptyPlaceHolder ?? Constant.String.dash
+        detailLbl.text = inviteObj?.description?.withEmptyPlaceHolder ?? Constant.String.dash
         policyLbl.text = String(format: Constant.String.venuePolicy, inviteObj?.venue.name ?? "venue")
         locationLbl.text = inviteObj?.venue.address
         dressCodeLbl.text = inviteObj?.venue.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: inviteObj?.venue.latitude ?? 0, longitude: inviteObj?.venue.longitude ?? 0), with: inviteObj?.venue.name)
-        dateLbl.text = inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+        dateLbl.text = inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, customTimeZone: inviteObj?.venue.useTimezone ?? "")
         timingLbl.text = "\(Constant.String.dotDoorsOpenAt) \(inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a, customTimeZone: inviteObj?.venue.useTimezone ?? "") ?? "")"
         updateContinueBtn(show: true)
         if inviteObj?.venue.website ?? "" != "" {

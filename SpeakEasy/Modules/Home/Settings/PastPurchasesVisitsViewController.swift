@@ -71,8 +71,8 @@ extension PastPurchasesVisitsViewController: UITableViewDelegate, UITableViewDat
         if bookings[indexPath.row].eventId == nil {
             if bookings[indexPath.row].isCompedTicket == true, let inviteLink = bookings[indexPath.row].inviteLink {
                 cell.eventNameLbl.text = inviteLink.name
-                cell.monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
-                cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                cell.monthLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
+                cell.dateLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
             } else if bookings[indexPath.row].bookingType == "TABLE_BOOKING" {
                 cell.eventNameLbl.text = Constant.String.tableReservation
                 cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD)

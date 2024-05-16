@@ -289,6 +289,7 @@ extension Decodable {
             let data = try JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
             return try JSONDecoder().decode(self, from: data)
         } catch {
+            print("---\(error)")
             let error = NSError.init(domain: NSCocoaErrorDomain,
                                      code: 101,
                                      userInfo: ["type": "Model parsing error",
@@ -296,6 +297,7 @@ extension Decodable {
                                                 "error": "\(error)",
                                                 "environment": APIBuilder.webBaseURL,
                                                 "consumer id": UserDefault.shared.user?.id ?? "-"])
+            
             Crashlytics.crashlytics().record(error: error)
             return nil
         }

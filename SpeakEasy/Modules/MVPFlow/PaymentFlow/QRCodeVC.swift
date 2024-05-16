@@ -105,7 +105,7 @@ final class QRCodeVC: UIViewController {
                     titleLbl.text = inviteLink.name
                     dateLbl.isHidden = false
                     venueNameLbl.isHidden = false
-                    dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
+                    dateLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD)
                 } else {
                     titleLbl.text = booking.venueObject?.name
                     dateLbl.isHidden = true

@@ -97,10 +97,8 @@ extension AppDelegate {
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems, let value = queryItems.first(where: { $0.name == "bid" })?.value {
             if url.absoluteString.contains("event") {
                 setRootVC(.booking, id: value)
-            } else {
-                setRootVC(.addOns, id: value)
+                return
             }
-            return
         }
         
         if url.absoluteString.contains("event") {
@@ -150,6 +148,11 @@ extension AppDelegate {
             return
         }
         
+        if let value = queryItems.first(where: { $0.name == "bid" })?.value {
+            setRootVC(.addOns, id: value)
+            return
+        }
+        
         if let value = queryItems.first(where: { $0.name == "pid" })?.value {
             let eventId = queryItems.first(where: { $0.name == "eid" })?.value ?? ""
             setRootVC(.event, id: eventId, promoteId: value)
@@ -162,7 +165,7 @@ extension AppDelegate {
         }
         
         if let value = queryItems.first(where: { $0.name == "aid" })?.value {
-            setRootVC(.addOns, addOnsId: value)
+            setRootVC(.addOns, addOnsId: value, isOnlyAddOnAvailable: true)
             return
         }
         
@@ -191,7 +194,7 @@ extension AppDelegate {
         }
     }
     
-    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "") {
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "", isOnlyAddOnAvailable: Bool = false) {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -244,7 +247,7 @@ extension AppDelegate {
         case .booking:
             Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
         case .addOns:
-            Navigate.to.scanQR(home, isAddOnsAvailable: true, bookingId: id, isOnlyAddOnAvailable: true, addOnsBookingId: addOnsId, venueName: "")
+            Navigate.to.scanQR(home, isAddOnsAvailable: true, bookingId: id, isOnlyAddOnAvailable: isOnlyAddOnAvailable, addOnsBookingId: addOnsId, venueName: "")
         }
     }
     

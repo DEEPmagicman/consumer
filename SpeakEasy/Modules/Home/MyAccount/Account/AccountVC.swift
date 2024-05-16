@@ -179,8 +179,8 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             if bookings[indexPath.row].eventId == nil {
                 if bookings[indexPath.row].isCompedTicket == true, let inviteLink = bookings[indexPath.row].inviteLink {
                     cell.eventNameLbl.text = inviteLink.name
-                    cell.monthLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
-                    cell.dateLbl.text = inviteLink.date.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
+                    cell.monthLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMM)
+                    cell.dateLbl.text = inviteLink.date?.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
                 } else if bookings[indexPath.row].bookingType == "TABLE" {
                     cell.eventNameLbl.text = Constant.String.tableReservation
                     cell.dateLbl.text = bookings[indexPath.row].floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(from: .YYYYMMDD, to: .DD, isUTC: true, customTimeZone: bookings[indexPath.row].venueObject?.useTimezone ?? "") ?? bookings[indexPath.row].createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .DD)
@@ -237,10 +237,12 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0:
-            if bookings[indexPath.row].eventId == nil {
-                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
-            } else {
+            if bookings[indexPath.row].eventId != nil {
                 Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
+            } else if bookings[indexPath.row].inviteLink != nil {
+                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
+            } else {
+                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
             }
         case 1:
             Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
