@@ -30,6 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
                     venueId = venue
                     UserDefaults.standard.setValue(venue, forKey: "venueId")
+                    return
                 }
                 if let venue = queryItems.first(where: { $0.name == "vid" })?.value {
                     checkForDeepLink(venue)
