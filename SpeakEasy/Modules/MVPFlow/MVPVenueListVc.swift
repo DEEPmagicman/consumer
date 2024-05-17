@@ -168,25 +168,13 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if section == 0 {
-           return openVenueList.count
-//        } else {
-//           return closeVenueList.count
-//        }
+        return openVenueList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
         var data: ClipVenue?
-//        if indexPath.section == 0 {
-            data = openVenueList[indexPath.row]
-//            cell.coverLbl.isHidden = false
-////            cell.updatedAtLbl.isHidden = false
-//        } else {
-//            data = closeVenueList[indexPath.row]
-//            cell.coverLbl.isHidden = true
-//            cell.updatedAtLbl.isHidden = true
-//        }
+        data = openVenueList[indexPath.row]
         if let data = data {
             cell.setData(data: data)
         }
@@ -194,47 +182,19 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if indexPath.section == 0 {
-            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
-//        } else {
-//            Navigate.to.MVPVenueDetailViewController(self, venueId: closeVenueList[indexPath.row].id, venueUniqueId: closeVenueList[indexPath.row].uniqueId, venueTimeZone: closeVenueList[indexPath.row].timezone ?? "")
-//        }
+        Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.section == 0 {
-            if indexPath.row == openVenueList.count - 1 {
-                if openHasMore {
-                    fetchAllOpenVenueForMVP()
-                }
+        if indexPath.row == openVenueList.count - 1 {
+            if openHasMore {
+                fetchAllOpenVenueForMVP()
             }
-//        } else {
-//            if indexPath.row == closeVenueList.count - 1 {
-//                if closeHasMore {
-//                    fetchAllCloseVenueForMVP()
-//                }
-//            }
-//        }
+        }
     }
     
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header = MVPVenueTypeHeaderView.instanceFromNib() as? MVPVenueTypeHeaderView
-//        if section == 0 {
-//            header?.openCloseLbl.text = "Open Tonight"
-//            header?.detailLbl.text = "Venues that are currently open in your city."
-//        } else {
-//            header?.openCloseLbl.text = "Venues in \(UserDefault.shared.localCity)"
-//            header?.detailLbl.text = "Venues in your city."
-//        }
-//        return header
-//    }
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 {
-            return openVenueList.count == 0 ? 0 : 60
-//        } else {
-//            return closeVenueList.count == 0 ? 0 : 60
-//        }
+        return openVenueList.count == 0 ? 0 : 60
     }
 }
 

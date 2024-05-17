@@ -33,7 +33,6 @@ final class PaymentPresenter {
             } else {
                 completion(false, "Alert","", "Booking failed")
             }
-
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain,"", "")
@@ -65,7 +64,6 @@ final class PaymentPresenter {
             } else {
                 completion(false, "Alert","", "Booking failed")
             }
-
         } failure: { error in
             if let err = error as NSError?, err.code == 0 {
                 completion(false, err.domain,"", "")
@@ -106,7 +104,6 @@ final class PaymentPresenter {
             completion(false, nil,"", "")
         }
     }
-
     
     static func createCoverFreeBooking(coverTickets: [[String: Any]], venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ id: String? , _ message: String?) -> Void) {
         let param = ["coverTicket": coverTickets,
@@ -157,7 +154,6 @@ final class PaymentPresenter {
         }
     }
     
-
     static func getAddOnsBooking(addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
         AFWrapper.getRequest(APIBuilder.addOnBookingAPI(addOnsBookingId), params: ["include": ["addOnsBookingHasItem.addOns", "venue.venueAttachment"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
@@ -193,7 +189,7 @@ final class PaymentPresenter {
             param["isAppClipPayment"] = false
             param["isTieredTicket"] = true
         }
-
+        
         AFWrapper.postRequest(APIBuilder.addPaymentURL(bookingId), params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {
@@ -249,8 +245,6 @@ final class PaymentPresenter {
             completion(false, nil, "", "", nil, "")
         }
     }
-    
-    
     
     static func getUserSavedMethods(customerId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ paymentMethods: [PaymentMethod]) -> Void) {
         AFWrapper.getRequest(APIBuilder.customerMethod(customerId), params: nil, headers: Header.header()) { response in

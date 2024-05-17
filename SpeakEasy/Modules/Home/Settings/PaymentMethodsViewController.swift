@@ -15,7 +15,7 @@ protocol PaymentMethodVCDelegate: AnyObject {
 final class PaymentMethodsViewController: UIViewController {
 
     @IBOutlet weak var paymentTableView: UITableView!
-
+    
     var selectedId = Constant.String.defaultSelectedPM
     var isEditable = false
     private var paymentMethods = [PaymentMethod]()

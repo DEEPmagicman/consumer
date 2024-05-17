@@ -76,12 +76,10 @@ final class InviteLinkVC: UIViewController {
         organizerName.text = inviteObj?.venue.name
         organizerAddress.text = inviteObj?.venue.website ?? "" != "" ? inviteObj?.venue.website : inviteObj?.venue.address
         descriptionText.text = inviteObj?.venue.description ?? "-"
-        if inviteObj?.venue.venueSettings?.isOrganizer == true {
-            dressCodeView.isHidden = true
-            venueDetailsView.isHidden = true
-            organizerView.isHidden = false
-            descriptionView.isHidden = false
-        }
+        dressCodeView.isHidden = inviteObj?.venue.venueSettings?.isOrganizer == true ? true : false
+        venueDetailsView.isHidden = inviteObj?.venue.venueSettings?.isOrganizer == true ? true : false
+        organizerView.isHidden = inviteObj?.venue.venueSettings?.isOrganizer == true ? false : true
+        descriptionView.isHidden = inviteObj?.venue.venueSettings?.isOrganizer == true ? false : true
         titleLbl.text = inviteObj?.name ?? "Untitle"
         headerTitleLbl.text = inviteObj?.name ?? "Untitle"
         venueTitleLbl.text = "\(inviteObj?.venue.name ?? ""), \(inviteObj?.venue.city ?? "")"
