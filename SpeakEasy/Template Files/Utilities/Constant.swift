@@ -9,24 +9,15 @@ import UIKit
 
 struct Constant {
     struct Color {
-        static let primaryColor = UIColor(red: 117/255, green: 48/255, blue: 159/255,alpha: 1)
-        static let vibesSelectedBgColor = UIColor(hex: "#75309F")
-        static let selectedItemTextColor = UIColor(hex: "#F2F2F2")
-        static let selectedDrinkColor = UIColor(hex: "#007AFF")
         static let code7Acolor = UIColor(named: "code7a")
-        static let code2Fcolor = UIColor(named: "code2f")
-        static let codea1Color = UIColor(named: "codea1")
-        static let submiteRequestBtnColor = UIColor(hex: "#0B78FF")
         static let primaryBlue = UIColor(named: "primaryBlue")
         static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
         static let customGray = UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.00)
     }
     
     struct Icon {
-        static let radioClick = UIImage(named: "blueCheck")
-        static let radioIcon = UIImage(named: "radioCirculIcon")
-        static let check = UIImage(named: "purpul_Check")
-        static let defaultIcon = UIImage(named: "defaultIcon")
+//        static let radioClick = UIImage(named: "blueCheck")
+//        static let check = UIImage(named: "purpul_Check")
         static let maleIdentify = UIImage(named: "maleIdentify_Ic")
         static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
         static let liveCover = UIImage(named: "liveCover")

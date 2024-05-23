@@ -9,6 +9,11 @@ import UIKit
 import FSPagerView
 import PassKit
 
+protocol QRCodeVCNavigationDelegate: AnyObject {
+  func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?)
+  func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String)
+}
+
 extension UIView {
     
     func setVerticalGradient(colors: [CGColor]) {
@@ -252,4 +257,9 @@ extension ScanQRCodeVC: PKAddPassesViewControllerDelegate {
             Alert.showToast("Ticket added to wallet", vc: self)
         }
     }
+}
+
+extension QRCodeVCNavigationDelegate {
+    func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) { }
+    func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) { }
 }

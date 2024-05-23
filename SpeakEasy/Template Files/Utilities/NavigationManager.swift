@@ -74,13 +74,6 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    func confirmEmailVC(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmEmailVC.self)
-        vc.modalTransitionStyle = .crossDissolve
-        vc.modalPresentationStyle = .overFullScreen
-        sender.navigationController?.present(vc, animated: true, completion: nil)
-    }
-    
     func presentDateSelectionBottomSheet(_ sender: UIViewController, date: Date? = nil) {
         var configuration: NBBottomSheetConfiguration
         configuration = NBBottomSheetConfiguration(sheetSize: .fixed(310))
@@ -110,16 +103,6 @@ final class Navigate {
         }
     }
     
-    func addEmailVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(AddEmailViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func dateOfBirthVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(DateOfBirthViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func SetProfilePicVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SetProfilePictureViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -142,61 +125,8 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectVibesVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectVibesViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func selectFavoriteDrinkVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectFavoriteDrinkViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func connectSocialMediaVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConnectSocialMediaViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func signInOptionVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(SignInOptionViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func loginWithEmailVc(_ sender: UIViewController, isFromSettings: Bool = false) {
-        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(LoginWithEmailViewController.self)
-        vc.isFromSettings = isFromSettings
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func enterEmailPassVc(_ sender: UIViewController, email: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(EnterEmailPassViewController.self)
-        vc.email = email
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func resetPasswordVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.login.instantiateVC(ResetPasswordViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func createPasswordVc(_ sender: UIViewController,email: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(CreatePasswordViewController.self)
-        vc.email = email
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func changePasswordVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.settings.instantiateVC(ChangePasswordViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func welcomeVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeViewController.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func welcomeItroduceVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(WelcomeItroduceViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -337,88 +267,6 @@ final class Navigate {
         vc.customerId = customerId
         vc.paymentMethod = paymentMethod
         vc.delegate = sender as? CardDetailChangeDelegate
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func instagramWebView(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(InstagramWebController.self)
-        vc.instaConnectedDelegate = sender as? InstagramConnectedDelegate
-        sender.navigationController?.present(vc, animated: true, completion: nil)
-    }
-    
-    func selectPhotoVc(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectPhotosViewController.self)
-        vc.selectedImgDelegate = sender as? SelectedInstaImgDelegate
-        sender.navigationController?.present(vc, animated: true, completion: nil)
-    }
-    
-    func inviteFriendPopUp(_ sender: UIViewController, invitedFrdList: [InviteFriendsModel], selectedGuest: Int) {
-        let vc = InviteFriendsPopUp()
-        vc.modalTransitionStyle = .crossDissolve
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.invitedFrdDelegate = sender as? InvitedFriendDelegate
-        vc.selectedFriend = invitedFrdList
-        vc.guest = selectedGuest
-        sender.navigationController?.present(vc, animated: true, completion: nil)
-    }
-    
-    func editProfile(_ sender: UIViewController) {
-        let vc = EditProfileVC()
-        fullscreenPush(vc: vc)
-    }
-    
-    func bookingInvite(_ sender: UIViewController, booking: BookingsDataSet?, isFromSettings: Bool = false) {
-        let vc = PendingBookingAwait()
-        vc.booking = booking
-        vc.isFromSettings = isFromSettings
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func VIPBookingInviteNew(_ sender: UIViewController, isFree: Bool) {
-        let vc = VipBookingInviteNew()
-        vc.itsFree = isFree
-        fullscreenPush(vc: vc)
-    }
-    
-    func pendingBookingAwait(_ sender: UIViewController, data: BookingsDataSet?, fromBooking: Bool = false) {
-        let vc = PendingBookingAwait()
-        vc.booking = data
-        vc.fromBookingInvite = fromBooking
-        fullscreenPush(vc: vc)
-    }
-    
-    func ticketConfirmation(_ sender: UIViewController, data: BookingsDataSet?, isFromSettings: Bool = false) {
-      let data = TopEventDataSet(imgEventCover: UIImage(named: "duttonRanch"), lblPerformerName: "Dutton Ranch", lblVenueName: "Welcome to the Farm",imgBrandLogo: UIImage(named: "welcomeFarmLogo"), lblEventDate: "Friday, October 28",location: "1054 Old River Rd. Cleveland, OH", imgBrandLogoLarge:  UIImage(named: "welcomeFarmLogoLarge"), lblSongName: "Country Girl", lblSongArtist: "Luke Bryan")
-        let vc = TicketConfirmation()
-        vc.screenType = .FromBooking
-        vc.isFromSettings = isFromSettings
-        vc.topEventData = data
-        fullscreenPush(vc: vc)
-    }
-    
-    func allEvents(_ sender: UIViewController) {
-        let vc = AllEvents()
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func allVenues(_ sender: UIViewController) {
-        let vc = AllVenues()
-        Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func tutorialVc(_ sender: UIViewController) {
-        let vc = Tutorials()
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-//    func eventDetail(_ sender: UIViewController, eventId: String) {
-//        let vc = EventBookingDetails()
-//        vc.eventId = eventId
-//        sender.navigationController?.pushViewController(vc, animated: true)
-//    }
-    
-    func homeCitySelection(_ sender: UIViewController) {
-        let vc = HomeCitySelectionVC()
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

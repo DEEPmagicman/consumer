@@ -9,11 +9,6 @@ import UIKit
 import SwiftUI
 import SDWebImage
 
-protocol SelectedInstaImgDelegate: AnyObject {
-    func selectedImg(image: String)
-    func loginAgain()
-}
-
 final class SetProfilePictureViewController: UIViewController {
 
     @IBOutlet weak var profileView: UIView!
@@ -88,28 +83,10 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
         let photoLibraryAction = UIAlertAction(title: "Camera Roll", style: .default) { (action) in
             Navigate.to.showImagePickerController(self, sourceType: .photoLibrary)
         }
-        // MARK: comment out Instagram flow for now
-//        let instagram = UIAlertAction(title: "Connect Instagram", style: .default) { (action) in
-////            Permission.openCamera(sender: self, mediaTypes: ["public.image"])
-////            self.showImagePickerController(soureType:.camera)
-//            self.fetchInstaPhotos(self)
-//        }
+        
         let cancelAction =  UIAlertAction(title: "Cancel", style: .cancel, handler: nil )
         
         Alert.showAlertSheet(style: .actionSheet, title: "Add photo", message: "", actions: [photoLibraryAction, cancelAction], completion: nil)
-    }
-    
-    func fetchInstaPhotos(_ fromViewController: UIViewController) {
-        if !Connectivity.isConnectedToInternet {
-            Alert.showAlertSheet(style: .alert, title: Constant.String.internetNotConnect, message: "")
-            return
-        }
-        let instaToken = UserDefault.shared.user?.instagramToken
-        if instaToken != "" && instaToken != nil {
-            Navigate.to.selectPhotoVc(self)
-        } else {
-            Navigate.to.instagramWebView(self)
-        }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -125,25 +102,5 @@ extension SetProfilePictureViewController: UIImagePickerControllerDelegate, UINa
             self.continueBtn.alpha = 1
         }
         picker.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension SetProfilePictureViewController: InstagramConnectedDelegate {
-    func instaConnect() {
-        Navigate.to.selectPhotoVc(self)
-    }
-}
-
-extension SetProfilePictureViewController: SelectedInstaImgDelegate {
-    func selectedImg(image: String) {
-        imageView.sd_setImage(with: URL( string: image), completed: nil)
-        continueBtn.isUserInteractionEnabled = true
-        continueBtn.alpha = 1
-    }
-    
-    func loginAgain() {
-        DispatchQueue.main.async {
-            Navigate.to.instagramWebView(self)
-        }
     }
 }

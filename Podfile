@@ -7,7 +7,6 @@ target 'SpeakEasy-Consumer' do
 
   # Pods for SpeakEasy
   pod 'Hero'
-  pod 'NVActivityIndicatorView', '4.7.0'
   pod 'UITextView+Placeholder'
   pod 'DropDown'
   pod 'SCPageControl'
@@ -16,7 +15,6 @@ target 'SpeakEasy-Consumer' do
   pod 'OTPFieldView'
   pod 'SVProgressHUD'
   pod 'GoogleSignIn'
-  pod 'SwiftInstagram', '~> 1.1.2'
   pod 'JWTDecode'
   pod 'NBBottomSheet', '~> 1.2'
 end

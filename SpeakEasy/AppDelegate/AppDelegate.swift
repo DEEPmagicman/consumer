@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.application = application
         
         IQKeyboardManager.shared.enable = true
-        
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         window = UIWindow(frame:UIScreen.main.bounds)
         launchApplication()
         Bundle.FlagIcons = Bundle(for: type(of: self))

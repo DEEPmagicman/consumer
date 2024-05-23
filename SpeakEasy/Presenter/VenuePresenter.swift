@@ -31,31 +31,7 @@ final class VenuePresenter {
             completion(false, nil, [], false)
         }
     }
-    
-    func getBottleList(venueId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [BottleCategory], _ hasMore: Bool) -> Void) {
-        Loader.show()
-        AFWrapper.getRequest(APIBuilder.bottleListURL(venueId),params: nil, headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool
-            else {
-                completion(false, nil, [], false)
-                return
-            }
-            if let bottleCategoryList = [BottleCategory].parse(menu) {
-                completion(true, nil, bottleCategoryList, hasMore)
-            } else {
-                completion(false, "internal error", [], false)
-            }
-
-        } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, [], false)
-                return
-            }
-            completion(false, nil, [], false)
-        }
-    }
-    
+        
     static func getDeepLinkData(_ id: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ doormanId: String?, _ venueId: String?) -> Void) {
         Loader.show()
         AFWrapper.getRequest(APIBuilder.deepLinkURL(id), params: nil, headers: Header.header()) { response in

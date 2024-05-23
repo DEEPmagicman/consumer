@@ -894,7 +894,6 @@ extension CheckOutVC {
                             self.addOnsPaymentSuccess {
                                 self.timer.invalidate()
                                 Navigate.to.scanQR(self, isAddOnsAvailable: true, bookingId: self.bookingId, addOnsBookingId: self.addOnsBookingId ?? "")
-                                //                        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId, type: self.type)
                             }
                         }
                     }

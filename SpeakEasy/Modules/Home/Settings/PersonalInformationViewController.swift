@@ -78,7 +78,7 @@ final class PersonalInformationViewController: UIViewController {
     }
     
     @IBAction func onClickEmail(_ sender: Any) {
-        Navigate.to.loginWithEmailVc(self, isFromSettings: true)
+//        Navigate.to.loginWithEmailVc(self, isFromSettings: true)
     }
         
     @IBAction func onClickPhoneNumber(_ sender: Any) {

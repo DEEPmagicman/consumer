@@ -21,15 +21,9 @@ PODS:
   - Hero (1.6.2)
   - JWTDecode (3.0.0)
   - NBBottomSheet (1.2.0)
-  - NVActivityIndicatorView (4.7.0):
-    - NVActivityIndicatorView/Presenter (= 4.7.0)
-  - NVActivityIndicatorView/Presenter (4.7.0)
   - OTPFieldView (1.0.1)
   - SCPageControl (0.4.0)
   - SVProgressHUD (2.2.5)
-  - SwiftInstagram (1.1.2):
-    - SwiftInstagram/Core (= 1.1.2)
-  - SwiftInstagram/Core (1.1.2)
   - "UITextView+Placeholder (1.4.0)"
 
 DEPENDENCIES:
@@ -40,11 +34,9 @@ DEPENDENCIES:
   - Hero
   - JWTDecode
   - NBBottomSheet (~> 1.2)
-  - NVActivityIndicatorView (= 4.7.0)
   - OTPFieldView
   - SCPageControl
   - SVProgressHUD
-  - SwiftInstagram (~> 1.1.2)
   - "UITextView+Placeholder"
 
 SPEC REPOS:
@@ -59,11 +51,9 @@ SPEC REPOS:
     - Hero
     - JWTDecode
     - NBBottomSheet
-    - NVActivityIndicatorView
     - OTPFieldView
     - SCPageControl
     - SVProgressHUD
-    - SwiftInstagram
     - "UITextView+Placeholder"
 
 SPEC CHECKSUMS:
@@ -77,13 +67,11 @@ SPEC CHECKSUMS:
   Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
-  NVActivityIndicatorView: b19ddab2576f805cbe0fb2306cba3476e09a1dea
   OTPFieldView: 700a752fe62c41d1c4914c78aa500fb30d97c255
   SCPageControl: 8a8dfbba7d7d8c66487a317cb4c4578a7e4af27a
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
-  SwiftInstagram: 1579fd6ffb294de557bc47deddbe719fde6e2058
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: 82badf9bf8578b3cca2774b6045e30bbd3f76c0e
+PODFILE CHECKSUM: 75ee5ecd3f530f9bff12daaaeebdb84db482cb96
 
 COCOAPODS: 1.15.2

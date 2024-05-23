@@ -187,9 +187,9 @@ struct ImageDetail {
     var description: String?
     
     enum CodingKeys: String, CodingKey {
-        case key = "key"
-        case name = "name"
-        case description = "description"
+        case key
+        case name
+        case description
     }
     
     internal init(key: String, name: String, description: String) {
@@ -226,5 +226,16 @@ extension ImageDetail: Decodable, Encodable {
         try val.encode(key, forKey: .key)
         try val.encode(name, forKey: .name)
         try val.encode(description, forKey: .description)
+    }
+}
+
+struct MVPCity: Codable {
+    var label: String
+    var value: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(label, forKey: .label)
+        try container.encode(value, forKey: .value)
     }
 }
