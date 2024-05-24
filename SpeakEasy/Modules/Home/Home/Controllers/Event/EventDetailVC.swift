@@ -463,7 +463,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case ticketListTableView:
-            return activeTickets?.count ?? 0
+            let tick = activeTickets?.filter({ $0.beginSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date() <= Date() })
+            return tick?.count ?? 0
         case artistTableView:
             lineUpView.isHidden = artists.count == 0
             return artists.count
