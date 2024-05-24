@@ -16,10 +16,6 @@ struct Constant {
     }
     
     struct Icon {
-//        static let radioClick = UIImage(named: "blueCheck")
-//        static let check = UIImage(named: "purpul_Check")
-        static let maleIdentify = UIImage(named: "maleIdentify_Ic")
-        static let femaleIdentify = UIImage(named: "femalIdentify_Ic")
         static let liveCover = UIImage(named: "liveCover")
         static let uploadImage = UIImage(named: "uploadImage")
         static let defaultProfile = UIImage(named: "default-profile")
