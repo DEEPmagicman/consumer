@@ -1449,6 +1449,7 @@
 				CE48671C286F2CB000FD277E /* Resources */,
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
+				04C0C3D02C04B50F00DF2970 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1596,6 +1597,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		04C0C3D02C04B50F00DF2970 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
 		088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2118,6 +2141,58 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 5.0.2;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"AppAuth\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"DropDown\"",
+					"-framework",
+					"\"FlagPhoneNumber\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GSImageViewerController\"",
+					"-framework",
+					"\"GTMAppAuth\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleSignIn\"",
+					"-framework",
+					"\"Hero\"",
+					"-framework",
+					"\"JWTDecode\"",
+					"-framework",
+					"\"LocalAuthentication\"",
+					"-framework",
+					"\"NBBottomSheet\"",
+					"-framework",
+					"\"OTPFieldView\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"SCPageControl\"",
+					"-framework",
+					"\"SVProgressHUD\"",
+					"-framework",
+					"\"SafariServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"UITextView_Placeholder\"",
+					"-weak_framework",
+					"\"AuthenticationServices\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2164,6 +2239,58 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 5.0.2;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"AppAuth\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreMedia\"",
+					"-framework",
+					"\"CoreText\"",
+					"-framework",
+					"\"DropDown\"",
+					"-framework",
+					"\"FlagPhoneNumber\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GSImageViewerController\"",
+					"-framework",
+					"\"GTMAppAuth\"",
+					"-framework",
+					"\"GTMSessionFetcher\"",
+					"-framework",
+					"\"GoogleSignIn\"",
+					"-framework",
+					"\"Hero\"",
+					"-framework",
+					"\"JWTDecode\"",
+					"-framework",
+					"\"LocalAuthentication\"",
+					"-framework",
+					"\"NBBottomSheet\"",
+					"-framework",
+					"\"OTPFieldView\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"SCPageControl\"",
+					"-framework",
+					"\"SVProgressHUD\"",
+					"-framework",
+					"\"SafariServices\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"UITextView_Placeholder\"",
+					"-weak_framework",
+					"\"AuthenticationServices\"",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer";
 				PRODUCT_NAME = Speakeasy;
 				PROVISIONING_PROFILE_SPECIFIER = "";
