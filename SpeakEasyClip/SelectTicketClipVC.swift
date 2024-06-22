@@ -172,7 +172,7 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+        print("---\(url)")
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
@@ -205,12 +205,26 @@ final class SelectTicketClipVC: UIViewController {
                 self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
 #endif
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
-                
+                VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 self.setUpUI()
                 self.getAddOns()
+                if VenueImageManager.shared.customQRData != nil { self.getCustomImage() }
                 self.updateContinueBtn(forceRemove: true)
             }
         }.resume()
+    }
+    
+    private func getCustomImage() {
+        DispatchQueue.global(qos: .background).async {
+            let imgStr = "\(self.venueDetail?.venueSettings?.coverTicketViewSettings?.image ?? "")"
+            guard let imgUrl = URL(string: imgStr) else { return }
+            do {
+                let imgData = try Data(contentsOf: imgUrl)
+                DispatchQueue.main.async {
+                    VenueImageManager.shared.customQRImage = imgData
+                }
+            } catch {}
+        }
     }
     
     private func setUpUI() {
@@ -557,9 +571,12 @@ extension Double {
 }
 
 class VenueImageManager {
+    
     static let shared = VenueImageManager()
     
     var venueImage = Data()
+    var customQRData: CoverTicketViewSettings?
+    var customQRImage = Data()
     
     init() {}
 }

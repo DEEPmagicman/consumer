@@ -164,6 +164,7 @@
 		CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */; };
 		CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE3213CD29E03DA400EBC179 /* TitleHeader.xib */; };
 		CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3C896329A61C8A0072E93C /* FloorPlan.swift */; };
+		CE3EF13A2C25901C00C2B21B /* CustomQRScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */; };
 		CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486721286F2CB000FD277E /* AppDelegate.swift */; };
 		CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE48672A286F2CB100FD277E /* Assets.xcassets */; };
 		CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */; };
@@ -206,6 +207,10 @@
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
+		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
+		CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C41092C26C4680083222C /* Motor-Regular.ttf */; };
+		CE9C410C2C26C47F0083222C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */; };
+		CE9C410E2C26C4C90083222C /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9E92B986ABC007E94A7 /* FSPagerView */; };
@@ -435,6 +440,7 @@
 		CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHeader.swift; sourceTree = "<group>"; };
 		CE3213CD29E03DA400EBC179 /* TitleHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleHeader.xib; sourceTree = "<group>"; };
 		CE3C896329A61C8A0072E93C /* FloorPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlan.swift; sourceTree = "<group>"; };
+		CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQRScreen.swift; sourceTree = "<group>"; };
 		CE48671E286F2CB000FD277E /* Speakeasy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Speakeasy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE486721286F2CB000FD277E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE48672A286F2CB100FD277E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -473,6 +479,9 @@
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
+		CE9C41092C26C4680083222C /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Motor-Regular.ttf"; path = "../../../../../../../Desktop/Motor-Regular.ttf"; sourceTree = "<group>"; };
+		CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../../../../../../Downloads/Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Avenir-Regular.ttf"; path = "../../../../../../../Desktop/Avenir-Regular.ttf"; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
@@ -656,6 +665,7 @@
 				CEE7A2292A28BC9C009A027F /* Common.swift */,
 				04862C102B96FE3300836598 /* UpSellClipVC.swift */,
 				04862C172B975F9000836598 /* QRClipVC.swift */,
+				CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */,
 			);
 			path = SpeakEasyClip;
 			sourceTree = "<group>";
@@ -1074,6 +1084,9 @@
 		CE48677B286F358700FD277E /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				CE9C41082C26C39C0083222C /* Avenir */,
+				CE9C41072C26C3950083222C /* Motor */,
+				CE9C41012C26B0B20083222C /* Open_sans */,
 				BD3FB25429406EBC00BE7713 /* Poppins */,
 				CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */,
 				CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */,
@@ -1197,6 +1210,30 @@
 				CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */,
 			);
 			path = ArtistListTVC;
+			sourceTree = "<group>";
+		};
+		CE9C41012C26B0B20083222C /* Open_sans */ = {
+			isa = PBXGroup;
+			children = (
+				CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */,
+			);
+			path = Open_sans;
+			sourceTree = "<group>";
+		};
+		CE9C41072C26C3950083222C /* Motor */ = {
+			isa = PBXGroup;
+			children = (
+				CE9C41092C26C4680083222C /* Motor-Regular.ttf */,
+			);
+			path = Motor;
+			sourceTree = "<group>";
+		};
+		CE9C41082C26C39C0083222C /* Avenir */ = {
+			isa = PBXGroup;
+			children = (
+				CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */,
+			);
+			path = Avenir;
 			sourceTree = "<group>";
 		};
 		CEDB81F92AA21C4F00DAD9FE /* SDK */ = {
@@ -1529,11 +1566,14 @@
 			files = (
 				04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */,
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
+				CE9C410E2C26C4C90083222C /* Avenir-Regular.ttf in Resources */,
 				04862C132B9719A500836598 /* ticketTypeTableViewCell.xib in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
 				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
+				CE9C410C2C26C47F0083222C /* OpenSans-Regular.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
+				CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */,
 				CEDB82402AA21DD500DAD9FE /* countryCodes.json in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
 				CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */,
@@ -1703,6 +1743,7 @@
 				CEDB82512AA21DD500DAD9FE /* FPNFormat.swift in Sources */,
 				CEDB823D2AA21DD500DAD9FE /* FPNTextField.swift in Sources */,
 				29AEDD992982557200E8E1E9 /* CheckOutClipVC.swift in Sources */,
+				CE9C41002C26973B0083222C /* Color.swift in Sources */,
 				CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */,
 				CEDB82472AA21DD500DAD9FE /* NBRegularExpressionCache.m in Sources */,
 				CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */,
@@ -1710,6 +1751,7 @@
 				CEDB824C2AA21DD500DAD9FE /* NBPhoneNumberDesc.m in Sources */,
 				04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */,
 				CEDB824E2AA21DD500DAD9FE /* FPNNibLoadingView.swift in Sources */,
+				CE3EF13A2C25901C00C2B21B /* CustomQRScreen.swift in Sources */,
 				04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				CEDB82442AA21DD500DAD9FE /* NBPhoneNumberUtil.m in Sources */,

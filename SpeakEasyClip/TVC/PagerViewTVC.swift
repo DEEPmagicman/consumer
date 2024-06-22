@@ -23,7 +23,7 @@ class PagerViewTVC: FSPagerViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        bgView.backgroundColor = UIColor(hex: VenueImageManager.shared.customQRData?.cardCustomColor ?? "")
         ticketsTableView.delegate = self
         ticketsTableView.dataSource = self
         ticketsTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
@@ -69,8 +69,10 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name
             cell.quantityLbl.text = "\(addOnsBookingHasItem[indexPath.row].selectedQuantity ?? 0)x"
         }
+        cell.titleLbl.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorB ?? "")
+        cell.subTitleLbl.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorB ?? "")
+        cell.quantityLbl.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorB ?? "")
         cell.selectionStyle = .none
-        
         return cell
     }
 }

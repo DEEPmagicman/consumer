@@ -941,7 +941,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             self.addOnsPaymentSuccess(.SUCCESS) {
                                 self.getAddOnsBooking {
                                     AppClipLoader.hideLoader()
-                                    self.navigateToQR()
+                                    if VenueImageManager.shared.customQRData == nil {
+                                        self.navigateToQR()
+                                    } else {
+                                        self.navigateToCustomQR()
+                                    }
                                 }
                             }
                         }
@@ -950,7 +954,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             self.addOnsPaymentSuccess(.SUCCESS) {
                                 self.getAddOnsBooking {
                                     AppClipLoader.hideLoader()
-                                    self.navigateToQR()
+                                    if VenueImageManager.shared.customQRData == nil {
+                                        self.navigateToQR()
+                                    } else {
+                                        self.navigateToCustomQR()
+                                    }
                                 }
                             }
                         } else {
@@ -958,10 +966,18 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                                 guard let self = self else { return }
                                 if self.selectedAddOnsItem.count != 0 {
                                     self.addOnsPaymentSuccess(.SUCCESS) {
-                                        self.navigateToQR()
+                                        if VenueImageManager.shared.customQRData == nil {
+                                            self.navigateToQR()
+                                        } else {
+                                            self.navigateToCustomQR()
+                                        }
                                     }
                                 } else {
-                                    self.navigateToQR()
+                                    if VenueImageManager.shared.customQRData == nil {
+                                        self.navigateToQR()
+                                    } else {
+                                        self.navigateToCustomQR()
+                                    }
                                 }
                             }
                         }
@@ -1039,7 +1055,11 @@ extension CheckOutClipVC {
                     self.addOnsPaymentSuccess(.SUCCESS) {
                         self.getAddOnsBooking {
                             AppClipLoader.hideLoader()
-                            self.navigateToQR()
+                            if VenueImageManager.shared.customQRData == nil {
+                                self.navigateToQR()
+                            } else {
+                                self.navigateToCustomQR()
+                            }
                         }
                     }
                 }
@@ -1048,7 +1068,11 @@ extension CheckOutClipVC {
                     self.addOnsPaymentSuccess(.SUCCESS) {
                         self.getAddOnsBooking {
                             AppClipLoader.hideLoader()
-                            self.navigateToQR()
+                            if VenueImageManager.shared.customQRData == nil {
+                                self.navigateToQR()
+                            } else {
+                                self.navigateToCustomQR()
+                            }
                         }
                     }
                 } else {
@@ -1056,10 +1080,18 @@ extension CheckOutClipVC {
                         guard let self = self else { return }
                         if self.selectedAddOnsItem.count != 0 {
                             self.addOnsPaymentSuccess(.SUCCESS) {
-                                self.navigateToQR()
+                                if VenueImageManager.shared.customQRData == nil {
+                                    self.navigateToQR()
+                                } else {
+                                    self.navigateToCustomQR()
+                                }
                             }
                         } else {
-                            self.navigateToQR()
+                            if VenueImageManager.shared.customQRData == nil {
+                                self.navigateToQR()
+                            } else {
+                                self.navigateToCustomQR()
+                            }
                         }
                     }
                 }
@@ -1231,10 +1263,18 @@ extension CheckOutClipVC {
 #endif
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
-                self.navigateToQR()
+                if VenueImageManager.shared.customQRData == nil {
+                    self.navigateToQR()
+                } else {
+                    self.navigateToCustomQR()
+                }
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
-                self.navigateToQR()
+                if VenueImageManager.shared.customQRData == nil {
+                    self.navigateToQR()
+                } else {
+                    self.navigateToCustomQR()
+                }
                 self.createdAT = createdAt
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
@@ -1342,6 +1382,24 @@ extension CheckOutClipVC {
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.venueImageData = self.venueImageData
+                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                    self.navigationController?.viewControllers = [selectVC, vc]
+                }
+            }
+        }
+    }
+    
+    private func navigateToCustomQR() {
+        DispatchQueue.main.async {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CustomQRScreen")) as? CustomQRScreen {
+                AppClipLoader.hideLoader()
+                vc.bookingId = self.bookingId
+                vc.addOnBookingId = self.addOnsBookingId
+                vc.appClipTicket = self.selectedCoverTickets
+                vc.selectedAddOns = self.selectedAddOnsItem
+                vc.bookingCode = self.venue?.bookingCode ?? ""
+                vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
                     self.navigationController?.viewControllers = [selectVC, vc]
