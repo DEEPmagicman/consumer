@@ -9,8 +9,8 @@ import Foundation
 
 struct Venue: Codable {
 
-    var logo: Logo?
-    var venueAttachment: [VenueAttachment]
+    var logo: ImageDetail?
+    var venueAttachment: [ImageDetail]
     var venueHours: [VenueHours]
     var id: String
     var uniqueId: String
@@ -48,5 +48,21 @@ struct Venue: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}
+
+struct VenueHours: Codable {
+
+    var day: String
+    var venueStatus: String
+    var from: String
+    var to: String
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(day, forKey: .day)
+        try container.encode(venueStatus, forKey: .venueStatus)
+        try container.encode(from, forKey: .from)
+        try container.encode(to, forKey: .to)
     }
 }

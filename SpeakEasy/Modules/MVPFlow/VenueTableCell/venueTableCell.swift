@@ -13,10 +13,10 @@ class venueTableCell: UITableViewCell {
     @IBOutlet weak var venueEventImg: UIImageView!
     @IBOutlet weak var liveLbl: UILabel!
     @IBOutlet weak var logoImg: UIImageView!
-    @IBOutlet weak var coverLbl: UILabelDeviceClass!
-    @IBOutlet weak var eventNameLbl: UILabelDeviceClass!
+    @IBOutlet weak var coverLbl: UILabel!
+    @IBOutlet weak var eventNameLbl: UILabel!
     @IBOutlet weak var liveView: UIView!
-    @IBOutlet weak var bookNow: UILabelDeviceClass!
+    @IBOutlet weak var bookNow: UILabel!
     @IBOutlet weak var bookNowHeight: NSLayoutConstraint!
 //    @IBOutlet weak var updatedAtLbl: UILabelDeviceClass!
     

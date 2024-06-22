@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 enum Strings: String{
     
@@ -363,8 +362,8 @@ enum Strings: String{
     case FEATURED = "Featured"
     case CITY_VIEWS = "City Views"
     case ROOFTOP = "Rooftop"
-    case WATERFRONT = "Waterfront"
-    case STEAKHOUSE = "Steakhouse"
+//    case WATERFRONT = "Waterfront"
+//    case STEAKHOUSE = "Steakhouse"
     
     case TOP_EVENTS = "Top Events"
     case FEATURED_EVENTS = "Featured Events"

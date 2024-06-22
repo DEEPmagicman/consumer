@@ -224,6 +224,7 @@ final class EventDetailVC: UIViewController {
         if event == nil {
             view.alpha = 0
         }
+        Loader.show()
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             Loader.hide()
             guard let self = self else {
@@ -462,6 +463,8 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case ticketListTableView:
+            let tick = activeTickets?.filter({ $0.beginSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date() <= Date() })
+            activeTickets = tick
             return activeTickets?.count ?? 0
         case artistTableView:
             lineUpView.isHidden = artists.count == 0

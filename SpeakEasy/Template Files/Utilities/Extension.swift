@@ -125,9 +125,9 @@ extension Date {
 
 extension Double {
     // For reducing value as per scale down value
-    var scaledValue: Double {
-        self / Double(FixValue.scale)
-    }
+//    var scaledValue: Double {
+//        self / Double(FixValue.scale)
+//    }
     
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()

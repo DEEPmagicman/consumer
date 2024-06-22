@@ -147,56 +147,7 @@ final class OnBoardingPresenter {
             completion("", "", false, nil)
         }
     }
-    
-    func loginWithEmailApi(email: String, password: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
-        Loader.show()
-        let param = ["email": email, "password": password]
-        AFWrapper.postRequest(APIBuilder.loginWithEmailURL, params: param, headers: Header.header(), shouldForceLogout: false) { response in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any] else {
-                completion(false, nil)
-                return
-            }
-            let imageDic = userDic["image"] as? [String: Any]
-            let user = User(fromDictionary: userDic)
-            UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
-            UserDefault.shared.isLoggedIn = true
-            UserDefault.shared.isGuest = false
-            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
-            UserDefault.shared.user = user
-            completion(true, nil)
-
-        } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain)
-                return
-            }
-            print(error ?? "")
-            completion(false,nil)
-        }
-    }
-    
-    func forgotPasswordApi(email: String, completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
-        Loader.show()
-        let param = ["email": email]
-        AFWrapper.postRequest(APIBuilder.forgotPasswordURL, params: param, headers: Header.header()) { response in
-            
-            guard let responseDic = response as? NSDictionary else {
-                completion(false, nil)
-                return
-            }
-            completion(true, nil)
-
-        } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain)
-                return
-            }
-            print(error ?? "")
-            completion(false, nil)
-        }
-    }
-    
     func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg:String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName, fName != "" {
@@ -291,64 +242,6 @@ final class OnBoardingPresenter {
             print(error ?? "")
         }
     }
-
-    
-//    func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl:String, _ isSuccess: Bool) -> Void) {
-//        Loader.show()
-//        let param = ["file": image] as [String: Any]
-//        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
-//
-//            guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
-//                completion("", false)
-//                return
-//            }
-//            completion(imgUrl, true)
-//
-//        } failure: { error in
-//            completion("", false)
-//            print(error ?? "")
-//        }
-//    }
-    
-    func getVibesListAPi(from:Int? = 0, completion: @escaping(_ vibeList: [Vibe],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
-        Loader.show()
-        let param = ["skip": from]
-        AFWrapper.getRequest(APIBuilder.vibesListURL, params: param as [String: Any], headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String: Any], let vibesArray = responseDic["list"] as? [[String: Any]], let more = responseDic["hasMany"] as? Bool else {
-                completion([Vibe](), false, false)
-                return
-            }
-            var vibes = [Vibe]()
-            vibesArray.forEach {
-                vibes.append(Vibe(fromDictionary: $0))
-            }
-            completion(vibes, more, true)
-        } failure: { error in
-            completion([Vibe](), false, false)
-            print(error ?? "")
-        }
-    }
-    
-    func getDrinkListAPi(from:Int? = 0, completion: @escaping(_ drinkList: [Drink],_ hasMore: Bool, _ isSuccess: Bool) -> Void) {
-        Loader.show()
-        let param = ["skip": from]
-        AFWrapper.getRequest(APIBuilder.drinksListURL, params: param as [String: Any], headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String: Any], let drinkArray = responseDic["list"] as? [[String: Any]], let more = responseDic["hasMany"] as? Bool else {
-                completion([Drink](), false, false)
-                return
-            }
-            var drinks = [Drink]()
-            drinkArray.forEach {
-                drinks.append(Drink(fromDictionary: $0))
-            }
-            completion(drinks, more, true)
-        } failure: { error in
-            completion([Drink](), false, false)
-            print(error ?? "")
-        }
-    }
     
     func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         
@@ -425,34 +318,6 @@ final class OnBoardingPresenter {
             }
             print(error ?? "")
             completion(false, nil)
-        }
-    }
-    
-    func getCityListAPi(from: Int? = 0, searchText: String? = "", completion: @escaping(_ cityList: [City], _ hasMore: Bool, _ isSuccess: Bool) -> Void) {
-        if from == 0 {
-            Loader.show()
-        }
-        var param: [String:Any] = [:]
-           param["skip"] = from
-           param["search_column"] = "name"
-           param["countryCode"] = "US"
-        if searchText != "" {
-            param["search"] = searchText
-        }
-        AFWrapper.getRequest(APIBuilder.getCityListURL, params: param, headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String:Any], let cityArray = responseDic["list"] as? [[String:Any]], let more = responseDic["hasMany"] as? Bool else {
-                completion([City](), false, false)
-                return
-            }
-            var citys = [City]()
-            cityArray.forEach {
-                citys.append(City(fromDictionary: $0))
-            }
-            completion(citys, more, true)
-        } failure: { error in
-            completion([City](), false, false)
-            print(error ?? "")
         }
     }
     

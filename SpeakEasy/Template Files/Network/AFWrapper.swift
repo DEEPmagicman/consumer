@@ -417,7 +417,6 @@ final class AFWrapper: NSObject {
     }
     
     static func forceLogout() {
-        CustomLoader.sharedInstance.stopAnimation()
         Loader.hide()
         Utility.main.showAlert(message: Constant.String.sessionTimeOut, title: "") {
             UserDefault.shared.emptyData()
