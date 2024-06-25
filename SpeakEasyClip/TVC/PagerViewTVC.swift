@@ -32,6 +32,7 @@ class PagerViewTVC: FSPagerViewCell {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
         containerView.addGestureRecognizer(tapGesture)
+        super.contentView.layer.shadowColor = UIColor.clear.cgColor
     }
     
     

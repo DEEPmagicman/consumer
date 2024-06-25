@@ -53,21 +53,20 @@ final class CustomQRScreen: UIViewController {
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
         customImage.image = UIImage(data: VenueImageManager.shared.venueImage)
-        customBtn.setTitle(VenueImageManager.shared.customQRData?.button.text.uppercased(), for: .normal)
-        customBtn.backgroundColor = UIColor(hex: VenueImageManager.shared.customQRData?.button.color ?? "")
-        customBtn.titleLabel?.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.button.fontColor ?? "")
-        buyAnotherTicketBtn.titleLabel?.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorA ?? "")
+        customBtn.setTitle(VenueImageManager.shared.customQRData?.button?.text.uppercased(), for: .normal)
+        customBtn.backgroundColor = UIColor(hex: VenueImageManager.shared.customQRData?.button?.color ?? "")
+        customBtn.setTitleColor(UIColor(hex: VenueImageManager.shared.customQRData?.button?.fontColor ?? ""), for: .normal)
+        buyAnotherTicketBtn.setTitleColor(UIColor(hex: VenueImageManager.shared.customQRData?.fontColorA ?? ""), for: .normal)
         anotherTicketBtnView.backgroundColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorA ?? "")
-        if VenueImageManager.shared.customQRData?.button.text == "open_sans" {
+        if VenueImageManager.shared.customQRData?.button?.text == "open_sans" {
             customBtn.titleLabel?.font = UIFont(name: "OpenSans-Regular", size: 15)
-        } else if VenueImageManager.shared.customQRData?.button.text == "motor" {
+        } else if VenueImageManager.shared.customQRData?.button?.text == "motor" {
             customBtn.titleLabel?.font = UIFont(name: "Motor-Regular", size: 15)
-        } else if VenueImageManager.shared.customQRData?.button.text == "avenir" {
+        } else if VenueImageManager.shared.customQRData?.button?.text == "avenir" {
             customBtn.titleLabel?.font = UIFont(name: "Avenir-Regular", size: 15)
         } else {
             customBtn.titleLabel?.font = UIFont(name: "Poppins-Regular", size: 15)
         }
-//        customBtn.titleLabel?.font = UIFont(name: "OpenSans-SemiBold", size: 15)
         customImage.image = UIImage(data: VenueImageManager.shared.customQRImage)
         bgView.backgroundColor = UIColor(hex: VenueImageManager.shared.customQRData?.background ?? "")
         resizeLandscapeImageView(imageViewFrameWidth: UIScreen.main.bounds.width, image: customImage.image ?? UIImage())
@@ -103,7 +102,7 @@ final class CustomQRScreen: UIViewController {
     }
     
     @IBAction func onClickCustomBtn(_ sender: Any) {
-        guard let url = URL(string: VenueImageManager.shared.customQRData?.button.link ?? "") else { return }
+        guard let url = URL(string: VenueImageManager.shared.customQRData?.button?.link ?? "") else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     

@@ -319,7 +319,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(addOnsBookingSettings, forKey: .addOnsBookingSettings)
         try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
         try container.encode(bookingStatus, forKey: .bookingStatus)
-        try container.encodeIfPresent(coverTicketViewSettings, forKey: .coverTicketViewSettings)
+//        try container.encodeIfPresent(coverTicketViewSettings, forKey: .coverTicketViewSettings)
     }
 }
 
@@ -357,21 +357,21 @@ struct CoverTicketFeesSettings: Codable {
 
 struct CoverTicketViewSettings: Codable {
     
-    var image: String
-    var button: CustomButton
-    var background: String
-    var fontColorA: String
-    var fontColorB: String
-    var cardCustomColor: String
+    var image: String?
+    var button: CustomButton?
+    var background: String?
+    var fontColorA: String?
+    var fontColorB: String?
+    var cardCustomColor: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(image, forKey: .image)
-        try container.encode(button, forKey: .button)
-        try container.encode(background, forKey: .background)
-        try container.encode(fontColorA, forKey: .fontColorA)
-        try container.encode(fontColorB, forKey: .fontColorB)
-        try container.encode(cardCustomColor, forKey: .cardCustomColor)
+        try container.encodeIfPresent(image, forKey: .image)
+        try container.encodeIfPresent(button, forKey: .button)
+        try container.encodeIfPresent(background, forKey: .background)
+        try container.encodeIfPresent(fontColorA, forKey: .fontColorA)
+        try container.encodeIfPresent(fontColorB, forKey: .fontColorB)
+        try container.encodeIfPresent(cardCustomColor, forKey: .cardCustomColor)
     }
 }
 
