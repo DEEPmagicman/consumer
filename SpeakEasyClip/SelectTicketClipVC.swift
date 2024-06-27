@@ -353,17 +353,12 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @objc func plusBtnClick(_ sender: UIButton) {
-        if isMaxTicketReached {
-//            Alert.showToast("Max ticket selection reached")
-            return
-        }
+        
         if let totalTicket = venueDetail?.coverTicket?[sender.tag].selectedQuantity {
             if totalTicket < maxTicket {
                 venueDetail?.coverTicket?[sender.tag].selectedQuantity = totalTicket + 1
                 ticketTypeTableView.reloadData()
                 updateContinueBtn()
-            } else {
-//                Alert.showToast("Max ticket selection reached")
             }
         }
     }
@@ -374,11 +369,6 @@ final class SelectTicketClipVC: UIViewController {
                 self.venueDetail?.coverTicket?.indices.forEach {
                     self.venueDetail?.coverTicket?[$0].selectedQuantity = nil
                 }
-//                if self.venueDetail?.availableTimeSlot == true {
-//                    self.continueBtn.isHidden = false
-//                    self.VIPTableBookingView.isHidden = false
-//                    self.scrollViewBottomConstraint.constant = 128
-//                } else {
                     self.VIPTableBookingView.isHidden = true
                     self.continueBtn.isHidden = true
                     self.scrollViewBottomConstraint.constant = 20
@@ -495,15 +485,23 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         }
         venueDetail?.coverTicket?[indexPath.row].selectedQuantity = 1
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-            forceRemovePaidTicket()
             forceRemoveCustomTicket()
-            selectedType = .FREE
+            
+//            let ticket = self.venueDetail?.coverTicket?.filter(<#T##isIncluded: (CoverTicket) throws -> Bool##(CoverTicket) throws -> Bool#>) ?.indices.forEach {
+//                self.venueDetail?.coverTicket?[$0].selectedQuantity = nil
+//            }
+            
+            let selected = venueDetail?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0 })
+            if let paid = selected?.filter({ $0.price > 2 }), paid.count != 0 {
+                selectedType = .PAID
+            } else {
+                selectedType = .FREE
+            }
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true {
             forceRemovePaidTicket()
             forceRemoveFreeTicket()
             selectedType = venueDetail?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
         } else {
-            forceRemoveFreeTicket()
             forceRemoveCustomTicket()
             selectedType = .PAID
         }

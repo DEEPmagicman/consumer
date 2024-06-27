@@ -193,6 +193,7 @@
 		CE677F9A2A4177310025421D /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F992A4177310025421D /* Invite.swift */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
+		CE7234D32C2D4BA400DA7BD9 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */; };
 		CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */; };
 		CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
@@ -209,7 +210,6 @@
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C41092C26C4680083222C /* Motor-Regular.ttf */; };
-		CE9C410C2C26C47F0083222C /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */; };
 		CE9C410E2C26C4C90083222C /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
@@ -469,6 +469,7 @@
 		CE677F992A4177310025421D /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
 		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
+		CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../../../../../Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistListTVC.swift; sourceTree = "<group>"; };
 		CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistListTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
@@ -480,7 +481,6 @@
 		CE858068299A2089001F6E56 /* FlagKit.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FlagKit.xcassets; path = Pods/FlagPhoneNumber/Sources/Resources/FlagKit.xcassets; sourceTree = SOURCE_ROOT; };
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
 		CE9C41092C26C4680083222C /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Motor-Regular.ttf"; path = "../../../../../../../Desktop/Motor-Regular.ttf"; sourceTree = "<group>"; };
-		CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../../../../../../Downloads/Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Avenir-Regular.ttf"; path = "../../../../../../../Desktop/Avenir-Regular.ttf"; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
@@ -1215,7 +1215,7 @@
 		CE9C41012C26B0B20083222C /* Open_sans */ = {
 			isa = PBXGroup;
 			children = (
-				CE9C410B2C26C47F0083222C /* OpenSans-Regular.ttf */,
+				CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */,
 			);
 			path = Open_sans;
 			sourceTree = "<group>";
@@ -1571,7 +1571,6 @@
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
 				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
-				CE9C410C2C26C47F0083222C /* OpenSans-Regular.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
 				CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */,
 				CEDB82402AA21DD500DAD9FE /* countryCodes.json in Resources */,
@@ -1580,6 +1579,7 @@
 				CEDB823F2AA21DD500DAD9FE /* FPNCountryView.xib in Resources */,
 				CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */,
 				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
+				CE7234D32C2D4BA400DA7BD9 /* OpenSans-Regular.ttf in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -375,7 +375,7 @@ final class MVPVenueDetailVc: UIViewController {
             Navigate.to.login(forceCreateAccount: true)
             return
         }
-        
+        print("---\(selectedType)")
         if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()
         } else {
@@ -602,15 +602,18 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
             if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
                 scrollViewBottomConstraint.constant = 70
-                forceRemovePaidTicket()
                 forceRemoveCustomTicket()
-                selectedType = .FREE
+                let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0 })
+                if let paid = selected?.filter({ $0.price > 2 }), paid.count != 0 {
+                    selectedType = .PAID
+                } else {
+                    selectedType = .FREE
+                }
             } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
                 forceRemovePaidTicket()
                 forceRemoveFreeTicket()
                 selectedType = venueDetails?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
             } else {
-                forceRemoveFreeTicket()
                 forceRemoveCustomTicket()
                 selectedType = .PAID
             }
