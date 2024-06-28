@@ -431,14 +431,11 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].description
         cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+        cell.plusBtn.isUserInteractionEnabled = isMaxTicketReached ? false : true
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
             cell.ticketPriceLbl.text = "FREE"
-            cell.plusBtn.alpha = 0.5
-            cell.plusBtn.isUserInteractionEnabled = false
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true && venueDetail?.coverTicket?[indexPath.row].price ?? 0 == 0 {
             cell.ticketPriceLbl.text = "FREE"
-            cell.plusBtn.alpha = 0.5
-            cell.plusBtn.isUserInteractionEnabled = false
         } else {
             if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
@@ -480,16 +477,11 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         if venueDetail?.coverTicket?[indexPath.row].status != "ENABLED" { return }
         if venueDetail?.coverTicket?[indexPath.row].selectedQuantity != nil { return }
         if isMaxTicketReached {
-//            Alert.showToast("Max ticket selection reached")
             return
         }
         venueDetail?.coverTicket?[indexPath.row].selectedQuantity = 1
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
             forceRemoveCustomTicket()
-            
-//            let ticket = self.venueDetail?.coverTicket?.filter(<#T##isIncluded: (CoverTicket) throws -> Bool##(CoverTicket) throws -> Bool#>) ?.indices.forEach {
-//                self.venueDetail?.coverTicket?[$0].selectedQuantity = nil
-//            }
             
             let selected = venueDetail?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0 })
             if let paid = selected?.filter({ $0.price > 2 }), paid.count != 0 {

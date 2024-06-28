@@ -479,12 +479,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
             if ticket?.price ?? 0 < 2 && ticket?.name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
-                cell.plusBtn.alpha = 0.5
-                cell.plusBtn.isUserInteractionEnabled = false
             } else if ticket?.isCustom == true && ticket?.price ?? 0 == 0 {
                 cell.ticketPriceLbl.text = "FREE"
-                cell.plusBtn.alpha = 0.5
-                cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
