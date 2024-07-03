@@ -363,6 +363,27 @@ final class PaymentPresenter {
             completion(false, nil)
         }
     }
+    
+    static func getEventBookingQuestion(eventUniqueId: String, completion: @escaping ( _ isSuccess: Bool, _ errMsg: String?, _ questions: [Questions]?) -> Void) {
+        let param = ["take": 50,
+                     "orderBy": "order|asc"] as [String: Any]
+        AFWrapper.getRequest(APIBuilder.getEventQuestion(eventUniqueId), params: param, headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any], let questions = responseDic["list"] as? [[String: Any]] else {
+                return
+            }
+            if let data = [Questions].parse(questions) {
+                completion(true, nil, data)
+            } else {
+                completion(false, "Internal error", [])
+            }
+        } failure: { error in
+            if let err = (error as NSError?), err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+            completion(false, nil, [])
+        }
+    }
 }
 
 extension URLSession {

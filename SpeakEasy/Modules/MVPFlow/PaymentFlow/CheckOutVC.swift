@@ -106,6 +106,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var isFreeTicket = false
     var addOnsBookingId: String?
     var bookingType: TicketPriceType = .FREE
+    var eventQuestions = [Questions]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -178,6 +179,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
         startTimer()
         navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
+        
+        if type == .singleTickedEvent { getEventQuestions() }
     }
     
     @objc private func handleBackSwipe() {
@@ -855,6 +858,22 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = .clear
         cell.contentView.backgroundColor = .clear
         return cell
+    }
+    
+    private func getEventQuestions() {
+        PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
+            guard let self = self else { return }
+            if isSuccess {
+                self.eventQuestions = questions ?? []
+                print("---\(self.eventQuestions)")
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
     }
 }
 
