@@ -1383,7 +1383,8 @@ extension CheckOutClipVC {
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.venueImageData = self.venueImageData
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
-                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
+                    selectVC.forceRemoveAllTicket()
                     self.navigationController?.viewControllers = [selectVC, vc]
                 }
             }
@@ -1401,7 +1402,8 @@ extension CheckOutClipVC {
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
-                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) {
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
+                    selectVC.forceRemoveAllTicket()
                     self.navigationController?.viewControllers = [selectVC, vc]
                 }
             }

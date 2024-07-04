@@ -172,7 +172,6 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        print("---\(url)")
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
@@ -346,6 +345,8 @@ final class SelectTicketClipVC: UIViewController {
                 updateContinueBtn()
             } else if totalTicket == 1 {
                 venueDetail?.coverTicket?[sender.tag].selectedQuantity = nil
+                let ticket = venueDetail?.coverTicket?.first(where: { $0.price >= 2 && $0.selectedQuantity != nil })
+                if ticket != nil { selectedType = .PAID } else { selectedType = .FREE }
                 ticketTypeTableView.reloadData()
                 updateContinueBtn(forceRemove: (venueDetail?.coverTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
             }
@@ -390,6 +391,14 @@ final class SelectTicketClipVC: UIViewController {
                 self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
             }
         }
+    }
+    
+    func forceRemoveAllTicket() {
+        self.venueDetail?.coverTicket?.indices.forEach {
+            self.venueDetail?.coverTicket?[$0].selectedQuantity = nil
+        }
+        ticketTypeTableView.reloadData()
+        updateContinueBtn(forceRemove: true)
     }
     
     private func forceRemoveFreeTicket() {
