@@ -225,6 +225,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         
         if (venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true {
+            let customTicket = selectedCoverTickets.first(where: { $0.isCustom == true && $0.price > 0 })
+            salesTaxPr.text = customTicket == nil ? "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)" : "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return true
         }
         return false
