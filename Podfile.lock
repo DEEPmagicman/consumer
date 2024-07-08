@@ -5,7 +5,6 @@ PODS:
   - AppAuth/Core (1.6.0)
   - AppAuth/ExternalUserAgent (1.6.0):
     - AppAuth/Core
-  - DropDown (2.3.13)
   - FlagPhoneNumber (0.8.0):
     - FlagPhoneNumber/libPhoneNumberiOS (= 0.8.0)
   - FlagPhoneNumber/libPhoneNumberiOS (0.8.0)
@@ -27,7 +26,6 @@ PODS:
   - "UITextView+Placeholder (1.4.0)"
 
 DEPENDENCIES:
-  - DropDown
   - FlagPhoneNumber
   - GoogleSignIn
   - GSImageViewerController
@@ -42,7 +40,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
-    - DropDown
     - FlagPhoneNumber
     - GoogleSignIn
     - GSImageViewerController
@@ -58,7 +55,6 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
-  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   FlagPhoneNumber: 3712455b95f66cb0f2016fef7d9e34cddf8c7f9a
   GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
   GSImageViewerController: 20a257d7e3dd9ee171c2dfea659992eba2761839
@@ -72,6 +68,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: dc2dbe30abbd4d3c9fc33e975543c7b89a741ba7
+PODFILE CHECKSUM: 5355c4de4a3d645113994b466048210ea2c1f4f6
 
 COCOAPODS: 1.15.2

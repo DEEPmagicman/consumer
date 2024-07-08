@@ -72,6 +72,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsTableView: UITableView!
     @IBOutlet weak var addOnsPaymentMethodView: UIView!
     @IBOutlet weak var addOnsSeparatorHeight: NSLayoutConstraint!
+    @IBOutlet weak var questionTableView: UITableView!
+    @IBOutlet weak var questionTableViewHeight: NSLayoutConstraint!
     
     var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
@@ -107,6 +109,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var addOnsBookingId: String?
     var bookingType: TicketPriceType = .FREE
     var eventQuestions = [Questions]()
+    private var questionHeightObservation: NSKeyValueObservation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -181,6 +184,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
         
         if type == .singleTickedEvent { getEventQuestions() }
+        
+        questionTableView.delegate = self
+        questionTableView.dataSource = self
+        questionTableView.register(UINib(nibName: "EventQuestionTVC", bundle: nil), forCellReuseIdentifier: "EventQuestionTVC")
+        questionHeightObservation = questionTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.questionTableViewHeight.constant = self.questionTableView.contentSize.height
+            self.questionTableView.layoutIfNeeded()
+        }
     }
     
     @objc private func handleBackSwipe() {
@@ -822,49 +834,15 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
         }
     }
-}
-
-extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch type {
-        case .appClip:
-            return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
-        case .singleTickedEvent:
-            return selectedEventTicket.count
-        case .tieredTickedEvent:
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        switch type {
-        case .appClip:
-            if tableView == ticketListTableView {
-                cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
-            } else {
-                cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
-            }
-            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
-            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
-        case .singleTickedEvent:
-            cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
-            cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
-            cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
-        case .tieredTickedEvent:
-            break
-        }
-        cell.selectionStyle = .none
-        cell.backgroundColor = .clear
-        cell.contentView.backgroundColor = .clear
-        return cell
-    }
     
     private func getEventQuestions() {
         PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
             guard let self = self else { return }
             if isSuccess {
                 self.eventQuestions = questions ?? []
+                DispatchQueue.main.async {
+                    self.questionTableView.reloadData()
+                }
                 print("---\(self.eventQuestions)")
             } else {
                 if errMsg != nil {
@@ -873,6 +851,57 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                 }
             }
+        }
+    }
+}
+
+extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == questionTableView {
+            return eventQuestions.count
+        } else {
+            switch type {
+            case .appClip:
+                return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
+            case .singleTickedEvent:
+                return selectedEventTicket.count
+            case .tieredTickedEvent:
+                return 0
+            }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == questionTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EventQuestionTVC", for: indexPath) as! EventQuestionTVC
+            let question = eventQuestions[indexPath.row]
+            cell.questionNameLbl.text = question.question
+            cell.multiSelectView.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
+            cell.checkBoxView.isHidden = !(question.questionType == "CHECKBOX")
+            cell.textQuestionView.isHidden = !(question.questionType == "TEXT")
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+            switch type {
+            case .appClip:
+                if tableView == ticketListTableView {
+                    cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
+                } else {
+                    cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
+                }
+                cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
+                cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+            case .singleTickedEvent:
+                cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
+                cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
+                cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
+            case .tieredTickedEvent:
+                break
+            }
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+            cell.contentView.backgroundColor = .clear
+            return cell
         }
     }
 }

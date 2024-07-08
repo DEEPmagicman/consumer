@@ -21,6 +21,4 @@ class Fonts {
     static func poppinsRegular(_ size: CGFloat) -> UIFont {
         UIFont(name: "Poppins-Regular", size: size) ?? UIFont.systemFont(ofSize: size, weight: .medium)
     }
-
-
 }

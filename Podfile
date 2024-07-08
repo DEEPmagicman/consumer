@@ -8,7 +8,7 @@ target 'SpeakEasy-Consumer' do
   # Pods for SpeakEasy
   pod 'Hero'
   pod 'UITextView+Placeholder'
-  pod 'DropDown'
+#  pod 'DropDown'
   pod 'SCPageControl'
   pod "GSImageViewerController"
   pod "FlagPhoneNumber"

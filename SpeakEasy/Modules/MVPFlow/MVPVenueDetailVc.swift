@@ -589,7 +589,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch tableView {
+//        Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: [], selectedEventTicket: [], selectedAddOnsItem: [], totalPrice: 0, type: .appClip, bookingType: .PAID)
+       switch tableView {
         case ticketTypeTableView:
             if venueDetails?.venueSettings?.bookingStatus != "OPEN" { return }
             if venueDetails?.coverTicket?[indexPath.row].status != "ENABLED" { return }
