@@ -366,7 +366,8 @@ final class PaymentPresenter {
     
     static func getEventBookingQuestion(eventUniqueId: String, completion: @escaping ( _ isSuccess: Bool, _ errMsg: String?, _ questions: [Questions]?) -> Void) {
         let param = ["take": 50,
-                     "orderBy": "order|asc"] as [String: Any]
+                     "orderBy": "order|asc",
+                     "include": "eventQuestionHasOption"] as [String: Any]
         AFWrapper.getRequest(APIBuilder.getEventQuestion(eventUniqueId), params: param, headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any], let questions = responseDic["list"] as? [[String: Any]] else {
                 return

@@ -382,7 +382,6 @@ final class MVPVenueDetailVc: UIViewController {
             Navigate.to.login(forceCreateAccount: true)
             return
         }
-        print("---\(selectedType)")
         if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()
         } else {
@@ -589,7 +588,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: [], selectedEventTicket: [], selectedAddOnsItem: [], totalPrice: 0, type: .appClip, bookingType: .PAID)
        switch tableView {
         case ticketTypeTableView:
             if venueDetails?.venueSettings?.bookingStatus != "OPEN" { return }

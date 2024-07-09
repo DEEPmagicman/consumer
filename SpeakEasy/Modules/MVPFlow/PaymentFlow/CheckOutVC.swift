@@ -9,6 +9,12 @@ protocol UpdateDetailDelegate: AnyObject {
     func update()
 }
 
+protocol DropDownDelegate: AnyObject {
+    func textAns(ans: String, index: Int)
+    func boolAns(ans: Bool, index: Int)
+    func multipleAns(ans: [String], index: Int)
+}
+
 import UIKit
 import PassKit
 import StripeApplePay
@@ -110,6 +116,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var bookingType: TicketPriceType = .FREE
     var eventQuestions = [Questions]()
     private var questionHeightObservation: NSKeyValueObservation?
+    private var questionAnswers = [Int: Any]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -183,7 +190,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         startTimer()
         navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
         
-        if type == .singleTickedEvent { getEventQuestions() }
+        if type == .singleTickedEvent {
+            getEventQuestions()
+        }
         
         questionTableView.delegate = self
         questionTableView.dataSource = self
@@ -691,13 +700,17 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
-        if isFreeTicket {
-            createFreeEventBooking()
+        if !setAnswerData {
+            Alert.showAlertSheet(style: .alert, title: "Please fill all required answers", message: "")
         } else {
-            if selectedId == Constant.String.defaultSelectedPM {
-                applePayButtonTapped()
+            if isFreeTicket {
+                createFreeEventBooking()
             } else {
-                onClickCreditCardPay()
+                if selectedId == Constant.String.defaultSelectedPM {
+                    applePayButtonTapped()
+                } else {
+                    onClickCreditCardPay()
+                }
             }
         }
     }
@@ -781,7 +794,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (()-> Void)) {
         Loader.show()
-        print("--- - \(bookingId)")
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
@@ -843,7 +855,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 DispatchQueue.main.async {
                     self.questionTableView.reloadData()
                 }
-                print("---\(self.eventQuestions)")
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -852,6 +863,26 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 }
             }
         }
+    }
+    
+    private var setAnswerData: Bool {
+        var requiredIndex = [Int]()
+        for (index, element) in eventQuestions.enumerated() {
+            if !element.isOptional {
+                requiredIndex.append(index)
+            }
+        }
+        var requiredEmptyIndex = [Int]()
+        for index in requiredIndex {
+            if eventQuestions[index].questionType == "MULTI_SELECT" {
+                if questionAnswers[index] as? [String] ?? [] == [] { requiredEmptyIndex.append(index) }
+            } else if eventQuestions[index].questionType == "SINGLE_SELECT" || eventQuestions[index].questionType == "TEXT" {
+                if questionAnswers[index] as? String ?? "" == "" { requiredEmptyIndex.append(index) }
+            } else {
+                if questionAnswers[index] as? Bool ?? false == false { requiredEmptyIndex.append(index) }
+            }
+        }
+        return requiredEmptyIndex.count == 0 ? true : false
     }
 }
 
@@ -875,10 +906,20 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
         if tableView == questionTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "EventQuestionTVC", for: indexPath) as! EventQuestionTVC
             let question = eventQuestions[indexPath.row]
-            cell.questionNameLbl.text = question.question
+            cell.questionNameLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
             cell.multiSelectView.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
             cell.checkBoxView.isHidden = !(question.questionType == "CHECKBOX")
             cell.textQuestionView.isHidden = !(question.questionType == "TEXT")
+            cell.questionView.isHidden = question.questionType == "CHECKBOX"
+            cell.checkBoxQuestionLbl.text = question.question
+            var qns = [String]()
+            question.eventQuestionHasOption?.forEach({ que in
+                qns.append(que.option)
+            })
+            cell.options = qns
+            cell.delegate = self
+            cell.index = indexPath.row
+            cell.questionType = question.questionType
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
@@ -1103,4 +1144,23 @@ extension CheckOutVC: PaymentMethodVCDelegate {
             self.onClickCreditCardPay()
         }
     }
+}
+extension CheckOutVC: DropDownDelegate {
+    func textAns(ans: String, index: Int) {
+        questionAnswers[index] = ans
+    }
+    
+    func boolAns(ans: Bool, index: Int) {
+        questionAnswers[index] = ans
+    }
+    
+    func multipleAns(ans: [String], index: Int) {
+        questionAnswers[index] = ans
+    }
+}
+
+extension DropDownDelegate {
+    func textAns(ans: String, index: Int) { }
+    func boolAns(ans: Bool, index: Int) { }
+    func multipleAns(ans: [String], index: Int) { }
 }

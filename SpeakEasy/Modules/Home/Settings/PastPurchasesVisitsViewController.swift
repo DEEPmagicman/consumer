@@ -42,7 +42,6 @@ final class PastPurchasesVisitsViewController: UIViewController {
                 }
                 if hasMany {
                     self.skipValue += 10
-                    print("---\(self.skipValue)")
                 }
                 self.hasMany = hasMany
                 self.zeroCaseView.isHidden = !(bookings.count == 0)

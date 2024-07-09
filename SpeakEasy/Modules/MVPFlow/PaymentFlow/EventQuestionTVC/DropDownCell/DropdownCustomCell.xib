@@ -20,7 +20,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cll-L5-6lR">
                         <rect key="frame" x="0.0" y="0.0" width="230" height="22"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3dE-32-Yrr">
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3dE-32-Yrr">
                                 <rect key="frame" x="10" y="4" width="16" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="3dE-32-Yrr" secondAttribute="height" multiplier="1:1" id="Vrq-ga-QBT"/>
