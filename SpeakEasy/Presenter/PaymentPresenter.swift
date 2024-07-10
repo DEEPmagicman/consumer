@@ -385,6 +385,25 @@ final class PaymentPresenter {
             completion(false, nil, [])
         }
     }
+    
+    static func postEventBookingQueAns(eventUniqueId: String, answers: [Any], bookingId: String, completion: @escaping ( _ isSuccess: Bool, _ errMsg: String?) -> Void) {
+        let param = ["answers": answers,
+                     "bookingId": bookingId] as [String: Any]
+        
+        AFWrapper.postRequest(APIBuilder.postEventQueAns(eventUniqueId), params: param, headers: Header.header()) { response in
+            guard let responseBool = response as? Bool else {
+                completion(false, nil)
+                return
+            }
+            completion(responseBool, nil)
+        } failure: { error in
+            if let err = (error as NSError?), err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            completion(false, nil)
+        }
+    }
 }
 
 extension URLSession {

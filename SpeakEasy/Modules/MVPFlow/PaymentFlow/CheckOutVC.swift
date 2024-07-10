@@ -80,6 +80,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsSeparatorHeight: NSLayoutConstraint!
     @IBOutlet weak var questionTableView: UITableView!
     @IBOutlet weak var questionTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var eventQuestionView: UIStackView!
     
     var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
@@ -116,7 +117,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var bookingType: TicketPriceType = .FREE
     var eventQuestions = [Questions]()
     private var questionHeightObservation: NSKeyValueObservation?
-    private var questionAnswers = [Int: Any]()
+    private var questionAnswers = [String: Any]()
+    var isEventQueAnsCollected = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -202,6 +204,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             self.questionTableViewHeight.constant = self.questionTableView.contentSize.height
             self.questionTableView.layoutIfNeeded()
         }
+        eventQuestionView.isHidden = true
     }
     
     @objc private func handleBackSwipe() {
@@ -412,16 +415,22 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
             Loader.hide()
+            guard let self = self else { return }
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
-                if isFreeTicket {
-                    self.paymentMethodView.isHidden = true
-                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                if self.eventQuestions.count == 0 {
+                    if isFreeTicket {
+                        self.paymentMethodView.isHidden = true
+                        self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                    } else {
+                        self.paymentMethodView.isHidden = false
+                        self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                    }
                 } else {
-                    self.paymentMethodView.isHidden = false
-                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                    self.paymentMethodView.isHidden = true
+                    self.buyNowBtn.setTitle("Submit Answer", for: .normal)
                 }
                 self.isFreeTicket = isFreeTicket
                 self.paymentIntent = clientSecret
@@ -700,17 +709,32 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
-        if !setAnswerData {
-            Alert.showAlertSheet(style: .alert, title: "Please fill all required answers", message: "")
-        } else {
-            if isFreeTicket {
-                createFreeEventBooking()
+        var answers = [[String: Any]]()
+        
+        _ = questionAnswers.map ({ ans in
+            answers.append(["eventQuestionId": ans.key,
+                            "answer": ans.value])
+        })
+        
+        if type == .singleTickedEvent && eventQuestions.count != 0 && !isEventQueAnsCollected {
+            if !setAnswerData {
+                Alert.showAlertSheet(style: .alert, title: "Please fill required answers", message: "")
             } else {
-                if selectedId == Constant.String.defaultSelectedPM {
-                    applePayButtonTapped()
-                } else {
-                    onClickCreditCardPay()
-                }
+                postQuestionAns(ans: answers)
+            }
+        } else {
+            bookingAPIcall()
+        }
+    }
+    
+    private func bookingAPIcall() {
+        if isFreeTicket {
+            createFreeEventBooking()
+        } else {
+            if selectedId == Constant.String.defaultSelectedPM {
+                applePayButtonTapped()
+            } else {
+                onClickCreditCardPay()
             }
         }
     }
@@ -852,8 +876,33 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             guard let self = self else { return }
             if isSuccess {
                 self.eventQuestions = questions ?? []
+                self.eventQuestionView.isHidden = questions?.count == 0
                 DispatchQueue.main.async {
                     self.questionTableView.reloadData()
+                }
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
+    }
+    
+    private func postQuestionAns(ans: [Any]) {
+        Loader.show()
+        PaymentPresenter.postEventBookingQueAns(eventUniqueId: event?.uniqueId ?? "", answers: ans, bookingId: bookingId) { [weak self] isSuccess, errMsg in
+            Loader.hide()
+            guard let self = self else { return }
+            if isSuccess {
+                self.isEventQueAnsCollected = true
+                if isFreeTicket {
+                    self.paymentMethodView.isHidden = true
+                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                } else {
+                    self.paymentMethodView.isHidden = false
+                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
                 }
             } else {
                 if errMsg != nil {
@@ -875,11 +924,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         var requiredEmptyIndex = [Int]()
         for index in requiredIndex {
             if eventQuestions[index].questionType == "MULTI_SELECT" {
-                if questionAnswers[index] as? [String] ?? [] == [] { requiredEmptyIndex.append(index) }
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? [String] ?? [] == [] { requiredEmptyIndex.append(index) }
             } else if eventQuestions[index].questionType == "SINGLE_SELECT" || eventQuestions[index].questionType == "TEXT" {
-                if questionAnswers[index] as? String ?? "" == "" { requiredEmptyIndex.append(index) }
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? String ?? "" == "" { requiredEmptyIndex.append(index) }
             } else {
-                if questionAnswers[index] as? Bool ?? false == false { requiredEmptyIndex.append(index) }
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? Bool ?? false == false { requiredEmptyIndex.append(index) }
             }
         }
         return requiredEmptyIndex.count == 0 ? true : false
@@ -918,7 +970,7 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             })
             cell.options = qns
             cell.delegate = self
-            cell.index = indexPath.row
+            cell.selectedIndex = indexPath.row
             cell.questionType = question.questionType
             return cell
         } else {
@@ -1147,15 +1199,18 @@ extension CheckOutVC: PaymentMethodVCDelegate {
 }
 extension CheckOutVC: DropDownDelegate {
     func textAns(ans: String, index: Int) {
-        questionAnswers[index] = ans
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
     }
     
     func boolAns(ans: Bool, index: Int) {
-        questionAnswers[index] = ans
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
     }
     
     func multipleAns(ans: [String], index: Int) {
-        questionAnswers[index] = ans
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
     }
 }
 

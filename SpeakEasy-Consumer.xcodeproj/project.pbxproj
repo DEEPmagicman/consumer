@@ -230,6 +230,7 @@
 		CECDD9F22B986E02007E94A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9F12B986E02007E94A7 /* Reachability */; };
 		CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */; };
 		CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */; };
+		CED54E442C3E8ABF00D3A942 /* EventCheckoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED54E432C3E8ABF00D3A942 /* EventCheckoutVC.swift */; };
 		CEDB81782AA1FA9B00DAD9FE /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81772AA1FA9B00DAD9FE /* StripePaymentSheet */; };
 		CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB81792AA1FAC100DAD9FE /* StripeApplePay */; };
 		CEDB817C2AA1FAC800DAD9FE /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = CEDB817B2AA1FAC800DAD9FE /* StripePaymentSheet */; };
@@ -508,6 +509,7 @@
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
 		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
+		CED54E432C3E8ABF00D3A942 /* EventCheckoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCheckoutVC.swift; sourceTree = "<group>"; };
 		CEDB820C2AA21DCB00DAD9FE /* FPNCountryListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryListViewController.swift; sourceTree = "<group>"; };
 		CEDB820D2AA21DCB00DAD9FE /* FPNTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNTextField.swift; sourceTree = "<group>"; };
 		CEDB820E2AA21DCB00DAD9FE /* FPNCountryRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPNCountryRepository.swift; sourceTree = "<group>"; };
@@ -946,6 +948,7 @@
 				049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */,
 				920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */,
 				044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */,
+				CED54E432C3E8ABF00D3A942 /* EventCheckoutVC.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -1576,6 +1579,7 @@
 				088156357D2947BC73FD7EB0 /* [CP] Embed Pods Frameworks */,
 				2966E33D2980F86000B5E103 /* Embed App Clips */,
 				04C0C3D02C04B50F00DF2970 /* ShellScript */,
+				CED54E422C3E585500D3A942 /* Upload dSYM */,
 			);
 			buildRules = (
 			);
@@ -1768,6 +1772,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		CED54E422C3E585500D3A942 /* Upload dSYM */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Upload dSYM";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols\" -gsp \"${PROJECT_DIR}/SpeakEasy/AppDelegate/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
+		};
 		ED647637B553BEBC3592CC30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1924,6 +1946,7 @@
 				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				046866532B0F280F00E498CF /* FooterView.swift in Sources */,
+				CED54E442C3E8ABF00D3A942 /* EventCheckoutVC.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				BD3FB24F294068B900BE7713 /* StoryboardAndXibManager.swift in Sources */,
 				BD942F4129595E1A00D52115 /* OnBoardingPresenter.swift in Sources */,

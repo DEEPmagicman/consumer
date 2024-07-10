@@ -342,7 +342,10 @@ final class EventDetailVC: UIViewController {
         }
         switch selectedType {
         case .FREE:
-            createFreeEventBooking()
+//            getEventQuestions()
+            if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount ?? 0 != 0 }) {
+                Navigate.to.eventFreeCheckoutVC(self, event: event, selectedEventTicket: selectedTickets, venueDetails: venueDetails)
+            }
         case .PAID, .CUSTOM:
             if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
                 Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
@@ -351,28 +354,53 @@ final class EventDetailVC: UIViewController {
         }
     }
     
-    private func createFreeEventBooking() {
-        if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
-            var tickets = [[String: Any]]()
-            selectedTickets.forEach {
-                tickets.append(["ticketId": $0.id ?? 0,
-                                "ticketQuantity": $0.selectedTicketCount ?? 0])
-            }
-            Loader.show()
-            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id,massage  in
-                guard let self = self else {
-                    Loader.hide()
-                    return
-                }
-                Loader.hide()
-                if isSuccess, let id = id {
-                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
-                } else {
-                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
-                }
-            }
-        }
-    }
+//    private func getEventQuestions() {
+//        Loader.show()
+//        PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
+//            guard let self = self else { return }
+//            if isSuccess {
+//                if questions?.count == 0 {
+//                    self.createFreeEventBooking()
+//                } else {
+//                    Loader.hide()
+//                    if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
+//                        Navigate.to.checkOutVC(self, venue: venueDetails, selectedCoverTickets: [], selectedEventTicket: selectedTickets, selectedAddOnsItem: [], event: event, totalPrice: totalPrice, type: .singleTickedEvent, promoteId: promoteId)
+//                        updateContinueBtn(forceRemove: true)
+//                    }
+//                }
+//            } else {
+//                Loader.show()
+//                if errMsg != nil {
+//                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+//                } else {
+//                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+//                }
+//            }
+//        }
+//    }
+    
+//    private func createFreeEventBooking() {
+//        if let selectedTickets = activeTickets?.filter({ $0.selectedTicketCount != nil }) {
+//            var tickets = [[String: Any]]()
+//            selectedTickets.forEach {
+//                tickets.append(["ticketId": $0.id ?? 0,
+//                                "ticketQuantity": $0.selectedTicketCount ?? 0])
+//            }
+//            
+//            PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets) { [weak self] isSuccess, errMsg, id, massage  in
+//                guard let self = self else {
+//                    Loader.hide()
+//                    return
+//                }
+//                Loader.hide()
+//                if isSuccess, let id = id {
+//                    Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
+//                } else {
+//                    Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+//                }
+//            }
+//        }
+//    }
     
     func updateContinueBtn(forceRemove: Bool = false) {
         if isNotSellingStage {

@@ -23,7 +23,7 @@ final class EventQuestionTVC: UITableViewCell {
     var questionType = String()
     var selectedAns = [String]()
     var options = [String]()
-    var index = Int()
+    var selectedIndex = Int()
     weak var delegate: DropDownDelegate?
     
     override func awakeFromNib() {
@@ -35,7 +35,7 @@ final class EventQuestionTVC: UITableViewCell {
     }
     
     @objc func textValueChanged() {
-        delegate?.textAns(ans: textQuestionView.text ?? "", index: index)
+        delegate?.textAns(ans: textQuestionView.text ?? "", index: selectedIndex)
     }
     
     @IBAction func onClickDropDown(_ sender: Any) {
@@ -84,10 +84,10 @@ final class EventQuestionTVC: UITableViewCell {
             let joinedString = self.selectedAns.joined(separator: ", ")
             self.multiSelectLbl.text = joinedString
             if questionType == "SINGLE_SELECT" {
-                self.delegate?.textAns(ans: selectedAns.first ?? "", index: index)
+                self.delegate?.textAns(ans: selectedAns.first ?? "", index: selectedIndex)
                 dropDown.hide()
             } else {
-                self.delegate?.multipleAns(ans: selectedAns, index: index)
+                self.delegate?.multipleAns(ans: selectedAns, index: selectedIndex)
                 dropDown.reloadAllComponents()
             }
         }
@@ -95,6 +95,6 @@ final class EventQuestionTVC: UITableViewCell {
     
     @IBAction func onClickCheckBox(_ sender: Any) {
         checkBox.isSelected = !checkBox.isSelected
-        delegate?.boolAns(ans: checkBox.isSelected, index: index)
+        delegate?.boolAns(ans: checkBox.isSelected, index: selectedIndex)
     }
 }
