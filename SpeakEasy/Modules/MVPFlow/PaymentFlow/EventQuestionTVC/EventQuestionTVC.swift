@@ -50,7 +50,7 @@ final class EventQuestionTVC: UITableViewCell {
         dropDown.textColor = .white
         dropDown.backgroundColor = .gray
         dropDown.textFont = Fonts.poppinsRegular(15)
-        
+        dropDown.tableView.bounces = false
         dropDown.anchorView = dropDownBtn
         dropDown.direction = .bottom
         dropDown.bottomOffset = CGPoint(x: 0, y: dropDownBtn.bounds.height)

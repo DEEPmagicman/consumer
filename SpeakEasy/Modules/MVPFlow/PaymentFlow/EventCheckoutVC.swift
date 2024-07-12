@@ -81,7 +81,7 @@ final class EventCheckoutVC: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
-                self.eventQuestions = questions ?? []
+                self.eventQuestions = questions?.filter({ $0.isDeleted == false }) ?? []
                 DispatchQueue.main.async {
                     self.questionTableView.reloadData()
                 }

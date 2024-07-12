@@ -239,7 +239,7 @@ final class MVPVenueDetailVc: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             
-            if self.tonightEventSkip == 0 {
+            if self.upcomingEventSkip == 0 {
                 self.events.removeAll()
             }
             for event in eventList {

@@ -190,7 +190,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
         startTimer()
-        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
         
         if type == .singleTickedEvent {
             getEventQuestions()
@@ -211,13 +210,16 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
         cancelBooking()
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
         WebSocketWrapper.shared.delegate.append(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
@@ -430,7 +432,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     }
                 } else {
                     self.paymentMethodView.isHidden = true
-                    self.buyNowBtn.setTitle("Submit Answer", for: .normal)
+                    self.buyNowBtn.setTitle("Submit", for: .normal)
                 }
                 self.isFreeTicket = isFreeTicket
                 self.paymentIntent = clientSecret
@@ -875,7 +877,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
             guard let self = self else { return }
             if isSuccess {
-                self.eventQuestions = questions ?? []
+                self.eventQuestions = questions?.filter({ $0.isDeleted == false }) ?? []
                 self.eventQuestionView.isHidden = questions?.count == 0
                 DispatchQueue.main.async {
                     self.questionTableView.reloadData()
@@ -897,6 +899,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             guard let self = self else { return }
             if isSuccess {
                 self.isEventQueAnsCollected = true
+                self.questionTableView.reloadData()
                 if isFreeTicket {
                     self.paymentMethodView.isHidden = true
                     self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
@@ -957,13 +960,34 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == questionTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "EventQuestionTVC", for: indexPath) as! EventQuestionTVC
+            cell.dropDownBtn.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.textQuestionView.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.checkBox.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.multiSelectView.isUserInteractionEnabled = !isEventQueAnsCollected
             let question = eventQuestions[indexPath.row]
+            if isEventQueAnsCollected {
+                if let answer = questionAnswers[question.id] {
+                    if let singleStringAns = answer as? String {
+                        if question.questionType == "TEXT" {
+                            cell.textQuestionView.text = singleStringAns
+                        } else {
+                            cell.multiSelectLbl.text = singleStringAns
+                        }
+                    } else if let multiStringAns = answer as? [String] {
+                        let joinedString = multiStringAns.joined(separator: ", ")
+                        cell.multiSelectLbl.text = joinedString
+                    } else if let boolAns = answer as? Bool {
+                        cell.checkBox.isSelected = boolAns
+                    }
+                }
+            }
+            
             cell.questionNameLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
             cell.multiSelectView.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
             cell.checkBoxView.isHidden = !(question.questionType == "CHECKBOX")
             cell.textQuestionView.isHidden = !(question.questionType == "TEXT")
             cell.questionView.isHidden = question.questionType == "CHECKBOX"
-            cell.checkBoxQuestionLbl.text = question.question
+            cell.checkBoxQuestionLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
             var qns = [String]()
             question.eventQuestionHasOption?.forEach({ que in
                 qns.append(que.option)
