@@ -9,6 +9,8 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
+import AVFoundation
+
 enum PaymentStatus: String {
     case SUCCESS
     case FAILED
@@ -73,6 +75,12 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var totalView: UIView!
     @IBOutlet weak var grandTotalAmount: UILabel!
     @IBOutlet weak var ticketListView: UIView!
+    @IBOutlet weak var phoneNumberView: UIView!
+    @IBOutlet weak var firstNameUnderlineView: UIView!
+    @IBOutlet weak var lastNameUnderlineView: UIView!
+    @IBOutlet weak var emailUnderlineView: UIView!
+    @IBOutlet weak var countryCodeUnderlineView: UIView!
+    @IBOutlet weak var phoneNumberUnderlineView: UIView!
     
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
@@ -185,10 +193,15 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             cardPayView.isHidden = selectedAddOnsItem.count == 0
             freeTicketView.isHidden = !(selectedAddOnsItem.count == 0)
         }
-        checkValidation(isCorrectDetails: false)
-        firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
-        lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
-        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.allEvents)
+//        checkValidation(isCorrectDetails: false)
+        firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
+        firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingChanged)
+        lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
+        lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingChanged)
+        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
+        emailTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingChanged)
+        phoneNumTextField.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
+        phoneNumTextField.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingChanged)
         firstNameTF.addNextButtonKeyboard(superViewCount: 3)
         lastNameTF.addNextButtonKeyboard(superViewCount: 3)
         emailTF.addDoneButtonKeyboard()
@@ -613,59 +626,82 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc func checkApplePay() {
-        if isValidNo == false {
-            alertPopup("Alert", "Enter valid number")
-            return
-        }
-        if StripeAPI.deviceSupportsApplePay() {
-            if isIntendCreated {
-                DispatchQueue.main.async {
-                    self.applePayButtonTapped()
-                }
+        if !checkAllData {
+            checkValidation()
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+        } else {
+            if isValidNo == false {
+                alertPopup("Alert", "Enter valid number")
                 return
             }
-            if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-                getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
-            } else {
-                if selectedCoverTickets.count == 0 {
+            if StripeAPI.deviceSupportsApplePay() {
+                if isIntendCreated {
+                    DispatchQueue.main.async {
+                        self.applePayButtonTapped()
+                    }
+                    return
+                }
+                if bookingType == .FREE && selectedAddOnsItem.count != 0 {
                     getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
                 } else {
-                    createBooking()
+                    if selectedCoverTickets.count == 0 {
+                        getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+                    } else {
+                        createBooking()
+                    }
                 }
+                
+                applePayBtn.isHidden = false
+                errorLbl.isHidden = true
+            } else if isApplePayNotSupported == false {
+                alertForWallet()
+                setUpPaymentBtn()
+            } else {
+                applePayBtn.isHidden = true
+                errorLbl.isHidden = false
             }
-            
-            applePayBtn.isHidden = false
-            errorLbl.isHidden = true
-        } else if isApplePayNotSupported == false {
-            alertForWallet()
-            setUpPaymentBtn()
-        } else {
-            applePayBtn.isHidden = true
-            errorLbl.isHidden = false
         }
     }
     
-    private func checkValidation(isCorrectDetails: Bool) {
-        freeTicketBtn.alpha = isCorrectDetails ? 1 : 0.5
-        freeTicketBtn.isUserInteractionEnabled = isCorrectDetails
-        applePayBtn.alpha = isCorrectDetails ? 1 : 0.5
-        applePayBtn.isUserInteractionEnabled = isCorrectDetails
-        cardPayBtn.alpha = isCorrectDetails ? 1 : 0.5
-        cardPayBtn.isUserInteractionEnabled = isCorrectDetails
+    private func checkValidation() {
+        if phoneNumTextField.text ?? "" == "" {
+            phoneNumTextField.shake()
+            phoneNumberUnderlineView.backgroundColor = .red
+            countryCodeUnderlineView.backgroundColor = .red
+        }
+        
+        if venue?.venueSettings?.collectNameDuringBooking ?? false == true {
+            if firstNameTF.text ?? "" == "" {
+                firstNameTF.shake()
+                firstNameUnderlineView.backgroundColor = .red
+            }
+            if lastNameTF.text ?? "" == "" {
+                lastNameTF.shake()
+                lastNameUnderlineView.backgroundColor = .red
+            }
+        }
+        
+        if venue?.venueSettings?.collectEmailDuringBooking ?? false == true {
+            if venue?.venueSettings?.collectEmailDuringBookingOptional ?? false == false {
+                if emailTF.text ?? "" == "" {
+                    emailTF.shake()
+                    emailUnderlineView.backgroundColor = .red
+                }
+            }
+        }
     }
     
     private var checkAllData: Bool {
-        if !isValidNo {
+        if phoneNumTextField.text ?? "" == "" {
             return false
         }
-        if venue?.venueSettings?.collectNameDuringBooking ?? false == false {
-            return true
+        
+        if venue?.venueSettings?.collectNameDuringBooking ?? false == true && firstNameTF.text ?? "" == "" && lastNameTF.text ?? "" == "" {
+            return false
         }
-        if venue?.venueSettings?.collectNameDuringBooking ?? false == false {
-            return true
-        }
-        if venue?.venueSettings?.collectNameDuringBooking == true {
-            if firstNameTF.text == "" || lastNameTF.text == "" || !isValidNo {
+        
+        if venue?.venueSettings?.collectEmailDuringBooking ?? false == true {
+            if venue?.venueSettings?.collectEmailDuringBookingOptional ?? false == false && emailTF.text ?? "" == "" {
                 return false
             }
         }
@@ -674,9 +710,20 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     @objc private func textFieldValDidChange(_ textField: UITextField) {
         isIntendCreated = false
-        checkValidation(isCorrectDetails: checkAllData)
+        if textField.text != "" {
+            if textField == firstNameTF {
+                firstNameUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+            } else if textField == lastNameTF {
+                lastNameUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+            } else if textField == phoneNumTextField {
+                phoneNumberUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+                countryCodeUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+            } else {
+                emailUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+            }
+        }
     }
-
+    
     private func addPaymentApi(isApplePay: Bool = true) {
         if isIntendCreated { return }
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(bookingId)") else { return }
@@ -685,7 +732,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var selectedTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
-                                   "quantity": $0.selectedQuantity ?? 0])
+                                    "quantity": $0.selectedQuantity ?? 0])
         }
         var paramData = [String: Any]()
         var param = ["cart": selectedTickets] as [String: Any]
@@ -1013,30 +1060,40 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction func onClickCardPay(_ sender: Any) {
-        if isIntendCreated {
-            DispatchQueue.main.async {
-                self.onClickCreditCardPay()
-            }
-            return
-        }
-        
-        if bookingType == .FREE && selectedAddOnsItem.count != 0 {
-            getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+        if !checkAllData {
+            checkValidation()
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
         } else {
-            if selectedCoverTickets.count == 0 {
+            if isIntendCreated {
+                DispatchQueue.main.async {
+                    self.onClickCreditCardPay()
+                }
+                return
+            }
+            
+            if bookingType == .FREE && selectedAddOnsItem.count != 0 {
                 getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
             } else {
-                createBooking(isApplePay: false)
+                if selectedCoverTickets.count == 0 {
+                    getAddOnsPaymentIntent(bookingId: "", isApplePay: true)
+                } else {
+                    createBooking(isApplePay: false)
+                }
             }
         }
     }
 
     @IBAction func onClickFreeTicket(_ sender: Any) {
-        if !validateEmail {
-            emailValidationLbl.isHidden = false
+        if !checkAllData {
+            checkValidation()
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
         } else {
-            emailValidationLbl.isHidden = true
-            createFreeBooking()
+            if !validateEmail {
+                emailValidationLbl.isHidden = false
+            } else {
+                emailValidationLbl.isHidden = true
+                createFreeBooking()
+            }
         }
     }
 }
@@ -1491,7 +1548,6 @@ extension CheckOutClipVC: FPNTextFieldDelegate {
             countryCodeTextField.text = ""
         } else if textField == checkFPNField {
             isValidNo = isValid
-            checkValidation(isCorrectDetails: checkAllData)
             isIntendCreated = false
         }
     }
@@ -1563,5 +1619,15 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         isChangingFlag = false
+    }
+}
+
+extension UITextField {
+    func shake() {
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        shakeAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        shakeAnimation.duration = 0.5
+        shakeAnimation.values = [-10, 10, -8, 8, -5, 5, -2, 2, 0]
+        layer.add(shakeAnimation, forKey: "shake")
     }
 }
