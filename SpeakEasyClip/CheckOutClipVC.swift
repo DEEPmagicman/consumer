@@ -696,7 +696,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             return false
         }
         
-        if venue?.venueSettings?.collectNameDuringBooking ?? false == true && firstNameTF.text ?? "" == "" && lastNameTF.text ?? "" == "" {
+        if venue?.venueSettings?.collectNameDuringBooking ?? false == true && (firstNameTF.text ?? "" == "" || lastNameTF.text ?? "" == "") {
             return false
         }
         
@@ -1064,6 +1064,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             checkValidation()
             UINotificationFeedbackGenerator().notificationOccurred(.error)
         } else {
+            if isValidNo == false {
+                alertPopup("Alert", "Enter valid number")
+                return
+            }
             if isIntendCreated {
                 DispatchQueue.main.async {
                     self.onClickCreditCardPay()
@@ -1092,6 +1096,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 emailValidationLbl.isHidden = false
             } else {
                 emailValidationLbl.isHidden = true
+                if isValidNo == false {
+                    alertPopup("Alert", "Enter valid number")
+                    return
+                }
                 createFreeBooking()
             }
         }
