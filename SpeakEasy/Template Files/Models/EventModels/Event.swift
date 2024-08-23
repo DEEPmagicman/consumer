@@ -38,11 +38,13 @@ struct Event: Codable {
     var updatedAt: String
     var floorPlanId: String?
     var eventTicket: [EventTicket]?
+    var passwordProtrectedTickets: [EventTicket]?
     var venue: ClipVenue?
     var eventHasArtist: [ArtistData]?
     var showAddress: Bool?
     var totalTickets: Int?
     var allowGuestCheckin: Bool?
+    var eventTicketSettings: EventTicketSettings?
     
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
@@ -63,7 +65,73 @@ struct Event: Codable {
         let filterTicket = allTickets?.filter { (($0.issuedUnits ?? 0) <= ($0.soldUnits ?? 0)) }
         return filterTicket?.count == allTickets?.count
     }
-
+    
+    var modifiedPasswordProtectedTicket: [EventTicket] {
+        var ticketData = [EventTicket]()
+        
+        passwordProtrectedTickets?.enumerated().forEach({ index, ticket in
+            ticketData.append(ticket)
+            
+            let taxRate = Double(eventTicketSettings?.salesTax ?? 0) / 100.0
+            let currentPrice = Double(ticket.price ?? 0)
+            
+            if eventTicketSettings?.isProcessingFeePassToCustomer == true {
+                if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
+                    let stripeFee = (0.029 * ((currentPrice + ticket.customFee1) * (1.0 + taxRate) + ticket.SEFee) + 0.3) / (1 - 0.029)
+                    let totalProcessingFees = ticket.SEFee + stripeFee
+                    let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
+                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 +  salesTax)
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else {
+                    let stripeFee = (0.029 * (1 + taxRate) * (currentPrice + ticket.SEFee + ticket.customFee1) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                    let totalProcessingFees = ticket.SEFee + stripeFee
+                    let salesTax = (currentPrice + totalProcessingFees + ticket.customFee1) * taxRate
+                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 + salesTax)
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                }
+            } else {
+                let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
+                let amountChargedToConsumer = (currentPrice + ticket.customFee1 + salesTax)
+                ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+            }
+        })
+        
+        return ticketData
+    }
+    
+    var modifiedEventTicket: [EventTicket] {
+        var ticketData = [EventTicket]()
+        
+        eventTicket?.enumerated().forEach({ index, ticket in
+            ticketData.append(ticket)
+            
+            let taxRate = Double(eventTicketSettings?.salesTax ?? 0) / 100.0
+            let currentPrice = Double(ticket.price ?? 0)
+            
+            if eventTicketSettings?.isProcessingFeePassToCustomer == true {
+                if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
+                    let stripeFee = (0.029 * ((currentPrice + ticket.customFee1) * (1.0 + taxRate) + ticket.SEFee) + 0.3) / (1 - 0.029)
+                    let totalProcessingFees = ticket.SEFee + stripeFee
+                    let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
+                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 +  salesTax)
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else {
+                    let stripeFee = (0.029 * (1 + taxRate) * (currentPrice + ticket.SEFee + ticket.customFee1) + 0.3) / (1 - (1 + taxRate) * 0.029)
+                    let totalProcessingFees = ticket.SEFee + stripeFee
+                    let salesTax = (currentPrice + totalProcessingFees + ticket.customFee1) * taxRate
+                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 + salesTax)
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                }
+            } else {
+                let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
+                let amountChargedToConsumer = (currentPrice + ticket.customFee1 + salesTax)
+                ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+            }
+        })
+        
+        return ticketData
+    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(flyer, forKey: .flyer)
@@ -105,6 +173,18 @@ struct Event: Codable {
 
 struct ArtistData: Codable {
     var artist: Artists
+}
+
+struct EventTicketSettings: Codable {
+    
+    var isUpFront: Bool
+    var isProcessingFeePassToCustomer: Bool
+    var isEnableSalesTax: Bool
+    var salesTaxName: String
+    var salesTax: Int
+    var subjectToTax: Bool
+    var isCustomFeeTaxable: Bool
+    var isProcessingFeeTaxable: Bool
 }
 
 struct Artists: Codable {

@@ -12,7 +12,7 @@ struct EventTicket: Codable {
     var id: String?
     var eventId: String?
     var tierName: String
-    var price: Int?
+    var price: Double?
     var issuedUnits: Int?
     var beginSale: String
     var endSale: String
@@ -31,7 +31,6 @@ struct EventTicket: Codable {
     }
     var SEFee: Double {
         return ((price ?? 0) <= 10) ? (Double(price ?? 0) * 0.1) : 1
-
     }
     var priceWithFees: Double {
         priceWithFee(Double(price ?? 0))
@@ -53,7 +52,26 @@ struct EventTicket: Codable {
         let stripeFee = (0.029 * (1 + 0) * (price + 1 + customFee1 ) + 0.3) / (1 - 0.029)
         return price + stripeFee + SEFee + customFee1
     }
-
+    
+    
+   /*
+    stripeFee = parseFloat(
+        (
+            0.029 * (price + customFee1) * (1 + taxRate(sales tax)) + 0.3
+        ).toFixed(2),
+    );
+    totalProcessingFees = parseFloat((SEFee + stripeFee).toFixed(2));
+    salesTax = parseFloat(
+        ((amountTransferToVenueTemp + totalCustomFees) * taxRate(sales tax)).toFixed(2),
+    );
+    amountChargedToConsumer = parseFloat(
+        (
+            (amountTransferToVenue + totalCustomFees + salesTax) *
+            Number(CoverTicketDollar.HUNDERED)
+        ).toFixed(2),
+    );
+    */
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -155,3 +173,85 @@ struct PaymentDetail: Codable {
         try container.encodeIfPresent(salesTaxName, forKey: .salesTaxName)
     }
 }
+
+/*
+if (eventTicketSettings.isProcessingFeePassToCustomer) {
+    if (
+        eventTicketSettings.isCustomFeeTaxable === true &&
+        eventTicketSettings.isProcessingFeeTaxable === false
+    ) {
+        stripeFee = parseFloat(
+            (
+                (this.stripePerc *
+                 ((amountTransferToVenueTemp + totalCustomFees) * (1 + taxRate) +
+                  SEFee) +
+                 this.stripeFlat) /
+                (1 - this.stripePerc)
+            ).toFixed(2),
+        );
+        
+        totalProcessingFees = parseFloat((SEFee + stripeFee).toFixed(2));
+        salesTax = parseFloat(
+            ((amountTransferToVenueTemp + totalCustomFees) * taxRate).toFixed(
+                2,
+            ),
+        );
+        amountChargedToConsumer = parseFloat(
+            (
+                (amountTransferToVenue +
+                 totalProcessingFees +
+                 totalCustomFees +
+                 salesTax) *
+                Number(CoverTicketDollar.HUNDERED)
+            ).toFixed(2),
+        );
+    } else {
+        stripeFee = parseFloat(
+            (
+                (this.stripePerc *
+                 (1 + taxRate) *
+                 (amountTransferToVenueTemp + SEFee + totalCustomFees) +
+                 this.stripeFlat) /
+                (1 - (1 + taxRate) * this.stripePerc)
+            ).toFixed(2),
+        );
+        totalProcessingFees = parseFloat((SEFee + stripeFee).toFixed(2));
+        salesTax = parseFloat(
+            (
+                (amountTransferToVenueTemp +
+                 totalProcessingFees +
+                 totalCustomFees) *
+                taxRate
+            ).toFixed(2),
+        );
+        amountChargedToConsumer = parseFloat(
+            (
+                (amountTransferToVenue +
+                 totalProcessingFees +
+                 totalCustomFees +
+                 salesTax) *
+                Number(CoverTicketDollar.HUNDERED)
+            ).toFixed(2),
+        );
+    }
+} else {
+    stripeFee = parseFloat(
+        (
+            this.stripePerc *
+            (amountTransferToVenueTemp + totalCustomFees) *
+            (1 + taxRate) +
+            this.stripeFlat
+        ).toFixed(2),
+    );
+    totalProcessingFees = parseFloat((SEFee + stripeFee).toFixed(2));
+    salesTax = parseFloat(
+        ((amountTransferToVenueTemp + totalCustomFees) * taxRate).toFixed(2),
+    );
+    amountChargedToConsumer = parseFloat(
+        (
+            (amountTransferToVenue + totalCustomFees + salesTax) *
+            Number(CoverTicketDollar.HUNDERED)
+        ).toFixed(2),
+    );
+}
+*/

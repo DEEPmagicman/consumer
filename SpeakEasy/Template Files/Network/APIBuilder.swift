@@ -261,6 +261,10 @@ struct APIBuilder {
         baseURL + route + payment + "/\(id)"
     }
     
+    static func addEventPaymentURL(_ id: String) -> String {
+        baseURL + "/v2" + route + payment + "/\(id)"
+    }
+    
     static func successPaymentURL(_ paymentHistoryId: String, _ id: String, paymentFrom: String? = nil) -> String {
         var url = baseURL + route + payment + "/" + "\(paymentHistoryId)" + "/" + "\(id)" + statusSuccess
         if let paymentFrom = paymentFrom {
