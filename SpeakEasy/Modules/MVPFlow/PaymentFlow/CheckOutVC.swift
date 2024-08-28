@@ -9,6 +9,12 @@ protocol UpdateDetailDelegate: AnyObject {
     func update()
 }
 
+protocol DropDownDelegate: AnyObject {
+    func textAns(ans: String, index: Int)
+    func boolAns(ans: Bool, index: Int)
+    func multipleAns(ans: [String], index: Int)
+}
+
 import UIKit
 import PassKit
 import StripeApplePay
@@ -72,6 +78,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var addOnsTableView: UITableView!
     @IBOutlet weak var addOnsPaymentMethodView: UIView!
     @IBOutlet weak var addOnsSeparatorHeight: NSLayoutConstraint!
+    @IBOutlet weak var questionTableView: UITableView!
+    @IBOutlet weak var questionTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var eventQuestionView: UIStackView!
     
     var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
@@ -106,6 +115,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     var isFreeTicket = false
     var addOnsBookingId: String?
     var bookingType: TicketPriceType = .FREE
+    var eventQuestions = [Questions]()
+    private var questionHeightObservation: NSKeyValueObservation?
+    private var questionAnswers = [String: Any]()
+    var isEventQueAnsCollected = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -177,20 +190,36 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(enterBackGround), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(exitBackGround), name: UIApplication.didBecomeActiveNotification, object: nil)
         startTimer()
-        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
+        
+        if type == .singleTickedEvent {
+            getEventQuestions()
+        }
+        
+        questionTableView.delegate = self
+        questionTableView.dataSource = self
+        questionTableView.register(UINib(nibName: "EventQuestionTVC", bundle: nil), forCellReuseIdentifier: "EventQuestionTVC")
+        questionHeightObservation = questionTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.questionTableViewHeight.constant = self.questionTableView.contentSize.height
+            self.questionTableView.layoutIfNeeded()
+        }
+        eventQuestionView.isHidden = true
     }
     
     @objc private func handleBackSwipe() {
         navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
         cancelBooking()
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
         WebSocketWrapper.shared.delegate.append(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
@@ -388,16 +417,22 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         case .tieredTickedEvent:
             break
         }
-        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
+        PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
             Loader.hide()
+            guard let self = self else { return }
             if isSuccess {
                 guard let clientSecret = clientSecret else { Loader.hide(); return }
-                if isFreeTicket {
-                    self.paymentMethodView.isHidden = true
-                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                if self.eventQuestions.count == 0 {
+                    if isFreeTicket {
+                        self.paymentMethodView.isHidden = true
+                        self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                    } else {
+                        self.paymentMethodView.isHidden = false
+                        self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                    }
                 } else {
-                    self.paymentMethodView.isHidden = false
-                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                    self.paymentMethodView.isHidden = true
+                    self.buyNowBtn.setTitle("Submit", for: .normal)
                 }
                 self.isFreeTicket = isFreeTicket
                 self.paymentIntent = clientSecret
@@ -676,6 +711,25 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
+        var answers = [[String: Any]]()
+        
+        _ = questionAnswers.map ({ ans in
+            answers.append(["eventQuestionId": ans.key,
+                            "answer": ans.value])
+        })
+        
+        if type == .singleTickedEvent && eventQuestions.count != 0 && !isEventQueAnsCollected {
+            if !setAnswerData {
+                Alert.showAlertSheet(style: .alert, title: "Please fill required answers", message: "")
+            } else {
+                postQuestionAns(ans: answers)
+            }
+        } else {
+            bookingAPIcall()
+        }
+    }
+    
+    private func bookingAPIcall() {
         if isFreeTicket {
             createFreeEventBooking()
         } else {
@@ -766,7 +820,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (()-> Void)) {
         Loader.show()
-        print("--- - \(bookingId)")
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
             Loader.hide()
             if isSuccess {
@@ -819,42 +872,154 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             }
         }
     }
+    
+    private func getEventQuestions() {
+        PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
+            guard let self = self else { return }
+            if isSuccess {
+                self.eventQuestions = questions?.filter({ $0.isDeleted == false }) ?? []
+                self.eventQuestionView.isHidden = questions?.count == 0
+                DispatchQueue.main.async {
+                    self.questionTableView.reloadData()
+                }
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
+    }
+    
+    private func postQuestionAns(ans: [Any]) {
+        Loader.show()
+        PaymentPresenter.postEventBookingQueAns(eventUniqueId: event?.uniqueId ?? "", answers: ans, bookingId: bookingId) { [weak self] isSuccess, errMsg in
+            Loader.hide()
+            guard let self = self else { return }
+            if isSuccess {
+                self.isEventQueAnsCollected = true
+                self.questionTableView.reloadData()
+                if isFreeTicket {
+                    self.paymentMethodView.isHidden = true
+                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+                } else {
+                    self.paymentMethodView.isHidden = false
+                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+                }
+            } else {
+                if errMsg != nil {
+                    Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
+                } else {
+                    Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                }
+            }
+        }
+    }
+    
+    private var setAnswerData: Bool {
+        var requiredIndex = [Int]()
+        for (index, element) in eventQuestions.enumerated() {
+            if !element.isOptional {
+                requiredIndex.append(index)
+            }
+        }
+        var requiredEmptyIndex = [Int]()
+        for index in requiredIndex {
+            if eventQuestions[index].questionType == "MULTI_SELECT" {
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? [String] ?? [] == [] { requiredEmptyIndex.append(index) }
+            } else if eventQuestions[index].questionType == "SINGLE_SELECT" || eventQuestions[index].questionType == "TEXT" {
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? String ?? "" == "" { requiredEmptyIndex.append(index) }
+            } else {
+                let id = eventQuestions[index].id
+                if questionAnswers[id] as? Bool ?? false == false { requiredEmptyIndex.append(index) }
+            }
+        }
+        return requiredEmptyIndex.count == 0 ? true : false
+    }
 }
 
 extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch type {
-        case .appClip:
-            return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
-        case .singleTickedEvent:
-            return selectedEventTicket.count
-        case .tieredTickedEvent:
-            return 0
+        if tableView == questionTableView {
+            return eventQuestions.count
+        } else {
+            switch type {
+            case .appClip:
+                return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
+            case .singleTickedEvent:
+                return selectedEventTicket.count
+            case .tieredTickedEvent:
+                return 0
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
-        switch type {
-        case .appClip:
-            if tableView == ticketListTableView {
-                cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
-            } else {
-                cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
+        if tableView == questionTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "EventQuestionTVC", for: indexPath) as! EventQuestionTVC
+            cell.dropDownBtn.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.textQuestionView.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.checkBox.isUserInteractionEnabled = !isEventQueAnsCollected
+            cell.multiSelectView.isUserInteractionEnabled = !isEventQueAnsCollected
+            let question = eventQuestions[indexPath.row]
+            if isEventQueAnsCollected {
+                if let answer = questionAnswers[question.id] {
+                    if let singleStringAns = answer as? String {
+                        if question.questionType == "TEXT" {
+                            cell.textQuestionView.text = singleStringAns
+                        } else {
+                            cell.multiSelectLbl.text = singleStringAns
+                        }
+                    } else if let multiStringAns = answer as? [String] {
+                        let joinedString = multiStringAns.joined(separator: ", ")
+                        cell.multiSelectLbl.text = joinedString
+                    } else if let boolAns = answer as? Bool {
+                        cell.checkBox.isSelected = boolAns
+                    }
+                }
             }
-            cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
-            cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
-        case .singleTickedEvent:
-            cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
-            cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
-            cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
-        case .tieredTickedEvent:
-            break
+            
+            cell.questionNameLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
+            cell.multiSelectView.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
+            cell.checkBoxView.isHidden = !(question.questionType == "CHECKBOX")
+            cell.textQuestionView.isHidden = !(question.questionType == "TEXT")
+            cell.questionView.isHidden = question.questionType == "CHECKBOX"
+            cell.checkBoxQuestionLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
+            var qns = [String]()
+            question.eventQuestionHasOption?.forEach({ que in
+                qns.append(que.option)
+            })
+            cell.options = qns
+            cell.delegate = self
+            cell.selectedIndex = indexPath.row
+            cell.questionType = question.questionType
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+            switch type {
+            case .appClip:
+                if tableView == ticketListTableView {
+                    cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
+                } else {
+                    cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name ?? ""
+                }
+                cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description ?? ""
+                cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
+            case .singleTickedEvent:
+                cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
+                cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
+                cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
+            case .tieredTickedEvent:
+                break
+            }
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+            cell.contentView.backgroundColor = .clear
+            return cell
         }
-        cell.selectionStyle = .none
-        cell.backgroundColor = .clear
-        cell.contentView.backgroundColor = .clear
-        return cell
     }
 }
 
@@ -1055,4 +1220,26 @@ extension CheckOutVC: PaymentMethodVCDelegate {
             self.onClickCreditCardPay()
         }
     }
+}
+extension CheckOutVC: DropDownDelegate {
+    func textAns(ans: String, index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
+    }
+    
+    func boolAns(ans: Bool, index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
+    }
+    
+    func multipleAns(ans: [String], index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
+    }
+}
+
+extension DropDownDelegate {
+    func textAns(ans: String, index: Int) { }
+    func boolAns(ans: Bool, index: Int) { }
+    func multipleAns(ans: [String], index: Int) { }
 }

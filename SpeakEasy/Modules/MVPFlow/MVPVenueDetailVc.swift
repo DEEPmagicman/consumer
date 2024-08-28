@@ -110,6 +110,13 @@ final class MVPVenueDetailVc: UIViewController {
         }
         return total >= maxTicket
     }
+    var customPaidTicket: CoverTicket? {
+        venueDetails?.coverTicket?.first(where: { $0.isCustom == true && $0.price > 0 && $0.selectedQuantity ?? 0 != 0 })
+    }
+    var defaultPaidTicket: CoverTicket? {
+        venueDetails?.coverTicket?.first(where: { $0.isCustom == false && $0.price > 0 && $0.selectedQuantity ?? 0 != 0  })
+    }
+    
     private var events = [Event]()
     private var todaysEvents = [Event]()
     private var gradient: CAGradientLayer?
@@ -232,7 +239,7 @@ final class MVPVenueDetailVc: UIViewController {
             Loader.hide()
             guard let self = self else { return }
             
-            if self.tonightEventSkip == 0 {
+            if self.upcomingEventSkip == 0 {
                 self.events.removeAll()
             }
             for event in eventList {
@@ -375,7 +382,6 @@ final class MVPVenueDetailVc: UIViewController {
             Navigate.to.login(forceCreateAccount: true)
             return
         }
-        
         if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()
         } else {
@@ -479,12 +485,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
             if ticket?.price ?? 0 < 2 && ticket?.name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
-                cell.plusBtn.alpha = 0.5
-                cell.plusBtn.isUserInteractionEnabled = false
             } else if ticket?.isCustom == true && ticket?.price ?? 0 == 0 {
                 cell.ticketPriceLbl.text = "FREE"
-                cell.plusBtn.alpha = 0.5
-                cell.plusBtn.isUserInteractionEnabled = false
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
@@ -586,7 +588,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch tableView {
+       switch tableView {
         case ticketTypeTableView:
             if venueDetails?.venueSettings?.bookingStatus != "OPEN" { return }
             if venueDetails?.coverTicket?[indexPath.row].status != "ENABLED" { return }
@@ -600,20 +602,44 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             continueBtnView.isHidden = false
             scrollViewBottomConstraint.constant = 30
             venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
-            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-                scrollViewBottomConstraint.constant = 70
-                forceRemovePaidTicket()
-                forceRemoveCustomTicket()
-                selectedType = .FREE
+            
+            let selectedTicket = venueDetails?.coverTicket?[indexPath.row]
+//            let customPaidTicket = venueDetails?.coverTicket?.first(where: { $0.isCustom == true && $0.price > 0 })
+//            let defaultPaidTicket = venueDetails?.coverTicket?.first(where: { $0.isCustom == false && $0.price > 0 })
+            
+            if selectedTicket?.isCustom == false {
+                if selectedTicket?.price ?? 0 >= 2 {
+                    if customPaidTicket != nil {
+                        forceRemoveCustomTicket()
+                    }
+                    
+                }
             } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
-                forceRemovePaidTicket()
-                forceRemoveFreeTicket()
-                selectedType = venueDetails?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
-            } else {
-                forceRemoveFreeTicket()
-                forceRemoveCustomTicket()
-                selectedType = .PAID
+                if selectedTicket?.price ?? 0 > 0 {
+                    if defaultPaidTicket != nil {
+                        forceRemovePaidTicket()
+                    }
+                    selectedType = .PAID
+                }
             }
+            selectedType = (defaultPaidTicket == nil && customPaidTicket == nil) ? .FREE : .PAID
+//            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
+//                scrollViewBottomConstraint.constant = 70
+//                forceRemoveCustomTicket()
+//                let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0 })
+//                if let paid = selected?.filter({ $0.price > 2 }), paid.count != 0 {
+//                    selectedType = .PAID
+//                } else {
+//                    selectedType = .FREE
+//                }
+//            } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
+//                forceRemovePaidTicket()
+//                forceRemoveFreeTicket()
+//                selectedType = venueDetails?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
+//            } else {
+//                forceRemoveCustomTicket()
+//                selectedType = .PAID
+//            }
             ticketTypeTableView.reloadData()
             updateContinueBtn()
         case upcomingTableView:
@@ -650,6 +676,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else if totalTicket == 1 {
                 venueDetails?.coverTicket?[sender.tag].selectedQuantity = nil
                 ticketTypeTableView.reloadData()
+                selectedType = (defaultPaidTicket == nil && customPaidTicket == nil) ? .FREE : .PAID
                 updateContinueBtn(forceRemove: (venueDetails?.coverTicket?.firstIndex(where: { $0.selectedQuantity != nil })) == nil)
             }
         }

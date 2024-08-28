@@ -379,3 +379,55 @@ struct BookingCheckIn: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
     }
 }
+
+struct Questions: Codable {
+    
+    var id: String
+    var eventId: String
+    var question: String
+    var order: Int
+    var isOptional: Bool
+    var questionType: String
+    var status: String
+    var isDeleted: Bool
+    var createdAt: String
+    var updatedAt: String
+    var eventQuestionHasOption: [EventQuestionHasOption]?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(eventId, forKey: .eventId)
+        try container.encode(question, forKey: .question)
+        try container.encode(order, forKey: .order)
+        try container.encode(isOptional, forKey: .isOptional)
+        try container.encode(questionType, forKey: .questionType)
+        try container.encode(status, forKey: .status)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(eventQuestionHasOption, forKey: .eventQuestionHasOption)
+    }
+}
+
+struct EventQuestionHasOption: Codable {
+    
+    var id: String
+    var eventQuestionId: String
+    var option: String
+    var status: String
+    var isDeleted: Bool
+    var createdAt: String
+    var updatedAt: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(eventQuestionId, forKey: .eventQuestionId)
+        try container.encode(option, forKey: .option)
+        try container.encode(status, forKey: .status)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}

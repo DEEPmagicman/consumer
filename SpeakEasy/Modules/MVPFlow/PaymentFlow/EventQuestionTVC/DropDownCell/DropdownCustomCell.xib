@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="22" id="KGk-i7-Jjw" customClass="DropdownCustomCell" customModule="Speakeasy" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="230" height="22"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="230" height="22"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cll-L5-6lR">
+                        <rect key="frame" x="0.0" y="0.0" width="230" height="22"/>
+                        <subviews>
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3dE-32-Yrr">
+                                <rect key="frame" x="10" y="4" width="16" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="3dE-32-Yrr" secondAttribute="height" multiplier="1:1" id="Vrq-ga-QBT"/>
+                                    <constraint firstAttribute="height" constant="16" id="xc8-Gn-q6P"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="checkBoxEmpty"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select item" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LbV-RF-nW5">
+                                <rect key="frame" x="34" y="4.333333333333333" width="186" height="15.666666666666668"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.11372549019607843" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="3dE-32-Yrr" firstAttribute="leading" secondItem="Cll-L5-6lR" secondAttribute="leading" constant="10" id="6zu-NK-G8n"/>
+                            <constraint firstItem="3dE-32-Yrr" firstAttribute="top" secondItem="Cll-L5-6lR" secondAttribute="top" constant="4" id="9yw-5v-VCg"/>
+                            <constraint firstItem="LbV-RF-nW5" firstAttribute="leading" secondItem="3dE-32-Yrr" secondAttribute="trailing" constant="8" id="HDu-jk-z6J"/>
+                            <constraint firstAttribute="trailing" secondItem="LbV-RF-nW5" secondAttribute="trailing" constant="10" id="Mzx-71-pQX"/>
+                            <constraint firstItem="LbV-RF-nW5" firstAttribute="centerY" secondItem="3dE-32-Yrr" secondAttribute="centerY" id="Pgf-tS-fwp"/>
+                            <constraint firstAttribute="bottom" secondItem="3dE-32-Yrr" secondAttribute="bottom" constant="2" id="vO7-PO-lba"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Cll-L5-6lR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Kt5-k9-eJH"/>
+                    <constraint firstAttribute="bottom" secondItem="Cll-L5-6lR" secondAttribute="bottom" id="hmV-Yd-0TP"/>
+                    <constraint firstAttribute="trailing" secondItem="Cll-L5-6lR" secondAttribute="trailing" id="rHW-J1-O2Q"/>
+                    <constraint firstItem="Cll-L5-6lR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="z4f-QH-lpE"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="checkBoxBtn" destination="3dE-32-Yrr" id="Lnu-sf-68n"/>
+                <outlet property="optionLabel" destination="LbV-RF-nW5" id="1Ow-Vz-WF2"/>
+            </connections>
+            <point key="canvasLocation" x="-65.648854961832058" y="10.563380281690142"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="checkBoxEmpty" width="22" height="22"/>
+    </resources>
+</document>

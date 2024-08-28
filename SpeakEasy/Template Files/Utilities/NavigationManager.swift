@@ -314,6 +314,14 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func eventFreeCheckoutVC(_ sender: UIViewController, event: Event?, selectedEventTicket: [EventTicket], venueDetails: ClipVenue?) {
+        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(EventCheckoutVC.self)
+        vc.event = event
+        vc.selectedEventTicket = selectedEventTicket
+        vc.venueDetails = venueDetails
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func fullscreenPush(vc: UIViewController) {
         if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
             Utility.main.topViewController()?.navigationController?.pushViewController(vc, animated: true)

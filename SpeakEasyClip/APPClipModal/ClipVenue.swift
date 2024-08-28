@@ -300,6 +300,7 @@ struct VenueSettings: Codable {
     var addOnsBookingSettings: CoverTicketFeesSettings?
     var isOrganizer: Bool?
     var bookingStatus: String?
+    var coverTicketViewSettings: CoverTicketViewSettings?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -318,6 +319,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(addOnsBookingSettings, forKey: .addOnsBookingSettings)
         try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
         try container.encode(bookingStatus, forKey: .bookingStatus)
+//        try container.encodeIfPresent(coverTicketViewSettings, forKey: .coverTicketViewSettings)
     }
 }
 
@@ -350,6 +352,44 @@ struct CoverTicketFeesSettings: Codable {
         try container.encode(customFeeName, forKey: .customFeeName)
         try container.encodeIfPresent(pageTitle, forKey: .pageTitle)
         try container.encodeIfPresent(description, forKey: .description)
+    }
+}
+
+struct CoverTicketViewSettings: Codable {
+    
+    var image: String?
+    var button: CustomButton?
+    var background: String?
+    var fontColorA: String?
+    var fontColorB: String?
+    var cardCustomColor: String?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(image, forKey: .image)
+        try container.encodeIfPresent(button, forKey: .button)
+        try container.encodeIfPresent(background, forKey: .background)
+        try container.encodeIfPresent(fontColorA, forKey: .fontColorA)
+        try container.encodeIfPresent(fontColorB, forKey: .fontColorB)
+        try container.encodeIfPresent(cardCustomColor, forKey: .cardCustomColor)
+    }
+}
+
+struct CustomButton: Codable {
+    
+    var link: String
+    var text: String
+    var color: String
+    var fontColor: String
+    var fontStyle: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(link, forKey: .link)
+        try container.encode(text, forKey: .text)
+        try container.encode(color, forKey: .color)
+        try container.encode(fontColor, forKey: .fontColor)
+        try container.encode(fontStyle, forKey: .fontStyle)
     }
 }
 
