@@ -606,7 +606,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalView.isHidden = false
             processingFeesView.isHidden = event?.eventTicketSettings?.isProcessingFeePassToCustomer == true ? false : true
             
-            if paymentDetail?.salesTax ?? 0 == 0 || event?.eventTicketSettings?.isEnableSalesTax == false {
+            if paymentDetail?.salesTax ?? 0 == 0 || event?.eventTicketSettings?.isEnableSalesTax == false || event?.eventTicketSettings?.isUpFront == true {
                 salesTexView.isHidden = true
             } else {
                 salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"

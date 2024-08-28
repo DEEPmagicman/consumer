@@ -72,27 +72,50 @@ struct Event: Codable {
         passwordProtrectedTickets?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
             
-            let taxRate = Double(eventTicketSettings?.salesTax ?? 0) / 100.0
-            let currentPrice = Double(ticket.price ?? 0)
+            let taxRate = eventTicketSettings?.isEnableSalesTax == true ? Double(eventTicketSettings?.salesTax ?? 0) : 0 / 100.0
+            let amountTransferToVenue = Double(ticket.price ?? 0)
+            let SEFee = ticket.SEFee
+            let stripePerc = 0.029
+            let stripeFlat = 0.3
+            let totalCustomFees = ticket.customFee1
+            let amountTransferToVenueTemp = amountTransferToVenue
             
             if eventTicketSettings?.isProcessingFeePassToCustomer == true {
                 if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
-                    let stripeFee = (0.029 * ((currentPrice + ticket.customFee1) * (1.0 + taxRate) + ticket.SEFee) + 0.3) / (1 - 0.029)
-                    let totalProcessingFees = ticket.SEFee + stripeFee
-                    let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
-                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 +  salesTax)
+                    let stripeFee = (stripePerc * ((amountTransferToVenueTemp + totalCustomFees) * (1 + taxRate) + SEFee) + stripeFlat) / (1 - stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else if eventTicketSettings?.isCustomFeeTaxable == true &&  eventTicketSettings?.isProcessingFeeTaxable == true {
+                    let stripeFee = (stripePerc * (1 + taxRate) * (amountTransferToVenueTemp + SEFee + totalCustomFees) + stripeFlat) / (1 - (1 + taxRate) * stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalProcessingFees + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else if eventTicketSettings?.isCustomFeeTaxable == false && eventTicketSettings?.isProcessingFeeTaxable == true {
+                    let stripeFee = (stripePerc * ((1 + taxRate) * (amountTransferToVenueTemp + SEFee) + totalCustomFees) + stripeFlat) / (1 - (1 + taxRate) * stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalProcessingFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
                     ticketData[index].price = round(amountChargedToConsumer * 100) / 100
                 } else {
-                    let stripeFee = (0.029 * (1 + taxRate) * (currentPrice + ticket.SEFee + ticket.customFee1) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                    let totalProcessingFees = ticket.SEFee + stripeFee
-                    let salesTax = (currentPrice + totalProcessingFees + ticket.customFee1) * taxRate
-                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 + salesTax)
+                    let stripeFee = (stripePerc * (amountTransferToVenueTemp * (1 + taxRate) + totalCustomFees + SEFee) + stripeFlat) / (1 - stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = amountTransferToVenueTemp * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
                     ticketData[index].price = round(amountChargedToConsumer * 100) / 100
                 }
             } else {
-                let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
-                let amountChargedToConsumer = (currentPrice + ticket.customFee1 + salesTax)
-                ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                if eventTicketSettings?.isCustomFeeTaxable == true {
+                    let salesTax = (amountTransferToVenueTemp + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else {
+                    let salesTax = amountTransferToVenueTemp * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                }
             }
         })
         
@@ -105,27 +128,50 @@ struct Event: Codable {
         eventTicket?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
             
-            let taxRate = Double(eventTicketSettings?.salesTax ?? 0) / 100.0
-            let currentPrice = Double(ticket.price ?? 0)
+            let taxRate = eventTicketSettings?.isEnableSalesTax == true ? Double(eventTicketSettings?.salesTax ?? 0) / 100 : 0
+            let amountTransferToVenue = Double(ticket.price ?? 0)
+            let SEFee = ticket.SEFee
+            let stripePerc = 0.029
+            let stripeFlat = 0.3
+            let totalCustomFees = ticket.customFee1
+            let amountTransferToVenueTemp = amountTransferToVenue
             
             if eventTicketSettings?.isProcessingFeePassToCustomer == true {
                 if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
-                    let stripeFee = (0.029 * ((currentPrice + ticket.customFee1) * (1.0 + taxRate) + ticket.SEFee) + 0.3) / (1 - 0.029)
-                    let totalProcessingFees = ticket.SEFee + stripeFee
-                    let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
-                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 +  salesTax)
+                    let stripeFee = (stripePerc * ((amountTransferToVenueTemp + totalCustomFees) * (1 + taxRate) + SEFee) + stripeFlat) / (1 - stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else if eventTicketSettings?.isCustomFeeTaxable == true &&  eventTicketSettings?.isProcessingFeeTaxable == true {
+                    let stripeFee = (stripePerc * (1 + taxRate) * (amountTransferToVenueTemp + SEFee + totalCustomFees) + stripeFlat) / (1 - (1 + taxRate) * stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalProcessingFees + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else if eventTicketSettings?.isCustomFeeTaxable == false && eventTicketSettings?.isProcessingFeeTaxable == true {
+                    let stripeFee = (stripePerc * ((1 + taxRate) * (amountTransferToVenueTemp + SEFee) + totalCustomFees) + stripeFlat) / (1 - (1 + taxRate) * stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = (amountTransferToVenueTemp + totalProcessingFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
                     ticketData[index].price = round(amountChargedToConsumer * 100) / 100
                 } else {
-                    let stripeFee = (0.029 * (1 + taxRate) * (currentPrice + ticket.SEFee + ticket.customFee1) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                    let totalProcessingFees = ticket.SEFee + stripeFee
-                    let salesTax = (currentPrice + totalProcessingFees + ticket.customFee1) * taxRate
-                    let amountChargedToConsumer = (currentPrice + totalProcessingFees + ticket.customFee1 + salesTax)
+                    let stripeFee = (stripePerc * (amountTransferToVenueTemp * (1 + taxRate) + totalCustomFees + SEFee) + stripeFlat) / (1 - stripePerc)
+                    let totalProcessingFees = SEFee + stripeFee
+                    let salesTax = amountTransferToVenueTemp * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalProcessingFees + totalCustomFees + salesTax
                     ticketData[index].price = round(amountChargedToConsumer * 100) / 100
                 }
             } else {
-                let salesTax = ((currentPrice + ticket.customFee1) * taxRate)
-                let amountChargedToConsumer = (currentPrice + ticket.customFee1 + salesTax)
-                ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                if eventTicketSettings?.isCustomFeeTaxable == true {
+                    let salesTax = (amountTransferToVenueTemp + totalCustomFees) * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                } else {
+                    let salesTax = amountTransferToVenueTemp * taxRate
+                    let amountChargedToConsumer = amountTransferToVenue + totalCustomFees + salesTax
+                    ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+                }
             }
         })
         
@@ -181,7 +227,7 @@ struct EventTicketSettings: Codable {
     var isProcessingFeePassToCustomer: Bool
     var isEnableSalesTax: Bool
     var salesTaxName: String
-    var salesTax: Int
+    var salesTax: Double
     var subjectToTax: Bool
     var isCustomFeeTaxable: Bool
     var isProcessingFeeTaxable: Bool

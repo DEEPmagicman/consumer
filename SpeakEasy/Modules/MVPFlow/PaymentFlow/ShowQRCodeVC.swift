@@ -279,7 +279,7 @@ final class ShowQRCodeVC: UIViewController {
         case "FREE_EVENT_TICKET", "FREE_APPCLIP":
             totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
         case "EVENT":
-            if booking?.event?.upfront == false {
+            if booking?.event?.eventTicketSettings?.isUpFront == false {
                 processingFeeView.isHidden = booking?.fees?.processingFee ?? 0 == 0 ? true : false
                 salesTaxView.isHidden = booking?.fees?.salesTax ?? 0 == 0 ? true : false
                 customFeeView.isHidden = booking?.fees?.customFee ?? 0 == 0 ? true : false
