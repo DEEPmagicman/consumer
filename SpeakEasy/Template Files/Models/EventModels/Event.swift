@@ -80,6 +80,10 @@ struct Event: Codable {
             let totalCustomFees = ticket.customFee1
             let amountTransferToVenueTemp = amountTransferToVenue
             
+            if amountTransferToVenueTemp == 0 {
+                return
+            }
+            
             if eventTicketSettings?.isProcessingFeePassToCustomer == true {
                 if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
                     let stripeFee = (stripePerc * ((amountTransferToVenueTemp + totalCustomFees) * (1 + taxRate) + SEFee) + stripeFlat) / (1 - stripePerc)
@@ -135,6 +139,10 @@ struct Event: Codable {
             let stripeFlat = 0.3
             let totalCustomFees = ticket.customFee1
             let amountTransferToVenueTemp = amountTransferToVenue
+            
+            if amountTransferToVenueTemp == 0 {
+                return
+            }
             
             if eventTicketSettings?.isProcessingFeePassToCustomer == true {
                 if eventTicketSettings?.isCustomFeeTaxable == true && eventTicketSettings?.isProcessingFeeTaxable == false {
