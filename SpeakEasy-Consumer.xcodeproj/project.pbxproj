@@ -64,6 +64,9 @@
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
 		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
+		691609442C7F418000C74F48 /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609402C7F418000C74F48 /* Avenir-Regular.ttf */; };
+		691609462C7F418000C74F48 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609412C7F418000C74F48 /* OpenSans-Regular.ttf */; };
+		691609482C7F418000C74F48 /* Motor-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609422C7F418000C74F48 /* Motor-Regular.ttf */; };
 		69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
@@ -200,7 +203,6 @@
 		CE677F9A2A4177310025421D /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F992A4177310025421D /* Invite.swift */; };
 		CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
-		CE7234D32C2D4BA400DA7BD9 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */; };
 		CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */; };
 		CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
@@ -220,8 +222,6 @@
 		CE954B9A2C392C8500BD3009 /* DropdownCustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */; };
 		CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
-		CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C41092C26C4680083222C /* Motor-Regular.ttf */; };
-		CE9C410E2C26C4C90083222C /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9E92B986ABC007E94A7 /* FSPagerView */; };
@@ -352,6 +352,9 @@
 		29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketClipVC.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
+		691609402C7F418000C74F48 /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Regular.ttf"; sourceTree = "<group>"; };
+		691609412C7F418000C74F48 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		691609422C7F418000C74F48 /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Motor-Regular.ttf"; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
 		824F86EC2987D52600A9F1FD /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
@@ -488,7 +491,6 @@
 		CE677F992A4177310025421D /* Invite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketDetailTVC.swift; sourceTree = "<group>"; };
 		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
-		CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenSans-Regular.ttf"; path = "../../../../../../Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistListTVC.swift; sourceTree = "<group>"; };
 		CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistListTVC.xib; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
@@ -503,8 +505,6 @@
 		CE954B8D2C39159500BD3009 /* EventQuestionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQuestionTVC.xib; sourceTree = "<group>"; };
 		CE954B972C392C8500BD3009 /* DropdownCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownCustomCell.swift; sourceTree = "<group>"; };
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
-		CE9C41092C26C4680083222C /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Motor-Regular.ttf"; path = "../../../../../../../Desktop/Motor-Regular.ttf"; sourceTree = "<group>"; };
-		CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Avenir-Regular.ttf"; path = "../../../../../../../Desktop/Avenir-Regular.ttf"; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
@@ -833,13 +833,6 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		BD80B38B295EBC25005592A7 /* InstgramManager */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = InstgramManager;
-			sourceTree = "<group>";
-		};
 		BD942F3B29595A0D00D52115 /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -1097,7 +1090,6 @@
 				BD942F3B29595A0D00D52115 /* Network */,
 				BD3FB24B2940678800BE7713 /* Utilities */,
 				CE4867E6286F392D00FD277E /* Models */,
-				CE486782286F358700FD277E /* Services */,
 				CE48674D286F358700FD277E /* HelperClasses */,
 				CE48677B286F358700FD277E /* Font */,
 				CE48678D286F358700FD277E /* ThirdParty Libraries */,
@@ -1157,9 +1149,9 @@
 		CE48677B286F358700FD277E /* Font */ = {
 			isa = PBXGroup;
 			children = (
-				CE9C41082C26C39C0083222C /* Avenir */,
-				CE9C41072C26C3950083222C /* Motor */,
-				CE9C41012C26B0B20083222C /* Open_sans */,
+				691609402C7F418000C74F48 /* Avenir-Regular.ttf */,
+				691609422C7F418000C74F48 /* Motor-Regular.ttf */,
+				691609412C7F418000C74F48 /* OpenSans-Regular.ttf */,
 				BD3FB25429406EBC00BE7713 /* Poppins */,
 				CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */,
 				CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */,
@@ -1169,14 +1161,6 @@
 				CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */,
 			);
 			path = Font;
-			sourceTree = "<group>";
-		};
-		CE486782286F358700FD277E /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				BD80B38B295EBC25005592A7 /* InstgramManager */,
-			);
-			path = Services;
 			sourceTree = "<group>";
 		};
 		CE48678D286F358700FD277E /* ThirdParty Libraries */ = {
@@ -1302,30 +1286,6 @@
 				CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */,
 			);
 			path = DropDownCell;
-			sourceTree = "<group>";
-		};
-		CE9C41012C26B0B20083222C /* Open_sans */ = {
-			isa = PBXGroup;
-			children = (
-				CE7234D22C2D4BA400DA7BD9 /* OpenSans-Regular.ttf */,
-			);
-			path = Open_sans;
-			sourceTree = "<group>";
-		};
-		CE9C41072C26C3950083222C /* Motor */ = {
-			isa = PBXGroup;
-			children = (
-				CE9C41092C26C4680083222C /* Motor-Regular.ttf */,
-			);
-			path = Motor;
-			sourceTree = "<group>";
-		};
-		CE9C41082C26C39C0083222C /* Avenir */ = {
-			isa = PBXGroup;
-			children = (
-				CE9C410D2C26C4C90083222C /* Avenir-Regular.ttf */,
-			);
-			path = Avenir;
 			sourceTree = "<group>";
 		};
 		CEDB81F92AA21C4F00DAD9FE /* SDK */ = {
@@ -1657,22 +1617,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				691609482C7F418000C74F48 /* Motor-Regular.ttf in Resources */,
 				04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */,
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
-				CE9C410E2C26C4C90083222C /* Avenir-Regular.ttf in Resources */,
 				04862C132B9719A500836598 /* ticketTypeTableViewCell.xib in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
 				CE85806C299A3DC5001F6E56 /* FlagKit.xcassets in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
+				691609462C7F418000C74F48 /* OpenSans-Regular.ttf in Resources */,
 				29AEDD9D298275EC00E8E1E9 /* Poppins-Regular.ttf in Resources */,
-				CE9C410A2C26C4680083222C /* Motor-Regular.ttf in Resources */,
 				CEDB82402AA21DD500DAD9FE /* countryCodes.json in Resources */,
+				691609442C7F418000C74F48 /* Avenir-Regular.ttf in Resources */,
 				2966E3342980F86000B5E103 /* Assets.xcassets in Resources */,
 				CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */,
 				CEDB823F2AA21DD500DAD9FE /* FPNCountryView.xib in Resources */,
 				CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */,
 				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
-				CE7234D32C2D4BA400DA7BD9 /* OpenSans-Regular.ttf in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
