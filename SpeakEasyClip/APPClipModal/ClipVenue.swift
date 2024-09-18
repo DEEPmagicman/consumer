@@ -336,7 +336,6 @@ struct CoverTicketFeesSettings: Codable {
       var customFee: Double
       var isCustomFeeTaxable: Bool?
       var isProcessingFeeTaxable: Bool?
-      var subjectToTax: Bool?
       var pageTitle: String?
       var description: String?
     

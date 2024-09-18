@@ -236,7 +236,6 @@ struct EventTicketSettings: Codable {
     var isEnableSalesTax: Bool
     var salesTaxName: String
     var salesTax: Double
-    var subjectToTax: Bool
     var isCustomFeeTaxable: Bool
     var isProcessingFeeTaxable: Bool
 }
