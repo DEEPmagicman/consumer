@@ -35,6 +35,7 @@ struct Booking: Codable {
     var guestList: GuestList?
     var addOnsBookingId: String?
     var bookingHasCheckIn: [BookingHasCheckIn]?
+    var bookingDetails: BookingDetails?
     
     // MARK: app side parameters
     var uniqueTickets: [BookingHasItem] {
@@ -81,6 +82,7 @@ struct Booking: Codable {
         case guestList
         case addOnsBookingId
         case bookingHasCheckIn
+        case bookingDetails
     }
 
     func encode(to encoder: Encoder) throws {
@@ -111,6 +113,7 @@ struct Booking: Codable {
         try container.encodeIfPresent(guestList, forKey: .guestList)
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encodeIfPresent(bookingHasCheckIn, forKey: .bookingHasCheckIn)
+        try container.encodeIfPresent(bookingDetails, forKey: .bookingDetails)
     }
 }
 
@@ -429,5 +432,19 @@ struct EventQuestionHasOption: Codable {
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
+    }
+}
+
+struct BookingDetails: Codable {
+    
+    var id: String
+    var bookingId: String
+    var eventTicketSettings: EventTicketSettings
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(bookingId, forKey: .bookingId)
+        try container.encode(eventTicketSettings, forKey: .eventTicketSettings)
     }
 }

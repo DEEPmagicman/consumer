@@ -58,7 +58,7 @@ final class EventDetailVC: UIViewController {
     private var isNotSellingStage = false
     private var maxTicket = 20
     private var activeTickets: [EventTicket]?
-    private var protectedTickets: [EventTicket]?
+//    private var protectedTickets: [EventTicket]?
     private var totalPrice: Double {
         var total: Double = 0
         activeTickets?.forEach {
@@ -152,11 +152,21 @@ final class EventDetailVC: UIViewController {
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")
-        dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
+        dateLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: venueDetails?.useTimezone ?? "") ?? ""),"
         timingLbl.text = "\(event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "") - \(event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: venueDetails?.useTimezone ?? "") ?? "LATE")"
         artistTableView.reloadData()
-        activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
-        let filteredProtectedTickets = protectedTickets?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        if event?.eventTicketSettings?.isUpFront == true {
+            activeTickets = event?.modifiedEventTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        } else {
+            activeTickets = event?.eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        }
+        
+        var filteredProtectedTickets = [EventTicket]()
+        if event?.eventTicketSettings?.isUpFront == true {
+            filteredProtectedTickets = event?.modifiedPasswordProtectedTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        } else {
+            filteredProtectedTickets = event?.passwordProtrectedTickets?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+        }
             if activeTickets == nil {
               activeTickets = filteredProtectedTickets
             } else {
@@ -317,11 +327,14 @@ final class EventDetailVC: UIViewController {
                 }
                 self.unLockTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
                     for data in tickets {
-                        if self.protectedTickets?.contains(where: {$0.id == data.id}) ?? false == false {
-                            if self.protectedTickets == nil {
-                                self.protectedTickets = [data]
+                        if self.event?.passwordProtrectedTickets?.contains(where: {$0.id == data.id}) ?? false == false {
+                            if self.event?.passwordProtrectedTickets == nil {
+//                                self.protectedTickets = [data]
+                                self.event?.passwordProtrectedTickets = [data]
                             } else {
-                                self.protectedTickets?.append(data)
+//                                self.protectedTickets?.append(data)
+                                self.event?.passwordProtrectedTickets?.append(data)
+                                
                             }
                         }
                     }
@@ -513,7 +526,10 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.upfront == true ? (activeTickets?[indexPath.row].priceWithFees ?? 0).decimalFormat(true) : Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
+                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
+                
+//                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.eventTicketSettings?.isUpFront == true ? (activeTickets?[indexPath.row].priceWithFees ?? 0).decimalFormat(true) : Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
+                
                 cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
                 cell.plusBtn.isUserInteractionEnabled = true
             }
@@ -628,7 +644,7 @@ extension EventDetailVC: UpdateDetailDelegate {
         Loader.show()
         event?.eventTicket?.removeAll()
         activeTickets?.removeAll()
-        protectedTickets?.removeAll()
+        event?.passwordProtrectedTickets?.removeAll()
         unLockTicketView.isHidden = true
         updateContinueBtn(forceRemove: true)
         getEventDetail()

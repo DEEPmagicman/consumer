@@ -71,11 +71,11 @@ extension String {
         } else {
             convertDateFormatter.timeZone = .current
         }
-        if useDayLightSavingTime {
-            return convertDateFormatter.string(from: oldDate.addingTimeInterval(convertDateFormatter.timeZone.daylightSavingTimeOffset()))
-        } else {
+//        if useDayLightSavingTime {
+//            return convertDateFormatter.string(from: oldDate.addingTimeInterval(convertDateFormatter.timeZone.daylightSavingTimeOffset()))
+//        } else {
             return convertDateFormatter.string(from: oldDate)
-        }
+//        }
     }
     
     func displayUpdatedAgo(from: DateFormat, to: DateFormat, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {

@@ -234,7 +234,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             promoCodeView.isHidden = true
             venueNameLbl.text = "\(venue?.name ?? ""), \(venue?.city ?? "")"
         case .singleTickedEvent:
-            noFeeView.isHidden = !(event?.upfront == true)
+            noFeeView.isHidden = !(event?.eventTicketSettings?.isUpFront == true)
             titleLbl.text = event?.title ?? "Untitle Event"
             dateLbl.text = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, useDayLightSavingTime: true, customTimeZone: event?.venue?.useTimezone ?? "")
             purchaseImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -604,8 +604,17 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 discountAmount.text = "-\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.discount ?? 0).decimalFormat(true))"
             }
             subTotalView.isHidden = false
-            processingFeesView.isHidden = false
-            if event?.upfront == true {
+            processingFeesView.isHidden = event?.eventTicketSettings?.isProcessingFeePassToCustomer == true ? false : true
+            
+            if paymentDetail?.salesTax ?? 0 == 0 || event?.eventTicketSettings?.isEnableSalesTax == false || event?.eventTicketSettings?.isUpFront == true {
+                salesTexView.isHidden = true
+            } else {
+                salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
+                salesTaxName.text = paymentDetail?.salesTaxName ?? "Custom fee"
+                salesTaxPr.text = "(\(event?.eventTicketSettings?.salesTax ?? 0)%)"
+                salesTexView.isHidden = false
+            }
+            if event?.eventTicketSettings?.isUpFront == true {
                 if paymentDetail?.discount ?? 0 == 0 {
                     subTotalView.isHidden = true
                     discountView.isHidden = true

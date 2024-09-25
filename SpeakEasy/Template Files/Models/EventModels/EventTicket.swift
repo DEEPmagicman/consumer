@@ -12,7 +12,7 @@ struct EventTicket: Codable {
     var id: String?
     var eventId: String?
     var tierName: String
-    var price: Int?
+    var price: Double?
     var issuedUnits: Int?
     var beginSale: String
     var endSale: String
@@ -31,7 +31,6 @@ struct EventTicket: Codable {
     }
     var SEFee: Double {
         return ((price ?? 0) <= 10) ? (Double(price ?? 0) * 0.1) : 1
-
     }
     var priceWithFees: Double {
         priceWithFee(Double(price ?? 0))
@@ -53,7 +52,7 @@ struct EventTicket: Codable {
         let stripeFee = (0.029 * (1 + 0) * (price + 1 + customFee1 ) + 0.3) / (1 - 0.029)
         return price + stripeFee + SEFee + customFee1
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
