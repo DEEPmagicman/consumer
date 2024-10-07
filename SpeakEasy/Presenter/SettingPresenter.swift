@@ -93,7 +93,7 @@ final class SettingPresenter {
     }
     
     func changePhoneNumberApi(phone: String,code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
+        
         let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
             

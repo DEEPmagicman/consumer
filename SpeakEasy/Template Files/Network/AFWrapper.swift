@@ -22,13 +22,14 @@ final class AFWrapper: NSObject {
     
     private override init() {}
     
+    @discardableResult
     static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, shouldForceLogout: Bool = true,
                             success: @escaping DefaultAPISuccessClosure,
-                            failure: @escaping DefaultAPIFailureClosure) {
+                            failure: @escaping DefaultAPIFailureClosure) -> DataRequest? {
         
         if !Connectivity.isConnectedToInternet {
             failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
-            return
+            return nil
         }
         
 #if DEBUG
@@ -80,6 +81,7 @@ final class AFWrapper: NSObject {
         }
 #endif
         debugPrint(req)
+        return req
     }
     
     static func patchRequest(_ strURL: String, params:  [String: Any]? = nil, headers: [String: String]?,

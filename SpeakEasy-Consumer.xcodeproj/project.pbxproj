@@ -157,6 +157,7 @@
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
+		CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */ = {isa = PBXBuildFile; productRef = CE19C1AA2CA44469007050ED /* MHLoadingButton */; };
 		CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */; };
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
@@ -591,6 +592,7 @@
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
+				CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */,
 				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1559,6 +1561,7 @@
 				69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */,
 				CECDD9EB2B986B58007E94A7 /* FSPagerView */,
 				CECDD9EF2B986DFC007E94A7 /* Reachability */,
+				CE19C1AA2CA44469007050ED /* MHLoadingButton */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -1601,6 +1604,7 @@
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
+				CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -2471,6 +2475,14 @@
 				kind = branch;
 			};
 		};
+		CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twho/loading-buttons-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.3;
+			};
+		};
 		CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
@@ -2539,6 +2551,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		CE19C1AA2CA44469007050ED /* MHLoadingButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */;
+			productName = MHLoadingButton;
 		};
 		CECDD9E92B986ABC007E94A7 /* FSPagerView */ = {
 			isa = XCSwiftPackageProductDependency;

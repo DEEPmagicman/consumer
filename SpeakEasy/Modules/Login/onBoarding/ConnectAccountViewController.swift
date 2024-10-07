@@ -55,10 +55,8 @@ final class ConnectAccountViewController: UIViewController {
             let firstPart = tokenParts[0]
 
             self.onBoardingDelegate.socialMediaConnectAPi(email: email, socialType: SocialType.google.rawValue, socialId:firstPart ) { [weak self] isSuccess, errorMsg  in
-                guard let self = self else {
-                    Loader.hide()
-                    return
-                }
+                guard let self = self else { return }
+                
                 if isSuccess {
                     UserDefault.shared.user?.email = email
                     Navigate.to.enterNameVc(self)
@@ -69,7 +67,6 @@ final class ConnectAccountViewController: UIViewController {
                         Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                     }
                 }
-                Loader.hide()
             }
         }
     }

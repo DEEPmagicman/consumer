@@ -7,11 +7,12 @@
 
 import UIKit
 import FlagPhoneNumber
+import MHLoadingButton
 
 final class EnterPhoneNumberViewController: UIViewController {
     
     @IBOutlet weak var countryCodeTextField: FPNTextField!
-    @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var continueBtn: LoadingButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var contrySelectionView: UIView!    
@@ -55,6 +56,8 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
         contrySelectionView.addGestureRecognizer(tap)
+        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.indicator = MaterialLoadingIndicator(color: .white)
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
     }
@@ -83,14 +86,12 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
+        continueBtn.showLoader(userInteraction: false)
         if isFromLogin {
-            Loader.show()
             onBoardingPresenter.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                guard let self = self else {
-                    Loader.hide()
-                    return
-                }
-                Loader.hide()
+                guard let self = self else { return }
+                
+                continueBtn.hideLoader()
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                 } else if errorMsg == Constant.String.internetNotConnect {
@@ -102,10 +103,9 @@ final class EnterPhoneNumberViewController: UIViewController {
         } else {
             if isFromSettings {
                 settingPresenter.changePhoneNumberApi(phone: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errMsg in
-                    guard let self = self else {
-                        Loader.hide()
-                        return
-                    }
+                    guard let self = self else { return }
+                    
+                    continueBtn.hideLoader()
                     if isSuccess {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errMsg == Constant.String.internetNotConnect {
@@ -113,15 +113,12 @@ final class EnterPhoneNumberViewController: UIViewController {
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
-                    Loader.hide()
                 }
             } else {
                 onBoardingPresenter.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg  in
-                    guard let self = self else {
-                        Loader.hide()
-                        return
-                    }
-                    Loader.hide()
+                    guard let self = self else { return }
+                    
+                    continueBtn.hideLoader()
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
