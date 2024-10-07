@@ -104,16 +104,16 @@ final class SelectTicketClipVC: UIViewController {
         URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
                 var json = [String: Any]()
-#if DEBUG
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                    AppClipLoader.hideLoader()
-                    return
+                if !SharedURL.isEncryptionEnabled {
+                    guard let data = data,
+                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                } else {
+                    guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
                 }
-#else
-                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
-                json =  response.decrypted() ?? [:]
-#endif
                 
                 self.venueId = json["venueId"] as? String ?? ""
                 self.doormanId = json["doormanId"] as? String ?? ""
@@ -134,42 +134,42 @@ final class SelectTicketClipVC: UIViewController {
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
                 let decoder = JSONDecoder()
-#if DEBUG
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                    return
-                }
-                if let addOns = json["list"] as? [[String: Any]] {
-                    guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                if !SharedURL.isEncryptionEnabled {
+                    guard let data = data,
+                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                         return
                     }
-                    do {
-                        self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
-                        DispatchQueue.main.async {
-                            self.upSellView.isHidden = self.upSellTickets.count <= 0
+                    if let addOns = json["list"] as? [[String: Any]] {
+                        guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                            return
                         }
-                    } catch (let error) {
-                        print(error)
-                    }
-                
-            }
-#else
-                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
-                let json =  response.decrypted() ?? [:]
-                if let addOns = json["list"] as? [[String: Any]] {
-                    guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
-                        return
-                    }
-                    do {
-                        self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
-                        DispatchQueue.main.async {
-                            self.upSellView.isHidden = self.upSellTickets.count <= 0
+                        do {
+                            self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                            DispatchQueue.main.async {
+                                self.upSellView.isHidden = self.upSellTickets.count <= 0
+                            }
+                        } catch (let error) {
+                            print(error)
                         }
-                    } catch (let error) {
-                        print(error)
+                        
+                    }
+                } else {
+                    guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                    let json =  response.decrypted() ?? [:]
+                    if let addOns = json["list"] as? [[String: Any]] {
+                        guard let addOnData = try? JSONSerialization.data(withJSONObject: addOns, options: .prettyPrinted) else {
+                            return
+                        }
+                        do {
+                            self.upSellTickets = try decoder.decode([UpSellTicket].self, from: addOnData)
+                            DispatchQueue.main.async {
+                                self.upSellView.isHidden = self.upSellTickets.count <= 0
+                            }
+                        } catch (let error) {
+                            print(error)
+                        }
                     }
                 }
-#endif
             }
         }.resume()
     }
@@ -192,23 +192,23 @@ final class SelectTicketClipVC: UIViewController {
             DispatchQueue.main.async {
                 AppClipLoader.hideLoader()
                 let decoder = JSONDecoder()
-#if DEBUG
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                    return
+                if !SharedURL.isEncryptionEnabled {
+                    guard let data = data,
+                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        return
+                    }
+                    guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+                        return
+                    }
+                    self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
+                } else {
+                    guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                    let json =  response.decrypted() ?? [:]
+                    guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
+                        return
+                    }
+                    self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
                 }
-                guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
-                    return
-                }
-                self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
-#else
-                guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
-                let json =  response.decrypted() ?? [:]
-                guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
-                    return
-                }
-                self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
-#endif
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 self.setUpUI()
