@@ -14,7 +14,6 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBOutlet weak var countryCodeTextField: FPNTextField!
     @IBOutlet weak var continueBtn: LoadingButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
-    @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var contrySelectionView: UIView!    
 
     var isFromLogin = false
@@ -45,13 +44,6 @@ final class EnterPhoneNumberViewController: UIViewController {
         countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         countryCodeTextField.displayMode = .list // .picker by default
         
-        let items = [
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
-            UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
-            UIBarButtonItem(title: "Item 2", style: .plain, target: self, action: nil)
-        ]
-        countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
-        
         listController.showCountryPhoneCode = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
@@ -60,16 +52,6 @@ final class EnterPhoneNumberViewController: UIViewController {
         continueBtn.indicator = MaterialLoadingIndicator(color: .white)
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
-    }
-    
-    private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
-        let toolbar: UIToolbar = UIToolbar()
-        
-        toolbar.barStyle = UIBarStyle.default
-        toolbar.items = items
-        toolbar.sizeToFit()
-        
-        return toolbar
     }
     
     @objc func dismissCountries() {

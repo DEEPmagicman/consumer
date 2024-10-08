@@ -7,7 +7,6 @@
 
 import UIKit
 import OTPFieldView
-import SwiftUI
 import MHLoadingButton
 
 final class VerificationCodeViewController: UIViewController {

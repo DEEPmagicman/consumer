@@ -5,7 +5,6 @@
 //  Created by Square Infosoft on 26/12/22.
 //
 
-import Alamofire
 import UIKit
 
 final class OnBoardingPresenter {
@@ -125,7 +124,6 @@ final class OnBoardingPresenter {
     }
     
     func signUpResendOtpApi(otpref: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.signUpOTPResendURL, params: param, headers: Header.header()) { response in
             

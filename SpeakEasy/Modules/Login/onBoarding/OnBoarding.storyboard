@@ -597,7 +597,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="backBtn" destination="i5J-HI-KEp" id="WDN-hV-aKT"/>
                         <outlet property="continueBtn" destination="g7o-ve-eMD" id="iOf-Oh-oCB"/>
                         <outlet property="contrySelectionView" destination="BL1-hY-a2W" id="cxy-YJ-d2C"/>
                         <outlet property="countryCodeTextField" destination="4Ha-FD-VvL" id="XI8-na-dUx"/>
