@@ -193,7 +193,7 @@ final class OnBoardingPresenter {
         if let isProfileCompleted = isProfileCompleted {
             param["isProfileCompleted"] = isProfileCompleted
         }
-        Loader.show()
+        
         AFWrapper.patchRequest(APIBuilder.userProfileURL, params: param, headers: Header.header()) { response in
             
             guard response is [String: Any] else {
@@ -214,11 +214,8 @@ final class OnBoardingPresenter {
     
     
     func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl: String, _ isSuccess: Bool) -> Void) {
-        Loader.show()
-        
         guard let imageData = image.jpegData(compressionQuality: 1) else {
             completion("", false)
-            Loader.hide()
             return
         }
         let param = ["file": image] as [String: Any]
@@ -226,15 +223,12 @@ final class OnBoardingPresenter {
             
             guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
                 completion("", false)
-                Loader.hide()
                 return
             }
             
             completion(imgUrl, true)
-            Loader.hide()
         } failure: { error in
             completion("", false)
-            Loader.hide()
             print(error ?? "")
         }
     }

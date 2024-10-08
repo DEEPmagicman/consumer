@@ -123,11 +123,13 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     
     func confirmDetail() {
         ContinueBtn.showLoader(userInteraction: false)
+        self.view.isUserInteractionEnabled = false
         presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: "", email: emailTextField.text ?? "", dob: DOBTextField.text, gender: gender) { [weak self] isSuccess,errorMsg  in
             
             guard let self = self else { return }
             
             ContinueBtn.hideLoader()
+            self.view.isUserInteractionEnabled = true
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTextField.text ?? ""

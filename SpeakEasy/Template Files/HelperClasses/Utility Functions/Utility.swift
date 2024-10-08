@@ -13,6 +13,14 @@ import UIKit
     fileprivate override init() {}
 }
 extension Utility {
+    
+    static var isDebug: Bool {
+#if DEBUG
+        return true
+#else
+        return false
+#endif
+    }
     func topViewController(base: UIViewController? = (AppDelegate.shared).window?.rootViewController) -> UIViewController? {
         
         if let nav = base as? UINavigationController {

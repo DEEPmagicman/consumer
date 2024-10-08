@@ -38,6 +38,8 @@ final class SetProfilePictureViewController: UIViewController {
 
     @IBAction private func onClickContinue(_ sender: Any) {
         continueBtn.showLoader(userInteraction: false)
+        self.view.isUserInteractionEnabled = false
+        
         presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
             guard let self = self else { return }
             
@@ -48,6 +50,8 @@ final class SetProfilePictureViewController: UIViewController {
                     guard let self = self else { return }
                     
                     continueBtn.hideLoader()
+                    self.view.isUserInteractionEnabled = true
+                    
                     if isSuccess {
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
@@ -60,6 +64,8 @@ final class SetProfilePictureViewController: UIViewController {
                     }
                 }
             } else {
+                self.continueBtn.hideLoader()
+                self.view.isUserInteractionEnabled = true
                 Alert.showAlertSheet(style: .alert, title: "image not upload", message: "")
             }
         }
