@@ -116,6 +116,17 @@ extension String {
     }
 }
 
+extension Date {
+    func toString(dateFormat format: DateFormat, timeZone: TimeZone? = nil) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format.rawValue
+        if let timeZone = timeZone {
+            dateFormatter.timeZone = timeZone
+        }
+        return dateFormatter.string(from: self)
+    }
+}
+
 extension Dictionary {
     func encrypted() -> [String: Any]? {
         guard var params = self as? [String: Any] else {
@@ -129,6 +140,21 @@ extension Dictionary {
             let encryptedParamData = try encrypt(data: paramData, key: EncryptKeys.key, iv: EncryptKeys.iv)
             let encryptedParamBase64 = encryptedParamData.base64EncodedString()
             return ["data": encryptedParamBase64]
+        } catch {
+            print("Error serializing parameters: \(error)")
+            return nil
+        }
+    }
+    
+    func headerEncrypt() -> String? {
+        guard let params = self as? [String: Any] else {
+            return nil
+        }
+        do {
+            let paramData = try JSONSerialization.data(withJSONObject: params)
+            let encryptedParamData = try encrypt(data: paramData, key: EncryptKeys.key, iv: EncryptKeys.iv)
+            let encryptedParamBase64 = encryptedParamData.base64EncodedString()
+            return encryptedParamBase64
         } catch {
             print("Error serializing parameters: \(error)")
             return nil
@@ -186,6 +212,12 @@ extension String {
             print("Error decrypting response: \(error)")
             return nil
         }
+    }
+    
+    func encryptedHeader() -> String {
+        var data = [String: Any]()
+        data["date"] = self
+        return data.headerEncrypt() ?? ""
     }
 }
 

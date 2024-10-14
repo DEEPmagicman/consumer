@@ -22,6 +22,10 @@ struct Header {
          "build_number": Bundle.main.buildVersionNumber,
          "platform": "ios",
          "app_bundle_id": Bundle.main.bundleIdentifier ?? "invalid bundle id"]
+        
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
+        header["token"] = date.encryptedHeader()
+        
         if timeZone?.lowercased() != "" {
             header["timezone"] = timeZone?.lowercased() ?? TimeZone.current.identifier.lowercased()
         }
@@ -32,5 +36,9 @@ struct Header {
             header["venue"] = String(venueId)
         }
         return header
+    }
+    
+    static var CurrentUTCTime: String {
+        Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
     }
 }

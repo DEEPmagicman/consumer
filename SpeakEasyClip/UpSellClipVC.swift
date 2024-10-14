@@ -154,6 +154,8 @@ final class UpSellClipVC: UIViewController {
 //        )
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
 //        request.httpBody = bodyData
         

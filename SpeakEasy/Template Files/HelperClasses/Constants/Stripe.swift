@@ -32,3 +32,9 @@ struct SharedURL {
     static let addOnsShareURL = "\(webBaseURL)/%@/addons/booking?aid=%@"
     static let tableBookingURL = "\(webBaseURL)/select-date?venueId=%@"
 }
+
+struct Const {
+    static var CurrentUTCTime: String {
+        Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
+    }
+}
