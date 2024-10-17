@@ -12,8 +12,8 @@ struct EncryptKeys {
     static let key = Data(base64Encoded: "j2bQhJar8pQnfYqhRtm7oQ/Q6jccysoXhjRl5Z5u05s=")!
     static let iv = Data(base64Encoded: "1lSi0HuO7qs2+n0AMEyioQ==")!
     
-    static let headerKey = Data(base64Encoded: "")!
-    static let headerIV = Data(base64Encoded: "")!
+    static let headerKey = Data(base64Encoded: "0nKT8pkl4RnlNlbfQQQjsddse4zQP08IHFk7x0u72rA=")!
+    static let headerIV = Data(base64Encoded: "33JIHSC0bjItzjGhT8olkg==")!
 }
 
 func encrypt(data: Data, key: Data, iv: Data) throws -> Data {

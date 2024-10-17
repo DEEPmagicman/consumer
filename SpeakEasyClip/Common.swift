@@ -152,7 +152,7 @@ extension Dictionary {
         }
         do {
             let paramData = try JSONSerialization.data(withJSONObject: params)
-            let encryptedParamData = try encrypt(data: paramData, key: EncryptKeys.key, iv: EncryptKeys.iv)
+            let encryptedParamData = try encrypt(data: paramData, key: EncryptKeys.headerKey, iv: EncryptKeys.headerIV)
             let encryptedParamBase64 = encryptedParamData.base64EncodedString()
             return encryptedParamBase64
         } catch {
