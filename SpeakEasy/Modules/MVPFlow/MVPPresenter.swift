@@ -30,8 +30,6 @@ final class MVPPresenter {
         }
     }
     
-    
-    
     func getVenueListForMVP(from: Int, status: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue], _ hasMore: Bool) -> Void) {
         let param = ["skip": from, 
                      "bookingStatus": status] as [String : Any]
@@ -67,7 +65,7 @@ final class MVPPresenter {
     }
 
     func mvpCityListAPi(completion: @escaping (_ cityList: [MVPCity], _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.mvpCityListURL, params: nil, headers: nil, success: { response in
+        AFWrapper.getRequest(APIBuilder.mvpCityListURL, params: nil, headers: Header.unauthorizedHeader(), success: { response in
             guard let responseDict = response as? [String: Any] else {
                 completion([], false, nil)
                 return

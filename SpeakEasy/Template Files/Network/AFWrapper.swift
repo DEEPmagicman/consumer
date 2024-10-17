@@ -22,9 +22,7 @@ final class AFWrapper: NSObject {
     
     private override init() {}
     
-    static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, shouldForceLogout: Bool = true,
-                            success: @escaping DefaultAPISuccessClosure,
-                            failure: @escaping DefaultAPIFailureClosure) {
+    static func postRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, shouldForceLogout: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
@@ -32,13 +30,20 @@ final class AFWrapper: NSObject {
         }
         
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
                 
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
                     } else if shouldForceLogout && responseCode == 401 {
-                        forceLogout()
+                        TokenManager.shared.addPendingRequest( {
+                            self.postRequest(strURL, params: params, headers: headers, isJsonEncoding: isJsonEncoding, shouldForceLogout: shouldForceLogout, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if responseObject.result.value != nil {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -57,7 +62,7 @@ final class AFWrapper: NSObject {
                 parameters =  params.encrypted()
             }
             
-            let req = Alamofire.request(strURL, method: .post, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: headers).responseString { response in
+            let req = Alamofire.request(strURL, method: .post, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseString { response in
                 
                 if let responseCode = response.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
@@ -67,7 +72,14 @@ final class AFWrapper: NSObject {
                         let decryptedResponse = encryptedResponse.decrypted()
                         success(decryptedResponse)
                     }  else if shouldForceLogout && responseCode == 401 {
-                        forceLogout()
+                        TokenManager.shared.addPendingRequest( {
+                            self.postRequest(strURL, params: parameters, headers: headers, isJsonEncoding: isJsonEncoding, shouldForceLogout: shouldForceLogout, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if response.result.value != nil {
                         let errorResponse = errorHandling(response.result.value)
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -82,9 +94,59 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func patchRequest(_ strURL: String, params:  [String: Any]? = nil, headers: [String: String]?,
-                             success: @escaping DefaultAPISuccessClosure,
-                             failure: @escaping DefaultAPIFailureClosure) {
+    static func postRequestRefreshToken(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+        
+        if !Connectivity.isConnectedToInternet {
+            failure(NSError(domain: Constant.String.internetNotConnect, code: 0, userInfo: [:]))
+            return
+        }
+        
+        if !SharedURL.isEncryptionEnabled {
+            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
+                
+                if let responseCode = responseObject.response?.statusCode {
+                    if responseCode == 200 || responseCode == 201 {
+                        success(responseObject.result.value)
+                    } else {
+                        forceLogout()
+                        failure(responseObject.result.error)
+                    }
+                } else {
+                    forceLogout()
+                    failure(responseObject.result.error)
+                }
+            }
+            debugPrint(req)
+        } else {
+            
+            var parameters: Parameters?
+            if let params = params {
+                parameters =  params.encrypted()
+            }
+            
+            let req = Alamofire.request(strURL, method: .post, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseString { response in
+                
+                if let responseCode = response.response?.statusCode {
+                    if responseCode == 200 || responseCode == 201 {
+                        guard let encryptedResponse = response.result.value else {
+                            return
+                        }
+                        let decryptedResponse = encryptedResponse.decrypted()
+                        success(decryptedResponse)
+                    }  else {
+                        forceLogout()
+                        failure(response.result.error)
+                    }
+                } else {
+                    forceLogout()
+                    failure(response.result.error)
+                }
+            }
+            debugPrint(req)
+        }
+    }
+    
+    static func patchRequest(_ strURL: String, params:  [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
@@ -93,12 +155,19 @@ final class AFWrapper: NSObject {
         }
         
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .patch, parameters: params, encoding: JSONEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .patch, parameters: params, encoding: JSONEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
                     } else if responseCode == 401 {
-                        forceLogout()
+                        TokenManager.shared.addPendingRequest( {
+                            self.patchRequest(strURL, params: params, headers: headers, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if responseObject.result.value != nil {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -116,7 +185,7 @@ final class AFWrapper: NSObject {
                 parameters = params.encrypted()
             }
             
-            let req = Alamofire.request(strURL, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseString { response in
+            let req = Alamofire.request(strURL, method: .patch, parameters: parameters, encoding: JSONEncoding.default, headers: Header.updateToken(headers)).responseString { response in
                 
                 if let responseCode = response.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
@@ -134,7 +203,14 @@ final class AFWrapper: NSObject {
                             success(decryptedBoolResponse)
                         }
                     }  else if responseCode == 401 {
-                        forceLogout()
+                        TokenManager.shared.addPendingRequest( {
+                            self.patchRequest(strURL, params: parameters, headers: headers, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if response.result.value != nil {
                         let errorResponse = errorHandling(response.result.value)
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -149,9 +225,7 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post,
-                          success: @escaping DefaultAPISuccessClosure,
-                          failure: @escaping DefaultAPIFailureClosure) {
+    static func multipart(_ strURL: String, fileData: Data?, fileName: String, fileParamKey: String, params: [String: Any], headers: [String: String]?, method: HTTPMethod = .post, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
@@ -177,7 +251,14 @@ final class AFWrapper: NSObject {
                             } else if responseCode == 201 {
                                 success(response.result.value)
                             } else if responseCode == 401 {
-                                forceLogout()
+                                TokenManager.shared.addPendingRequest( {
+                                    self.multipart(strURL, fileData: fileData, fileName: fileName, fileParamKey: fileParamKey, params: params, headers: headers, method: method, success: success, failure: failure)
+                                })
+                                TokenManager.shared.refreshToken { success in
+                                    if !success {
+                                        forceLogout()
+                                    }
+                                }
                             } else {
                                 failure(response.result.error)
                             }
@@ -217,7 +298,14 @@ final class AFWrapper: NSObject {
                                 let decryptedResponse = encryptedResponse.decrypted()
                                 success(decryptedResponse)
                             } else if responseCode == 401 {
-                                forceLogout()
+                                TokenManager.shared.addPendingRequest( {
+                                    self.multipart(strURL, fileData: fileData, fileName: fileName, fileParamKey: fileParamKey, params: multipartParams, headers: headers, method: method, success: success, failure: failure)
+                                })
+                                TokenManager.shared.refreshToken { success in
+                                    if !success {
+                                        forceLogout()
+                                    }
+                                }
                             } else {
                                 failure(response.result.error)
                             }
@@ -233,18 +321,25 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func getRequest(_ strURL: String,isForCard:Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func getRequest(_ strURL: String, isForCard:Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         if !Connectivity.isConnectedToInternet {
             failure(nil)
             return
         }
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseJSON { responseObject in
+            let req = Alamofire.request(strURL, method: .get, parameters: params, headers: Header.updateToken(headers)).responseJSON { responseObject in
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
                     } else if responseCode == 401 {
-                        forceLogout()
+                        TokenManager.shared.addPendingRequest( {
+                            self.getRequest(strURL, isForCard: isForCard, params: params, headers: headers, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if responseObject.result.value != nil {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
@@ -257,7 +352,7 @@ final class AFWrapper: NSObject {
             }
             debugPrint(req)
         } else {
-            let req = Alamofire.request(strURL, method: .get, parameters: params, headers: headers).responseString(queue: nil, encoding: .utf8) { response in
+            let req = Alamofire.request(strURL, method: .get, parameters: params, headers: Header.updateToken(headers)).responseString(queue: nil, encoding: .utf8) { response in
                 switch response.result {
                 case .success(let value):
                     if let responseCode = response.response?.statusCode {
@@ -277,7 +372,14 @@ final class AFWrapper: NSObject {
                                 
                             }
                         } else if responseCode == 401 {
-                            forceLogout()
+                            TokenManager.shared.addPendingRequest( {
+                                self.getRequest(strURL, isForCard: isForCard, params: params, headers: headers, success: success, failure: failure)
+                            })
+                            TokenManager.shared.refreshToken { success in
+                                if !success {
+                                    forceLogout()
+                                }
+                            }
                         } else {
                             let errorMessage = "Request failed with status code \(responseCode)"
                             failure(NSError(domain: errorMessage, code: responseCode, userInfo: [:]))
@@ -301,33 +403,42 @@ final class AFWrapper: NSObject {
             return
         }
         //        #if DEBUG
-        //        #else
-        var encryptedParams = params
-        encryptedParams = encryptedParams?.encrypted()
-        
-        let req = Alamofire.request(strURL, method: .delete, parameters: encryptedParams, headers: headers).responseString { (response) in
+        if !SharedURL.isEncryptionEnabled {
+            var encryptedParams = params
+            encryptedParams = encryptedParams?.encrypted()
             
-            if let responseCode = response.response?.statusCode {
-                if responseCode == 200 || responseCode == 201 {
-                    guard let encryptedResponse = response.result.value else {
-                        return
+            let req = Alamofire.request(strURL, method: .delete, parameters: encryptedParams, headers: Header.updateToken(headers)).responseString { (response) in
+                
+                if let responseCode = response.response?.statusCode {
+                    if responseCode == 200 || responseCode == 201 {
+                        guard let encryptedResponse = response.result.value else {
+                            return
+                        }
+                        let decryptedResponse = encryptedResponse.decrypted()
+                        success(decryptedResponse)
+                    } else if responseCode == 401 {
+                        TokenManager.shared.addPendingRequest( {
+                            self.deleteRequest(strURL, params: encryptedParams, headers: headers, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
+                    } else {
+                        failure(response.result.error)
                     }
-                    let decryptedResponse = encryptedResponse.decrypted()
-                    success(decryptedResponse)
-                } else if responseCode == 401 {
-                    forceLogout()
                 } else {
                     failure(response.result.error)
                 }
-            } else {
-                failure(response.result.error)
             }
+            debugPrint(req)
         }
         //        #endif
-        debugPrint(req)
+        
     }
     
-    static func putRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, isForceLogout: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func putRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, isJsonEncoding: Bool = true, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
@@ -335,7 +446,7 @@ final class AFWrapper: NSObject {
             return
         }
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
@@ -343,7 +454,14 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(responseObject.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else if responseCode == 401 {
-                        if isForceLogout { forceLogout() } else { failure(responseObject.result.error) }
+                        TokenManager.shared.addPendingRequest( {
+                            self.putRequest(strURL, params: params, headers: headers, isJsonEncoding: isJsonEncoding, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if responseCode >= 500 {
                         failure(NSError(domain: "", code: 500, userInfo: [:]))
                     } else {
@@ -360,7 +478,7 @@ final class AFWrapper: NSObject {
                 parameters = params.encrypted()
             }
             
-            let req = Alamofire.request(strURL, method: .put, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: headers).responseString { response in
+            let req = Alamofire.request(strURL, method: .put, parameters: parameters, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: Header.updateToken(headers)).responseString { response in
                 
                 if let responseCode = response.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
@@ -373,7 +491,14 @@ final class AFWrapper: NSObject {
                         let errorResponse = errorHandling(response.result.value ?? "")
                         failure(NSError(domain: errorResponse.1, code: errorResponse.0 == true ? 0 : 1, userInfo: [:]))
                     } else if responseCode == 401 {
-                        if isForceLogout { forceLogout() } else { failure(response.result.error) }
+                        TokenManager.shared.addPendingRequest( {
+                            self.putRequest(strURL, params: parameters, headers: headers, isJsonEncoding: isJsonEncoding, success: success, failure: failure)
+                        })
+                        TokenManager.shared.refreshToken { success in
+                            if !success {
+                                forceLogout()
+                            }
+                        }
                     } else if responseCode >= 500 {
                         failure(NSError(domain: "", code: 500, userInfo: [:]))
                     } else {

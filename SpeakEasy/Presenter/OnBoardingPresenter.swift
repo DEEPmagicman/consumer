@@ -39,6 +39,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -109,6 +110,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -305,6 +307,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -331,6 +334,7 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String: Any]
             if let sessionDic = sessionDic {
                 UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+                UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             }
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user

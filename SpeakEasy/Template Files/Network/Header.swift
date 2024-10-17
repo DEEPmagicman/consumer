@@ -38,7 +38,19 @@ struct Header {
         return header
     }
     
-    static var CurrentUTCTime: String {
-        Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
+    static func unauthorizedHeader() -> [String: String] {
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
+        return ["token": date.encryptedHeader()]
+    }
+    
+    static func updateToken(_ header: [String: String]?) -> [String: String]? {
+        if var newHeader = header {
+            newHeader["Authorization"] = "Bearer \(UserDefault.shared.accessToken ?? "")"
+            let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC"))
+            newHeader["token"] = date.encryptedHeader()
+            return newHeader
+        } else {
+            return nil
+        }
     }
 }
