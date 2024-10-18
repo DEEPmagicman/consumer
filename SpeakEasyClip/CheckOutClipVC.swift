@@ -336,7 +336,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
@@ -432,7 +432,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
@@ -486,7 +486,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func getAddOnsBooking(completion: @escaping (()-> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnsBookingId)") else { return }
         var request = URLRequest(url: url)
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "GET"
@@ -554,7 +554,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
@@ -738,7 +738,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         var selectedTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
@@ -879,7 +879,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
@@ -924,7 +924,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
@@ -974,7 +974,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
@@ -1237,7 +1237,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
@@ -1322,7 +1322,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
@@ -1414,7 +1414,7 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"

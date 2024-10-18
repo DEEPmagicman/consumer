@@ -96,7 +96,7 @@ final class SelectTicketClipVC: UIViewController {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/deep-link/\(self.deepLink)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         DispatchQueue.main.async {
@@ -132,7 +132,7 @@ final class SelectTicketClipVC: UIViewController {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
         request.addValue(venueDetail?.id ?? "", forHTTPHeaderField: "venue")
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         URLSession.shared.dataTask(with: request) { data, respons, error in
@@ -186,7 +186,7 @@ final class SelectTicketClipVC: UIViewController {
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
-        let date = Date().toString(dateFormat: .YYYYMMDD, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
         if withLoader {
