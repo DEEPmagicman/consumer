@@ -65,6 +65,8 @@ final class SettingsViewController: UIViewController {
             UIAlertAction in
             UserDefault.shared.emptyData()
             AppDelegate.shared.changeRootViewController()
+            OnBoardingPresenter.logout { isSuccess, errorMsg in
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) {
             _ in

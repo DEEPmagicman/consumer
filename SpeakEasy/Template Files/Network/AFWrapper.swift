@@ -108,7 +108,6 @@ final class AFWrapper: NSObject {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
                     } else {
-                        forceLogout()
                         failure(responseObject.result.error)
                     }
                 } else {
@@ -354,7 +353,7 @@ final class AFWrapper: NSObject {
         } else {
             let req = Alamofire.request(strURL, method: .get, parameters: params, headers: Header.updateToken(headers)).responseString(queue: nil, encoding: .utf8) { response in
                 switch response.result {
-                case .success(let value):
+                case .success(_):
                     if let responseCode = response.response?.statusCode {
                         if responseCode == 200 || responseCode == 201 {
                             guard let responseInString = response.result.value else {
@@ -549,6 +548,8 @@ final class AFWrapper: NSObject {
         Utility.main.showAlert(message: Constant.String.sessionTimeOut, title: "") {
             UserDefault.shared.emptyData()
             AppDelegate.shared.changeRootViewController()
+        }
+        OnBoardingPresenter.logout { _, _ in
         }
     }
 }
