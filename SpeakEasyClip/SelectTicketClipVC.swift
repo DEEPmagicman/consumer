@@ -181,6 +181,7 @@ final class SelectTicketClipVC: UIViewController {
     
     private func getVenueDetailsWithTickets(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
+        print("urmil:  \(url)")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
@@ -218,6 +219,7 @@ final class SelectTicketClipVC: UIViewController {
                 }
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
+                VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false
                 self.setUpUI()
                 self.getAddOns()
                 if VenueImageManager.shared.customQRData != nil { self.getCustomImage() }
@@ -606,6 +608,7 @@ class VenueImageManager {
     
     var venueImage = Data()
     var customQRData: CoverTicketViewSettings?
+    var isEnableCoverTicketViewSettings: Bool = false
     var customQRImage = Data()
     
     init() {}
