@@ -38,6 +38,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -106,6 +107,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -236,7 +238,6 @@ final class OnBoardingPresenter {
     func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         
         let tsocialIdParts = socialId.components(separatedBy: ".")
-        let firstPart = tsocialIdParts[0]
      
         var param = ["email": email, "socialType": socialType, "socialId": socialId]
         if socialType == SocialType.apple.rawValue {
@@ -294,6 +295,7 @@ final class OnBoardingPresenter {
             }
             let imageDic = userDic["image"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+            UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
@@ -320,6 +322,7 @@ final class OnBoardingPresenter {
             let imageDic = userDic["image"] as? [String: Any]
             if let sessionDic = sessionDic {
                 UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
+                UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             }
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
@@ -352,6 +355,17 @@ final class OnBoardingPresenter {
             completion(false, nil)
         }
     }
+    
+    static func logout(completion: @escaping(_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+        AFWrapper.postRequest(APIBuilder.logoutAPI, headers: Header.header()) { _ in
+            completion(true, nil)
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain)
+                return
+            }
+            print(error ?? "")
+            completion(false, nil)
+        }
+    }
 }
-
-

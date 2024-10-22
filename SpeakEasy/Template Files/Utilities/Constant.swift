@@ -8,6 +8,7 @@
 import UIKit
 
 struct Constant {
+    
     struct Color {
         static let code7Acolor = UIColor(named: "code7a")
         static let primaryBlue = UIColor(named: "primaryBlue")

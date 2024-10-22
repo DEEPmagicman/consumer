@@ -158,6 +158,7 @@
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
 		CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */ = {isa = PBXBuildFile; productRef = CE19C1AA2CA44469007050ED /* MHLoadingButton */; };
+		CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE236E332CC10BEE00FB8B4A /* TokenManager.swift */; };
 		CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */; };
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
@@ -454,6 +455,7 @@
 		CE221A692C3BC93900BC1BD8 /* DPDUIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DPDUIView+Extension.swift"; sourceTree = "<group>"; };
 		CE221A6A2C3BC93900BC1BD8 /* DPDConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPDConstants.swift; sourceTree = "<group>"; };
 		CE221A6C2C3BC93900BC1BD8 /* DropDownCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownCell.xib; sourceTree = "<group>"; };
+		CE236E332CC10BEE00FB8B4A /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectionBottomSheet.swift; sourceTree = "<group>"; };
 		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -844,6 +846,7 @@
 				CE565472299CA9A3009CE55C /* ReachabilityManager.swift */,
 				CE565475299CAC95009CE55C /* WebSocketWrapper.swift */,
 				CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */,
+				CE236E332CC10BEE00FB8B4A /* TokenManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1860,6 +1863,7 @@
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,
 				82847A8629828BA600611DC4 /* ticketTypeTableViewCell.swift in Sources */,
+				CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
 				82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */,
 				BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */,
@@ -2047,7 +2051,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 169;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2064,7 +2068,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2084,7 +2088,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 169;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2100,7 +2104,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2243,7 +2247,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 169;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2269,7 +2273,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2341,7 +2345,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 168;
+				CURRENT_PROJECT_VERSION = 169;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2365,7 +2369,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.1.3;
+				MARKETING_VERSION = 5.1.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",

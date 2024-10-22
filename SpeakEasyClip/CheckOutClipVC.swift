@@ -316,11 +316,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var paramData = [String: Any]()
         param["addOnsItems"] = addOnsItems
         param["venueId"] = venue?.id ?? ""
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
@@ -336,6 +336,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -349,21 +351,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             }
             
             var paymentDetail = [String: Any]()
-#if DEBUG
-            guard let paymentDetailData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let paymentDetailData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                paymentDetail = paymentDetailData
+            } else {
+                guard let response = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                paymentDetail =  response.decrypted() ?? [:]
             }
-            paymentDetail = paymentDetailData
-#else
-            guard let response = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            paymentDetail =  response.decrypted() ?? [:]
-#endif
             AppClipLoader.hideLoader()
             
             if let subTotal = paymentDetail["subTotal"] as? Double, let processingFee = paymentDetail["processingFee"] as? Double, let customFee = paymentDetail["customFee"] as? Double, let salesTax = paymentDetail["salesTax"] as? Double, let total = paymentDetail["total"] as? Double, let customFeeName = paymentDetail["customFeeName"] as? String, let salesTaxName = paymentDetail["salesTaxName"] as? String {
@@ -411,11 +413,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if bookingId != "" {
             param["bookingId"] = bookingId
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
@@ -430,6 +432,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -442,21 +446,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let jsonData = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData.decrypted() ?? [:]
             }
-            json = jsonData
-#else
-            guard let jsonData = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            json = jsonData.decrypted() ?? [:]
-#endif
             if let paymentIntent = json["clientSecret"] as? String, let addOnsBookingId = json["bookingId"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
@@ -481,37 +485,40 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     
     private func getAddOnsBooking(completion: @escaping (()-> Void)) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnsBookingId)") else { return }
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-
+        var request = URLRequest(url: url)
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, respons, error in
             DispatchQueue.main.async {
-                AppClipLoader.showLoader(self.view)
-            }
-            
-            URLSession.shared.dataTask(with: request) { data, respons, error in
-                DispatchQueue.main.async {
-                    guard let data = data else {
-                        AppClipLoader.hideLoader()
-                        return
-                    }
-                    var json = [String: Any]()
-#if DEBUG
+                guard let data = data else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                var json = [String: Any]()
+                if !SharedURL.isEncryptionEnabled {
                     guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
                     json = jsonData
-#else
+                } else {
                     guard let response = String(data: data, encoding: .utf8) else {
                         AppClipLoader.hideLoader()
                         return
                     }
                     json = response.decrypted() ?? [:]
-#endif
-                    self.createdAT = json["createdAt"] as? String ?? ""
-                    completion()
                 }
-            }.resume()
+                self.createdAT = json["createdAt"] as? String ?? ""
+                completion()
+            }
+        }.resume()
     }
     
     private func customFeeCount() {
@@ -527,11 +534,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                      "isTieredTicket": false,
                      "venueId": venue?.id ?? ""] as [String: Any]
         
-#if DEBUG
+        if !SharedURL.isEncryptionEnabled {
             param = paramData
-#else
+        } else {
             param = paramData.encrypted() ?? [:]
-#endif
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: param, options: .prettyPrinted)
@@ -547,6 +554,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -559,21 +568,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                 AppClipLoader.hideLoader()
-                 self.alertPopup("Alert", "Internal data formate error")
-                 return
-             }
-             json = jsonData
-#else
-            guard let response = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let response = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json =  response.decrypted() ?? [:]
             }
-            json =  response.decrypted() ?? [:]
-#endif
             if let subTotal = json["subTotal"] as? Double, let processingFee = json["processingFee"] as? Double, let customFee = json["customFee"] as? Double, let salesTax = json["salesTax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["customFeeName"] as? String, let salesTaxName = json["salesTaxName"] as? String {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
@@ -729,6 +738,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/payment/\(bookingId)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         var selectedTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
@@ -737,11 +748,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var paramData = [String: Any]()
         var param = ["cart": selectedTickets] as [String: Any]
         param["isAppClipPayment"] = true
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: paramData,
             options: [.prettyPrinted]
@@ -759,21 +770,21 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let response = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json =  response.decrypted() ?? [:]
             }
-            json = jsonData
-#else
-            guard let response = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            json =  response.decrypted() ?? [:]
-#endif
             guard let paymentIntentClientSecret = json["clientSecret"] as? String, let paymentHistoryId = json["paymentHistoryId"] as? String else {
                 self.alertPopup("Alert", "Payment Initialisation issue")
                 return
@@ -856,11 +867,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if venue?.venueSettings?.optedPolicy == true {
             param["optedPolicy"] = optedPolicy
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: paramData,
             options: [.prettyPrinted]
@@ -868,6 +879,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
             if let error = error as? NSError {
                 if self?.retryCount ?? 0 < self?.maxRetry ?? 0 {
@@ -898,11 +912,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if bookingType == .FREE {
             param["mainBookingId"] = bookingId
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: paramData,
             options: [.prettyPrinted]
@@ -910,6 +924,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] (data, response, error) in
             if let error = error as? NSError {
@@ -946,11 +962,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
 """
         param["message"] = msg
         param["bookingId"] = bookingId
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         let bodyData = try? JSONSerialization.data(
             withJSONObject: paramData,
             options: [.prettyPrinted]
@@ -958,6 +974,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpBody = bodyData
         request.addValue("*/*", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
         })
         task.resume()
@@ -990,7 +1009,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             self.addOnsPaymentSuccess(.SUCCESS) {
                                 self.getAddOnsBooking {
                                     AppClipLoader.hideLoader()
-                                    if VenueImageManager.shared.customQRData == nil {
+                                    if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                         self.navigateToQR()
                                     } else {
                                         self.navigateToCustomQR()
@@ -1003,7 +1022,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             self.addOnsPaymentSuccess(.SUCCESS) {
                                 self.getAddOnsBooking {
                                     AppClipLoader.hideLoader()
-                                    if VenueImageManager.shared.customQRData == nil {
+                                    if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                         self.navigateToQR()
                                     } else {
                                         self.navigateToCustomQR()
@@ -1015,14 +1034,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                                 guard let self = self else { return }
                                 if self.selectedAddOnsItem.count != 0 {
                                     self.addOnsPaymentSuccess(.SUCCESS) {
-                                        if VenueImageManager.shared.customQRData == nil {
+                                        if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                             self.navigateToQR()
                                         } else {
                                             self.navigateToCustomQR()
                                         }
                                     }
                                 } else {
-                                    if VenueImageManager.shared.customQRData == nil {
+                                    if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                         self.navigateToQR()
                                     } else {
                                         self.navigateToCustomQR()
@@ -1122,7 +1141,7 @@ extension CheckOutClipVC {
                     self.addOnsPaymentSuccess(.SUCCESS) {
                         self.getAddOnsBooking {
                             AppClipLoader.hideLoader()
-                            if VenueImageManager.shared.customQRData == nil {
+                            if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                 self.navigateToQR()
                             } else {
                                 self.navigateToCustomQR()
@@ -1135,7 +1154,7 @@ extension CheckOutClipVC {
                     self.addOnsPaymentSuccess(.SUCCESS) {
                         self.getAddOnsBooking {
                             AppClipLoader.hideLoader()
-                            if VenueImageManager.shared.customQRData == nil {
+                            if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                 self.navigateToQR()
                             } else {
                                 self.navigateToCustomQR()
@@ -1147,14 +1166,14 @@ extension CheckOutClipVC {
                         guard let self = self else { return }
                         if self.selectedAddOnsItem.count != 0 {
                             self.addOnsPaymentSuccess(.SUCCESS) {
-                                if VenueImageManager.shared.customQRData == nil {
+                                if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                     self.navigateToQR()
                                 } else {
                                     self.navigateToCustomQR()
                                 }
                             }
                         } else {
-                            if VenueImageManager.shared.customQRData == nil {
+                            if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                                 self.navigateToQR()
                             } else {
                                 self.navigateToCustomQR()
@@ -1198,11 +1217,11 @@ extension CheckOutClipVC {
                 param["email"] = emailTF.text ?? ""
             }
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
@@ -1218,6 +1237,8 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -1230,21 +1251,21 @@ extension CheckOutClipVC {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let jsonData = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData.decrypted() ?? [:]
             }
-            json = jsonData
-#else
-            guard let jsonData = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            json = jsonData.decrypted() ?? [:]
-#endif
             
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
@@ -1281,11 +1302,11 @@ extension CheckOutClipVC {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
@@ -1301,6 +1322,8 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -1313,31 +1336,31 @@ extension CheckOutClipVC {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let jsonData = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData.decrypted() ?? [:]
             }
-            json = jsonData
-#else
-            guard let jsonData = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            json = jsonData.decrypted() ?? [:]
-#endif
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
-                if VenueImageManager.shared.customQRData == nil {
+                if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                     self.navigateToQR()
                 } else {
                     self.navigateToCustomQR()
                 }
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
-                if VenueImageManager.shared.customQRData == nil {
+                if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                     self.navigateToQR()
                 } else {
                     self.navigateToCustomQR()
@@ -1371,11 +1394,11 @@ extension CheckOutClipVC {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
         }
-#if DEBUG
-        paramData = param
-#else
-        paramData = param.encrypted() ?? [:]
-#endif
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
         var postData = Data()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
@@ -1391,6 +1414,8 @@ extension CheckOutClipVC {
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
         
         request.httpMethod = "POST"
         request.httpBody = postData
@@ -1403,21 +1428,21 @@ extension CheckOutClipVC {
                 return
             }
             var json = [String: Any]()
-#if DEBUG
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
+            if !SharedURL.isEncryptionEnabled {
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData
+            } else {
+                guard let jsonData = String(data: data, encoding: .utf8) else {
+                    AppClipLoader.hideLoader()
+                    self.alertPopup("Alert", "Internal data formate error")
+                    return
+                }
+                json = jsonData.decrypted() ?? [:]
             }
-            json = jsonData
-#else
-            guard let jsonData = String(data: data, encoding: .utf8) else {
-                AppClipLoader.hideLoader()
-                self.alertPopup("Alert", "Internal data formate error")
-                return
-            }
-            json = jsonData.decrypted() ?? [:]
-#endif
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
                 completion()
