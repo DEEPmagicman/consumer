@@ -53,7 +53,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://dev-consumer.speakeasygo.com/?vid=VN-iscp"
+            value = "https://dev-consumer.speakeasygo.com/?vid=VN-22rs"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -79,7 +79,7 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
