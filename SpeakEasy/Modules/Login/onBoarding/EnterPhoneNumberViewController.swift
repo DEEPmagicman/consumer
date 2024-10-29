@@ -69,11 +69,13 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
         continueBtn.showLoader(userInteraction: false)
+        self.view.isUserInteractionEnabled = false
         if isFromLogin {
             onBoardingPresenter.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self = self else { return }
                 
                 continueBtn.hideLoader()
+                self.view.isUserInteractionEnabled = true
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                 } else if errorMsg == Constant.String.internetNotConnect {

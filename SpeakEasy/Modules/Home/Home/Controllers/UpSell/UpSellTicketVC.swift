@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import MHLoadingButton
 
 class UpSellTicketVC: UIViewController {
     
     @IBOutlet weak var ticketTypeTableView: UITableView!
-    @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var continueBtn: LoadingButton!
     @IBOutlet weak var upSellTitle: UILabel!
     @IBOutlet weak var upSellDescription: UILabel!
     
@@ -114,6 +115,8 @@ class UpSellTicketVC: UIViewController {
         upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell Items"
         upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingSettings?.description ?? ""
         updateContinueBtn()
+        continueBtn.bgColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
+        continueBtn.indicator = MaterialLoadingIndicator(color: .black)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -185,10 +188,12 @@ class UpSellTicketVC: UIViewController {
                     tickets.append(["ticketId": $0.id,
                                     "ticketQuantity": $0.selectedQuantity ?? 0])
                 }
-                Loader.show()
-                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id,message   in
-                    Loader.hide()
+                continueBtn.showLoader(userInteraction: false)
+                self.view.isUserInteractionEnabled = false
+                PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, message in
                     guard let self = self else { return }
+                    self.continueBtn.hideLoader()
+                    self.view.isUserInteractionEnabled = true
                     if isSuccess, let id = id {
                         Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
                     } else {

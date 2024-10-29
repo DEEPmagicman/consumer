@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import MapKit
+import MHLoadingButton
 
 final class MVPVenueDetailVc: UIViewController {
 
@@ -20,7 +21,7 @@ final class MVPVenueDetailVc: UIViewController {
     @IBOutlet weak var ticketTypeTableView: UITableView!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var liveLbl: UILabel!
-    @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var continueBtn: LoadingButton!
     @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var updatedAtLbl: UILabel!
@@ -169,6 +170,9 @@ final class MVPVenueDetailVc: UIViewController {
         checkOutIndicator.startAnimating()
         checkOutIndicator.isHidden = true
         tonightView.isHidden = true
+        
+        continueBtn.bgColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
+        continueBtn.indicator = MaterialLoadingIndicator(color: .black)
     }
     
     private func getVenueDetail(withLoader: Bool = true) {
@@ -425,10 +429,12 @@ final class MVPVenueDetailVc: UIViewController {
                 tickets.append(["ticketId": $0.id,
                                 "ticketQuantity": $0.selectedQuantity ?? 0])
             }
-            Loader.show()
+            continueBtn.showLoader(userInteraction: false)
+            self.view.isUserInteractionEnabled = false
             PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, message in
-                Loader.hide()
                 guard let self = self else { return }
+                self.continueBtn.hideLoader()
+                self.view.isUserInteractionEnabled = true
                 if isSuccess, let id = id {
                     Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
                 } else {
