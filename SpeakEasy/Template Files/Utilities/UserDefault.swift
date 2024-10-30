@@ -11,6 +11,7 @@ final class UserDefault: NSObject {
     
     enum UserDefaultKey: String {
         case accessTokenKey = "accessToken"
+        case refreshTokenKey = "refreshToken"
         case userKey = "user"
         case isLoggedInKey = "isLoggedIn"
         case isGuest = "isGuest"
@@ -33,6 +34,14 @@ final class UserDefault: NSObject {
             return UserDefaults.standard.value(forKey: UserDefaultKey.accessTokenKey.rawValue) as? String
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.accessTokenKey.rawValue)
+        }
+    }
+    
+    var refreshToken: String? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.refreshTokenKey.rawValue) as? String
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.refreshTokenKey.rawValue)
         }
     }
     

@@ -21,6 +21,8 @@ struct APIBuilder {
     static private let OTPVerify = "/otp-verify"
     static private let OTPResend = "/otp-resend"
     static private let login = "/login"
+    static private let logout = "/logout"
+    static private let refreshToken = "/refresh-token"
     static private let profile = "/profile"
     static private let upload = "/upload"
     static private let uploadFile = "/uploadFile"
@@ -90,6 +92,14 @@ struct APIBuilder {
     
     static var loginWithEmailURL: String {
         baseURL + route + auth + login
+    }
+    
+    static var logoutAPI: String {
+        baseURL + route + auth + logout
+    }
+    
+    static var refreshTokenAPI: String {
+        baseURL + route + auth + refreshToken
     }
     
     static var forgotPasswordURL: String {

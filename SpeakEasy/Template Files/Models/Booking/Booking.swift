@@ -439,7 +439,7 @@ struct BookingDetails: Codable {
     
     var id: String
     var bookingId: String
-    var eventTicketSettings: EventTicketSettings
+    var eventTicketSettings: EventTicketSettings?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
