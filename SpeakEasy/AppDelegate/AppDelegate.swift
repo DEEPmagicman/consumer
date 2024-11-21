@@ -105,11 +105,11 @@ extension AppDelegate {
         if url.absoluteString.contains("event") {
             if let components = URLComponents(url: url, resolvingAgainstBaseURL: true), let queryItems = components.queryItems {
                 if let value = queryItems.first(where: { $0.name == "eid" })?.value {
-                    setRootVC(.event, id: value)
+                    setRootVC(.event, id: value, link: url.absoluteString)
                     return
                 }
                 if let inviteId = queryItems.first(where: { $0.name == "L" })?.value {
-                    setRootVC(.inviteLink, id: inviteId)
+                    setRootVC(.inviteLink, id: inviteId, link: url.absoluteString)
                     return
                 }
                 let promoteId = queryItems.first(where: { $0.name == "promoteId" })?.value
@@ -117,10 +117,10 @@ extension AppDelegate {
                 if let bookingId = bookingId {
                     setRootVC(.booking, id: bookingId)
                 } else {
-                    setRootVC(.event, id: url.lastPathComponent, promoteId: promoteId ?? "")
+                    setRootVC(.event, id: url.lastPathComponent, promoteId: promoteId ?? "", link: url.absoluteString)
                 }
             } else {
-                setRootVC(.event, id: url.lastPathComponent)
+                setRootVC(.event, id: url.lastPathComponent, link: url.absoluteString)
             }
             return
         }
@@ -156,12 +156,12 @@ extension AppDelegate {
         
         if let value = queryItems.first(where: { $0.name == "pid" })?.value {
             let eventId = queryItems.first(where: { $0.name == "eid" })?.value ?? ""
-            setRootVC(.event, id: eventId, promoteId: value)
+            setRootVC(.event, id: eventId, promoteId: value, link: url.absoluteString)
             return
         }
         
         if let value = queryItems.first(where: { $0.name == "eid" })?.value {
-            setRootVC(.event, id: value)
+            setRootVC(.event, id: value, link: url.absoluteString)
             return
         }
         
@@ -190,12 +190,12 @@ extension AppDelegate {
             return
         }
         if let inviteId = queryItems.first(where: { $0.name == "L" })?.value {
-            setRootVC(.inviteLink, id: inviteId)
+            setRootVC(.inviteLink, id: inviteId, link: url.absoluteString)
             return
         }
     }
     
-    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "", isOnlyAddOnAvailable: Bool = false) {
+    private func setRootVC(_ forType: NavigationDestination = .appLaunch, id: String = "", promoteId: String = "", doormanId: String = "", addOnsId: String = "", isOnlyAddOnAvailable: Bool = false, link: String? = nil) {
         let tabBarController = UITabBarController()
         ReachabilityManager.shared.startMonitoring()
         let home = StoryboardAndXibManager.StoryBoard.home.instantiateVC(MVPVenueListVc.self)
@@ -242,9 +242,16 @@ extension AppDelegate {
             vc.doormanId = doormanId
             home.navigationController?.pushViewController(vc, animated: false)
         case .event:
-            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
+            if let url = link {
+                Navigate.externalURL(url)
+            }
+            
+//            Navigate.to.eventDetail(home, eventId: id, venueDetail: nil, event: nil, promoteId: promoteId)
         case .inviteLink:
-            inviteLinkNav(home, id: id)
+            if let url = link {
+                Navigate.externalURL(url)
+            }
+//            inviteLinkNav(home, id: id)
         case .booking:
             Navigate.to.showQRCode(home, booking: nil, bookingId: id, type: .singleTickedEvent)
         case .addOns:

@@ -496,12 +496,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat())"
                     } else {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat())"
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat())"
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
@@ -649,8 +649,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             ticketTypeTableView.reloadData()
             updateContinueBtn()
         case upcomingTableView:
-            updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: events[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: events[indexPath.row])
+           updateContinueBtn(forceRemove: true)
+           Navigate.externalURL(String(format: APIBuilder.eventLink, events[indexPath.row].uniqueId ?? ""))
         case todaysEventTableView:
             updateContinueBtn(forceRemove: true)
             Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
