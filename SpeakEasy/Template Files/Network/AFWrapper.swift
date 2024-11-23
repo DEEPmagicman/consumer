@@ -402,7 +402,6 @@ final class AFWrapper: NSObject {
             return
         }
         //        #if DEBUG
-        if !SharedURL.isEncryptionEnabled {
             var encryptedParams = params
             encryptedParams = encryptedParams?.encrypted()
             
@@ -432,7 +431,6 @@ final class AFWrapper: NSObject {
                 }
             }
             debugPrint(req)
-        }
         //        #endif
         
     }
