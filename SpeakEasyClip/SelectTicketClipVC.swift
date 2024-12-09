@@ -90,6 +90,7 @@ final class SelectTicketClipVC: UIViewController {
         upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
         tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
         tableBookNowBtn.layer.borderWidth = 1
+        
     }
     
     private func getDeepLinkData() {
@@ -220,6 +221,9 @@ final class SelectTicketClipVC: UIViewController {
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false
+                if let color = self.venueDetail?.venueSettings?.whiteLabelColor {
+                    self.continueBtn.backgroundColor = UIColor(hex: color)
+                }
                 self.setUpUI()
                 self.getAddOns()
                 if VenueImageManager.shared.customQRData != nil { self.getCustomImage() }

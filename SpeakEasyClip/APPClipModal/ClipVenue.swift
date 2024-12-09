@@ -302,6 +302,7 @@ struct VenueSettings: Codable {
     var bookingStatus: String?
     var coverTicketViewSettings: CoverTicketViewSettings?
     var isEnableCoverTicketViewSettings: Bool?
+    var whiteLabelColor: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -321,6 +322,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(isOrganizer, forKey: .isOrganizer)
         try container.encode(bookingStatus, forKey: .bookingStatus)
         try container.encodeIfPresent(isEnableCoverTicketViewSettings, forKey: .isEnableCoverTicketViewSettings)
+        try container.encodeIfPresent(whiteLabelColor, forKey: .whiteLabelColor)
     }
 }
 
