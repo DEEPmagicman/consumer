@@ -25,6 +25,9 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var upSellView: UIView!
     @IBOutlet weak var upSellBtn: UIButton!
     @IBOutlet weak var VIPTableBookingView: UIView!    
+    @IBOutlet weak var disclaimerText: UILabel!
+    @IBOutlet weak var disclaimerInSideView: UIView!
+    @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
 
     var isLive = true
@@ -293,6 +296,17 @@ final class SelectTicketClipVC: UIViewController {
             }
             self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
         }
+        
+        self.disclaimerView.isHidden = self.venueDetail?.venueSettings?.showCoverDisclaimer ?? false == false
+        self.disclaimerInSideView.layer.cornerRadius = 8
+        self.disclaimerInSideView.layer.borderWidth = 1
+        if self.venueDetail?.venueSettings?.whiteLabelColor ?? "" != "" {
+            let color = self.venueDetail?.venueSettings?.whiteLabelColor ?? ""
+            self.disclaimerInSideView.layer.borderColor = UIColor(hex: color).cgColor
+        } else {
+            self.disclaimerInSideView.layer.borderColor = UIColor(hex: "F581FE").cgColor
+        }
+        self.disclaimerText.text = self.venueDetail?.venueSettings?.coverDisclaimerText ?? ""
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
