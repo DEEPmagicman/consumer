@@ -217,7 +217,8 @@ final class VerificationCodeViewController: UIViewController {
                     if UserDefault.shared.user?.isProfileCompleted == true {
                         AppDelegate.shared.changeRootViewController()
                     } else {
-                        Navigate.to.connectAccountVc(self)
+//                        Navigate.to.connectAccountVc(self)
+                        Navigate.to.enterNameVc(self)
                     }
                 } else {
                     if errorMsg != nil {
@@ -283,7 +284,8 @@ final class VerificationCodeViewController: UIViewController {
                     
                     continueBtn.hideLoader()
                     if isSuccess {
-                        Navigate.to.connectAccountVc(self)
+//                        Navigate.to.connectAccountVc(self)
+                        Navigate.to.enterNameVc(self)
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

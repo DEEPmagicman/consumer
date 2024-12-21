@@ -77,7 +77,8 @@ extension AppDelegate {
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
         if isNavigateToDetail {
-            Navigate.to.connectAccountVc(controller)
+//            Navigate.to.connectAccountVc(controller)
+            Navigate.to.enterNameVc(controller)
         } else if forceCreateAccount {
             Navigate.to.enterPhoneNumVc(controller)
         }

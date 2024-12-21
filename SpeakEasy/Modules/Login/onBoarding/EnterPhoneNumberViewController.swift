@@ -80,7 +80,9 @@ final class EnterPhoneNumberViewController: UIViewController {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
+                    self.view.isUserInteractionEnabled = true
                 } else {
+                    self.view.isUserInteractionEnabled = true
                     Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 }
             }
@@ -94,7 +96,9 @@ final class EnterPhoneNumberViewController: UIViewController {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
+                        self.view.isUserInteractionEnabled = true
                     } else {
+                        self.view.isUserInteractionEnabled = true
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
                 }
@@ -107,8 +111,10 @@ final class EnterPhoneNumberViewController: UIViewController {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errorMsg == Constant.String.internetNotConnect {
+                        self.view.isUserInteractionEnabled = true
                         self.view.endEditing(true)
                     } else {
+                        self.view.isUserInteractionEnabled = true
                         if errorMsg == "Entered phone number already exist in system." {
                             self.isFromLogin = true
                             self.onClickContinue(0)
