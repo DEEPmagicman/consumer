@@ -31,7 +31,6 @@ final class SettingPresenter {
     }
     
     func changeEmailPhoneVerifyApi(otp: Int, otpRef: String,isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         var url = ""
         if isForPhone  {
@@ -66,7 +65,6 @@ final class SettingPresenter {
     }
     
     func changeEmailPhoneResendOtpApi(otpref: String,isForPhone: Bool = false, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otpRef": otpref]
         var url = ""
         if isForPhone {
@@ -93,7 +91,7 @@ final class SettingPresenter {
     }
     
     func changePhoneNumberApi(phone: String,code: String, completion: @escaping (_ otp: String, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
+        
         let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
             

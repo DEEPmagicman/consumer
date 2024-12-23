@@ -131,7 +131,7 @@ extension Double {
     
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 2
+        numberFormatter.minimumFractionDigits = valueDouble ? 2 : 0
         numberFormatter.numberStyle = .decimal
         if valueDouble {
             if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {
@@ -140,6 +140,8 @@ extension Double {
                 return "0.00"
             }
         } else {
+            let decimalPrice = Int(String(self).components(separatedBy: ".").last ?? "0")
+            numberFormatter.minimumFractionDigits = decimalPrice ?? 0 > 0 ? 2 : 0
             return String(numberFormatter.string(from: NSNumber(value: self)) ?? "")
         }
     }

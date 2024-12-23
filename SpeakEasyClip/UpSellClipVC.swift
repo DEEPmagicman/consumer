@@ -104,12 +104,17 @@ final class UpSellClipVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tics = upSellTicket.sorted(by: { $0.price < $1.price})
+        upSellTicket = tics
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
         getUpSellTicket(withLoader: true)
         upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
         upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
+        if let color = self.venue?.venueSettings?.whiteLabelColor {
+            self.continueBtn.backgroundColor = UIColor(hex: color)
+        }
         updateContinueBtn()
     }
     

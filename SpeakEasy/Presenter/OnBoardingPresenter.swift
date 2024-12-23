@@ -29,7 +29,6 @@ final class OnBoardingPresenter {
     }
     
     func loginOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         AFWrapper.postRequest(APIBuilder.loginOTPVerifyURL, params: param, headers: Header.header(), shouldForceLogout: false) { response in
             
@@ -58,7 +57,6 @@ final class OnBoardingPresenter {
     }
     
     func loginResendOtpApi(otpref: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.loginResendOTPURL, params: param, headers: Header.header()) { response in
             
@@ -79,7 +77,7 @@ final class OnBoardingPresenter {
     }
     
     func signUpWithPhoneApi(phonenum: String, code: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
+        
         let param = ["phone": phonenum.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.signUpWithPhoneURL, params: param, headers: Header.header()) { response in
             
@@ -100,7 +98,6 @@ final class OnBoardingPresenter {
     }
     
     func signUpOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         AFWrapper.postRequest(APIBuilder.signUpOTPVerifyURL, params: param, headers: Header.header()) { response in
             
@@ -129,7 +126,6 @@ final class OnBoardingPresenter {
     }
     
     func signUpResendOtpApi(otpref: String, completion: @escaping (_ otp: String?, _ otpRef: String, _ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        Loader.show()
         let param = ["otpRef": otpref]
         AFWrapper.postRequest(APIBuilder.signUpOTPResendURL, params: param, headers: Header.header()) { response in
             
@@ -199,10 +195,10 @@ final class OnBoardingPresenter {
         if let isProfileCompleted = isProfileCompleted {
             param["isProfileCompleted"] = isProfileCompleted
         }
-        Loader.show()
+        
         AFWrapper.patchRequest(APIBuilder.userProfileURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? [String: Any] else {
+            guard response is [String: Any] else {
                 completion(false,nil)
                 return
             }
@@ -220,27 +216,21 @@ final class OnBoardingPresenter {
     
     
     func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl: String, _ isSuccess: Bool) -> Void) {
-        Loader.show()
-        
         guard let imageData = image.jpegData(compressionQuality: 1) else {
             completion("", false)
-            Loader.hide()
             return
         }
         let param = ["file": image] as [String: Any]
-        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: image.jpegData(compressionQuality: 1), fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
+        AFWrapper.multipart(APIBuilder.uploadPhotoURL, fileData: imageData, fileName: "\(UUID().uuidString).jpg", fileParamKey: "file", params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? NSDictionary, let imgUrl = responseDic["Location"] as? String else {
                 completion("", false)
-                Loader.hide()
                 return
             }
             
             completion(imgUrl, true)
-            Loader.hide()
         } failure: { error in
             completion("", false)
-            Loader.hide()
             print(error ?? "")
         }
     }
@@ -262,7 +252,6 @@ final class OnBoardingPresenter {
             param["lastName"] = lastName
         }
 
-        Loader.show()
         AFWrapper.patchRequest(APIBuilder.socialMediaConnectURL, params: param, headers: Header.header()) { response in
             
             guard let responseDic = response as? [String: Any] else {

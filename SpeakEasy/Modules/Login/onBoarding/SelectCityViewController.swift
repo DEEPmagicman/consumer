@@ -51,7 +51,6 @@ final class SelectCityViewController: UIViewController {
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            Loader.hide()
         }
     }
     
@@ -71,6 +70,7 @@ final class SelectCityViewController: UIViewController {
     }
     
      func onClickContinue() {
+         Loader.show()
         presenter.editUserProfileApi(city: self.selectedCity, isProfileCompleted: true) { [weak self] isSuccess,errorMsg  in
             guard let self = self else {
                 Loader.hide()

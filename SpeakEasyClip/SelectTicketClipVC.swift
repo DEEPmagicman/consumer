@@ -25,6 +25,9 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var upSellView: UIView!
     @IBOutlet weak var upSellBtn: UIButton!
     @IBOutlet weak var VIPTableBookingView: UIView!    
+    @IBOutlet weak var disclaimerText: UILabel!
+    @IBOutlet weak var disclaimerInSideView: UIView!
+    @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
 
     var isLive = true
@@ -90,6 +93,7 @@ final class SelectTicketClipVC: UIViewController {
         upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
         tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
         tableBookNowBtn.layer.borderWidth = 1
+        
     }
     
     private func getDeepLinkData() {
@@ -220,6 +224,9 @@ final class SelectTicketClipVC: UIViewController {
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false
+                if let color = self.venueDetail?.venueSettings?.whiteLabelColor {
+                    self.continueBtn.backgroundColor = UIColor(hex: color)
+                }
                 self.setUpUI()
                 self.getAddOns()
                 if VenueImageManager.shared.customQRData != nil { self.getCustomImage() }
@@ -289,6 +296,17 @@ final class SelectTicketClipVC: UIViewController {
             }
             self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
         }
+        
+        self.disclaimerView.isHidden = self.venueDetail?.venueSettings?.showCoverDisclaimer ?? false == false
+        self.disclaimerInSideView.layer.cornerRadius = 8
+        self.disclaimerInSideView.layer.borderWidth = 1
+        if self.venueDetail?.venueSettings?.whiteLabelColor ?? "" != "" {
+            let color = self.venueDetail?.venueSettings?.whiteLabelColor ?? ""
+            self.disclaimerInSideView.layer.borderColor = UIColor(hex: color).cgColor
+        } else {
+            self.disclaimerInSideView.layer.borderColor = UIColor(hex: "F581FE").cgColor
+        }
+        self.disclaimerText.text = self.venueDetail?.venueSettings?.coverDisclaimerText ?? ""
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -587,7 +605,7 @@ extension SelectTicketClipVC: UIGestureRecognizerDelegate {
 extension Double {
     func decimalFormat(_ valueDouble: Bool = false) -> String {
         let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = !valueDouble ? 0 : 2
+        numberFormatter.minimumFractionDigits = valueDouble ? 2 : 0
         numberFormatter.numberStyle = .decimal
         if valueDouble {
             if let newValue =  Double(String(format: "%.2f", NSNumber(value: self).doubleValue)) {
@@ -596,6 +614,8 @@ extension Double {
                 return "0.00"
             }
         } else {
+            let decimalPrice = Int(String(self).components(separatedBy: ".").last ?? "0")
+            numberFormatter.minimumFractionDigits = decimalPrice ?? 0 > 0 ? 2 : 0
             return String(numberFormatter.string(from: NSNumber(value: self)) ?? "")
         }
     }

@@ -7,13 +7,13 @@
 
 import UIKit
 import FlagPhoneNumber
+import MHLoadingButton
 
 final class EnterPhoneNumberViewController: UIViewController {
     
     @IBOutlet weak var countryCodeTextField: FPNTextField!
-    @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var continueBtn: LoadingButton!
     @IBOutlet weak var phoneNumTextField: UITextField!
-    @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var contrySelectionView: UIView!    
 
     var isFromLogin = false
@@ -44,29 +44,14 @@ final class EnterPhoneNumberViewController: UIViewController {
         countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         countryCodeTextField.displayMode = .list // .picker by default
         
-        let items = [
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
-            UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
-            UIBarButtonItem(title: "Item 2", style: .plain, target: self, action: nil)
-        ]
-        countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
-        
         listController.showCountryPhoneCode = true
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
         contrySelectionView.addGestureRecognizer(tap)
+        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.indicator = MaterialLoadingIndicator(color: .white)
         continueBtn.isUserInteractionEnabled = false
         continueBtn.alpha = 0.5
-    }
-    
-    private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
-        let toolbar: UIToolbar = UIToolbar()
-        
-        toolbar.barStyle = UIBarStyle.default
-        toolbar.items = items
-        toolbar.sizeToFit()
-        
-        return toolbar
     }
     
     @objc func dismissCountries() {
@@ -83,51 +68,53 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = phoneNumTextField.text?.replacingOccurrences(of: " ", with: "")
+        continueBtn.showLoader(userInteraction: false)
+        self.view.isUserInteractionEnabled = false
         if isFromLogin {
-            Loader.show()
             onBoardingPresenter.loginWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg in
-                guard let self = self else {
-                    Loader.hide()
-                    return
-                }
-                Loader.hide()
+                guard let self = self else { return }
+                
+                continueBtn.hideLoader()
+                self.view.isUserInteractionEnabled = true
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
+                    self.view.isUserInteractionEnabled = true
                 } else {
+                    self.view.isUserInteractionEnabled = true
                     Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 }
             }
         } else {
             if isFromSettings {
                 settingPresenter.changePhoneNumberApi(phone: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errMsg in
-                    guard let self = self else {
-                        Loader.hide()
-                        return
-                    }
+                    guard let self = self else { return }
+                    
+                    continueBtn.hideLoader()
                     if isSuccess {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
+                        self.view.isUserInteractionEnabled = true
                     } else {
+                        self.view.isUserInteractionEnabled = true
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
-                    Loader.hide()
                 }
             } else {
                 onBoardingPresenter.signUpWithPhoneApi(phonenum: phoneNum ?? "", code: countryCode) { [weak self] otp, otpRef, isSuccess, errorMsg  in
-                    guard let self = self else {
-                        Loader.hide()
-                        return
-                    }
-                    Loader.hide()
+                    guard let self = self else { return }
+                    
+                    continueBtn.hideLoader()
                     if isSuccess {
                         UserDefault.shared.user?.phone = phoneNum ?? ""
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: self.countryCode)
                     } else if errorMsg == Constant.String.internetNotConnect {
+                        self.view.isUserInteractionEnabled = true
                         self.view.endEditing(true)
                     } else {
+                        self.view.isUserInteractionEnabled = true
                         if errorMsg == "Entered phone number already exist in system." {
                             self.isFromLogin = true
                             self.onClickContinue(0)

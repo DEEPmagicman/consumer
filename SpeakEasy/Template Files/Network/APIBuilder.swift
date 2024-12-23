@@ -353,6 +353,7 @@ extension APIBuilder {
     static let termsConsumerURL = "\(webBaseURL)/terms-consumer"
     static let supportURL = "\(webBaseURL)/support"
     static let eventWebURL = "\(webBaseURL)/%@/%@?eid=%@"
+    static let eventLink = "\(webBaseURL)/event/%@"
     static let venueWebURL = "\(webBaseURL)/%@?vid=%@"
     static let invitationURL = "\(webBaseURL)?L=%@"
 }

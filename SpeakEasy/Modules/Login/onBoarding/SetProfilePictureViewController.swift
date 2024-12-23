@@ -5,15 +5,15 @@
 //  Created by Square Infosoft on 09/12/22.
 //
 
+import MHLoadingButton
 import UIKit
-import SwiftUI
 import SDWebImage
 
 final class SetProfilePictureViewController: UIViewController {
 
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var continueBtn: LoadingButton!
     
     private var presenter = OnBoardingPresenter()
     
@@ -32,37 +32,41 @@ final class SetProfilePictureViewController: UIViewController {
             continueBtn.isUserInteractionEnabled = false
             continueBtn.alpha = 0.5
         }
+        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.indicator = MaterialLoadingIndicator(color: .white)
     }
 
     @IBAction private func onClickContinue(_ sender: Any) {
+        continueBtn.showLoader(userInteraction: false)
+        self.view.isUserInteractionEnabled = false
+        
         presenter.uploadPhotoApi(image: imageView.image ?? UIImage()) { [weak self] imgUrl ,isSuccess in
-            guard let self = self else {
-                Loader.hide()
-                return
-            }
+            guard let self = self else { return }
+            
             if isSuccess {
                 let imgDetail = ImageDetail(key: imgUrl, name:"\(UserDefault.shared.user?.phone ?? "")", description: "profile picture")
+                
                 self.presenter.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
-                    guard let self = self else {
-                        Loader.hide()
-                        return
-                    }
+                    guard let self = self else { return }
+                    
+                    continueBtn.hideLoader()
+                    self.view.isUserInteractionEnabled = true
+                    
                     if isSuccess {
                         UserDefault.shared.user?.image = imgDetail
                         Navigate.to.notificationPermissionVc(self)
-                        Loader.hide()
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
                         } else {
                             Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
                         }
-                        Loader.hide()
                     }
                 }
             } else {
+                self.continueBtn.hideLoader()
+                self.view.isUserInteractionEnabled = true
                 Alert.showAlertSheet(style: .alert, title: "image not upload", message: "")
-                Loader.hide()
             }
         }
     }
