@@ -1474,7 +1474,9 @@ extension CheckOutClipVC {
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.venueImageData = self.venueImageData
-                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
+                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
+                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(self.countryCode) \(self.phoneNumTextField.text ?? "")"
+                vc.guestInfo = "\(userData) - \(self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? ""))"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
                     selectVC.forceRemoveAllTicket()
                     self.navigationController?.viewControllers = [selectVC, vc]
@@ -1493,7 +1495,10 @@ extension CheckOutClipVC {
                 vc.selectedAddOns = self.selectedAddOnsItem
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
-                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd")
+                vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
+                
+                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(self.countryCode) \(self.phoneNumTextField.text ?? "")"
+                vc.guestInfo = "\(userData) - \(self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? ""))"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
                     selectVC.forceRemoveAllTicket()
                     self.navigationController?.viewControllers = [selectVC, vc]

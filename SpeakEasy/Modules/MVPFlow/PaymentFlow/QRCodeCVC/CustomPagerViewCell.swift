@@ -17,6 +17,7 @@ class CustomPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var ticketCodeView: UIView!
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
+    @IBOutlet weak var guestNameLbl: UILabel!
     
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?

@@ -25,6 +25,7 @@ final class QRClipVC: UIViewController {
     var addOnsQR:UIImage? = nil
     var isOnlyAddOnsAvailable = false
     var venueImageData = Data()
+    var guestInfo = String()
     
     @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var swipeLbl: UILabel!
@@ -144,6 +145,7 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
             cell.qrImage.image = index == 0 ? qrImage : addOnsQR
             cell.ticketsTableView.reloadData()
         }
+        cell.guestName.text = guestInfo
         return cell
     }
     

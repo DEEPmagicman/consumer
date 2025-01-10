@@ -220,10 +220,13 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! CustomPagerViewCell
         cell.backupCode.text = booking?.venueObject?.bookingCode ?? ""
         cell.bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
+        cell.guestNameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") - \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMDDYYYYHMMA, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if isOnlyAddOnAvailable {
             cell.addOnsBooking = addOnsBooking
             cell.backupCode.text = addOnsBooking?.venue.bookingCode ?? ""
             cell.bookingDateTime.text = "Purchased on \(addOnsBooking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
+            
+            cell.guestNameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") - \(addOnsBooking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMDDYYYYHMMA, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
             if index == 0 {
                 cell.qrImage.image = addOnsQR
             }
