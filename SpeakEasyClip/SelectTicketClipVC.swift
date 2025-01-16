@@ -29,7 +29,7 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var disclaimerInSideView: UIView!
     @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
-
+    
     var isLive = true
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?

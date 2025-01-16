@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,8 +31,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Njy-BJ-hw4">
                                 <rect key="frame" x="0.0" y="0.0" width="376" height="398"/>
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest name and time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3eT-Jz-oyS">
+                                        <rect key="frame" x="20" y="10" width="336" height="22.5"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DuO-o5-ZMy">
-                                        <rect key="frame" x="98" y="43" width="180" height="180"/>
+                                        <rect key="frame" x="98" y="62.5" width="180" height="180"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRCodeAP" translatesAutoresizingMaskIntoConstraints="NO" id="dxI-GJ-inC">
                                                 <rect key="frame" x="0.0" y="0.0" width="180" height="180"/>
@@ -83,18 +89,21 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kR9-aT-Wr2">
-                                        <rect key="frame" x="10" y="253" width="356" height="135"/>
+                                        <rect key="frame" x="10" y="272.5" width="356" height="115.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.1529411765" green="0.1529411765" blue="0.1529411765" alpha="0.39738142570000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="kR9-aT-Wr2" firstAttribute="top" secondItem="DuO-o5-ZMy" secondAttribute="bottom" constant="30" id="3C4-Xb-ed0"/>
-                                    <constraint firstItem="DuO-o5-ZMy" firstAttribute="top" secondItem="Njy-BJ-hw4" secondAttribute="top" constant="43" id="8cx-B0-9x0"/>
                                     <constraint firstAttribute="bottom" secondItem="kR9-aT-Wr2" secondAttribute="bottom" constant="10" id="Elc-nM-30Q"/>
+                                    <constraint firstItem="3eT-Jz-oyS" firstAttribute="centerX" secondItem="Njy-BJ-hw4" secondAttribute="centerX" id="M3N-IY-wwG"/>
+                                    <constraint firstItem="3eT-Jz-oyS" firstAttribute="leading" secondItem="Njy-BJ-hw4" secondAttribute="leading" constant="20" id="O1K-6T-gn3"/>
                                     <constraint firstAttribute="trailing" secondItem="kR9-aT-Wr2" secondAttribute="trailing" constant="10" id="P3F-FN-sdS"/>
+                                    <constraint firstItem="3eT-Jz-oyS" firstAttribute="top" secondItem="Njy-BJ-hw4" secondAttribute="top" constant="10" id="Pyh-6G-Evb"/>
                                     <constraint firstItem="kR9-aT-Wr2" firstAttribute="leading" secondItem="Njy-BJ-hw4" secondAttribute="leading" constant="10" id="tfh-ef-rhi"/>
                                     <constraint firstItem="DuO-o5-ZMy" firstAttribute="centerX" secondItem="Njy-BJ-hw4" secondAttribute="centerX" id="tyi-dQ-4DI"/>
+                                    <constraint firstItem="DuO-o5-ZMy" firstAttribute="top" secondItem="3eT-Jz-oyS" secondAttribute="bottom" constant="30" id="zEH-dn-cyT"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -127,6 +136,7 @@
                 <outlet property="bgView" destination="Njy-BJ-hw4" id="Czj-5x-pmW"/>
                 <outlet property="bookingDateTime" destination="L2A-x3-mHr" id="YB7-Oh-7B0"/>
                 <outlet property="containerView" destination="DuO-o5-ZMy" id="gQT-6H-clh"/>
+                <outlet property="guestName" destination="3eT-Jz-oyS" id="ctf-PA-oWZ"/>
                 <outlet property="qrImage" destination="dxI-GJ-inC" id="HKl-bL-cSc"/>
                 <outlet property="ticketCodeView" destination="v2N-nE-Dbt" id="hgk-S3-3ER"/>
                 <outlet property="ticketsTableView" destination="kR9-aT-Wr2" id="tGX-vV-sfr"/>

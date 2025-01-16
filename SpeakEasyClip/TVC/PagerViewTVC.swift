@@ -17,6 +17,7 @@ class PagerViewTVC: FSPagerViewCell {
     @IBOutlet weak var ticketCodeView: UIView!
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
+    @IBOutlet weak var guestName: UILabel!
     
     var uniqueTickets = [CoverTicket]()
     var addOnsBookingHasItem = [UpSellTicket]()
