@@ -11,7 +11,7 @@ public class CountryCodePickerViewController: UITableViewController {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = NSLocalizedString(
             "PhoneNumberKit.CountryCodePicker.SearchBarPlaceholder",
-            value: "Search Country Codes",
+            value: "Search",
             comment: "Placeholder for country code search field")
 
         return searchController
@@ -93,7 +93,7 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 
     func commonInit() {
-        self.title = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Choose your country", comment: "Title of CountryCodePicker ViewController")
+        self.title = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Countries", comment: "Title of CountryCodePicker ViewController")
 
         tableView.register(Cell.self, forCellReuseIdentifier: Cell.reuseIdentifier)
         searchController.searchResultsUpdater = self
@@ -158,8 +158,7 @@ public class CountryCodePickerViewController: UITableViewController {
         if let cellBackgroundColor = options.cellBackgroundColor {
             cell.backgroundColor = cellBackgroundColor
         }
-
-        cell.textLabel?.text = country.prefix + " " + country.flag
+        cell.textLabel?.text = country.prefix
 
         if let textLabelColor = options.textLabelColor {
             cell.textLabel?.textColor = textLabelColor
@@ -169,7 +168,7 @@ public class CountryCodePickerViewController: UITableViewController {
             cell.detailTextLabel?.textColor = detailTextLabelColor
         }
 
-        cell.detailTextLabel?.text = country.name
+        cell.detailTextLabel?.text = country.flag + "  " + country.name
 
         if let textLabelFont = options.textLabelFont {
             cell.textLabel?.font = textLabelFont
@@ -184,7 +183,21 @@ public class CountryCodePickerViewController: UITableViewController {
             view.backgroundColor = cellBackgroundColorSelection
             cell.selectedBackgroundView = view
         }
-
+        
+        cell.detailTextLabel?.translatesAutoresizingMaskIntoConstraints = false
+        cell.textLabel?.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let textLabel = cell.textLabel, let detailTextLabel = cell.detailTextLabel {
+                NSLayoutConstraint.activate([
+                    
+                    textLabel.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16),
+                    textLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+                    
+                    detailTextLabel.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16),
+                    detailTextLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
+                ])
+            }
+        
         return cell
     }
 
@@ -201,23 +214,23 @@ public class CountryCodePickerViewController: UITableViewController {
         return countries[section].first?.name.first.map(String.init)
     }
 
-    override public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        guard !isFiltering else {
-            return nil
-        }
-        var titles: [String] = []
-        if hasCurrent {
-            titles.append("•") // NOTE: SFSymbols are not supported otherwise we would use 􀋑
-        }
-        if hasCommon {
-            titles.append("★") // This is a classic unicode star
-        }
-        return titles + countries.suffix(countries.count - titles.count).map { group in
-            group.first?.name.first
-                .map(String.init)?
-                .folding(options: .diacriticInsensitive, locale: nil) ?? ""
-        }
-    }
+//    override public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+//        guard !isFiltering else {
+//            return nil
+//        }
+//        var titles: [String] = []
+//        if hasCurrent {
+//            titles.append("•") // NOTE: SFSymbols are not supported otherwise we would use 􀋑
+//        }
+//        if hasCommon {
+//            titles.append("★") // This is a classic unicode star
+//        }
+//        return titles + countries.suffix(countries.count - titles.count).map { group in
+//            group.first?.name.first
+//                .map(String.init)?
+//                .folding(options: .diacriticInsensitive, locale: nil) ?? ""
+//        }
+//    }
 
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let country = self.country(for: indexPath)

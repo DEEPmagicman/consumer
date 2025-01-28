@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RemoteConfigHelper.shared.getRemoteConfigValues()
         window = UIWindow(frame:UIScreen.main.bounds)
         launchApplication()
-        Bundle.FlagIcons = Bundle(for: type(of: self))
+//        Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
     }
     

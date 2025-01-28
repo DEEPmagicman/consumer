@@ -21,7 +21,7 @@ final class VerificationCodeViewController: UIViewController {
     var currectOtp: String?
     var otpRef = ""
     var phoneNum = ""
-    var countryCode = ""
+//    var countryCode = ""
     var isFromLogin = false
     var isFromSettings = false
     var isForEmail = false
@@ -49,14 +49,13 @@ final class VerificationCodeViewController: UIViewController {
         resendBtn.alpha = 0.5
         resendBtn.isUserInteractionEnabled = false
         if Utility.isDebug {
-            print("*-*\(currectOtp)")
             Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        phoneNumLbl.text = "\(countryCode) \(phoneNum)"
+        phoneNumLbl.text = "\(phoneNum)"
     }
     
     private func setOtpView() {
