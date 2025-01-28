@@ -226,6 +226,50 @@
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
+		CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EE2D48E2FD00B640C8 /* LICENSE */; };
+		CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EF2D48E2FD00B640C8 /* README.md */; };
+		CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */; };
+		CEBCF5F42D48E2FD00B640C8 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */; };
+		CEBCF5F52D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */; };
+		CEBCF5F62D48E2FD00B640C8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DF2D48E2FD00B640C8 /* Constants.swift */; };
+		CEBCF5F72D48E2FD00B640C8 /* PartialFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E62D48E2FD00B640C8 /* PartialFormatter.swift */; };
+		CEBCF5F82D48E2FD00B640C8 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E72D48E2FD00B640C8 /* PhoneNumber.swift */; };
+		CEBCF5F92D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E92D48E2FD00B640C8 /* PhoneNumberFormatter.swift */; };
+		CEBCF5FA2D48E2FD00B640C8 /* ParseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E52D48E2FD00B640C8 /* ParseManager.swift */; };
+		CEBCF5FB2D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DE2D48E2FD00B640C8 /* Bundle+Resources.swift */; };
+		CEBCF5FC2D48E2FD00B640C8 /* MetadataParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E22D48E2FD00B640C8 /* MetadataParsing.swift */; };
+		CEBCF5FD2D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EA2D48E2FD00B640C8 /* PhoneNumberParser.swift */; };
+		CEBCF5FE2D48E2FD00B640C8 /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E42D48E2FD00B640C8 /* NSRegularExpression+Swift.swift */; };
+		CEBCF5FF2D48E2FD00B640C8 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E02D48E2FD00B640C8 /* Formatter.swift */; };
+		CEBCF6002D48E2FD00B640C8 /* MetadataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E12D48E2FD00B640C8 /* MetadataManager.swift */; };
+		CEBCF6012D48E2FD00B640C8 /* RegexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EC2D48E2FD00B640C8 /* RegexManager.swift */; };
+		CEBCF6022D48E2FD00B640C8 /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DB2D48E2FD00B640C8 /* CountryCodePickerViewController.swift */; };
+		CEBCF6032D48E2FD00B640C8 /* PhoneNumberUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EB2D48E2FD00B640C8 /* PhoneNumberUtility.swift */; };
+		CEBCF6042D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DC2D48E2FD00B640C8 /* PhoneNumberTextField.swift */; };
+		CEBCF6052D48E2FD00B640C8 /* MetadataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E32D48E2FD00B640C8 /* MetadataTypes.swift */; };
+		CEBCF6062D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E82D48E2FD00B640C8 /* PhoneNumber+Codable.swift */; };
+		CEBCF6072D48E2FD00B640C8 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EE2D48E2FD00B640C8 /* LICENSE */; };
+		CEBCF6082D48E2FD00B640C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EF2D48E2FD00B640C8 /* README.md */; };
+		CEBCF6092D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */; };
+		CEBCF60A2D48E2FD00B640C8 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */; };
+		CEBCF60B2D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */; };
+		CEBCF60C2D48E2FD00B640C8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DF2D48E2FD00B640C8 /* Constants.swift */; };
+		CEBCF60D2D48E2FD00B640C8 /* PartialFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E62D48E2FD00B640C8 /* PartialFormatter.swift */; };
+		CEBCF60E2D48E2FD00B640C8 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E72D48E2FD00B640C8 /* PhoneNumber.swift */; };
+		CEBCF60F2D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E92D48E2FD00B640C8 /* PhoneNumberFormatter.swift */; };
+		CEBCF6102D48E2FD00B640C8 /* ParseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E52D48E2FD00B640C8 /* ParseManager.swift */; };
+		CEBCF6112D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DE2D48E2FD00B640C8 /* Bundle+Resources.swift */; };
+		CEBCF6122D48E2FD00B640C8 /* MetadataParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E22D48E2FD00B640C8 /* MetadataParsing.swift */; };
+		CEBCF6132D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EA2D48E2FD00B640C8 /* PhoneNumberParser.swift */; };
+		CEBCF6142D48E2FD00B640C8 /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E42D48E2FD00B640C8 /* NSRegularExpression+Swift.swift */; };
+		CEBCF6152D48E2FD00B640C8 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E02D48E2FD00B640C8 /* Formatter.swift */; };
+		CEBCF6162D48E2FD00B640C8 /* MetadataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E12D48E2FD00B640C8 /* MetadataManager.swift */; };
+		CEBCF6172D48E2FD00B640C8 /* RegexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EC2D48E2FD00B640C8 /* RegexManager.swift */; };
+		CEBCF6182D48E2FD00B640C8 /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DB2D48E2FD00B640C8 /* CountryCodePickerViewController.swift */; };
+		CEBCF6192D48E2FD00B640C8 /* PhoneNumberUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5EB2D48E2FD00B640C8 /* PhoneNumberUtility.swift */; };
+		CEBCF61A2D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5DC2D48E2FD00B640C8 /* PhoneNumberTextField.swift */; };
+		CEBCF61B2D48E2FD00B640C8 /* MetadataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E32D48E2FD00B640C8 /* MetadataTypes.swift */; };
+		CEBCF61C2D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBCF5E82D48E2FD00B640C8 /* PhoneNumber+Codable.swift */; };
 		CECDD9EA2B986ABC007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9E92B986ABC007E94A7 /* FSPagerView */; };
 		CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EB2B986B58007E94A7 /* FSPagerView */; };
 		CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CECDD9EF2B986DFC007E94A7 /* Reachability */; };
@@ -510,6 +554,28 @@
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
+		CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
+		CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodePickerOptions.swift; sourceTree = "<group>"; };
+		CEBCF5DB2D48E2FD00B640C8 /* CountryCodePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodePickerViewController.swift; sourceTree = "<group>"; };
+		CEBCF5DC2D48E2FD00B640C8 /* PhoneNumberTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextField.swift; sourceTree = "<group>"; };
+		CEBCF5DE2D48E2FD00B640C8 /* Bundle+Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Resources.swift"; sourceTree = "<group>"; };
+		CEBCF5DF2D48E2FD00B640C8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		CEBCF5E02D48E2FD00B640C8 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
+		CEBCF5E12D48E2FD00B640C8 /* MetadataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataManager.swift; sourceTree = "<group>"; };
+		CEBCF5E22D48E2FD00B640C8 /* MetadataParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataParsing.swift; sourceTree = "<group>"; };
+		CEBCF5E32D48E2FD00B640C8 /* MetadataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataTypes.swift; sourceTree = "<group>"; };
+		CEBCF5E42D48E2FD00B640C8 /* NSRegularExpression+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+Swift.swift"; sourceTree = "<group>"; };
+		CEBCF5E52D48E2FD00B640C8 /* ParseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseManager.swift; sourceTree = "<group>"; };
+		CEBCF5E62D48E2FD00B640C8 /* PartialFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartialFormatter.swift; sourceTree = "<group>"; };
+		CEBCF5E72D48E2FD00B640C8 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+		CEBCF5E82D48E2FD00B640C8 /* PhoneNumber+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+Codable.swift"; sourceTree = "<group>"; };
+		CEBCF5E92D48E2FD00B640C8 /* PhoneNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberFormatter.swift; sourceTree = "<group>"; };
+		CEBCF5EA2D48E2FD00B640C8 /* PhoneNumberParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberParser.swift; sourceTree = "<group>"; };
+		CEBCF5EB2D48E2FD00B640C8 /* PhoneNumberUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberUtility.swift; sourceTree = "<group>"; };
+		CEBCF5EC2D48E2FD00B640C8 /* RegexManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexManager.swift; sourceTree = "<group>"; };
+		CEBCF5EE2D48E2FD00B640C8 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		CEBCF5EF2D48E2FD00B640C8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CED07E9629AC746A004EBBC5 /* MVPCitySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPCitySelectionVC.swift; sourceTree = "<group>"; };
 		CED5465E29F7BE65006465FD /* FullScreenImgVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImgVC.swift; sourceTree = "<group>"; };
 		CED54E432C3E8ABF00D3A942 /* EventCheckoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCheckoutVC.swift; sourceTree = "<group>"; };
@@ -1171,6 +1237,7 @@
 		CE48678D286F358700FD277E /* ThirdParty Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				CEBCF5F02D48E2FD00B640C8 /* PhoneNumberKit */,
 				CAC413D528A478040007BA86 /* DatePicker */,
 				CAC413BF28A478040007BA86 /* Extended */,
 				CE48678E286F358700FD277E /* PagerMenu */,
@@ -1291,6 +1358,59 @@
 				CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */,
 			);
 			path = DropDownCell;
+			sourceTree = "<group>";
+		};
+		CEBCF5D92D48E2FD00B640C8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */,
+				CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CEBCF5DD2D48E2FD00B640C8 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */,
+				CEBCF5DB2D48E2FD00B640C8 /* CountryCodePickerViewController.swift */,
+				CEBCF5DC2D48E2FD00B640C8 /* PhoneNumberTextField.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		CEBCF5ED2D48E2FD00B640C8 /* PhoneNumberKit */ = {
+			isa = PBXGroup;
+			children = (
+				CEBCF5D92D48E2FD00B640C8 /* Resources */,
+				CEBCF5DD2D48E2FD00B640C8 /* UI */,
+				CEBCF5DE2D48E2FD00B640C8 /* Bundle+Resources.swift */,
+				CEBCF5DF2D48E2FD00B640C8 /* Constants.swift */,
+				CEBCF5E02D48E2FD00B640C8 /* Formatter.swift */,
+				CEBCF5E12D48E2FD00B640C8 /* MetadataManager.swift */,
+				CEBCF5E22D48E2FD00B640C8 /* MetadataParsing.swift */,
+				CEBCF5E32D48E2FD00B640C8 /* MetadataTypes.swift */,
+				CEBCF5E42D48E2FD00B640C8 /* NSRegularExpression+Swift.swift */,
+				CEBCF5E52D48E2FD00B640C8 /* ParseManager.swift */,
+				CEBCF5E62D48E2FD00B640C8 /* PartialFormatter.swift */,
+				CEBCF5E72D48E2FD00B640C8 /* PhoneNumber.swift */,
+				CEBCF5E82D48E2FD00B640C8 /* PhoneNumber+Codable.swift */,
+				CEBCF5E92D48E2FD00B640C8 /* PhoneNumberFormatter.swift */,
+				CEBCF5EA2D48E2FD00B640C8 /* PhoneNumberParser.swift */,
+				CEBCF5EB2D48E2FD00B640C8 /* PhoneNumberUtility.swift */,
+				CEBCF5EC2D48E2FD00B640C8 /* RegexManager.swift */,
+			);
+			path = PhoneNumberKit;
+			sourceTree = "<group>";
+		};
+		CEBCF5F02D48E2FD00B640C8 /* PhoneNumberKit */ = {
+			isa = PBXGroup;
+			children = (
+				CEBCF5ED2D48E2FD00B640C8 /* PhoneNumberKit */,
+				CEBCF5EE2D48E2FD00B640C8 /* LICENSE */,
+				CEBCF5EF2D48E2FD00B640C8 /* README.md */,
+			);
+			path = PhoneNumberKit;
 			sourceTree = "<group>";
 		};
 		CEDB81F92AA21C4F00DAD9FE /* SDK */ = {
@@ -1640,6 +1760,10 @@
 				CEDB823F2AA21DD500DAD9FE /* FPNCountryView.xib in Resources */,
 				CE999130298BBBDE00943FD7 /* Poppins-Medium.ttf in Resources */,
 				297E37392983B16200139947 /* TicketTypeTVC.xib in Resources */,
+				CEBCF6072D48E2FD00B640C8 /* LICENSE in Resources */,
+				CEBCF6082D48E2FD00B640C8 /* README.md in Resources */,
+				CEBCF6092D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */,
+				CEBCF60A2D48E2FD00B640C8 /* PhoneNumberMetadata.json in Resources */,
 				2966E3322980F85E00B5E103 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1657,6 +1781,10 @@
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
 				0436D085295966CF0087D3DB /* Settings.storyboard in Resources */,
 				CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */,
+				CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */,
+				CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */,
+				CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */,
+				CEBCF5F42D48E2FD00B640C8 /* PhoneNumberMetadata.json in Resources */,
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
 				045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */,
@@ -1836,6 +1964,24 @@
 				04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */,
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				CEDB82442AA21DD500DAD9FE /* NBPhoneNumberUtil.m in Sources */,
+				CEBCF60B2D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
+				CEBCF60C2D48E2FD00B640C8 /* Constants.swift in Sources */,
+				CEBCF60D2D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,
+				CEBCF60E2D48E2FD00B640C8 /* PhoneNumber.swift in Sources */,
+				CEBCF60F2D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
+				CEBCF6102D48E2FD00B640C8 /* ParseManager.swift in Sources */,
+				CEBCF6112D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */,
+				CEBCF6122D48E2FD00B640C8 /* MetadataParsing.swift in Sources */,
+				CEBCF6132D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */,
+				CEBCF6142D48E2FD00B640C8 /* NSRegularExpression+Swift.swift in Sources */,
+				CEBCF6152D48E2FD00B640C8 /* Formatter.swift in Sources */,
+				CEBCF6162D48E2FD00B640C8 /* MetadataManager.swift in Sources */,
+				CEBCF6172D48E2FD00B640C8 /* RegexManager.swift in Sources */,
+				CEBCF6182D48E2FD00B640C8 /* CountryCodePickerViewController.swift in Sources */,
+				CEBCF6192D48E2FD00B640C8 /* PhoneNumberUtility.swift in Sources */,
+				CEBCF61A2D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */,
+				CEBCF61B2D48E2FD00B640C8 /* MetadataTypes.swift in Sources */,
+				CEBCF61C2D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */,
 				04862C152B971C2400836598 /* Booking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1900,6 +2046,24 @@
 				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
 				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
+				CEBCF5F52D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
+				CEBCF5F62D48E2FD00B640C8 /* Constants.swift in Sources */,
+				CEBCF5F72D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,
+				CEBCF5F82D48E2FD00B640C8 /* PhoneNumber.swift in Sources */,
+				CEBCF5F92D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
+				CEBCF5FA2D48E2FD00B640C8 /* ParseManager.swift in Sources */,
+				CEBCF5FB2D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */,
+				CEBCF5FC2D48E2FD00B640C8 /* MetadataParsing.swift in Sources */,
+				CEBCF5FD2D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */,
+				CEBCF5FE2D48E2FD00B640C8 /* NSRegularExpression+Swift.swift in Sources */,
+				CEBCF5FF2D48E2FD00B640C8 /* Formatter.swift in Sources */,
+				CEBCF6002D48E2FD00B640C8 /* MetadataManager.swift in Sources */,
+				CEBCF6012D48E2FD00B640C8 /* RegexManager.swift in Sources */,
+				CEBCF6022D48E2FD00B640C8 /* CountryCodePickerViewController.swift in Sources */,
+				CEBCF6032D48E2FD00B640C8 /* PhoneNumberUtility.swift in Sources */,
+				CEBCF6042D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */,
+				CEBCF6052D48E2FD00B640C8 /* MetadataTypes.swift in Sources */,
+				CEBCF6062D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
 				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
