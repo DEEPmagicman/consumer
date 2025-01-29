@@ -21,9 +21,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var totalPriceLbl: UILabel!
     @IBOutlet private weak var ticketListTableView: UITableView!
     @IBOutlet private weak var ticketListHeight: NSLayoutConstraint!
-    @IBOutlet private weak var countryCodeTextField: FPNTextField!
-    @IBOutlet private weak var phoneNumTextField: UITextField!
-    @IBOutlet private weak var countrySelectionView: UIView!
+//    @IBOutlet private weak var countryCodeTextField: FPNTextField!
+    @IBOutlet private weak var phoneNumTextField: PhoneNumberTextField!
+//    @IBOutlet private weak var countrySelectionView: UIView!
     @IBOutlet private weak var errorLbl: UILabel!
     @IBOutlet private weak var firstNameView: UIView!
     @IBOutlet private weak var lastNameView: UIView!
@@ -79,8 +79,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var firstNameUnderlineView: UIView!
     @IBOutlet weak var lastNameUnderlineView: UIView!
     @IBOutlet weak var emailUnderlineView: UIView!
-    @IBOutlet weak var countryCodeUnderlineView: UIView!
+//    @IBOutlet weak var countryCodeUnderlineView: UIView!
     @IBOutlet weak var phoneNumberUnderlineView: UIView!
+    @IBOutlet weak var noFeesText: UILabel!
+    @IBOutlet weak var noFeesTextForAddOns: UILabel!
     
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
@@ -94,11 +96,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var isIntendCreated = false
     private var isApplePayNotSupported = false
     private var isPaymentInitiated = false
-    private var checkFPNField = FPNTextField()
-    private var countryCode = ""
-    private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
+//    private var checkFPNField = FPNTextField()
+//    private var countryCode = ""
+//    private var listController: FPNCountryListViewController = FPNCountryListViewController(style: .grouped)
     private var isValidNo = false
-    private var isChangingFlag = false
+//    private var isChangingFlag = false
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var addOnsHeightObservation: NSKeyValueObservation?
     private var retryCount = 0
@@ -110,6 +112,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var isOnlyAddOnsAvailable = false
     var bookingType: TicketPriceType = .PAID
     var venueImageData = Data()
+    let phoneNumberUtility = PhoneNumberUtility()
+    var phoneNumber: PhoneNumber?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,35 +137,23 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.addOnsTableViewHeight.constant = self.addOnsTableView.contentSize.height
             self.addOnsTableView.layoutIfNeeded()
         }
-        countryCodeTextField.textColor = .white
         
         phoneNumTextField.delegate = self
-        checkFPNField.delegate = self
+        phoneNumTextField.withDefaultPickerUI = true
+        phoneNumTextField.defaultRegion = "US"
+        phoneNumTextField.withPrefix = true
+        phoneNumTextField.withFlag = true
+        phoneNumTextField.withExamplePlaceholder = true
         
-        countryCodeTextField.delegate = self
-        countryCodeTextField.setFlag(countryCode: .US)
-        countryCode = "+1"
+        CountryCodePicker.alwaysShowsSearchBar = true
+        CountryCodePicker.forceModalPresentation = true
+        var options = CountryCodePickerOptions()
+        options.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.00)
+        options.textLabelFont = UIFont(name: "Poppins-Regular", size: 15)!
+        options.textLabelColor = UIColor(red: 0.63, green: 0.63, blue: 0.63, alpha: 1.00)
+        options.detailTextLabelFont = UIFont(name: "Poppins-Regular", size: 15)!
+        phoneNumTextField.withDefaultPickerUIOptions = options
         
-        listController.setup(repository: countryCodeTextField.countryRepository)
-        listController.didSelect = { [weak self] country in
-            self?.countryCodeTextField.setFlag(countryCode: country.code)
-        }
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickCountrySelect))
-        countrySelectionView.addGestureRecognizer(tap)
-        
-        countryCodeTextField.flagButtonSize = CGSize(width: 44, height: 44)
-        countryCodeTextField.flagButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        countryCodeTextField.displayMode = .list
-        
-        let items = [
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.save, target: self, action: nil),
-            UIBarButtonItem(title: "Item 1", style: .plain, target: self, action: nil),
-            UIBarButtonItem(title: "Item 2", style: .plain, target: self, action: nil)
-        ]
-        countryCodeTextField.textFieldInputAccessoryView = getCustomTextFieldInputAccessoryView(with: items)
-        
-        listController.showCountryPhoneCode = true
         dressCodeInfoLbl.highlightBold(["\"All entry subject to doorman discretion\"."], size: 14, textColor: UIColor(red: 180/255, green: 180/255, blue: 180/255, alpha: 1))
         totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.00" : "-"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
@@ -216,6 +208,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             noFeeView.isHidden = false
         }
         emailValidationLbl.isHidden = true
+        if let color = self.venue?.venueSettings?.whiteLabelColor {
+            self.freeTicketBtn.backgroundColor = UIColor(hex: color)
+            self.noFeesText.textColor = UIColor(hex: color)
+            self.noFeesTextForAddOns.textColor = UIColor(hex: color)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -408,8 +405,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var paramData = [String: Any]()
         param["addOnsItems"] = addOnsItems
         param["venueId"] = venue?.id ?? ""
-        param["phone"] = "\(self.phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"
-        param["code"] = countryCode
+        param["phone"] = "\(self.phoneNumber?.nationalNumber ?? 0)"
+        param["code"] = "+\(self.phoneNumber?.countryCode ?? 1)"
         if bookingId != "" {
             param["bookingId"] = bookingId
         }
@@ -625,15 +622,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         return toolbar
     }
     
-    @objc private func dismissCountries() {
-        isChangingFlag = false
-        listController.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func onClickCountrySelect() {
-        fpnDisplayCountryList()
-    }
-    
     @objc func checkApplePay() {
         if !checkAllData {
             checkValidation()
@@ -676,7 +664,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if phoneNumTextField.text ?? "" == "" {
             phoneNumTextField.shake()
             phoneNumberUnderlineView.backgroundColor = .red
-            countryCodeUnderlineView.backgroundColor = .red
+//            countryCodeUnderlineView.backgroundColor = .red
         }
         
         if venue?.venueSettings?.collectNameDuringBooking ?? false == true {
@@ -726,7 +714,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 lastNameUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
             } else if textField == phoneNumTextField {
                 phoneNumberUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
-                countryCodeUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
+//                countryCodeUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
             } else {
                 emailUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
             }
@@ -1206,8 +1194,8 @@ extension CheckOutClipVC {
         var paramData = [String: Any]()
         var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
-                     "code": countryCode,
-                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")"] as [String: Any]
+                     "code": "+\(self.phoneNumber?.countryCode ?? 1)",
+                     "phone": "\(self.phoneNumber?.nationalNumber ?? 0)"] as [String: Any]
         if venue?.venueSettings?.collectNameDuringBooking == true {
             param["firstName"] = firstNameTF.text ?? ""
             param["lastName"] = lastNameTF.text ?? ""
@@ -1295,8 +1283,8 @@ extension CheckOutClipVC {
         var paramData = [String: Any]()
         var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
-                     "code": countryCode,
-                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
+                     "code": "+\(self.phoneNumber?.countryCode ?? 1)",
+                     "phone": "\(self.phoneNumber?.nationalNumber ?? 0)",
                      "optedPolicy": policyCheckBox.isSelected] as [String: Any]
         if venue?.venueSettings?.collectNameDuringBooking ?? false {
             param["firstName"] = firstNameTF.text ?? ""
@@ -1387,8 +1375,8 @@ extension CheckOutClipVC {
         var paramData = [String: Any]()
         var param = ["appclipTicket": selectedTickets,
                      "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
-                     "code": countryCode,
-                     "phone": "\(phoneNumTextField.text?.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "") ?? "")",
+                     "code": "+\(self.phoneNumber?.countryCode ?? 1)",
+                     "phone": "\(self.phoneNumber?.nationalNumber ?? 0)",
                      "optedPolicy": policyCheckBox.isSelected] as [String: Any]
         if venue?.venueSettings?.collectNameDuringBooking ?? false {
             param["firstName"] = firstNameTF.text ?? ""
@@ -1475,7 +1463,7 @@ extension CheckOutClipVC {
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.venueImageData = self.venueImageData
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
-                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(self.countryCode) \(self.phoneNumTextField.text ?? "")"
+                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "+\(self.phoneNumber?.countryCode ?? 1) \(self.phoneNumber?.nationalNumber ?? 0)"
                 vc.guestInfo = "\(userData) - \(self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? ""))"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
                     selectVC.forceRemoveAllTicket()
@@ -1497,7 +1485,7 @@ extension CheckOutClipVC {
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
                 
-                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(self.countryCode) \(self.phoneNumTextField.text ?? "")"
+                let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "+\(self.phoneNumber?.countryCode ?? 1) \(self.phoneNumber?.nationalNumber ?? 0)"
                 vc.guestInfo = "\(userData) - \(self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? ""))"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
                     selectVC.forceRemoveAllTicket()
@@ -1533,19 +1521,48 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension CheckOutClipVC: UITextFieldDelegate {
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        checkFPNField.text = textField.text
-        checkFPNField.sendActions(for: .editingChanged)
-        phoneNumTextField.delegate = nil
-        if textField.text?.contains("+") == true && checkFPNField.text?.contains("+") == false {
-            checkFPNField.sendActions(for: .editingChanged)
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let textRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: textRange, with: string)
+        if currentText == "+" && string.isEmpty {
+            return false
         }
-        phoneNumTextField.text = checkFPNField.text
-        phoneNumTextField.delegate = self
+        if !updatedText.hasPrefix("+") {
+            textField.text = "+" + updatedText.replacingOccurrences(of: "+", with: "")
+            return false
+        }
+        return true
     }
     
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        do {
+            let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "")
+            self.phoneNumber = phoneNumber
+            self.isValidNo = true
+//            continueBtn.isUserInteractionEnabled = true
+//            continueBtn.alpha = 1
+        }
+        catch {
+            self.isValidNo = false
+//            continueBtn.isUserInteractionEnabled = false
+//            continueBtn.alpha = 0.5
+        }
+    }
+    
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//        checkFPNField.text = textField.text
+//        checkFPNField.sendActions(for: .editingChanged)
+//        phoneNumTextField.delegate = nil
+//        if textField.text?.contains("+") == true && checkFPNField.text?.contains("+") == false {
+//            checkFPNField.sendActions(for: .editingChanged)
+//        }
+//        phoneNumTextField.text = checkFPNField.text
+//        phoneNumTextField.delegate = self
+//    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if isChangingFlag { return }
+//        if isChangingFlag { return }
         if !isValidNo {
             if textField.text?.replacingOccurrences(of: " ", with: "") != "" {
                 alertPopup("Alert", "Enter valid number")
@@ -1554,42 +1571,42 @@ extension CheckOutClipVC: UITextFieldDelegate {
     }
 }
 
-extension CheckOutClipVC: FPNTextFieldDelegate {
-    func fpnDisplayCountryList() {
-        isChangingFlag = true
-        let navigationViewController = UINavigationController(rootViewController: listController)
-        listController.title = "Countries"
-        listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
-        listController.navigationController?.presentationController?.delegate = self
-        present(navigationViewController, animated: true, completion: nil)
-    }
-    
-    func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
-        if let countryCode = FPNCountryCode(rawValue: code) {
-            isChangingFlag = false
-            if countryCode == checkFPNField.selectedCountry?.code { return }
-            checkFPNField.delegate = nil
-            checkFPNField.setFlag(countryCode: countryCode)
-            checkFPNField.delegate = self
-            checkFPNField.sendActions(for: .editingChanged)
-            phoneNumTextField.delegate = nil
-            phoneNumTextField.text = checkFPNField.text
-            phoneNumTextField.delegate = self
-            self.countryCode = dialCode
-        }
-    }
-    
-    func fpnDidValidatePhoneNumber(textField: FPNTextField, isValid: Bool) {
-        if textField == countryCodeTextField {
-            phoneNumTextField.placeholder = countryCodeTextField.placeholder
-            countryCodeTextField.placeholder = ""
-            countryCodeTextField.text = ""
-        } else if textField == checkFPNField {
-            isValidNo = isValid
-            isIntendCreated = false
-        }
-    }
-}
+//extension CheckOutClipVC: FPNTextFieldDelegate {
+//    func fpnDisplayCountryList() {
+//        isChangingFlag = true
+//        let navigationViewController = UINavigationController(rootViewController: listController)
+//        listController.title = "Countries"
+//        listController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(dismissCountries))
+//        listController.navigationController?.presentationController?.delegate = self
+//        present(navigationViewController, animated: true, completion: nil)
+//    }
+//    
+//    func fpnDidSelectCountry(name: String, dialCode: String, code: String) {
+//        if let countryCode = FPNCountryCode(rawValue: code) {
+//            isChangingFlag = false
+//            if countryCode == checkFPNField.selectedCountry?.code { return }
+//            checkFPNField.delegate = nil
+//            checkFPNField.setFlag(countryCode: countryCode)
+//            checkFPNField.delegate = self
+//            checkFPNField.sendActions(for: .editingChanged)
+//            phoneNumTextField.delegate = nil
+//            phoneNumTextField.text = checkFPNField.text
+//            phoneNumTextField.delegate = self
+//            self.countryCode = dialCode
+//        }
+//    }
+//    
+//    func fpnDidValidatePhoneNumber(textField: FPNTextField, isValid: Bool) {
+//        if textField == countryCodeTextField {
+//            phoneNumTextField.placeholder = countryCodeTextField.placeholder
+//            countryCodeTextField.placeholder = ""
+//            countryCodeTextField.text = ""
+//        } else if textField == checkFPNField {
+//            isValidNo = isValid
+//            isIntendCreated = false
+//        }
+//    }
+//}
 
 extension CheckOutClipVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {
@@ -1656,7 +1673,7 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
 
 extension CheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        isChangingFlag = false
+//        isChangingFlag = false
     }
 }
 
