@@ -52,20 +52,20 @@ final class EnterPhoneNumberViewController: UIViewController {
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = self.phoneNumber?.nationalNumber ?? 0
         continueBtn.showLoader(userInteraction: false)
-        self.view.isUserInteractionEnabled = false
+//        self.view.isUserInteractionEnabled = false
         if isFromLogin {
             onBoardingPresenter.loginWithPhoneApi(phonenum: "\(phoneNum)", code: "+\(self.phoneNumber?.countryCode ?? 1)") { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self = self else { return }
                 
                 continueBtn.hideLoader()
-                self.view.isUserInteractionEnabled = true
+//                self.view.isUserInteractionEnabled = true
                 if isSuccess {
                     Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
-                    self.view.isUserInteractionEnabled = true
+//                    self.view.isUserInteractionEnabled = true
                 } else {
-                    self.view.isUserInteractionEnabled = true
+//                    self.view.isUserInteractionEnabled = true
                     Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 }
             }
@@ -79,9 +79,9 @@ final class EnterPhoneNumberViewController: UIViewController {
                         Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
-                        self.view.isUserInteractionEnabled = true
+//                        self.view.isUserInteractionEnabled = true
                     } else {
-                        self.view.isUserInteractionEnabled = true
+//                        self.view.isUserInteractionEnabled = true
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                     }
                 }
@@ -94,10 +94,10 @@ final class EnterPhoneNumberViewController: UIViewController {
                         UserDefault.shared.user?.phone = "\(phoneNum)"
                         Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
                     } else if errorMsg == Constant.String.internetNotConnect {
-                        self.view.isUserInteractionEnabled = true
+//                        self.view.isUserInteractionEnabled = true
                         self.view.endEditing(true)
                     } else {
-                        self.view.isUserInteractionEnabled = true
+//                        self.view.isUserInteractionEnabled = true
                         if errorMsg == "Entered phone number already exist in system." {
                             self.isFromLogin = true
                             self.onClickContinue(0)
