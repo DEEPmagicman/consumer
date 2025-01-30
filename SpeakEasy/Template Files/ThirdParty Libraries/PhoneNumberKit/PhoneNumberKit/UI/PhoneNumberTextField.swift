@@ -27,7 +27,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 super.text = newValue
             }
             NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: self)
-            self.updateFlag()
+            let countryCode = self.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII }
+            self.updateFlag(code: countryCode)
         }
         get {
             return super.text
@@ -62,11 +63,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public var withPrefix: Bool = true {
         didSet {
             self.partialFormatter.withPrefix = self.withPrefix
-            if self.withPrefix == false {
-                self.keyboardType = .numberPad
-            } else {
+//            if self.withPrefix == false {
+//                self.keyboardType = .numberPad
+//            } else {
                 self.keyboardType = .phonePad
-            }
+//            }
             if self.withExamplePlaceholder {
                 self.updatePlaceholder()
             }
@@ -79,7 +80,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         didSet {
             leftView = self.withFlag ? self.flagButton : nil
             leftViewMode = self.withFlag ? .always : .never
-            self.updateFlag()
+            self.updateFlag(code: "+1")
         }
     }
 
@@ -295,7 +296,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return "+" + countryCode
     }
 
-    open func updateFlag() {
+    open func updateFlag(code: String? = nil) {
         guard self.withFlag else { return }
 
         if let phoneNumber = phoneNumber,
@@ -313,8 +314,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             .unicodeScalars
             .compactMap { UnicodeScalar(flagBase + $0.value)?.description }
             .joined()
-
-        self.flagButton.setTitle(flag + " ", for: .normal)
+        
+        if let code = code {
+            self.flagButton.setTitle(flag + "\(code) ", for: .normal)
+        }
+        
+        self.flagButton.titleLabel?.font = UIFont(name: "Poppins-Regular", size: 20)!
         self.flagButton.accessibilityLabel = NSLocalizedString(
             "PhoneNumberKit.CountryCodePickerEntryButton.AccessibilityLabel",
             value: "Select your country code",
@@ -327,8 +332,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 comment: "Accessiblity hint for currently selected country code")
             self.flagButton.accessibilityHint = String(format: selectedFormat, countryName)
         }
-        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
-        self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+//        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
+//        self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
 
     open func updatePlaceholder() {
@@ -485,7 +490,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         if withFlag == true {
             self._defaultRegion = self.currentRegion
             self.partialFormatter.defaultRegion = self.currentRegion
-            self.updateFlag()
+            let countryCode = self.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII }
+            self.updateFlag(code: countryCode)
             self.updatePlaceholder()
         }
 
@@ -544,7 +550,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
            text == internationalPrefix(for: countryCode) {
             textField.text = ""
             sendActions(for: .editingChanged)
-            self.updateFlag()
+            let countryCode = self.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII }
+            self.updateFlag(code: countryCode)
             self.updatePlaceholder()
         }
     }
@@ -555,7 +562,7 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         text = isEditing ? "+" + country.prefix : ""
         _defaultRegion = country.code
         partialFormatter.defaultRegion = country.code
-        updateFlag()
+        updateFlag(code: country.prefix)
         updatePlaceholder()
 
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {

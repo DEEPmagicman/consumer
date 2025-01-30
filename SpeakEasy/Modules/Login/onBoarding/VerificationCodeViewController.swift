@@ -21,7 +21,7 @@ final class VerificationCodeViewController: UIViewController {
     var currectOtp: String?
     var otpRef = ""
     var phoneNum = ""
-//    var countryCode = ""
+    var countryCode = ""
     var isFromLogin = false
     var isFromSettings = false
     var isForEmail = false
@@ -55,7 +55,7 @@ final class VerificationCodeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        phoneNumLbl.text = "\(phoneNum)"
+        phoneNumLbl.text = "\(countryCode) \(phoneNum)"
     }
     
     private func setOtpView() {

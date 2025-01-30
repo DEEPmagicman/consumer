@@ -31,7 +31,7 @@ final class EnterPhoneNumberViewController: UIViewController {
         
         phoneNumTextField.withDefaultPickerUI = true
         phoneNumTextField.defaultRegion = "US"
-        phoneNumTextField.withPrefix = true
+        phoneNumTextField.withPrefix = false
         phoneNumTextField.withFlag = true
         phoneNumTextField.withExamplePlaceholder = true
         
@@ -51,16 +51,17 @@ final class EnterPhoneNumberViewController: UIViewController {
     
     @IBAction func onClickContinue(_ sender: Any) {
         let phoneNum = self.phoneNumber?.nationalNumber ?? 0
+        let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII }
         continueBtn.showLoader(userInteraction: false)
 //        self.view.isUserInteractionEnabled = false
         if isFromLogin {
-            onBoardingPresenter.loginWithPhoneApi(phonenum: "\(phoneNum)", code: "+\(self.phoneNumber?.countryCode ?? 1)") { [weak self] otp, otpRef, isSuccess, errorMsg in
+            onBoardingPresenter.loginWithPhoneApi(phonenum: "\(phoneNum)", code: countryCode ?? "+1") { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self = self else { return }
                 
                 continueBtn.hideLoader()
 //                self.view.isUserInteractionEnabled = true
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                    Navigate.to.enterVerificationCodeVc(self, isFromLogin: true, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: countryCode ?? "+1")
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
 //                    self.view.isUserInteractionEnabled = true
@@ -71,12 +72,12 @@ final class EnterPhoneNumberViewController: UIViewController {
             }
         } else {
             if isFromSettings {
-                settingPresenter.changePhoneNumberApi(phone: "\(phoneNum)", code: "+\(self.phoneNumber?.countryCode ?? 1)") { [weak self] otp, otpRef, isSuccess, errMsg in
+                settingPresenter.changePhoneNumberApi(phone: "\(phoneNum)", code: countryCode ?? "+1") { [weak self] otp, otpRef, isSuccess, errMsg in
                     guard let self = self else { return }
                     
                     continueBtn.hideLoader()
                     if isSuccess {
-                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, isFromSettings: self.isFromSettings, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: countryCode ?? "+1")
                     } else if errMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)
 //                        self.view.isUserInteractionEnabled = true
@@ -86,13 +87,13 @@ final class EnterPhoneNumberViewController: UIViewController {
                     }
                 }
             } else {
-                onBoardingPresenter.signUpWithPhoneApi(phonenum: "\(phoneNum)", code: "+\(self.phoneNumber?.countryCode ?? 1)") { [weak self] otp, otpRef, isSuccess, errorMsg  in
+                onBoardingPresenter.signUpWithPhoneApi(phonenum: "\(phoneNum)", code: countryCode ?? "+1") { [weak self] otp, otpRef, isSuccess, errorMsg  in
                     guard let self = self else { return }
                     
                     continueBtn.hideLoader()
                     if isSuccess {
                         UserDefault.shared.user?.phone = "\(phoneNum)"
-                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "")
+                        Navigate.to.enterVerificationCodeVc(self, otp: otp, otpRef: otpRef, phoneNum: self.phoneNumTextField.text ?? "", countryCode: countryCode ?? "+1")
                     } else if errorMsg == Constant.String.internetNotConnect {
 //                        self.view.isUserInteractionEnabled = true
                         self.view.endEditing(true)
@@ -113,16 +114,6 @@ final class EnterPhoneNumberViewController: UIViewController {
 
 extension EnterPhoneNumberViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        guard let textRange = Range(range, in: currentText) else { return false }
-        let updatedText = currentText.replacingCharacters(in: textRange, with: string)
-        if currentText == "+" && string.isEmpty {
-            return false
-        }
-        if !updatedText.hasPrefix("+") {
-            textField.text = "+" + updatedText.replacingOccurrences(of: "+", with: "")
-            return false
-        }
         return true
     }
     
