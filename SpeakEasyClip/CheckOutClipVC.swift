@@ -150,16 +150,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.00" : "-"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
-            errorLbl.text = "Add Card to your Apple wallet & try again."
+            errorLbl.text = "Add Card to your Apple wallet & try again.".localize()
         } else {
             isApplePayNotSupported = true
-            errorLbl.text = "Apple pay is not supported on your device, try another payment option."
+            errorLbl.text = "Apple pay is not supported on your device, try another payment option.".localize()
         }
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
-        policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
+        policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages".localize()
         firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         

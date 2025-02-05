@@ -116,6 +116,60 @@ extension String {
     }
 }
 
+// NOTE: for localisation
+extension String {
+    func localize(comment: String = "") -> String {
+        return NSLocalizedString(self, tableName: "Localizable", comment: comment)
+    }
+    
+    func localize(comment: String = "", args: CVarArg...) -> String {
+        let format = NSLocalizedString(self, comment: comment)
+        let result = withVaList(args) {
+            (NSString(format: format, locale: NSLocale.current, arguments: $0) as String)
+        }
+        return result
+    }
+}
+
+extension Bundle {
+    static func swizzleLocalization() {
+        let orginalSelector = #selector(localizedString(forKey:value:table:))
+        guard let orginalMethod = class_getInstanceMethod(self, orginalSelector) else { return }
+        
+        let mySelector = #selector(myLocaLizedString(forKey:value:table:))
+        guard let myMethod = class_getInstanceMethod(self, mySelector) else { return }
+        
+        if class_addMethod(self, orginalSelector, method_getImplementation(myMethod), method_getTypeEncoding(myMethod)) {
+            class_replaceMethod(self, mySelector, method_getImplementation(orginalMethod), method_getTypeEncoding(orginalMethod))
+        } else {
+            method_exchangeImplementations(orginalMethod, myMethod)
+        }
+    }
+    
+    @objc private func myLocaLizedString(forKey key: String, value: String?, table: String?) -> String {
+
+        guard let bundlePath = Bundle.main.path(forResource: UserDefaults.standard.language, ofType: "lproj"),
+              let bundle = Bundle(path: bundlePath) else {
+            return Bundle.main.myLocaLizedString(forKey: key, value: value, table: table)
+        }
+        if table == "Main" {
+            return bundle.myLocaLizedString(forKey: key, value: value, table: table)
+        }
+        return bundle.myLocaLizedString(forKey: key, value: value, table: "Localizable")
+    }
+}
+
+extension UserDefaults {
+    var language: String {
+        var systemLanguage: Language = .english
+        if let arr = UserDefaults.standard.stringArray(forKey: "AppleLanguages"), let language = arr.first {
+            let languageCode = language.components(separatedBy: "-").first ?? language
+            systemLanguage = Language(rawValue: languageCode) ?? .english
+        }
+        return systemLanguage.rawValue
+    }
+}
+
 extension Date {
     func toString(dateFormat format: DateFormat, timeZone: TimeZone? = nil) -> String {
         let dateFormatter = DateFormatter()
@@ -221,4 +275,7 @@ extension String {
     }
 }
 
-
+enum Language: String {
+    case english = "en"
+    case spanish = "es"
+}

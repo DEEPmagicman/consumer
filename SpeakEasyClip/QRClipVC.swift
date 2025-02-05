@@ -100,7 +100,7 @@ final class QRClipVC: UIViewController {
         if isAlertDisplayed {
             navigationController?.popToRootViewController(animated: true)
         } else {
-            alertPopup("", "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket.")
+            alertPopup("", "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket.".localize())
             isAlertDisplayed = true
         }
     }
@@ -129,7 +129,7 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
 
         cell.backupCode.text = bookingCode
-        cell.bookingDateTime.text = "Purchased on \(createdAT)"
+        cell.bookingDateTime.text = "Purchased on".localize() + " \(createdAT)"
         
         if isOnlyAddOnsAvailable {
             if index == 0 {

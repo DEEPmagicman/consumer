@@ -29,6 +29,7 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var disclaimerInSideView: UIView!
     @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
+    @IBOutlet weak var languageSwitchBtn: UIButton!
     
     var isLive = true
     var venueDetail: ClipVenue?
@@ -90,10 +91,12 @@ final class SelectTicketClipVC: UIViewController {
         } else {
             getVenueDetailsWithTickets()
         }
-        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
+        upSellBtn.setTitle("Buy upsell".localize(args: (self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell".localize())), for: .normal)
+
         tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
         tableBookNowBtn.layer.borderWidth = 1
         
+        setupLanguageSelection()
     }
     
     private func getDeepLinkData() {
@@ -267,14 +270,14 @@ final class SelectTicketClipVC: UIViewController {
         }
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
-            self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
-            self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
+//            self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
+//            self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
             if self.venueDetail?.venueSettings?.bookingStatus == "OPEN" {
-                self.liveCloseLbl.text = "LIVE"
+                self.liveCloseLbl.text = "LIVE".localize()
                 self.liveCloseLbl.textColor = UIColor(red: 0.00, green: 1.00, blue: 0.58, alpha: 1.00)
                 self.tonightLbl.alpha = 1
             } else {
-                self.liveCloseLbl.text = "CLOSED"
+                self.liveCloseLbl.text = "CLOSED".localize()
                 self.liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 self.tonightLbl.alpha = 0.5
             }
@@ -288,13 +291,13 @@ final class SelectTicketClipVC: UIViewController {
                 self.closeLblView.isHidden = true
             }
             if self.venueDetail == nil {
-                self.closeLbl.text = "Venue not found"
+                self.closeLbl.text = "Venue not found".localize()
                 self.infoView.isHidden = true
                 self.closeLblView.isHidden = false
                 self.liveCloseLbl.isHidden = true
                 self.tonightLbl.isHidden = true
             }
-            self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
+            self.upSellBtn.setTitle("Buy upsell".localize(args: (self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell".localize())), for: .normal)
         }
         
         self.disclaimerView.isHidden = self.venueDetail?.venueSettings?.showCoverDisclaimer ?? false == false
@@ -417,12 +420,12 @@ final class SelectTicketClipVC: UIViewController {
             switch self.selectedType {
             case .FREE:
                 if self.upSellView.isHidden == true {
-                    self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                    self.continueBtn.setTitle("GET MY FREE TICKET".localize(), for: .normal)
                 } else {
-                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
                 }
             case .PAID, .CUSTOM:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
             }
         }
     }
@@ -476,9 +479,9 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isUserInteractionEnabled = isMaxTicketReached ? false : true
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-            cell.ticketPriceLbl.text = "FREE"
+            cell.ticketPriceLbl.text = "FREE".localize()
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true && venueDetail?.coverTicket?[indexPath.row].price ?? 0 == 0 {
-            cell.ticketPriceLbl.text = "FREE"
+            cell.ticketPriceLbl.text = "FREE".localize()
         } else {
             if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
@@ -599,6 +602,31 @@ extension SelectTicketClipVC: WebSocketCallBackDelegate {
 extension SelectTicketClipVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         true
+    }
+}
+
+extension SelectTicketClipVC {
+
+    private func setupLanguageSelection() {
+        let actionClosure = { (action: UIAction) in
+            UserDefaults.standard.set([action.title.lowercased()], forKey: "AppleLanguages")
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+            }
+        }
+        
+        let dataSource = ["EN", "ES"]
+        var menuChildren: [UIMenuElement] = []
+        for data in dataSource {
+            menuChildren.append(UIAction(title: data, state: data.lowercased() == UserDefaults.standard.language ? .on : .off, handler: actionClosure))
+        }
+        languageSwitchBtn.menu = UIMenu(options: .displayInline, children: menuChildren)
+        languageSwitchBtn.menu?.preferredElementSize = .small
+        languageSwitchBtn.showsMenuAsPrimaryAction = true
+        if #available(iOS 15.0, *) {
+            languageSwitchBtn.changesSelectionAsPrimaryAction = true
+        }
+        languageSwitchBtn.setTitle("EN".localize(), for: .normal)
     }
 }
 

@@ -130,18 +130,18 @@ final class UpSellClipVC: UIViewController {
     
     private func updateContinueBtn() {
         if selectedAppClipTicket.count == 0 {
-            continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+            continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
             continueBtn.alpha = selectedAddOns.count == 0 ? 0.5 : 1
             continueBtn.isUserInteractionEnabled = selectedAddOns.count == 0 ? false : true
         } else {
             if selectedAddOns.count == 0 {
                 if bookingType == .FREE {
-                    continueBtn.setTitle("SKIP THIS & GET MY FREE TICKET", for: .normal)
+                    continueBtn.setTitle("SKIP THIS & GET MY FREE TICKET".localize(), for: .normal)
                 } else {
-                    continueBtn.setTitle("SKIP THIS & CONTINUE TO CHECKOUT", for: .normal)
+                    continueBtn.setTitle("SKIP THIS & CONTINUE TO CHECKOUT".localize(), for: .normal)
                 }
             } else {
-                continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
             }
         }
     }
