@@ -278,4 +278,24 @@ extension String {
 enum Language: String {
     case english = "en"
     case spanish = "es"
+    
+    var display: String {
+        switch self {
+        case .english:
+            "English"
+        case .spanish:
+            "Español"
+        }
+    }
+    
+    init(language: String) {
+        switch language {
+        case "English":
+            self = .english
+        case "Español":
+            self = .spanish
+        default:
+            self = .english
+        }
+    }
 }

@@ -30,7 +30,9 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
     @IBOutlet weak var languageSwitchBtn: UIButton!
-    
+    @IBOutlet weak var languageSwitchImg: UIImageView!
+    @IBOutlet weak var languageSwitchLbl: UILabel!
+
     var isLive = true
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?
@@ -609,24 +611,25 @@ extension SelectTicketClipVC {
 
     private func setupLanguageSelection() {
         let actionClosure = { (action: UIAction) in
-            UserDefaults.standard.set([action.title.lowercased()], forKey: "AppleLanguages")
+            UserDefaults.standard.set([Language(language: action.title).rawValue], forKey: "AppleLanguages")
             if let window = UIApplication.shared.windows.first {
                 window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
             }
         }
         
-        let dataSource = ["EN", "ES"]
+        let dataSource = ["English", "Español"]
         var menuChildren: [UIMenuElement] = []
         for data in dataSource {
-            menuChildren.append(UIAction(title: data, state: data.lowercased() == UserDefaults.standard.language ? .on : .off, handler: actionClosure))
+            menuChildren.append(UIAction(title: data, image: UIImage(named: Language(language: data).rawValue.uppercased()), state: Language(language: data).rawValue == UserDefaults.standard.language ? .on : .off, handler: actionClosure))
         }
         languageSwitchBtn.menu = UIMenu(options: .displayInline, children: menuChildren)
-        languageSwitchBtn.menu?.preferredElementSize = .small
         languageSwitchBtn.showsMenuAsPrimaryAction = true
         if #available(iOS 15.0, *) {
             languageSwitchBtn.changesSelectionAsPrimaryAction = true
         }
-        languageSwitchBtn.setTitle("EN".localize(), for: .normal)
+        languageSwitchBtn.setTitle("", for: .normal)
+        languageSwitchLbl.text = UserDefaults.standard.language.uppercased()
+        languageSwitchImg.image = UIImage(named: UserDefaults.standard.language.uppercased())
     }
 }
 

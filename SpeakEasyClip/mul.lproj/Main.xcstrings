@@ -181,24 +181,6 @@
         }
       }
     },
-    "a9F-aO-ive.placeholder" : {
-      "comment" : "Class = \"UITextField\"; placeholder = \"Email\"; ObjectID = \"a9F-aO-ive\";",
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Email"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Correo electrónico"
-          }
-        }
-      }
-    },
     "AY8-dB-eac.title" : {
       "comment" : "Class = \"UIViewController\"; title = \"ScanQRCodeVC\"; ObjectID = \"AY8-dB-eac\";",
       "extractionState" : "extracted_with_value",
@@ -411,24 +393,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "$0.00"
-          }
-        }
-      }
-    },
-    "FCR-iE-N4m.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"EN\"; ObjectID = \"FCR-iE-N4m\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "EN"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "EN"
           }
         }
       }
@@ -717,6 +681,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tarifas de procesamiento"
+          }
+        }
+      }
+    },
+    "q5I-cd-ZFV.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"EN\"; ObjectID = \"q5I-cd-ZFV\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "EN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ES"
           }
         }
       }
