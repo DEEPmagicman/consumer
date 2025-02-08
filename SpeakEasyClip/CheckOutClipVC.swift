@@ -1524,7 +1524,7 @@ extension CheckOutClipVC: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         do {
-            let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "")
+            let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "", withRegion: phoneNumTextField.defaultRegion)
             self.phoneNumber = phoneNumber
             self.isValidNo = true
         }

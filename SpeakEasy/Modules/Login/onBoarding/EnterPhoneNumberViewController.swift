@@ -119,7 +119,7 @@ extension EnterPhoneNumberViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         do {
-            let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "")
+            let phoneNumber = try phoneNumberUtility.parse(phoneNumTextField.text ?? "", withRegion: phoneNumTextField.defaultRegion)
             self.phoneNumber = phoneNumber
             continueBtn.isUserInteractionEnabled = true
             continueBtn.alpha = 1
