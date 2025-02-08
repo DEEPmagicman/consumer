@@ -260,10 +260,29 @@ struct CoverTicket: Codable {
     var createdAt: String?
     var updatedAt: String?
     var coverType: String?
+    var coverTicketLocalizations: [CoverTicketLocalizations]
     // MARK: app side parameters
     var selectedQuantity: Int?
     var isCustom: Bool {
         coverType == "CUSTOM"
+    }
+    var displayName: String {
+        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+            return languageWiseTicket.name
+        }
+        return name
+    }
+    var displayCustomName: String? {
+        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+            return languageWiseTicket.customName
+        }
+        return customName
+    }
+    var displayDescription: String? {
+        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+            return languageWiseTicket.description
+        }
+        return description
     }
     
     func encode(to encoder: Encoder) throws {
@@ -280,6 +299,7 @@ struct CoverTicket: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(coverType, forKey: .coverType)
+        try container.encode(coverTicketLocalizations, forKey: .coverTicketLocalizations)
     }
 }
 
@@ -328,6 +348,15 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(showCoverDisclaimer, forKey: .showCoverDisclaimer)
         try container.encodeIfPresent(coverDisclaimerText, forKey: .coverDisclaimerText)
     }
+}
+
+struct CoverTicketLocalizations: Codable {
+    let id: String
+    let coverTicketId: String
+    let language: String
+    let name: String
+    let customName: String
+    let description: String
 }
 
 struct CoverTicketFeesSettings: Codable {

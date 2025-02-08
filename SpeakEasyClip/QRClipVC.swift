@@ -77,15 +77,7 @@ final class QRClipVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = """
-            Thank you for checking into \(venueName) with Speakeasy!
-
-            Access Your Ticket Here: \(isOnlyAddOnsAvailable ? String(format: SharedURL.addOnsShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), addOnBookingId) : String(format: SharedURL.coverShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), bookingId))
-
-            Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
-
-            Link to App: \(SharedURL.appStoreURL)
-            """
+        let msgText = "shareText".localize(args: "\(venueName)", "\(isOnlyAddOnsAvailable ? String(format: SharedURL.addOnsShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), addOnBookingId) : String(format: SharedURL.coverShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), bookingId))", "\(SharedURL.appStoreURL)")
         shareSocialWith(text: msgText)
     }
     

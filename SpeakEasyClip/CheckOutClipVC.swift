@@ -1504,7 +1504,7 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
 
         if tableView == ticketListTableView {
-            cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].name : selectedCoverTickets[indexPath.row].customName
+            cell.titleLbl.text = selectedCoverTickets[indexPath.row].customName ?? "" == "" ? selectedCoverTickets[indexPath.row].displayName : selectedCoverTickets[indexPath.row].displayCustomName
         } else {
             cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name
         }

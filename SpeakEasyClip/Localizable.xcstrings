@@ -223,6 +223,23 @@
         }
       }
     },
+    "shareText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you for checking into %1$@ with Speakeasy!\n\n            Access Your Ticket Here: %2$@\n\n            Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!\n\n            Link to App: %3$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Gracias por registrarte en %1$@ con Speakeasy!\n\n            Accede a tu entrada aquí: %2$@\n\n            Descarga Speakeasy en la App Store de Apple para mantenerte actualizado sobre las portadas y los tiempos de espera en tus lugares favoritos. ¡Esperamos verte allí!\n\n            Enlace a la aplicación: %3$@"
+          }
+        }
+      }
+    },
     "SKIP THIS & CONTINUE TO CHECKOUT" : {
       "extractionState" : "manual",
       "localizations" : {

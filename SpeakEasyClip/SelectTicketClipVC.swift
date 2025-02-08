@@ -190,7 +190,6 @@ final class SelectTicketClipVC: UIViewController {
     
     private func getVenueDetailsWithTickets(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
-        print("urmil:  \(url)")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
@@ -475,8 +474,8 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
-        cell.ticketTypeLbl.text = self.venueDetail?.coverTicket?[indexPath.row].customName ?? "" == "" ? self.venueDetail?.coverTicket?[indexPath.row].name : self.venueDetail?.coverTicket?[indexPath.row].customName
-        cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].description
+        cell.ticketTypeLbl.text = self.venueDetail?.coverTicket?[indexPath.row].customName ?? "" == "" ? venueDetail?.coverTicket?[indexPath.row].displayName : venueDetail?.coverTicket?[indexPath.row].displayCustomName
+        cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].displayDescription
         cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isUserInteractionEnabled = isMaxTicketReached ? false : true
