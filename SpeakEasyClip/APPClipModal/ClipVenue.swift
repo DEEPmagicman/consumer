@@ -355,8 +355,8 @@ struct CoverTicketLocalizations: Codable {
     let coverTicketId: String
     let language: String
     let name: String
-    let customName: String
-    let description: String
+    let customName: String?
+    let description: String?
 }
 
 struct CoverTicketFeesSettings: Codable {
