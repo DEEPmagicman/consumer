@@ -1,6 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Add Card" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar tarjeta"
+          }
+        }
+      }
+    },
+    "Add Card to Apple Pay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar tarjeta a Apple Pay"
+          }
+        }
+      }
+    },
     "Add Card to your Apple wallet & try again." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -12,8 +34,26 @@
         }
       }
     },
+    "Alert" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerta"
+          }
+        }
+      }
+    },
     "An error occured while validating the phone number." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error al validar el número de teléfono."
+          }
+        }
+      }
     },
     "Apple pay is not supported on your device, try another payment option." : {
       "extractionState" : "manual",
@@ -22,6 +62,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Pay no es compatible con tu dispositivo, prueba con otra opción de pago."
+          }
+        }
+      }
+    },
+    "Booking failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva fallida"
           }
         }
       }
@@ -43,6 +94,17 @@
         }
       }
     },
+    "Cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
+      }
+    },
     "CONTINUE TO CHECKOUT" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -54,6 +116,23 @@
         }
       }
     },
+    "Data not found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data not found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos no encontrados"
+          }
+        }
+      }
+    },
     "EN" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -61,6 +140,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ES"
+          }
+        }
+      }
+    },
+    "Enter valid number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce un número válido"
           }
         }
       }
@@ -82,7 +172,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "OBTENGA MI ENTRADA GRATIS\""
+            "value" : "OBTENGA MI ENTRADA GRATIS"
           }
         }
       }
@@ -100,6 +190,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pagar con"
+          }
+        }
+      }
+    },
+    "Internal data formate error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de formato de datos internos"
           }
         }
       }
@@ -126,6 +227,28 @@
         }
       }
     },
+    "Max ticket selection reached" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selección máxima de entradas alcanzada"
+          }
+        }
+      }
+    },
+    "ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ok"
+          }
+        }
+      }
+    },
     "Opt in for future messages" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -133,6 +256,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Optar por recibir mensajes futuros"
+          }
+        }
+      }
+    },
+    "Payment failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pago fallido"
+          }
+        }
+      }
+    },
+    "Payment Initialisation issue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema de inicialización de pago"
           }
         }
       }
@@ -212,6 +357,28 @@
         }
       }
     },
+    "Please add a card to your Apple Pay wallet and check again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregue una tarjeta a su billetera Apple Pay y verifique nuevamente."
+          }
+        }
+      }
+    },
+    "Problem with your Apple Pay configuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema con la configuración de tu Apple Pay"
+          }
+        }
+      }
+    },
     "Purchased on" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -262,6 +429,17 @@
         }
       }
     },
+    "Something went wrong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "algo salió mal"
+          }
+        }
+      }
+    },
     "The country code is invalid." : {
 
     },
@@ -274,8 +452,30 @@
     "The number provided is too short." : {
 
     },
+    "The venue updated their prices" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El local actualizó sus precios."
+          }
+        }
+      }
+    },
     "This function is deprecated." : {
 
+    },
+    "Update" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar"
+          }
+        }
+      }
     },
     "Upsell" : {
       "extractionState" : "manual",
@@ -298,6 +498,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lugar no encontrado"
+          }
+        }
+      }
+    },
+    "Venue you trying to booking, updated it's ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lugar que estás intentando reservar, actualizado su ticket"
+          }
+        }
+      }
+    },
+    "Venue your trying to booking is closed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El lugar en el que intentas reservar está cerrado."
+          }
+        }
+      }
+    },
+    "Venue your trying to booking, updated it's ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lugar en el que estás intentando reservar, actualiza tu billete."
           }
         }
       }

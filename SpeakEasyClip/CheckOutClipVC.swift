@@ -808,9 +808,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     func alertForWallet() {
-        let alertController = UIAlertController(title: "Add Card to Apple Pay", message: "Please add a card to your Apple Pay wallet and check again.", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        let setUpAction = UIAlertAction(title: "Add Card", style: .default) { (_) in
+        let alertController = UIAlertController(title: "Add Card to Apple Pay".localize(), message: "Please add a card to your Apple Pay wallet and check again.".localize(), preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Cancel".localize(), style: .cancel, handler: nil)
+        let setUpAction = UIAlertAction(title: "Add Card".localize(), style: .default) { (_) in
             if let url = URL(string: "wallet://") {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
@@ -1496,7 +1496,7 @@ extension CheckOutClipVC {
 
 extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
+       tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -1519,7 +1519,7 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
 
 extension CheckOutClipVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return true
+        true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {

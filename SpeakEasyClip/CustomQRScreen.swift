@@ -97,7 +97,7 @@ final class CustomQRScreen: UIViewController {
         if isAlertDisplayed {
             navigationController?.popToRootViewController(animated: true)
         } else {
-            alertPopup("", "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket.".localize())
+            alertPopup("", "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket.")
             isAlertDisplayed = true
         }
     }
