@@ -107,7 +107,8 @@ final class SelectTicketClipVC: UIViewController {
         request.httpMethod = "GET"
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
-        
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
+
         DispatchQueue.main.async {
             AppClipLoader.showLoader(self.view)
         }
@@ -141,6 +142,7 @@ final class SelectTicketClipVC: UIViewController {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
         request.addValue(venueDetail?.id ?? "", forHTTPHeaderField: "venue")
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -197,6 +199,7 @@ final class SelectTicketClipVC: UIViewController {
         }
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
         
         if withLoader {
             DispatchQueue.main.async {
