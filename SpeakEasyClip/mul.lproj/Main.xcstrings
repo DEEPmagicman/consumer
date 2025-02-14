@@ -937,6 +937,18 @@
         }
       }
     },
+    "WlO-N1-in1.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"-\"; ObjectID = \"WlO-N1-in1\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "-"
+          }
+        }
+      }
+    },
     "wZz-PX-xOT.text" : {
       "comment" : "Class = \"UILabel\"; text = \"No ticketing fees\"; ObjectID = \"wZz-PX-xOT\";",
       "extractionState" : "extracted_with_value",

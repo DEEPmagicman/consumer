@@ -80,6 +80,9 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var phoneNumberUnderlineView: UIView!
     @IBOutlet weak var noFeesText: UILabel!
     @IBOutlet weak var noFeesTextForAddOns: UILabel!
+    @IBOutlet weak var disclaimerView: UIView!
+    @IBOutlet weak var disclaimerBtn: UIButton!
+    @IBOutlet weak var disclaimerText: UILabel!
     
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
@@ -158,6 +161,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
+        
+        disclaimerBtn.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        disclaimerBtn.isSelected = true
+        
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages".localize()
         firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
