@@ -196,7 +196,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         firstNameTF.addNextButtonKeyboard(superViewCount: 3)
         lastNameTF.addNextButtonKeyboard(superViewCount: 3)
         emailTF.addDoneButtonKeyboard()
-        emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)" : "Email"
+        emailTF.placeholder = venue?.venueSettings?.collectEmailDuringBookingOptional == true ? "Email (optional)".localize() : "Email".localize()
         emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
         if venue?.venueSettings?.coverTicketSettings != nil && totalPrice != 0 {
             customFeeCount()
@@ -1515,7 +1515,7 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.titleLbl.text = selectedAddOnsItem[indexPath.row].addOns?.name
         }
-        cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].description : selectedAddOnsItem[indexPath.row].addOns?.description
+        cell.subTitleLbl.text = tableView == ticketListTableView ? selectedCoverTickets[indexPath.row].displayDescription : selectedAddOnsItem[indexPath.row].addOns?.description
         cell.quantityLbl.text = tableView == ticketListTableView ? "\(selectedCoverTickets[indexPath.row].selectedQuantity ?? 0)x" : "\(selectedAddOnsItem[indexPath.row].selectedQuantity ?? 0)x"
         cell.selectionStyle = .none
         cell.backgroundColor = .clear

@@ -92,6 +92,7 @@ extension String {
         guard let oldDate = olDateFormatter.date(from: self) else { return "No date Found" }
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = to
+        convertDateFormatter.locale = Locale(identifier: UserDefaults.standard.language)
         if customTimeZone != "", let timeZone = TimeZone(identifier: customTimeZone) {
             convertDateFormatter.timeZone = timeZone
         } else {

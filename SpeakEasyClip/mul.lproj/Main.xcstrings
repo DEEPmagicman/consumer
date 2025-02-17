@@ -181,6 +181,18 @@
         }
       }
     },
+    "a9F-aO-ive.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"Email\"; ObjectID = \"a9F-aO-ive\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Email"
+          }
+        }
+      }
+    },
     "AY8-dB-eac.title" : {
       "comment" : "Class = \"UIViewController\"; title = \"ScanQRCodeVC\"; ObjectID = \"AY8-dB-eac\";",
       "extractionState" : "extracted_with_value",

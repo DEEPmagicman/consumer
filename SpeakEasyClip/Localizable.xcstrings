@@ -133,6 +133,28 @@
         }
       }
     },
+    "Email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico "
+          }
+        }
+      }
+    },
+    "Email (optional)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico (opcional)"
+          }
+        }
+      }
+    },
     "EN" : {
       "extractionState" : "manual",
       "localizations" : {
