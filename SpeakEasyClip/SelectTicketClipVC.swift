@@ -118,10 +118,11 @@ final class SelectTicketClipVC: UIViewController {
                 var json = [String: Any]()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
+                    json = dataJson;
                 } else {
                     guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]
