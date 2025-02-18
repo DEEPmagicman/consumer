@@ -162,11 +162,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
         
+        disclaimerBtn.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         disclaimerBtn.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         disclaimerBtn.isSelected = true
         
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages".localize()
+        disclaimerText.text = venue?.venueSettings?.coverTicketSettings?.disclaimer ?? ""
+        disclaimerView.isHidden = venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty ?? true
         firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
         
@@ -701,6 +704,11 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             if venue?.venueSettings?.collectEmailDuringBookingOptional ?? false == false && emailTF.text ?? "" == "" {
                 return false
             }
+        }
+        
+        if venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false && disclaimerBtn.isSelected == false {
+            alertPopup("", "You must accept the terms and conditions by clicking the checkbox.".localize())
+            return false
         }
         return true
     }

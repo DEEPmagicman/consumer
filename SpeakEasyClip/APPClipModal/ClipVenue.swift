@@ -374,6 +374,7 @@ struct CoverTicketFeesSettings: Codable {
       var isProcessingFeeTaxable: Bool?
       var pageTitle: String?
       var description: String?
+    var disclaimer: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -387,6 +388,7 @@ struct CoverTicketFeesSettings: Codable {
         try container.encode(customFeeName, forKey: .customFeeName)
         try container.encodeIfPresent(pageTitle, forKey: .pageTitle)
         try container.encodeIfPresent(description, forKey: .description)
+        try container.encodeIfPresent(disclaimer, forKey: .disclaimer)
     }
 }
 

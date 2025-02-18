@@ -556,6 +556,17 @@
           }
         }
       }
+    },
+    "You must accept the terms and conditions by clicking the checkbox." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes aceptar los términos y condiciones haciendo clic en la casilla de verificación."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
