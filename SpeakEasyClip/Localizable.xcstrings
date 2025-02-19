@@ -111,7 +111,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CONTINUAR COMPRANDO"
+            "value" : "Continuar a Finalizar Compra"
           }
         }
       }
@@ -435,7 +435,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SALTAR ESTO Y CONTINUAR COMPRANDO"
+            "value" : "SALTAR ESTO Y Continuar a Finalizar Compra"
           }
         }
       }
