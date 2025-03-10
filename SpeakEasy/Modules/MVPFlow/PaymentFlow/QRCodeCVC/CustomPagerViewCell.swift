@@ -61,11 +61,19 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         cell.contentView.backgroundColor = .clear
+        cell.checkInProgressBarView.isHidden = false
+        cell.checkInProgress.cornerRadius = 5
+        
         if booking != nil {
             cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
             cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketCustomName ?? "" == "" ? booking?.uniqueTickets[indexPath.row].ticketName : booking?.uniqueTickets[indexPath.row].ticketCustomName
             
             cell.quantityLbl.text = "\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
+            
+            let checkInCount = booking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
+            cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
+            cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
+            
         } else {
             cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.description ?? ""
             cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.name ?? ""

@@ -43,9 +43,18 @@ struct Booking: Codable {
         bookingHasItem.forEach { ticket in
             if let index = tickets.firstIndex(where: { $0.ticketId == ticket.ticketId }), let quantity = tickets[index].selectedQuantity {
                 tickets[index].selectedQuantity = quantity + 1
+                if bookingHasCheckIn?.first?.bookingItemCheckIn.contains(where: { $0.bookingHasItemId == ticket.id }) == true {
+                    let alreadyCheckInCount = tickets[index].checkedInQuantity ?? 0
+                    tickets[index].checkedInQuantity = alreadyCheckInCount + 1
+                }
             } else {
                 var ticket = ticket
                 ticket.selectedQuantity = 1
+                if bookingHasCheckIn?.first?.bookingItemCheckIn.contains(where: { $0.bookingHasItemId == ticket.id }) == true {
+                    ticket.checkedInQuantity = 1
+                } else {
+                    ticket.checkedInQuantity = 0
+                }
                 tickets.append(ticket)
             }
         }
@@ -123,7 +132,6 @@ struct BookingHasItem: Codable {
     var ticketId: String
     var ticketName: String?
     var ticketPrice: Double
-    var isCheckedIn: Int?
     var bookingId: String
     var isDeleted: Bool?
     var createdAt: String
@@ -131,13 +139,13 @@ struct BookingHasItem: Codable {
     var ticketCustomName: String?
     // MARK: app side parameters
     var selectedQuantity: Int? = nil
-
+    var checkedInQuantity: Int? = nil
+    
     private enum CodingKeys: String, CodingKey {
         case id = "id"
         case ticketId = "ticketId"
         case ticketName = "ticketName"
         case ticketPrice = "ticketPrice"
-        case isCheckedIn = "isCheckedIn"
         case bookingId = "bookingId"
         case isDeleted = "isDeleted"
         case createdAt = "createdAt"
@@ -151,7 +159,6 @@ struct BookingHasItem: Codable {
         try container.encode(ticketId, forKey: .ticketId)
         try container.encode(ticketName, forKey: .ticketName)
         try container.encode(ticketPrice, forKey: .ticketPrice)
-        try container.encodeIfPresent(isCheckedIn, forKey: .isCheckedIn)
         try container.encode(bookingId, forKey: .bookingId)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)

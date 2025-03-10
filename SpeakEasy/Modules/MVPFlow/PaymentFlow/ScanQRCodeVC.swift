@@ -82,6 +82,16 @@ class ScanQRCodeVC: UIViewController { //
         addToWalletBtn.isHidden = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
     @objc private func addToWalletBtnTapped() {
         var url = URL(string: "")
         url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
@@ -265,4 +275,20 @@ extension ScanQRCodeVC: PKAddPassesViewControllerDelegate {
 extension QRCodeVCNavigationDelegate {
     func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) { }
     func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) { }
+}
+
+extension ScanQRCodeVC: WebSocketCallBackDelegate {
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
 }
