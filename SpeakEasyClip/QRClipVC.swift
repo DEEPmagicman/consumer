@@ -16,6 +16,8 @@ final class QRClipVC: UIViewController {
     var venueName = ""
     var bookingId = ""
     var addOnBookingId = ""
+    var booking: Booking?
+    var addOnsBooking: AddOnsBooking?
     private var isAlertDisplayed = false
     var bookingCode = String()
     var createdAT = String()
@@ -59,6 +61,7 @@ final class QRClipVC: UIViewController {
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
+        WebSocketWrapper.shared.delegate.append(self)
     }
     
     func loadImage() {
@@ -125,18 +128,22 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         
         if isOnlyAddOnsAvailable {
             if index == 0 {
-                cell.qrImage.image = addOnsQR
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
         } else {
             if index == 0 {
                 cell.uniqueTickets = appClipTicket
+                cell.booking = booking
+                cell.qrImage.image = qrImage
             } else {
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
-            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
-            cell.ticketsTableView.reloadData()
         }
+        cell.ticketsTableView.reloadData()
         cell.guestName.text = guestInfo
         return cell
     }
@@ -146,3 +153,32 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     }
 }
 
+extension QRClipVC: WebSocketCallBackDelegate {
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+}

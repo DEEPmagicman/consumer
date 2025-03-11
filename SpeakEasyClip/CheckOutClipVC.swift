@@ -103,6 +103,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var maxRetry = 3
     private var createdAT = String()
     private var addOnsPaymentDetails: PaymentDetail?
+    private var booking: Booking?
+    private var addOnsBooking: AddOnsBooking?
     var selectedAddOnsItem = [UpSellTicket]()
     var isOnlyAddOnsAvailable = false
     var bookingType: TicketPriceType = .PAID
@@ -891,7 +893,13 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     completion()
                 }
             } else {
-                completion()
+                if let data = data {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                    self?.booking = booking
+                }
+                DispatchQueue.main.async {
+                    completion()
+                }
             }
         })
         task.resume()
@@ -936,8 +944,44 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     completion()
                 }
             } else {
-                completion()
+                if let data = data {
+                    do {
+                        let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
+                        self?.getAddOnsBooking(addOnsBooking.id ?? "") {
+                            DispatchQueue.main.async {
+                                completion()
+                            }
+                        }
+                    } catch {
+                        completion()
+                    }
+                } else {
+                    completion()
+                }
             }
+        })
+        task.resume()
+    }
+    
+    private func getAddOnsBooking(_ addOnsBookingId: String, completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(addOnsBookingId)?include%5B%5D=addOnsBookingHasItem.addOns&include%5B%5D=addOnsBookingHasCheckIn.addOnsBookingItemCheckIn") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("*/*", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+            if let data = data {
+                do {
+                    let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
+                    self.addOnsBooking = addOnsBooking
+                } catch {
+                    
+                }
+            }
+            completion()
         })
         task.resume()
     }
@@ -1466,6 +1510,8 @@ extension CheckOutClipVC {
                 AppClipLoader.hideLoader()
                 vc.venueName = self.venue?.name ?? ""
                 vc.bookingId = self.bookingId
+                vc.booking = self.booking
+                vc.addOnsBooking = self.addOnsBooking
                 vc.addOnBookingId = self.addOnsBookingId
                 vc.venueLogo = self.venue?.logo?.key ?? ""
                 vc.venueAttachment = self.venue?.venueAttachment?.first?.key ?? ""
@@ -1491,6 +1537,8 @@ extension CheckOutClipVC {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "CustomQRScreen")) as? CustomQRScreen {
                 AppClipLoader.hideLoader()
                 vc.bookingId = self.bookingId
+                vc.booking = self.booking
+                vc.addOnsBooking = self.addOnsBooking
                 vc.addOnBookingId = self.addOnsBookingId
                 vc.appClipTicket = self.selectedCoverTickets
                 vc.selectedAddOns = self.selectedAddOnsItem
