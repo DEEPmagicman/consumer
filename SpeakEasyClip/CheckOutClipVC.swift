@@ -953,10 +953,14 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                             }
                         }
                     } catch {
-                        completion()
+                        DispatchQueue.main.async {
+                            completion()
+                        }
                     }
                 } else {
-                    completion()
+                    DispatchQueue.main.async {
+                        completion()
+                    }
                 }
             }
         })

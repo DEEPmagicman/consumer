@@ -288,7 +288,7 @@ struct AddOnsBooking: Codable {
     var venueId: String?
     var bookingId: String?
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
-    var venue: AddOnVenue
+    var venue: AddOnVenue?
     var createdAt: String
     var addOnsBookingHasCheckIn: [AddOnsBookingHasCheckIn]?
     
