@@ -288,6 +288,7 @@ struct AddOnsBooking: Codable {
     var venueId: String?
     var bookingId: String?
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
+    var venue: AddOnVenue
     var createdAt: String
     var addOnsBookingHasCheckIn: [AddOnsBookingHasCheckIn]?
     
@@ -322,6 +323,7 @@ struct AddOnsBooking: Codable {
         try container.encode(venueId, forKey: .venueId)
         try container.encode(bookingId, forKey: .bookingId)
         try container.encode(addOnsBookingHasItem, forKey: .addOnsBookingHasItem)
+        try container.encodeIfPresent(venue, forKey: .venue)
         try container.encode(createdAt, forKey: .createdAt)
     }
 }
@@ -343,6 +345,15 @@ struct AddOnsBookingHasItem: Codable {
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encode(addOnsId, forKey: .addOnsId)
     }
+}
+
+struct AddOnVenue: Codable {
+    var bookingCode: String
+    var id: String
+    var uniqueId: String
+    var timezone: String?
+    var name: String?
+    var venueAttachment: [VenueAttachmentClip]?
 }
 
 struct AddOnsBookingHasCheckIn: Codable {
