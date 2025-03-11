@@ -291,4 +291,18 @@ extension ScanQRCodeVC: WebSocketCallBackDelegate {
             pagerView.reloadData()
         }
     }
+    
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
 }

@@ -155,7 +155,7 @@ final class PaymentPresenter {
     }
     
     static func getAddOnsBooking(addOnsBookingId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ booking: AddOnsBooking?) -> Void) {
-        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(addOnsBookingId), params: ["include": ["addOnsBookingHasItem.addOns", "venue.venueAttachment"]], headers: Header.header()) { response in
+        AFWrapper.getRequest(APIBuilder.addOnBookingAPI(addOnsBookingId), params: ["include": ["addOnsBookingHasItem.addOns", "venue.venueAttachment", "addOnsBookingHasCheckIn.addOnsBookingItemCheckIn"]], headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)
                 return

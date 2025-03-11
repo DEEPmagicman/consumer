@@ -290,15 +290,26 @@ struct AddOnsBooking: Codable {
     var addOnsBookingHasItem: [AddOnsBookingHasItem]?
     var venue: AddOnVenue
     var createdAt: String
+    var addOnsBookingHasCheckIn: [AddOnsBookingHasCheckIn]?
+    
     // MARK: app side parameters
     var uniqueTickets: [AddOnsBookingHasItem] {
         var tickets = [AddOnsBookingHasItem]()
         addOnsBookingHasItem?.forEach { ticket in
             if let index = tickets.firstIndex(where: { $0.addOnsId == ticket.addOnsId }), let quantity = tickets[index].selectedQuantity {
                 tickets[index].selectedQuantity = quantity + 1
+                if addOnsBookingHasCheckIn?.first?.addOnsBookingItemCheckIn?.contains(where: { $0.addOnsBookingHasItemId == ticket.id }) == true {
+                    let alreadyCheckInCount = tickets[index].checkedInQuantity ?? 0
+                    tickets[index].checkedInQuantity = alreadyCheckInCount + 1
+                }
             } else {
                 var ticket = ticket
                 ticket.selectedQuantity = 1
+                if addOnsBookingHasCheckIn?.first?.addOnsBookingItemCheckIn?.contains(where: { $0.addOnsBookingHasItemId == ticket.id }) == true {
+                    ticket.checkedInQuantity = 1
+                } else {
+                    ticket.checkedInQuantity = 0
+                }
                 tickets.append(ticket)
             }
         }
@@ -319,14 +330,17 @@ struct AddOnsBooking: Codable {
 
 struct AddOnsBookingHasItem: Codable {
     
+    var id: String
     var addOns: AddOns
     var addOnsBookingId: String
     var addOnsId: String
     // MARK: app side parameters
     var selectedQuantity: Int? = nil
+    var checkedInQuantity: Int? = nil
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
         try container.encode(addOns, forKey: .addOns)
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encode(addOnsId, forKey: .addOnsId)
@@ -340,6 +354,54 @@ struct AddOnVenue: Codable {
     var timezone: String?
     var name: String?
     var venueAttachment: [VenueAttachmentClip]?
+}
+
+struct AddOnsBookingHasCheckIn: Codable {
+    
+    var id: String
+    var addOnsBookingId: String
+    var consumerUserId: String
+    var lastCheckIn: String?
+    var status: String?
+    var createdAt: String?
+    var updatedAt: String?
+    var isDeleted: Bool?
+    var addOnsBookingItemCheckIn: [AddOnsBookingItemCheckIn]?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
+        try container.encode(consumerUserId, forKey: .consumerUserId)
+        try container.encodeIfPresent(lastCheckIn, forKey: .lastCheckIn)
+        try container.encodeIfPresent(status, forKey: .status)
+        try container.encodeIfPresent(createdAt, forKey: .createdAt)
+        try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
+        try container.encodeIfPresent(isDeleted, forKey: .isDeleted)
+        try container.encodeIfPresent(addOnsBookingItemCheckIn, forKey: .addOnsBookingItemCheckIn)
+    }
+}
+
+struct AddOnsBookingItemCheckIn: Codable {
+    
+    var id: String
+    var addOnsBookingHasCheckInId: String
+    var addOnsBookingHasItemId: String
+    var checkInDate: String?
+    var createdAt: String?
+    var updatedAt: String?
+    var isDeleted: Bool?
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(addOnsBookingHasCheckInId, forKey: .addOnsBookingHasCheckInId)
+        try container.encode(addOnsBookingHasItemId, forKey: .addOnsBookingHasItemId)
+        try container.encodeIfPresent(checkInDate, forKey: .checkInDate)
+        try container.encodeIfPresent(createdAt, forKey: .createdAt)
+        try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
+        try container.encodeIfPresent(isDeleted, forKey: .isDeleted)
+    }
 }
 
 struct BookingHasCheckIn: Codable {
