@@ -8,7 +8,7 @@
 import UIKit
 import FSPagerView
 
-class CustomPagerViewCell: FSPagerViewCell {
+final class CustomPagerViewCell: FSPagerViewCell {
     
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var ticketsTableView: UITableView!

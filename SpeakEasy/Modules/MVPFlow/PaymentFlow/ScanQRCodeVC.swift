@@ -27,7 +27,7 @@ extension UIView {
     }
 }
 
-class ScanQRCodeVC: UIViewController { //
+class ScanQRCodeVC: UIViewController {
     
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicket: UIButton!
