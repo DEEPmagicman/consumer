@@ -1314,9 +1314,15 @@ extension CheckOutClipVC {
             
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
+                let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                self.booking = booking
                 self.addPaymentApi(isApplePay: isApplePay)
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
+                if let newData = try? JSONSerialization.data(withJSONObject: booking, options: .prettyPrinted) {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: newData)
+                    self.booking = booking
+                }
                 self.createdAT = createdAt
                 self.addPaymentApi(isApplePay: isApplePay)
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
@@ -1498,9 +1504,15 @@ extension CheckOutClipVC {
             }
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
+                let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                self.booking = booking
                 completion()
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String {
                 self.bookingId = bookingId
+                if let newData = try? JSONSerialization.data(withJSONObject: booking, options: .prettyPrinted) {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: newData)
+                    self.booking = booking
+                }
                 completion()
             } else if let error = json["error"] as? String, let message = json["message"] as? String {
                 AppClipLoader.hideLoader()
