@@ -39,7 +39,7 @@
     },
     "2ob-qK-48g.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Label\"; ObjectID = \"2ob-qK-48g\";",
-      "extractionState" : "extracted_with_value",
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

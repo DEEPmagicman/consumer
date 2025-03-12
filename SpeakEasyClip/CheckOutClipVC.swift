@@ -1399,6 +1399,8 @@ extension CheckOutClipVC {
             }
             if let bookingId = json["id"] as? String {
                 self.bookingId = bookingId
+                let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                self.booking = booking
                 if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                     self.navigateToQR()
                 } else {
@@ -1406,6 +1408,10 @@ extension CheckOutClipVC {
                 }
             } else if let booking = json["booking"] as? [String: Any], let bookingId = booking["id"] as? String, let createdAt = booking["createdAt"] as? String {
                 self.bookingId = bookingId
+                if let newData = try? JSONSerialization.data(withJSONObject: booking, options: .prettyPrinted) {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: newData)
+                    self.booking = booking
+                }
                 if VenueImageManager.shared.customQRData == nil || VenueImageManager.shared.isEnableCoverTicketViewSettings == false {
                     self.navigateToQR()
                 } else {
