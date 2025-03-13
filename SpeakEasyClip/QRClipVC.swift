@@ -62,6 +62,72 @@ final class QRClipVC: UIViewController {
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
         WebSocketWrapper.shared.delegate.append(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    @objc func refreshData() {
+        if isOnlyAddOnsAvailable {
+            getAddOnsBooking {}
+        } else {
+            getBooking {
+                self.getAddOnsBooking {}
+            }
+        }
+    }
+    
+    private func getBooking(completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/booking/\(self.bookingId)?include%5B%5D=bookingHasItem&include%5B%5D=bookingHasCheckIn.bookingItemCheckIn&include%5B%5D=bookingDetails") else { return }
+        var request = URLRequest(url: url)
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            DispatchQueue.main.async {
+                guard let data = data else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                self.booking = booking
+                self.pagerView.reloadData()
+                AppClipLoader.hideLoader()
+                completion()
+            }
+        }.resume()
+    }
+    
+    private func getAddOnsBooking(completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnBookingId)?include%5B%5D=addOnsBookingHasItem.addOns&include%5B%5D=addOnsBookingHasCheckIn.addOnsBookingItemCheckIn") else { return }
+        var request = URLRequest(url: url)
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            DispatchQueue.main.async {
+                guard let data = data else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                let addOnsBooking = try? JSONDecoder().decode(AddOnsBooking.self, from: data)
+                self.addOnsBooking = addOnsBooking
+                self.pagerView.reloadData()
+                AppClipLoader.hideLoader()
+                completion()
+            }
+        }.resume()
     }
     
     func loadImage() {

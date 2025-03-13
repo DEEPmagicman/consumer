@@ -27,7 +27,7 @@ extension UIView {
     }
 }
 
-class ScanQRCodeVC: UIViewController {
+final class ScanQRCodeVC: UIViewController {
     
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicket: UIButton!
@@ -80,6 +80,9 @@ class ScanQRCodeVC: UIViewController {
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
         addToWalletBtn.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -90,6 +93,14 @@ class ScanQRCodeVC: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
+    @objc func refreshData() {
+        if isOnlyAddOnAvailable {
+            getAddOnsBooking()
+        } else {
+            getBooking(id: bookingId)
+        }
     }
     
     @objc private func addToWalletBtnTapped() {
