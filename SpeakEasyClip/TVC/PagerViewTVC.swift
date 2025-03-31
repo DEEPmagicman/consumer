@@ -72,11 +72,11 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
             cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
             cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
             
-            if (booking?.uniqueTickets.count ?? 0) > indexPath.row {
+            if let index = booking?.uniqueTickets.firstIndex(where: {$0.ticketId == uniqueTickets[indexPath.row].id }) {
                 cell.checkInProgressBarView.isHidden = false
-                let checkInCount = booking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
-                cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
-                cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
+                let checkInCount = booking?.uniqueTickets[index].checkedInQuantity ?? 0
+                cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[index].selectedQuantity ?? 0)"
+                cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
             } else {
                 cell.checkInProgressBarView.isHidden = true
             }
@@ -85,11 +85,11 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name
             cell.quantityLbl.text = "\(addOnsBookingHasItem[indexPath.row].selectedQuantity ?? 0)x"
             
-            if (addOnsBooking?.uniqueTickets.count ?? 0) > indexPath.row {
+            if let index = addOnsBooking?.uniqueTickets.firstIndex(where: {$0.addOnsId == addOnsBookingHasItem[indexPath.row].addOnsId }) {
                 cell.checkInProgressBarView.isHidden = false
-                let checkInCount = addOnsBooking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
-                cell.checkInCount.text = "\(checkInCount)/\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
-                cell.checkInProgress.setProgress(Float(checkInCount) / Float(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
+                let checkInCount = addOnsBooking?.uniqueTickets[index].checkedInQuantity ?? 0
+                cell.checkInCount.text = "\(checkInCount)/\(addOnsBooking?.uniqueTickets[index].selectedQuantity ?? 0)"
+                cell.checkInProgress.setProgress(Float(checkInCount) / Float(addOnsBooking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
             } else {
                 cell.checkInProgressBarView.isHidden = true
             }
