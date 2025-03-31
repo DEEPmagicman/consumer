@@ -37,8 +37,16 @@ final class SelectTicketClipVC: UIViewController {
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?
     private var venueImgHeightObservation: NSKeyValueObservation?
-    private var venueId = ""
-    private var deepLink = ""
+    private var venueId: String {
+        get {
+            return UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
+        }
+    }
+    private var deepLink: String {
+        get {
+            return UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
+        }
+    }
     private var doormanId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
@@ -86,8 +94,7 @@ final class SelectTicketClipVC: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
-        venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
-        deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
+
         if venueId == "" {
             getDeepLinkData()
         } else {
@@ -99,6 +106,16 @@ final class SelectTicketClipVC: UIViewController {
         tableBookNowBtn.layer.borderWidth = 1
         
         setupLanguageSelection()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDeepLink(_:)), name: Notification.Name("DeepLinkReceived"), object: nil)
+    }
+    
+    @objc func handleDeepLink(_ notification: Notification) {
+        if venueId == "" {
+            getDeepLinkData()
+        } else {
+            getVenueDetailsWithTickets()
+        }
     }
     
     private func getDeepLinkData() {
@@ -128,7 +145,7 @@ final class SelectTicketClipVC: UIViewController {
                     json =  response.decrypted() ?? [:]
                 }
                 
-                self.venueId = json["venueId"] as? String ?? ""
+                UserDefaults.standard.set(json["venueId"] as? String ?? "", forKey: "venueId")
                 self.doormanId = json["doormanId"] as? String ?? ""
                 self.getVenueDetailsWithTickets()
             }
