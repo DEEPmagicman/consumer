@@ -893,7 +893,20 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     completion()
                 }
             } else {
-                if let data = data {
+                var json = [String: Any]()
+                if !SharedURL.isEncryptionEnabled {
+                    guard let data = data,
+                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                    json = dataJson;
+                } else {
+                    guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
+                }
+                
+                if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
                     let booking = try? JSONDecoder().decode(Booking.self, from: data)
                     self?.booking = booking
                 }
@@ -946,8 +959,26 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             } else {
                 if let data = data {
                     do {
-                        let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
-                        self?.getAddOnsBooking(addOnsBooking.id ?? "") {
+                        var json = [String: Any]()
+                        if !SharedURL.isEncryptionEnabled {
+                            guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                                AppClipLoader.hideLoader()
+                                return
+                            }
+                            json = dataJson;
+                        } else {
+                            guard let response = String(data: data, encoding: .utf8) else { return }
+                            json =  response.decrypted() ?? [:]
+                        }
+                        
+                        if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                            let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
+                            self?.getAddOnsBooking(addOnsBooking.id ?? "") {
+                                DispatchQueue.main.async {
+                                    completion()
+                                }
+                            }
+                        } else {
                             DispatchQueue.main.async {
                                 completion()
                             }
@@ -979,8 +1010,22 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
             if let data = data {
                 do {
-                    let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
-                    self.addOnsBooking = addOnsBooking
+                    var json = [String: Any]()
+                    if !SharedURL.isEncryptionEnabled {
+                        guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                            AppClipLoader.hideLoader()
+                            return
+                        }
+                        json = dataJson;
+                    } else {
+                        guard let response = String(data: data, encoding: .utf8) else { return }
+                        json =  response.decrypted() ?? [:]
+                    }
+                    
+                    if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                        let addOnsBooking = try JSONDecoder().decode(AddOnsBooking.self, from: data)
+                        self.addOnsBooking = addOnsBooking
+                    }
                 } catch {
                     
                 }

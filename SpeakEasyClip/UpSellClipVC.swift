@@ -109,7 +109,6 @@ final class UpSellClipVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
-        getUpSellTicket(withLoader: true)
         upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
         upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
         if let color = self.venue?.venueSettings?.whiteLabelColor {
@@ -144,43 +143,6 @@ final class UpSellClipVC: UIViewController {
                 continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
             }
         }
-    }
-    
-    private func getUpSellTicket(withLoader: Bool = true) {
-        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/\(venue?.id ?? "")/add-ons") else { return }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-//        var param = ["include": "addOns"] as [String: Any]
-//        param["isAppClipPayment"] = true
-//        let bodyData = try? JSONSerialization.data(
-//            withJSONObject: param,
-//            options: [.prettyPrinted]
-//        )
-        request.addValue("*/*", forHTTPHeaderField: "accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
-        request.addValue(date, forHTTPHeaderField: "token")
-        
-//        request.httpBody = bodyData
-        
-        if withLoader {
-            AppClipLoader.showLoader(self.view)
-        }
-        URLSession.shared.dataTask(with: request) { data, respons, error in
-            guard let data = data,
-                  let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
-                AppClipLoader.hideLoader()
-                return
-            }
-            guard let venueData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) else {
-                AppClipLoader.hideLoader()
-                return
-            }
-            DispatchQueue.main.async {
-                AppClipLoader.hideLoader()
-            }
-        }.resume()
     }
     
     @IBAction func onClickContinue(_ sender: Any) {
@@ -284,7 +246,19 @@ extension UpSellClipVC: UIGestureRecognizerDelegate {
 
 extension UpSellClipVC: WebSocketCallBackDelegate {
     func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
-        upSellTicket.removeAll()
-        getUpSellTicket(withLoader: false)
+        for item in ticket {
+            if let index = self.upSellTicket.firstIndex(where: {$0.id == item.id}) {
+                if item.status == "DISABLED" {
+                    self.upSellTicket.remove(at: index)
+                } else {
+                    self.upSellTicket[index] = item
+                }
+            } else {
+                self.upSellTicket.append(item)
+            }
+        }
+        
+        self.upSellTicket.sort(by: {$0.price < $1.price})
+        self.tableView.reloadData()
     }
 }

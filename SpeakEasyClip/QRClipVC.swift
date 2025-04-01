@@ -94,8 +94,25 @@ final class QRClipVC: UIViewController {
                     AppClipLoader.hideLoader()
                     return
                 }
-                let booking = try? JSONDecoder().decode(Booking.self, from: data)
-                self.booking = booking
+                
+                var json = [String: Any]()
+
+                if !SharedURL.isEncryptionEnabled {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                    json = dataJson;
+                } else {
+                    guard let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
+                }
+                
+                if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                    self.booking = booking
+                }
+                
                 self.pagerView.reloadData()
                 AppClipLoader.hideLoader()
                 completion()
@@ -121,8 +138,25 @@ final class QRClipVC: UIViewController {
                     AppClipLoader.hideLoader()
                     return
                 }
-                let addOnsBooking = try? JSONDecoder().decode(AddOnsBooking.self, from: data)
-                self.addOnsBooking = addOnsBooking
+                
+                var json = [String: Any]()
+
+                if !SharedURL.isEncryptionEnabled {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                    json = dataJson;
+                } else {
+                    guard let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
+                }
+                
+                if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                    let addOnsBooking = try? JSONDecoder().decode(AddOnsBooking.self, from: data)
+                    self.addOnsBooking = addOnsBooking
+                }
+
                 self.pagerView.reloadData()
                 AppClipLoader.hideLoader()
                 completion()
