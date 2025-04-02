@@ -111,6 +111,10 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     @objc func handleDeepLink(_ notification: Notification) {
+        if let homeVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
+            self.navigationController?.viewControllers = [homeVC]
+        }
+        
         if venueId == "" {
             getDeepLinkData()
         } else {
