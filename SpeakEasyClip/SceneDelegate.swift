@@ -26,6 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func extractVenueIdFromUrl(userActivity: NSUserActivity) {
+        UserDefaults.standard.removeObject(forKey: "venueId")
+        UserDefaults.standard.removeObject(forKey: "deepLinkId")
+        
         if let incomingURL = userActivity.webpageURL {
             guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true),
                   let queryItems = components.queryItems else { return }

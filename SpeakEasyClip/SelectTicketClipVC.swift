@@ -112,7 +112,7 @@ final class SelectTicketClipVC: UIViewController {
     
     @objc func handleDeepLink(_ notification: Notification) {
         self.navigationController?.popToRootViewController(animated: false)
-        
+        doormanId = ""
         if venueId == "" {
             getDeepLinkData()
         } else {
