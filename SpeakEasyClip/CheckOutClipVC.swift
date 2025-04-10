@@ -217,6 +217,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.noFeesText.textColor = UIColor(hex: color)
             self.noFeesTextForAddOns.textColor = UIColor(hex: color)
         }
+        emailTF.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -1304,7 +1305,7 @@ extension CheckOutClipVC {
         }
         if venue?.venueSettings?.collectEmailDuringBooking == true {
             if emailTF.text ?? "" != "" {
-                param["email"] = emailTF.text ?? ""
+                param["email"] = (emailTF.text ?? "").replacingOccurrences(of: " ", with: "")
             }
         }
         if !SharedURL.isEncryptionEnabled {
@@ -1649,7 +1650,10 @@ extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
 
 extension CheckOutClipVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        true
+        if textField == emailTF && string == " " {
+            return false
+        }
+         return true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
