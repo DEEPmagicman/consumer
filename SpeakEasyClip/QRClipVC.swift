@@ -16,6 +16,8 @@ final class QRClipVC: UIViewController {
     var venueName = ""
     var bookingId = ""
     var addOnBookingId = ""
+    var booking: Booking?
+    var addOnsBooking: AddOnsBooking?
     private var isAlertDisplayed = false
     var bookingCode = String()
     var createdAT = String()
@@ -59,6 +61,107 @@ final class QRClipVC: UIViewController {
         qrImage = generateQRCode(from: string)
         addOnsQR = generateQRCode(from: string1)
         pagerView.reloadData()
+        WebSocketWrapper.shared.delegate.append(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    @objc func refreshData() {
+        if isOnlyAddOnsAvailable {
+            getAddOnsBooking {}
+        } else {
+            getBooking {
+                self.getAddOnsBooking {}
+            }
+        }
+    }
+    
+    private func getBooking(completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/booking/\(self.bookingId)?include%5B%5D=bookingHasItem&include%5B%5D=bookingHasCheckIn.bookingItemCheckIn&include%5B%5D=bookingDetails") else { return }
+        var request = URLRequest(url: url)
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            DispatchQueue.main.async {
+                guard let data = data else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                
+                var json = [String: Any]()
+
+                if !SharedURL.isEncryptionEnabled {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                    json = dataJson;
+                } else {
+                    guard let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
+                }
+                
+                if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                    let booking = try? JSONDecoder().decode(Booking.self, from: data)
+                    self.booking = booking
+                }
+                
+                self.pagerView.reloadData()
+                AppClipLoader.hideLoader()
+                completion()
+            }
+        }.resume()
+    }
+    
+    private func getAddOnsBooking(completion: @escaping (()-> Void)) {
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons/\(self.addOnBookingId)?include%5B%5D=addOnsBookingHasItem.addOns&include%5B%5D=addOnsBookingHasCheckIn.addOnsBookingItemCheckIn") else { return }
+        var request = URLRequest(url: url)
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        DispatchQueue.main.async {
+            AppClipLoader.showLoader(self.view)
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, respons, error in
+            DispatchQueue.main.async {
+                guard let data = data else {
+                    AppClipLoader.hideLoader()
+                    return
+                }
+                
+                var json = [String: Any]()
+
+                if !SharedURL.isEncryptionEnabled {
+                    guard let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                        AppClipLoader.hideLoader()
+                        return
+                    }
+                    json = dataJson;
+                } else {
+                    guard let response = String(data: data, encoding: .utf8) else { return }
+                    json =  response.decrypted() ?? [:]
+                }
+                
+                if let data = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+                    let addOnsBooking = try? JSONDecoder().decode(AddOnsBooking.self, from: data)
+                    self.addOnsBooking = addOnsBooking
+                }
+
+                self.pagerView.reloadData()
+                AppClipLoader.hideLoader()
+                completion()
+            }
+        }.resume()
     }
     
     func loadImage() {
@@ -77,15 +180,7 @@ final class QRClipVC: UIViewController {
     }
     
     @IBAction func onClickShare(_ sender: Any) {
-        let msgText = """
-            Thank you for checking into \(venueName) with Speakeasy!
-
-            Access Your Ticket Here: \(isOnlyAddOnsAvailable ? String(format: SharedURL.addOnsShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), addOnBookingId) : String(format: SharedURL.coverShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), bookingId))
-
-            Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!
-
-            Link to App: \(SharedURL.appStoreURL)
-            """
+        let msgText = "shareText".localize(args: "\(venueName)", "\(isOnlyAddOnsAvailable ? String(format: SharedURL.addOnsShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), addOnBookingId) : String(format: SharedURL.coverShareURL, venueName.lowercased().replacingOccurrences(of: " ", with: "-"), bookingId))", "\(SharedURL.appStoreURL)")
         shareSocialWith(text: msgText)
     }
     
@@ -129,22 +224,26 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
 
         cell.backupCode.text = bookingCode
-        cell.bookingDateTime.text = "Purchased on \(createdAT)"
+        cell.bookingDateTime.text = "Purchased on".localize() + " \(createdAT)"
         
         if isOnlyAddOnsAvailable {
             if index == 0 {
-                cell.qrImage.image = addOnsQR
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
         } else {
             if index == 0 {
                 cell.uniqueTickets = appClipTicket
+                cell.booking = booking
+                cell.qrImage.image = qrImage
             } else {
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
-            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
-            cell.ticketsTableView.reloadData()
         }
+        cell.ticketsTableView.reloadData()
         cell.guestName.text = guestInfo
         return cell
     }
@@ -154,3 +253,32 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     }
 }
 
+extension QRClipVC: WebSocketCallBackDelegate {
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+}

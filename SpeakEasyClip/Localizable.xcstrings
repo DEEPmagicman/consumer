@@ -1,0 +1,573 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Add Card" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar tarjeta"
+          }
+        }
+      }
+    },
+    "Add Card to Apple Pay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregar tarjeta a Apple Pay"
+          }
+        }
+      }
+    },
+    "Add Card to your Apple wallet & try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregue la Tarjeta a su billetera Apple e inténtelo nuevamente."
+          }
+        }
+      }
+    },
+    "Alert" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerta"
+          }
+        }
+      }
+    },
+    "An error occured while validating the phone number." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se produjo un error al validar el número de teléfono."
+          }
+        }
+      }
+    },
+    "Apple pay is not supported on your device, try another payment option." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Pay no es compatible con tu dispositivo, prueba con otra opción de pago."
+          }
+        }
+      }
+    },
+    "Booking failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva fallida"
+          }
+        }
+      }
+    },
+    "Buy upsell" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy %1$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Comprar %1$@"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        }
+      }
+    },
+    "CONTINUE TO CHECKOUT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar a Finalizar Compra"
+          }
+        }
+      }
+    },
+    "Data not found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data not found"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datos no encontrados"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico "
+          }
+        }
+      }
+    },
+    "Email (optional)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Correo electrónico (opcional)"
+          }
+        }
+      }
+    },
+    "EN" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ES"
+          }
+        }
+      }
+    },
+    "Enter valid number" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduce un número válido"
+          }
+        }
+      }
+    },
+    "FREE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GRATIS"
+          }
+        }
+      }
+    },
+    "GET MY FREE TICKET" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OBTENGA MI ENTRADA GRATIS"
+          }
+        }
+      }
+    },
+    "IN_APP_PAYMENT_BUTTON_PAY_WITH" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay with"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pagar con"
+          }
+        }
+      }
+    },
+    "Internal data formate error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de formato de datos internos"
+          }
+        }
+      }
+    },
+    "LIVE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VIVA"
+          }
+        }
+      }
+    },
+    "Make sure that you've received a booking SMS or take a screen-shot of QR before buying another ticket." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegúrate de haber recibido un SMS de reserva o haz una captura de pantalla del QR antes de comprar otro billete."
+          }
+        }
+      }
+    },
+    "Max ticket selection reached" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selección máxima de entradas alcanzada"
+          }
+        }
+      }
+    },
+    "ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ok"
+          }
+        }
+      }
+    },
+    "Opt in for future messages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optar por recibir mensajes futuros"
+          }
+        }
+      }
+    },
+    "Payment failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pago fallido"
+          }
+        }
+      }
+    },
+    "Payment Initialisation issue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema de inicialización de pago"
+          }
+        }
+      }
+    },
+    "Phone number is ambiguous." : {
+
+    },
+    "PhoneNumberKit.CountryCodePicker.Common" : {
+      "comment" : "Name of \"Common\" section",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Common"
+          }
+        }
+      }
+    },
+    "PhoneNumberKit.CountryCodePicker.Current" : {
+      "comment" : "Name of \"Current\" section",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Current"
+          }
+        }
+      }
+    },
+    "PhoneNumberKit.CountryCodePicker.SearchBarPlaceholder" : {
+      "comment" : "Placeholder for country code search field",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Search"
+          }
+        }
+      }
+    },
+    "PhoneNumberKit.CountryCodePicker.Title" : {
+      "comment" : "Title of CountryCodePicker ViewController",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Countries"
+          }
+        }
+      }
+    },
+    "PhoneNumberKit.CountryCodePickerEntryButton.AccessibilityHint" : {
+      "comment" : "Accessiblity hint for currently selected country code",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%@ selected"
+          }
+        }
+      }
+    },
+    "PhoneNumberKit.CountryCodePickerEntryButton.AccessibilityLabel" : {
+      "comment" : "Accessibility Label for Country Code Picker button",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Select your country code"
+          }
+        }
+      }
+    },
+    "Please add a card to your Apple Pay wallet and check again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agregue una tarjeta a su billetera Apple Pay y verifique nuevamente."
+          }
+        }
+      }
+    },
+    "Problem with your Apple Pay configuration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema con la configuración de tu Apple Pay"
+          }
+        }
+      }
+    },
+    "Purchased on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comprado en"
+          }
+        }
+      }
+    },
+    "shareText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thank you for checking into %1$@ with Speakeasy!\n\n            Access Your Ticket Here: %2$@\n\n            Download Speakeasy on the Apple App Store to stay updated on covers and wait times at your favorite venues. We hope to see you there!\n\n            Link to App: %3$@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Gracias por registrarte en %1$@ con Speakeasy!\n\n            Accede a tu entrada aquí: %2$@\n\n            Descarga Speakeasy en la App Store de Apple para mantenerte actualizado sobre las portadas y los tiempos de espera en tus lugares favoritos. ¡Esperamos verte allí!\n\n            Enlace a la aplicación: %3$@"
+          }
+        }
+      }
+    },
+    "SKIP THIS & CONTINUE TO CHECKOUT" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SALTAR ESTO Y Continuar a Finalizar Compra"
+          }
+        }
+      }
+    },
+    "SKIP THIS & GET MY FREE TICKET" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SALTAR ESTO Y OBTENER MI BOLETO GRATIS"
+          }
+        }
+      }
+    },
+    "Something went wrong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "algo salió mal"
+          }
+        }
+      }
+    },
+    "The country code is invalid." : {
+
+    },
+    "The number provided is invalid." : {
+
+    },
+    "The number provided is too long." : {
+
+    },
+    "The number provided is too short." : {
+
+    },
+    "The venue updated their prices" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El local actualizó sus precios."
+          }
+        }
+      }
+    },
+    "This function is deprecated." : {
+
+    },
+    "Update" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar"
+          }
+        }
+      }
+    },
+    "Upsell" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Venta adicional"
+          }
+        }
+      }
+    },
+    "Valid metadata is missing." : {
+
+    },
+    "Venue not found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lugar no encontrado"
+          }
+        }
+      }
+    },
+    "Venue you trying to booking, updated it's ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lugar que estás intentando reservar, actualizado su ticket"
+          }
+        }
+      }
+    },
+    "Venue your trying to booking is closed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El lugar en el que intentas reservar está cerrado."
+          }
+        }
+      }
+    },
+    "Venue your trying to booking, updated it's ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lugar en el que estás intentando reservar, actualiza tu billete."
+          }
+        }
+      }
+    },
+    "You must accept the terms and conditions by clicking the checkbox." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debes aceptar los términos y condiciones haciendo clic en la casilla de verificación."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -16,26 +16,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
         if let activity = connectionOptions.userActivities.filter({ $0.activityType == NSUserActivityTypeBrowsingWeb }).first {
-            if let incomingURL = activity.webpageURL {
-                guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true), let queryItems = components.queryItems else {
-                    return
-                }
-                
-                UserDefaults.standard.resetDefaults()
-                
-                if let value = queryItems.first(where: { $0.name == "v" })?.value {
-                    checkForDeepLink(value)
-                    return
-                }
-                if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
-                    venueId = venue
-                    UserDefaults.standard.setValue(venue, forKey: "venueId")
-                    return
-                }
-                if let venue = queryItems.first(where: { $0.name == "vid" })?.value {
-                    checkForDeepLink(venue)
-                    return
-                }
+            self.extractVenueIdFromUrl(userActivity: activity)
+        }
+    }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        self.extractVenueIdFromUrl(userActivity: userActivity)
+        NotificationCenter.default.post(name: Notification.Name("DeepLinkReceived"), object: nil, userInfo: nil)
+    }
+    
+    func extractVenueIdFromUrl(userActivity: NSUserActivity) {
+        UserDefaults.standard.removeObject(forKey: "venueId")
+        UserDefaults.standard.removeObject(forKey: "deepLinkId")
+        
+        if let incomingURL = userActivity.webpageURL {
+            guard let components = URLComponents(url: incomingURL, resolvingAgainstBaseURL: true),
+                  let queryItems = components.queryItems else { return }
+            
+            if let value = queryItems.first(where: { $0.name == "v" })?.value {
+                checkForDeepLink(value)
+                return
+            }
+            if let venue = queryItems.first(where: { $0.name == "venueId" })?.value {
+                venueId = venue
+                UserDefaults.standard.setValue(venue, forKey: "venueId")
+                return
+            }
+            if let venue = queryItems.first(where: { $0.name == "vid" })?.value {
+                checkForDeepLink(venue)
+                return
             }
         }
     }

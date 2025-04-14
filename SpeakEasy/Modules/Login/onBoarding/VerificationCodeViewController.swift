@@ -49,7 +49,6 @@ final class VerificationCodeViewController: UIViewController {
         resendBtn.alpha = 0.5
         resendBtn.isUserInteractionEnabled = false
         if Utility.isDebug {
-            print("*-*\(currectOtp)")
             Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
         }
     }
@@ -123,13 +122,13 @@ final class VerificationCodeViewController: UIViewController {
         resendBtn.alpha = 0.5
         resendBtn.isUserInteractionEnabled = false
         resendBtn.showLoader(userInteraction: false)
-        self.view.isUserInteractionEnabled = false
+//        self.view.isUserInteractionEnabled = false
         if isFromLogin {
             self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
                 guard let self = self else { return }
                 
                 hideResendButtonLoader()
-                self.view.isUserInteractionEnabled = true
+//                self.view.isUserInteractionEnabled = true
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
@@ -206,13 +205,13 @@ final class VerificationCodeViewController: UIViewController {
     
     private func otpVerification() {
         continueBtn.showLoader(userInteraction: false)
-        self.view.isUserInteractionEnabled = false
+//        self.view.isUserInteractionEnabled = false
         if isFromLogin {
             self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
                 guard let self = self else { return }
                 
                 continueBtn.hideLoader()
-                self.view.isUserInteractionEnabled = true
+//                self.view.isUserInteractionEnabled = true
                 if isSuccess {
                     if UserDefault.shared.user?.isProfileCompleted == true {
                         AppDelegate.shared.changeRootViewController()
@@ -235,7 +234,7 @@ final class VerificationCodeViewController: UIViewController {
                 if isForEmail {
                     self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errMsg in
                         guard let self = self else { return }
-                        
+//                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
                         if isSuccess {
                             for controller in self.navigationController!.viewControllers{
@@ -259,7 +258,7 @@ final class VerificationCodeViewController: UIViewController {
 //                        }
                     self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
                         guard let self = self else { return }
-                        
+//                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
                         if isSuccess {
                             for controller in self.navigationController!.viewControllers{

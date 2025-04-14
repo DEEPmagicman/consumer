@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ReachabilityManager.shared.startMonitoring()
         IQKeyboardManager.shared.enable = true
         StripeAPI.defaultPublishableKey = Stripe.publishableKey
-        Bundle.FlagIcons = Bundle(for: type(of: self))
+        Bundle.swizzleLocalization()
         return true
     }
 

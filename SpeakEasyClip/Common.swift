@@ -78,7 +78,7 @@ extension String {
     var isValidEmail: Bool {
         let regularExpressionForEmail = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let testEmail = NSPredicate(format:"SELF MATCHES %@", regularExpressionForEmail)
-        return testEmail.evaluate(with: self)
+        return testEmail.evaluate(with: self.replacingOccurrences(of: " ", with: ""))
     }
     
     func convertDateFormat(from: String, to: String, isUTC: Bool = true, useDayLightSavingTime: Bool = false, customTimeZone: String = "") -> String {
@@ -92,6 +92,7 @@ extension String {
         guard let oldDate = olDateFormatter.date(from: self) else { return "No date Found" }
         let convertDateFormatter = DateFormatter()
         convertDateFormatter.dateFormat = to
+        convertDateFormatter.locale = Locale(identifier: UserDefaults.standard.language)
         if customTimeZone != "", let timeZone = TimeZone(identifier: customTimeZone) {
             convertDateFormatter.timeZone = timeZone
         } else {
@@ -113,6 +114,60 @@ extension String {
         }
         dateFormatter.dateFormat = format.rawValue
         return dateFormatter.date(from: self)
+    }
+}
+
+// NOTE: for localisation
+extension String {
+    func localize(comment: String = "") -> String {
+        return NSLocalizedString(self, tableName: "Localizable", comment: comment)
+    }
+    
+    func localize(comment: String = "", args: CVarArg...) -> String {
+        let format = NSLocalizedString(self, comment: comment)
+        let result = withVaList(args) {
+            (NSString(format: format, locale: NSLocale.current, arguments: $0) as String)
+        }
+        return result
+    }
+}
+
+extension Bundle {
+    static func swizzleLocalization() {
+        let orginalSelector = #selector(localizedString(forKey:value:table:))
+        guard let orginalMethod = class_getInstanceMethod(self, orginalSelector) else { return }
+        
+        let mySelector = #selector(myLocaLizedString(forKey:value:table:))
+        guard let myMethod = class_getInstanceMethod(self, mySelector) else { return }
+        
+        if class_addMethod(self, orginalSelector, method_getImplementation(myMethod), method_getTypeEncoding(myMethod)) {
+            class_replaceMethod(self, mySelector, method_getImplementation(orginalMethod), method_getTypeEncoding(orginalMethod))
+        } else {
+            method_exchangeImplementations(orginalMethod, myMethod)
+        }
+    }
+    
+    @objc private func myLocaLizedString(forKey key: String, value: String?, table: String?) -> String {
+
+        guard let bundlePath = Bundle.main.path(forResource: UserDefaults.standard.language, ofType: "lproj"),
+              let bundle = Bundle(path: bundlePath) else {
+            return Bundle.main.myLocaLizedString(forKey: key, value: value, table: table)
+        }
+        if table == "Main" {
+            return bundle.myLocaLizedString(forKey: key, value: value, table: table)
+        }
+        return bundle.myLocaLizedString(forKey: key, value: value, table: "Localizable")
+    }
+}
+
+extension UserDefaults {
+    var language: String {
+        var systemLanguage: Language = .english
+        if let arr = UserDefaults.standard.stringArray(forKey: "AppleLanguages"), let language = arr.first {
+            let languageCode = language.components(separatedBy: "-").first ?? language
+            systemLanguage = Language(rawValue: languageCode) ?? .english
+        }
+        return systemLanguage.rawValue
     }
 }
 
@@ -221,4 +276,27 @@ extension String {
     }
 }
 
-
+enum Language: String {
+    case english = "en"
+    case spanish = "es"
+    
+    var display: String {
+        switch self {
+        case .english:
+            "English"
+        case .spanish:
+            "Español"
+        }
+    }
+    
+    init(language: String) {
+        switch language {
+        case "English":
+            self = .english
+        case "Español":
+            self = .spanish
+        default:
+            self = .english
+        }
+    }
+}

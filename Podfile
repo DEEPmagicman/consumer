@@ -11,7 +11,6 @@ target 'SpeakEasy-Consumer' do
 #  pod 'DropDown'
   pod 'SCPageControl'
   pod "GSImageViewerController"
-  pod "FlagPhoneNumber"
   pod 'OTPFieldView'
   pod 'SVProgressHUD'
   pod 'GoogleSignIn'

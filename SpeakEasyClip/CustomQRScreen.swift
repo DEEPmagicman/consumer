@@ -25,6 +25,8 @@ final class CustomQRScreen: UIViewController {
     
     var bookingId = ""
     var addOnBookingId = ""
+    var booking: Booking?
+    var addOnsBooking: AddOnsBooking?
     private var isAlertDisplayed = false
     var bookingCode = String()
     var createdAT = String()
@@ -74,6 +76,7 @@ final class CustomQRScreen: UIViewController {
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+        WebSocketWrapper.shared.delegate.append(self)
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
@@ -138,23 +141,27 @@ extension CustomQRScreen: FSPagerViewDelegate, FSPagerViewDataSource {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
 
         cell.backupCode.text = bookingCode
-        cell.bookingDateTime.text = "Purchased on \(createdAT)"
+        cell.bookingDateTime.text = "Purchased on".localize() + " \(createdAT)"
         cell.guestName.text = guestInfo
         
         if isOnlyAddOnsAvailable {
             if index == 0 {
-                cell.qrImage.image = addOnsQR
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
         } else {
             if index == 0 {
                 cell.uniqueTickets = appClipTicket
+                cell.booking = booking
+                cell.qrImage.image = qrImage
             } else {
                 cell.addOnsBookingHasItem = selectedAddOns
+                cell.addOnsBooking = addOnsBooking
+                cell.qrImage.image = addOnsQR
             }
-            cell.qrImage.image = index == 0 ? qrImage : addOnsQR
-            cell.ticketsTableView.reloadData()
         }
+        cell.ticketsTableView.reloadData()
         return cell
     }
     
@@ -162,3 +169,34 @@ extension CustomQRScreen: FSPagerViewDelegate, FSPagerViewDataSource {
         pageControl.currentPage = pagerView.currentIndex
     }
 }
+
+extension CustomQRScreen: WebSocketCallBackDelegate {
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+}
+

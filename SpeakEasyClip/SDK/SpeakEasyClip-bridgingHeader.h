@@ -8,7 +8,4 @@
 #ifndef SpeakEasyClip_bridgingHeader_h
 #define SpeakEasyClip_bridgingHeader_h
 
-#import "NBPhoneNumber.h"
-#import "NBAsYouTypeFormatter.h"
-#import "NBPhoneNumberUtil.h"
 #endif /* SpeakEasyClip_bridgingHeader_h */

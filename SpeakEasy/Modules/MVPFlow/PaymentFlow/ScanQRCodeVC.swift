@@ -27,7 +27,7 @@ extension UIView {
     }
 }
 
-class ScanQRCodeVC: UIViewController { //
+final class ScanQRCodeVC: UIViewController {
     
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicket: UIButton!
@@ -80,6 +80,27 @@ class ScanQRCodeVC: UIViewController { //
         addToWalletBtn.addPassButtonStyle = .blackOutline
         addToWalletBtn.addTarget(self, action: #selector(addToWalletBtnTapped), for: .touchUpInside)
         addToWalletBtn.isHidden = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.willEnterForegroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
+    }
+    
+    @objc func refreshData() {
+        if isOnlyAddOnAvailable {
+            getAddOnsBooking()
+        } else {
+            getBooking(id: bookingId)
+        }
     }
     
     @objc private func addToWalletBtnTapped() {
@@ -140,8 +161,8 @@ class ScanQRCodeVC: UIViewController { //
     
     @IBAction func onClickBuyAnotherTicket(_ sender: Any) {
         pagerView.reloadData()
-        let uniqueId = addOnsBooking != nil ? addOnsBooking?.venue.uniqueId ?? "" : booking?.venueObject?.uniqueId ?? ""
-        let timeZone = addOnsBooking != nil ? addOnsBooking?.venue.timezone ?? "" : booking?.venueObject?.timezone ?? ""
+        let uniqueId = addOnsBooking != nil ? addOnsBooking?.venue?.uniqueId ?? "" : booking?.venueObject?.uniqueId ?? ""
+        let timeZone = addOnsBooking != nil ? addOnsBooking?.venue?.timezone ?? "" : booking?.venueObject?.timezone ?? ""
         delegate?.navigateToVenueDetail(venueId: venueId, venueUniqueId: uniqueId, venueTimeZone: timeZone)
         dismiss(animated: true)
     }
@@ -183,8 +204,8 @@ class ScanQRCodeVC: UIViewController { //
             guard let self = self else { return }
             if isSuccess {
                 self.addOnsBooking = booking
-                self.venueName.text = booking?.venue.name ?? "-"
-                bgImage.sd_setImage(with: URL(string: (booking?.venue.venueAttachment?.first?.key ?? "").imageURL))
+                self.venueName.text = booking?.venue?.name ?? "-"
+                bgImage.sd_setImage(with: URL(string: (booking?.venue?.venueAttachment?.first?.key ?? "").imageURL))
                 let string1 = """
             {
                 "id": "\(booking?.id ?? "")",
@@ -223,7 +244,7 @@ extension ScanQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.guestNameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") - \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMDDYYYYHMMA, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
         if isOnlyAddOnAvailable {
             cell.addOnsBooking = addOnsBooking
-            cell.backupCode.text = addOnsBooking?.venue.bookingCode ?? ""
+            cell.backupCode.text = addOnsBooking?.venue?.bookingCode ?? ""
             cell.bookingDateTime.text = "Purchased on \(addOnsBooking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
             
             cell.guestNameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") - \(addOnsBooking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMDDYYYYHMMA, isUTC: true, customTimeZone: booking?.venueObject?.useTimezone ?? "") ?? "")"
@@ -265,4 +286,34 @@ extension ScanQRCodeVC: PKAddPassesViewControllerDelegate {
 extension QRCodeVCNavigationDelegate {
     func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) { }
     func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) { }
+}
+
+extension ScanQRCodeVC: WebSocketCallBackDelegate {
+    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
+        if booking?.id ?? "" == bookingId {
+            booking?.bookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
+    
+    func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {
+        if addOnsBooking?.id ?? "" == bookingId {
+            addOnsBooking?.addOnsBookingHasCheckIn = checkIndata
+            pagerView.reloadData()
+        }
+    }
 }

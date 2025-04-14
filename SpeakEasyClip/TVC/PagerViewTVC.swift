@@ -21,6 +21,8 @@ class PagerViewTVC: FSPagerViewCell {
     
     var uniqueTickets = [CoverTicket]()
     var addOnsBookingHasItem = [UpSellTicket]()
+    var booking: Booking?
+    var addOnsBooking: AddOnsBooking?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -64,14 +66,33 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         cell.contentView.backgroundColor = .clear
+        cell.checkInProgress.layer.cornerRadius = 5
         if uniqueTickets.count != 0 {
-            cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].name : uniqueTickets[indexPath.row].customName
-            cell.subTitleLbl.text = uniqueTickets[indexPath.row].description
+            cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
+            cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
             cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
+            
+            if let index = booking?.uniqueTickets.firstIndex(where: {$0.ticketId == uniqueTickets[indexPath.row].id }) {
+                cell.checkInProgressBarView.isHidden = false
+                let checkInCount = booking?.uniqueTickets[index].checkedInQuantity ?? 0
+                cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[index].selectedQuantity ?? 0)"
+                cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
+            } else {
+                cell.checkInProgressBarView.isHidden = true
+            }
         } else {
             cell.subTitleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.description
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name
             cell.quantityLbl.text = "\(addOnsBookingHasItem[indexPath.row].selectedQuantity ?? 0)x"
+            
+            if let index = addOnsBooking?.uniqueTickets.firstIndex(where: {$0.addOnsId == addOnsBookingHasItem[indexPath.row].addOnsId }) {
+                cell.checkInProgressBarView.isHidden = false
+                let checkInCount = addOnsBooking?.uniqueTickets[index].checkedInQuantity ?? 0
+                cell.checkInCount.text = "\(checkInCount)/\(addOnsBooking?.uniqueTickets[index].selectedQuantity ?? 0)"
+                cell.checkInProgress.setProgress(Float(checkInCount) / Float(addOnsBooking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
+            } else {
+                cell.checkInProgressBarView.isHidden = true
+            }
         }
         if VenueImageManager.shared.customQRData != nil && VenueImageManager.shared.isEnableCoverTicketViewSettings == true {
             cell.titleLbl.textColor = UIColor(hex: VenueImageManager.shared.customQRData?.fontColorB ?? "")

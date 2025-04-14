@@ -29,13 +29,24 @@ final class SelectTicketClipVC: UIViewController {
     @IBOutlet weak var disclaimerInSideView: UIView!
     @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var tableBookNowBtn: UIButton!
-    
+    @IBOutlet weak var languageSwitchBtn: UIButton!
+    @IBOutlet weak var languageSwitchImg: UIImageView!
+    @IBOutlet weak var languageSwitchLbl: UILabel!
+
     var isLive = true
     var venueDetail: ClipVenue?
     private var gradient: CAGradientLayer?
     private var venueImgHeightObservation: NSKeyValueObservation?
-    private var venueId = ""
-    private var deepLink = ""
+    private var venueId: String {
+        get {
+            return UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
+        }
+    }
+    private var deepLink: String {
+        get {
+            return UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
+        }
+    }
     private var doormanId = ""
     private var maxTicket = 20
     private var selectedType: TicketPriceType = .FREE
@@ -83,17 +94,30 @@ final class SelectTicketClipVC: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
         ticketTypeTableView.register(UINib(nibName: "TicketTypeTVC", bundle: nil), forCellReuseIdentifier: "TicketTypeTVC")
         ticketTypeTableView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.old, context: nil)
-        venueId = UserDefaults.standard.value(forKey: "venueId") as? String ?? ""
-        deepLink = UserDefaults.standard.value(forKey: "deepLinkId") as? String ?? ""
+
         if venueId == "" {
             getDeepLinkData()
         } else {
             getVenueDetailsWithTickets()
         }
-        upSellBtn.setTitle("Buy \(venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
+        upSellBtn.setTitle("Buy upsell".localize(args: (self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell".localize())), for: .normal)
+
         tableBookNowBtn.layer.borderColor = UIColor.white.cgColor
         tableBookNowBtn.layer.borderWidth = 1
         
+        setupLanguageSelection()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDeepLink(_:)), name: Notification.Name("DeepLinkReceived"), object: nil)
+    }
+    
+    @objc func handleDeepLink(_ notification: Notification) {
+        self.navigationController?.popToRootViewController(animated: false)
+        doormanId = ""
+        if venueId == "" {
+            getDeepLinkData()
+        } else {
+            getVenueDetailsWithTickets()
+        }
     }
     
     private func getDeepLinkData() {
@@ -102,7 +126,8 @@ final class SelectTicketClipVC: UIViewController {
         request.httpMethod = "GET"
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
-        
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
+
         DispatchQueue.main.async {
             AppClipLoader.showLoader(self.view)
         }
@@ -112,16 +137,17 @@ final class SelectTicketClipVC: UIViewController {
                 var json = [String: Any]()
                 if !SharedURL.isEncryptionEnabled {
                     guard let data = data,
-                          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
+                          let dataJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else {
                         AppClipLoader.hideLoader()
                         return
                     }
+                    json = dataJson;
                 } else {
                     guard let data = data, let response = String(data: data, encoding: .utf8) else { return }
                     json =  response.decrypted() ?? [:]
                 }
                 
-                self.venueId = json["venueId"] as? String ?? ""
+                UserDefaults.standard.set(json["venueId"] as? String ?? "", forKey: "venueId")
                 self.doormanId = json["doormanId"] as? String ?? ""
                 self.getVenueDetailsWithTickets()
             }
@@ -136,6 +162,7 @@ final class SelectTicketClipVC: UIViewController {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")
         }
         request.addValue(venueDetail?.id ?? "", forHTTPHeaderField: "venue")
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
         
@@ -185,7 +212,6 @@ final class SelectTicketClipVC: UIViewController {
     
     private func getVenueDetailsWithTickets(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
-        print("urmil:  \(url)")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
@@ -193,6 +219,7 @@ final class SelectTicketClipVC: UIViewController {
         }
         let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
         request.addValue(date, forHTTPHeaderField: "token")
+        request.addValue(UserDefaults.standard.language, forHTTPHeaderField: "language")
         
         if withLoader {
             DispatchQueue.main.async {
@@ -267,14 +294,14 @@ final class SelectTicketClipVC: UIViewController {
         }
         DispatchQueue.main.async {
             self.venueTitleNameLbl.text = self.venueDetail?.name
-            self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
-            self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
+//            self.venueInfoLbl.text = "Entry tickets can be purchased in-person at \(self.venueDetail?.name ?? "") by scanning the banner located outside the venue. \nPrices shown here are live and subject to change."
+//            self.venueInfoLbl.highlightBold(["in-person","live and subject to change."], size: 15, textColor: .white)
             if self.venueDetail?.venueSettings?.bookingStatus == "OPEN" {
-                self.liveCloseLbl.text = "LIVE"
+                self.liveCloseLbl.text = "LIVE".localize()
                 self.liveCloseLbl.textColor = UIColor(red: 0.00, green: 1.00, blue: 0.58, alpha: 1.00)
                 self.tonightLbl.alpha = 1
             } else {
-                self.liveCloseLbl.text = "CLOSED"
+                self.liveCloseLbl.text = "CLOSED".localize()
                 self.liveCloseLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 self.tonightLbl.alpha = 0.5
             }
@@ -288,13 +315,13 @@ final class SelectTicketClipVC: UIViewController {
                 self.closeLblView.isHidden = true
             }
             if self.venueDetail == nil {
-                self.closeLbl.text = "Venue not found"
+                self.closeLbl.text = "Venue not found".localize()
                 self.infoView.isHidden = true
                 self.closeLblView.isHidden = false
                 self.liveCloseLbl.isHidden = true
                 self.tonightLbl.isHidden = true
             }
-            self.upSellBtn.setTitle("Buy \(self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell")", for: .normal)
+            self.upSellBtn.setTitle("Buy upsell".localize(args: (self.venueDetail?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell".localize())), for: .normal)
         }
         
         self.disclaimerView.isHidden = self.venueDetail?.venueSettings?.showCoverDisclaimer ?? false == false
@@ -417,12 +444,12 @@ final class SelectTicketClipVC: UIViewController {
             switch self.selectedType {
             case .FREE:
                 if self.upSellView.isHidden == true {
-                    self.continueBtn.setTitle("GET MY FREE TICKET", for: .normal)
+                    self.continueBtn.setTitle("GET MY FREE TICKET".localize(), for: .normal)
                 } else {
-                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                    self.continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
                 }
             case .PAID, .CUSTOM:
-                self.continueBtn.setTitle("CONTINUE TO CHECKOUT", for: .normal)
+                self.continueBtn.setTitle("CONTINUE TO CHECKOUT".localize(), for: .normal)
             }
         }
     }
@@ -470,15 +497,15 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
-        cell.ticketTypeLbl.text = self.venueDetail?.coverTicket?[indexPath.row].customName ?? "" == "" ? self.venueDetail?.coverTicket?[indexPath.row].name : self.venueDetail?.coverTicket?[indexPath.row].customName
-        cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].description
+        cell.ticketTypeLbl.text = self.venueDetail?.coverTicket?[indexPath.row].customName ?? "" == "" ? venueDetail?.coverTicket?[indexPath.row].displayName : venueDetail?.coverTicket?[indexPath.row].displayCustomName
+        cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].displayDescription
         cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isUserInteractionEnabled = isMaxTicketReached ? false : true
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-            cell.ticketPriceLbl.text = "FREE"
+            cell.ticketPriceLbl.text = "FREE".localize()
         } else if venueDetail?.coverTicket?[indexPath.row].isCustom == true && venueDetail?.coverTicket?[indexPath.row].price ?? 0 == 0 {
-            cell.ticketPriceLbl.text = "FREE"
+            cell.ticketPriceLbl.text = "FREE".localize()
         } else {
             if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
@@ -599,6 +626,32 @@ extension SelectTicketClipVC: WebSocketCallBackDelegate {
 extension SelectTicketClipVC: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         true
+    }
+}
+
+extension SelectTicketClipVC {
+
+    private func setupLanguageSelection() {
+        let actionClosure = { (action: UIAction) in
+            UserDefaults.standard.set([Language(language: action.title).rawValue], forKey: "AppleLanguages")
+            if let window = UIApplication.shared.windows.first {
+                window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+            }
+        }
+        
+        let dataSource = ["English", "Español"]
+        var menuChildren: [UIMenuElement] = []
+        for data in dataSource {
+            menuChildren.append(UIAction(title: data, image: UIImage(named: Language(language: data).rawValue.uppercased()), state: Language(language: data).rawValue == UserDefaults.standard.language ? .on : .off, handler: actionClosure))
+        }
+        languageSwitchBtn.menu = UIMenu(options: .displayInline, children: menuChildren)
+        languageSwitchBtn.showsMenuAsPrimaryAction = true
+        if #available(iOS 15.0, *) {
+            languageSwitchBtn.changesSelectionAsPrimaryAction = true
+        }
+        languageSwitchBtn.setTitle("", for: .normal)
+        languageSwitchLbl.text = UserDefaults.standard.language.uppercased()
+        languageSwitchImg.image = UIImage(named: UserDefaults.standard.language.uppercased())
     }
 }
 

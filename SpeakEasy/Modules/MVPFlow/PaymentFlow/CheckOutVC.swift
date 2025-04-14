@@ -81,6 +81,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var questionTableView: UITableView!
     @IBOutlet weak var questionTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var eventQuestionView: UIStackView!
+    @IBOutlet weak var disclaimerView: UIView!
+    @IBOutlet weak var disclaimerCheckbox: UIButton!
+    @IBOutlet weak var disclaimerText: UILabel!
     
     var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
@@ -175,6 +178,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
+        
+        disclaimerCheckbox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        disclaimerCheckbox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        disclaimerCheckbox.isSelected = true
+        
         let time = secondsToHoursMinutesSeconds(seconds: count)
         timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
         validateBtn(isValid: false)
@@ -246,6 +254,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
+        disclaimerText.text = venue?.venueSettings?.coverTicketSettings?.disclaimer ?? ""
+        disclaimerView.isHidden = selectedCoverTickets.count == 0 || venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty ?? true
     }
         
     @objc func exitBackGround() {
@@ -720,6 +730,10 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
+        if venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false && disclaimerCheckbox.isSelected == false && selectedCoverTickets.count != 0 {
+            Alert.showAlertSheet(style: .alert, title: "You must accept the terms and conditions by clicking the checkbox.", message: "")
+            return
+        }
         var answers = [[String: Any]]()
         
         _ = questionAnswers.map ({ ans in
