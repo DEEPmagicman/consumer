@@ -141,7 +141,8 @@ struct PaymentDetail: Codable {
     var customFeeName: String?
     var discount: Double?
     var salesTaxName: String?
-    
+    var customFees: [CustomFees]?
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(subTotal, forKey: .subTotal)
@@ -152,5 +153,35 @@ struct PaymentDetail: Codable {
         try container.encode(customFeeName, forKey: .customFeeName)
         try container.encodeIfPresent(discount, forKey: .discount)
         try container.encodeIfPresent(salesTaxName, forKey: .salesTaxName)
+        try container.encodeIfPresent(customFees, forKey: .customFees)
     }
 }
+
+struct CustomFees: Codable {
+    var fee: Double
+    var name: String
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(fee, forKey: .fee)
+        try container.encodeIfPresent(name, forKey: .name)
+    }
+    
+    func toDic() -> [String: Any] {
+        var dic: [String: Any] = [:]
+        dic["fee"] = fee
+        dic["name"] = name
+        return dic
+    }
+}
+
+extension [CustomFees] {
+    func dicConveter() -> [[String: Any]] {
+        var dicArray = [[String: Any]]()
+        self.forEach { fee in
+            dicArray.append(fee.toDic())
+        }
+        return dicArray
+    }
+}
+

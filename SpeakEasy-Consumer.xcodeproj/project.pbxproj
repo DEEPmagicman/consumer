@@ -62,6 +62,7 @@
 		29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
+		690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */; };
 		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691609442C7F418000C74F48 /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609402C7F418000C74F48 /* Avenir-Regular.ttf */; };
@@ -369,6 +370,7 @@
 		29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutClipVC.swift; sourceTree = "<group>"; };
 		29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketClipVC.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFeeTVC.swift; sourceTree = "<group>"; };
 		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
 		691609402C7F418000C74F48 /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Regular.ttf"; sourceTree = "<group>"; };
 		691609412C7F418000C74F48 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -738,6 +740,14 @@
 			path = EventModels;
 			sourceTree = "<group>";
 		};
+		690DC2762DAFD338007F94C7 /* CustomFeeTVC */ = {
+			isa = PBXGroup;
+			children = (
+				690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */,
+			);
+			path = CustomFeeTVC;
+			sourceTree = "<group>";
+		};
 		82847A77298244A000611DC4 /* MVPFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -933,6 +943,7 @@
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
+				690DC2762DAFD338007F94C7 /* CustomFeeTVC */,
 				CE954B8B2C39156F00BD3009 /* EventQuestionTVC */,
 				920B4CFF2B909F8000C07402 /* QRCodeCVC */,
 				045D04C52B1739B000B68D9E /* PurchasesTVC */,
@@ -1682,9 +1693,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1910,6 +1925,7 @@
 				CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
+				690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */,
 				CE45A5B32C3BC9CA00E1FE3F /* DropDown+Appearance.swift in Sources */,
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
