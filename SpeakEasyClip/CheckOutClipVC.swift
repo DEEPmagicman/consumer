@@ -45,8 +45,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var processingFeeView: UIView!
     @IBOutlet weak var processingFeeAmount: UILabel!
     @IBOutlet weak var customFeeView: UIView!
-    @IBOutlet weak var customFeeName: UILabel!
-    @IBOutlet weak var customFeeAmount: UILabel!
     @IBOutlet weak var salesTextView: UIView!
     @IBOutlet weak var salesTextAmount: UILabel!
     @IBOutlet weak var noFeeView: UIView!
@@ -83,6 +81,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var disclaimerView: UIView!
     @IBOutlet weak var disclaimerBtn: UIButton!
     @IBOutlet weak var disclaimerText: UILabel!
+    @IBOutlet weak var customFeeTableView: UITableView!
+    @IBOutlet weak var customFeeTableViewHeight: NSLayoutConstraint!
     
     var totalPrice = 1.0
     var totalAddOnPrice = 0.0
@@ -111,7 +111,8 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var venueImageData = Data()
     let phoneNumberUtility = PhoneNumberUtility()
     var phoneNumber: PhoneNumber?
-    
+    private var paymentDetail: PaymentDetail?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
@@ -586,22 +587,22 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 }
                 json =  response.decrypted() ?? [:]
             }
-            if let subTotal = json["subTotal"] as? Double, let processingFee = json["processingFee"] as? Double, let customFee = json["customFee"] as? Double, let salesTax = json["salesTax"] as? Double, let total = json["total"] as? Double, let customFeeName = json["customFeeName"] as? String, let salesTaxName = json["salesTaxName"] as? String {
+            
+            if let paymentDetail = PaymentDetail.parse(json) {
                 DispatchQueue.main.async {
                     AppClipLoader.hideLoader()
-                    self.subTotalView.isHidden = (!self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView) || (subTotal == total)
+                    self.paymentDetail = paymentDetail
+                    self.subTotalView.isHidden = (!self.setSalesTaxView && !self.setProcessingTaxView && !self.setCustomTaxView) || (paymentDetail.subTotal == paymentDetail.total)
                     self.salesTextView.isHidden = !self.setSalesTaxView
-                    self.processingFeeView.isHidden = !self.setProcessingTaxView || processingFee == 0
+                    self.processingFeeView.isHidden = !self.setProcessingTaxView || paymentDetail.processingFee == 0
                     self.customFeeView.isHidden = !self.setCustomTaxView
                     self.noFeeView.isHidden = !self.subTotalView.isHidden
-                    self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(subTotal.decimalFormat(true))"
-                    self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(processingFee.decimalFormat(true))"
-                    self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(salesTax.decimalFormat(true))"
-                    self.customFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(customFee.decimalFormat(true))"
-                    self.customFeeName.text = customFeeName == "" ? "Custom Fee" : customFeeName
-                    self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(total.decimalFormat(true))"
-                    self.totalPrice = total
-                    self.salesTaxName.text = salesTaxName == "" ? "Sales Tax" : salesTaxName
+                    self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.subTotal.decimalFormat(true))"
+                    self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.processingFee.decimalFormat(true))"
+                    self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.salesTax?.decimalFormat(true) ?? "")"
+                    self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\(paymentDetail.total.decimalFormat(true))"
+                    self.totalPrice = paymentDetail.total
+                    self.salesTaxName.text = paymentDetail.salesTaxName ?? "Sales Tax"
                     self.grandTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((self.totalAddOnPrice + self.totalPrice).decimalFormat(true))"
                     if self.bookingType == .FREE {
                         self.subTotalView.isHidden = true
@@ -609,6 +610,10 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
                         self.customFeeView.isHidden = true
                         self.salesTextView.isHidden = true
                     }
+                    
+                    self.customFeeTableViewHeight.constant = CGFloat((self.paymentDetail?.customFees?.count ?? 0) * 30)
+                    self.customFeeTableView.setNeedsLayout()
+                    self.customFeeTableView.reloadData()
                 }
             } else {
                 AppClipLoader.hideLoader()
@@ -1627,10 +1632,23 @@ extension CheckOutClipVC {
 
 extension CheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
+        if tableView == ticketListTableView {
+            return selectedCoverTickets.count
+        } else if tableView == customFeeTableView {
+            return self.paymentDetail?.customFees?.count ?? 0
+        } else {
+            return selectedAddOnsItem.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView == customFeeTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
+            let customFee = self.paymentDetail?.customFees?[indexPath.row]
+            cell.lblFeeName.text = customFee?.name ?? "Custom fee"
+            cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
+            return cell
+        }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
 

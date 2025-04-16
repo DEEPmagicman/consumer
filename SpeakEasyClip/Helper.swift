@@ -66,3 +66,21 @@ extension UIViewController {
         }
     }
 }
+
+extension Decodable {
+    static func parse(_ obj: Any) -> Self? {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+            return try JSONDecoder().decode(self, from: data)
+        } catch {
+            print("---\(error)")
+            let error = NSError.init(domain: NSCocoaErrorDomain,
+                                     code: 101,
+                                     userInfo: ["type": "Model parsing error",
+                                                "model type": "\(self)",
+                                                "error": "\(error)",
+                                                "environment": SharedURL.baseURL])            
+            return nil
+        }
+    }
+}

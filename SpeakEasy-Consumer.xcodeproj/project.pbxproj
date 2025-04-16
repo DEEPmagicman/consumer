@@ -63,6 +63,7 @@
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
 		690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */; };
+		690DC27A2DAFE354007F94C7 /* CustomFeeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */; };
 		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691609442C7F418000C74F48 /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609402C7F418000C74F48 /* Avenir-Regular.ttf */; };
@@ -1754,6 +1755,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0475E3252BECEAA200E4801C /* TimeSlot.swift in Sources */,
+				690DC27A2DAFE354007F94C7 /* CustomFeeTVC.swift in Sources */,
 				04862C112B96FE3300836598 /* UpSellClipVC.swift in Sources */,
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */,

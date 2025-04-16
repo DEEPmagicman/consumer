@@ -774,7 +774,7 @@
                                                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jgB-6Q-9ew">
                                                                                 <rect key="frame" x="0.0" y="-100" width="362" height="100"/>
                                                                                 <subviews>
-                                                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="30" estimatedRowHeight="30" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ow6-Yo-gqv">
+                                                                                    <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="30" estimatedRowHeight="30" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ow6-Yo-gqv">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="362" height="100"/>
                                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -823,7 +823,6 @@
                                                                                         <sections/>
                                                                                         <connections>
                                                                                             <outlet property="dataSource" destination="3Nt-ST-B22" id="b4a-0a-ZpN"/>
-                                                                                            <outlet property="delegate" destination="3Nt-ST-B22" id="Pif-A0-kbN"/>
                                                                                         </connections>
                                                                                     </tableView>
                                                                                 </subviews>
