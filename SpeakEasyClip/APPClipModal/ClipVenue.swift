@@ -375,6 +375,7 @@ struct CoverTicketFeesSettings: Codable {
       var pageTitle: String?
       var description: String?
     var disclaimer: String?
+    var customFees: [CustomFeeSettings]?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -389,6 +390,7 @@ struct CoverTicketFeesSettings: Codable {
         try container.encodeIfPresent(pageTitle, forKey: .pageTitle)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(disclaimer, forKey: .disclaimer)
+        try container.encodeIfPresent(customFees, forKey: .customFees)
     }
 }
 
@@ -459,3 +461,31 @@ let CoverTicketVIP = [
   "VIP Skip Line - Male",
   "VIP Skip Line - Female",
 ];
+
+struct CustomFeeSettings: Codable {
+    var isEnableCustomFee: Bool
+    var customFeeType: String
+    var customFeeName: String
+    var customFee: Double
+    var isCustomFeeTaxable: Bool
+    
+    func toDic() -> [String: Any] {
+        var dic: [String: Any] = [:]
+        dic["isEnableCustomFee"] = isEnableCustomFee
+        dic["customFeeType"] = customFeeType == "" ? "PERCENTAGE" : customFeeType
+        dic["customFeeName"] = customFeeName
+        dic["customFee"] = customFee
+        dic["isCustomFeeTaxable"] = isCustomFeeTaxable
+        return dic
+    }
+}
+
+extension [CustomFeeSettings] {
+    func dicConveter() -> [[String: Any]] {
+        var dicArray = [[String: Any]]()
+        self.forEach { fee in
+            dicArray.append(fee.toDic())
+        }
+        return dicArray
+    }
+}

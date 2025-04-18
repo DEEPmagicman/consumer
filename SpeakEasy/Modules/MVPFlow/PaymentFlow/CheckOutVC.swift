@@ -234,7 +234,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func setUpData() {
         switch type {
         case .appClip:
-            noFeeView.isHidden = (venue?.venueSettings?.coverTicketSettings?.isUpFront == true) ? false : (venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true || venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true)
+            noFeeView.isHidden = (venue?.venueSettings?.coverTicketSettings?.isUpFront == true) ? false : (venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true || venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true || (venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0))
             titleLbl.text = selectedAddOnsItem.count != 0 && selectedCoverTickets.count == 0 ? (venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? Constant.String.upSellTicket) : Constant.String.liveCoverTicket
             dateLbl.text = "Tonight"
             purchaseImg.image = Constant.Icon.liveCover
@@ -563,14 +563,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private var setCustomTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            return venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true ? true : false
+            return venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            return venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
+            return (venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
-        if (venue?.venueSettings?.coverTicketSettings?.isEnableCustomFee == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableCustomFee == true {
+        if ((venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0 {
             return true
         }
         return false

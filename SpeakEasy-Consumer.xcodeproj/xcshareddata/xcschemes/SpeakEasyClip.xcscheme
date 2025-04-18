@@ -53,7 +53,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCAppClipURL"
-            value = "https://preprod-consumer.speakeasygo.com/?vid=VN-p246"
+            value = "https://preprod-consumer.speakeasygo.com/?vid=VN-ghgj"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
