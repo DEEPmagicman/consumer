@@ -185,8 +185,6 @@ final class ShowQRCodeVC: UIViewController {
                 eventTicketDetailsView.isHidden = false
                 coverTicketDetailsView.isHidden = true
                 ticketTypeLbl.text = "Event Details"
-            case .tieredTickedEvent:
-                break
             }
         }
     }
@@ -211,8 +209,6 @@ final class ShowQRCodeVC: UIViewController {
             url = URL(string: APIBuilder.appClipAppleWallet(booking?.id ?? ""))
         case .singleTickedEvent:
             url = URL(string: APIBuilder.eventAppleWallet(booking?.id ?? ""))
-        case .tieredTickedEvent:
-            break
         }
         guard let url = url else { return }
         let pkl = PKPassLibrary()
@@ -336,8 +332,6 @@ final class ShowQRCodeVC: UIViewController {
         case .singleTickedEvent:
             delegate?.navigateToEventDetail(eventId: booking?.event?.uniqueId ?? "" , venueDetail: booking?.venueObject, event: booking?.event)
             dismiss(animated: true)
-        case .tieredTickedEvent:
-            break
         }
     }
     

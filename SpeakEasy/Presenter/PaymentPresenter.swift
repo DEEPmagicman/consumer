@@ -10,7 +10,6 @@ import Foundation
 enum PaymentIntentType {
     case appClip
     case singleTickedEvent
-    case tieredTickedEvent
 }
 
 final class PaymentPresenter {
@@ -181,13 +180,9 @@ final class PaymentPresenter {
             param["isAppClipPayment"] = true
         case .singleTickedEvent:
             param["isAppClipPayment"] = false
-            param["isTieredTicket"] = false
             if promoCode != "" {
                 param["promoCode"] = promoCode
             }
-        case .tieredTickedEvent:
-            param["isAppClipPayment"] = false
-            param["isTieredTicket"] = true
         }
         let url = type == .singleTickedEvent ? APIBuilder.addEventPaymentURL(bookingId) : APIBuilder.addPaymentURL(bookingId)
         AFWrapper.postRequest(url, params: param, headers: Header.header()) { response in

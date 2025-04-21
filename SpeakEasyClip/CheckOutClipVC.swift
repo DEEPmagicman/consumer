@@ -535,7 +535,6 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var param = [String: Any]()
         let paramData = ["cart": selectedTickets,
                      "isAppClipPayment": true,
-                     "isTieredTicket": false,
                      "venueId": venue?.id ?? ""] as [String: Any]
         
         if !SharedURL.isEncryptionEnabled {
