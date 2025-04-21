@@ -249,8 +249,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             bgImage.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             promoCodeView.isHidden = false
             venueNameLbl.text = (event?.customVenue != nil && venue?.venueSettings?.isOrganizer == true) ? "\(event?.customVenue?.name ?? ""), \(event?.customVenue?.address ?? "")" : "\(venue?.name ?? "")"
-        case .tieredTickedEvent:
-            break
         }
         policyView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
@@ -399,8 +397,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                     Loader.hide()
                 }
             }
-        case .tieredTickedEvent:
-            break
         }
     }
     
@@ -424,8 +420,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 coverTickets.append(["ticketId": $0.id ?? "",
                                        "quantity": $0.selectedTicketCount ?? 0])
             }
-        case .tieredTickedEvent:
-            break
         }
         PaymentPresenter.getPaymentIntent(bookingId: bookingId, selectedTickets: coverTickets, promoCode: promoCodeTF.text ?? "", type: type) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket  in
             Loader.hide()
@@ -974,8 +968,6 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
                 return tableView == ticketListTableView ? selectedCoverTickets.count : selectedAddOnsItem.count
             case .singleTickedEvent:
                 return selectedEventTicket.count
-            case .tieredTickedEvent:
-                return 0
             }
         }
     }
@@ -1035,8 +1027,6 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
                 cell.titleLbl.text = selectedEventTicket[indexPath.row].tierName
                 cell.subTitleLbl.text = selectedEventTicket[indexPath.row].tierDescription
                 cell.quantityLbl.text = "\(selectedEventTicket[indexPath.row].selectedTicketCount ?? 0)x"
-            case .tieredTickedEvent:
-                break
             }
             cell.selectionStyle = .none
             cell.backgroundColor = .clear

@@ -18,20 +18,17 @@ struct Event: Codable {
     var date: String?
     var startDateTime: String
     var endDateTime: String?
-    var isCover: Bool
     var eventType: String?
     var artistId: String?
     var isRecurring: Bool?
     var version: String
     var eventStatus: String
     var status: String
-    var rejectReason: String?
     var recurringType: String?
     var recurringTo: String?
     var recurringFrom: String?
     var description: String
     var disclaimer: String?
-    var isTieredTicket: Bool
     var upfront: Bool?
     var isDeleted: Bool
     var createdAt: String
@@ -197,20 +194,17 @@ struct Event: Codable {
         try container.encode(date, forKey: .date)
         try container.encode(startDateTime, forKey: .startDateTime)
         try container.encode(endDateTime, forKey: .endDateTime)
-        try container.encode(isCover, forKey: .isCover)
         try container.encode(eventType, forKey: .eventType)
         try container.encode(artistId, forKey: .artistId)
         try container.encode(isRecurring, forKey: .isRecurring)
         try container.encode(version, forKey: .version)
         try container.encode(eventStatus, forKey: .eventStatus)
         try container.encode(status, forKey: .status)
-        try container.encode(rejectReason, forKey: .rejectReason)
         try container.encode(recurringType, forKey: .recurringType)
         try container.encode(recurringTo, forKey: .recurringTo)
         try container.encode(recurringFrom, forKey: .recurringFrom)
         try container.encode(description, forKey: .description)
         try container.encode(disclaimer, forKey: .disclaimer)
-        try container.encode(isTieredTicket, forKey: .isTieredTicket)
         try container.encode(upfront, forKey: .upfront)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
