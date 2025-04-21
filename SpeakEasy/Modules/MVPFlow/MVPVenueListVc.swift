@@ -182,7 +182,9 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
+        if openVenueList[indexPath.row].isDiscoveryClickable ?? true {
+            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

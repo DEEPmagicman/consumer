@@ -42,6 +42,7 @@ struct ClipVenue: Codable {
     var availableTimeSlot: Bool?
     var speakEasyCharges: String?
     var event: [Event]?
+    var isDiscoveryClickable: Bool?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -195,6 +196,7 @@ struct ClipVenue: Codable {
         try container.encode(availableTimeSlot, forKey: .availableTimeSlot)
         try container.encode(speakEasyCharges, forKey: .speakEasyCharges)
         try container.encodeIfPresent(event, forKey: .event)
+        try container.encodeIfPresent(isDiscoveryClickable, forKey: .isDiscoveryClickable)
     }
 }
 
