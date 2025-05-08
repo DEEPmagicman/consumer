@@ -512,7 +512,7 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
                 let dPrice = price.components(separatedBy: ".")[1]
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"
             } else {
-                let price = Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat()
+                let price = Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true)
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(price)"
             }
         }
