@@ -222,6 +222,12 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
             cell.totalTicketLbl.text = "\(quantity)"
         }
+        if upSellTicket[indexPath.row].extraFees ?? 0 > 0 {
+            cell.lblExtraFeesValue.isHidden = false
+            cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].extraFees ?? 0).decimalFormat(true)) in fees)"
+        } else {
+            cell.lblExtraFeesValue.isHidden = true
+        }
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isEnabled = isMaxTicketReached ? false : true
         cell.minusBtn.tag = indexPath.row

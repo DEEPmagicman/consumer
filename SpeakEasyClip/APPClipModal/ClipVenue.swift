@@ -79,43 +79,43 @@ struct ClipVenue: Codable {
     }
     
     var modifiedCoverTicket: [CoverTicket] {
-        var ticketData = [CoverTicket]()
-        coverTicket?.enumerated().forEach({ index, ticket in
-            ticketData.append(ticket)
-            
-            if ticket.price < 2 {
-                return
-            }
-            
-            var taxRate = 0.0
-            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
-                taxRate = (venueSettings?.coverTicketSettings?.salesTax ?? 0) / 100
-            }
-            
-            var totalCustomFee = 0.0
-            if venueSettings?.coverTicketSettings?.isEnableCustomFee == true {
-                if venueSettings?.coverTicketSettings?.customFeeType == "PERCENTAGE" {
-                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketSettings?.customFee ?? 0) / 100)
-                } else {
-                    totalCustomFee = (venueSettings?.coverTicketSettings?.customFee ?? 0)
-                }
-            }
-            
-            var totalProcessingFee = 0.0
-            if venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true {
-                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
-                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
-            }
-            
-            var salesTax = 0.0
-            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
-                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
-            }
-            
-            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
-            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
-        })
-        return ticketData
+//        var ticketData = [CoverTicket]()
+//        coverTicket?.enumerated().forEach({ index, ticket in
+//            ticketData.append(ticket)
+//            
+//            if ticket.price < 2 {
+//                return
+//            }
+//            
+//            var taxRate = 0.0
+//            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
+//                taxRate = (venueSettings?.coverTicketSettings?.salesTax ?? 0) / 100
+//            }
+//            
+//            var totalCustomFee = 0.0
+//            if venueSettings?.coverTicketSettings?.isEnableCustomFee == true {
+//                if venueSettings?.coverTicketSettings?.customFeeType == "PERCENTAGE" {
+//                    totalCustomFee = (ticketData[index].price * (venueSettings?.coverTicketSettings?.customFee ?? 0) / 100)
+//                } else {
+//                    totalCustomFee = (venueSettings?.coverTicketSettings?.customFee ?? 0)
+//                }
+//            }
+//            
+//            var totalProcessingFee = 0.0
+//            if venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true {
+//                let stripeFee = (0.029 * (1 + taxRate) * (ticket.price + SEFee(ticket.price, ticketName: ticket.name) + totalCustomFee ) + 0.3) / (1 - (1 + taxRate) * 0.029)
+//                totalProcessingFee = stripeFee + SEFee(ticket.price, ticketName: ticket.name)
+//            }
+//            
+//            var salesTax = 0.0
+//            if venueSettings?.coverTicketSettings?.isEnableSalesTax == true {
+//                salesTax = (ticket.price + totalProcessingFee + totalCustomFee) * taxRate
+//            }
+//            
+//            let amountChargedToConsumer = ticket.price + totalProcessingFee + totalCustomFee + salesTax
+//            ticketData[index].price = round(amountChargedToConsumer * 100) / 100
+//        })
+        return coverTicket ?? []
     }
     
     var useTimezone: String {
@@ -255,6 +255,7 @@ struct CoverTicket: Codable {
     var name: String
     var customName: String?
     var price: Double
+    var extraFees: Double?
     var parentId: String?
     var status: String?
     var description: String?
@@ -294,6 +295,7 @@ struct CoverTicket: Codable {
         try container.encode(name, forKey: .name)
         try container.encode(customName, forKey: .customName)
         try container.encode(price, forKey: .price)
+        try container.encodeIfPresent(extraFees, forKey: .extraFees)
         try container.encode(parentId, forKey: .parentId)
         try container.encode(status, forKey: .status)
         try container.encode(description, forKey: .description)

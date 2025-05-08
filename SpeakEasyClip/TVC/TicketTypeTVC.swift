@@ -17,4 +17,5 @@ final class TicketTypeTVC: UITableViewCell {
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var totalTicketLbl: UILabel!
     @IBOutlet weak var sideArrow: UIImageView!
+    @IBOutlet weak var lblExtraFeesValue: UILabel!
 }

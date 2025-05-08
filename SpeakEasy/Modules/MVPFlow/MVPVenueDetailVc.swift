@@ -505,6 +505,12 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
+            if ticket?.extraFees ?? 0 > 0 {
+                cell.lblExtraFeesValue.isHidden = false
+                cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((ticket?.extraFees ?? 0).decimalFormat(true)) in fees)"
+            } else {
+                cell.lblExtraFeesValue.isHidden = true
+            }
             if venueDetails?.venueSettings?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
                 cell.ticketTypeLbl.textColor = .white

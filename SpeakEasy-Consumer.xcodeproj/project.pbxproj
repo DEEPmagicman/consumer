@@ -1563,7 +1563,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -1694,13 +1694,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2511,7 +2507,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -2604,12 +2600,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

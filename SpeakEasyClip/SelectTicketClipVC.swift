@@ -155,7 +155,7 @@ final class SelectTicketClipVC: UIViewController {
     }
     
     private func getAddOns() {
-        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons?include=addOns") else { return }
+        guard let url = URL(string: "\(SharedURL.baseURL)/consumer/add-ons?include=addOns.venue.venueSettings.addOnsBookingSettings") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         if doormanId != "" {
@@ -515,6 +515,12 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
                 let price = Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat()
                 cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(price)"
             }
+        }
+        if venueDetail?.coverTicket?[indexPath.row].extraFees ?? 0 > 0 {
+            cell.lblExtraFeesValue.isHidden = false
+            cell.lblExtraFeesValue.text = "(Incl. \(venueDetail?.venueSettings?.currencySymbol ?? "$")\((venueDetail?.coverTicket?[indexPath.row].extraFees ?? 0).decimalFormat(true)) in fees)"
+        } else {
+            cell.lblExtraFeesValue.isHidden = true
         }
         if venueDetail?.coverTicket?[indexPath.row].selectedQuantity ?? 0 >= 1 {
             cell.ticketPlusMinusView.isHidden = false

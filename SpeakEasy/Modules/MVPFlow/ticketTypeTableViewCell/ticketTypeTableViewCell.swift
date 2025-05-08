@@ -17,7 +17,8 @@ class ticketTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var totalTicketLbl: UILabel!
     @IBOutlet weak var hotVenueLbl: UILabel!
-    
+    @IBOutlet weak var lblExtraFeesValue: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
     }

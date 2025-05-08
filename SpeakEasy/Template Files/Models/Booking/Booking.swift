@@ -235,6 +235,7 @@ struct UpSellTicket: Codable {
     var doormanId: String
     var addOnsId: String
     var price: Double
+    var extraFees: Double?
     var status: String
     var isDeleted: Bool
     var createdAt: String
@@ -249,6 +250,7 @@ struct UpSellTicket: Codable {
         try container.encode(doormanId, forKey: .doormanId)
         try container.encode(addOnsId, forKey: .addOnsId)
         try container.encode(price, forKey: .price)
+        try container.encodeIfPresent(extraFees, forKey: .extraFees)
         try container.encode(status, forKey: .status)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encode(createdAt, forKey: .createdAt)
