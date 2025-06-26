@@ -8,13 +8,13 @@
 import Foundation
 
 struct TimeSlot: Codable {
-
+    
     var id: String
     var bookingId: String
     var floorPlanTableTimeSlotId: String
     var createdAt: String
     var floorPlanTableTimeSlot: FloorPlanTableTimeSlot
-
+    
     private enum CodingKeys: String, CodingKey {
         case id = "id"
         case bookingId = "bookingId"
@@ -22,7 +22,7 @@ struct TimeSlot: Codable {
         case createdAt = "createdAt"
         case floorPlanTableTimeSlot = "FloorPlanTableTimeSlot"
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -31,7 +31,6 @@ struct TimeSlot: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(floorPlanTableTimeSlot, forKey: .floorPlanTableTimeSlot)
     }
-
 }
 
 struct FloorPlanTableTimeSlot: Codable {

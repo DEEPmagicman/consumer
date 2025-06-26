@@ -334,4 +334,11 @@ final class Navigate {
         guard let url = URL(string: url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+    
+    func barTabCheckoutVC(_ sender: UIViewController, selectedTicket: [CoverTicket], venueDetails: ClipVenue?) {
+        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabCheckoutVC.self)
+        vc.selectedTicket = selectedTicket
+        vc.venueDetails = venueDetails
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }

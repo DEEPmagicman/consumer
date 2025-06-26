@@ -263,26 +263,29 @@ struct CoverTicket: Codable {
     var createdAt: String?
     var updatedAt: String?
     var coverType: String?
-    var coverTicketLocalizations: [CoverTicketLocalizations]
+    var coverTicketLocalizations: [CoverTicketLocalizations]?
     // MARK: app side parameters
     var selectedQuantity: Int?
     var isCustom: Bool {
         coverType == "CUSTOM"
     }
+    var isBarTicket: Bool {
+        coverType == "BAR_TAB"
+    }
     var displayName: String {
-        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+        if let languageWiseTicket = coverTicketLocalizations?.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
             return languageWiseTicket.name
         }
         return name
     }
     var displayCustomName: String? {
-        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+        if let languageWiseTicket = coverTicketLocalizations?.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
             return languageWiseTicket.customName
         }
         return customName
     }
     var displayDescription: String? {
-        if let languageWiseTicket = coverTicketLocalizations.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
+        if let languageWiseTicket = coverTicketLocalizations?.first(where: { $0.language == UserDefaults.standard.language.lowercased() }) {
             return languageWiseTicket.description
         }
         return description
@@ -303,7 +306,7 @@ struct CoverTicket: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(coverType, forKey: .coverType)
-        try container.encode(coverTicketLocalizations, forKey: .coverTicketLocalizations)
+        try container.encodeIfPresent(coverTicketLocalizations, forKey: .coverTicketLocalizations)
     }
 }
 
@@ -364,20 +367,20 @@ struct CoverTicketLocalizations: Codable {
 }
 
 struct CoverTicketFeesSettings: Codable {
-      var id: String
-      var isUpFront: Bool
-      var isProcessingFeePassToCustomer: Bool
-      var isEnableSalesTax: Bool
-      var salesTaxName: String?
-      var salesTax: Double
-      var isEnableCustomFee: Bool
-      var customFeeType: String
-      var customFeeName: String
-      var customFee: Double
-      var isCustomFeeTaxable: Bool?
-      var isProcessingFeeTaxable: Bool?
-      var pageTitle: String?
-      var description: String?
+    var id: String
+    var isUpFront: Bool
+    var isProcessingFeePassToCustomer: Bool
+    var isEnableSalesTax: Bool
+    var salesTaxName: String?
+    var salesTax: Double
+    var isEnableCustomFee: Bool
+    var customFeeType: String
+    var customFeeName: String
+    var customFee: Double
+    var isCustomFeeTaxable: Bool?
+    var isProcessingFeeTaxable: Bool?
+    var pageTitle: String?
+    var description: String?
     var disclaimer: String?
     var customFees: [CustomFeeSettings]?
     

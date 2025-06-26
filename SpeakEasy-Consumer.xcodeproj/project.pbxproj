@@ -226,6 +226,11 @@
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
+		CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB654212E0D319400E9BFD3 /* BarTab.storyboard */; };
+		CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */; };
+		CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */; };
+		CEB6542C2E0D6D2800E9BFD3 /* BarTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */; };
+		CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */; };
 		CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EE2D48E2FD00B640C8 /* LICENSE */; };
 		CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EF2D48E2FD00B640C8 /* README.md */; };
 		CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */; };
@@ -528,6 +533,10 @@
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
+		CEB654212E0D319400E9BFD3 /* BarTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BarTab.storyboard; sourceTree = "<group>"; };
+		CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabCheckoutVC.swift; sourceTree = "<group>"; };
+		CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabPresenter.swift; sourceTree = "<group>"; };
+		CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTab.swift; sourceTree = "<group>"; };
 		CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodePickerOptions.swift; sourceTree = "<group>"; };
@@ -707,6 +716,7 @@
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
 				CE677F962A41720F0025421D /* InvitePresenter.swift */,
+				CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -956,6 +966,7 @@
 				920B4CFD2B90932200C07402 /* ScanQRCodeVC.swift */,
 				044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */,
 				CED54E432C3E8ABF00D3A942 /* EventCheckoutVC.swift */,
+				CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */,
 			);
 			path = PaymentFlow;
 			sourceTree = "<group>";
@@ -1091,6 +1102,7 @@
 		CE486737286F2D4B00FD277E /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				CEB654202E0D317800E9BFD3 /* Bartab */,
 				E15D6B3F28BC39AB0076286C /* Login */,
 				CE4867E7286F7DC500FD277E /* Home */,
 				82847A77298244A000611DC4 /* MVPFlow */,
@@ -1221,6 +1233,7 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CEB654272E0D6D0F00E9BFD3 /* BarTab */,
 				CE677F982A4177220025421D /* Invite */,
 				CE0F423B29FBE69A0082723B /* Booking */,
 				29868364297567FB00CB827B /* EventModels */,
@@ -1300,6 +1313,22 @@
 				CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */,
 			);
 			path = DropDownCell;
+			sourceTree = "<group>";
+		};
+		CEB654202E0D317800E9BFD3 /* Bartab */ = {
+			isa = PBXGroup;
+			children = (
+				CEB654212E0D319400E9BFD3 /* BarTab.storyboard */,
+			);
+			path = Bartab;
+			sourceTree = "<group>";
+		};
+		CEB654272E0D6D0F00E9BFD3 /* BarTab */ = {
+			isa = PBXGroup;
+			children = (
+				CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */,
+			);
+			path = BarTab;
 			sourceTree = "<group>";
 		};
 		CEBCF5D92D48E2FD00B640C8 /* Resources */ = {
@@ -1614,6 +1643,7 @@
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
+				CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */,
 				CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */,
 				CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */,
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
@@ -1757,6 +1787,7 @@
 				04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */,
+				CEB6542C2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
 				04862C182B975F9000836598 /* QRClipVC.swift in Sources */,
 				691574662A0CD0EF002F303A /* Stripe.swift in Sources */,
 				CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */,
@@ -1816,6 +1847,7 @@
 				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
 				BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */,
+				CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */,
 				CE4867AB286F358800FD277E /* Utility.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
@@ -1847,6 +1879,7 @@
 				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
+				CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
 				2986835B2975658300CB827B /* Venue.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
@@ -1943,6 +1976,7 @@
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */,
+				CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */,
 				CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */,
 				04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */,
 				CAC413F528A478040007BA86 /* DeviceOrientation.swift in Sources */,

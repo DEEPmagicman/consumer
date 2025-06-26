@@ -64,6 +64,7 @@ struct APIBuilder {
     static private let checkin = "/checkin"
     static private let question = "/question"
     static private let answer = "/answer"
+    static private let barTab = "/bar-tab"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -334,6 +335,10 @@ struct APIBuilder {
     
     static func postEventQueAns(_ eventUniqueId: String) -> String {
         baseURL + route + event + "/\(eventUniqueId)" + question + answer
+    }
+    
+    static var barTabAPI: String {
+        baseURL + route + barTab
     }
 }
 

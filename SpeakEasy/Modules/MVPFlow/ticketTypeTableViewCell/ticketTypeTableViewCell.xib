@@ -31,8 +31,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="496" height="164"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-NG-UWF">
-                        <rect key="frame" x="0.0" y="15" width="496" height="149"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-NG-UWF" customClass="ShadowView" customModule="Speakeasy">
+                        <rect key="frame" x="16" y="7.5" width="464" height="149"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-bV-Bk6" customClass="UILabelDeviceClass" customModule="SpeakEasyClip" customModuleProvider="target">
                                 <rect key="frame" x="10" y="11" width="9.5" height="22.5"/>
@@ -41,13 +41,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YKK-ir-Xwf" customClass="UILabelDeviceClass" customModule="SpeakEasyClip" customModuleProvider="target">
-                                <rect key="frame" x="10" y="60" width="473" height="18.5"/>
+                                <rect key="frame" x="10" y="60" width="441" height="18.5"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="VDi-Xa-xSQ">
-                                <rect key="frame" x="386" y="11" width="97" height="45"/>
+                                <rect key="frame" x="354" y="11" width="97" height="45"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="$" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tAa-Ha-WLH" customClass="UILabelDeviceClass" customModule="SpeakEasyClip" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="97" height="31"/>
@@ -64,7 +64,7 @@
                                 </subviews>
                             </stackView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="Hot Night!" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOM-Ut-JRn" customClass="UILabelDeviceClass" customModule="SpeakEasyClip" customModuleProvider="target">
-                                <rect key="frame" x="431.5" y="125" width="51.5" height="14"/>
+                                <rect key="frame" x="399.5" y="125" width="51.5" height="14"/>
                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="10"/>
                                 <color key="textColor" red="0.96078431372549022" green="0.50588235294117645" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -84,7 +84,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vRX-HR-NMm">
-                                <rect key="frame" x="248" y="92.5" width="0.0" height="0.0"/>
+                                <rect key="frame" x="232" y="92.5" width="0.0" height="0.0"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn7-Cz-YYd">
                                         <rect key="frame" x="0.0" y="0.0" width="153" height="63"/>
@@ -140,7 +140,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.5" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.078431375319999996" green="0.078431375319999996" blue="0.078431375319999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="YKK-ir-Xwf" firstAttribute="top" secondItem="VDi-Xa-xSQ" secondAttribute="bottom" constant="4" id="228-SW-38C"/>
                             <constraint firstItem="UuF-8i-IxH" firstAttribute="leading" secondItem="av2-NG-UWF" secondAttribute="leading" constant="16" id="4uc-Pj-Z9h"/>
@@ -176,15 +176,16 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="av2-NG-UWF" secondAttribute="trailing" id="2tc-ei-DfG"/>
-                    <constraint firstItem="av2-NG-UWF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="F3f-lX-eh2"/>
-                    <constraint firstItem="av2-NG-UWF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="PKZ-PU-nqp"/>
-                    <constraint firstAttribute="bottom" secondItem="av2-NG-UWF" secondAttribute="bottom" id="iNG-hC-aen"/>
+                    <constraint firstAttribute="trailing" secondItem="av2-NG-UWF" secondAttribute="trailing" constant="16" id="2tc-ei-DfG"/>
+                    <constraint firstItem="av2-NG-UWF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7.5" id="F3f-lX-eh2"/>
+                    <constraint firstItem="av2-NG-UWF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="PKZ-PU-nqp"/>
+                    <constraint firstAttribute="bottom" secondItem="av2-NG-UWF" secondAttribute="bottom" constant="7.5" id="iNG-hC-aen"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="bgView" destination="av2-NG-UWF" id="4dz-OE-pfd"/>
                 <outlet property="hotVenueLbl" destination="BOM-Ut-JRn" id="1Os-hH-3jf"/>
                 <outlet property="infoLbl" destination="YKK-ir-Xwf" id="saW-dg-8rH"/>
                 <outlet property="lblExtraFeesValue" destination="XIf-0R-BG9" id="3UQ-0Z-P1O"/>
