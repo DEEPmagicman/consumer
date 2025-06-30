@@ -31,7 +31,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="496" height="164"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-NG-UWF" customClass="ShadowView" customModule="Speakeasy">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av2-NG-UWF">
                         <rect key="frame" x="16" y="7.5" width="464" height="149"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-bV-Bk6" customClass="UILabelDeviceClass" customModule="SpeakEasyClip" customModuleProvider="target">

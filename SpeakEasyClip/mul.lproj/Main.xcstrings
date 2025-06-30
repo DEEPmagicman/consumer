@@ -37,6 +37,18 @@
         }
       }
     },
+    "2jt-ET-Eky.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Sales Tax\"; ObjectID = \"2jt-ET-Eky\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sales Tax"
+          }
+        }
+      }
+    },
     "2ob-qK-48g.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Label\"; ObjectID = \"2ob-qK-48g\";",
       "extractionState" : "stale",
@@ -127,6 +139,30 @@
         }
       }
     },
+    "5KO-7S-wik.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$\"; ObjectID = \"5KO-7S-wik\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$"
+          }
+        }
+      }
+    },
+    "5UZ-MY-GYs.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"5UZ-MY-GYs\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$0.00"
+          }
+        }
+      }
+    },
     "5vU-L4-goq.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"GET MY FREE TICKET\"; ObjectID = \"5vU-L4-goq\";",
       "extractionState" : "extracted_with_value",
@@ -141,6 +177,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OBTENGA MI ENTRADA GRATIS"
+          }
+        }
+      }
+    },
+    "5z0-sW-XmO.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Label\"; ObjectID = \"5z0-sW-XmO\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Label"
           }
         }
       }
@@ -193,6 +241,18 @@
         }
       }
     },
+    "asy-UZ-W9X.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"First Name\"; ObjectID = \"asy-UZ-W9X\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "First Name"
+          }
+        }
+      }
+    },
     "AY8-dB-eac.title" : {
       "comment" : "Class = \"UIViewController\"; title = \"ScanQRCodeVC\"; ObjectID = \"AY8-dB-eac\";",
       "extractionState" : "extracted_with_value",
@@ -225,6 +285,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Por favor ingrese un correo electrónico válido"
+          }
+        }
+      }
+    },
+    "brm-bk-8GG.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Processing Fees\"; ObjectID = \"brm-bk-8GG\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Processing Fees"
+          }
+        }
+      }
+    },
+    "BRY-zT-a9e.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"Last Name\"; ObjectID = \"BRY-zT-a9e\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Last Name"
           }
         }
       }
@@ -315,6 +399,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Se requieren boletos para guardarropas por cada huésped con abrigos. Agregue un boleto para cada invitado de su grupo."
+          }
+        }
+      }
+    },
+    "DIE-DT-glF.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"First Name\"; ObjectID = \"DIE-DT-glF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "First Name"
           }
         }
       }
@@ -427,6 +523,18 @@
         }
       }
     },
+    "fiY-ih-ihI.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Please enter valid email\"; ObjectID = \"fiY-ih-ihI\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Please enter valid email"
+          }
+        }
+      }
+    },
     "fNc-yr-ukq.placeholder" : {
       "comment" : "Class = \"UITextField\"; placeholder = \"Last Name\"; ObjectID = \"fNc-yr-ukq\";",
       "extractionState" : "extracted_with_value",
@@ -530,6 +638,18 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "XXX-XXX-XXXX"
+          }
+        }
+      }
+    },
+    "Is1-Jv-Bm9.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"XXX-XXX-XXXX\"; ObjectID = \"Is1-Jv-Bm9\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
             "value" : "XXX-XXX-XXXX"
           }
         }
@@ -709,6 +829,30 @@
         }
       }
     },
+    "O7m-ck-9Za.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Last Name\"; ObjectID = \"O7m-ck-9Za\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Last Name"
+          }
+        }
+      }
+    },
+    "O45-BI-5tM.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Subtotal\"; ObjectID = \"O45-BI-5tM\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Subtotal"
+          }
+        }
+      }
+    },
     "pde-e5-yev.text" : {
       "comment" : "Class = \"UILabel\"; text = \"CUSTOM FEE\"; ObjectID = \"pde-e5-yev\";",
       "extractionState" : "extracted_with_value",
@@ -717,6 +861,30 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "CUSTOM FEE"
+          }
+        }
+      }
+    },
+    "pIT-fv-ze0.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Pay with Card\"; ObjectID = \"pIT-fv-ze0\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Pay with Card"
+          }
+        }
+      }
+    },
+    "Q0F-pX-xcZ.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Total\"; ObjectID = \"Q0F-pX-xcZ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Total"
           }
         }
       }
@@ -829,6 +997,18 @@
         }
       }
     },
+    "RAE-pk-owH.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"RAE-pk-owH\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$0.00"
+          }
+        }
+      }
+    },
     "rd7-Bn-11N.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Subtotal\"; ObjectID = \"rd7-Bn-11N\";",
       "extractionState" : "extracted_with_value",
@@ -861,6 +1041,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finalizar Compra"
+          }
+        }
+      }
+    },
+    "SKn-4f-viY.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"We will send your ticket(s) to this number.\"; ObjectID = \"SKn-4f-viY\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "We will send your ticket(s) to this number."
+          }
+        }
+      }
+    },
+    "sSu-iW-qVE.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"sSu-iW-qVE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$0.00"
+          }
+        }
+      }
+    },
+    "swH-YV-AQx.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Email\"; ObjectID = \"swH-YV-AQx\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Email"
+          }
+        }
+      }
+    },
+    "TOA-sO-0OF.placeholder" : {
+      "comment" : "Class = \"UITextField\"; placeholder = \"Email\"; ObjectID = \"TOA-sO-0OF\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Email"
           }
         }
       }
@@ -1003,6 +1231,18 @@
         }
       }
     },
+    "xRS-EW-hiS.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"CUSTOM FEE\"; ObjectID = \"xRS-EW-hiS\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "CUSTOM FEE"
+          }
+        }
+      }
+    },
     "xuQ-ZD-c1L.text" : {
       "comment" : "Class = \"UILabel\"; text = \"No ticketing fees\"; ObjectID = \"xuQ-ZD-c1L\";",
       "extractionState" : "extracted_with_value",
@@ -1035,6 +1275,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TARIFA PERSONALIZADA"
+          }
+        }
+      }
+    },
+    "y6m-xJ-SNA.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"y6m-xJ-SNA\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$0.00"
+          }
+        }
+      }
+    },
+    "YOg-bb-4m2.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Checkout\"; ObjectID = \"YOg-bb-4m2\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Checkout"
           }
         }
       }

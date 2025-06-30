@@ -564,7 +564,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             return (venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
-        if (((venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && (paymentDetail?.customFees?.reduce(0.0) { $0 + $1.fee } ?? 0 > 0) {
+        if (((venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && (paymentDetail?.customFees?.reduce(0.0) { $0 + ($1.fee ?? 0) } ?? 0 > 0) {
             return true
         }
         return false
@@ -572,7 +572,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private var setProcessingTaxView: Bool {
         var isProcessingFeeApplied = paymentDetail?.processingFee ?? 0 > 0
-        let totalCustomFee = paymentDetail?.customFees?.reduce(0.0) { $0 + $1.fee } ?? 0
+        let totalCustomFee = paymentDetail?.customFees?.reduce(0.0) { $0 + ($1.fee ?? 0) } ?? 0
         let processingFee = paymentDetail?.processingFee ?? 0
         let subTotal = paymentDetail?.subTotal ?? 0
         let salesTax = paymentDetail?.salesTax ?? 0
@@ -598,7 +598,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     private func displayPayment() {
         if self.paymentDetail?.customFees?.count ?? 0 == 0 && self.paymentDetail?.customFee ?? 0 > 0 {
             let paymentDetails = self.paymentDetail
-            self.paymentDetail?.customFees = [CustomFees(fee: paymentDetails?.customFee ?? 0, name: paymentDetails?.customFeeName ?? "")]
+            self.paymentDetail?.customFees = [CustomFees(fee: paymentDetails?.customFee ?? 0, name: paymentDetails?.customFeeName ?? "", amount: paymentDetails?.customFee ?? 0)]
         }
         
         switch type {

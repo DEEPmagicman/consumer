@@ -86,3 +86,4 @@ struct BarTabPayments: Codable {
         try container.encodeIfPresent(bookingFees, forKey: .bookingFees)
     }
 }
+

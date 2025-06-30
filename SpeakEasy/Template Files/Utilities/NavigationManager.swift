@@ -341,4 +341,9 @@ final class Navigate {
         vc.venueDetails = venueDetails
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func barTabConfirmationVC(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabConfirmationVC.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }

@@ -525,13 +525,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 cell.ticketPriceLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
                 cell.ticketTypeLbl.textColor = UIColor(red: 121/255, green: 121/255, blue: 121/255, alpha: 1)
             }
-            if ticket?.isBarTicket == true && ticket?.selectedQuantity ?? 0 > 0 {
-                cell.bgView.addOuterShadow()
-            } else if ticket?.selectedQuantity ?? 0 >= 1 {
-                cell.bgView.removeOuterShadow()
+            if ticket?.selectedQuantity ?? 0 >= 1 {
                 cell.ticketPlusMinusView.isHidden = false
             } else {
-                cell.bgView.removeOuterShadow()
                 cell.ticketPlusMinusView.isHidden = true
             }
             if venueDetails?.checkInUser ?? 0 > 100 {
@@ -635,9 +631,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if defaultPaidTicket != nil {
                     forceRemovePaidTicket()
                 }
-//                if barTabTicket != nil {
-//                    forceRemoveBarTabTicket()
-//                }
             } else if selectedTicket?.isCustom == false {
                 if selectedTicket?.price ?? 0 >= 2 {
                     if customPaidTicket != nil {
@@ -836,3 +829,4 @@ extension MVPVenueDetailVc: UpdateDetailDelegate {
         updateContinueBtn(forceRemove: true)
     }
 }
+
