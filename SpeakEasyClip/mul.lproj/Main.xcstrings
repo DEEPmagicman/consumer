@@ -181,18 +181,6 @@
         }
       }
     },
-    "5z0-sW-XmO.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Label\"; ObjectID = \"5z0-sW-XmO\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Label"
-          }
-        }
-      }
-    },
     "6sN-Av-WaO.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Processing Fees\"; ObjectID = \"6sN-Av-WaO\";",
       "extractionState" : "extracted_with_value",

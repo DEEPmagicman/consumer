@@ -354,7 +354,6 @@ final class SelectTicketClipVC: UIViewController {
         
         if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "BarTabCheckOutClipVC")) as? BarTabCheckOutClipVC, let selectedTickets = venueDetail?.coverTicket?.filter({ $0.selectedQuantity != nil }), selectedTickets.first?.isBarTicket == true {
                 vc.selectedCoverTickets = selectedTickets
-                vc.totalPrice = totalPrice
                 vc.venue = venueDetail
                 vc.venueImageData = venueImageData
                 navigationController?.interactivePopGestureRecognizer?.delegate = self

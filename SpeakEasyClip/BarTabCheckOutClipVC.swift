@@ -36,7 +36,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var customFeeView: UIView!
     @IBOutlet weak var salesTextView: UIView!
     @IBOutlet weak var salesTextAmount: UILabel!
-    @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var emailValidationLbl: UILabel!
     @IBOutlet weak var salesTaxName: UILabel!
     @IBOutlet weak var ticketListView: UIView!
@@ -48,7 +47,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var customFeeTableView: UITableView!
     @IBOutlet weak var customFeeTableViewHeight: NSLayoutConstraint!
     
-    var totalPrice = 1.0
     var venue: ClipVenue?
     var selectedCoverTickets = [CoverTicket]()
     private var paymentSheet: PaymentSheet?
@@ -58,12 +56,12 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var isPaymentInitiated = false
     private var isValidNo = false
     private var ticketListHeightObservation: NSKeyValueObservation?
-    private var booking: Booking?
     var venueImageData = Data()
     let phoneNumberUtility = PhoneNumberUtility()
     var phoneNumber: PhoneNumber?
     private var paymentDetail: PaymentDetail?
-
+    private var barTabData: BarTabData?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         WebSocketWrapper.shared.delegate.append(self)
@@ -78,11 +76,12 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         phoneNumTextField.delegate = self
         phoneNumTextField.withDefaultPickerUI = true
-        phoneNumTextField.defaultRegion = "US"
+        phoneNumTextField.defaultRegion = "IN"
         phoneNumTextField.withPrefix = false
         phoneNumTextField.withFlag = true
         phoneNumTextField.withExamplePlaceholder = true
-        
+        firstNameTF.text = "Urmil"
+        lastNameTF.text = "Vataliya"
         CountryCodePicker.alwaysShowsSearchBar = true
         CountryCodePicker.forceModalPresentation = true
         var options = CountryCodePickerOptions()
@@ -92,7 +91,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         options.detailTextLabelFont = UIFont(name: "Poppins-Regular", size: 15)!
         phoneNumTextField.withDefaultPickerUIOptions = options
         
-        totalPriceLbl.text = totalPrice == 0 ? "\(venue?.venueSettings?.currencySymbol ?? "$")0.00" : "-"
+        totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")0.00"
         applePayBtn.addTarget(self, action: #selector(checkApplePay), for: .touchUpInside)
         if PKPaymentAuthorizationViewController.canMakePayments() {
             errorLbl.text = "Add Card to your Apple wallet & try again.".localize()
@@ -117,73 +116,15 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailValidationLbl.isHidden = true
         emailTF.delegate = self
+        createBooking()
     }
     
     override func viewDidLayoutSubviews() {
-        if totalPrice == 0 {
+        if paymentDetail?.total ?? 0 == 0 {
             scrollViewBottomConstraint.constant = 130 - view.safeAreaInsets.bottom
         } else {
             scrollViewBottomConstraint.constant = 190 - view.safeAreaInsets.bottom
         }
-    }
-    
-    private var setSalesTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
-            return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
-        }
-        
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
-            return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
-        }
-        
-        if ((venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true) && paymentDetail?.salesTax ?? 0 > 0 {
-            let customTicket = selectedCoverTickets.first(where: { $0.isCustom == true && $0.price > 0 })
-            salesTaxPr.text = customTicket == nil ? "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)" : "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
-            return true
-        }
-        return false
-    }
-    
-    private var setCustomTaxView: Bool {
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            return venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0
-        }
-        
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            return (venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
-        }
-        
-        if (((venue?.venueSettings?.coverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.customFees?.filter({$0.isEnableCustomFee == true }).count ?? 0 > 0) && (paymentDetail?.customFees?.reduce(0.0) { $0 + ($1.fee ?? 0) } ?? 0 > 0) {
-            return true
-        }
-        return false
-    }
-    
-    private var setProcessingTaxView: Bool {
-        
-        var isProcessingFeeApplied = paymentDetail?.processingFee ?? 0 > 0
-        let totalCustomFee = paymentDetail?.customFees?.reduce(0.0) { $0 + ($1.fee ?? 0) } ?? 0
-        let processingFee = paymentDetail?.processingFee ?? 0
-        let subTotal = paymentDetail?.subTotal ?? 0
-        let salesTax = paymentDetail?.salesTax ?? 0
-        let total = paymentDetail?.total ?? 0
-        let totalAmount = (subTotal + processingFee + salesTax + totalCustomFee)
-        isProcessingFeeApplied = totalAmount == total
-        
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            return venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true ? true : false
-        }
-        
-        if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            return venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
-        }
-        
-        if ((venue?.venueSettings?.coverTicketSettings?.isProcessingFeePassToCustomer == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false) || venue?.venueSettings?.customCoverTicketSettings?.isProcessingFeePassToCustomer == true) && isProcessingFeeApplied {
-            return true
-        }
-        return false
     }
     
     private func getCustomTextFieldInputAccessoryView(with items: [UIBarButtonItem]) -> UIToolbar {
@@ -194,6 +135,109 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         toolbar.sizeToFit()
         
         return toolbar
+    }
+    
+    func createBooking() {
+        let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII } ?? "+1"
+        if !validateEmail {
+            emailValidationLbl.isHidden = false
+            return
+        }
+        emailValidationLbl.isHidden = true
+        AppClipLoader.showLoader(self.view)
+        var selectedTickets = [[String: Any]]()
+        selectedCoverTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+        }
+        var paramData = [String: Any]()
+        var param = ["tickets": selectedTickets,
+                     "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? "",
+                     "code": countryCode,
+                     "phone": "\(self.phoneNumber?.nationalNumber ?? 0)"] as [String: Any]
+        if firstNameTF.text ?? "" != "" {
+            param["firstName"] = firstNameTF.text ?? ""
+        }
+        if lastNameTF.text ?? "" != "" {
+            param["lastName"] = lastNameTF.text ?? ""
+        }
+        if emailTF.text ?? "" != "" {
+            param["email"] = (emailTF.text ?? "").replacingOccurrences(of: " ", with: "")
+        }
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            AppClipLoader.hideLoader()
+            if let data = try? JSONDecoder().decode(BarTabData.self, from: data) {
+                self.barTabData = data
+                self.paymentIntent = self.barTabData?.clientSecret ?? ""
+                self.paymentDetail = self.barTabData?.barTab.barTabPayments?.first?.bookingFees
+                self.displayPaymentData()
+            }
+        }
+        task.resume()
+    }
+    
+    private func displayPaymentData() {
+        let feeData = paymentDetail
+        DispatchQueue.main.async {
+            self.subTotalView.isHidden = feeData?.subTotal == feeData?.total
+            self.salesTextView.isHidden = feeData?.salesTax ?? 0 == 0
+            self.customFeeView.isHidden = feeData?.additionalFees?.count == 0
+            self.processingFeeView.isHidden = !self.setProcessingFeeView
+            
+            self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
+            self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.subTotal ?? 0).decimalFormat(true))"
+            self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.salesTax ?? 0).decimalFormat(true))"
+            self.salesTaxName.text = feeData?.salesTaxName ?? "Sales Tax"
+            self.totalPriceLbl.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.total ?? 0).decimalFormat(true))"
+            
+            self.customFeeTableViewHeight.constant = CGFloat((feeData?.additionalFees?.count ?? 0) * 30)
+            self.customFeeTableView.reloadData()
+            self.isIntendCreated = true
+            self.setUpPaymentBottomSheet()
+        }
+    }
+    
+    var setProcessingFeeView: Bool {
+        let feeData = barTabData?.barTab.barTabPayments?.first?.bookingFees
+        let totalCustomFee = feeData?.additionalFees?.reduce(0.0) { $0 + ($1.amount ?? 0) } ?? 0
+        let processingFee = feeData?.processingFee ?? 0
+        let subTotal = feeData?.subTotal ?? 0
+        let salesTax = feeData?.salesTax ?? 0
+        let total = feeData?.total ?? 0
+
+        return (processingFee != 0) && (total != subTotal) && ((subTotal + salesTax + totalCustomFee) != total)
     }
     
     @objc func checkApplePay() {
@@ -212,7 +256,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     }
                     return
                 }
-                
                 applePayBtn.isHidden = false
                 errorLbl.isHidden = true
             } else if isApplePayNotSupported == false {
@@ -254,7 +297,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     @objc private func textFieldValDidChange(_ textField: UITextField) {
-        isIntendCreated = false
+//        isIntendCreated = false
         if textField.text != "" {
             if textField == firstNameTF {
                 firstNameUnderlineView.backgroundColor = UIColor(red: 0.48, green: 0.48, blue: 0.49, alpha: 1.00)
@@ -306,7 +349,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         let merchantIdentifier = "merchant.com.speakeasy"
         let paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: merchantIdentifier, country: "US", currency: venue?.venueSettings?.currencyCode?.uppercased() ?? "USD")
         paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: (totalPrice)))
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: (paymentDetail?.total ?? 0)))
         ]
         paymentRequest.requiredBillingContactFields = []
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
@@ -331,14 +374,17 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
         isPaymentInitiated = true
+        print("-=-= \(self.paymentIntent)")
         paymentSheet?.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                DispatchQueue.main.async {
-                    AppClipLoader.showLoader(self.view)
-                }
+//                DispatchQueue.main.async {
+//                    AppClipLoader.showLoader(self.view)
+//                }
+                print("-=-= payment completed")
             case .canceled:
+                print("-=-= payment canceled")
                 self.isPaymentInitiated = false
             case .failed:
                 self.isPaymentInitiated = false
@@ -348,9 +394,11 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     }
     
     private var validateEmail: Bool {
-            return (emailTF.text ?? "").isValidEmail
+        if emailTF.text ?? "" == "" {
+            return true
         }
-    
+        return (emailTF.text ?? "").isValidEmail
+    }
     
     @IBAction func onClickCardPay(_ sender: Any) {
         if !checkAllData {
@@ -366,6 +414,8 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.onClickCreditCardPay()
                 }
                 return
+            } else {
+                print("-=-= isIntendCreated is false ")
             }
         }
     }
@@ -404,9 +454,9 @@ extension BarTabCheckOutClipVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == customFeeTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
-            let customFee = self.paymentDetail?.customFees?[indexPath.row]
+            let customFee = self.paymentDetail?.additionalFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
-            cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
+            cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.amount ?? 0).decimalFormat(true))"
             return cell
         }
         
