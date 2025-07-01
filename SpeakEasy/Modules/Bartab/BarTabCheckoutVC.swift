@@ -45,9 +45,6 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     }
     private var isPaymentInitiated = false
     private var paymentSheet: PaymentSheet?
-//    private var paymentIntent = ""
-//    private var paymentHistoryId = ""
-//    private var ephemeralKey = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
