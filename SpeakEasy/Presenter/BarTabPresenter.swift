@@ -53,4 +53,25 @@ final class BarTabPresenter {
             completion(false, nil, nil)
         }
     }
+    
+    
+    static func getBarTabPaymentDetails(posCheckId: String, completion: @escaping(_ isSuccess: Bool, _ errMsg: String?, _ barTabBooking: BarTabBooking?) -> Void) {
+        AFWrapper.getRequest(APIBuilder.barTabPaymentDetails(posCheckId: posCheckId), headers: Header.header()) { response in
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, nil, nil)
+                return
+            }
+            if let booking = BarTabBooking.parse(responseDic) {
+                completion(true, nil, booking)
+            } else {
+                completion(false, "internal error", nil)
+            }
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            completion(false, nil, nil)
+        }
+    }
 }

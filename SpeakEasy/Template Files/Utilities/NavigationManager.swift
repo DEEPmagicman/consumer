@@ -342,8 +342,27 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func barTabConfirmationVC(_ sender: UIViewController) {
-        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabConfirmationVC.self)
-        sender.navigationController?.pushViewController(vc, animated: true)
+    func barTabQRCodeVC(_ sender: UIViewController, posCheckId: String, venue: ClipVenue?, barTabId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabQRCodeVC.self)
+        vc.venue = venue
+        vc.posCheckId = posCheckId
+        vc.barTabId = barTabId
+        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+            homeVc.present(vc, animated: true)
+            homeVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [homeVc]
+            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
+                vc.delegate = accountVC
+            }
+            return
+        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
+            accountVc.present(vc, animated: true)
+            accountVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [accountVc]
+            vc.delegate = accountVc as? AccountVC
+            return
+        }
+        sender.navigationController?.present(vc, animated: true)
+//        sender.navigationController?.pushViewController(vc, animated: true)
     }
 }

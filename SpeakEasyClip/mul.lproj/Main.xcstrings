@@ -217,18 +217,6 @@
         }
       }
     },
-    "43k-ZO-xoV.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Order with your bartender and show them the tab number.\"; ObjectID = \"43k-ZO-xoV\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Order with your bartender and show them the tab number."
-          }
-        }
-      }
-    },
     "a9F-aO-ive.placeholder" : {
       "comment" : "Class = \"UITextField\"; placeholder = \"Email\"; ObjectID = \"a9F-aO-ive\";",
       "extractionState" : "extracted_with_value",
@@ -237,18 +225,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Email"
-          }
-        }
-      }
-    },
-    "alR-gg-KbB.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Paul Stacek\"; ObjectID = \"alR-gg-KbB\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Paul Stacek"
           }
         }
       }
@@ -751,18 +727,6 @@
         }
       }
     },
-    "Mcy-Of-FYS.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Tab Number\"; ObjectID = \"Mcy-Of-FYS\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Tab Number"
-          }
-        }
-      }
-    },
     "MoV-7y-Ad4.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"CHECKOUT\"; ObjectID = \"MoV-7y-Ad4\";",
       "extractionState" : "extracted_with_value",
@@ -1033,6 +997,18 @@
         }
       }
     },
+    "Rbl-d3-eeA.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Buy another ticket\"; ObjectID = \"Rbl-d3-eeA\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Buy another ticket"
+          }
+        }
+      }
+    },
     "rd7-Bn-11N.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Subtotal\"; ObjectID = \"rd7-Bn-11N\";",
       "extractionState" : "extracted_with_value",
@@ -1047,30 +1023,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total Parcial"
-          }
-        }
-      }
-    },
-    "rjb-Su-A3N.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"rjb-Su-A3N\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "$0.00"
-          }
-        }
-      }
-    },
-    "rqQ-qa-aII.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Credit remaining\"; ObjectID = \"rqQ-qa-aII\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Credit remaining"
           }
         }
       }
@@ -1177,6 +1129,18 @@
         }
       }
     },
+    "UvL-WL-KxT.title" : {
+      "comment" : "Class = \"UIViewController\"; title = \"ScanQRCodeVC\"; ObjectID = \"UvL-WL-KxT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "ScanQRCodeVC"
+          }
+        }
+      }
+    },
     "vFt-le-S5V.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"BUY ANOTHER TICKET\"; ObjectID = \"vFt-le-S5V\";",
       "extractionState" : "extracted_with_value",
@@ -1209,18 +1173,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El lugar no está vendiendo entradas actualmente. Vuelve más tarde."
-          }
-        }
-      }
-    },
-    "VzO-pk-8QO.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"Tabs left open will auto close at May 21,  2:00 AM with a 20% tip.  Any unused credit is non-refundable.\"; ObjectID = \"VzO-pk-8QO\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Tabs left open will auto close at May 21,  2:00 AM with a 20% tip.  Any unused credit is non-refundable."
           }
         }
       }
@@ -1377,18 +1329,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "-"
-          }
-        }
-      }
-    },
-    "zd1-qg-6Sf.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"888\"; ObjectID = \"zd1-qg-6Sf\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "888"
           }
         }
       }

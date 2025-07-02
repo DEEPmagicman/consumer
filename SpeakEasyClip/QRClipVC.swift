@@ -7,7 +7,6 @@
 
 import UIKit
 import FSPagerView
-//import SDWebImage
 
 final class QRClipVC: UIViewController {
     

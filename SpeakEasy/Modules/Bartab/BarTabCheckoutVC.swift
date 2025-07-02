@@ -143,8 +143,8 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-                self.paymentStatus() {
-                    Navigate.to.barTabConfirmationVC(self)
+                self.paymentStatus() { posCheckId in
+                    Navigate.to.barTabQRCodeVC(self, posCheckId: posCheckId, venue: self.venueDetails, barTabId: self.barTabData?.barTab.id ?? "")
                 }
             case .canceled:
                 self.isPaymentInitiated = false
@@ -219,12 +219,12 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(completion: @escaping ((_ posCheckId: String)-> Void)) {
         Loader.show()
-        BarTabPresenter.barTabPaymentCompleteAPI(barId: barTabData?.barTab.id ?? "", paymentId: barTabData?.barTab.barTabPayments?.first?.id ?? "") { isSuccess, errMsg, _ in
+        BarTabPresenter.barTabPaymentCompleteAPI(barId: barTabData?.barTab.id ?? "", paymentId: barTabData?.barTab.barTabPayments?.first?.id ?? "") { isSuccess, errMsg, barTab in
             Loader.hide()
             if isSuccess {
-                completion()
+                completion(barTab?.posChecksId ?? "")
             } else {
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -292,8 +292,8 @@ extension BarTabCheckoutVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            paymentStatus() {
-                Navigate.to.barTabConfirmationVC(self)
+            self.paymentStatus() { posCheckId in
+                Navigate.to.barTabQRCodeVC(self, posCheckId: posCheckId, venue: self.venueDetails, barTabId: self.barTabData?.barTab.id ?? "")
             }
         case .error:
             isFromApplePay = true

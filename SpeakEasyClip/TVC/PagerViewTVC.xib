@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,17 +19,17 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Lyz-Mw-cWU" customClass="PagerViewTVC" customModule="SpeakEasyClip" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+            <rect key="frame" x="0.0" y="0.0" width="392" height="641"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+                <rect key="frame" x="0.0" y="0.0" width="392" height="641"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tTs-MO-nJ0">
-                        <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+                        <rect key="frame" x="0.0" y="0.0" width="392" height="641"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Njy-BJ-hw4">
-                                <rect key="frame" x="0.0" y="0.0" width="376" height="398"/>
+                                <rect key="frame" x="0.0" y="0.0" width="376" height="641"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest name and time" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3eT-Jz-oyS">
                                         <rect key="frame" x="20" y="10" width="336" height="22.5"/>
@@ -89,7 +89,7 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="kR9-aT-Wr2">
-                                        <rect key="frame" x="10" y="272.5" width="356" height="115.5"/>
+                                        <rect key="frame" x="10" y="272.5" width="356" height="358.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableView>
                                 </subviews>
@@ -130,7 +130,7 @@
                 <constraint firstAttribute="bottom" secondItem="tTs-MO-nJ0" secondAttribute="bottom" id="gqd-8Q-7iM"/>
                 <constraint firstAttribute="trailing" secondItem="tTs-MO-nJ0" secondAttribute="trailing" id="uJK-gD-xSZ"/>
             </constraints>
-            <size key="customSize" width="392" height="398"/>
+            <size key="customSize" width="392" height="641"/>
             <connections>
                 <outlet property="backupCode" destination="kxe-RN-Eev" id="UYb-Ig-SIp"/>
                 <outlet property="bgView" destination="Njy-BJ-hw4" id="Czj-5x-pmW"/>
@@ -141,7 +141,7 @@
                 <outlet property="ticketCodeView" destination="v2N-nE-Dbt" id="hgk-S3-3ER"/>
                 <outlet property="ticketsTableView" destination="kR9-aT-Wr2" id="tGX-vV-sfr"/>
             </connections>
-            <point key="canvasLocation" x="426.08695652173918" y="172.09821428571428"/>
+            <point key="canvasLocation" x="426.08695652173918" y="253.45982142857142"/>
         </collectionViewCell>
     </objects>
     <resources>

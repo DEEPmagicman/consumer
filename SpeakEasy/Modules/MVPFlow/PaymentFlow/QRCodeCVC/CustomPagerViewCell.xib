@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,31 +14,34 @@
         <array key="Poppins-Medium.ttf">
             <string>Poppins-Medium</string>
         </array>
+        <array key="Poppins-SemiBold.ttf">
+            <string>Poppins-SemiBold</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="CustomPagerViewCell" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+            <rect key="frame" x="0.0" y="0.0" width="392" height="649"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+                <rect key="frame" x="0.0" y="0.0" width="392" height="649"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EmV-dt-idR">
-                        <rect key="frame" x="0.0" y="0.0" width="392" height="398"/>
+                        <rect key="frame" x="0.0" y="0.0" width="392" height="649"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qt8-tp-5lI">
-                                <rect key="frame" x="0.0" y="0.0" width="376" height="398"/>
+                                <rect key="frame" x="0.0" y="0.0" width="392" height="649"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Guest name" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AL8-4P-rVC">
-                                        <rect key="frame" x="20" y="10" width="336" height="22.5"/>
+                                        <rect key="frame" x="20" y="10" width="352" height="22.5"/>
                                         <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bdV-QJ-vrc">
-                                        <rect key="frame" x="98" y="62.5" width="180" height="180"/>
+                                        <rect key="frame" x="106" y="62.5" width="180" height="180"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRCodeAP" translatesAutoresizingMaskIntoConstraints="NO" id="YvV-ua-WMx">
                                                 <rect key="frame" x="0.0" y="0.0" width="180" height="180"/>
@@ -89,24 +92,44 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="JEo-HM-DXX">
-                                        <rect key="frame" x="10" y="272.5" width="356" height="115.5"/>
+                                        <rect key="frame" x="10" y="272.5" width="372" height="306.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="dataSource" destination="-1" id="mgw-cP-liR"/>
                                             <outlet property="delegate" destination="-1" id="Lsp-oz-MQQ"/>
                                         </connections>
                                     </tableView>
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y8j-Tq-25F">
+                                        <rect key="frame" x="10" y="589" width="372" height="50"/>
+                                        <color key="backgroundColor" red="0.60784313725490191" green="0.24313725490196078" blue="0.24313725490196078" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="5OJ-Am-VMi"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="16"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Open Tab">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <integer key="value" value="24"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.39738142571481716" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="AL8-4P-rVC" firstAttribute="leading" secondItem="Qt8-tp-5lI" secondAttribute="leading" constant="20" id="4xo-vS-Gst"/>
                                     <constraint firstItem="AL8-4P-rVC" firstAttribute="top" secondItem="Qt8-tp-5lI" secondAttribute="top" constant="10" id="9Vf-42-s6K"/>
+                                    <constraint firstAttribute="trailing" secondItem="y8j-Tq-25F" secondAttribute="trailing" constant="10" id="ATx-lp-t3D"/>
                                     <constraint firstItem="bdV-QJ-vrc" firstAttribute="centerX" secondItem="Qt8-tp-5lI" secondAttribute="centerX" id="CKt-DX-Q9q"/>
+                                    <constraint firstAttribute="bottom" secondItem="y8j-Tq-25F" secondAttribute="bottom" constant="10" id="Lcr-dw-7EA"/>
                                     <constraint firstAttribute="trailing" secondItem="JEo-HM-DXX" secondAttribute="trailing" constant="10" id="Mea-vW-vmy"/>
+                                    <constraint firstItem="y8j-Tq-25F" firstAttribute="leading" secondItem="Qt8-tp-5lI" secondAttribute="leading" constant="10" id="VC2-cm-brG"/>
                                     <constraint firstItem="bdV-QJ-vrc" firstAttribute="top" secondItem="AL8-4P-rVC" secondAttribute="bottom" constant="30" id="bii-8z-xZ4"/>
                                     <constraint firstItem="JEo-HM-DXX" firstAttribute="leading" secondItem="Qt8-tp-5lI" secondAttribute="leading" constant="10" id="coh-Q4-9yu"/>
                                     <constraint firstItem="JEo-HM-DXX" firstAttribute="top" secondItem="bdV-QJ-vrc" secondAttribute="bottom" constant="30" id="ih0-Vx-FIR"/>
-                                    <constraint firstAttribute="bottom" secondItem="JEo-HM-DXX" secondAttribute="bottom" constant="10" id="uGe-Mj-3kj"/>
+                                    <constraint firstItem="y8j-Tq-25F" firstAttribute="top" secondItem="JEo-HM-DXX" secondAttribute="bottom" constant="10" id="uGe-Mj-3kj"/>
                                     <constraint firstItem="AL8-4P-rVC" firstAttribute="centerX" secondItem="Qt8-tp-5lI" secondAttribute="centerX" id="xxb-jt-bQ8"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -119,7 +142,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Qt8-tp-5lI" firstAttribute="top" secondItem="EmV-dt-idR" secondAttribute="top" id="PSB-yd-ucv"/>
-                            <constraint firstAttribute="trailing" secondItem="Qt8-tp-5lI" secondAttribute="trailing" constant="16" id="Pc0-Ok-xR8"/>
+                            <constraint firstAttribute="trailing" secondItem="Qt8-tp-5lI" secondAttribute="trailing" id="Pc0-Ok-xR8"/>
                             <constraint firstAttribute="bottom" secondItem="Qt8-tp-5lI" secondAttribute="bottom" id="pDg-gS-mBw"/>
                             <constraint firstItem="Qt8-tp-5lI" firstAttribute="leading" secondItem="EmV-dt-idR" secondAttribute="leading" id="vNC-sV-T82"/>
                         </constraints>
@@ -134,18 +157,19 @@
                 <constraint firstItem="EmV-dt-idR" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="jvV-ni-ClV"/>
                 <constraint firstAttribute="bottom" secondItem="EmV-dt-idR" secondAttribute="bottom" id="u0A-4i-uBy"/>
             </constraints>
-            <size key="customSize" width="392" height="398"/>
+            <size key="customSize" width="392" height="649"/>
             <connections>
                 <outlet property="backupCode" destination="lI2-2L-Vh5" id="0GA-xL-EJg"/>
                 <outlet property="bgView" destination="EmV-dt-idR" id="i71-C8-SjH"/>
                 <outlet property="bookingDateTime" destination="vUe-U0-K7v" id="Gz3-hn-ema"/>
                 <outlet property="containerView" destination="bdV-QJ-vrc" id="39q-KS-YLO"/>
                 <outlet property="guestNameLbl" destination="AL8-4P-rVC" id="4Xa-pC-gkh"/>
+                <outlet property="openTabBtnHeight" destination="5OJ-Am-VMi" id="tky-MB-Ex1"/>
                 <outlet property="qrImage" destination="YvV-ua-WMx" id="iyj-vc-1ha"/>
                 <outlet property="ticketCodeView" destination="Vtw-uK-pzD" id="KyP-dM-UCe"/>
                 <outlet property="ticketsTableView" destination="JEo-HM-DXX" id="kN5-7x-krK"/>
             </connections>
-            <point key="canvasLocation" x="426.08695652173918" y="172.09821428571428"/>
+            <point key="canvasLocation" x="426.08695652173918" y="256.13839285714283"/>
         </collectionViewCell>
     </objects>
     <resources>

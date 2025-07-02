@@ -23,6 +23,7 @@ class PagerViewTVC: FSPagerViewCell {
     var addOnsBookingHasItem = [UpSellTicket]()
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
+    var barTabBooking: BarTabBooking?
     
     override func awakeFromNib() {
         super.awakeFromNib()

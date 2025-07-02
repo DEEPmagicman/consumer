@@ -61,6 +61,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     var phoneNumber: PhoneNumber?
     private var paymentDetail: PaymentDetail?
     private var barTabData: BarTabData?
+    private var barBooking: BarTabBooking?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,6 +204,58 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.paymentIntent = self.barTabData?.clientSecret ?? ""
                 self.paymentDetail = self.barTabData?.barTab.barTabPayments?.first?.bookingFees
                 self.displayPaymentData()
+            }
+        }
+        task.resume()
+    }
+    
+    private func paymentStatus(completion: @escaping ((_ posCheckId: String)-> Void)) {
+        let barTabId = barTabData?.barTab.id ?? ""
+        let paymentId = barTabData?.barTab.barTabPayments?.first?.id ?? ""
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabId)/payments/\(paymentId)/complete") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "POST"
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            AppClipLoader.hideLoader()
+            if let data = try? JSONDecoder().decode(BarTab.self, from: data) {
+                completion(data.posChecksId ?? "")
+            }
+        }
+        task.resume()
+    }
+    
+    private func getBarBooking(posCheckId: String, completion: @escaping (()-> Void)) {
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(posCheckId)/payments-details/") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "GET"
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            AppClipLoader.hideLoader()
+            if let data = try? JSONDecoder().decode(BarTabBooking.self, from: data) {
+                self.barBooking = data
+                completion()
             }
         }
         task.resume()
@@ -374,14 +427,18 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
         isPaymentInitiated = true
-        print("-=-= \(self.paymentIntent)")
         paymentSheet?.present(from: self) { paymentResult in
             // MARK: Handle the payment result
             switch paymentResult {
             case .completed:
-//                DispatchQueue.main.async {
-//                    AppClipLoader.showLoader(self.view)
-//                }
+                DispatchQueue.main.async {
+                    AppClipLoader.showLoader(self.view)
+                }
+                self.paymentStatus { posCheckId in
+                    self.getBarBooking(posCheckId: posCheckId) {
+                        self.navigateToQR(posCheckId: posCheckId)
+                    }
+                }
                 print("-=-= payment completed")
             case .canceled:
                 print("-=-= payment canceled")
@@ -416,6 +473,25 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 return
             } else {
                 print("-=-= isIntendCreated is false ")
+            }
+        }
+    }
+    
+    private func navigateToQR(posCheckId: String) {
+        DispatchQueue.main.async {
+            if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "BarTabQRCodeClipVC")) as? BarTabQRCodeClipVC {
+                AppClipLoader.hideLoader()
+                vc.venue = self.venue
+                vc.appClipTicket = self.selectedCoverTickets
+                vc.barBooking = self.barBooking
+                vc.barTabId = self.barTabData?.barTab.id ?? ""
+                vc.posCheckId = posCheckId
+                let userData =  "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")"
+                vc.guestInfo = "\(userData) - \(self.barBooking?.createdAt.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "") ?? "")"
+                if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
+                    selectVC.forceRemoveAllTicket()
+                    self.navigationController?.viewControllers = [selectVC, vc]
+                }
             }
         }
     }

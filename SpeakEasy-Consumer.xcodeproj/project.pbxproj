@@ -160,9 +160,7 @@
 		CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */; };
 		CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F423C29FBE6AB0082723B /* Booking.swift */; };
 		CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */ = {isa = PBXBuildFile; productRef = CE19C1AA2CA44469007050ED /* MHLoadingButton */; };
-		CE1BB3652E0E6AF900162973 /* BarTabConfirmationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1BB3642E0E6AF900162973 /* BarTabConfirmationVC.swift */; };
 		CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE236E332CC10BEE00FB8B4A /* TokenManager.swift */; };
-		CE24C1892E13FF8E004C0D24 /* BarTabConfirmationClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE24C1882E13FF8E004C0D24 /* BarTabConfirmationClipVC.swift */; };
 		CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */; };
 		CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
@@ -197,6 +195,8 @@
 		CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */; };
+		CE557D4F2E14E1DF0035C75A /* BarTabQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */; };
+		CE557D592E150EFE0035C75A /* BarTabQRCodeClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */; };
 		CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
@@ -475,7 +475,6 @@
 		CE0E87482994C61000F2B2E9 /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
 		CE0E874F2994D1B600F2B2E9 /* CheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutVC.swift; sourceTree = "<group>"; };
 		CE0F423C29FBE6AB0082723B /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
-		CE1BB3642E0E6AF900162973 /* BarTabConfirmationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabConfirmationVC.swift; sourceTree = "<group>"; };
 		CE221A642C3BC93900BC1BD8 /* DropDown+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropDown+Appearance.swift"; sourceTree = "<group>"; };
 		CE221A652C3BC93900BC1BD8 /* DropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDown.swift; sourceTree = "<group>"; };
 		CE221A662C3BC93900BC1BD8 /* DropDownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownCell.swift; sourceTree = "<group>"; };
@@ -484,7 +483,6 @@
 		CE221A6A2C3BC93900BC1BD8 /* DPDConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPDConstants.swift; sourceTree = "<group>"; };
 		CE221A6C2C3BC93900BC1BD8 /* DropDownCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownCell.xib; sourceTree = "<group>"; };
 		CE236E332CC10BEE00FB8B4A /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
-		CE24C1882E13FF8E004C0D24 /* BarTabConfirmationClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabConfirmationClipVC.swift; sourceTree = "<group>"; };
 		CE25D02B29EFB46100965C9F /* DateSelectionBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSelectionBottomSheet.swift; sourceTree = "<group>"; };
 		CE2605F129E55C2B00C46EFA /* EventDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailVC.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -514,6 +512,8 @@
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeVC.swift; sourceTree = "<group>"; };
+		CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeClipVC.swift; sourceTree = "<group>"; };
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE5A091B2D534BD0000729BF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -709,7 +709,7 @@
 				04862C172B975F9000836598 /* QRClipVC.swift */,
 				CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */,
 				CE7B92752E127377009B8B79 /* BarTabCheckOutClipVC.swift */,
-				CE24C1882E13FF8E004C0D24 /* BarTabConfirmationClipVC.swift */,
+				CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */,
 				CE5A091B2D534BD0000729BF /* Localizable.xcstrings */,
 			);
 			path = SpeakEasyClip;
@@ -1327,7 +1327,7 @@
 			children = (
 				CEB654212E0D319400E9BFD3 /* BarTab.storyboard */,
 				CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */,
-				CE1BB3642E0E6AF900162973 /* BarTabConfirmationVC.swift */,
+				CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */,
 			);
 			path = Bartab;
 			sourceTree = "<group>";
@@ -1804,7 +1804,6 @@
 				0475E3262BECEB4600E4801C /* EventTicket.swift in Sources */,
 				29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */,
 				CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */,
-				CE24C1892E13FF8E004C0D24 /* BarTabConfirmationClipVC.swift in Sources */,
 				041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */,
 				CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */,
 				04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */,
@@ -1820,6 +1819,7 @@
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				CEBCF60B2D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
 				CEBCF60C2D48E2FD00B640C8 /* Constants.swift in Sources */,
+				CE557D592E150EFE0035C75A /* BarTabQRCodeClipVC.swift in Sources */,
 				CEBCF60D2D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,
 				CEBCF60E2D48E2FD00B640C8 /* PhoneNumber.swift in Sources */,
 				CEBCF60F2D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
@@ -1847,7 +1847,6 @@
 				BDD1D4B4294362EB003EB5FC /* Extension.swift in Sources */,
 				CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */,
 				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
-				CE1BB3652E0E6AF900162973 /* BarTabConfirmationVC.swift in Sources */,
 				92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */,
 				CE677F9A2A4177310025421D /* Invite.swift in Sources */,
 				CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */,
@@ -1903,6 +1902,7 @@
 				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
 				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
+				CE557D4F2E14E1DF0035C75A /* BarTabQRCodeVC.swift in Sources */,
 				CEBCF5F52D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
 				CEBCF5F62D48E2FD00B640C8 /* Constants.swift in Sources */,
 				CEBCF5F72D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,

@@ -235,20 +235,21 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.section {
-        case 0:
-            if bookings[indexPath.row].eventId != nil {
-                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
-            } else if bookings[indexPath.row].inviteLink != nil {
-                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
-            } else {
-                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
-            }
-        case 1:
-            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
-        default:
-            break
-        }
+        Navigate.to.barTabQRCodeVC(self, posCheckId: "1d576c5d-d1c6-49ce-9793-e3502a69f215", venue: bookings[indexPath.row].venueObject, barTabId: "109954eb-f1c7-489a-a1f9-621cda192340")
+//        switch indexPath.section {
+//        case 0:
+//            if bookings[indexPath.row].eventId != nil {
+//                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
+//            } else if bookings[indexPath.row].inviteLink != nil {
+//                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
+//            } else {
+//                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
+//            }
+//        case 1:
+//            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
+//        default:
+//            break
+//        }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

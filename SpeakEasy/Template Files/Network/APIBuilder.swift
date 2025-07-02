@@ -67,6 +67,7 @@ struct APIBuilder {
     static private let barTab = "/bar-tab"
     static private let payments = "/payments"
     static private let complete = "/complete"
+    static private let paymentDetails = "/payment-details"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -345,6 +346,10 @@ struct APIBuilder {
     
     static func barTabPaymentComplete(barId: String, paymentId: String) -> String {
         baseURL + route + barTab + "/\(barId)" + payments + "/\(paymentId)" + complete
+    }
+    
+    static func barTabPaymentDetails(posCheckId: String) -> String {
+        baseURL + route + barTab + "/\(posCheckId)" + paymentDetails
     }
 }
 
