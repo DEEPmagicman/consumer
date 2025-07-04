@@ -24,7 +24,7 @@ final class BarTabQRCodeVC: UIViewController {
     var qrImage: UIImage? = nil
     var booking: BarTabBooking?
     var venue: ClipVenue?
-    var posCheckId = String()
+//    var posCheckId = String()
     var barTabId = String()
     
     override func viewDidLoad() {
@@ -65,7 +65,7 @@ final class BarTabQRCodeVC: UIViewController {
     
     private func getBarTabPaymentDetails() {
         Loader.show()
-        BarTabPresenter.getBarTabPaymentDetails(posCheckId: posCheckId) { [weak self] isSuccess, errMsg, barTabBooking in
+        BarTabPresenter.getBarTabPaymentDetails(posCheckId: barTabId) { [weak self] isSuccess, errMsg, barTabBooking in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess {
@@ -109,11 +109,11 @@ extension BarTabQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.backupCode.text = booking?.venue?.bookingCode ?? ""
         cell.bookingDateTime.text = "Purchased on \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .HMMAMMMDD, isUTC: true, customTimeZone: booking?.venue?.useTimezone ?? "") ?? "")"
         cell.guestNameLbl.text = "\(UserDefault.shared.user?.firstName ?? "") \(UserDefault.shared.user?.lastName ?? "") - \(booking?.createdAt.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .MMDDYYYYHMMA, isUTC: true, customTimeZone: booking?.venue?.useTimezone ?? "") ?? "")"
-       
-            cell.barTabBooking = booking
-            DispatchQueue.main.async {
-                cell.qrImage.image = self.qrImage
-            }
+        
+        cell.barTabBooking = booking
+        DispatchQueue.main.async {
+            cell.qrImage.image = self.qrImage
+        }
         cell.ticketsTableView.reloadData()
         return cell
     }

@@ -235,7 +235,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.barTabQRCodeVC(self, posCheckId: "1d576c5d-d1c6-49ce-9793-e3502a69f215", venue: bookings[indexPath.row].venueObject, barTabId: "109954eb-f1c7-489a-a1f9-621cda192340")
+        Navigate.to.barTabQRCodeVC(self, venue: bookings[indexPath.row].venueObject, barTabId: "a18a673d-dc7e-444a-92ba-13a5f294ac7a")
 //        switch indexPath.section {
 //        case 0:
 //            if bookings[indexPath.row].eventId != nil {

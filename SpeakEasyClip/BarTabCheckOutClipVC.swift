@@ -77,12 +77,10 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         phoneNumTextField.delegate = self
         phoneNumTextField.withDefaultPickerUI = true
-        phoneNumTextField.defaultRegion = "IN"
+        phoneNumTextField.defaultRegion = "US"
         phoneNumTextField.withPrefix = false
         phoneNumTextField.withFlag = true
         phoneNumTextField.withExamplePlaceholder = true
-        firstNameTF.text = "Urmil"
-        lastNameTF.text = "Vataliya"
         CountryCodePicker.alwaysShowsSearchBar = true
         CountryCodePicker.forceModalPresentation = true
         var options = CountryCodePickerOptions()
@@ -117,7 +115,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailValidationLbl.isHidden = true
         emailTF.delegate = self
-        createBooking()
+        createBooking() {}
     }
     
     override func viewDidLayoutSubviews() {
@@ -138,7 +136,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         return toolbar
     }
     
-    func createBooking() {
+    func createBooking(completion: @escaping (()-> Void)) {
         let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII } ?? "+1"
         if !validateEmail {
             emailValidationLbl.isHidden = false
@@ -165,6 +163,10 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         if emailTF.text ?? "" != "" {
             param["email"] = (emailTF.text ?? "").replacingOccurrences(of: " ", with: "")
         }
+        if self.barTabData?.barTab.id ?? "" != "" {
+            param["barTabId"] = self.barTabData?.barTab.id
+        }
+        
         if !SharedURL.isEncryptionEnabled {
             paramData = param
         } else {
@@ -204,12 +206,13 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.paymentIntent = self.barTabData?.clientSecret ?? ""
                 self.paymentDetail = self.barTabData?.barTab.barTabPayments?.first?.bookingFees
                 self.displayPaymentData()
+                completion()
             }
         }
         task.resume()
     }
     
-    private func paymentStatus(completion: @escaping ((_ posCheckId: String)-> Void)) {
+    private func paymentStatus(completion: @escaping (()-> Void)) {
         let barTabId = barTabData?.barTab.id ?? ""
         let paymentId = barTabData?.barTab.barTabPayments?.first?.id ?? ""
         guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabId)/payments/\(paymentId)/complete") else { return }
@@ -229,14 +232,14 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             }
             AppClipLoader.hideLoader()
             if let data = try? JSONDecoder().decode(BarTab.self, from: data) {
-                completion(data.posChecksId ?? "")
+                completion()
             }
         }
         task.resume()
     }
     
-    private func getBarBooking(posCheckId: String, completion: @escaping (()-> Void)) {
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(posCheckId)/payments-details/") else { return }
+    private func getBarBooking(completion: @escaping (()-> Void)) {
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabData?.barTab.id ?? "")/payment-details") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -302,25 +305,28 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 alertPopup("Alert", "Enter valid number")
                 return
             }
-            if StripeAPI.deviceSupportsApplePay() {
-                if isIntendCreated {
-                    DispatchQueue.main.async {
-                        self.applePayButtonTapped()
+            self.createBooking {
+                DispatchQueue.main.async {
+                    if StripeAPI.deviceSupportsApplePay() {
+                        if self.isIntendCreated {
+                            DispatchQueue.main.async {
+                                self.applePayButtonTapped()
+                            }
+                            return
+                        }
+                        self.applePayBtn.isHidden = false
+                        self.errorLbl.isHidden = true
+                    } else if self.isApplePayNotSupported == false {
+                        self.alertForWallet()
+                        self.setUpPaymentBtn()
+                    } else {
+                        self.applePayBtn.isHidden = true
+                        self.errorLbl.isHidden = false
                     }
-                    return
                 }
-                applePayBtn.isHidden = false
-                errorLbl.isHidden = true
-            } else if isApplePayNotSupported == false {
-                alertForWallet()
-                setUpPaymentBtn()
-            } else {
-                applePayBtn.isHidden = true
-                errorLbl.isHidden = false
             }
         }
     }
-    
     private func checkValidation() {
         if phoneNumTextField.text ?? "" == "" {
             phoneNumTextField.shake()
@@ -427,25 +433,31 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
         isPaymentInitiated = true
-        paymentSheet?.present(from: self) { paymentResult in
-            // MARK: Handle the payment result
-            switch paymentResult {
-            case .completed:
-                DispatchQueue.main.async {
-                    AppClipLoader.showLoader(self.view)
-                }
-                self.paymentStatus { posCheckId in
-                    self.getBarBooking(posCheckId: posCheckId) {
-                        self.navigateToQR(posCheckId: posCheckId)
+        self.createBooking() {
+            DispatchQueue.main.async {
+                self.paymentSheet?.present(from: self) { paymentResult in
+                    // MARK: Handle the payment result
+                    switch paymentResult {
+                    case .completed:
+                        DispatchQueue.main.async {
+                            AppClipLoader.showLoader(self.view)
+                        }
+                        
+                        self.paymentStatus {
+                            self.getBarBooking() {
+                                self.navigateToQR()
+                            }
+                        }
+                        
+                        print("-=-= payment completed")
+                    case .canceled:
+                        print("-=-= payment canceled")
+                        self.isPaymentInitiated = false
+                    case .failed:
+                        self.isPaymentInitiated = false
+                        self.alertPopup("Alert", "Payment failed")
                     }
                 }
-                print("-=-= payment completed")
-            case .canceled:
-                print("-=-= payment canceled")
-                self.isPaymentInitiated = false
-            case .failed:
-                self.isPaymentInitiated = false
-                self.alertPopup("Alert", "Payment failed")
             }
         }
     }
@@ -477,7 +489,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func navigateToQR(posCheckId: String) {
+    private func navigateToQR() {
         DispatchQueue.main.async {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "BarTabQRCodeClipVC")) as? BarTabQRCodeClipVC {
                 AppClipLoader.hideLoader()
@@ -485,7 +497,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 vc.appClipTicket = self.selectedCoverTickets
                 vc.barBooking = self.barBooking
                 vc.barTabId = self.barTabData?.barTab.id ?? ""
-                vc.posCheckId = posCheckId
                 let userData =  "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")"
                 vc.guestInfo = "\(userData) - \(self.barBooking?.createdAt.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "") ?? "")"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
@@ -507,7 +518,15 @@ extension BarTabCheckOutClipVC {
     func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
         switch status {
         case .success:
-            AppClipLoader.showLoader(view)
+            DispatchQueue.main.async {
+                AppClipLoader.showLoader(self.view)
+            }
+            
+            self.paymentStatus {
+                self.getBarBooking() {
+                    self.navigateToQR()
+                }
+            }
         case .error:
             isPaymentInitiated = false
             alertPopup("Alert", "Payment failed")

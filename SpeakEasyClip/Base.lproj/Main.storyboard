@@ -1752,7 +1752,7 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vFt-le-S5V">
-                                                <rect key="frame" x="125.5" y="712" width="163" height="36"/>
+                                                <rect key="frame" x="126" y="712" width="162" height="36"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="36" id="oMN-Q1-bZ2"/>
                                                 </constraints>
@@ -1766,7 +1766,7 @@
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j76-WA-NQS">
-                                                <rect key="frame" x="125.5" y="742" width="163" height="0.5"/>
+                                                <rect key="frame" x="126" y="742" width="162" height="0.5"/>
                                                 <color key="backgroundColor" systemColor="labelColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.69999999999999996" id="e9f-Pa-MmQ"/>
@@ -2607,7 +2607,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_img" translatesAutoresizingMaskIntoConstraints="NO" id="D5d-2p-eZp">
-                                <rect key="frame" x="-20" y="0.0" width="446" height="330"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="330"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="330" id="bL0-SK-YcW"/>
                                 </constraints>
@@ -2643,15 +2643,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rbl-d3-eeA">
-                                <rect key="frame" x="145.5" y="812" width="123" height="40"/>
+                                <rect key="frame" x="137" y="812" width="140" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="A6s-sM-tUz"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="13"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Buy another ticket"/>
+                                <state key="normal" title="BUY ANOTHER TICKET"/>
                                 <connections>
-                                    <action selector="onClickBuyAnotherTicket:" destination="UvL-WL-KxT" eventType="touchUpInside" id="t1x-DB-MkC"/>
+                                    <action selector="onClickBuyAnother:" destination="UvL-WL-KxT" eventType="touchUpInside" id="e16-bg-rPT"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2660,7 +2660,7 @@
                         <constraints>
                             <constraint firstItem="xrv-G6-AOn" firstAttribute="top" secondItem="cly-vD-wU1" secondAttribute="top" id="4tV-LQ-ut8"/>
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="top" secondItem="qqj-74-ceS" secondAttribute="top" constant="150" id="57g-jq-n2j"/>
-                            <constraint firstItem="D5d-2p-eZp" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" constant="-20" id="8dG-s2-Nen"/>
+                            <constraint firstItem="D5d-2p-eZp" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" id="8dG-s2-Nen"/>
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="top" secondItem="YRx-Fx-5E8" secondAttribute="bottom" constant="33" id="8zX-1U-kcy"/>
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="trailing" secondItem="qqj-74-ceS" secondAttribute="trailing" constant="-16" id="Kwv-6X-1e7"/>
                             <constraint firstAttribute="bottom" secondItem="Rbl-d3-eeA" secondAttribute="bottom" constant="44" id="PsT-P3-jya"/>
@@ -2669,16 +2669,20 @@
                             <constraint firstItem="Rbl-d3-eeA" firstAttribute="centerX" secondItem="cly-vD-wU1" secondAttribute="centerX" id="biN-fI-MfL"/>
                             <constraint firstItem="xrv-G6-AOn" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" id="cey-gm-M61"/>
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" constant="16" id="hbi-0h-EQ8"/>
-                            <constraint firstItem="qqj-74-ceS" firstAttribute="trailing" secondItem="D5d-2p-eZp" secondAttribute="trailing" constant="-12" id="q2A-Gz-ho0"/>
+                            <constraint firstItem="qqj-74-ceS" firstAttribute="trailing" secondItem="D5d-2p-eZp" secondAttribute="trailing" id="q2A-Gz-ho0"/>
                             <constraint firstItem="D5d-2p-eZp" firstAttribute="top" secondItem="cly-vD-wU1" secondAttribute="top" id="qpA-Gr-pOk"/>
                             <constraint firstItem="Rbl-d3-eeA" firstAttribute="top" secondItem="hdD-4k-kTf" secondAttribute="bottom" constant="42" id="rlR-dU-oKL"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="xrv-G6-AOn"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
-                        <outlet property="bgImage" destination="D5d-2p-eZp" id="ucB-Qr-zwm"/>
-                        <outlet property="buyAnotherTicket" destination="Rbl-d3-eeA" id="AXg-zp-DyJ"/>
-                        <outlet property="pagerView" destination="hdD-4k-kTf" id="rnl-Bu-ssZ"/>
-                        <outlet property="venueName" destination="YRx-Fx-5E8" id="uef-Vk-T0R"/>
+                        <outlet property="pagerView" destination="hdD-4k-kTf" id="Mbg-BM-ido"/>
+                        <outlet property="venueImg" destination="D5d-2p-eZp" id="JDg-cW-Cbl"/>
+                        <outlet property="venueNameLbl" destination="YRx-Fx-5E8" id="nza-48-zpv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TZW-62-OSv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2702,7 +2706,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

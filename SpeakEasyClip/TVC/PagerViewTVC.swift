@@ -72,14 +72,20 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
             cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
             cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
             cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
-            
-            if let index = booking?.uniqueTickets.firstIndex(where: {$0.ticketId == uniqueTickets[indexPath.row].id }) {
+            if let barBooking = barTabBooking {
                 cell.checkInProgressBarView.isHidden = false
-                let checkInCount = booking?.uniqueTickets[index].checkedInQuantity ?? 0
-                cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[index].selectedQuantity ?? 0)"
-                cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
+                let checkInCount = barBooking.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
+                cell.checkInCount.text = "\(checkInCount)/\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
+                cell.checkInProgress.setProgress(Float(checkInCount) / Float(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
             } else {
-                cell.checkInProgressBarView.isHidden = true
+                if let index = booking?.uniqueTickets.firstIndex(where: {$0.ticketId == uniqueTickets[indexPath.row].id }) {
+                    cell.checkInProgressBarView.isHidden = false
+                    let checkInCount = booking?.uniqueTickets[index].checkedInQuantity ?? 0
+                    cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[index].selectedQuantity ?? 0)"
+                    cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[index].selectedQuantity ?? 0), animated: false)
+                } else {
+                    cell.checkInProgressBarView.isHidden = true
+                }
             }
         } else {
             cell.subTitleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.description

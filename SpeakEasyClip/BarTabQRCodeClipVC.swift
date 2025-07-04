@@ -21,7 +21,6 @@ final class BarTabQRCodeClipVC: UIViewController {
     var barBooking: BarTabBooking?
     var venue: ClipVenue?
     var barTabId = String()
-    var posCheckId = String()
     var qrImage: UIImage? = nil
     private var isAlertDisplayed = false
     var guestInfo = String()
@@ -35,7 +34,7 @@ final class BarTabQRCodeClipVC: UIViewController {
         let string = """
             {
                 "id": "\(barTabId)",
-                "type": "BOOKING"
+                "type": "BAR_TAB"
             }
     """
         qrImage = generateQRCode(from: string)
@@ -53,7 +52,7 @@ final class BarTabQRCodeClipVC: UIViewController {
     
     private func getBarBooking() {
         AppClipLoader.showLoader(self.view)
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(posCheckId)/payments-details/") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabId)/payments-details/") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

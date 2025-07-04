@@ -342,10 +342,9 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func barTabQRCodeVC(_ sender: UIViewController, posCheckId: String, venue: ClipVenue?, barTabId: String) {
+    func barTabQRCodeVC(_ sender: UIViewController, venue: ClipVenue?, barTabId: String) {
         let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabQRCodeVC.self)
         vc.venue = venue
-        vc.posCheckId = posCheckId
         vc.barTabId = barTabId
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)

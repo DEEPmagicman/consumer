@@ -27,7 +27,7 @@ struct BarTab: Codable {
 //    var venueId: String
 //    var consumerUserId: String
 //    var consumerUser: User?
-//    var barTabHasItem: BarTabHasItem?
+    var barTabHasItem: BarTabHasItem?
     var posChecksId: String?
     var barTabPayments: [BarTabPayments]?
     
@@ -98,8 +98,8 @@ struct BarTabBooking: Codable {
     var venueId: String
     var consumerUserId: String
     var posChecksId: String
-    var totalCredit: Int?
-    var usedCredit: Int?
+    var totalCredit: Double?
+    var usedCredit: Double?
     var createdAt: String
     var updatedAt: String
 //    var consumerUser: User?

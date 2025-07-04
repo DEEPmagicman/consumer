@@ -998,13 +998,13 @@
       }
     },
     "Rbl-d3-eeA.normalTitle" : {
-      "comment" : "Class = \"UIButton\"; normalTitle = \"Buy another ticket\"; ObjectID = \"Rbl-d3-eeA\";",
+      "comment" : "Class = \"UIButton\"; normalTitle = \"BUY ANOTHER TICKET\"; ObjectID = \"Rbl-d3-eeA\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Buy another ticket"
+            "value" : "BUY ANOTHER TICKET"
           }
         }
       }
