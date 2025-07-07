@@ -19,6 +19,7 @@ final class CustomPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var bookingDateTime: UILabel!
     @IBOutlet weak var guestNameLbl: UILabel!
     @IBOutlet weak var openTabBtnHeight: NSLayoutConstraint!
+    @IBOutlet weak var openTabBtn: UIButton!
     
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?

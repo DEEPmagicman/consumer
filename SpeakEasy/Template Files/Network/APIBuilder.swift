@@ -372,4 +372,5 @@ extension APIBuilder {
     static let eventLink = "\(webBaseURL)/event/%@"
     static let venueWebURL = "\(webBaseURL)/%@?vid=%@"
     static let invitationURL = "\(webBaseURL)?L=%@"
+    static let openBarTab = "\(webBaseURL)/%@/bar-tab/%@"
 }

@@ -119,7 +119,7 @@ extension BarTabQRCodeClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     
     func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
-        
+        cell.openTabBtnHeight.constant = 50
         cell.backupCode.text = venue?.bookingCode
         cell.bookingDateTime.text = "Purchased on \(barBooking?.createdAt ?? "")"
         cell.uniqueTickets = appClipTicket
@@ -127,7 +127,14 @@ extension BarTabQRCodeClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.qrImage.image = qrImage
         cell.ticketsTableView.reloadData()
         cell.guestName.text = guestInfo
+        cell.openTabBtn.addTarget(self, action: #selector(openTabBtn), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func openTabBtn() {
+        let url = "\(SharedURL.webBaseURL)/\(barBooking?.venue?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "")/bar-tab/\(barBooking?.id ?? "")"
+        guard let url = URL(string: url) else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
 

@@ -18,6 +18,8 @@ class PagerViewTVC: FSPagerViewCell {
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
     @IBOutlet weak var guestName: UILabel!
+    @IBOutlet weak var openTabBtnHeight: NSLayoutConstraint!
+    @IBOutlet weak var openTabBtn: UIButton!
     
     var uniqueTickets = [CoverTicket]()
     var addOnsBookingHasItem = [UpSellTicket]()

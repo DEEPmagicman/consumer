@@ -114,8 +114,13 @@ extension BarTabQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         DispatchQueue.main.async {
             cell.qrImage.image = self.qrImage
         }
+        cell.openTabBtn.addTarget(self, action: #selector(openTabBtn), for: .touchUpInside)
         cell.ticketsTableView.reloadData()
         return cell
+    }
+    
+    @objc func openTabBtn() {
+        Navigate.externalURL(String(format: APIBuilder.openBarTab, booking?.venue?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "", booking?.id ?? ""))
     }
 }
 
