@@ -115,7 +115,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.addDoneButtonKeyboard()
         emailValidationLbl.isHidden = true
         emailTF.delegate = self
-        createBooking() {}
+        getCalculation()
     }
     
     override func viewDidLayoutSubviews() {
@@ -136,6 +136,61 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         return toolbar
     }
     
+    func getCalculation() {
+        
+        AppClipLoader.showLoader(self.view)
+        var selectedTickets = [[String: Any]]()
+        selectedCoverTickets.forEach {
+            selectedTickets.append(["ticketId": $0.id,
+                                    "ticketQuantity": $0.selectedQuantity ?? 0])
+        }
+        var paramData = [String: Any]()
+        let param = ["tickets": selectedTickets,
+                     "venueId": UserDefaults.standard.value(forKey: "venueIdLong") as? String ?? ""] as [String: Any]
+        
+        print("-=-= \(param)")
+        if !SharedURL.isEncryptionEnabled {
+            paramData = param
+        } else {
+            paramData = param.encrypted() ?? [:]
+        }
+        var postData = Data()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: paramData, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            if let jsonData = jsonString?.data(using: .utf8) {
+                postData = jsonData
+            }
+        } catch {
+            print("Error converting dictionary to JSON string: \(error)")
+        }
+        
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/calculation") else { return }
+        var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        let date = Date().toString(dateFormat: .yyyyMMddHHmmss, timeZone: TimeZone(identifier: "UTC")).encryptedHeader()
+        request.addValue(date, forHTTPHeaderField: "token")
+        
+        request.httpMethod = "POST"
+        request.httpBody = postData
+        
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+            guard let data = data else {
+                AppClipLoader.hideLoader()
+                self.alertPopup("Alert", "Data not found")
+                return
+            }
+            AppClipLoader.hideLoader()
+            if let data = try? JSONDecoder().decode(PaymentDetail.self, from: data) {
+                self.paymentDetail = data
+                self.displayPaymentData()
+            }
+        }
+        task.resume()
+    }
+    
     func createBooking(completion: @escaping (()-> Void)) {
         let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII } ?? "+1"
         if !validateEmail {
@@ -147,7 +202,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         var selectedTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
             selectedTickets.append(["ticketId": $0.id,
-                                   "ticketQuantity": $0.selectedQuantity ?? 0])
+                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
         var paramData = [String: Any]()
         var param = ["tickets": selectedTickets,
@@ -162,9 +217,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
         if emailTF.text ?? "" != "" {
             param["email"] = (emailTF.text ?? "").replacingOccurrences(of: " ", with: "")
-        }
-        if self.barTabData?.barTab.id ?? "" != "" {
-            param["barTabId"] = self.barTabData?.barTab.id
         }
         
         if !SharedURL.isEncryptionEnabled {
@@ -205,7 +257,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.barTabData = data
                 self.paymentIntent = self.barTabData?.clientSecret ?? ""
                 self.paymentDetail = self.barTabData?.barTab.barTabPayments?.first?.bookingFees
-                self.displayPaymentData()
                 completion()
             }
         }
