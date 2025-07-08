@@ -192,6 +192,7 @@ final class MVPVenueDetailVc: UIViewController {
                 if let venueId = venueDetail?.id {
                     self.venueId = venueId
                 }
+                self.venueDetails?.coverTicket?.removeAll(where: { $0.price == 0 && $0.isBarTicket == true })
                 self.setUpUI()
                 self.ticketTypeTableView.reloadData()
                 self.openingHoursTableView.reloadData()

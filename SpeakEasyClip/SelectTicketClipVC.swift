@@ -251,6 +251,7 @@ final class SelectTicketClipVC: UIViewController {
                     }
                     self.venueDetail = try? decoder.decode(ClipVenue.self, from: venueData)
                 }
+                self.venueDetail?.coverTicket?.removeAll(where: { $0.price == 0 && $0.isBarTicket == true})
                 UserDefaults.standard.setValue(self.venueDetail?.id ?? "", forKey: "venueIdLong")
                 VenueImageManager.shared.customQRData = self.venueDetail?.venueSettings?.coverTicketViewSettings
                 VenueImageManager.shared.isEnableCoverTicketViewSettings = self.venueDetail?.venueSettings?.isEnableCoverTicketViewSettings ?? false

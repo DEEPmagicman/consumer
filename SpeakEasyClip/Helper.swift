@@ -56,9 +56,9 @@ struct AppClipLoader {
 }
 
 extension UIViewController {
-    func alertPopup(_ title: String, _ message: String, completion: (() -> Void)? = nil) {
+    func alertPopup(_ title: String, _ message: String, _ btnTitle: String = "ok", completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title.localize(), message: message.localize(), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ok".localize(), style: .default) { _ in
+        alert.addAction(UIAlertAction(title: btnTitle.localize(), style: .default) { _ in
             completion?()
         })
         DispatchQueue.main.async {

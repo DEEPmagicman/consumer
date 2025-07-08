@@ -339,6 +339,7 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabCheckoutVC.self)
         vc.selectedTicket = selectedTicket
         vc.venueDetails = venueDetails
+        vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     

@@ -46,6 +46,9 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var phoneNumberUnderlineView: UIView!
     @IBOutlet weak var customFeeTableView: UITableView!
     @IBOutlet weak var customFeeTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var paymentBtnStackView: UIStackView!
+    @IBOutlet weak var userDetailsStackView: UIStackView!
+    @IBOutlet weak var ticketDetailsView: UIStackView!
     
     var venue: ClipVenue?
     var selectedCoverTickets = [CoverTicket]()
@@ -186,6 +189,15 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             if let data = try? JSONDecoder().decode(PaymentDetail.self, from: data) {
                 self.paymentDetail = data
                 self.displayPaymentData()
+            } else if let errData = convertDataToDictionary(data: data), let errMsg = errData["message"] as? String {
+                DispatchQueue.main.async {
+                    self.userDetailsStackView.isHidden = true
+                    self.paymentBtnStackView.isHidden = true
+                    self.ticketDetailsView.isHidden = true
+                    self.alertPopup("", errMsg, "Go Back") {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+                }
             }
         }
         task.resume()
@@ -696,5 +708,15 @@ extension BarTabCheckOutClipVC: WebSocketCallBackDelegate {
 extension BarTabCheckOutClipVC: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
 //        isChangingFlag = false
+    }
+}
+
+func convertDataToDictionary(data: Data) -> [String: Any]? {
+    do {
+        let json = try JSONSerialization.jsonObject(with: data, options: [])
+        return json as? [String: Any]
+    } catch {
+        print("Failed to convert Data to Dictionary: \(error.localizedDescription)")
+        return nil
     }
 }

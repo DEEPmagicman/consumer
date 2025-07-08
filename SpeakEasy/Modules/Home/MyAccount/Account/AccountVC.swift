@@ -235,21 +235,20 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.barTabQRCodeVC(self, venue: bookings[indexPath.row].venueObject, barTabId: "a18a673d-dc7e-444a-92ba-13a5f294ac7a")
-//        switch indexPath.section {
-//        case 0:
-//            if bookings[indexPath.row].eventId != nil {
-//                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
-//            } else if bookings[indexPath.row].inviteLink != nil {
-//                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
-//            } else {
-//                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
-//            }
-//        case 1:
-//            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
-//        default:
-//            break
-//        }
+        switch indexPath.section {
+        case 0:
+            if bookings[indexPath.row].eventId != nil {
+                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .singleTickedEvent)
+            } else if bookings[indexPath.row].inviteLink != nil {
+                Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
+            } else {
+                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
+            }
+        case 1:
+            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
+        default:
+            break
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

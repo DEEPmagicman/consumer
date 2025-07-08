@@ -94,7 +94,10 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
                 self.barTabData = barTabDetails
                 self.setUpData()
             } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                let action = UIAlertAction(title: "Go Back", style: .cancel) { _ in
+                    Navigate.to.back(self)
+                }
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "", actions: [action])
             }
         }
     }
