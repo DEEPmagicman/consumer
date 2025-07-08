@@ -99,7 +99,6 @@ final class MVPVenueListVc: UIViewController {
                 return
             }
             if isSuccess {
-                self.fetchAllCloseVenueForMVP()
                 if self.openFrom == 0 {
                     self.openVenueList.removeAll()
                 }
@@ -110,6 +109,9 @@ final class MVPVenueListVc: UIViewController {
                     self.openFrom = self.openVenueList.count
                 }
                 self.openHasMore = hasMore
+                if !self.openHasMore {
+                    self.fetchAllCloseVenueForMVP()
+                }
                 self.venueListTableView.reloadData()
                 self.refresh.endRefreshing()
             } else {
@@ -191,6 +193,8 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
         if indexPath.row == openVenueList.count - 1 {
             if openHasMore {
                 fetchAllOpenVenueForMVP()
+            } else if closeHasMore {
+                fetchAllCloseVenueForMVP()
             }
         }
     }
