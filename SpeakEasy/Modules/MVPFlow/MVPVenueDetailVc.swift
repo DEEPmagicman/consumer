@@ -382,6 +382,7 @@ final class MVPVenueDetailVc: UIViewController {
         forceRemoveFreeTicket()
         forceRemoveCustomTicket()
         forceRemovePaidTicket()
+        forceRemoveBarTabTicket()
         Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
@@ -393,6 +394,7 @@ final class MVPVenueDetailVc: UIViewController {
         if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.first?.isBarTicket == true {
             if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
                 Navigate.to.barTabCheckoutVC(self, selectedTicket: selectedTickets, venueDetails: venueDetails)
+                self.updateContinueBtn(forceRemove: true)
             }
         } else if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()

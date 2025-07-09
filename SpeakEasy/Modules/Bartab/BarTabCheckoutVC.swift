@@ -33,6 +33,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var customFeesTableViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var totalAmountLbl: UILabel!
     @IBOutlet private weak var paymentMethodView: UIView!
+    @IBOutlet weak var insideScrollView: UIView!
     
     var venueDetails: ClipVenue?
     var selectedTicket = [CoverTicket]()
@@ -94,6 +95,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
                 self.barTabData = barTabDetails
                 self.setUpData()
             } else {
+                insideScrollView.isHidden = true
                 let action = UIAlertAction(title: "Go Back", style: .cancel) { _ in
                     Navigate.to.back(self)
                 }
