@@ -23,6 +23,9 @@ protocol WebSocketCallBackDelegate: AnyObject {
     func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String)
     func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String)
     func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String)
+    
+    func checkinBarBooking(barItems: [BarTabHasItem])
+    func uncheckBarBooking(barItems: [BarTabHasItem])
 }
 
 final class WebSocketWrapper: NSObject {
@@ -144,8 +147,33 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-//        "UNCHECK_ADDONS"
-//        static let checkinAddOns = "CHECK_IN_ADDONS"
+        socket?.on("CHECK_IN_BAR_TAB") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["barTabHasItems"] as? [[String: Any]] else {
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: checkInData, options: .prettyPrinted)
+                let tickets = try decoder.decode([BarTabHasItem].self, from: data)
+                self.delegate.forEach { $0.checkinBarBooking(barItems: tickets) }
+            } catch {
+                return
+            }
+        }
+        
+        socket?.on("UNCHECK_BAR_TAB") { data, ack in
+            guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["barTabHasItems"] as? [[String: Any]] else {
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                let data = try JSONSerialization.data(withJSONObject: checkInData, options: .prettyPrinted)
+                let tickets = try decoder.decode([BarTabHasItem].self, from: data)
+                self.delegate.forEach { $0.checkinBarBooking(barItems: tickets) }
+            } catch {
+                return
+            }
+        }
     }
     
     private func addEventListener() {
@@ -210,5 +238,8 @@ extension WebSocketCallBackDelegate {
     func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {}
     func checkInAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {}
     func unCheckAddOnsTicket(checkIndata: [AddOnsBookingHasCheckIn], bookingId: String) {}
+    
+    func checkinBarBooking(barItems: [BarTabHasItem]) {}
+    func uncheckBarBooking(barItems: [BarTabHasItem]) {}
 }
 

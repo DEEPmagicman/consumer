@@ -49,6 +49,9 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var paymentBtnStackView: UIStackView!
     @IBOutlet weak var userDetailsStackView: UIStackView!
     @IBOutlet weak var ticketDetailsView: UIStackView!
+    @IBOutlet weak var policyView: UIView!
+    @IBOutlet weak var policyCheckBox: UIButton!
+    @IBOutlet weak var policyLbl: UILabel!
     
     var venue: ClipVenue?
     var selectedCoverTickets = [CoverTicket]()
@@ -102,9 +105,6 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             errorLbl.text = "Apple pay is not supported on your device, try another payment option.".localize()
         }
         
-//        firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
-//        lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
-        
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
         firstNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingChanged)
         lastNameTF.addTarget(self, action: #selector(textFieldValDidChange), for: UIControl.Event.editingDidEnd)
@@ -119,6 +119,12 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailValidationLbl.isHidden = true
         emailTF.delegate = self
         getCalculation()
+        
+        policyView.isHidden = venue?.venueSettings?.barTabBookingPolicy?.isEmpty == true
+        policyLbl.text = venue?.venueSettings?.barTabBookingPolicy ?? ""
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        policyCheckBox.isSelected = true
     }
     
     override func viewDidLayoutSubviews() {
@@ -209,6 +215,11 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             emailValidationLbl.isHidden = false
             return
         }
+        if venue?.venueSettings?.barTabBookingPolicy?.isEmpty == false && policyCheckBox.isSelected == false {
+            alertPopup("", "You must accept the terms and conditions by clicking the checkbox.")
+            return
+        }
+        
         emailValidationLbl.isHidden = true
         AppClipLoader.showLoader(self.view)
         var selectedTickets = [[String: Any]]()
@@ -269,6 +280,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 self.barTabData = data
                 self.paymentIntent = self.barTabData?.clientSecret ?? ""
                 self.paymentDetail = self.barTabData?.barTab.barTabPayments?.first?.bookingFees
+                self.setUpPaymentBottomSheet()
                 completion()
             }
         }
@@ -344,7 +356,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.customFeeTableViewHeight.constant = CGFloat((feeData?.additionalFees?.count ?? 0) * 30)
             self.customFeeTableView.reloadData()
             self.isIntendCreated = true
-            self.setUpPaymentBottomSheet()
+           
         }
     }
     

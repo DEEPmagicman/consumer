@@ -49,9 +49,7 @@ struct BarTabHasItem: Codable {
     var coverTicketId: String?
     var ticketPrice: Int?
     var barTabId: String?
-    var isDeleted: Bool?
-//    var createdAt: String?
-//    var updatedAt: String?
+    var isCheckedIn: Bool?
     var coverTicket: CoverTicket?
     // MARK: app side parameters
     var selectedQuantity: Int? = nil
@@ -63,9 +61,7 @@ struct BarTabHasItem: Codable {
         try container.encodeIfPresent(coverTicketId, forKey: .coverTicketId)
         try container.encodeIfPresent(ticketPrice, forKey: .ticketPrice)
         try container.encodeIfPresent(barTabId, forKey: .barTabId)
-        try container.encodeIfPresent(isDeleted, forKey: .isDeleted)
-//        try container.encodeIfPresent(createdAt, forKey: .createdAt)
-//        try container.encodeIfPresent(updatedAt, forKey: .updatedAt)
+        try container.encodeIfPresent(isCheckedIn, forKey: .isCheckedIn)
         try container.encodeIfPresent(coverTicket, forKey: .coverTicket)
     }
 }
@@ -112,18 +108,18 @@ struct BarTabBooking: Codable {
         barTabHasItems.forEach { ticket in
             if let index = tickets.firstIndex(where: { $0.coverTicketId == ticket.coverTicketId }), let quantity = tickets[index].selectedQuantity {
                 tickets[index].selectedQuantity = quantity + 1
-//                if bookingHasCheckIn?.first?.bookingItemCheckIn.contains(where: { $0.bookingHasItemId == ticket.id }) == true {
-//                    let alreadyCheckInCount = tickets[index].checkedInQuantity ?? 0
-//                    tickets[index].checkedInQuantity = alreadyCheckInCount + 1
-//                }
+                if ticket.isCheckedIn == true {
+                    let alreadyCheckInCount = tickets[index].checkedInQuantity ?? 0
+                    tickets[index].checkedInQuantity = alreadyCheckInCount + 1
+                }
             } else {
                 var ticket = ticket
                 ticket.selectedQuantity = 1
-//                if bookingHasCheckIn?.first?.bookingItemCheckIn.contains(where: { $0.bookingHasItemId == ticket.id }) == true {
-//                    ticket.checkedInQuantity = 1
-//                } else {
-//                    ticket.checkedInQuantity = 0
-//                }
+                if ticket.isCheckedIn == true {
+                    ticket.checkedInQuantity = 1
+                } else {
+                    ticket.checkedInQuantity = 0
+                }
                 tickets.append(ticket)
             }
         }

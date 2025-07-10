@@ -34,6 +34,9 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var totalAmountLbl: UILabel!
     @IBOutlet private weak var paymentMethodView: UIView!
     @IBOutlet weak var insideScrollView: UIView!
+    @IBOutlet weak var policyView: UIView!
+    @IBOutlet weak var policyText: UILabel!
+    @IBOutlet weak var policyCheckBox: UIButton!
     
     var venueDetails: ClipVenue?
     var selectedTicket = [CoverTicket]()
@@ -66,6 +69,10 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         paymentMethodView.addGestureRecognizer(tap)
         customFeesTableView.delegate = self
         customFeesTableView.dataSource = self
+        
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        policyCheckBox.isSelected = true
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -124,6 +131,9 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         self.customFeesView.isHidden = false
         
         self.setUpPaymentBottomSheet()
+        
+        policyView.isHidden = (venueDetails?.venueSettings?.barTabBookingPolicy ?? "").isEmpty == true
+        policyText.text = venueDetails?.venueSettings?.barTabBookingPolicy ?? ""
     }
     
     var setProcessingFeeView: Bool {
@@ -241,11 +251,19 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     }
     
     @IBAction private func onClickBuy(_ sender: Any) {
+        if venueDetails?.venueSettings?.barTabBookingPolicy?.isEmpty ?? true == false && policyCheckBox.isSelected == false {
+            Alert.showAlertSheet(style: .alert, title: "You must accept the terms and conditions by clicking the checkbox.", message: "")
+            return
+        }
         if selectedId == Constant.String.defaultSelectedPM {
             applePayButtonTapped()
         } else {
             onClickCreditCardPay()
         }
+    }
+    
+    @IBAction func onClickPolicyBtn(_ sender: Any) {
+        policyCheckBox.isSelected = !policyCheckBox.isSelected
     }
 }
 

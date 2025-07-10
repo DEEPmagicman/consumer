@@ -125,17 +125,17 @@ extension BarTabQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
 }
 
 extension BarTabQRCodeVC: WebSocketCallBackDelegate {
-//    func checkInTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
-//        if booking?.id ?? "" == bookingId {
-//            booking?.bookingHasCheckIn = checkIndata
-//            pagerView.reloadData()
-//        }
-//    }
-//    
-//    func unCheckTicket(checkIndata: [BookingHasCheckIn], bookingId: String) {
-//        if booking?.id ?? "" == bookingId {
-//            booking?.bookingHasCheckIn = checkIndata
-//            pagerView.reloadData()
-//        }
-//    }
+    func checkinBarBooking(barItems: [BarTabHasItem]) {
+        if booking?.id ?? "" == barItems.first?.barTabId {
+            booking?.barTabHasItems = barItems
+            pagerView.reloadData()
+        }
+    }
+    
+    func uncheckBarBooking(barItems: [BarTabHasItem]) {
+        if booking?.id ?? "" == barItems.first?.barTabId {
+            booking?.barTabHasItems = barItems
+            pagerView.reloadData()
+        }
+    }
 }

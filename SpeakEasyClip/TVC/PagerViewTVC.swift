@@ -63,6 +63,9 @@ class PagerViewTVC: FSPagerViewCell {
 
 extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let barBooking = barTabBooking {
+            return barBooking.uniqueTickets.count
+        }
         return uniqueTickets.count != 0 ? uniqueTickets.count : addOnsBookingHasItem.count
     }
     
@@ -71,15 +74,20 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
         cell.contentView.backgroundColor = .clear
         cell.checkInProgress.layer.cornerRadius = 5
         if uniqueTickets.count != 0 {
-            cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
-            cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
-            cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
             if let barBooking = barTabBooking {
+                
+                cell.titleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.customName ?? "" == "" ? barBooking.uniqueTickets[indexPath.row].coverTicket?.displayName : barBooking.uniqueTickets[indexPath.row].coverTicket?.displayCustomName
+                cell.subTitleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.displayDescription
+                cell.quantityLbl.text = "\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
+                
                 cell.checkInProgressBarView.isHidden = false
                 let checkInCount = barBooking.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
                 cell.checkInCount.text = "\(checkInCount)/\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
                 cell.checkInProgress.setProgress(Float(checkInCount) / Float(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
             } else {
+                cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
+                cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
+                cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
                 if let index = booking?.uniqueTickets.firstIndex(where: {$0.ticketId == uniqueTickets[indexPath.row].id }) {
                     cell.checkInProgressBarView.isHidden = false
                     let checkInCount = booking?.uniqueTickets[index].checkedInQuantity ?? 0

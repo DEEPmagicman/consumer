@@ -332,6 +332,7 @@ struct VenueSettings: Codable {
     var whiteLabelColor: String?
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
+    var barTabBookingPolicy: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -354,6 +355,7 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(whiteLabelColor, forKey: .whiteLabelColor)
         try container.encodeIfPresent(showCoverDisclaimer, forKey: .showCoverDisclaimer)
         try container.encodeIfPresent(coverDisclaimerText, forKey: .coverDisclaimerText)
+        try container.encodeIfPresent(barTabBookingPolicy, forKey: .barTabBookingPolicy)
     }
 }
 

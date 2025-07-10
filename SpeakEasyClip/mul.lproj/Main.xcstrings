@@ -727,6 +727,18 @@
         }
       }
     },
+    "mMI-ZC-6mt.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"-\"; ObjectID = \"mMI-ZC-6mt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "-"
+          }
+        }
+      }
+    },
     "MoV-7y-Ad4.normalTitle" : {
       "comment" : "Class = \"UIButton\"; normalTitle = \"CHECKOUT\"; ObjectID = \"MoV-7y-Ad4\";",
       "extractionState" : "extracted_with_value",

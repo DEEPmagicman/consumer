@@ -139,5 +139,17 @@ extension BarTabQRCodeClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
 }
 
 extension BarTabQRCodeClipVC: WebSocketCallBackDelegate {
+    func checkinBarBooking(barItems: [BarTabHasItem]) {
+        if barBooking?.id ?? "" == barItems.first?.barTabId {
+            barBooking?.barTabHasItems = barItems
+            pagerView.reloadData()
+        }
+    }
     
+    func uncheckBarBooking(barItems: [BarTabHasItem]) {
+        if barBooking?.id ?? "" == barItems.first?.barTabId {
+            barBooking?.barTabHasItems = barItems
+            pagerView.reloadData()
+        }
+    }
 }
