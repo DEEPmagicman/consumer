@@ -116,7 +116,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         subTotalView.isHidden = feeData?.subTotal == feeData?.total
         salesTaxView.isHidden = feeData?.salesTax ?? 0 == 0
         customFeesView.isHidden = feeData?.additionalFees?.count == 0
-        processingFeesView.isHidden = !setProcessingFeeView
+        processingFeesView.isHidden = true // !setProcessingFeeView
         
         processingFeeAmount.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
         totalAmountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((feeData?.total ?? 0).decimalFormat(true))"
@@ -133,19 +133,19 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         self.setUpPaymentBottomSheet()
         
         policyView.isHidden = (venueDetails?.venueSettings?.barTabBookingPolicy ?? "").isEmpty == true
-        policyText.text = venueDetails?.venueSettings?.barTabBookingPolicy ?? ""
+        policyText.text = venueDetails?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
     }
     
-    var setProcessingFeeView: Bool {
-        let feeData = barTabData?.barTab.barTabPayments?.first?.bookingFees
-        let totalCustomFee = feeData?.additionalFees?.reduce(0.0) { $0 + ($1.amount ?? 0) } ?? 0
-        let processingFee = feeData?.processingFee ?? 0
-        let subTotal = feeData?.subTotal ?? 0
-        let salesTax = feeData?.salesTax ?? 0
-        let total = feeData?.total ?? 0
-
-        return (processingFee != 0) && (total != subTotal) && ((subTotal + salesTax + totalCustomFee) != total)
-    }
+//    var setProcessingFeeView: Bool {
+//        let feeData = barTabData?.barTab.barTabPayments?.first?.bookingFees
+//        let totalCustomFee = feeData?.additionalFees?.reduce(0.0) { $0 + ($1.amount ?? 0) } ?? 0
+//        let processingFee = feeData?.processingFee ?? 0
+//        let subTotal = feeData?.subTotal ?? 0
+//        let salesTax = feeData?.salesTax ?? 0
+//        let total = feeData?.total ?? 0
+//
+//        return (processingFee != 0) && (total != subTotal) && ((subTotal + salesTax + totalCustomFee) != total)
+//    }
     
     @objc private func onClickPaymentMethod() {
         Navigate.to.paymentMethodsVc(self, selectedId: selectedId)

@@ -120,8 +120,9 @@ extension BarTabQRCodeClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
     func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
         cell.openTabBtnHeight.constant = 50
+        cell.openTabBtn.isHidden = false
         cell.backupCode.text = venue?.bookingCode
-        cell.bookingDateTime.text = "Purchased on \(barBooking?.createdAt ?? "")"
+        cell.bookingDateTime.text = "Purchased on \(barBooking?.createdAt.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "") ?? "")"
         cell.uniqueTickets = appClipTicket
         cell.barTabBooking = barBooking
         cell.qrImage.image = qrImage

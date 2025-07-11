@@ -121,7 +121,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         getCalculation()
         
         policyView.isHidden = venue?.venueSettings?.barTabBookingPolicy?.isEmpty == true
-        policyLbl.text = venue?.venueSettings?.barTabBookingPolicy ?? ""
+        policyLbl.text = venue?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
@@ -345,9 +345,9 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.subTotalView.isHidden = feeData?.subTotal == feeData?.total
             self.salesTextView.isHidden = feeData?.salesTax ?? 0 == 0
             self.customFeeView.isHidden = feeData?.additionalFees?.count == 0
-            self.processingFeeView.isHidden = !self.setProcessingFeeView
+            self.processingFeeView.isHidden = true // !self.setProcessingFeeView
             
-            self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
+//            self.processingFeeAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.processingFee ?? 0).decimalFormat(true))"
             self.subTotalAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.subTotal ?? 0).decimalFormat(true))"
             self.salesTextAmount.text = "\(self.venue?.venueSettings?.currencySymbol ?? "$")\((feeData?.salesTax ?? 0).decimalFormat(true))"
             self.salesTaxName.text = feeData?.salesTaxName ?? "Sales Tax"
@@ -360,16 +360,16 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    var setProcessingFeeView: Bool {
-        let feeData = barTabData?.barTab.barTabPayments?.first?.bookingFees
-        let totalCustomFee = feeData?.additionalFees?.reduce(0.0) { $0 + ($1.amount ?? 0) } ?? 0
-        let processingFee = feeData?.processingFee ?? 0
-        let subTotal = feeData?.subTotal ?? 0
-        let salesTax = feeData?.salesTax ?? 0
-        let total = feeData?.total ?? 0
-
-        return (processingFee != 0) && (total != subTotal) && ((subTotal + salesTax + totalCustomFee) != total)
-    }
+//    var setProcessingFeeView: Bool {
+//        let feeData = barTabData?.barTab.barTabPayments?.first?.bookingFees
+//        let totalCustomFee = feeData?.additionalFees?.reduce(0.0) { $0 + ($1.amount ?? 0) } ?? 0
+//        let processingFee = feeData?.processingFee ?? 0
+//        let subTotal = feeData?.subTotal ?? 0
+//        let salesTax = feeData?.salesTax ?? 0
+//        let total = feeData?.total ?? 0
+//
+//        return (processingFee != 0) && (total != subTotal) && ((subTotal + salesTax + totalCustomFee) != total)
+//    }
     
     @objc func checkApplePay() {
         if !checkAllData {
@@ -730,5 +730,23 @@ func convertDataToDictionary(data: Data) -> [String: Any]? {
     } catch {
         print("Failed to convert Data to Dictionary: \(error.localizedDescription)")
         return nil
+    }
+}
+
+extension String {
+    func htmlToPlainText() -> String {
+        guard let data = self.data(using: .utf8) else { return self }
+        
+        do {
+            let attributedString = try NSAttributedString(
+                data: data,
+                options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
+                documentAttributes: nil
+            )
+            return attributedString.string
+        } catch {
+            print("Error converting HTML to plain text: \(error)")
+            return self
+        }
     }
 }
