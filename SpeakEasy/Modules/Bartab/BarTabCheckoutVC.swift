@@ -37,6 +37,9 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var policyView: UIView!
     @IBOutlet weak var policyText: UILabel!
     @IBOutlet weak var policyCheckBox: UIButton!
+    @IBOutlet weak var marketingOptInView: UIView!
+    @IBOutlet weak var marketingText: UILabel!
+    @IBOutlet weak var marketingOptInBtn: UIButton!
     
     var venueDetails: ClipVenue?
     var selectedTicket = [CoverTicket]()
@@ -73,6 +76,13 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
+        
+        marketingOptInBtn.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        marketingOptInBtn.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        marketingOptInBtn.isSelected = true
+        if let color = self.venueDetails?.venueSettings?.whiteLabelColor {
+            buyNowBtn.backgroundColor = UIColor(hex: color)
+        }
     }
     
     @IBAction func onClickBack(_ sender: Any) {
@@ -134,6 +144,9 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         
         policyView.isHidden = (venueDetails?.venueSettings?.barTabBookingPolicy ?? "").isEmpty == true
         policyText.text = venueDetails?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
+        
+        marketingOptInView.isHidden = !(venueDetails?.venueSettings?.optedPolicy == true)
+        marketingText.text = venueDetails?.venueSettings?.policyText ?? "Opt in for future messages"
     }
     
 //    var setProcessingFeeView: Bool {

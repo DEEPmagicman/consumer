@@ -341,6 +341,9 @@ final class MVPVenueDetailVc: UIViewController {
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
         buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Buy Upsell", for: .normal)
+        if let color = self.venueDetails?.venueSettings?.whiteLabelColor {
+            continueBtn.bgColor = UIColor(hex: color)
+        }
     }
     
     @objc func onClickWebSite() {

@@ -216,6 +216,7 @@ final class SelectTicketClipVC: UIViewController {
     private func getVenueDetailsWithTickets(withLoader: Bool = true) {
         guard let url = URL(string: "\(SharedURL.baseURL)/consumer/cover/\(venueId)") else { return }
         var request = URLRequest(url: url)
+        print("-=-= \("\(SharedURL.baseURL)/consumer/cover/\(venueId)")")
         request.httpMethod = "GET"
         if doormanId != "" {
             request.addValue(doormanId, forHTTPHeaderField: "doorman")

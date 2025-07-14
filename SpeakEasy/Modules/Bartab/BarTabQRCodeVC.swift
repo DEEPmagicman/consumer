@@ -115,6 +115,9 @@ extension BarTabQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
             cell.qrImage.image = self.qrImage
         }
         cell.openTabBtn.addTarget(self, action: #selector(openTabBtn), for: .touchUpInside)
+        if let color = self.venue?.venueSettings?.whiteLabelColor {
+            cell.openTabBtn.backgroundColor = UIColor(hex: color)
+        }
         cell.ticketsTableView.reloadData()
         return cell
     }

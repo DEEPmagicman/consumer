@@ -52,6 +52,10 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var policyView: UIView!
     @IBOutlet weak var policyCheckBox: UIButton!
     @IBOutlet weak var policyLbl: UILabel!
+    @IBOutlet weak var insideScrollView: UIView!
+    @IBOutlet weak var marketingView: UIView!
+    @IBOutlet weak var marketingCheckBox: UIButton!
+    @IBOutlet weak var marketingLbl: UILabel!
     
     var venue: ClipVenue?
     var selectedCoverTickets = [CoverTicket]()
@@ -120,11 +124,21 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         emailTF.delegate = self
         getCalculation()
         
-        policyView.isHidden = venue?.venueSettings?.barTabBookingPolicy?.isEmpty == true
+        policyView.isHidden = venue?.venueSettings?.barTabBookingPolicy?.isEmpty ?? true == true
         policyLbl.text = venue?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
+        
+        marketingView.isHidden = !(venue?.venueSettings?.optedPolicy == true)
+        marketingLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
+        marketingCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
+        marketingCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
+        marketingCheckBox.isSelected = true
+        
+        firstNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
+        lastNameView.isHidden = venue?.venueSettings?.collectNameDuringBooking ?? false == false
+        emailView.isHidden = venue?.venueSettings?.collectEmailDuringBooking == true ? false : true
     }
     
     override func viewDidLayoutSubviews() {
@@ -200,6 +214,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                     self.userDetailsStackView.isHidden = true
                     self.paymentBtnStackView.isHidden = true
                     self.ticketDetailsView.isHidden = true
+                    self.insideScrollView.isHidden = true
                     self.alertPopup("", errMsg, "Go Back") {
                         self.navigationController?.popToRootViewController(animated: true)
                     }
@@ -215,7 +230,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             emailValidationLbl.isHidden = false
             return
         }
-        if venue?.venueSettings?.barTabBookingPolicy?.isEmpty == false && policyCheckBox.isSelected == false {
+        if venue?.venueSettings?.barTabBookingPolicy?.isEmpty ?? true == false && policyCheckBox.isSelected == false {
             alertPopup("", "You must accept the terms and conditions by clicking the checkbox.")
             return
         }
@@ -408,14 +423,14 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             phoneNumberUnderlineView.backgroundColor = .red
         }
         
-        if firstNameTF.text ?? "" == "" {
-                firstNameTF.shake()
-                firstNameUnderlineView.backgroundColor = .red
-            }
-            if lastNameTF.text ?? "" == "" {
-                lastNameTF.shake()
-                lastNameUnderlineView.backgroundColor = .red
-            }
+        if venue?.venueSettings?.collectNameDuringBooking == true && firstNameTF.text ?? "" == "" {
+            firstNameTF.shake()
+            firstNameUnderlineView.backgroundColor = .red
+        }
+        if venue?.venueSettings?.collectNameDuringBooking == true && lastNameTF.text ?? "" == "" {
+            lastNameTF.shake()
+            lastNameUnderlineView.backgroundColor = .red
+        }
     }
     
     private var checkAllData: Bool {
@@ -423,7 +438,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
             return false
         }
         
-        if firstNameTF.text ?? "" == "" || lastNameTF.text ?? "" == "" {
+        if (venue?.venueSettings?.collectNameDuringBooking == true && firstNameTF.text ?? "" == "") || (venue?.venueSettings?.collectNameDuringBooking == true && lastNameTF.text ?? "" == "") {
             return false
         }
         
@@ -572,7 +587,12 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                 vc.appClipTicket = self.selectedCoverTickets
                 vc.barBooking = self.barBooking
                 vc.barTabId = self.barTabData?.barTab.id ?? ""
-                let userData =  "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")"
+                var userData = ""
+                if self.venue?.venueSettings?.collectNameDuringBooking == true {
+                    userData =  "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")"
+                } else {
+                    userData = "+\(self.phoneNumber?.countryCode ?? 1) \(self.phoneNumber?.numberString ?? "")"
+                }
                 vc.guestInfo = "\(userData) - \(self.barBooking?.createdAt.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "") ?? "")"
                 if let selectVC = self.navigationController?.viewControllers.first(where: { $0.isKind(of: SelectTicketClipVC.self) }) as? SelectTicketClipVC {
                     selectVC.forceRemoveAllTicket()

@@ -129,6 +129,9 @@ extension BarTabQRCodeClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.ticketsTableView.reloadData()
         cell.guestName.text = guestInfo
         cell.openTabBtn.addTarget(self, action: #selector(openTabBtn), for: .touchUpInside)
+        if let color = self.venue?.venueSettings?.whiteLabelColor {
+            cell.openTabBtn.backgroundColor = UIColor(hex: color)
+        }
         return cell
     }
     

@@ -643,6 +643,18 @@
         }
       }
     },
+    "J2J-Zq-SZT.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"-\"; ObjectID = \"J2J-Zq-SZT\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "-"
+          }
+        }
+      }
+    },
     "jtY-e3-Qa6.text" : {
       "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"jtY-e3-Qa6\";",
       "extractionState" : "extracted_with_value",

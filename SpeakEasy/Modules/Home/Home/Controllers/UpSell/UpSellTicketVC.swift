@@ -117,6 +117,9 @@ class UpSellTicketVC: UIViewController {
         updateContinueBtn()
         continueBtn.bgColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
         continueBtn.indicator = MaterialLoadingIndicator(color: .black)
+        if let color = self.venueDetails?.venueSettings?.whiteLabelColor {
+            continueBtn.bgColor = UIColor(hex: color)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

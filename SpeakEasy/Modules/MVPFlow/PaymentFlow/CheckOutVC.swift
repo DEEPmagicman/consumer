@@ -212,6 +212,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             self.questionTableView.layoutIfNeeded()
         }
         eventQuestionView.isHidden = true
+        if let color = self.venue?.venueSettings?.whiteLabelColor {
+            buyNowBtn.backgroundColor = UIColor(hex: color)
+        }
     }
     
     @objc private func handleBackSwipe() {
