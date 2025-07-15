@@ -2736,7 +2736,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rbl-d3-eeA">
-                                <rect key="frame" x="134" y="812" width="146" height="40"/>
+                                <rect key="frame" x="137" y="812" width="140" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="A6s-sM-tUz"/>
                                 </constraints>
@@ -2755,9 +2755,9 @@
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="top" secondItem="qqj-74-ceS" secondAttribute="top" constant="150" id="57g-jq-n2j"/>
                             <constraint firstItem="D5d-2p-eZp" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" id="8dG-s2-Nen"/>
                             <constraint firstItem="hdD-4k-kTf" firstAttribute="top" secondItem="YRx-Fx-5E8" secondAttribute="bottom" constant="33" id="8zX-1U-kcy"/>
-                            <constraint firstItem="hdD-4k-kTf" firstAttribute="trailing" secondItem="qqj-74-ceS" secondAttribute="trailing" constant="-16" id="Kwv-6X-1e7"/>
                             <constraint firstAttribute="bottom" secondItem="Rbl-d3-eeA" secondAttribute="bottom" constant="44" id="PsT-P3-jya"/>
                             <constraint firstItem="qqj-74-ceS" firstAttribute="trailing" secondItem="xrv-G6-AOn" secondAttribute="trailing" id="U9f-RV-DdD"/>
+                            <constraint firstItem="hdD-4k-kTf" firstAttribute="centerX" secondItem="cly-vD-wU1" secondAttribute="centerX" id="VNd-DK-LWX"/>
                             <constraint firstItem="YRx-Fx-5E8" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" constant="16" id="ZVQ-8Z-Oxa"/>
                             <constraint firstItem="Rbl-d3-eeA" firstAttribute="centerX" secondItem="cly-vD-wU1" secondAttribute="centerX" id="biN-fI-MfL"/>
                             <constraint firstItem="xrv-G6-AOn" firstAttribute="leading" secondItem="qqj-74-ceS" secondAttribute="leading" id="cey-gm-M61"/>
