@@ -300,3 +300,53 @@ enum Language: String {
         }
     }
 }
+
+extension UITextView {
+    func setHTMLFromString(htmlText: String) {
+        let fontName = self.font?.fontName ?? "-apple-system"
+        let fontSize = self.font?.pointSize ?? 16
+        let modifiedFont = String(format:"<span style=\"font-family: \(fontName); font-size: \(fontSize)\">%@</span>", htmlText)
+
+        guard let data = modifiedFont.data(using: .unicode) else { return }
+
+        do {
+            let attributedString = try NSMutableAttributedString(
+                data: data,
+                options: [.documentType: NSAttributedString.DocumentType.html],
+                documentAttributes: nil)
+
+            let fullRange = NSRange(location: 0, length: attributedString.length)
+            if let currentTextColor = self.textColor {
+                attributedString.addAttribute(.foregroundColor, value: currentTextColor, range: fullRange)
+            }
+
+            self.attributedText = attributedString
+            self.isEditable = false
+            self.isScrollEnabled = false
+            self.dataDetectorTypes = .link
+            self.textContainerInset = .zero
+            self.isSelectable = true
+            self.textContainer.lineFragmentPadding = 0
+        } catch {
+            print("Failed to parse HTML:", error)
+        }
+    }
+}
+
+extension String {
+    func htmlToPlainText() -> String {
+        guard let data = self.data(using: .utf8) else { return self }
+        
+        do {
+            let attributedString = try NSAttributedString(
+                data: data,
+                options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
+                documentAttributes: nil
+            )
+            return attributedString.string
+        } catch {
+            print("Error converting HTML to plain text: \(error)")
+            return self
+        }
+    }
+}

@@ -51,7 +51,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var ticketDetailsView: UIStackView!
     @IBOutlet weak var policyView: UIView!
     @IBOutlet weak var policyCheckBox: UIButton!
-    @IBOutlet weak var policyLbl: UILabel!
+    @IBOutlet weak var policyLbl: UITextView!
     @IBOutlet weak var insideScrollView: UIView!
     @IBOutlet weak var marketingView: UIView!
     @IBOutlet weak var marketingCheckBox: UIButton!
@@ -125,7 +125,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         getCalculation()
         
         policyView.isHidden = venue?.venueSettings?.barTabBookingPolicy?.isEmpty ?? true == true
-        policyLbl.text = venue?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
+        policyLbl.setHTMLFromString(htmlText: venue?.venueSettings?.barTabBookingPolicy ?? "")
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxEmpty, for: .normal)
         policyCheckBox.setImage(CommonConstant.Icon.checkBoxFull, for: .selected)
         policyCheckBox.isSelected = true
@@ -754,23 +754,5 @@ func convertDataToDictionary(data: Data) -> [String: Any]? {
     } catch {
         print("Failed to convert Data to Dictionary: \(error.localizedDescription)")
         return nil
-    }
-}
-
-extension String {
-    func htmlToPlainText() -> String {
-        guard let data = self.data(using: .utf8) else { return self }
-        
-        do {
-            let attributedString = try NSAttributedString(
-                data: data,
-                options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue],
-                documentAttributes: nil
-            )
-            return attributedString.string
-        } catch {
-            print("Error converting HTML to plain text: \(error)")
-            return self
-        }
     }
 }

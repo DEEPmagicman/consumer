@@ -2427,22 +2427,22 @@
                                                                             <action selector="onClickPolicyCheckBox:" destination="z4G-mK-QL5" eventType="touchUpInside" id="3hd-e8-LhI"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mMI-ZC-6mt">
-                                                                        <rect key="frame" x="40" y="0.0" width="342" height="50"/>
+                                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="-" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="C2a-0Y-3h3">
+                                                                        <rect key="frame" x="38" y="0.0" width="346" height="70"/>
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="13"/>
-                                                                        <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                        <nil key="highlightedColor"/>
-                                                                    </label>
+                                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                                    </textView>
                                                                 </subviews>
                                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="bottom" secondItem="mMI-ZC-6mt" secondAttribute="bottom" id="3ER-1m-0Fx"/>
-                                                                    <constraint firstItem="mMI-ZC-6mt" firstAttribute="top" secondItem="SMu-lt-k4A" secondAttribute="top" id="KaX-9S-xYO"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="mMI-ZC-6mt" secondAttribute="trailing" id="Lub-Lt-MXV"/>
-                                                                    <constraint firstItem="mMI-ZC-6mt" firstAttribute="leading" secondItem="FJC-5U-hG9" secondAttribute="trailing" constant="14" id="N0D-64-tTp"/>
+                                                                    <constraint firstItem="C2a-0Y-3h3" firstAttribute="leading" secondItem="FJC-5U-hG9" secondAttribute="trailing" constant="12" id="1Lr-fa-wlC"/>
                                                                     <constraint firstItem="FJC-5U-hG9" firstAttribute="leading" secondItem="SMu-lt-k4A" secondAttribute="leading" constant="4" id="OdU-k3-xPI"/>
-                                                                    <constraint firstItem="FJC-5U-hG9" firstAttribute="top" secondItem="mMI-ZC-6mt" secondAttribute="top" id="Rfb-O2-aC5"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="C2a-0Y-3h3" secondAttribute="trailing" constant="-2" id="bs6-jJ-ERS"/>
+                                                                    <constraint firstItem="C2a-0Y-3h3" firstAttribute="top" secondItem="FJC-5U-hG9" secondAttribute="top" id="iPZ-HW-EpC"/>
+                                                                    <constraint firstItem="C2a-0Y-3h3" firstAttribute="top" secondItem="SMu-lt-k4A" secondAttribute="top" id="jrq-7O-FYf"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="C2a-0Y-3h3" secondAttribute="bottom" constant="-20" id="lGo-xW-ei4"/>
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nts-rj-S0X">
@@ -2669,7 +2669,7 @@
                         <outlet property="phoneNumberUnderlineView" destination="TuX-jh-t4r" id="yaz-du-NlX"/>
                         <outlet property="phoneNumberView" destination="5fS-QG-GHN" id="k0e-fV-Rwm"/>
                         <outlet property="policyCheckBox" destination="FJC-5U-hG9" id="9dP-Yr-B7I"/>
-                        <outlet property="policyLbl" destination="mMI-ZC-6mt" id="sbu-v9-Tti"/>
+                        <outlet property="policyLbl" destination="C2a-0Y-3h3" id="DmI-1R-PH3"/>
                         <outlet property="policyView" destination="SMu-lt-k4A" id="Kn0-b0-CvL"/>
                         <outlet property="processingFeeAmount" destination="RAE-pk-owH" id="gOa-vZ-MrM"/>
                         <outlet property="processingFeeView" destination="j9n-km-fpd" id="wMd-F5-msR"/>

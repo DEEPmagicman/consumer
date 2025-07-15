@@ -319,6 +319,18 @@
         }
       }
     },
+    "C2a-0Y-3h3.text" : {
+      "comment" : "Class = \"UITextView\"; text = \"-\"; ObjectID = \"C2a-0Y-3h3\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "-"
+          }
+        }
+      }
+    },
     "C8h-xq-I9E.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Sales Tax\"; ObjectID = \"C8h-xq-I9E\";",
       "extractionState" : "extracted_with_value",
@@ -735,18 +747,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total"
-          }
-        }
-      }
-    },
-    "mMI-ZC-6mt.text" : {
-      "comment" : "Class = \"UILabel\"; text = \"-\"; ObjectID = \"mMI-ZC-6mt\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "-"
           }
         }
       }

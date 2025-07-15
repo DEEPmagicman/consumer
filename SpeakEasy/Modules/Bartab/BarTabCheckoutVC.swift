@@ -35,7 +35,7 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var paymentMethodView: UIView!
     @IBOutlet weak var insideScrollView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var policyText: UILabel!
+    @IBOutlet weak var policyText: UITextView!
     @IBOutlet weak var policyCheckBox: UIButton!
     @IBOutlet weak var marketingOptInView: UIView!
     @IBOutlet weak var marketingText: UILabel!
@@ -143,8 +143,8 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
         self.setUpPaymentBottomSheet()
         
         policyView.isHidden = (venueDetails?.venueSettings?.barTabBookingPolicy ?? "").isEmpty == true
-        policyText.text = venueDetails?.venueSettings?.barTabBookingPolicy?.htmlToPlainText() ?? ""
-        
+        policyText.setHTMLFromString(htmlText: venueDetails?.venueSettings?.barTabBookingPolicy ?? "")
+
         marketingOptInView.isHidden = !(venueDetails?.venueSettings?.optedPolicy == true)
         marketingText.text = venueDetails?.venueSettings?.policyText ?? "Opt in for future messages"
     }
