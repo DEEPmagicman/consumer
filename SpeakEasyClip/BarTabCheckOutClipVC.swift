@@ -472,6 +472,10 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         sender.isSelected.toggle()
     }
     
+    @IBAction private func onClickMarketingCheckBox(_ sender: UIButton) {
+        sender.isSelected.toggle()
+    }
+    
     @IBAction private func onClickBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }

@@ -25,11 +25,16 @@ final class BarTabQRCodeClipVC: UIViewController {
     private var isAlertDisplayed = false
     var guestInfo = String()
     var appClipTicket = [CoverTicket]()
+    private var gradient: CAGradientLayer?
+    private var venueImgHeightObservation: NSKeyValueObservation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadImage()
-        venueImg.setGradientColor()
+        gradient = venueImg.setGradientColor()
+        venueImgHeightObservation = venueImg.observe(\.bounds, options: []) { [weak self] _, _ in
+            self?.gradient = self?.venueImg.setGradientColor()
+        }
         venueNameLbl.text = venue?.name
         let string = """
             {

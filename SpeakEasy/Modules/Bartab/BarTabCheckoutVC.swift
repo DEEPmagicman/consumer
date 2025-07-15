@@ -278,6 +278,10 @@ final class BarTabCheckoutVC: UIViewController, ApplePayContextDelegate {
     @IBAction func onClickPolicyBtn(_ sender: Any) {
         policyCheckBox.isSelected = !policyCheckBox.isSelected
     }
+    
+    @IBAction func onClickMarketingBtn(_ sender: Any) {
+        marketingOptInBtn.isSelected = !marketingOptInBtn.isSelected
+    }
 }
 
 extension BarTabCheckoutVC: UITableViewDelegate, UITableViewDataSource {
