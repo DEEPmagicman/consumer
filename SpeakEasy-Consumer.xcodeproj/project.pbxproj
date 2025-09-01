@@ -1733,9 +1733,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2280,6 +2284,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
@@ -2374,6 +2379,7 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";

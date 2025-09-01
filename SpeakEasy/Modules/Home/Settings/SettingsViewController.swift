@@ -73,4 +73,8 @@ final class SettingsViewController: UIViewController {
         }
         Alert.showAlertSheet(style: .alert, title: "", message: "Are you sure you want to log out?", actions: [okAction, cancelAction])
     }
+    
+    @IBAction func onClickCreateAccount(_ sender: Any) {
+        Navigate.externalURL("https://calendly.com/speakeasygo/discovery?month=2025-08")
+    }
 }
