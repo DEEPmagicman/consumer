@@ -182,13 +182,9 @@
 		CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486721286F2CB000FD277E /* AppDelegate.swift */; };
 		CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE48672A286F2CB100FD277E /* Assets.xcassets */; };
 		CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */; };
-		CE4867A7286F358800FD277E /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486751286F358700FD277E /* Strings.swift */; };
-		CE4867A8286F358800FD277E /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486754286F358700FD277E /* Validator.swift */; };
 		CE4867AB286F358800FD277E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486757286F358700FD277E /* Utility.swift */; };
 		CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486762286F358700FD277E /* UIView+Extention.swift */; };
 		CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486763286F358700FD277E /* UILabel+Extension.swift */; };
-		CE4867B7286F358800FD277E /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486767286F358700FD277E /* String+Extension.swift */; };
-		CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486769286F358700FD277E /* CLPlacemark+Extension.swift */; };
 		CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48678F286F358700FD277E /* CMSteppedProgressBar.m */; };
 		CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486790286F358700FD277E /* CAPSPageMenu.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
@@ -1886,7 +1882,6 @@
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
 				CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */,
-				CE4867B7286F358800FD277E /* String+Extension.swift in Sources */,
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CE954B992C392C8500BD3009 /* DropdownCustomCell.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
@@ -1903,7 +1898,6 @@
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */,
-				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
 				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
 				CE557D4F2E14E1DF0035C75A /* BarTabQRCodeVC.swift in Sources */,
@@ -1954,7 +1948,6 @@
 				E16705A028CA6B3700644BF0 /* HoursTVC.swift in Sources */,
 				BD942F3D29595A3300D52115 /* AFWrapper.swift in Sources */,
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
-				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
 				920B4D062B90AF8300C07402 /* CustomPagerViewCell.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
 				0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */,
@@ -1966,7 +1959,6 @@
 				CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */,
 				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
 				CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */,
-				CE4867A8286F358800FD277E /* Validator.swift in Sources */,
 				CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */,
 				CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */,
 				CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */,
