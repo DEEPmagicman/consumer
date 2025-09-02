@@ -103,12 +103,12 @@ final class UserDefault: NSObject {
         }
     }
     
-    func removeInstaConnection() {
-        user?.instagramId = ""
-        user?.instagramToken = nil
-        user?.instaNextPageURL = nil
-        user?.instaUserName = nil
-    }
+//    func removeInstaConnection() {
+//        user?.instagramId = ""
+//        user?.instagramToken = nil
+//        user?.instaNextPageURL = nil
+//        user?.instaUserName = nil
+//    }
     
     func emptyData() {
         accessToken = nil
