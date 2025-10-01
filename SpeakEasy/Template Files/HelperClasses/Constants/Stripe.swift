@@ -17,8 +17,8 @@ struct Stripe {
 
 struct SharedURL {
 #if DEBUG
-    static let baseURL = "https://preprod.speakeasygo.com"
-    static let webBaseURL = "https://preprod-consumer.speakeasygo.com"
+    static let baseURL = "https://dev.speakeasygo.com"
+    static let webBaseURL = "https://dev-consumer.speakeasygo.com"
     static let isEncryptionEnabled = false
 #else
     static let baseURL = "https://production.speakeasygo.com"
