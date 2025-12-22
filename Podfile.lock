@@ -16,6 +16,7 @@ PODS:
   - GTMSessionFetcher/Core (2.3.0)
   - Hero (1.6.2)
   - JWTDecode (3.0.0)
+  - LGSideMenuController (3.1.2)
   - NBBottomSheet (1.2.0)
   - OTPFieldView (1.0.1)
   - SCPageControl (0.4.0)
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - GSImageViewerController
   - Hero
   - JWTDecode
+  - LGSideMenuController
   - NBBottomSheet (~> 1.2)
   - OTPFieldView
   - SCPageControl
@@ -42,6 +44,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - Hero
     - JWTDecode
+    - LGSideMenuController
     - NBBottomSheet
     - OTPFieldView
     - SCPageControl
@@ -56,12 +59,13 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
+  LGSideMenuController: 0c7b155b0dbdf14bf8b88d5ac363c5fe1584bb23
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
   OTPFieldView: 700a752fe62c41d1c4914c78aa500fb30d97c255
   SCPageControl: 8a8dfbba7d7d8c66487a317cb4c4578a7e4af27a
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: b3c9c27ece88681856abbde6db4819c9c31e86a2
+PODFILE CHECKSUM: ce433213e8bfb4bd9e72981d52810576ebb942ef
 
 COCOAPODS: 1.16.2

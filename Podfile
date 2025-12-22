@@ -16,6 +16,7 @@ target 'SpeakEasy-Consumer' do
   pod 'GoogleSignIn'
   pod 'JWTDecode'
   pod 'NBBottomSheet', '~> 1.2'
+  pod 'LGSideMenuController'
 end
 
 post_install do |installer|
