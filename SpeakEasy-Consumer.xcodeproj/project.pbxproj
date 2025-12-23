@@ -197,6 +197,10 @@
 		CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48678F286F358700FD277E /* CMSteppedProgressBar.m */; };
 		CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486790286F358700FD277E /* CAPSPageMenu.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
+		CE48D8302EFA714300E7110B /* VenueCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48D82E2EFA714300E7110B /* VenueCVC.swift */; };
+		CE48D8312EFA714300E7110B /* VenueCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE48D82F2EFA714300E7110B /* VenueCVC.xib */; };
+		CE48D8342EFA7CE100E7110B /* EventV2CVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE48D8322EFA7CE100E7110B /* EventV2CVC.swift */; };
+		CE48D8352EFA7CE100E7110B /* EventV2CVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE48D8332EFA7CE100E7110B /* EventV2CVC.xib */; };
 		CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */; };
@@ -308,6 +312,8 @@
 		CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */; };
 		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
 		CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
+		CEF48B522EFA4937006A6468 /* EventCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEF48B512EFA4937006A6468 /* EventCVC.xib */; };
+		CEF48B532EFA4937006A6468 /* EventCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF48B502EFA4937006A6468 /* EventCVC.swift */; };
 		E15D6B6128BC39AC0076286C /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15D6B4128BC39AB0076286C /* Splash.swift */; };
 		E15D6B6228BC39AC0076286C /* Splash.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15D6B4228BC39AB0076286C /* Splash.xib */; };
 		E167059F28CA6B3700644BF0 /* HoursTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E167059828CA6B3700644BF0 /* HoursTVC.xib */; };
@@ -528,6 +534,10 @@
 		CE48679B286F358700FD277E /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		CE48D82E2EFA714300E7110B /* VenueCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueCVC.swift; sourceTree = "<group>"; };
+		CE48D82F2EFA714300E7110B /* VenueCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueCVC.xib; sourceTree = "<group>"; };
+		CE48D8322EFA7CE100E7110B /* EventV2CVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventV2CVC.swift; sourceTree = "<group>"; };
+		CE48D8332EFA7CE100E7110B /* EventV2CVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventV2CVC.xib; sourceTree = "<group>"; };
 		CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
 		CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeVC.swift; sourceTree = "<group>"; };
 		CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeClipVC.swift; sourceTree = "<group>"; };
@@ -591,6 +601,8 @@
 		CEE0B518299F94E5004F0DA2 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
 		CEE7A2292A28BC9C009A027F /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		CEF48B502EFA4937006A6468 /* EventCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCVC.swift; sourceTree = "<group>"; };
+		CEF48B512EFA4937006A6468 /* EventCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventCVC.xib; sourceTree = "<group>"; };
 		DE742D780F1B0DB306081B84 /* Pods-SpeakEasy-Consumer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpeakEasy-Consumer.debug.xcconfig"; path = "Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer.debug.xcconfig"; sourceTree = "<group>"; };
 		E15D6B4128BC39AB0076286C /* Splash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		E15D6B4228BC39AB0076286C /* Splash.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Splash.xib; sourceTree = "<group>"; };
@@ -1417,6 +1429,15 @@
 		CEC6D6D02EF9261400A05672 /* v2 */ = {
 			isa = PBXGroup;
 			children = (
+				CEF48B4F2EFA491E006A6468 /* CVC */,
+				CEF48B4E2EFA48F7006A6468 /* Landing */,
+			);
+			path = v2;
+			sourceTree = "<group>";
+		};
+		CEF48B4E2EFA48F7006A6468 /* Landing */ = {
+			isa = PBXGroup;
+			children = (
 				CEC6D6D12EF92B1C00A05672 /* Landing.storyboard */,
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
 				CE4580132EF94E3300A873C4 /* Discover.storyboard */,
@@ -1430,7 +1451,20 @@
 				CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */,
 				CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */,
 			);
-			path = v2;
+			path = Landing;
+			sourceTree = "<group>";
+		};
+		CEF48B4F2EFA491E006A6468 /* CVC */ = {
+			isa = PBXGroup;
+			children = (
+				CEF48B502EFA4937006A6468 /* EventCVC.swift */,
+				CEF48B512EFA4937006A6468 /* EventCVC.xib */,
+				CE48D82E2EFA714300E7110B /* VenueCVC.swift */,
+				CE48D82F2EFA714300E7110B /* VenueCVC.xib */,
+				CE48D8322EFA7CE100E7110B /* EventV2CVC.swift */,
+				CE48D8332EFA7CE100E7110B /* EventV2CVC.xib */,
+			);
+			path = CVC;
 			sourceTree = "<group>";
 		};
 		E157027228C01D5E00D4A410 /* MyAccount */ = {
@@ -1641,7 +1675,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -1699,6 +1733,7 @@
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
 				0436D085295966CF0087D3DB /* Settings.storyboard in Resources */,
 				CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */,
+				CEF48B522EFA4937006A6468 /* EventCVC.xib in Resources */,
 				CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */,
 				CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */,
 				CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */,
@@ -1714,6 +1749,7 @@
 				CE45801E2EF94FEB00A873C4 /* Search.storyboard in Resources */,
 				CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */,
 				E167059F28CA6B3700644BF0 /* HoursTVC.xib in Resources */,
+				CE48D8312EFA714300E7110B /* VenueCVC.xib in Resources */,
 				82847A8729828BA600611DC4 /* ticketTypeTableViewCell.xib in Resources */,
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
@@ -1741,6 +1777,7 @@
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
 				82847A8029824B2B00611DC4 /* venueTableCell.xib in Resources */,
 				CE4580142EF94E3300A873C4 /* Discover.storyboard in Resources */,
+				CE48D8352EFA7CE100E7110B /* EventV2CVC.xib in Resources */,
 				CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */,
 				CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */,
 			);
@@ -1779,9 +1816,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1906,6 +1947,7 @@
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
 				BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */,
 				CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */,
+				CE48D8302EFA714300E7110B /* VenueCVC.swift in Sources */,
 				CE4867AB286F358800FD277E /* Utility.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
@@ -2021,6 +2063,7 @@
 				046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */,
 				4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */,
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
+				CE48D8342EFA7CE100E7110B /* EventV2CVC.swift in Sources */,
 				CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
 				CE45A5B42C3BC9CF00E1FE3F /* DropDownCell.swift in Sources */,
@@ -2052,6 +2095,7 @@
 				BD942F3F29595C7800D52115 /* APIBuilder.swift in Sources */,
 				CAC4141528A478050007BA86 /* Fonts.swift in Sources */,
 				CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */,
+				CEF48B532EFA4937006A6468 /* EventCVC.swift in Sources */,
 				CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */,
 				04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */,
 				2986836629756E8600CB827B /* Event.swift in Sources */,
@@ -2603,7 +2647,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -2696,12 +2740,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

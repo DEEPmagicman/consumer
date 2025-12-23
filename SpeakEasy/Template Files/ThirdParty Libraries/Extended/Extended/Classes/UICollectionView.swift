@@ -22,4 +22,11 @@ extension UICollectionView {
         }
         return nil
     }
+    
+    func dequeue<T: UICollectionViewCell>(withIdentifier id: String, for ipp: IndexPath) -> T {
+        guard let cell = self.dequeueReusableCell(withReuseIdentifier: id, for: ipp) as? T else {
+            fatalError("could not cast cell")
+        }
+        return cell
+    }
 }

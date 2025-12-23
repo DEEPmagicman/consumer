@@ -255,6 +255,9 @@ extension UIView {
     static var nib: UINib {
         UINib(nibName: "\(self)", bundle: nil)
     }
+    static var identifier: String {
+        String(describing: Self.self)
+    }
 }
 
 extension UITapGestureRecognizer {
