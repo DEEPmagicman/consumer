@@ -104,6 +104,19 @@ extension String {
             return "\(Constant.String.updated) \(convertDateFormatter.string(from: oldDate))"
         }
     }
+    
+    func dateFormatter(formate: DateFormat = .yyyyMMddTHHmmssSSSz, isTimeZoneChanged: Bool = false, isUTC: Bool = false) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = .current
+        dateFormatter.dateFormat = formate.rawValue
+        if !isTimeZoneChanged {
+            dateFormatter.timeZone = Constant.venueTimeZone
+        }
+        if isUTC {
+            dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        }
+        return dateFormatter.date(from: self)
+    }
 }
 
 extension Date {
@@ -117,7 +130,7 @@ extension Date {
     var age: Int{
         let now = Date()
         let calendar = Calendar.current
-
+        
         let ageComponents = calendar.dateComponents([.year], from: self, to: now)
         return ageComponents.year ?? 0
     }
@@ -221,6 +234,21 @@ extension UIImageView {
 }
 
 extension UITableView {
+    
+    func dequeue<T: UITableViewCell>(withIdentifier id: String, for ipp: IndexPath) -> T {
+        guard let cell = dequeueReusableCell(withIdentifier: id, for: ipp) as? T else {
+            fatalError("could not cast cell")
+        }
+        return cell
+    }
+
+    func dequeue<T: UITableViewHeaderFooterView>(withIdentifier id: String) -> T {
+        guard let view = dequeueReusableHeaderFooterView(withIdentifier: id) as? T else {
+            fatalError("could not cast view")
+        }
+        return view
+    }
+    
     func setupPadding() {
         if #available(iOS 15.0, *) {
             self.sectionHeaderTopPadding = 0

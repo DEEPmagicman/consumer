@@ -99,6 +99,18 @@ struct Constant {
         static let diners = UIImage(named: "diners")
         static let jcb = UIImage(named: "jcb")
     }
+    
+    static var venueTimeZone: TimeZone? {
+        TimeZone(identifier: "america/chicago".capitalized)
+    }
+    
+    static var venueTimeZoneWithOffset: TimeZone? {
+        TimeZone(secondsFromGMT: ((venueTimeZone?.secondsFromGMT() ?? 0) - 28800))
+    }
+    
+    static func venueTodayDate(_ format: DateFormat = .YYYYMMDD) -> Swift.String {
+        Date().toString(dateFormat: format, timeZone: Constant.venueTimeZoneWithOffset)
+    }
 }
 
 extension String {

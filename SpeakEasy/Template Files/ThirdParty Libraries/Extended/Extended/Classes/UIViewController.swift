@@ -25,5 +25,21 @@ extension UIViewController {
 
         present(ac, animated: true, completion: nil)
     }
+    
+    func pushVC(_ controller: UIViewController, animated: Bool = true) {
+        if let self = self as? UINavigationController {
+            self.pushViewController(controller, animated: animated)
+        } else {
+            self.navigationController?.pushViewController(controller, animated: animated)
+        }
+    }
+    
+    func setUIInterfaceOrientation(_ value: UIInterfaceOrientation) {
+        UIDevice.current.setValue(value.rawValue, forKey: "orientation")
+    }
+    
+    func presentVC(_ controller: UIViewController, animated: Bool = true) {
+        self.navigationController?.present(controller, animated: animated, completion: nil)
+    }
+    
 }
-

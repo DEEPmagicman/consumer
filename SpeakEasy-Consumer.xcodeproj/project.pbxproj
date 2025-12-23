@@ -154,6 +154,13 @@
 		CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CAC413ED28A478040007BA86 /* Picker.storyboard */; };
 		CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */; };
 		CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE04049129EE6D6A00DD546D /* PaymentMethod.swift */; };
+		CE0762E12EFA9C1F00670694 /* SelectLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0762DF2EFA9C1F00670694 /* SelectLocationVC.swift */; };
+		CE0762E22EFA9C1F00670694 /* SelectLocationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0762E02EFA9C1F00670694 /* SelectLocationVC.xib */; };
+		CE0762E62EFAA41200670694 /* SelectLocationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0762E42EFAA41200670694 /* SelectLocationTVC.swift */; };
+		CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0762E52EFAA41200670694 /* SelectLocationTVC.xib */; };
+		CE0762EB2EFAA9B400670694 /* DateRangeSelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0762E92EFAA9B400670694 /* DateRangeSelectionVC.swift */; };
+		CE0762EC2EFAA9B400670694 /* DateRangeSelectionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE0762EA2EFAA9B400670694 /* DateRangeSelectionVC.xib */; };
+		CE0762EE2EFAB05F00670694 /* CustomCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0762ED2EFAB05100670694 /* CustomCalendar.swift */; };
 		CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */; };
 		CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */; };
 		CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE0E87482994C61000F2B2E9 /* Payment.storyboard */; };
@@ -483,6 +490,13 @@
 		CAC413ED28A478040007BA86 /* Picker.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Picker.storyboard; sourceTree = "<group>"; };
 		CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		CE04049129EE6D6A00DD546D /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
+		CE0762DF2EFA9C1F00670694 /* SelectLocationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocationVC.swift; sourceTree = "<group>"; };
+		CE0762E02EFA9C1F00670694 /* SelectLocationVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectLocationVC.xib; sourceTree = "<group>"; };
+		CE0762E42EFAA41200670694 /* SelectLocationTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocationTVC.swift; sourceTree = "<group>"; };
+		CE0762E52EFAA41200670694 /* SelectLocationTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectLocationTVC.xib; sourceTree = "<group>"; };
+		CE0762E92EFAA9B400670694 /* DateRangeSelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateRangeSelectionVC.swift; sourceTree = "<group>"; };
+		CE0762EA2EFAA9B400670694 /* DateRangeSelectionVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateRangeSelectionVC.xib; sourceTree = "<group>"; };
+		CE0762ED2EFAB05100670694 /* CustomCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCalendar.swift; sourceTree = "<group>"; };
 		CE096D1029F6800300D6BA43 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE096D1229F6802400D6BA43 /* RemoteConfigHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigHelper.swift; sourceTree = "<group>"; };
 		CE0A750C2B9854760013381D /* FSPagerView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FSPagerView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -871,6 +885,7 @@
 		BD3FB24B2940678800BE7713 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				CE0762ED2EFAB05100670694 /* CustomCalendar.swift */,
 				CEE0B518299F94E5004F0DA2 /* Toast.swift */,
 				BD3FB24C294067D900BE7713 /* NavigationManager.swift */,
 				BD3FB24E294068B900BE7713 /* StoryboardAndXibManager.swift */,
@@ -989,6 +1004,34 @@
 				CAC413EE28A478040007BA86 /* ButtonCollectionViewCell.swift */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		CE0762DE2EFA9C0300670694 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				CE0762E32EFAA3F100670694 /* TVC */,
+				CE0762DF2EFA9C1F00670694 /* SelectLocationVC.swift */,
+				CE0762E02EFA9C1F00670694 /* SelectLocationVC.xib */,
+			);
+			path = Location;
+			sourceTree = "<group>";
+		};
+		CE0762E32EFAA3F100670694 /* TVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE0762E42EFAA41200670694 /* SelectLocationTVC.swift */,
+				CE0762E52EFAA41200670694 /* SelectLocationTVC.xib */,
+			);
+			path = TVC;
+			sourceTree = "<group>";
+		};
+		CE0762E82EFAA97B00670694 /* Date Selection */ = {
+			isa = PBXGroup;
+			children = (
+				CE0762E92EFAA9B400670694 /* DateRangeSelectionVC.swift */,
+				CE0762EA2EFAA9B400670694 /* DateRangeSelectionVC.xib */,
+			);
+			path = "Date Selection";
 			sourceTree = "<group>";
 		};
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
@@ -1450,6 +1493,8 @@
 				CE45801F2EF94FFB00A873C4 /* SearchVC.swift */,
 				CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */,
 				CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */,
+				CE0762DE2EFA9C0300670694 /* Location */,
+				CE0762E82EFAA97B00670694 /* Date Selection */,
 			);
 			path = Landing;
 			sourceTree = "<group>";
@@ -1675,7 +1720,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -1749,6 +1794,7 @@
 				CE45801E2EF94FEB00A873C4 /* Search.storyboard in Resources */,
 				CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */,
 				E167059F28CA6B3700644BF0 /* HoursTVC.xib in Resources */,
+				CE0762EC2EFAA9B400670694 /* DateRangeSelectionVC.xib in Resources */,
 				CE48D8312EFA714300E7110B /* VenueCVC.xib in Resources */,
 				82847A8729828BA600611DC4 /* ticketTypeTableViewCell.xib in Resources */,
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
@@ -1766,8 +1812,10 @@
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				CEC6D6D22EF92B1C00A05672 /* Landing.storyboard in Resources */,
 				048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */,
+				CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */,
 				CE954B9A2C392C8500BD3009 /* DropdownCustomCell.xib in Resources */,
 				CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */,
+				CE0762E22EFA9C1F00670694 /* SelectLocationVC.xib in Resources */,
 				04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */,
 				CAC4140A28A478050007BA86 /* MonthCollectionViewCell.xib in Resources */,
 				CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */,
@@ -1816,9 +1864,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1938,6 +1990,7 @@
 				BD942F4329595F6200D52115 /* UserDefault.swift in Sources */,
 				CAC4140328A478040007BA86 /* TimeInterval.swift in Sources */,
 				CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */,
+				CE0762EB2EFAA9B400670694 /* DateRangeSelectionVC.swift in Sources */,
 				BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */,
 				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
@@ -1992,6 +2045,7 @@
 				CEBCF5F82D48E2FD00B640C8 /* PhoneNumber.swift in Sources */,
 				CEBCF5F92D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
 				CEBCF5FA2D48E2FD00B640C8 /* ParseManager.swift in Sources */,
+				CE0762E12EFA9C1F00670694 /* SelectLocationVC.swift in Sources */,
 				CEBCF5FB2D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */,
 				CEBCF5FC2D48E2FD00B640C8 /* MetadataParsing.swift in Sources */,
 				CEBCF5FD2D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */,
@@ -2027,6 +2081,7 @@
 				CAC413FF28A478040007BA86 /* Double.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
+				CE0762E62EFAA41200670694 /* SelectLocationTVC.swift in Sources */,
 				045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */,
 				CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */,
 				BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */,
@@ -2067,6 +2122,7 @@
 				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,
 				CAC4140928A478050007BA86 /* MonthsCollectionViewCell.swift in Sources */,
 				82847A7F29824B2B00611DC4 /* venueTableCell.swift in Sources */,
+				CE0762EE2EFAB05F00670694 /* CustomCalendar.swift in Sources */,
 				82847A8229827AC500611DC4 /* MVPVenueDetailVc.swift in Sources */,
 				BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */,
 				CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */,
@@ -2639,7 +2695,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -2732,12 +2788,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -58,6 +58,11 @@
                 <constraint firstAttribute="trailing" secondItem="JQm-Xc-ccV" secondAttribute="trailing" constant="2" id="v9u-GC-8eG"/>
             </constraints>
             <size key="customSize" width="178" height="238"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                    <real key="value" value="8"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="85.496183206106863" y="145.77464788732394"/>
         </collectionViewCell>
     </objects>

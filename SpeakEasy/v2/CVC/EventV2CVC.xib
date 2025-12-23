@@ -20,28 +20,37 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uG-e4-sGy">
                         <rect key="frame" x="2" y="2" width="158" height="244"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="jVm-f0-TEl">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_img" translatesAutoresizingMaskIntoConstraints="NO" id="jVm-f0-TEl">
                                 <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="158" id="bpq-Mf-y2f"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Moe’s Cantina River North" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RwG-f4-gJc">
-                                <rect key="frame" x="0.0" y="160" width="158" height="18"/>
+                                <rect key="frame" x="0.0" y="160" width="158" height="36"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="18" id="ECh-ue-0FG"/>
+                                    <constraint firstAttribute="height" constant="36" id="ECh-ue-0FG"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Moe’s Cantina River North" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1J-sG-Ehb">
-                                <rect key="frame" x="0.0" y="113" width="158" height="18"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Fri, Jun 20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1J-sG-Ehb">
+                                <rect key="frame" x="0.0" y="196" width="158" height="16"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="18" id="8gR-mE-ksn"/>
+                                    <constraint firstAttribute="height" constant="16" id="Hu9-7m-Laf"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E11EVEN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cz0-0D-gTc">
+                                <rect key="frame" x="0.0" y="212" width="158" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="hpd-nr-rKz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -49,13 +58,22 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="RwG-f4-gJc" secondAttribute="trailing" id="0uy-nX-4dX"/>
                             <constraint firstAttribute="width" constant="158" id="1mv-e3-u0M"/>
-                            <constraint firstAttribute="bottom" secondItem="RwG-f4-gJc" secondAttribute="bottom" id="Oof-NK-Dii"/>
+                            <constraint firstItem="Cz0-0D-gTc" firstAttribute="top" secondItem="w1J-sG-Ehb" secondAttribute="bottom" id="64T-8b-Us5"/>
+                            <constraint firstItem="w1J-sG-Ehb" firstAttribute="top" secondItem="RwG-f4-gJc" secondAttribute="bottom" id="J37-5X-xq4"/>
                             <constraint firstItem="RwG-f4-gJc" firstAttribute="top" secondItem="jVm-f0-TEl" secondAttribute="bottom" constant="2" id="PfW-6B-B7C"/>
                             <constraint firstItem="jVm-f0-TEl" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="R4d-dY-Vo1"/>
                             <constraint firstItem="RwG-f4-gJc" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="XHC-VB-B4f"/>
                             <constraint firstAttribute="trailing" secondItem="jVm-f0-TEl" secondAttribute="trailing" id="bPl-EB-Pdp"/>
+                            <constraint firstAttribute="trailing" secondItem="Cz0-0D-gTc" secondAttribute="trailing" id="dB7-ev-ibc"/>
+                            <constraint firstAttribute="bottom" secondItem="Cz0-0D-gTc" secondAttribute="bottom" id="dvI-7F-D4o"/>
+                            <constraint firstItem="Cz0-0D-gTc" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="gcy-Sx-pyU"/>
                             <constraint firstItem="jVm-f0-TEl" firstAttribute="top" secondItem="8uG-e4-sGy" secondAttribute="top" id="hiv-VE-Rxv"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
             </view>
@@ -71,6 +89,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="demo venue" width="156" height="156"/>
+        <image name="bg_img" width="389" height="298"/>
     </resources>
 </document>

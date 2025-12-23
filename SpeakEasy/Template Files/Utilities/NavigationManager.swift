@@ -365,4 +365,15 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true)
 //        sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func selectLocationVC(_ sender: UIViewController) {
+        let vc = SelectLocationVC(nibName: "SelectLocationVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
+    func dateRangeSelectionVC(_ sender: UIViewController) {
+        let vc = DateRangeSelectionVC(nibName: "DateRangeSelectionVC", bundle: nil)
+        vc.dateDelegate = sender as? SelectedDateDelegate
+        sender.presentVC(vc)
+    }
 }
