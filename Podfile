@@ -6,7 +6,6 @@ target 'SpeakEasy-Consumer' do
   use_frameworks!
 
   # Pods for SpeakEasy
-  pod 'Hero'
   pod 'UITextView+Placeholder'
 #  pod 'DropDown'
   pod 'SCPageControl'

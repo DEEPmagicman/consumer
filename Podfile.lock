@@ -14,7 +14,6 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (2.3.0)
-  - Hero (1.6.2)
   - JWTDecode (3.0.0)
   - LGSideMenuController (3.1.2)
   - NBBottomSheet (1.2.0)
@@ -26,7 +25,6 @@ PODS:
 DEPENDENCIES:
   - GoogleSignIn
   - GSImageViewerController
-  - Hero
   - JWTDecode
   - LGSideMenuController
   - NBBottomSheet (~> 1.2)
@@ -42,7 +40,6 @@ SPEC REPOS:
     - GSImageViewerController
     - GTMAppAuth
     - GTMSessionFetcher
-    - Hero
     - JWTDecode
     - LGSideMenuController
     - NBBottomSheet
@@ -57,7 +54,6 @@ SPEC CHECKSUMS:
   GSImageViewerController: 20a257d7e3dd9ee171c2dfea659992eba2761839
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
-  Hero: c69009dbc9e2f0472e081adc644dba05fcedae72
   JWTDecode: 82480a7173f8a811954e7e14a2b59f688ca4222a
   LGSideMenuController: 0c7b155b0dbdf14bf8b88d5ac363c5fe1584bb23
   NBBottomSheet: aa7a52809b2d7b193f733247b8ce391a59904372
@@ -66,6 +62,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   "UITextView+Placeholder": d7b0c400921f66523f3a85d74f774512e14f6502
 
-PODFILE CHECKSUM: ce433213e8bfb4bd9e72981d52810576ebb942ef
+PODFILE CHECKSUM: 036cee2d4df6d678d83bfe400784a925a9e3809f
 
 COCOAPODS: 1.16.2

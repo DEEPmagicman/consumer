@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Hero
 
 final class Splash: UIViewController {
 
@@ -23,10 +22,18 @@ final class Splash: UIViewController {
 //MARK: - Animate Logo
 extension Splash {
     private func animateLogo() {
-        UIView.animate(withDuration: 1.0, animations: {() -> Void in
-        }, completion: {(_ finished: Bool) -> Void in
-                sleep(1)
+        self.view.layoutIfNeeded()
+        UIView.animate(
+            withDuration: 0.8,
+            delay: 0,
+            options: [.curveEaseInOut, .beginFromCurrentState],
+            animations: {
+                self.imgLogo.alpha = 0
+                self.imgLogo.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+            },
+            completion: { _ in
                 AppDelegate.shared.changeRootViewController()
-        })
+            }
+        )
     }
 }
