@@ -8,29 +8,29 @@
 import Foundation
 
 final class VenuePresenter {
-    func getVenues(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [Venue],_ hasMore: Bool) -> Void) {
-        let param = ["skip": from]
-        Loader.show()
-        AFWrapper.getRequest(APIBuilder.venueURL,params: param, headers: Header.header()) { response in
-            
-            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
-                completion(false, nil, [], false)
-                return
-            }
-            if let venueList = [Venue].parse(menu) {
-                completion(true, nil, venueList,hasMore)
-            } else {
-                completion(false, "internal error", [], false)
-            }
-
-        } failure: { error in
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, [], false)
-                return
-            }
-            completion(false, nil, [], false)
-        }
-    }
+//    func getVenues(from: Int, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [Venue],_ hasMore: Bool) -> Void) {
+//        let param = ["skip": from]
+//        Loader.show()
+//        AFWrapper.getRequest(APIBuilder.venueURL,params: param, headers: Header.header()) { response in
+//            
+//            guard let responseDic = response as? [String: Any], let menu = responseDic["list"] as? [[String: Any]], let hasMore = responseDic["hasMany"] as? Bool else {
+//                completion(false, nil, [], false)
+//                return
+//            }
+//            if let venueList = [Venue].parse(menu) {
+//                completion(true, nil, venueList,hasMore)
+//            } else {
+//                completion(false, "internal error", [], false)
+//            }
+//
+//        } failure: { error in
+//            if let err = error as? NSError, err.code == 0 {
+//                completion(false, err.domain, [], false)
+//                return
+//            }
+//            completion(false, nil, [], false)
+//        }
+//    }
         
     static func getDeepLinkData(_ id: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ doormanId: String?, _ venueId: String?) -> Void) {
         Loader.show()

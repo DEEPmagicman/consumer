@@ -14,7 +14,7 @@ struct PaymentMethod: Codable {
     var expMonth: Int
     var expYear: Int
     var last4: String
-    var type: String
+//    var type: String
 
     private enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -22,7 +22,7 @@ struct PaymentMethod: Codable {
         case expMonth = "exp_month"
         case expYear = "exp_year"
         case last4 = "last4"
-        case type = "type"
+//        case type = "type"
     }
 
     func encode(to encoder: Encoder) throws {
@@ -32,7 +32,7 @@ struct PaymentMethod: Codable {
         try container.encode(expMonth, forKey: .expMonth)
         try container.encode(expYear, forKey: .expYear)
         try container.encode(last4, forKey: .last4)
-        try container.encode(type, forKey: .type)
+//        try container.encode(type, forKey: .type)
     }
 }
 

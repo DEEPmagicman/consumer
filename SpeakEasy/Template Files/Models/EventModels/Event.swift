@@ -13,30 +13,27 @@ struct Event: Codable {
     var customVenue: CustomVenue?
     var id: String
     var uniqueId: String?
-    var venueId: String
+//    var venueId: String
     var title: String
-    var date: String?
+//    var date: String?
     var startDateTime: String
     var endDateTime: String?
-    var isCover: Bool
-    var eventType: String?
-    var artistId: String?
-    var isRecurring: Bool?
-    var version: String
-    var eventStatus: String
-    var status: String
-    var rejectReason: String?
-    var recurringType: String?
-    var recurringTo: String?
-    var recurringFrom: String?
+//    var eventType: String?
+//    var artistId: String?
+//    var isRecurring: Bool?
+//    var version: String
+//    var eventStatus: String
+//    var status: String
+//    var recurringType: String?
+//    var recurringTo: String?
+//    var recurringFrom: String?
     var description: String
     var disclaimer: String?
-    var isTieredTicket: Bool
     var upfront: Bool?
-    var isDeleted: Bool
-    var createdAt: String
-    var updatedAt: String
-    var floorPlanId: String?
+//    var isDeleted: Bool
+//    var createdAt: String
+//    var updatedAt: String
+//    var floorPlanId: String?
     var eventTicket: [EventTicket]?
     var passwordProtrectedTickets: [EventTicket]?
     var venue: ClipVenue?
@@ -192,30 +189,27 @@ struct Event: Codable {
         try container.encode(customVenue, forKey: .customVenue)
         try container.encode(id, forKey: .id)
         try container.encode(uniqueId, forKey: .uniqueId)
-        try container.encode(venueId, forKey: .venueId)
+//        try container.encode(venueId, forKey: .venueId)
         try container.encode(title, forKey: .title)
-        try container.encode(date, forKey: .date)
+//        try container.encode(date, forKey: .date)
         try container.encode(startDateTime, forKey: .startDateTime)
         try container.encode(endDateTime, forKey: .endDateTime)
-        try container.encode(isCover, forKey: .isCover)
-        try container.encode(eventType, forKey: .eventType)
-        try container.encode(artistId, forKey: .artistId)
-        try container.encode(isRecurring, forKey: .isRecurring)
-        try container.encode(version, forKey: .version)
-        try container.encode(eventStatus, forKey: .eventStatus)
-        try container.encode(status, forKey: .status)
-        try container.encode(rejectReason, forKey: .rejectReason)
-        try container.encode(recurringType, forKey: .recurringType)
-        try container.encode(recurringTo, forKey: .recurringTo)
-        try container.encode(recurringFrom, forKey: .recurringFrom)
+//        try container.encode(eventType, forKey: .eventType)
+//        try container.encode(artistId, forKey: .artistId)
+//        try container.encode(isRecurring, forKey: .isRecurring)
+//        try container.encode(version, forKey: .version)
+//        try container.encode(eventStatus, forKey: .eventStatus)
+//        try container.encode(status, forKey: .status)
+//        try container.encode(recurringType, forKey: .recurringType)
+//        try container.encode(recurringTo, forKey: .recurringTo)
+//        try container.encode(recurringFrom, forKey: .recurringFrom)
         try container.encode(description, forKey: .description)
         try container.encode(disclaimer, forKey: .disclaimer)
-        try container.encode(isTieredTicket, forKey: .isTieredTicket)
         try container.encode(upfront, forKey: .upfront)
-        try container.encode(isDeleted, forKey: .isDeleted)
-        try container.encode(createdAt, forKey: .createdAt)
-        try container.encode(updatedAt, forKey: .updatedAt)
-        try container.encode(floorPlanId, forKey: .floorPlanId)
+//        try container.encode(isDeleted, forKey: .isDeleted)
+//        try container.encode(createdAt, forKey: .createdAt)
+//        try container.encode(updatedAt, forKey: .updatedAt)
+//        try container.encode(floorPlanId, forKey: .floorPlanId)
         try container.encode(eventTicket, forKey: .eventTicket)
         try container.encode(venue, forKey: .venue)
         try container.encode(eventHasArtist, forKey: .eventHasArtist)
@@ -234,7 +228,7 @@ struct EventTicketSettings: Codable {
     var isUpFront: Bool
     var isProcessingFeePassToCustomer: Bool
     var isEnableSalesTax: Bool
-    var salesTaxName: String
+//    var salesTaxName: String
     var salesTax: Double
     var isCustomFeeTaxable: Bool
     var isProcessingFeeTaxable: Bool
@@ -242,22 +236,22 @@ struct EventTicketSettings: Codable {
 
 struct Artists: Codable {
 
-    var id: String
+//    var id: String
     var name: String
     var instagramUsername: String
     var status: String
-    var createdAt: String
-    var updatedAt: String
+//    var createdAt: String
+//    var updatedAt: String
     var artistImage: Flyer?
-    
+//    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
+//        try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(instagramUsername, forKey: .instagramUsername)
         try container.encode(status, forKey: .status)
-        try container.encode(createdAt, forKey: .createdAt)
-        try container.encode(updatedAt, forKey: .updatedAt)
+//        try container.encode(createdAt, forKey: .createdAt)
+//        try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(artistImage, forKey: .artistImage)
     }
 }
@@ -266,8 +260,8 @@ struct CustomVenue: Codable {
     
     var name: String
     var address: String
-    var city: String?
-    var pinCode: String?
+//    var city: String?
+//    var pinCode: String?
     var lat: String?
     var lng: String?
     // MARK: App side parameter
@@ -281,8 +275,8 @@ struct CustomVenue: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
         try container.encode(address, forKey: .address)
-        try container.encode(city, forKey: .city)
-        try container.encode(pinCode, forKey: .pinCode)
+//        try container.encode(city, forKey: .city)
+//        try container.encode(pinCode, forKey: .pinCode)
         try container.encode(lat, forKey: .lat)
         try container.encode(lng, forKey: .lng)
     }

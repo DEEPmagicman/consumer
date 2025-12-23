@@ -8,7 +8,7 @@
 import Foundation
 
 struct Invite: Codable {
-
+    
     var id: String
     var uniqueId: String
     var date: String?
@@ -25,7 +25,7 @@ struct Invite: Codable {
     var updatedAt: String
     var venue: ClipVenue
     var guestList: GuestList?
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

@@ -62,6 +62,8 @@
 		29AEDD9F2982900300E8E1E9 /* SelectTicketClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */; };
 		4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
 		68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B12D05238D774BDDCC607B2 /* Pods_SpeakEasy_Consumer.framework */; };
+		690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */; };
+		690DC27A2DAFE354007F94C7 /* CustomFeeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */; };
 		691574652A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691574662A0CD0EF002F303A /* Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691574642A0CD0EF002F303A /* Stripe.swift */; };
 		691609442C7F418000C74F48 /* Avenir-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 691609402C7F418000C74F48 /* Avenir-Regular.ttf */; };
@@ -180,19 +182,17 @@
 		CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486721286F2CB000FD277E /* AppDelegate.swift */; };
 		CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE48672A286F2CB100FD277E /* Assets.xcassets */; };
 		CE48672E286F2CB100FD277E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */; };
-		CE4867A7286F358800FD277E /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486751286F358700FD277E /* Strings.swift */; };
-		CE4867A8286F358800FD277E /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486754286F358700FD277E /* Validator.swift */; };
 		CE4867AB286F358800FD277E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486757286F358700FD277E /* Utility.swift */; };
 		CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486762286F358700FD277E /* UIView+Extention.swift */; };
 		CE4867B3286F358800FD277E /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486763286F358700FD277E /* UILabel+Extension.swift */; };
-		CE4867B7286F358800FD277E /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486767286F358700FD277E /* String+Extension.swift */; };
-		CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486769286F358700FD277E /* CLPlacemark+Extension.swift */; };
 		CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48678F286F358700FD277E /* CMSteppedProgressBar.m */; };
 		CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE486790286F358700FD277E /* CAPSPageMenu.swift */; };
 		CE4867D7286F358800FD277E /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48679B286F358700FD277E /* iCarousel.m */; };
 		CE4B88D12A0A1CF7003C3EA5 /* TicketDetailTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6813D929DEEECE00B41418 /* TicketDetailTVC.swift */; };
 		CE4B88D22A0A1CFD003C3EA5 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */; };
+		CE557D4F2E14E1DF0035C75A /* BarTabQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */; };
+		CE557D592E150EFE0035C75A /* BarTabQRCodeClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */; };
 		CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565474299CAA2E009CE55C /* ReachabilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565472299CA9A3009CE55C /* ReachabilityManager.swift */; };
 		CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
@@ -207,6 +207,7 @@
 		CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */; };
 		CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */; };
 		CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */; };
+		CE7B92762E127377009B8B79 /* BarTabCheckOutClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7B92752E127377009B8B79 /* BarTabCheckOutClipVC.swift */; };
 		CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */; };
 		CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */; };
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
@@ -224,6 +225,11 @@
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
+		CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB654212E0D319400E9BFD3 /* BarTab.storyboard */; };
+		CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */; };
+		CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */; };
+		CEB6542C2E0D6D2800E9BFD3 /* BarTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */; };
+		CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */; };
 		CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EE2D48E2FD00B640C8 /* LICENSE */; };
 		CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5EF2D48E2FD00B640C8 /* README.md */; };
 		CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */; };
@@ -369,6 +375,7 @@
 		29AEDD982982557200E8E1E9 /* CheckOutClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOutClipVC.swift; sourceTree = "<group>"; };
 		29AEDD9E2982900300E8E1E9 /* SelectTicketClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTicketClipVC.swift; sourceTree = "<group>"; };
 		4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFeeTVC.swift; sourceTree = "<group>"; };
 		691574642A0CD0EF002F303A /* Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripe.swift; sourceTree = "<group>"; };
 		691609402C7F418000C74F48 /* Avenir-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Avenir-Regular.ttf"; sourceTree = "<group>"; };
 		691609412C7F418000C74F48 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -501,6 +508,8 @@
 		CE48679C286F358700FD277E /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		CE48679D286F358700FD277E /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CE4B88D32A0B8519003C3EA5 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeVC.swift; sourceTree = "<group>"; };
+		CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeClipVC.swift; sourceTree = "<group>"; };
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
 		CE5A091B2D534BD0000729BF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -512,6 +521,7 @@
 		CE6813DA29DEEECE00B41418 /* TicketDetailTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketDetailTVC.xib; sourceTree = "<group>"; };
 		CE78CDE42A17607D00FA47FC /* ArtistListTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistListTVC.swift; sourceTree = "<group>"; };
 		CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistListTVC.xib; sourceTree = "<group>"; };
+		CE7B92752E127377009B8B79 /* BarTabCheckOutClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabCheckOutClipVC.swift; sourceTree = "<group>"; };
 		CE7F9B622878C26400BFCCD1 /* SpeakEasy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakEasy.entitlements; sourceTree = "<group>"; };
 		CE7F9B632878C29F00BFCCD1 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		CE7F9B642878C29F00BFCCD1 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -525,6 +535,10 @@
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
+		CEB654212E0D319400E9BFD3 /* BarTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BarTab.storyboard; sourceTree = "<group>"; };
+		CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabCheckoutVC.swift; sourceTree = "<group>"; };
+		CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabPresenter.swift; sourceTree = "<group>"; };
+		CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTab.swift; sourceTree = "<group>"; };
 		CEBCF5D72D48E2FD00B640C8 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		CEBCF5D82D48E2FD00B640C8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CEBCF5DA2D48E2FD00B640C8 /* CountryCodePickerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCodePickerOptions.swift; sourceTree = "<group>"; };
@@ -690,6 +704,8 @@
 				04862C102B96FE3300836598 /* UpSellClipVC.swift */,
 				04862C172B975F9000836598 /* QRClipVC.swift */,
 				CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */,
+				CE7B92752E127377009B8B79 /* BarTabCheckOutClipVC.swift */,
+				CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */,
 				CE5A091B2D534BD0000729BF /* Localizable.xcstrings */,
 			);
 			path = SpeakEasyClip;
@@ -704,6 +720,7 @@
 				BD942F4029595E1A00D52115 /* OnBoardingPresenter.swift */,
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
 				CE677F962A41720F0025421D /* InvitePresenter.swift */,
+				CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -736,6 +753,14 @@
 				CEA15DC2298A6C270006D13A /* EventTicket.swift */,
 			);
 			path = EventModels;
+			sourceTree = "<group>";
+		};
+		690DC2762DAFD338007F94C7 /* CustomFeeTVC */ = {
+			isa = PBXGroup;
+			children = (
+				690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */,
+			);
+			path = CustomFeeTVC;
 			sourceTree = "<group>";
 		};
 		82847A77298244A000611DC4 /* MVPFlow */ = {
@@ -933,6 +958,7 @@
 		CE0E87472994C5E600F2B2E9 /* PaymentFlow */ = {
 			isa = PBXGroup;
 			children = (
+				690DC2762DAFD338007F94C7 /* CustomFeeTVC */,
 				CE954B8B2C39156F00BD3009 /* EventQuestionTVC */,
 				920B4CFF2B909F8000C07402 /* QRCodeCVC */,
 				045D04C52B1739B000B68D9E /* PurchasesTVC */,
@@ -1079,6 +1105,7 @@
 		CE486737286F2D4B00FD277E /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				CEB654202E0D317800E9BFD3 /* Bartab */,
 				E15D6B3F28BC39AB0076286C /* Login */,
 				CE4867E7286F7DC500FD277E /* Home */,
 				82847A77298244A000611DC4 /* MVPFlow */,
@@ -1209,6 +1236,7 @@
 		CE4867E6286F392D00FD277E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CEB654272E0D6D0F00E9BFD3 /* BarTab */,
 				CE677F982A4177220025421D /* Invite */,
 				CE0F423B29FBE69A0082723B /* Booking */,
 				29868364297567FB00CB827B /* EventModels */,
@@ -1288,6 +1316,24 @@
 				CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */,
 			);
 			path = DropDownCell;
+			sourceTree = "<group>";
+		};
+		CEB654202E0D317800E9BFD3 /* Bartab */ = {
+			isa = PBXGroup;
+			children = (
+				CEB654212E0D319400E9BFD3 /* BarTab.storyboard */,
+				CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */,
+				CE557D4E2E14E1DF0035C75A /* BarTabQRCodeVC.swift */,
+			);
+			path = Bartab;
+			sourceTree = "<group>";
+		};
+		CEB654272E0D6D0F00E9BFD3 /* BarTab */ = {
+			isa = PBXGroup;
+			children = (
+				CEB6542B2E0D6D2800E9BFD3 /* BarTab.swift */,
+			);
+			path = BarTab;
 			sourceTree = "<group>";
 		};
 		CEBCF5D92D48E2FD00B640C8 /* Resources */ = {
@@ -1602,6 +1648,7 @@
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
+				CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */,
 				CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */,
 				CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */,
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
@@ -1682,9 +1729,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1738,12 +1789,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE7B92762E127377009B8B79 /* BarTabCheckOutClipVC.swift in Sources */,
 				0475E3252BECEAA200E4801C /* TimeSlot.swift in Sources */,
+				690DC27A2DAFE354007F94C7 /* CustomFeeTVC.swift in Sources */,
 				04862C112B96FE3300836598 /* UpSellClipVC.swift in Sources */,
 				297E37382983B16200139947 /* TicketTypeTVC.swift in Sources */,
 				04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */,
+				CEB6542C2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
 				04862C182B975F9000836598 /* QRClipVC.swift in Sources */,
 				691574662A0CD0EF002F303A /* Stripe.swift in Sources */,
 				CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */,
@@ -1765,6 +1819,7 @@
 				CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */,
 				CEBCF60B2D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
 				CEBCF60C2D48E2FD00B640C8 /* Constants.swift in Sources */,
+				CE557D592E150EFE0035C75A /* BarTabQRCodeClipVC.swift in Sources */,
 				CEBCF60D2D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,
 				CEBCF60E2D48E2FD00B640C8 /* PhoneNumber.swift in Sources */,
 				CEBCF60F2D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
@@ -1803,6 +1858,7 @@
 				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
 				BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */,
+				CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */,
 				CE4867AB286F358800FD277E /* Utility.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
@@ -1826,7 +1882,6 @@
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
 				CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */,
-				CE4867B7286F358800FD277E /* String+Extension.swift in Sources */,
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CE954B992C392C8500BD3009 /* DropdownCustomCell.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
@@ -1834,6 +1889,7 @@
 				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
+				CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
 				2986835B2975658300CB827B /* Venue.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
@@ -1842,9 +1898,9 @@
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */,
-				CE4867A7286F358800FD277E /* Strings.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
 				040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */,
+				CE557D4F2E14E1DF0035C75A /* BarTabQRCodeVC.swift in Sources */,
 				CEBCF5F52D48E2FD00B640C8 /* CountryCodePickerOptions.swift in Sources */,
 				CEBCF5F62D48E2FD00B640C8 /* Constants.swift in Sources */,
 				CEBCF5F72D48E2FD00B640C8 /* PartialFormatter.swift in Sources */,
@@ -1892,7 +1948,6 @@
 				E16705A028CA6B3700644BF0 /* HoursTVC.swift in Sources */,
 				BD942F3D29595A3300D52115 /* AFWrapper.swift in Sources */,
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
-				CE4867B9286F358800FD277E /* CLPlacemark+Extension.swift in Sources */,
 				920B4D062B90AF8300C07402 /* CustomPagerViewCell.swift in Sources */,
 				BD3FB253294069BE00BE7713 /* StartScreenViewController.swift in Sources */,
 				0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */,
@@ -1904,12 +1959,12 @@
 				CE096D1329F6802400D6BA43 /* RemoteConfigHelper.swift in Sources */,
 				0436D089295978060087D3DB /* NotificationViewController.swift in Sources */,
 				CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */,
-				CE4867A8286F358800FD277E /* Validator.swift in Sources */,
 				CE4867D0286F358800FD277E /* CMSteppedProgressBar.m in Sources */,
 				CE04049229EE6D6A00DD546D /* PaymentMethod.swift in Sources */,
 				CE0F423D29FBE6AB0082723B /* Booking.swift in Sources */,
 				CAC413F428A478040007BA86 /* UIView.swift in Sources */,
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
+				690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */,
 				CE45A5B32C3BC9CA00E1FE3F /* DropDown+Appearance.swift in Sources */,
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
@@ -1929,6 +1984,7 @@
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */,
+				CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */,
 				CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */,
 				04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */,
 				CAC413F528A478040007BA86 /* DeviceOrientation.swift in Sources */,
@@ -2007,7 +2063,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 205;
+				CURRENT_PROJECT_VERSION = 223;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2025,7 +2081,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.2;
+				MARKETING_VERSION = 5.4.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2045,7 +2101,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 205;
+				CURRENT_PROJECT_VERSION = 223;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2062,7 +2118,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.2;
+				MARKETING_VERSION = 5.4.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.project.speakeasy-consumer.Clip";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2209,7 +2265,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 205;
+				CURRENT_PROJECT_VERSION = 223;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2220,6 +2276,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
@@ -2235,7 +2292,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.2;
+				MARKETING_VERSION = 5.4.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2305,7 +2362,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 205;
+				CURRENT_PROJECT_VERSION = 223;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2314,6 +2371,7 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
@@ -2329,7 +2387,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.4.2;
+				MARKETING_VERSION = 5.4.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",

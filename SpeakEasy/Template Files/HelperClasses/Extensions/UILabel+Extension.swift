@@ -6,7 +6,6 @@
 //  Copyright © 2020 Quick Delivery. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 extension UILabel {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AVFoundation
 import GoogleSignIn
 import AuthenticationServices
 import JWTDecode

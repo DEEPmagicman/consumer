@@ -39,7 +39,7 @@ extension Utility {
     
     func showAlert(message: String, title: String, usingCompletionHandler handler:@escaping (() -> Swift.Void)) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: Strings.OK.text, style: .default, handler: {
+        alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: {
             (action) in
             handler()
         }))

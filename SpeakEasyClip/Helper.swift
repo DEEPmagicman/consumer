@@ -56,13 +56,31 @@ struct AppClipLoader {
 }
 
 extension UIViewController {
-    func alertPopup(_ title: String, _ message: String, completion: (() -> Void)? = nil) {
+    func alertPopup(_ title: String, _ message: String, _ btnTitle: String = "ok", completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title.localize(), message: message.localize(), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ok".localize(), style: .default) { _ in
+        alert.addAction(UIAlertAction(title: btnTitle.localize(), style: .default) { _ in
             completion?()
         })
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
+extension Decodable {
+    static func parse(_ obj: Any) -> Self? {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+            return try JSONDecoder().decode(self, from: data)
+        } catch {
+            print("---\(error)")
+            let error = NSError.init(domain: NSCocoaErrorDomain,
+                                     code: 101,
+                                     userInfo: ["type": "Model parsing error",
+                                                "model type": "\(self)",
+                                                "error": "\(error)",
+                                                "environment": SharedURL.baseURL])            
+            return nil
         }
     }
 }

@@ -34,20 +34,31 @@
                                 <color key="textColor" red="0.47450980392156861" green="0.47450980392156861" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="$" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-7b-lRP">
-                                <rect key="frame" x="469.5" y="3.5" width="17.5" height="36.5"/>
-                                <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="26"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="yc2-MK-490">
+                                <rect key="frame" x="330.5" y="11" width="156.5" height="50.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="$435435.45" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zDK-7b-lRP">
+                                        <rect key="frame" x="0.0" y="0.0" width="156.5" height="36.5"/>
+                                        <fontDescription key="fontDescription" name="Poppins-SemiBold" family="Poppins" pointSize="26"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="749" text="(Incl. $5.50 in fees)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XIp-dv-yLK">
+                                        <rect key="frame" x="59.5" y="36.5" width="97" height="14"/>
+                                        <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="10"/>
+                                        <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" horizontalCompressionResistancePriority="749" text="Provides general admission to the venue. subject to doorman discretion." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tef-Nr-WTK">
-                                <rect key="frame" x="10" y="46" width="459.5" height="17"/>
+                                <rect key="frame" x="10" y="65.5" width="445" height="17"/>
                                 <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="12"/>
                                 <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mqQ-dO-arv">
-                                <rect key="frame" x="465" y="45" width="22" height="18.5"/>
+                                <rect key="frame" x="465" y="64.5" width="22" height="18.5"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="22" id="68R-ke-2p8"/>
@@ -55,10 +66,10 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mBj-MM-znu">
-                                <rect key="frame" x="250" y="77" width="0.0" height="80"/>
+                                <rect key="frame" x="250" y="96.5" width="0.0" height="60.5"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VPt-Rr-lar">
-                                        <rect key="frame" x="0.0" y="80" width="153" height="67"/>
+                                        <rect key="frame" x="0.0" y="60.5" width="153" height="67"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQD-0P-gij">
                                                 <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
@@ -104,18 +115,18 @@
                         </subviews>
                         <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="zDK-7b-lRP" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M0d-ys-JFT" secondAttribute="trailing" constant="10" id="14s-1n-mfF"/>
-                            <constraint firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="trailing" constant="13" id="Eub-Mf-3ZL"/>
+                            <constraint firstItem="mqQ-dO-arv" firstAttribute="trailing" secondItem="yc2-MK-490" secondAttribute="trailing" id="8SM-hc-LxY"/>
+                            <constraint firstItem="yc2-MK-490" firstAttribute="top" secondItem="M0d-ys-JFT" secondAttribute="top" id="E20-Os-VdA"/>
+                            <constraint firstItem="yc2-MK-490" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M0d-ys-JFT" secondAttribute="trailing" constant="10" id="Fho-R2-UQw"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="top" secondItem="tWk-iG-Idm" secondAttribute="top" constant="11" id="Hwq-eW-V68"/>
+                            <constraint firstAttribute="trailing" secondItem="yc2-MK-490" secondAttribute="trailing" constant="13" id="Lrq-BR-RaN"/>
                             <constraint firstAttribute="bottom" secondItem="mBj-MM-znu" secondAttribute="bottom" id="Pko-fD-oyr"/>
                             <constraint firstItem="mqQ-dO-arv" firstAttribute="centerY" secondItem="tef-Nr-WTK" secondAttribute="centerY" id="VjH-mr-UXy"/>
-                            <constraint firstItem="tef-Nr-WTK" firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="leading" id="ai8-lT-G3f"/>
                             <constraint firstItem="mBj-MM-znu" firstAttribute="top" secondItem="tef-Nr-WTK" secondAttribute="bottom" constant="14" id="atZ-J4-OIp"/>
-                            <constraint firstItem="zDK-7b-lRP" firstAttribute="centerY" secondItem="M0d-ys-JFT" secondAttribute="centerY" id="sgp-KC-0mR"/>
+                            <constraint firstItem="mqQ-dO-arv" firstAttribute="leading" secondItem="tef-Nr-WTK" secondAttribute="trailing" constant="10" id="hJK-Vu-g4x"/>
                             <constraint firstItem="M0d-ys-JFT" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" constant="10" id="waa-ez-gey"/>
-                            <constraint firstItem="mqQ-dO-arv" firstAttribute="trailing" secondItem="zDK-7b-lRP" secondAttribute="trailing" id="xa1-zp-acA"/>
                             <constraint firstItem="mBj-MM-znu" firstAttribute="centerX" secondItem="tWk-iG-Idm" secondAttribute="centerX" id="yTV-xU-kdf"/>
-                            <constraint firstItem="tef-Nr-WTK" firstAttribute="top" secondItem="M0d-ys-JFT" secondAttribute="bottom" constant="14" id="yVD-JT-O1N"/>
+                            <constraint firstItem="tef-Nr-WTK" firstAttribute="top" secondItem="yc2-MK-490" secondAttribute="bottom" constant="4" id="yVD-JT-O1N"/>
                             <constraint firstItem="tef-Nr-WTK" firstAttribute="leading" secondItem="tWk-iG-Idm" secondAttribute="leading" constant="10" id="zDQ-12-Y9X"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
@@ -136,6 +147,7 @@
             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <connections>
                 <outlet property="infoLbl" destination="tef-Nr-WTK" id="TeG-lp-MxU"/>
+                <outlet property="lblExtraFeesValue" destination="XIp-dv-yLK" id="7eG-3d-bVs"/>
                 <outlet property="minusBtn" destination="DQD-0P-gij" id="47e-YX-p9t"/>
                 <outlet property="plusBtn" destination="YSf-r1-h7M" id="tsD-9i-4zM"/>
                 <outlet property="sideArrow" destination="mqQ-dO-arv" id="wVg-Ct-3aG"/>

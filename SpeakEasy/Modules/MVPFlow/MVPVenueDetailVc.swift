@@ -117,6 +117,9 @@ final class MVPVenueDetailVc: UIViewController {
     var defaultPaidTicket: CoverTicket? {
         venueDetails?.coverTicket?.first(where: { $0.isCustom == false && $0.price > 0 && $0.selectedQuantity ?? 0 != 0  })
     }
+    var barTabTicket: CoverTicket? {
+        venueDetails?.coverTicket?.first(where: { $0.isBarTicket == true && $0.selectedQuantity ?? 0 != 0  })
+    }
     
     private var events = [Event]()
     private var todaysEvents = [Event]()
@@ -189,6 +192,7 @@ final class MVPVenueDetailVc: UIViewController {
                 if let venueId = venueDetail?.id {
                     self.venueId = venueId
                 }
+                self.venueDetails?.coverTicket?.removeAll(where: { $0.price == 0 && $0.isBarTicket == true })
                 self.setUpUI()
                 self.ticketTypeTableView.reloadData()
                 self.openingHoursTableView.reloadData()
@@ -337,6 +341,9 @@ final class MVPVenueDetailVc: UIViewController {
             organizerVenueAddressView.addGestureRecognizer(tap)
         }
         buyUpsellBtn.setTitle(venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Buy Upsell", for: .normal)
+        if let color = self.venueDetails?.venueSettings?.whiteLabelColor {
+            continueBtn.bgColor = UIColor(hex: color)
+        }
     }
     
     @objc func onClickWebSite() {
@@ -378,6 +385,7 @@ final class MVPVenueDetailVc: UIViewController {
         forceRemoveFreeTicket()
         forceRemoveCustomTicket()
         forceRemovePaidTicket()
+        forceRemoveBarTabTicket()
         Navigate.to.upSellTicketVC(self, upSellTicket: [], hasMany: false, venueDetails: venueDetails, doormanId: doormanId)
     }
     
@@ -386,7 +394,12 @@ final class MVPVenueDetailVc: UIViewController {
             Navigate.to.login(forceCreateAccount: true)
             return
         }
-        if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
+        if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.first?.isBarTicket == true {
+            if let selectedTickets = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }) {
+                Navigate.to.barTabCheckoutVC(self, selectedTicket: selectedTickets, venueDetails: venueDetails)
+                self.updateContinueBtn(forceRemove: true)
+            }
+        } else if let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity != nil }), selected.count > 0 {
             getUpSellItems()
         } else {
             Navigate.externalURL(String(format: SharedURL.tableBookingURL, "\(venueId)" ))
@@ -496,14 +509,20 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat())"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                     } else {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat())"
+                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true))"
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat())"
+                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
+            }
+            if ticket?.extraFees ?? 0 > 0 {
+                cell.lblExtraFeesValue.isHidden = false
+                cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((ticket?.extraFees ?? 0).decimalFormat(true)) in fees)"
+            } else {
+                cell.lblExtraFeesValue.isHidden = true
             }
             if venueDetails?.venueSettings?.bookingStatus == "OPEN" && ticket?.status == "ENABLED" {
                 cell.ticketPriceLbl.textColor = .white
@@ -527,6 +546,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.plusBtn.tag = indexPath.row
             cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
             cell.totalTicketLbl.text = "\(ticket?.selectedQuantity ?? 0)"
+            
             cell.selectionStyle = .none
             cell.layoutIfNeeded()
             return cell
@@ -594,7 +614,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       switch tableView {
+        switch tableView {
         case ticketTypeTableView:
             if venueDetails?.venueSettings?.bookingStatus != "OPEN" { return }
             if venueDetails?.coverTicket?[indexPath.row].status != "ENABLED" { return }
@@ -610,47 +630,39 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             venueDetails?.coverTicket?[indexPath.row].selectedQuantity = 1
             
             let selectedTicket = venueDetails?.coverTicket?[indexPath.row]
-//            let customPaidTicket = venueDetails?.coverTicket?.first(where: { $0.isCustom == true && $0.price > 0 })
-//            let defaultPaidTicket = venueDetails?.coverTicket?.first(where: { $0.isCustom == false && $0.price > 0 })
-            
-            if selectedTicket?.isCustom == false {
+            if selectedTicket?.isBarTicket == true {
+                if customPaidTicket != nil {
+                    forceRemoveCustomTicket()
+                }
+                if defaultPaidTicket != nil {
+                    forceRemovePaidTicket()
+                }
+            } else if selectedTicket?.isCustom == false {
                 if selectedTicket?.price ?? 0 >= 2 {
                     if customPaidTicket != nil {
                         forceRemoveCustomTicket()
                     }
-                    
+                    if barTabTicket != nil {
+                        forceRemoveBarTabTicket()
+                    }
                 }
-            } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
+            } else if selectedTicket?.isCustom == true {
                 if selectedTicket?.price ?? 0 > 0 {
                     if defaultPaidTicket != nil {
                         forceRemovePaidTicket()
+                    }
+                    if barTabTicket != nil {
+                        forceRemoveBarTabTicket()
                     }
                     selectedType = .PAID
                 }
             }
             selectedType = (defaultPaidTicket == nil && customPaidTicket == nil) ? .FREE : .PAID
-//            if venueDetails?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetails?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
-//                scrollViewBottomConstraint.constant = 70
-//                forceRemoveCustomTicket()
-//                let selected = venueDetails?.coverTicket?.filter({ $0.selectedQuantity ?? 0 != 0 })
-//                if let paid = selected?.filter({ $0.price > 2 }), paid.count != 0 {
-//                    selectedType = .PAID
-//                } else {
-//                    selectedType = .FREE
-//                }
-//            } else if venueDetails?.coverTicket?[indexPath.row].isCustom == true {
-//                forceRemovePaidTicket()
-//                forceRemoveFreeTicket()
-//                selectedType = venueDetails?.coverTicket?[indexPath.row].price == 0 ? .FREE : .CUSTOM
-//            } else {
-//                forceRemoveCustomTicket()
-//                selectedType = .PAID
-//            }
             ticketTypeTableView.reloadData()
             updateContinueBtn()
         case upcomingTableView:
-           updateContinueBtn(forceRemove: true)
-           Navigate.externalURL(String(format: APIBuilder.eventLink, events[indexPath.row].uniqueId ?? ""))
+            updateContinueBtn(forceRemove: true)
+            Navigate.externalURL(String(format: APIBuilder.eventLink, events[indexPath.row].uniqueId ?? ""))
         case todaysEventTableView:
             updateContinueBtn(forceRemove: true)
             Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
@@ -711,13 +723,6 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 self.venueDetails?.coverTicket?.indices.forEach {
                     self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
                 }
-//                if self.venueDetails?.availableTimeSlot ?? false {
-//                    self.continueBtnView.isHidden = true
-//                    self.VIPTableView.isHidden = false
-//                    self.stackViewBottomConstraint.constant = 0
-//                    self.scrollViewBottomConstraint.constant = 80
-//                    self.continueBtn.setTitle("VIP TABLES AVAILABLE - BOOK NOW", for: .normal)
-//                } else {
                     self.scrollViewBottomConstraint.constant = 70
                     self.VIPTableView.isHidden = true
                     self.stackViewBottomConstraint.constant = 30
@@ -752,7 +757,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
 
     private func forceRemovePaidTicket() {
         self.venueDetails?.coverTicket?.indices.forEach {
-            if venueDetails?.coverTicket?[$0].price ?? 0 < 2 && venueDetails?.coverTicket?[$0].name.lowercased().contains("general") == true {
+            if (venueDetails?.coverTicket?[$0].price ?? 0 < 2 && venueDetails?.coverTicket?[$0].name.lowercased().contains("general") == true) || (venueDetails?.coverTicket?[$0].isBarTicket ?? false == true) {
             } else if venueDetails?.coverTicket?[$0].isCustom ?? false != true {
                 self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
@@ -762,6 +767,14 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     private func forceRemoveCustomTicket() {
         self.venueDetails?.coverTicket?.indices.forEach {
             if venueDetails?.coverTicket?[$0].isCustom == true {
+                self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
+            }
+        }
+    }
+    
+    private func forceRemoveBarTabTicket() {
+        self.venueDetails?.coverTicket?.indices.forEach {
+            if venueDetails?.coverTicket?[$0].isBarTicket == true {
                 self.venueDetails?.coverTicket?[$0].selectedQuantity = nil
             }
         }
@@ -815,3 +828,4 @@ extension MVPVenueDetailVc: UpdateDetailDelegate {
         updateContinueBtn(forceRemove: true)
     }
 }
+

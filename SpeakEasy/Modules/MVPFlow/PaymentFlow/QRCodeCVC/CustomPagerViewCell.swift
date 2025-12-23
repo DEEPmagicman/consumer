@@ -18,9 +18,13 @@ final class CustomPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var backupCode: UILabel!
     @IBOutlet weak var bookingDateTime: UILabel!
     @IBOutlet weak var guestNameLbl: UILabel!
+    @IBOutlet weak var openTabBtnHeight: NSLayoutConstraint!
+    @IBOutlet weak var openTabBtn: UIButton!
+    @IBOutlet weak var upsellQRBgView: UIView!
     
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
+    var barTabBooking: BarTabBooking?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -50,12 +54,15 @@ final class CustomPagerViewCell: FSPagerViewCell {
             self.qrImage.isHidden = !self.qrImage.isHidden
         })
     }
-    
 }
 
 extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return booking != nil ? booking?.uniqueTickets.count ?? 0 : addOnsBooking?.uniqueTickets.count ?? 0
+        if let barTabBooking = barTabBooking {
+            return barTabBooking.uniqueTickets.count
+        } else {
+            return booking != nil ? booking?.uniqueTickets.count ?? 0 : addOnsBooking?.uniqueTickets.count ?? 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -63,8 +70,20 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
         cell.contentView.backgroundColor = .clear
         cell.checkInProgressBarView.isHidden = false
         cell.checkInProgress.cornerRadius = 5
-        
-        if booking != nil {
+        if let barTabBooking = barTabBooking {
+            upsellQRBgView.borderColor = .clear
+            upsellQRBgView.borderWidth = 0
+            cell.subTitleLbl.text =  barTabBooking.uniqueTickets[indexPath.row].coverTicket?.description
+            cell.titleLbl.text = barTabBooking.uniqueTickets[indexPath.row].coverTicket?.customName ?? "" == "" ? barTabBooking.uniqueTickets[indexPath.row].coverTicket?.name : barTabBooking.uniqueTickets[indexPath.row].coverTicket?.customName
+            
+            cell.quantityLbl.text = "\(barTabBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
+            let checkInCount = barTabBooking.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
+            cell.checkInCount.text = "\(checkInCount)/\(barTabBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
+            cell.checkInProgress.setProgress(Float(checkInCount) / Float(barTabBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
+            
+        } else if booking != nil {
+            upsellQRBgView.borderColor = .clear
+            upsellQRBgView.borderWidth = 0
             cell.subTitleLbl.text = booking?.ticketDetails?.first(where: { $0.ticketId == booking?.uniqueTickets[indexPath.row].ticketId })?.ticketDescription
             cell.titleLbl.text = booking?.uniqueTickets[indexPath.row].ticketCustomName ?? "" == "" ? booking?.uniqueTickets[indexPath.row].ticketName : booking?.uniqueTickets[indexPath.row].ticketCustomName
             
@@ -73,12 +92,12 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
             let checkInCount = booking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
             cell.checkInCount.text = "\(checkInCount)/\(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
             cell.checkInProgress.setProgress(Float(checkInCount) / Float(booking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
-            
         } else {
+            upsellQRBgView.borderColor = UIColor(hex: "#F1CE72")
+            upsellQRBgView.borderWidth = 8
             cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.description ?? ""
             cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.name ?? ""
             cell.quantityLbl.text = "\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
-            
             let checkInCount = addOnsBooking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
             cell.checkInCount.text = "\(checkInCount)/\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
             cell.checkInProgress.setProgress(Float(checkInCount) / Float(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)

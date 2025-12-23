@@ -117,6 +117,9 @@ class UpSellTicketVC: UIViewController {
         updateContinueBtn()
         continueBtn.bgColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
         continueBtn.indicator = MaterialLoadingIndicator(color: .black)
+        if let color = self.venueDetails?.venueSettings?.whiteLabelColor {
+            continueBtn.bgColor = UIColor(hex: color)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -221,6 +224,12 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
             cell.totalTicketLbl.text = "\(quantity)"
+        }
+        if upSellTicket[indexPath.row].extraFees ?? 0 > 0 {
+            cell.lblExtraFeesValue.isHidden = false
+            cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].extraFees ?? 0).decimalFormat(true)) in fees)"
+        } else {
+            cell.lblExtraFeesValue.isHidden = true
         }
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isEnabled = isMaxTicketReached ? false : true

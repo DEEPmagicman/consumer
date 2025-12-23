@@ -17,8 +17,8 @@ final class EnterPhoneNumberViewController: UIViewController {
     private var onBoardingPresenter = OnBoardingPresenter()
     private var settingPresenter = SettingPresenter()
     var isFromSettings = false
-    let phoneNumberUtility = PhoneNumberUtility()
-    var phoneNumber: PhoneNumber?
+    private let phoneNumberUtility = PhoneNumberUtility()
+    private var phoneNumber: PhoneNumber?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +38,9 @@ final class EnterPhoneNumberViewController: UIViewController {
         CountryCodePicker.alwaysShowsSearchBar = true
         CountryCodePicker.forceModalPresentation = true
         var options = CountryCodePickerOptions()
-        options.backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.00)
+        options.backgroundColor = Constant.Color.backgroundColor
         options.textLabelFont = Constant.Font.poppinsRegular(size: 15)
-        options.textLabelColor = UIColor(red: 0.63, green: 0.63, blue: 0.63, alpha: 1.00)
+        options.textLabelColor = Constant.Color.textLabelColor
         options.detailTextLabelFont = Constant.Font.poppinsRegular(size: 15)
         phoneNumTextField.withDefaultPickerUIOptions = options
     }
@@ -99,7 +99,7 @@ final class EnterPhoneNumberViewController: UIViewController {
                         self.view.endEditing(true)
                     } else {
 //                        self.view.isUserInteractionEnabled = true
-                        if errorMsg == "Entered phone number already exist in system." {
+                        if errorMsg == "Entered phone number already exists in system." {
                             self.isFromLogin = true
                             self.onClickContinue(0)
                         } else {
@@ -114,7 +114,7 @@ final class EnterPhoneNumberViewController: UIViewController {
 
 extension EnterPhoneNumberViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return true
+        true
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {

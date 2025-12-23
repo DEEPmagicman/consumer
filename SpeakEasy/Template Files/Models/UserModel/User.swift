@@ -10,7 +10,7 @@ import Foundation
 struct User {
     
     var id: String
-    var uniqueId: String
+//    var uniqueId: String
     var firstName: String
     var lastName: String
     var nickName: String
@@ -19,23 +19,23 @@ struct User {
     var email: String
     var location: String
     var city: String
-    var receiveMarketing: Bool
+//    var receiveMarketing: Bool
     var code: String
     var phone: String
     var phoneVerified: Bool
     var status: String
     var image: ImageDetail
-    var instagramId: String
-    var instagramToken: String?
-    var instaNextPageURL: String?
-    var instaUserName: String?
-    var spotifyId: String
+//    var instagramId: String
+//    var instagramToken: String?
+//    var instaNextPageURL: String?
+//    var instaUserName: String?
+//    var spotifyId: String
     var isDeleted: Bool
     var lastLogin: String
     var createdAt: String
     var updatedAt: String
-    var vibeIds: [String]
-    var drinkIds: [String]
+//    var vibeIds: [String]
+//    var drinkIds: [String]
     var stripeCusId: String
     var isProfileCompleted: Bool
     var isSocial: Bool?
@@ -45,7 +45,7 @@ struct User {
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        case uniqueId = "unique_id"
+//        case uniqueId = "unique_id"
         case firstName = "first_name"
         case lastName = "last_name"
         case nickName = "nick_name"
@@ -54,23 +54,23 @@ struct User {
         case email = "email"
         case location = "location"
         case city = "city"
-        case receiveMarketing = "receive_marketing"
+//        case receiveMarketing = "receive_marketing"
         case code = "code"
         case phone = "phone"
         case phoneVerified = "phone_verified"
         case status = "status"
         case image = "image"
-        case instagramId = "instagram_id"
-        case instagramToken
-        case instaNextPageURL
-        case instaUserName
-        case spotifyId = "spotify_id"
+//        case instagramId = "instagram_id"
+//        case instagramToken
+//        case instaNextPageURL
+//        case instaUserName
+//        case spotifyId = "spotify_id"
         case isDeleted = "is_deleted"
         case lastLogin = "last_login"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case vibeIds = "vibe_ids"
-        case drinkIds = "drink_ids"
+//        case vibeIds = "vibe_ids"
+//        case drinkIds = "drink_ids"
         case stripeCusId = "stripeCustId"
         case isProfileCompleted
         case isSocial
@@ -78,7 +78,7 @@ struct User {
     
     init(fromDictionary dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? ""
-        self.uniqueId = dictionary["uniqueId"] as? String ?? ""
+//        self.uniqueId = dictionary["uniqueId"] as? String ?? ""
         self.firstName = dictionary["firstName"] as? String ?? ""
         self.lastName = dictionary["lastName"] as? String ?? ""
         self.nickName = dictionary["nickName"] as? String ?? ""
@@ -87,23 +87,23 @@ struct User {
         self.email = dictionary["email"] as? String ?? ""
         self.location = dictionary["location"] as? String ?? ""
         self.city = dictionary["city"] as? String ?? ""
-        self.receiveMarketing = dictionary["receiveMarketing"] as? Bool ?? false
+//        self.receiveMarketing = dictionary["receiveMarketing"] as? Bool ?? false
         self.code = dictionary["code"] as? String ?? ""
         self.phone = dictionary["phone"] as? String ?? ""
         self.phoneVerified = dictionary["phoneVerified"] as? Bool ?? false
         self.status = dictionary["status"] as? String ?? ""
         self.image = ImageDetail(fromDictionary: dictionary["image"] as? [String:Any] ?? [:])
-        self.instagramId = dictionary["instagramId"] as? String ?? ""
-        self.instagramToken = dictionary["instagramToken"] as? String ?? ""
-        self.instaNextPageURL = dictionary["instaNextPageURL"] as? String ?? nil
-        self.instaUserName = dictionary["instaUserName"] as? String ?? ""
-        self.spotifyId = dictionary["spotifyId"] as? String ?? ""
+//        self.instagramId = dictionary["instagramId"] as? String ?? ""
+//        self.instagramToken = dictionary["instagramToken"] as? String ?? ""
+//        self.instaNextPageURL = dictionary["instaNextPageURL"] as? String ?? nil
+//        self.instaUserName = dictionary["instaUserName"] as? String ?? ""
+//        self.spotifyId = dictionary["spotifyId"] as? String ?? ""
         self.isDeleted = dictionary["isDeleted"] as? Bool ?? false
         self.lastLogin = dictionary["lastLogin"] as? String ?? ""
         self.createdAt = dictionary["createdAt"] as? String ?? ""
         self.updatedAt = dictionary["updatedAt"] as? String ?? ""
-        self.vibeIds = dictionary["vibeIds"] as? Array ?? []
-        self.drinkIds = dictionary["drinkIds"] as? Array ?? []
+//        self.vibeIds = dictionary["vibeIds"] as? Array ?? []
+//        self.drinkIds = dictionary["drinkIds"] as? Array ?? []
         self.stripeCusId = dictionary["stripeCustId"] as? String ?? ""
         self.isProfileCompleted = dictionary["isProfileCompleted"] as? Bool ?? false
         self.isSocial = dictionary["isSocial"] as? Bool ?? false
@@ -114,7 +114,7 @@ extension User: Decodable, Encodable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         id = (try? values.decode(String.self, forKey: .id)) ?? ""
-        uniqueId = (try? values.decode(String.self, forKey: .uniqueId)) ?? ""
+//        uniqueId = (try? values.decode(String.self, forKey: .uniqueId)) ?? ""
         firstName = (try? values.decode(String.self, forKey: .firstName)) ?? ""
         lastName = (try? values.decode(String.self, forKey: .lastName)) ?? ""
         nickName = (try? values.decode(String.self, forKey: .nickName)) ?? ""
@@ -123,23 +123,23 @@ extension User: Decodable, Encodable {
         email = (try? values.decode(String.self, forKey: .email)) ?? ""
         location = (try? values.decode(String.self, forKey: .location)) ?? ""
         city = (try? values.decode(String.self, forKey: .city)) ?? ""
-        receiveMarketing = (try? values.decode(Bool.self, forKey: .receiveMarketing)) ?? false
+//        receiveMarketing = (try? values.decode(Bool.self, forKey: .receiveMarketing)) ?? false
         code = (try? values.decode(String.self, forKey: .code)) ?? ""
         phone = (try? values.decode(String.self, forKey: .phone)) ?? ""
         phoneVerified = (try? values.decode(Bool.self, forKey: .phoneVerified)) ?? false
         status = (try? values.decode(String.self, forKey: .status)) ?? ""
         image = (try? values.decode(ImageDetail.self, forKey: .image)) ?? ImageDetail(fromDictionary: [:])
-        instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
-        instagramToken = try? values.decode(String.self, forKey: .instagramToken)
-        instaNextPageURL = try? values.decode(String.self, forKey: .instaNextPageURL)
-        instaUserName = try? values.decode(String.self, forKey: .instaUserName)
-        spotifyId = (try? values.decode(String.self, forKey: .spotifyId)) ?? ""
+//        instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
+//        instagramToken = try? values.decode(String.self, forKey: .instagramToken)
+//        instaNextPageURL = try? values.decode(String.self, forKey: .instaNextPageURL)
+//        instaUserName = try? values.decode(String.self, forKey: .instaUserName)
+//        spotifyId = (try? values.decode(String.self, forKey: .spotifyId)) ?? ""
         isDeleted = (try? values.decode(Bool.self, forKey: .isDeleted)) ?? false
         lastLogin = (try? values.decode(String.self, forKey: .lastLogin)) ?? ""
         createdAt = (try? values.decode(String.self, forKey: .createdAt)) ?? ""
         updatedAt = (try? values.decode(String.self, forKey: .updatedAt)) ?? ""
-        vibeIds = (try? values.decode([String].self, forKey: .vibeIds)) ?? []
-        drinkIds = (try? values.decode([String].self, forKey: .drinkIds)) ?? []
+//        vibeIds = (try? values.decode([String].self, forKey: .vibeIds)) ?? []
+//        drinkIds = (try? values.decode([String].self, forKey: .drinkIds)) ?? []
         stripeCusId = (try? values.decode(String.self, forKey: .stripeCusId)) ?? ""
         isProfileCompleted = (try? values.decode(Bool.self, forKey: .isProfileCompleted)) ?? false
         isSocial = (try? values.decode(Bool.self, forKey: .isSocial)) ?? false
@@ -148,7 +148,7 @@ extension User: Decodable, Encodable {
     func encode(to encoder: Encoder) throws {
         var val = encoder.container(keyedBy: CodingKeys.self)
         try val.encode(id, forKey: .id)
-        try val.encode(uniqueId, forKey: .uniqueId)
+//        try val.encode(uniqueId, forKey: .uniqueId)
         try val.encode(firstName, forKey: .firstName)
         try val.encode(lastName, forKey: .lastName)
         try val.encode(nickName, forKey: .nickName)
@@ -157,23 +157,23 @@ extension User: Decodable, Encodable {
         try val.encode(email, forKey: .email)
         try val.encode(location, forKey: .location)
         try val.encode(city, forKey: .city)
-        try val.encode(receiveMarketing, forKey: .receiveMarketing)
+//        try val.encode(receiveMarketing, forKey: .receiveMarketing)
         try val.encode(code, forKey: .code)
         try val.encode(phone, forKey: .phone)
         try val.encode(phoneVerified, forKey: .phoneVerified)
         try val.encode(status, forKey: .status)
         try val.encode(image, forKey: .image)
-        try val.encode(instagramId, forKey: .instagramId)
-        try val.encode(instagramToken, forKey: .instagramToken)
-        try val.encode(instaNextPageURL, forKey: .instaNextPageURL)
-        try val.encode(instaUserName, forKey: .instaUserName)
-        try val.encode(spotifyId, forKey: .spotifyId)
+//        try val.encode(instagramId, forKey: .instagramId)
+//        try val.encode(instagramToken, forKey: .instagramToken)
+//        try val.encode(instaNextPageURL, forKey: .instaNextPageURL)
+//        try val.encode(instaUserName, forKey: .instaUserName)
+//        try val.encode(spotifyId, forKey: .spotifyId)
         try val.encode(isDeleted, forKey: .isDeleted)
         try val.encode(lastLogin, forKey: .lastLogin)
         try val.encode(createdAt, forKey: .createdAt)
         try val.encode(updatedAt, forKey: .updatedAt)
-        try val.encode(vibeIds, forKey: .vibeIds)
-        try val.encode(drinkIds, forKey: .drinkIds)
+//        try val.encode(vibeIds, forKey: .vibeIds)
+//        try val.encode(drinkIds, forKey: .drinkIds)
         try val.encode(stripeCusId, forKey: .stripeCusId)
         try val.encode(isProfileCompleted, forKey: .isProfileCompleted)
         try val.encode(isSocial, forKey: .isSocial)

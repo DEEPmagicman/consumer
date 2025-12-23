@@ -14,6 +14,8 @@ struct Constant {
         static let primaryBlue = UIColor(named: "primaryBlue")
         static let purpleColor = UIColor(red: 0.96, green: 0.51, blue: 1.00, alpha: 1.00)
         static let customGray = UIColor(red: 0.20, green: 0.20, blue: 0.20, alpha: 1.00)
+        static let backgroundColor = UIColor(red: 0.11, green: 0.11, blue: 0.12, alpha: 1.00)
+        static let textLabelColor = UIColor(red: 0.63, green: 0.63, blue: 0.63, alpha: 1.00)
     }
     
     struct Icon {

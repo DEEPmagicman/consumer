@@ -99,7 +99,6 @@ final class MVPVenueListVc: UIViewController {
                 return
             }
             if isSuccess {
-                self.fetchAllCloseVenueForMVP()
                 if self.openFrom == 0 {
                     self.openVenueList.removeAll()
                 }
@@ -110,6 +109,9 @@ final class MVPVenueListVc: UIViewController {
                     self.openFrom = self.openVenueList.count
                 }
                 self.openHasMore = hasMore
+                if !self.openHasMore {
+                    self.fetchAllCloseVenueForMVP()
+                }
                 self.venueListTableView.reloadData()
                 self.refresh.endRefreshing()
             } else {
@@ -182,13 +184,17 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
+        if openVenueList[indexPath.row].isDiscoveryClickable ?? true {
+            Navigate.to.MVPVenueDetailViewController(self, venueId: openVenueList[indexPath.row].id, venueUniqueId: openVenueList[indexPath.row].uniqueId, venueTimeZone: openVenueList[indexPath.row].timezone ?? "")
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == openVenueList.count - 1 {
             if openHasMore {
                 fetchAllOpenVenueForMVP()
+            } else if closeHasMore {
+                fetchAllCloseVenueForMVP()
             }
         }
     }

@@ -334,4 +334,35 @@ final class Navigate {
         guard let url = URL(string: url) else { return }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+    
+    func barTabCheckoutVC(_ sender: UIViewController, selectedTicket: [CoverTicket], venueDetails: ClipVenue?) {
+        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabCheckoutVC.self)
+        vc.selectedTicket = selectedTicket
+        vc.venueDetails = venueDetails
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func barTabQRCodeVC(_ sender: UIViewController, venue: ClipVenue?, barTabId: String) {
+        let vc = StoryboardAndXibManager.StoryBoard.bartab.instantiateVC(BarTabQRCodeVC.self)
+        vc.venue = venue
+        vc.barTabId = barTabId
+        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+            homeVc.present(vc, animated: true)
+            homeVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [homeVc]
+            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
+                vc.delegate = accountVC
+            }
+            return
+        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
+            accountVc.present(vc, animated: true)
+            accountVc.tabBarController?.selectedIndex = 1
+            sender.navigationController?.viewControllers = [accountVc]
+            vc.delegate = accountVc as? AccountVC
+            return
+        }
+        sender.navigationController?.present(vc, animated: true)
+//        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }
