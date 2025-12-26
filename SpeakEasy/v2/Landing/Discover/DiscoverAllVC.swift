@@ -1,13 +1,13 @@
 //
-//  DiscoverVC.swift
+//  DiscoverAllVC.swift
 //  SpeakEasy-Consumer
 //
-//  Created by Square Infosoft on 22/12/25.
+//  Created by Square Infosoft on 24/12/25.
 //
 
 import UIKit
 
-final class DiscoverVC: UIViewController {
+final class DiscoverAllVC: UIViewController {
     
     @IBOutlet weak var tonightEventCollectionView: UICollectionView!
     @IBOutlet weak var venueListCollectionView: UICollectionView!
@@ -19,17 +19,9 @@ final class DiscoverVC: UIViewController {
         venueListCollectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
         allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
     }
-    
-    @IBAction func onClickCity(_ sender: Any) {
-        Navigate.to.selectLocationVC(self)
-    }
-    
-    @IBAction func onClickDate(_ sender: Any) {
-        Navigate.to.dateRangeSelectionVC(self)
-    }
 }
 
-extension DiscoverVC: UICollectionViewDelegate, UICollectionViewDataSource {
+extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
         case tonightEventCollectionView:
@@ -57,20 +49,5 @@ extension DiscoverVC: UICollectionViewDelegate, UICollectionViewDataSource {
         default:
             return UICollectionViewCell()
         }
-    }
-}
-
-extension DiscoverVC: SelectedDateDelegate {
-    func selectedDateRange(startDate: String?, endDate: String?) {
-        print("-=-=-= \(startDate ?? "")")
-        print("-=-=-= \(endDate ?? "")")
-//        if startDate == endDate {
-//            fromDate = startDate
-//            toDate = nil
-//        } else {
-//            fromDate = startDate
-//            toDate = endDate
-//        }
-//        self.tableView.reloadData()
     }
 }

@@ -31,4 +31,11 @@ extension UILabel {
         }
         self.attributedText = mutableAttributedString
     }
+    
+    func getWidth(text: String) -> CGFloat {
+        self.numberOfLines = 1
+        self.text = text
+        self.sizeToFit()
+        return self.frame.width
+    }
 }
