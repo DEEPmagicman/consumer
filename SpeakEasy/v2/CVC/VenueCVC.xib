@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -18,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JQm-Xc-ccV">
-                        <rect key="frame" x="2" y="2" width="158" height="234"/>
+                        <rect key="frame" x="2" y="2" width="158" height="236"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="PTn-rt-r7f">
                                 <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
@@ -48,13 +49,56 @@
                             <constraint firstAttribute="bottom" secondItem="T3V-j0-iIQ" secondAttribute="bottom" id="xpo-yk-OLh"/>
                         </constraints>
                     </view>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8z-mP-0G9">
+                        <rect key="frame" x="2" y="2" width="174" height="234"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4TW-XJ-fHZ" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="158" height="160"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="158" id="2Y7-lU-d49"/>
+                                    <constraint firstAttribute="height" constant="160" id="XKI-re-DFa"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AoN-LG-dmi" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="162" width="158" height="36"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="JRc-Fa-zPU"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.07061767578" green="0.07061767578" blue="0.07061767578" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="AoN-LG-dmi" firstAttribute="leading" secondItem="a8z-mP-0G9" secondAttribute="leading" id="9L4-gu-DOB"/>
+                            <constraint firstItem="4TW-XJ-fHZ" firstAttribute="leading" secondItem="a8z-mP-0G9" secondAttribute="leading" id="XXN-ie-9JK"/>
+                            <constraint firstItem="AoN-LG-dmi" firstAttribute="top" secondItem="4TW-XJ-fHZ" secondAttribute="bottom" constant="2" id="kFf-bf-ja9"/>
+                            <constraint firstItem="AoN-LG-dmi" firstAttribute="trailing" secondItem="4TW-XJ-fHZ" secondAttribute="trailing" id="l5I-jr-mja"/>
+                            <constraint firstItem="4TW-XJ-fHZ" firstAttribute="top" secondItem="a8z-mP-0G9" secondAttribute="top" id="r1N-fe-roK"/>
+                            <constraint firstAttribute="bottom" secondItem="AoN-LG-dmi" secondAttribute="bottom" id="vZ4-Ob-Xg9"/>
+                        </constraints>
+                    </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="JQm-Xc-ccV" secondAttribute="bottom" constant="2" id="4i8-4c-nEl"/>
+                <constraint firstItem="a8z-mP-0G9" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="67H-na-GKD"/>
                 <constraint firstItem="JQm-Xc-ccV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="MIE-OX-NRh"/>
+                <constraint firstAttribute="trailing" secondItem="a8z-mP-0G9" secondAttribute="trailing" constant="2" id="WfM-Ed-G9e"/>
+                <constraint firstAttribute="bottom" secondItem="a8z-mP-0G9" secondAttribute="bottom" constant="2" id="gtr-RY-Zy1"/>
+                <constraint firstItem="a8z-mP-0G9" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="jpo-7W-SHg"/>
                 <constraint firstItem="JQm-Xc-ccV" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="nAJ-l5-wM3"/>
+                <constraint firstAttribute="bottom" secondItem="JQm-Xc-ccV" secondAttribute="bottom" id="rle-0I-qUN"/>
                 <constraint firstAttribute="trailing" secondItem="JQm-Xc-ccV" secondAttribute="trailing" constant="2" id="v9u-GC-8eG"/>
             </constraints>
             <size key="customSize" width="178" height="238"/>
@@ -63,10 +107,16 @@
                     <real key="value" value="8"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="85.496183206106863" y="145.77464788732394"/>
+            <connections>
+                <outlet property="shimmerView" destination="a8z-mP-0G9" id="xQc-dJ-hSw"/>
+            </connections>
+            <point key="canvasLocation" x="85.496183206106863" y="144.36619718309859"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="demo venue" width="156" height="156"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

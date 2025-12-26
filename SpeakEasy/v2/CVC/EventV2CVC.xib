@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -40,7 +41,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Fri, Jun 20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1J-sG-Ehb">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Jun 20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1J-sG-Ehb">
                                 <rect key="frame" x="0.0" y="196" width="158" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="16" id="Hu9-7m-Laf"/>
@@ -64,6 +65,7 @@
                             <constraint firstAttribute="trailing" secondItem="RwG-f4-gJc" secondAttribute="trailing" id="0uy-nX-4dX"/>
                             <constraint firstAttribute="width" constant="158" id="1mv-e3-u0M"/>
                             <constraint firstItem="Cz0-0D-gTc" firstAttribute="top" secondItem="w1J-sG-Ehb" secondAttribute="bottom" id="64T-8b-Us5"/>
+                            <constraint firstItem="w1J-sG-Ehb" firstAttribute="trailing" secondItem="Cz0-0D-gTc" secondAttribute="trailing" id="FkF-c8-rsH"/>
                             <constraint firstItem="w1J-sG-Ehb" firstAttribute="top" secondItem="RwG-f4-gJc" secondAttribute="bottom" id="J37-5X-xq4"/>
                             <constraint firstItem="RwG-f4-gJc" firstAttribute="top" secondItem="jVm-f0-TEl" secondAttribute="bottom" constant="2" id="PfW-6B-B7C"/>
                             <constraint firstItem="jVm-f0-TEl" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="R4d-dY-Vo1"/>
@@ -73,6 +75,7 @@
                             <constraint firstAttribute="bottom" secondItem="Cz0-0D-gTc" secondAttribute="bottom" id="dvI-7F-D4o"/>
                             <constraint firstItem="Cz0-0D-gTc" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="gcy-Sx-pyU"/>
                             <constraint firstItem="jVm-f0-TEl" firstAttribute="top" secondItem="8uG-e4-sGy" secondAttribute="top" id="hiv-VE-Rxv"/>
+                            <constraint firstItem="w1J-sG-Ehb" firstAttribute="leading" secondItem="8uG-e4-sGy" secondAttribute="leading" id="iaY-QZ-Eyd"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -80,20 +83,84 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="amy-WB-kwR">
+                        <rect key="frame" x="2" y="2" width="158" height="244"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ye2-Mx-xA2" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="158" id="Iy0-45-J6Q"/>
+                                    <constraint firstAttribute="width" constant="158" id="RMA-GS-1Kz"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGK-M7-tZl" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="160" width="158" height="36"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="pvA-be-iJd"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yS7-1a-ggt" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="198" width="158" height="24"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="7XW-y0-Cg2"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.07061767578" green="0.07061767578" blue="0.07061767578" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="cGK-M7-tZl" firstAttribute="trailing" secondItem="ye2-Mx-xA2" secondAttribute="trailing" id="2RL-I8-KsH"/>
+                            <constraint firstItem="cGK-M7-tZl" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="69w-HU-bfu"/>
+                            <constraint firstItem="yS7-1a-ggt" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="89o-sz-6ae"/>
+                            <constraint firstAttribute="bottom" secondItem="yS7-1a-ggt" secondAttribute="bottom" id="HJC-eI-zgr"/>
+                            <constraint firstAttribute="width" constant="158" id="I6l-qq-6ix"/>
+                            <constraint firstItem="cGK-M7-tZl" firstAttribute="top" secondItem="ye2-Mx-xA2" secondAttribute="bottom" constant="2" id="R0Y-du-z9j"/>
+                            <constraint firstItem="ye2-Mx-xA2" firstAttribute="top" secondItem="amy-WB-kwR" secondAttribute="top" id="Xwx-s1-uIF"/>
+                            <constraint firstAttribute="trailing" secondItem="yS7-1a-ggt" secondAttribute="trailing" id="fJx-gC-1qO"/>
+                            <constraint firstItem="yS7-1a-ggt" firstAttribute="top" secondItem="cGK-M7-tZl" secondAttribute="bottom" constant="2" id="gYS-l3-Zih"/>
+                            <constraint firstItem="ye2-Mx-xA2" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="y87-GA-GFV"/>
+                        </constraints>
+                    </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
+                <constraint firstItem="amy-WB-kwR" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="3uE-Y2-H8k"/>
                 <constraint firstItem="8uG-e4-sGy" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="Fw6-uP-2WK"/>
                 <constraint firstAttribute="bottom" secondItem="8uG-e4-sGy" secondAttribute="bottom" constant="2" id="PrP-4W-NoE"/>
+                <constraint firstItem="amy-WB-kwR" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="S4y-Be-adf"/>
+                <constraint firstAttribute="bottom" secondItem="amy-WB-kwR" secondAttribute="bottom" constant="2" id="bTi-qI-M7r"/>
                 <constraint firstAttribute="trailing" secondItem="8uG-e4-sGy" secondAttribute="trailing" constant="2" id="qXp-J4-kfr"/>
                 <constraint firstItem="8uG-e4-sGy" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="tvk-SR-9nM"/>
             </constraints>
             <size key="customSize" width="265" height="248"/>
+            <connections>
+                <outlet property="shimmerView" destination="amy-WB-kwR" id="dck-De-Vv4"/>
+            </connections>
             <point key="canvasLocation" x="151.90839694656489" y="188.02816901408451"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="bg_img" width="389" height="298"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

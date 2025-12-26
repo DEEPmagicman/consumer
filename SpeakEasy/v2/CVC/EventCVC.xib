@@ -51,9 +51,19 @@
                                 <color key="textColor" red="0.82352941176470584" green="0.83529411764705885" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btN-Vb-ent" customClass="ShimmerView" customModule="Speakeasy_Door" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="298" height="298"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemYellowColor"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="btN-Vb-ent" secondAttribute="bottom" id="2PA-hO-Fq8"/>
                             <constraint firstItem="6w5-XB-coC" firstAttribute="leading" secondItem="4PW-OK-i02" secondAttribute="leading" constant="30" id="58i-OT-cUs"/>
                             <constraint firstItem="OfT-2S-8OV" firstAttribute="leading" secondItem="PqH-a5-E4D" secondAttribute="leading" id="64b-xf-L5o"/>
                             <constraint firstAttribute="trailing" secondItem="Rnn-IG-hMS" secondAttribute="trailing" constant="2" id="70u-oN-Z29"/>
@@ -68,9 +78,12 @@
                             <constraint firstItem="6w5-XB-coC" firstAttribute="centerX" secondItem="4PW-OK-i02" secondAttribute="centerX" id="i9g-DK-Q68"/>
                             <constraint firstItem="6w5-XB-coC" firstAttribute="top" secondItem="4PW-OK-i02" secondAttribute="top" id="mik-JY-XfG"/>
                             <constraint firstAttribute="height" constant="298" id="nSD-em-aKm"/>
+                            <constraint firstAttribute="trailing" secondItem="btN-Vb-ent" secondAttribute="trailing" id="qRf-ik-FPe"/>
                             <constraint firstItem="PqH-a5-E4D" firstAttribute="leading" secondItem="4PW-OK-i02" secondAttribute="leading" constant="12" id="rZb-gH-qFV"/>
                             <constraint firstItem="fci-Rz-qKt" firstAttribute="top" secondItem="4PW-OK-i02" secondAttribute="top" id="uMO-wa-tK6"/>
                             <constraint firstAttribute="bottom" secondItem="fci-Rz-qKt" secondAttribute="bottom" id="wgh-VC-BK9"/>
+                            <constraint firstItem="btN-Vb-ent" firstAttribute="leading" secondItem="4PW-OK-i02" secondAttribute="leading" id="yjA-un-qA3"/>
+                            <constraint firstItem="btN-Vb-ent" firstAttribute="top" secondItem="4PW-OK-i02" secondAttribute="top" id="yrh-Xt-Par"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -88,11 +101,17 @@
                 <constraint firstItem="4PW-OK-i02" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="yTG-jb-uDM"/>
             </constraints>
             <size key="customSize" width="345" height="320"/>
+            <connections>
+                <outlet property="shimmerView" destination="btN-Vb-ent" id="MBS-w3-t8a"/>
+            </connections>
             <point key="canvasLocation" x="303.05343511450383" y="176.05633802816902"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="bg_img" width="389" height="298"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

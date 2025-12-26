@@ -8,5 +8,5 @@
 import UIKit
 
 final class EventCVC: UICollectionViewCell {
-    
+    @IBOutlet weak var shimmerView: ShimmerView!
 }

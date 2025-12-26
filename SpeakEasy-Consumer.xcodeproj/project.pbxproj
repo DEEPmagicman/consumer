@@ -179,6 +179,9 @@
 		CE3213C929E03B8E00EBC179 /* AccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3213C829E03B8E00EBC179 /* AccountVC.swift */; };
 		CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */; };
 		CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE3213CD29E03DA400EBC179 /* TitleHeader.xib */; };
+		CE36C4712EFE513200F2C75B /* ShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36C4702EFE513200F2C75B /* ShimmerView.swift */; };
+		CE36C4752EFE69A400F2C75B /* AllVenueVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */; };
+		CE36C4762EFE69A400F2C75B /* AllVenueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */; };
 		CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3C896329A61C8A0072E93C /* FloorPlan.swift */; };
 		CE3EF13A2C25901C00C2B21B /* CustomQRScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */; };
 		CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45800D2EF944A700A873C4 /* LandingVC.swift */; };
@@ -531,6 +534,9 @@
 		CE3213C829E03B8E00EBC179 /* AccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVC.swift; sourceTree = "<group>"; };
 		CE3213CB29E03D8D00EBC179 /* TitleHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleHeader.swift; sourceTree = "<group>"; };
 		CE3213CD29E03DA400EBC179 /* TitleHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleHeader.xib; sourceTree = "<group>"; };
+		CE36C4702EFE513200F2C75B /* ShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmerView.swift; sourceTree = "<group>"; };
+		CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllVenueVC.swift; sourceTree = "<group>"; };
+		CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllVenueVC.xib; sourceTree = "<group>"; };
 		CE3C896329A61C8A0072E93C /* FloorPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlan.swift; sourceTree = "<group>"; };
 		CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQRScreen.swift; sourceTree = "<group>"; };
 		CE45800D2EF944A700A873C4 /* LandingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingVC.swift; sourceTree = "<group>"; };
@@ -905,6 +911,7 @@
 		BD3FB24B2940678800BE7713 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				CE36C4702EFE513200F2C75B /* ShimmerView.swift */,
 				CE0762ED2EFAB05100670694 /* CustomCalendar.swift */,
 				CEE0B518299F94E5004F0DA2 /* Toast.swift */,
 				BD3FB24C294067D900BE7713 /* NavigationManager.swift */,
@@ -1154,6 +1161,15 @@
 				CE3213CD29E03DA400EBC179 /* TitleHeader.xib */,
 			);
 			path = TitleHeader;
+			sourceTree = "<group>";
+		};
+		CE36C4722EFE698C00F2C75B /* Venues */ = {
+			isa = PBXGroup;
+			children = (
+				CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */,
+				CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */,
+			);
+			path = Venues;
 			sourceTree = "<group>";
 		};
 		CE486715286F2CB000FD277E = {
@@ -1526,7 +1542,6 @@
 			children = (
 				CEC6D6D12EF92B1C00A05672 /* Landing.storyboard */,
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
-				CEE02DA62EFB939F00AC7756 /* Discover */,
 				CE4580152EF94F4700A873C4 /* Orders.storyboard */,
 				CE4580172EF94F5A00A873C4 /* OrdersVC.swift */,
 				CE45801B2EF94FB800A873C4 /* Photos.storyboard */,
@@ -1535,8 +1550,10 @@
 				CE45801F2EF94FFB00A873C4 /* SearchVC.swift */,
 				CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */,
 				CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */,
+				CEE02DA62EFB939F00AC7756 /* Discover */,
 				CE0762DE2EFA9C0300670694 /* Location */,
 				CE0762E82EFAA97B00670694 /* Date Selection */,
+				CE36C4722EFE698C00F2C75B /* Venues */,
 			);
 			path = Landing;
 			sourceTree = "<group>";
@@ -1831,6 +1848,7 @@
 				CEBCF5F12D48E2FD00B640C8 /* LICENSE in Resources */,
 				CEBCF5F22D48E2FD00B640C8 /* README.md in Resources */,
 				CEBCF5F32D48E2FD00B640C8 /* PrivacyInfo.xcprivacy in Resources */,
+				CE36C4752EFE69A400F2C75B /* AllVenueVC.xib in Resources */,
 				CEBCF5F42D48E2FD00B640C8 /* PhoneNumberMetadata.json in Resources */,
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				CE09064D2EFBEB4000936E9D /* DateSelectionTVC.xib in Resources */,
@@ -2050,6 +2068,7 @@
 				CE48D8302EFA714300E7110B /* VenueCVC.swift in Sources */,
 				CE4867AB286F358800FD277E /* Utility.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
+				CE36C4762EFE69A400F2C75B /* AllVenueVC.swift in Sources */,
 				CE565473299CA9A3009CE55C /* ReachabilityManager.swift in Sources */,
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,
 				82847A8629828BA600611DC4 /* ticketTypeTableViewCell.swift in Sources */,
@@ -2086,6 +2105,7 @@
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,
 				CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */,
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
+				CE36C4712EFE513200F2C75B /* ShimmerView.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
