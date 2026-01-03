@@ -73,6 +73,8 @@
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
 		69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */; };
+		6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */; };
+		6AF2B9C62F09400800069A90 /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6AF2B9C52F09400800069A90 /* GLTFKit2 */; };
 		824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F86EC2987D52600A9F1FD /* SettingPresenter.swift */; };
 		82847A792982485B00611DC4 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82847A782982485B00611DC4 /* Home.storyboard */; };
 		82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */; };
@@ -420,6 +422,7 @@
 		691609422C7F418000C74F48 /* Motor-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Motor-Regular.ttf"; sourceTree = "<group>"; };
 		69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleExtension.swift; sourceTree = "<group>"; };
 		69D3CB792AA22ABA00FF5776 /* SpeakEasyClip-bridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SpeakEasyClip-bridgingHeader.h"; sourceTree = "<group>"; };
+		6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tables3DMapVC.swift; sourceTree = "<group>"; };
 		824F86EC2987D52600A9F1FD /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
 		82847A782982485B00611DC4 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueListVc.swift; sourceTree = "<group>"; };
@@ -671,6 +674,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */,
+				6AF2B9C62F09400800069A90 /* GLTFKit2 in Frameworks */,
 				CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */,
 				CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */,
 				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
@@ -837,6 +841,14 @@
 				690DC2772DAFD353007F94C7 /* CustomFeeTVC.swift */,
 			);
 			path = CustomFeeTVC;
+			sourceTree = "<group>";
+		};
+		6AF2B9C22F093ECC00069A90 /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */,
+			);
+			path = Event;
 			sourceTree = "<group>";
 		};
 		82847A77298244A000611DC4 /* MVPFlow */ = {
@@ -1517,6 +1529,7 @@
 		CEC6D6D02EF9261400A05672 /* v2 */ = {
 			isa = PBXGroup;
 			children = (
+				6AF2B9C22F093ECC00069A90 /* Event */,
 				CE0906492EFBEB2E00936E9D /* TVC */,
 				CEF48B4F2EFA491E006A6468 /* CVC */,
 				CEF48B4E2EFA48F7006A6468 /* Landing */,
@@ -1744,6 +1757,7 @@
 				CECDD9EB2B986B58007E94A7 /* FSPagerView */,
 				CECDD9EF2B986DFC007E94A7 /* Reachability */,
 				CE19C1AA2CA44469007050ED /* MHLoadingButton */,
+				6AF2B9C52F09400800069A90 /* GLTFKit2 */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -1788,6 +1802,7 @@
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 				CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */,
+				6AF2B9C12F093C5100069A90 /* XCRemoteSwiftPackageReference "GLTFKit2" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -2106,6 +2121,7 @@
 				CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */,
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
 				CE36C4712EFE513200F2C75B /* ShimmerView.swift in Sources */,
+				6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */,
 				044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */,
@@ -2707,6 +2723,14 @@
 				version = 6.5.12;
 			};
 		};
+		6AF2B9C12F093C5100069A90 /* XCRemoteSwiftPackageReference "GLTFKit2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/warrenm/GLTFKit2";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.15;
+			};
+		};
 		CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WenchaoD/FSPagerView.git";
@@ -2791,6 +2815,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
+		};
+		6AF2B9C52F09400800069A90 /* GLTFKit2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6AF2B9C12F093C5100069A90 /* XCRemoteSwiftPackageReference "GLTFKit2" */;
+			productName = GLTFKit2;
 		};
 		CE19C1AA2CA44469007050ED /* MHLoadingButton */ = {
 			isa = XCSwiftPackageProductDependency;
