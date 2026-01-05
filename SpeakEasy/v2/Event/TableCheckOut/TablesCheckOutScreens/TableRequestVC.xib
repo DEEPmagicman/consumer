@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-Regular.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TableRequestVC" customModule="Speakeasy" customModuleProvider="target">
+            <connections>
+                <outlet property="requestFormView" destination="geH-xT-Q87" id="AX1-hB-JpA"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FzV-8e-4gI" userLabel="Label1">
+                    <rect key="frame" x="16" y="128" width="361" height="43.666666666666657"/>
+                    <string key="text">Please complete the form to submit your request and a VIP Services Host will contact you. This request form is not a table reservation confirmation and does not guarantee entry.</string>
+                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="geH-xT-Q87">
+                    <rect key="frame" x="16" y="191.66666666666669" width="361" height="582.33333333333326"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="FzV-8e-4gI" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="10" id="3Tw-zg-ezZ"/>
+                <constraint firstItem="geH-xT-Q87" firstAttribute="top" secondItem="FzV-8e-4gI" secondAttribute="bottom" constant="20" id="5V2-en-ojh"/>
+                <constraint firstItem="geH-xT-Q87" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="CxE-s0-2to"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="geH-xT-Q87" secondAttribute="bottom" constant="10" id="Esf-GA-bMO"/>
+                <constraint firstAttribute="trailing" secondItem="FzV-8e-4gI" secondAttribute="trailing" constant="16" id="RO2-Pc-9TO"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="geH-xT-Q87" secondAttribute="trailing" constant="16" id="jXZ-Kh-C2b"/>
+                <constraint firstItem="FzV-8e-4gI" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="pJD-Xd-xGR"/>
+            </constraints>
+            <point key="canvasLocation" x="-63" y="120"/>
+        </view>
+    </objects>
+</document>

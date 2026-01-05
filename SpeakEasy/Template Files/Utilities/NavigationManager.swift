@@ -376,4 +376,14 @@ final class Navigate {
         vc.dateDelegate = sender as? SelectedDateDelegate
         sender.presentVC(vc)
     }
+    
+    func tables3DMapVC(_ sender: UIViewController) {
+        let vc = Tables3DMapVC(nibName: "Tables3DMapVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
+    func tableCheckOutVC(_ sender: UIViewController) {
+        let vc = TableCheckOutVC(nibName: "TableCheckOutVC", bundle: nil)
+        sender.pushVC(vc)
+    }
 }

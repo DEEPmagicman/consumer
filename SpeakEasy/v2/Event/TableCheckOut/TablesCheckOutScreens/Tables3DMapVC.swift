@@ -25,6 +25,9 @@ enum CameraConfig {
 
 
 final class Tables3DMapVC: UIViewController {
+    
+    @IBOutlet weak var mapView: UIView!
+    
     private let sceneView = SCNView()
     private let tapCategory: Int = 4
     
@@ -42,7 +45,6 @@ final class Tables3DMapVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         setupSceneView()
         setupCameraGestures()
         
@@ -63,7 +65,7 @@ private extension Tables3DMapVC {
         sceneView.cameraControlConfiguration.allowsTranslation = false
         sceneView.autoenablesDefaultLighting = false
         sceneView.scene = SCNScene()
-        view.addSubview(sceneView)
+        mapView.addSubview(sceneView)
     }
 }
 
@@ -72,10 +74,10 @@ private extension Tables3DMapVC {
 private extension Tables3DMapVC {
     
     func loadGLB_Local() {
-        guard let url = Bundle.main.url(forResource: "hotel_map", withExtension: "glb") else {
-            fatalError("GLB not found")
-        }
-        loadGLB(from: url)
+//        guard let url = Bundle.main.url(forResource: "hotel_map", withExtension: "glb") else {
+//            fatalError("GLB not found")
+//        }
+//        loadGLB(from: url)
     }
     
     // SERVER READY
