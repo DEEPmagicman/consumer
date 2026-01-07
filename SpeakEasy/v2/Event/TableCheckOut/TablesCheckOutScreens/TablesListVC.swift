@@ -104,22 +104,31 @@ class TablesListVC: UIViewController {
     private func setupChildVCs() {
 
         if let mapVC = mapVC {
-            addChild(mapVC)
-            contentContainerView.addSubview(mapVC.view)
-            mapVC.didMove(toParent: self)
+            addChildView(mapVC)
         }
 
         if let listVC = listVC {
-            addChild(listVC)
-            contentContainerView.addSubview(listVC.view)
-            listVC.didMove(toParent: self)
+            addChildView(listVC)
         }
 
         if let requestVC = requestVC {
-            addChild(requestVC)
-            contentContainerView.addSubview(requestVC.view)
-            requestVC.didMove(toParent: self)
+            addChildView(requestVC)
         }
+    }
+    
+    private func addChildView(_ vc: UIViewController) {
+        addChild(vc)
+        contentContainerView.addSubview(vc.view)
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            vc.view.topAnchor.constraint(equalTo: contentContainerView.topAnchor),
+            vc.view.bottomAnchor.constraint(equalTo: contentContainerView.bottomAnchor),
+            vc.view.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor),
+            vc.view.trailingAnchor.constraint(equalTo: contentContainerView.trailingAnchor)
+        ])
+
+        vc.didMove(toParent: self)
     }
     
     private func updateChildren() {

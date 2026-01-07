@@ -22,6 +22,14 @@ class TableCheckOutVC: UIViewController {
         super.viewDidLoad()
         tablesListVC = TablesListVC()
         setupChildVCs()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        venueNameNavigationLbl.text = "Nebula New York"
+        eventNameLbl.text = "Fedde Le Grand"
+        venueNameLbl.text = "Nebula New York"
+        timeLbl.text = "Fri, Sep 19 at 9:00 PM"
     }
     
     @IBAction func onCloseTapped(_ sender: Any) {
@@ -40,9 +48,22 @@ class TableCheckOutVC: UIViewController {
     private func setupChildVCs() {
 
         if let tablesListVC = tablesListVC {
-            addChild(tablesListVC)
-            mainContentView.addSubview(tablesListVC.view)
-            tablesListVC.didMove(toParent: self)
+            addChildView(tablesListVC)
         }
+    }
+    
+    private func addChildView(_ vc: UIViewController) {
+        addChild(vc)
+        mainContentView.addSubview(vc.view)
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            vc.view.topAnchor.constraint(equalTo: mainContentView.topAnchor),
+            vc.view.bottomAnchor.constraint(equalTo: mainContentView.bottomAnchor),
+            vc.view.leadingAnchor.constraint(equalTo: mainContentView.leadingAnchor),
+            vc.view.trailingAnchor.constraint(equalTo: mainContentView.trailingAnchor)
+        ])
+
+        vc.didMove(toParent: self)
     }
 }

@@ -72,7 +72,7 @@ extension TableRequestVC {
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
@@ -81,7 +81,7 @@ extension TableRequestVC {
         // Title
         let title = UILabel()
         title.text = "Your request"
-        title.font = AppFont.font(.inter, weight: .medium, size: 10)
+        title.font = AppFont.font(.inter, weight: .medium, size: 12)
         title.textAlignment = .center
         title.textColor = .black
         stack.addArrangedSubview(title)
@@ -121,7 +121,16 @@ extension TableRequestVC {
         iconView.widthAnchor.constraint(equalToConstant: 18).isActive = true
 
         let tf = UITextField()
-        tf.placeholder = placeholder
+
+        // ✅ Placeholder color set here
+        tf.attributedPlaceholder = NSAttributedString(
+            string: placeholder,
+            attributes: [
+                .foregroundColor: UIColor(hex: "#A1A1A1"),
+                .font: AppFont.font(.inter, weight: .medium, size: 14)
+            ]
+        )
+
         tf.font = AppFont.font(.inter, weight: .medium, size: 14)
         tf.textColor = .black
         tf.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
@@ -197,13 +206,14 @@ extension TableRequestVC {
 
         let label = UILabel()
         label.text = "I agree to receive marketing related text messages from E11EVEN. Msg & data rates may apply. Reply STOP to opt out or HELP for support."
-        label.textColor = .black
+        label.textColor = UIColor(hex: "#3D3A3A")
         label.font = AppFont.font(.inter, weight: .regular, size: 12)
         label.numberOfLines = 0
 
         let stack = UIStackView(arrangedSubviews: [marketingCheckbox, label])
         stack.axis = .horizontal
         stack.spacing = 10
+        stack.alignment = .top
         return stack
     }
 
@@ -223,7 +233,7 @@ extension TableRequestVC {
         btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         btn.addTarget(self, action: #selector(onRequestTapped), for: .touchUpInside)
 
-        requestButton.backgroundColor = .black
+        btn.backgroundColor = .black
         requestButton = btn
         updateRequestButtonState()
         return btn

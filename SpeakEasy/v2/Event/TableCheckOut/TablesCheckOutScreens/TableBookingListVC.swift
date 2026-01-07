@@ -26,6 +26,7 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TableListTVC = tableView.dequeue(withIdentifier: TableListTVC.identifier, for: indexPath)
+        cell.selectionStyle = .none
         return cell
     }
 }
