@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24127" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,10 +20,10 @@
                                 <rect key="frame" x="16" y="128" width="361" height="30"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MJt-9i-ldn">
-                                        <rect key="frame" x="0.0" y="0.0" width="357" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="95" height="30"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zyh-bo-JpY">
-                                                <rect key="frame" x="0.0" y="0.0" width="357" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="95" height="30"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RQb-aD-Rm5">
                                                         <rect key="frame" x="0.0" y="0.0" width="95" height="30"/>
@@ -68,23 +68,23 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Amk-RQ-jr6">
-                                                        <rect key="frame" x="103" y="0.0" width="96.666666666666686" height="30"/>
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Amk-RQ-jr6">
+                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="30"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="Nh7-Eu-CuW">
-                                                                <rect key="frame" x="12" y="0.0" width="72.666666666666671" height="30"/>
+                                                                <rect key="frame" x="12" y="0.0" width="21" height="30"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sA3-Ah-8Fv">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="51.666666666666664" height="30"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Dates" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wMh-do-Wpc">
-                                                                                <rect key="frame" x="0.0" y="8" width="51.666666666666664" height="14.333333333333336"/>
+                                                                                <rect key="frame" x="0.0" y="8" width="0.0" height="14.333333333333336"/>
                                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uuY-BY-Ki5">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="51.666666666666664" height="30"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
                                                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                                                 <connections>
                                                                                     <action selector="onClickDate:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="eg6-sm-acR"/>
@@ -104,7 +104,7 @@
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u4s-do-4gW">
-                                                                        <rect key="frame" x="62.666666666666657" y="0.0" width="10" height="30"/>
+                                                                        <rect key="frame" x="11" y="0.0" width="10" height="30"/>
                                                                         <subviews>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDu-uM-huh">
                                                                                 <rect key="frame" x="0.0" y="10" width="10" height="10"/>
@@ -143,11 +143,11 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Erz-kE-t6M">
-                                                        <rect key="frame" x="207.66666666666663" y="0.0" width="149.33333333333337" height="30"/>
+                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Erz-kE-t6M">
+                                                        <rect key="frame" x="0.0" y="0.0" width="24" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium Experiences" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p7A-6f-ivK">
-                                                                <rect key="frame" x="11.999999999999993" y="8" width="125.33333333333331" height="14.333333333333336"/>
+                                                                <rect key="frame" x="12" y="8" width="0.0" height="14.333333333333336"/>
                                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
@@ -222,6 +222,7 @@
                         <outlet property="dateCrossView" destination="u4s-do-4gW" id="sUw-ZP-8iV"/>
                         <outlet property="dateLbl" destination="wMh-do-Wpc" id="VUo-ZE-CYa"/>
                         <outlet property="dateView" destination="Amk-RQ-jr6" id="XzO-bg-oR7"/>
+                        <outlet property="selectedLocationName" destination="8eQ-Ms-Z84" id="wNK-iK-HBd"/>
                         <outletCollection property="segmentViewContainer" destination="8ph-4q-J5c" collectionClass="NSMutableArray" id="LCk-ne-vnU"/>
                         <outletCollection property="segmentViewContainer" destination="uBv-mf-ewj" collectionClass="NSMutableArray" id="M3t-jh-ZeO"/>
                     </connections>

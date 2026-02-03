@@ -13,6 +13,7 @@ final class DiscoverVC: UIViewController {
     @IBOutlet var dateLbl: UILabel!
     @IBOutlet var dateCrossView: UIView!
     @IBOutlet var dateView: UIView!
+    @IBOutlet weak var selectedLocationName: UILabel!
     
     private var viewControllers = [UIViewController]()
     var startDate: String?

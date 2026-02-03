@@ -16,6 +16,13 @@ final class DiscoverAllVC: UIViewController {
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
     var isVenueInitialLoading = true
+    private var openVenueList = [ClipVenue]()
+    private var closeVenueList = [ClipVenue]()
+    private var openFrom = 0
+    private var presenter = MVPPresenter()
+    private var openHasMore = false
+    private var closeFrom = 0
+    private var closeHasMore = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +31,77 @@ final class DiscoverAllVC: UIViewController {
         allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.updateShimmerView()
+        }
+        fetchAllOpenVenueForMVP()
+    }
+    
+    private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
+        if withLoader {
+            Loader.show()
+        }
+        presenter.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            if isSuccess {
+                if self.openFrom == 0 {
+                    self.openVenueList.removeAll()
+                }
+                for venue in openVenueList {
+                    self.openVenueList.append(venue)
+                }
+                if hasMore {
+                    self.openFrom = self.openVenueList.count
+                }
+                self.openHasMore = hasMore
+                if !self.openHasMore {
+                    self.fetchAllCloseVenueForMVP()
+                }
+                self.venueListCollectionView.reloadData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+            #if DEBUG
+            if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
+                Alert.showToast("Venue detail updated")
+            }
+            #endif
+            Loader.hide()
+        }
+    }
+    
+    private func fetchAllCloseVenueForMVP(withLoader: Bool = true) {
+        if withLoader {
+            Loader.show()
+        }
+        presenter.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
+            guard let self = self else {
+                Loader.hide()
+                return
+            }
+            if isSuccess {
+                if self.closeFrom == 0 {
+                    self.closeVenueList.removeAll()
+                }
+                for venue in closeVenueList {
+                    self.openVenueList.append(venue)
+                    self.closeVenueList.append(venue)
+                }
+                if hasMore {
+                    self.closeFrom = self.closeVenueList.count
+                }
+                self.closeHasMore = hasMore
+                self.venueListCollectionView.reloadData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+            #if DEBUG
+            if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
+                Alert.showToast("Venue detail updated")
+            }
+            #endif
+            Loader.hide()
         }
     }
     
@@ -57,10 +135,10 @@ final class DiscoverAllVC: UIViewController {
 extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
+        case venueListCollectionView:
+            return isVenueInitialLoading ? 3 : openVenueList.count
         case tonightEventCollectionView:
             return isTonightEventInitialLoading ? 3 : 5
-        case venueListCollectionView:
-            return isVenueInitialLoading ? 3 : 5
         case allEventsCollectionView:
             return isAllEventInitialLoading ? 3 : 5
         default:
@@ -76,16 +154,23 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.shimmerView?.startAnimating()
             return cell
         case venueListCollectionView:
-            let cell: VenueCVC = collectionView.dequeue(withIdentifier: VenueCVC.identifier, for: indexPath)
+            let cell: VenueCVC = collectionView.dequeue(
+                withIdentifier: VenueCVC.identifier,
+                for: indexPath
+            )
+
             if isVenueInitialLoading {
                 cell.shimmerView.isHidden = false
                 for view in cell.shimmerView.subviews where view is ShimmerView {
                     (view as? ShimmerView)?.startAnimating()
                 }
-                return cell
             } else {
                 cell.shimmerView.isHidden = true
+
+                let venue = openVenueList[indexPath.item]
+                cell.configure(with: venue) 
             }
+
             return cell
         case allEventsCollectionView:
             let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
