@@ -366,6 +366,12 @@ final class Navigate {
 //        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    
+    func allVenueVC(_ sender: UIViewController) {
+        let vc = AllVenueVC(nibName: "AllVenueVC", bundle: nil)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func selectLocationVC(_ sender: UIViewController) {
         let vc = SelectLocationVC(nibName: "SelectLocationVC", bundle: nil)
         sender.pushVC(vc)

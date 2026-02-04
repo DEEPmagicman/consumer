@@ -13,6 +13,7 @@ final class SelectLocationVC: UIViewController {
     @IBOutlet weak var closeBtn: UIButton!
     @IBOutlet weak var searchTextfeild: UITextField!
     
+    private var fullCityList = [MVPCity]()
     private var displayList = [MVPCity]()
     private var selectedCity = ""
     private var presenter = OnBoardingPresenter()
@@ -44,13 +45,26 @@ final class SelectLocationVC: UIViewController {
     @IBAction func onClickSearchClosebtn(_ sender: Any) {
         searchTextfeild.text = ""
         closeBtn.isHidden = true
+        displayList = fullCityList
         tableView.reloadData()
     }
 
     
     @objc private func textDidChange() {
-        let hasText = !(searchTextfeild.text?.isEmpty ?? true)
-        closeBtn.isHidden = !hasText
+        let searchText = searchTextfeild.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        closeBtn.isHidden = searchText.isEmpty
+
+        if searchText.isEmpty {
+            displayList = fullCityList
+        } else {
+            displayList = fullCityList.filter {
+                $0.value.lowercased().contains(searchText.lowercased())
+            }
+        }
+
+        tableView.reloadData()
     }
 
     
@@ -61,15 +75,21 @@ final class SelectLocationVC: UIViewController {
                 return
             }
             if isSuccess {
+                self.fullCityList = cityList
                 self.displayList = cityList
-                if self.userLocationCity != "", cityList.contains(where: { list in
-                    list.value == self.userLocationCity
-                }) {
+
+                if !self.userLocationCity.isEmpty,
+                   cityList.contains(where: { $0.value == self.userLocationCity }) {
                     self.selectedCity = self.userLocationCity
                 }
+
                 self.tableView.reloadData()
             } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
             }
         }
     }
@@ -96,8 +116,9 @@ extension SelectLocationVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCity = displayList[indexPath.row].value
-        UserDefault.shared.user?.city = self.selectedCity
-        UserDefault.shared.localCity = self.selectedCity
+        UserDefault.shared.user?.city = selectedCity
+        UserDefault.shared.localCity = selectedCity
         tableView.reloadData()
+        Navigate.to.back(self)
     }
 }

@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class DiscoverAllVC: UIViewController {
     
     @IBOutlet weak var tonightEventCollectionView: UICollectionView!
     @IBOutlet weak var venueListCollectionView: UICollectionView!
     @IBOutlet weak var allEventsCollectionView: UICollectionView!
+    @IBOutlet weak var venueTitleLable: UILabel!
     
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
@@ -24,6 +26,8 @@ final class DiscoverAllVC: UIViewController {
     private var closeFrom = 0
     private var closeHasMore = false
     
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tonightEventCollectionView.register(EventCVC.nib, forCellWithReuseIdentifier: EventCVC.identifier)
@@ -32,7 +36,7 @@ final class DiscoverAllVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.updateShimmerView()
         }
-        fetchAllOpenVenueForMVP()
+        bindSelectedCity()
     }
     
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
@@ -116,6 +120,27 @@ final class DiscoverAllVC: UIViewController {
         allEventsCollectionView.reloadData()
     }
     
+    private func bindSelectedCity() {
+        UserDefault.shared.localCityPublisher
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.setVenueListForSelectedCity()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func resolvedCity() -> String {
+        let city = UserDefault.shared.localCity.trimmingCharacters(in: .whitespacesAndNewlines)
+        return city.isEmpty ? "New York" : city
+    }
+    
+    private func setVenueListForSelectedCity() {
+        let city = resolvedCity()
+        venueTitleLable.text = "Venues in \(city)"
+        fetchAllOpenVenueForMVP()
+    }
+
     @IBAction func onClickBookNow(_ sender: Any) {
         isTonightEventInitialLoading = true
         tonightEventCollectionView.reloadData()
@@ -130,13 +155,19 @@ final class DiscoverAllVC: UIViewController {
             self.updateShimmerView()
         }
     }
+   
+    @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {
+        Navigate.to.allVenueVC(self)
+    }
 }
 
 extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView {
         case venueListCollectionView:
-            return isVenueInitialLoading ? 3 : openVenueList.count
+            return isVenueInitialLoading
+                        ? 3
+                        : min(openVenueList.count, 5)
         case tonightEventCollectionView:
             return isTonightEventInitialLoading ? 3 : 5
         case allEventsCollectionView:

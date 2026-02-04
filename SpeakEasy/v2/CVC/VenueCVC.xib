@@ -32,6 +32,18 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="Wxi-wr-5ND">
+                                <rect key="frame" x="37" y="37" width="84" height="84"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="84" id="Gan-FK-Tva"/>
+                                    <constraint firstAttribute="width" constant="84" id="KRf-Jq-BbR"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Moe’s Cantina River North" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3V-j0-iIQ">
                                 <rect key="frame" x="0.0" y="160" width="158" height="36"/>
                                 <constraints>
@@ -45,8 +57,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="PTn-rt-r7f" secondAttribute="trailing" id="8Oa-go-mvJ"/>
+                            <constraint firstItem="Wxi-wr-5ND" firstAttribute="centerY" secondItem="PTn-rt-r7f" secondAttribute="centerY" id="9es-dk-ICB"/>
                             <constraint firstAttribute="trailing" secondItem="T3V-j0-iIQ" secondAttribute="trailing" id="Bf4-IH-MXb"/>
                             <constraint firstItem="T3V-j0-iIQ" firstAttribute="top" secondItem="PTn-rt-r7f" secondAttribute="bottom" constant="2" id="PTI-l0-Esl"/>
+                            <constraint firstItem="Wxi-wr-5ND" firstAttribute="centerX" secondItem="PTn-rt-r7f" secondAttribute="centerX" id="Rm5-nq-gz4"/>
                             <constraint firstItem="T3V-j0-iIQ" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" id="aa0-zB-Yy8"/>
                             <constraint firstAttribute="width" constant="158" id="gBx-7z-2la"/>
                             <constraint firstItem="PTn-rt-r7f" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" id="hnm-ac-4vK"/>
@@ -115,6 +129,7 @@
             <connections>
                 <outlet property="shimmerView" destination="a8z-mP-0G9" id="xQc-dJ-hSw"/>
                 <outlet property="venueImg" destination="PTn-rt-r7f" id="7xY-LZ-jpb"/>
+                <outlet property="venueLogo" destination="Wxi-wr-5ND" id="6gs-8t-bRN"/>
                 <outlet property="venueName" destination="T3V-j0-iIQ" id="h8v-Tl-OQj"/>
             </connections>
             <point key="canvasLocation" x="85.496183206106863" y="144.36619718309859"/>

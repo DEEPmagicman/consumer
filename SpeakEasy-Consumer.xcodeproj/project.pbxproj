@@ -11,6 +11,8 @@
 		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
 		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
 		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
+		0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */; };
+		0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
 		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
 		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
@@ -41,6 +43,8 @@
 		049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
+		04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */; };
+		04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */; };
 		04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */; };
 		04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
@@ -390,6 +394,8 @@
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
 		04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerViewTVC.xib; sourceTree = "<group>"; };
+		0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueDetailsVC.swift; sourceTree = "<group>"; };
+		0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueDetailsVC.xib; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -412,6 +418,8 @@
 		048CF2522BF22EC500F0D0D7 /* MaintenanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceVC.swift; sourceTree = "<group>"; };
 		048CF2532BF22EC500F0D0D7 /* MaintenanceVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceVC.xib; sourceTree = "<group>"; };
 		049DFCF12B17656C006BD200 /* ShowQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowQRCodeVC.swift; sourceTree = "<group>"; };
+		04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueTVC.swift; sourceTree = "<group>"; };
+		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
 		04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
 		04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -729,6 +737,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0433FB8E2F333135008BC77B /* VenueDetails */ = {
+			isa = PBXGroup;
+			children = (
+				0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */,
+				0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */,
+			);
+			path = VenueDetails;
+			sourceTree = "<group>";
+		};
 		0436D083295966B40087D3DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,6 +797,15 @@
 				048CF2532BF22EC500F0D0D7 /* MaintenanceVC.xib */,
 			);
 			path = Maintenance;
+			sourceTree = "<group>";
+		};
+		04C2E9432F331CA000C5D4FC /* VenueTVC */ = {
+			isa = PBXGroup;
+			children = (
+				04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */,
+				04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */,
+			);
+			path = VenueTVC;
 			sourceTree = "<group>";
 		};
 		04E254C52BFF48F000505774 /* PaymentTVC */ = {
@@ -1271,6 +1297,8 @@
 		CE36C4722EFE698C00F2C75B /* Venues */ = {
 			isa = PBXGroup;
 			children = (
+				0433FB8E2F333135008BC77B /* VenueDetails */,
+				04C2E9432F331CA000C5D4FC /* VenueTVC */,
 				CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */,
 				CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */,
 			);
@@ -1979,6 +2007,7 @@
 				82847A8729828BA600611DC4 /* ticketTypeTableViewCell.xib in Resources */,
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
+				0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */,
 				CE954B8F2C39159500BD3009 /* EventQuestionTVC.xib in Resources */,
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
@@ -2000,6 +2029,7 @@
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
 				6AF2B9EA2F0BA1EC00069A90 /* Inter-Light.ttf in Resources */,
 				6AF2B9EB2F0BA1EC00069A90 /* Inter-SemiBold.ttf in Resources */,
+				04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */,
 				6AF2B9EC2F0BA1EC00069A90 /* Inter-Italic.ttf in Resources */,
 				CE954B9A2C392C8500BD3009 /* DropdownCustomCell.xib in Resources */,
 				CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */,
@@ -2257,6 +2287,7 @@
 				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
 				CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */,
+				0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */,
 				04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */,
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
@@ -2306,6 +2337,7 @@
 				BD532A152941B20100B9E38C /* Constant.swift in Sources */,
 				690DC2782DAFD353007F94C7 /* CustomFeeTVC.swift in Sources */,
 				CE45801A2EF94F9D00A873C4 /* PhotosVC.swift in Sources */,
+				04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */,
 				CE45A5B32C3BC9CA00E1FE3F /* DropDown+Appearance.swift in Sources */,
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,

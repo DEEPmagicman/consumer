@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class UserDefault: NSObject {
     
@@ -28,6 +29,12 @@ final class UserDefault: NSObject {
         }
         return Static.instance
     }
+    
+    private let citySubject = CurrentValueSubject<String, Never>("")
+
+       var localCityPublisher: AnyPublisher<String, Never> {
+           citySubject.eraseToAnyPublisher()
+       }
     
     var accessToken: String? {
         get {
@@ -84,6 +91,7 @@ final class UserDefault: NSObject {
             (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Chicago"
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
+            citySubject.send(newValue)
         }
     }
     

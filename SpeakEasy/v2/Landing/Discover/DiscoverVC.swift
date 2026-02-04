@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class DiscoverVC: UIViewController {
     
@@ -16,6 +17,7 @@ final class DiscoverVC: UIViewController {
     @IBOutlet weak var selectedLocationName: UILabel!
     
     private var viewControllers = [UIViewController]()
+    private var cancellables = Set<AnyCancellable>()
     var startDate: String?
     var endDate: String?
     private var isDateSelected: Bool = false {
@@ -41,6 +43,7 @@ final class DiscoverVC: UIViewController {
         super.viewDidLoad()
         isDateSelected = false
         showSegmentView(0)
+        bindSelectedCity()
     }
     
     @IBAction func onClickCity(_ sender: Any) {
@@ -63,6 +66,24 @@ final class DiscoverVC: UIViewController {
         }
     }
     
+    private func resolvedCity() -> String {
+        let city = UserDefault.shared.localCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return city.isEmpty ? "New York" : city
+    }
+
+    private func bindSelectedCity() {
+        UserDefault.shared.localCityPublisher
+            .removeDuplicates()
+            .map { _ in self.resolvedCity() }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] city in
+                self?.selectedLocationName.text = "\(city)"
+            }
+            .store(in: &cancellables)
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         viewControllers.append(segue.destination)
         switch segue.destination {

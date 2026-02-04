@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24127" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AllVenueVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="SyL-df-egT" id="f1h-U5-WSh"/>
+                <outlet property="venueTitleLbl" destination="947-OE-zCd" id="Szq-5T-A3u"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -41,32 +43,43 @@
                     </constraints>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" image="ic-back"/>
+                    <connections>
+                        <action selector="onClickBackBtn:" destination="-1" eventType="touchUpInside" id="mnL-ZQ-YtI"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Venues in New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="947-OE-zCd">
-                    <rect key="frame" x="16" y="172" width="361" height="31.333333333333343"/>
+                    <rect key="frame" x="16" y="158" width="361" height="31.333333333333343"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="26"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Direct access to your favorite venues for events and premium experiences" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fcy-mG-ztX">
-                    <rect key="frame" x="16" y="205.33333333333334" width="361" height="28.666666666666657"/>
+                    <rect key="frame" x="16" y="191.33333333333334" width="361" height="28.666666666666657"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SyL-df-egT">
+                    <rect key="frame" x="14" y="240" width="365" height="544"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="SyL-df-egT" secondAttribute="bottom" id="2GL-YB-5qA"/>
                 <constraint firstItem="uX0-Wo-aoZ" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="4wm-nY-c7J"/>
                 <constraint firstItem="Fcy-mG-ztX" firstAttribute="top" secondItem="947-OE-zCd" secondAttribute="bottom" constant="2" id="9mu-V3-boQ"/>
                 <constraint firstItem="947-OE-zCd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="ACN-9I-6PN"/>
-                <constraint firstItem="947-OE-zCd" firstAttribute="top" secondItem="uX0-Wo-aoZ" secondAttribute="bottom" constant="24" id="Dpw-AU-t9z"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="SyL-df-egT" secondAttribute="trailing" constant="14" id="Ar2-8u-Y6s"/>
                 <constraint firstItem="5yf-2R-aj5" firstAttribute="top" secondItem="14I-46-ahL" secondAttribute="top" id="ERI-iX-tpf"/>
                 <constraint firstItem="14I-46-ahL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="GSA-5j-IkJ"/>
                 <constraint firstItem="5yf-2R-aj5" firstAttribute="trailing" secondItem="14I-46-ahL" secondAttribute="trailing" id="OZf-gQ-90z"/>
                 <constraint firstItem="14I-46-ahL" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Pij-6Z-1b9"/>
                 <constraint firstItem="uX0-Wo-aoZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="S6k-zr-zdb"/>
+                <constraint firstItem="SyL-df-egT" firstAttribute="top" secondItem="Fcy-mG-ztX" secondAttribute="bottom" constant="20" id="Wyb-9h-iO2"/>
+                <constraint firstItem="SyL-df-egT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="14" id="eO3-n0-mXF"/>
+                <constraint firstItem="SyL-df-egT" firstAttribute="top" secondItem="14I-46-ahL" secondAttribute="bottom" id="eyW-gq-HtQ"/>
                 <constraint firstItem="5yf-2R-aj5" firstAttribute="leading" secondItem="14I-46-ahL" secondAttribute="leading" id="geK-Zr-diX"/>
                 <constraint firstItem="5yf-2R-aj5" firstAttribute="bottom" secondItem="14I-46-ahL" secondAttribute="bottom" id="khr-hS-lu0"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="14I-46-ahL" secondAttribute="trailing" id="kvi-MN-SOb"/>
