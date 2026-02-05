@@ -11,6 +11,8 @@
 		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
 		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
 		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
+		0425E3C92F3460B8005E4130 /* EventDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */; };
+		0425E3CA2F3460B8005E4130 /* EventDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */; };
 		0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */; };
 		0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
@@ -26,6 +28,8 @@
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */; };
 		045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */; };
+		0466858A2F34BE9000AC683E /* TicketSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046685882F34BE9000AC683E /* TicketSelectionViewController.swift */; };
+		0466858B2F34BE9000AC683E /* TicketSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046685892F34BE9000AC683E /* TicketSelectionViewController.xib */; };
 		046866532B0F280F00E498CF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046866522B0F280F00E498CF /* FooterView.swift */; };
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
@@ -394,6 +398,8 @@
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
 		04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerViewTVC.xib; sourceTree = "<group>"; };
+		0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsVC.swift; sourceTree = "<group>"; };
+		0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventDetailsVC.xib; sourceTree = "<group>"; };
 		0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueDetailsVC.swift; sourceTree = "<group>"; };
 		0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueDetailsVC.xib; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -409,6 +415,8 @@
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDetailsTVC.swift; sourceTree = "<group>"; };
 		045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PurchaseDetailsTVC.xib; sourceTree = "<group>"; };
+		046685882F34BE9000AC683E /* TicketSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketSelectionViewController.swift; sourceTree = "<group>"; };
+		046685892F34BE9000AC683E /* TicketSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketSelectionViewController.xib; sourceTree = "<group>"; };
 		046866522B0F280F00E498CF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
@@ -737,6 +745,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0425E3C52F34604F005E4130 /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				046685872F34BE1C00AC683E /* Ticket Checkout */,
+				0425E3C62F346071005E4130 /* EventDetails */,
+			);
+			path = Event;
+			sourceTree = "<group>";
+		};
+		0425E3C62F346071005E4130 /* EventDetails */ = {
+			isa = PBXGroup;
+			children = (
+				0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */,
+				0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */,
+			);
+			path = EventDetails;
+			sourceTree = "<group>";
+		};
 		0433FB8E2F333135008BC77B /* VenueDetails */ = {
 			isa = PBXGroup;
 			children = (
@@ -779,6 +805,15 @@
 				045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */,
 			);
 			path = PurchasesTVC;
+			sourceTree = "<group>";
+		};
+		046685872F34BE1C00AC683E /* Ticket Checkout */ = {
+			isa = PBXGroup;
+			children = (
+				046685882F34BE9000AC683E /* TicketSelectionViewController.swift */,
+				046685892F34BE9000AC683E /* TicketSelectionViewController.xib */,
+			);
+			path = "Ticket Checkout";
 			sourceTree = "<group>";
 		};
 		046866512B0F27B700E498CF /* FooterView */ = {
@@ -1688,6 +1723,7 @@
 				CEE02DA62EFB939F00AC7756 /* Discover */,
 				CE0762DE2EFA9C0300670694 /* Location */,
 				CE0762E82EFAA97B00670694 /* Date Selection */,
+				0425E3C52F34604F005E4130 /* Event */,
 				CE36C4722EFE698C00F2C75B /* Venues */,
 			);
 			path = Landing;
@@ -2012,6 +2048,7 @@
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
+				0466858B2F34BE9000AC683E /* TicketSelectionViewController.xib in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */,
@@ -2039,6 +2076,7 @@
 				CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */,
 				E16705AC28CA6B6E00644BF0 /* CitySelectionTableCell.xib in Resources */,
 				CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */,
+				0425E3C92F3460B8005E4130 /* EventDetailsVC.xib in Resources */,
 				6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
@@ -2205,6 +2243,7 @@
 				824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */,
 				92C961712B8F4DAC00D2EBC1 /* UpSellTicketVC.swift in Sources */,
 				CE677F9A2A4177310025421D /* Invite.swift in Sources */,
+				0425E3CA2F3460B8005E4130 /* EventDetailsVC.swift in Sources */,
 				CE78CDE62A17607D00FA47FC /* ArtistListTVC.swift in Sources */,
 				CE45A5B62C3BC9D800E1FE3F /* DPDKeyboardListener.swift in Sources */,
 				BD942F4329595F6200D52115 /* UserDefault.swift in Sources */,
@@ -2230,6 +2269,7 @@
 				BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */,
 				CAC413F828A478040007BA86 /* NSAttributedString.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
+				0466858A2F34BE9000AC683E /* TicketSelectionViewController.swift in Sources */,
 				CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */,
 				CAC413F328A478040007BA86 /* Date.swift in Sources */,
 				BD942F4729599FED00D52115 /* Loader.swift in Sources */,
