@@ -28,6 +28,8 @@
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */; };
 		045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */; };
+		045D2BFB2F3A163700842613 /* TicketConfirmationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D2BF92F3A163700842613 /* TicketConfirmationVC.swift */; };
+		045D2BFC2F3A163700842613 /* TicketConfirmationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D2BFA2F3A163700842613 /* TicketConfirmationVC.xib */; };
 		046866532B0F280F00E498CF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046866522B0F280F00E498CF /* FooterView.swift */; };
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
@@ -425,6 +427,8 @@
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDetailsTVC.swift; sourceTree = "<group>"; };
 		045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PurchaseDetailsTVC.xib; sourceTree = "<group>"; };
+		045D2BF92F3A163700842613 /* TicketConfirmationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketConfirmationVC.swift; sourceTree = "<group>"; };
+		045D2BFA2F3A163700842613 /* TicketConfirmationVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketConfirmationVC.xib; sourceTree = "<group>"; };
 		046866522B0F280F00E498CF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
@@ -768,6 +772,7 @@
 		0425E3C52F34604F005E4130 /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				045D2BF82F3A15F400842613 /* TicketConfirmation */,
 				04A202C72F36041300900A27 /* Ticket Checkout */,
 				0425E3C62F346071005E4130 /* EventDetails */,
 			);
@@ -828,6 +833,15 @@
 				045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */,
 			);
 			path = PurchasesTVC;
+			sourceTree = "<group>";
+		};
+		045D2BF82F3A15F400842613 /* TicketConfirmation */ = {
+			isa = PBXGroup;
+			children = (
+				045D2BF92F3A163700842613 /* TicketConfirmationVC.swift */,
+				045D2BFA2F3A163700842613 /* TicketConfirmationVC.xib */,
+			);
+			path = TicketConfirmation;
 			sourceTree = "<group>";
 		};
 		046866512B0F27B700E498CF /* FooterView */ = {
@@ -2069,6 +2083,7 @@
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				CEE02DB02EFB97C600AC7756 /* DiscoverDateFilterVC.storyboard in Resources */,
+				045D2BFC2F3A163700842613 /* TicketConfirmationVC.xib in Resources */,
 				04A202EC2F36059F00900A27 /* EventGuestListCVC.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
 				CEE02DB32EFBAE8300AC7756 /* DateSelectionCVC.xib in Resources */,
@@ -2389,6 +2404,7 @@
 				CEBCF6022D48E2FD00B640C8 /* CountryCodePickerViewController.swift in Sources */,
 				CEBCF6032D48E2FD00B640C8 /* PhoneNumberUtility.swift in Sources */,
 				CEBCF6042D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */,
+				045D2BFB2F3A163700842613 /* TicketConfirmationVC.swift in Sources */,
 				CEBCF6052D48E2FD00B640C8 /* MetadataTypes.swift in Sources */,
 				CEBCF6062D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,

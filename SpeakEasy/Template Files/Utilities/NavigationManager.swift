@@ -392,4 +392,19 @@ final class Navigate {
         let vc = TableCheckOutVC(nibName: "TableCheckOutVC", bundle: nil)
         sender.pushVC(vc)
     }
+    
+    func eventDetailsVC(_ sender: UIViewController) {
+        let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
+    func ticketSelectionVc(_ sender: UIViewController) {
+        let vc = TicketSelectionViewController(nibName: "TicketSelectionViewController", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
+    func ticketCheckoutVC(_ sender: UIViewController) {
+        let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
+        sender.pushVC(vc)
+    }
 }
