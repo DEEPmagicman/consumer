@@ -219,6 +219,43 @@ struct Event: Codable {
     }
 }
 
+
+
+//struct Event: Codable {
+//
+//    let id: String
+//    let uniqueId: String?
+//    let venueId: String?
+//    let title: String
+//    let startDateTime: String
+//    let endDateTime: String?
+//
+//    let description: String
+//    let disclaimer: String?
+//
+//    let upfront: Bool?
+//    let showAddress: Bool?
+//    let allowGuestCheckin: Bool?
+//
+//    let totalTickets: Int?
+//    let totalTicketIssued: Int?
+//    let totalTicketSold: Int?
+//    let totalSales: Double?
+//
+//    let coverImages: [String]?
+//    let flyer: Flyer?
+//
+//    let customVenue: CustomVenue?
+//    let venue: Venue?
+//
+//    let eventHasArtist: [EventHasArtist]?
+//    let eventTicket: [EventTicket]?
+//    let eventTicketSettings: EventTicketSettings?
+//
+//    let hasPurchasedTicket: Bool?
+//}
+
+
 struct ArtistData: Codable {
     var artist: Artists
 }

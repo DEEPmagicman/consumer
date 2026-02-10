@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -45,7 +46,7 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <blurEffect style="regular"/>
                 </visualEffectView>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="GuC-Uj-unM">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="GuC-Uj-unM">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P4o-ka-t84">
@@ -87,7 +88,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eu2-4w-br1">
-                                            <rect key="frame" x="28" y="2" width="108" height="16.333333333333332"/>
+                                            <rect key="frame" x="28" y="0.33333333333331439" width="128" height="19.666666666666668"/>
                                             <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -393,7 +394,7 @@
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dSA-7o-70Y">
                                             <rect key="frame" x="0.0" y="519.66666666666663" width="361" height="190"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <color key="backgroundColor" name="errorRed"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="190" id="ec0-Ve-Zh6"/>
                                             </constraints>
@@ -403,7 +404,7 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="egN-iv-3WV">
                                                     <rect key="frame" x="0.0" y="16" width="361" height="300"/>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="backgroundColor" name="TouchBarBezel"/>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -419,7 +420,7 @@
                                             <rect key="frame" x="0.0" y="1025.6666666666665" width="361" height="208.33333333333326"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Lineup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9c-Vf-vOw">
-                                                    <rect key="frame" x="0.0" y="20" width="54.666666666666664" height="28"/>
+                                                    <rect key="frame" x="0.0" y="20" width="60.666666666666664" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="Pyo-3h-Drg"/>
                                                     </constraints>
@@ -507,7 +508,7 @@ All guests must be 21+ with a valid photo ID. Ticket only guarantees entry befor
                                             <rect key="frame" x="0.0" y="1401.6666666666665" width="361" height="158"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FAQs" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="bsP-N1-YTv">
-                                                    <rect key="frame" x="0.0" y="16" width="34" height="20"/>
+                                                    <rect key="frame" x="0.0" y="16" width="35.666666666666664" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="Uh8-ph-I6l"/>
                                                     </constraints>
@@ -546,13 +547,13 @@ All guests must be 21+ with a valid photo ID. Ticket only guarantees entry befor
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E11EVEN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NE7-qo-JFp">
-                                                    <rect key="frame" x="0.0" y="44" width="60.333333333333336" height="25.333333333333329"/>
+                                                    <rect key="frame" x="0.0" y="44" width="60.333333333333336" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="29 NE 11th St, Miami, 33132" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dEI-xf-ry0">
-                                                    <rect key="frame" x="0.0" y="79.333333333333485" width="192.33333333333334" height="17.666666666666671"/>
+                                                    <rect key="frame" x="0.0" y="76" width="188.33333333333334" height="21"/>
                                                     <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                     <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -847,7 +848,6 @@ All guests must be 21+ with a valid photo ID. Ticket only guarantees entry befor
                 <constraint firstItem="jPJ-wl-Wbc" firstAttribute="leading" secondItem="AB7-eZ-LOh" secondAttribute="leading" id="VXK-tM-tBg"/>
                 <constraint firstItem="AB7-eZ-LOh" firstAttribute="trailing" secondItem="fdd-Cf-cGF" secondAttribute="trailing" id="WZH-P1-1ed"/>
                 <constraint firstItem="P4o-ka-t84" firstAttribute="width" secondItem="aiZ-8O-yi7" secondAttribute="width" id="XVE-ZW-PM7"/>
-                <constraint firstItem="P4o-ka-t84" firstAttribute="height" secondItem="aiZ-8O-yi7" secondAttribute="height" priority="250" id="aHM-pY-maF"/>
                 <constraint firstItem="GuC-Uj-unM" firstAttribute="leading" secondItem="AB7-eZ-LOh" secondAttribute="leading" id="asP-ZA-VeK"/>
                 <constraint firstItem="pTR-Hm-w0R" firstAttribute="trailing" secondItem="AB7-eZ-LOh" secondAttribute="trailing" id="fhM-wd-VRL"/>
                 <constraint firstItem="GuC-Uj-unM" firstAttribute="top" secondItem="aiZ-8O-yi7" secondAttribute="top" id="iGY-aF-Jy8"/>
@@ -4394,6 +4394,12 @@ kNOQ3JDkkOaQ6JDqkOyijKKRopminKKhoqkAAAAAAAACAQAAAAAAAAChAAAAAAAAAAAAAAAAAACirA
         </image>
         <image name="iv-leftArrow1" width="35" height="35"/>
         <image name="venueLogo" width="20" height="20"/>
+        <namedColor name="TouchBarBezel">
+            <color red="0.79607843137254897" green="0.18823529411764706" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="errorRed">
+            <color red="1" green="0.0" blue="0.0080000003799796104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

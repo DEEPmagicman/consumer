@@ -157,7 +157,7 @@ final class DiscoverAllVC: UIViewController {
     }
    
     @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {
-        Navigate.to.ticketSelectionVc(self)
+        Navigate.to.eventDetailsVC(self)
     }
 }
 
