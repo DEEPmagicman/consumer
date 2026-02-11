@@ -59,34 +59,130 @@ final class EventPresenter {
         }
     }
     
-    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
-        
-        var param = [String: Any]()
-        if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {
-            param["promotionLinkId"] = promotionLinkId
+//    static func getEventDetail(eventId: String, venueTimeZone: String? = nil, promotionLinkId: String = "", completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventDetail: Event?, _ errCode: Int?) -> Void) {
+//        
+//        var param = [String: Any]()
+//        if promotionLinkId.replacingOccurrences(of: " ", with: "") != "" {
+//            param["promotionLinkId"] = promotionLinkId
+//        }
+//        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
+//            
+//            guard let responseDic = response as? [String: Any] else {
+//                completion(false, nil, nil, nil)
+//                return
+//            }
+//            if let error = responseDic["error"] as? String, let code = responseDic["statusCode"] as? Int {
+//                completion(false, error, nil, code)
+//            } else if let eventList = Event.parse(responseDic) {
+//                completion(true, nil, eventList, nil)
+//            } else {
+//                completion(false, "internal error", nil, nil)
+//            }
+//
+//        } failure: { error in
+//            if let err = error as? NSError, err.code == 0 {
+//                completion(false, err.domain, nil, nil)
+//                return
+//            }
+//            completion(false, nil, nil, nil)
+//        }
+//    }
+    
+    static func getEventDetail(
+        eventId: String,
+        venueTimeZone: String? = nil,
+        promotionLinkId: String = "",
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ eventDetail: Event?,
+                               _ errCode: Int?) -> Void) {
+
+        var params: [String: Any] = [:]
+
+        params["isDiscounted"] = false
+
+        params["include"] = "flyer,customVenue,eventHasArtist.artist,eventTicketSettings,venue,venue.logo,eventSettings"
+
+        if !promotionLinkId.trimmingCharacters(in: .whitespaces).isEmpty {
+            params["promotionLinkId"] = promotionLinkId
         }
-        AFWrapper.getRequest(APIBuilder.eventDetailURL(eventId), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
-            
+
+        AFWrapper.getRequest(
+            APIBuilder.eventDetailURL(eventId),
+            params: params,
+            headers: nil
+        ) { response in
+
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil, nil)
                 return
             }
-            if let error = responseDic["error"] as? String, let code = responseDic["statusCode"] as? Int {
+
+            if let error = responseDic["error"] as? String,
+               let code = responseDic["statusCode"] as? Int {
+
                 completion(false, error, nil, code)
-            } else if let eventList = Event.parse(responseDic) {
-                completion(true, nil, eventList, nil)
+
+            } else if let event = Event.parse(responseDic) {
+
+                completion(true, nil, event, nil)
+
             } else {
+
                 completion(false, "internal error", nil, nil)
             }
 
         } failure: { error in
+
             if let err = error as? NSError, err.code == 0 {
                 completion(false, err.domain, nil, nil)
                 return
             }
+
             completion(false, nil, nil, nil)
         }
     }
+    
+    static func getEventAttendees(
+        eventId: String,
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ attendees: [Attendee]?,
+                               _ errCode: Int?) -> Void) {
+
+        var params: [String: Any] = [:]
+
+        params["include"] = "consumerUserImage"
+        params["take"] = 10
+        params["skip"] = 0
+        params["page"] = 1
+        params["orderBy"] = "createdAt|desc"
+
+        AFWrapper.getRequest(
+            APIBuilder.eventAttendeesURL(eventId),
+            params: params,
+            headers: nil
+        ) { response in
+
+            guard let dict = response as? [String: Any] else {
+                completion(false, nil, nil, nil)
+                return
+            }
+
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(AttendeesResponse.self, from: data)
+                completion(true, nil, decoded.list, nil)
+            } catch {
+                print("Decoding error:", error)
+                completion(false, "Parsing failed", nil, nil)
+            }
+
+        } failure: { error in
+            completion(false, error?.localizedDescription, nil, nil)
+        }
+    }
+
     
     static func eventTicketCheckIn(bookingId: String, ticketIds: [String], completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ chekInData: [BookingHasCheckIn]?) -> Void) {
         

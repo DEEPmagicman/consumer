@@ -220,6 +220,39 @@ struct Event: Codable {
 }
 
 
+struct AttendeesResponse: Codable {
+    var total: Int?
+    var list: [Attendee]?
+    var hasMany: Bool?
+    var count: Int?
+}
+
+
+struct Attendee: Codable {
+
+    var id: String?
+    var firstName: String?
+    var lastName: String?
+    var consumerUserImage: ImageData?
+
+    static func parse(_ dict: [String: Any]) -> Attendee? {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: dict)
+            return try JSONDecoder().decode(Attendee.self, from: data)
+        } catch {
+            print("Attendee parsing error:", error)
+            return nil
+        }
+    }
+}
+
+struct ImageData: Codable {
+    var id: String?
+    var key: String?
+}
+
+
+
 
 //struct Event: Codable {
 //

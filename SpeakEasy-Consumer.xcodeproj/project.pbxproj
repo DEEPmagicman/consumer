@@ -63,6 +63,7 @@
 		04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */; };
 		04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */; };
 		04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */; };
+		04FCDE252F3C56C700D10F90 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
 		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
 		2966E3342980F86000B5E103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
@@ -763,6 +764,7 @@
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
 				CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */,
 				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
+				04FCDE252F3C56C700D10F90 /* YouTubeiOSPlayerHelper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1992,6 +1994,7 @@
 				CECDD9EF2B986DFC007E94A7 /* Reachability */,
 				CE19C1AA2CA44469007050ED /* MHLoadingButton */,
 				6AF2B9C52F09400800069A90 /* GLTFKit2 */,
+				04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -2037,6 +2040,7 @@
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 				CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */,
 				6AF2B9C12F093C5100069A90 /* XCRemoteSwiftPackageReference "GLTFKit2" */,
+				04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -2987,6 +2991,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/youtube/youtube-ios-player-helper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 		69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -3078,6 +3090,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */;
+			productName = YouTubeiOSPlayerHelper;
+		};
 		69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;

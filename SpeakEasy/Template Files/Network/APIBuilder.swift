@@ -68,6 +68,7 @@ struct APIBuilder {
     static private let payments = "/payments"
     static private let complete = "/complete"
     static private let paymentDetails = "/payment-details"
+    static private let attendees = "/attendees"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -178,6 +179,10 @@ struct APIBuilder {
         baseURL + route + event + "/\(id)"
     }
     
+    static func eventAttendeesURL(_ id: String) -> String {
+        return baseURL + "/v2" + route + event + "/\(id)/attendees"
+    }
+
     static func getTicketPasswordAPI(_ eventId: String) -> String {
         baseURL + route + event + "/\(eventId)" + tickets
     }

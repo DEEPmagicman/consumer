@@ -8,10 +8,15 @@
 import UIKit
 
 class EventLineUpCVC: UICollectionViewCell {
-
+    
+    
+    @IBOutlet weak var imageView: UIImageView!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        imageView.layer.cornerRadius = imageView.frame.height / 2
+           imageView.clipsToBounds = true
     }
 
 }

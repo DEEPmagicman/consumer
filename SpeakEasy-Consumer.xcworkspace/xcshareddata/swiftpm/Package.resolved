@@ -1,5 +1,5 @@
 {
-  "originHash" : "902bf350e0889d662dc8d42350ac4b8fbe78d4d6a626d3ca07cd5d2f833f9def",
+  "originHash" : "60c94f61f22df1c192c1e1123d47cdaf5a49622662c2e45caf651ce10416c81f",
   "pins" : [
     {
       "identity" : "abseil-cpp-swiftpm",
@@ -206,6 +206,15 @@
       "state" : {
         "revision" : "c169a5744230951031770e27e475ff6eefe51f9d",
         "version" : "1.33.3"
+      }
+    },
+    {
+      "identity" : "youtube-ios-player-helper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/youtube/youtube-ios-player-helper",
+      "state" : {
+        "revision" : "f57129cd4380ec0a74dd3a59da3270a1d653d59b",
+        "version" : "1.0.4"
       }
     }
   ],
