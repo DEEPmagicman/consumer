@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -30,7 +29,7 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="xnD-0m-Gmx">
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="xnD-0m-Gmx">
                                         <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="KeR-Qk-2nV"/>
@@ -43,7 +42,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="xnD-0m-Gmx" secondAttribute="trailing" id="4H4-lM-9mN"/>
                                     <constraint firstItem="pFt-aQ-RT1" firstAttribute="centerY" secondItem="R98-9v-Xso" secondAttribute="centerY" id="BTa-Mu-BOD"/>
@@ -59,7 +58,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="R98-9v-Xso" secondAttribute="trailing" id="5Nf-0E-z9V"/>
                             <constraint firstAttribute="bottom" secondItem="R98-9v-Xso" secondAttribute="bottom" id="7Pi-1g-tF7"/>
@@ -70,6 +69,7 @@
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="QtN-Qy-6nA" secondAttribute="bottom" id="5aA-Fw-5ew"/>
                 <constraint firstAttribute="trailing" secondItem="QtN-Qy-6nA" secondAttribute="trailing" id="7Xl-CC-W8x"/>
@@ -79,6 +79,7 @@
             <size key="customSize" width="40" height="40"/>
             <connections>
                 <outlet property="attendeesName" destination="pFt-aQ-RT1" id="cZt-E9-4bh"/>
+                <outlet property="bgView" destination="R98-9v-Xso" id="kxd-1N-8aq"/>
                 <outlet property="imageView" destination="xnD-0m-Gmx" id="10Z-Gj-gzh"/>
             </connections>
             <point key="canvasLocation" x="-285.49618320610688" y="90.140845070422543"/>
@@ -86,8 +87,5 @@
     </objects>
     <resources>
         <image name="SampleVenue1" width="358" height="242"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

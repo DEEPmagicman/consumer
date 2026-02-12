@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -79,9 +79,6 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" image="decreaseIc"/>
-                                                        <connections>
-                                                            <action selector="onTapMinus:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="cXK-7H-oY4"/>
-                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -107,9 +104,6 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" image="increaseIc"/>
-                                                        <connections>
-                                                            <action selector="onTapPlus:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="4J4-n5-po1"/>
-                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -122,6 +116,35 @@
                                                     <constraint firstAttribute="width" constant="36" id="pmv-NE-b6d"/>
                                                 </constraints>
                                             </view>
+                                            <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFH-Qy-HBi">
+                                                <rect key="frame" x="36" y="0.0" width="60" height="36"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8p-T5-xKp">
+                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="36"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" title="RSVP"/>
+                                                        <connections>
+                                                            <action selector="onClickRSVPBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="IP2-3j-iFO"/>
+                                                            <action selector="onTapPlus:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="EHO-vU-2zn"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="60" id="LKS-Ue-WCC"/>
+                                                    <constraint firstAttribute="trailing" secondItem="C8p-T5-xKp" secondAttribute="trailing" id="NCS-Pu-M6g"/>
+                                                    <constraint firstAttribute="height" constant="36" id="Wce-I4-J56"/>
+                                                    <constraint firstAttribute="bottom" secondItem="C8p-T5-xKp" secondAttribute="bottom" id="miS-hg-Hk5"/>
+                                                    <constraint firstItem="C8p-T5-xKp" firstAttribute="top" secondItem="eFH-Qy-HBi" secondAttribute="top" id="rA1-fF-CJI"/>
+                                                    <constraint firstItem="C8p-T5-xKp" firstAttribute="leading" secondItem="eFH-Qy-HBi" secondAttribute="leading" id="s6E-DD-8dB"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="18"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -133,6 +156,12 @@
                                     <constraint firstAttribute="bottom" secondItem="kOz-OP-c2L" secondAttribute="bottom" id="w5D-mk-h3h"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="only 12 left" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYV-9A-N1h">
+                                <rect key="frame" x="353" y="98.666666666666671" width="62" height="14.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <constraints>
@@ -140,8 +169,10 @@
                             <constraint firstItem="Tcy-9s-9oL" firstAttribute="leading" secondItem="O1l-C6-mnB" secondAttribute="leading" constant="16" id="3zZ-L2-Cfu"/>
                             <constraint firstItem="Tcy-9s-9oL" firstAttribute="top" secondItem="O1l-C6-mnB" secondAttribute="top" constant="16" id="7YU-fG-ven"/>
                             <constraint firstItem="FZN-ZJ-SOO" firstAttribute="top" secondItem="Tcy-9s-9oL" secondAttribute="bottom" constant="4" id="BFw-Z1-emW"/>
+                            <constraint firstAttribute="bottom" secondItem="EYV-9A-N1h" secondAttribute="bottom" constant="16" id="Mvb-4E-kM6"/>
                             <constraint firstAttribute="bottom" secondItem="FZN-ZJ-SOO" secondAttribute="bottom" constant="16" id="WXG-Cs-Aje"/>
                             <constraint firstAttribute="trailing" secondItem="Tcy-9s-9oL" secondAttribute="trailing" constant="16" id="eNM-o4-umy"/>
+                            <constraint firstAttribute="trailing" secondItem="EYV-9A-N1h" secondAttribute="trailing" constant="16" id="eu6-db-F2x"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -167,12 +198,15 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="inclFeesLbl" destination="C7f-sw-9Cv" id="pqF-qm-GKJ"/>
                 <outlet property="minusBtn" destination="wMp-1o-9bC" id="7oL-Mi-yCc"/>
                 <outlet property="minusView" destination="a3I-Rf-f1Z" id="tsK-ds-IxX"/>
                 <outlet property="plusBtn" destination="Osa-M0-znj" id="dsR-qz-al0"/>
                 <outlet property="plusView" destination="Gz5-Bc-xEc" id="Ro3-yE-Avd"/>
                 <outlet property="priceLbl" destination="2xZ-Wa-6YF" id="wkK-Qh-kbB"/>
                 <outlet property="quantityLbl" destination="3Ka-YX-grf" id="8xG-Xl-YUh"/>
+                <outlet property="rsvpBtnView" destination="eFH-Qy-HBi" id="QAY-Hu-Rfb"/>
+                <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>
             </connections>
             <point key="canvasLocation" x="-78.625954198473281" y="129.22535211267606"/>

@@ -26,6 +26,7 @@ struct EventTicket: Codable {
     var updatedAt: String
     var eventTicketHasTier: [EventTicketHasTier]?
     var selectedTicketCount: Int?
+    var extraFees: Double?
     var remainingQuantity: Int? {
         (issuedUnits ?? 0) - (soldUnits ?? 0)
     }
@@ -71,6 +72,8 @@ struct EventTicket: Codable {
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(updatedAt, forKey: .updatedAt)
         try container.encode(eventTicketHasTier, forKey: .eventTicketHasTier)
+        try container.encode(extraFees, forKey: .extraFees)
+        
     }
 }
 

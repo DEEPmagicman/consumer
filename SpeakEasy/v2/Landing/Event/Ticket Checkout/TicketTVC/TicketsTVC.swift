@@ -7,12 +7,6 @@
 
 import UIKit
 
-struct TicketModel {
-    let title: String
-    let price: Double
-    var quantity: Int
-}
-
 class TicketsTVC: UITableViewCell {
 
     @IBOutlet weak var titleLbl: UILabel!
@@ -22,6 +16,10 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var plusBtn: UIButton!
     @IBOutlet weak var minusView: UIView!
     @IBOutlet weak var plusView: UIView!
+    @IBOutlet weak var ticketLeftLbl: UILabel!
+    @IBOutlet weak var rsvpBtnView: UIView!
+    @IBOutlet weak var inclFeesLbl: UILabel!
+    
     
     var onIncrease: (() -> Void)?
     var onDecrease: (() -> Void)?
@@ -30,15 +28,51 @@ class TicketsTVC: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func configure(ticket: TicketModel) {
-        titleLbl.text = ticket.title
-        priceLbl.text = "₹\(Int(ticket.price))"
-        quantityLbl.text = "\(ticket.quantity)"
+    func configure(ticket: EventTicket, currency: String, whiteLabelColor: String?) {
+        titleLbl.text = ticket.tierName
+        
+        let lowestPrice = ticket.price ?? 0
+     
+
+        if lowestPrice == 0 {
+            priceLbl.text = "FREE"
+        } else {
+            priceLbl.text = "\(currency)\(Double(lowestPrice).decimalFormat(true))"
+        }
+        
+        let fee = ticket.extraFees ?? 0
+        let symbol = currency
+
+        if fee > 0 {
+            inclFeesLbl.isHidden = false
+            inclFeesLbl.text = "(Incl. \(symbol)\(fee.decimalFormat(true)) in fees)"
+        } else {
+            inclFeesLbl.isHidden = true
+        }
+        
+        if let remaining = ticket.remainingQuantity {
+
+            ticketLeftLbl.isHidden = false
+            if remaining == 0 {
+                ticketLeftLbl.text = "Sold Out"
+            } else {
+                ticketLeftLbl.text = "Only \(remaining) left"
+            }
+            
+            if let hex = whiteLabelColor {
+                  let color = UIColor(hex: hex)
+                ticketLeftLbl.textColor = color
+            }
+
+        } else {
+            ticketLeftLbl.isHidden = true
+        }
+
     }
     
-    func showMinusView(ticket: TicketModel) {
-        self.minusView.isHidden = ticket.quantity < 0
-        self.quantityLbl.isHidden = ticket.quantity < 0
+    func showMinusView(ticket: EventTicket) {
+//        self.minusView.isHidden = ticket.quantity < 0
+//        self.quantityLbl.isHidden = ticket.quantity < 0
     }
     
     func hideMinusView() {
@@ -55,5 +89,11 @@ class TicketsTVC: UITableViewCell {
     @IBAction func onTapMinus(_ sender: Any) {
         onDecrease?()
     }
+    
+    @IBAction func onClickRSVPBtn(_ sender: Any) {
+        
+
+    }
+    
 }
 

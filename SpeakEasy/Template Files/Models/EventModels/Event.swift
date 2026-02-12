@@ -18,6 +18,9 @@ struct Event: Codable {
 //    var date: String?
     var startDateTime: String
     var endDateTime: String?
+    var openTimeCustomText: String?
+    var whiteLabelColor: String?
+    var youtubeVideoLink: String?
 //    var eventType: String?
 //    var artistId: String?
 //    var isRecurring: Bool?
@@ -194,6 +197,9 @@ struct Event: Codable {
 //        try container.encode(date, forKey: .date)
         try container.encode(startDateTime, forKey: .startDateTime)
         try container.encode(endDateTime, forKey: .endDateTime)
+        try container.encode(openTimeCustomText, forKey: .openTimeCustomText)
+        try container.encode(whiteLabelColor, forKey: .whiteLabelColor)
+        try container.encode(youtubeVideoLink, forKey: .youtubeVideoLink)
 //        try container.encode(eventType, forKey: .eventType)
 //        try container.encode(artistId, forKey: .artistId)
 //        try container.encode(isRecurring, forKey: .isRecurring)

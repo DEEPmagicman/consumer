@@ -333,6 +333,12 @@ struct VenueSettings: Codable {
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
     var barTabBookingPolicy: String?
+    var websiteUrl: String?
+    var instagramUrl: String?
+    var tiktokUrl: String?
+    var facebookUrl: String?
+    var xUrl: String?
+    var youtubeUrl: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -356,6 +362,12 @@ struct VenueSettings: Codable {
         try container.encodeIfPresent(showCoverDisclaimer, forKey: .showCoverDisclaimer)
         try container.encodeIfPresent(coverDisclaimerText, forKey: .coverDisclaimerText)
         try container.encodeIfPresent(barTabBookingPolicy, forKey: .barTabBookingPolicy)
+        try container.encodeIfPresent(websiteUrl, forKey: .websiteUrl)
+        try container.encodeIfPresent(instagramUrl, forKey: .instagramUrl)
+        try container.encodeIfPresent(tiktokUrl, forKey: .tiktokUrl)
+        try container.encodeIfPresent(facebookUrl, forKey: .facebookUrl)
+        try container.encodeIfPresent(xUrl, forKey: .xUrl)
+        try container.encodeIfPresent(youtubeUrl, forKey: .youtubeUrl)
     }
 }
 

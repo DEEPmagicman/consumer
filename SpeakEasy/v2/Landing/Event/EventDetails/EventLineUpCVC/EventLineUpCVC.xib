@@ -21,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="184" height="182"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="Vac-gj-B1s">
-                                <rect key="frame" x="30" y="0.0" width="124" height="124"/>
+                                <rect key="frame" x="30" y="16" width="124" height="124"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="124" id="WiD-pb-0C7"/>
                                     <constraint firstAttribute="height" constant="124" id="lPK-KF-12j"/>
@@ -33,7 +33,7 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fat Joe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUy-mk-uj8">
-                                <rect key="frame" x="68" y="132" width="48" height="17"/>
+                                <rect key="frame" x="68" y="148" width="48" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -41,7 +41,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Vac-gj-B1s" firstAttribute="top" secondItem="zQQ-rl-MHD" secondAttribute="top" id="Jk2-5X-7b5"/>
+                            <constraint firstItem="Vac-gj-B1s" firstAttribute="top" secondItem="zQQ-rl-MHD" secondAttribute="top" constant="16" id="Jk2-5X-7b5"/>
                             <constraint firstItem="AUy-mk-uj8" firstAttribute="top" secondItem="Vac-gj-B1s" secondAttribute="bottom" constant="8" id="YLR-Eh-eag"/>
                             <constraint firstItem="AUy-mk-uj8" firstAttribute="centerX" secondItem="Vac-gj-B1s" secondAttribute="centerX" id="eOm-tt-89R"/>
                             <constraint firstItem="Vac-gj-B1s" firstAttribute="centerX" secondItem="zQQ-rl-MHD" secondAttribute="centerX" id="vBN-ph-3eX"/>
@@ -58,7 +58,8 @@
             </constraints>
             <size key="customSize" width="184" height="182"/>
             <connections>
-                <outlet property="imageView" destination="Vac-gj-B1s" id="dNp-9w-Tbs"/>
+                <outlet property="imageView" destination="Vac-gj-B1s" id="sHR-NL-n2C"/>
+                <outlet property="nameLbl" destination="AUy-mk-uj8" id="Ekc-GW-HT0"/>
             </connections>
             <point key="canvasLocation" x="-174.04580152671755" y="140.14084507042253"/>
         </collectionViewCell>

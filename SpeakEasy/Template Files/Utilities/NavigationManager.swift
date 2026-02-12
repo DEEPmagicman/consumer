@@ -398,8 +398,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func ticketSelectionVc(_ sender: UIViewController) {
+    func ticketSelectionVc(_ sender: UIViewController, event: Event) {
         let vc = TicketSelectionViewController(nibName: "TicketSelectionViewController", bundle: nil)
+        vc.event = event
         sender.pushVC(vc)
     }
     
