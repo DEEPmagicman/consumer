@@ -371,6 +371,13 @@ class EventDetailsVC: UIViewController {
         
     }
     
+    
+    @IBAction func onClickVIPtable(_ sender: Any) {
+        if let event = self.event {
+            Navigate.to.tableCheckOutVC(self, event: event)
+        }
+    }
+    
     @objc private func toggleDescription() {
 
         isExpanded.toggle()

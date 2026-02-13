@@ -164,7 +164,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b7c-Q1-DnN">
-                                                    <rect key="frame" x="28" y="0.33333333333331439" width="128" height="19.666666666666668"/>
+                                                    <rect key="frame" x="28" y="0.33333333333331439" width="122" height="19.666666666666668"/>
                                                     <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -268,6 +268,13 @@
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nmN-gt-tqw">
                                                                     <rect key="frame" x="260" y="10" width="91" height="31"/>
                                                                     <subviews>
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3X1-oa-zIy">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="91" height="31"/>
+                                                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                            <connections>
+                                                                                <action selector="onClickVIPtable:" destination="-1" eventType="touchUpInside" id="54t-ow-sRy"/>
+                                                                            </connections>
+                                                                        </button>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Book Now" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPa-1P-ZGQ">
                                                                             <rect key="frame" x="16" y="8.3333333333332575" width="59" height="14.333333333333336"/>
                                                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
@@ -277,10 +284,14 @@
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
+                                                                        <constraint firstAttribute="bottom" secondItem="3X1-oa-zIy" secondAttribute="bottom" id="6ZW-Af-u1J"/>
                                                                         <constraint firstAttribute="height" constant="31" id="IyV-2e-50b"/>
                                                                         <constraint firstAttribute="width" constant="91" id="ViP-1W-1X2"/>
                                                                         <constraint firstItem="HPa-1P-ZGQ" firstAttribute="centerX" secondItem="nmN-gt-tqw" secondAttribute="centerX" id="aOM-td-KTZ"/>
+                                                                        <constraint firstItem="3X1-oa-zIy" firstAttribute="leading" secondItem="nmN-gt-tqw" secondAttribute="leading" id="dIs-Ew-VVc"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="3X1-oa-zIy" secondAttribute="trailing" id="f3P-MK-KE1"/>
                                                                         <constraint firstItem="HPa-1P-ZGQ" firstAttribute="centerY" secondItem="nmN-gt-tqw" secondAttribute="centerY" id="h9B-FQ-R6Y"/>
+                                                                        <constraint firstItem="3X1-oa-zIy" firstAttribute="top" secondItem="nmN-gt-tqw" secondAttribute="top" id="jGQ-kN-Fel"/>
                                                                     </constraints>
                                                                     <userDefinedRuntimeAttributes>
                                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -703,7 +714,7 @@ All guests must be 21+ with a valid photo ID. Ticket only guarantees entry befor
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="29 NE 11th St, Miami, 33132" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYG-fT-Pkc">
-                                                            <rect key="frame" x="0.0" y="72" width="188.33333333333334" height="21"/>
+                                                            <rect key="frame" x="0.0" y="72" width="187.33333333333334" height="21"/>
                                                             <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
                                                             <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -1063,7 +1074,7 @@ All guests must be 21+ with a valid photo ID. Ticket only guarantees entry befor
         <image name="shareIconV2" width="20" height="20"/>
         <image name="venueLogo" width="20" height="20"/>
         <namedColor name="AccentColor">
-            <color red="0.52941176470588236" green="0.77254901960784317" blue="0.25098039215686274" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.52899998426437378" green="0.77300000190734863" blue="0.25099998712539673" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="TouchBarBezel">
             <color red="0.79607843137254897" green="0.18823529411764706" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

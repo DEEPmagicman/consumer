@@ -36,8 +36,10 @@ class TicketsTVC: UITableViewCell {
 
         if lowestPrice == 0 {
             priceLbl.text = "FREE"
+            self.rsvpBtnView.isHidden = false
         } else {
             priceLbl.text = "\(currency)\(Double(lowestPrice).decimalFormat(true))"
+            self.rsvpBtnView.isHidden = true
         }
         
         let fee = ticket.extraFees ?? 0

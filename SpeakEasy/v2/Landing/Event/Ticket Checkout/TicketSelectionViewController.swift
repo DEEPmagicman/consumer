@@ -16,6 +16,8 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var ticketTableView: UITableView!
     @IBOutlet weak var hiddenTicketField: UITextField!
     @IBOutlet weak var eventTitleLbl: UILabel!
+    @IBOutlet weak var continueToCheckOutBtn: UIButton!
+    @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
     
     private var tickets: [EventTicket] = []
     var event: Event?
@@ -78,6 +80,7 @@ class TicketSelectionViewController: UIViewController {
         if let hex = self.event?.whiteLabelColor {
               let color = UIColor(hex: hex)
             dateandtimeLbl.textColor = color
+            continueToCheckOutBtn.backgroundColor = color
         }
        
 
@@ -102,15 +105,34 @@ class TicketSelectionViewController: UIViewController {
 
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        Navigate.to.back(self)
     }
     
     @IBAction func onClickLockBtn(_ sender: Any) {
     }
     
     @IBAction func onClickContinueBtn(_ sender: Any) {
-        Navigate.to.ticketCheckoutVC(self)
+        
+//        if UserDefault.shared.isGuest == true {
+//            Navigate.to.login(forceCreateAccount: true)
+//            return
+//        }
+        
+        let selectedTickets = tickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+        
+        guard !selectedTickets.isEmpty else {
+            Alert.showToast("Please select at least one ticket")
+            return
+        }
+        
+        guard let event = event else { return }
+        
+        Navigate.to.ticketCheckoutVC(
+            self,
+            event: event,
+            selectedTickets: selectedTickets
+        )
     }
-    
 }
 
 extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSource {
@@ -146,59 +168,52 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             cell.quantityLbl.text = "\(count)"
             cell.minusView.isHidden = false
         }
-      
-
-        cell.onIncrease = { [weak self] in
-            guard let self = self else { return }
-//            cell.showMinusView(ticket: self.tickets[indexPath.row])
-            tableView.reloadRows(at: [indexPath], with: .none)
-        }
-
-        cell.onDecrease = { [weak self] in
-            guard let self = self else { return }
-//            if self.tickets[indexPath.row].quantity <= 0 {
-//                cell.hideMinusView()
-//            }
-
-//            guard self.tickets[indexPath.row].quantity > 0 else { return }
-
-       
-
-          
-            tableView.reloadRows(at: [indexPath], with: .none)
-        }
-
-
         return cell
     }
     
     @objc func minusBtnClick(_ sender: UIButton) {
-        if let totalTicket = tickets[sender.tag].selectedTicketCount {
-            if totalTicket > 1 {
-                tickets[sender.tag].selectedTicketCount = totalTicket - 1
-                ticketTableView.reloadData()
-//                updateContinueBtn()
-            } else if totalTicket == 1 {
-                tickets[sender.tag].selectedTicketCount = nil
-                ticketTableView.reloadData()
-//                updateContinueBtn(forceRemove: (activeTickets?.firstIndex(where: { $0.selectedTicketCount != nil })) == nil)
+
+        let index = sender.tag
+        
+        guard let totalTicket = tickets[index].selectedTicketCount else { return }
+
+        if totalTicket > 1 {
+            tickets[index].selectedTicketCount = totalTicket - 1
+        } else {
+            tickets[index].selectedTicketCount = nil
+        }
+
+        updateContinueBtnState()
+        let indexPath = IndexPath(row: index, section: 0)
+        ticketTableView.reloadRows(at: [indexPath], with: .none)
+    }
+
+    @objc func plusBtnClick(_ sender: UIButton) {
+
+        let index = sender.tag
+        let totalTicket = tickets[index].selectedTicketCount ?? 0
+        let issuedUnits = tickets[index].issuedUnits ?? 0
+
+        if totalTicket < issuedUnits {
+
+            if let remaining = tickets[index].remainingQuantity,
+               remaining > totalTicket {
+
+                tickets[index].selectedTicketCount = totalTicket + 1
+
+                let indexPath = IndexPath(row: index, section: 0)
+                ticketTableView.reloadRows(at: [indexPath], with: .none)
+                updateContinueBtnState()
             }
+        } else {
+            Alert.showToast("Max ticket selection reached")
         }
     }
     
-    @objc func plusBtnClick(_ sender: UIButton) {
-         let totalTicket = tickets[sender.tag].selectedTicketCount ?? 0
-            if totalTicket < tickets[sender.tag].issuedUnits ?? 0 {
-                
-                if let remaining = tickets[sender.tag].remainingQuantity, remaining > totalTicket {
-                    tickets[sender.tag].selectedTicketCount = totalTicket + 1
-                    ticketTableView.reloadData()
-//                    updateContinueBtn()
-                }
-            }
-            else {
-                Alert.showToast("Max ticket selection reached")
-            }
-        
+    private func updateContinueBtnState() {
+        let isHidden = totalSelectedTickets <= 0
+        continueToCheckOutBtn.isHidden = isHidden
+        continueButtonBottomConstraint.constant = isHidden ? 0 : 32
+        self.view.layoutIfNeeded()
     }
 }

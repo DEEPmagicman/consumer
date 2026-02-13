@@ -18,6 +18,8 @@ class TableCheckOutVC: UIViewController {
     
     private var tablesListVC: TablesListVC?
     
+    var event: Event?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tablesListVC = TablesListVC()

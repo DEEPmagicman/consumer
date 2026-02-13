@@ -388,8 +388,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func tableCheckOutVC(_ sender: UIViewController) {
+    func tableCheckOutVC(_ sender: UIViewController, event: Event) {
         let vc = TableCheckOutVC(nibName: "TableCheckOutVC", bundle: nil)
+        vc.event = event
         sender.pushVC(vc)
     }
     
@@ -404,8 +405,10 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func ticketCheckoutVC(_ sender: UIViewController) {
+    func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = []) {
         let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
+        vc.event = event
+        vc.selectedTickets = selectedTickets
         sender.pushVC(vc)
     }
 }
