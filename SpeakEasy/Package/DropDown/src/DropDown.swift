@@ -1218,7 +1218,7 @@ private extension DispatchQueue {
 	}
 }
 
-@IBDesignable extension UIView {
+extension UIView {
     
     @IBInspectable var shadowColor: UIColor {
         get {

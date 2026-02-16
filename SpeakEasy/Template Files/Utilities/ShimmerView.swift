@@ -7,7 +7,7 @@
 
 import UIKit
 
-@IBDesignable
+//@IBDesignable
 final class ShimmerView: UIView {
 
     var gradientColorOne: CGColor = UIColor(white: 0.24, alpha: 0.4).cgColor
