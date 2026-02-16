@@ -19,6 +19,7 @@ class TableCheckOutVC: UIViewController {
     private var tablesListVC: TablesListVC?
     
     var event: Event?
+    var venueDetails: ClipVenue?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +29,54 @@ class TableCheckOutVC: UIViewController {
     }
     
     private func setupUI() {
-        venueNameNavigationLbl.text = "Nebula New York"
-        eventNameLbl.text = "Fedde Le Grand"
-        venueNameLbl.text = "Nebula New York"
-        timeLbl.text = "Fri, Sep 19 at 9:00 PM"
+        
+        if let venue = event?.venue {
+            self.venueDetails = venue
+        }
+        venueLogoImg.sd_setImage(
+            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+            placeholderImage: Constant.Icon.uploadImage
+        )
+        venueNameLbl.text = venueDetails?.name ?? ""
+        venueNameNavigationLbl.text = venueDetails?.name ?? ""
+        eventNameLbl.text = event?.title
+      
+        if let customText = event?.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            
+            timeLbl.text = customText
+            
+        } else {
+            
+            let timezone = venueDetails?.useTimezone ?? ""
+            
+            let dateText = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            )
+            
+            let startTime = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            )
+            
+            let endTime = event?.endDateTime?.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            ) ?? "LATE"
+            
+            timeLbl.text = "\(dateText ?? "") at \(startTime ?? "") - \(endTime)"
+        
+        }
+        
+        if let hex = self.event?.whiteLabelColor {
+            let color = UIColor(hex: hex)
+            timeLbl.textColor = color
+        }
+        
     }
     
     @IBAction func onCloseTapped(_ sender: Any) {

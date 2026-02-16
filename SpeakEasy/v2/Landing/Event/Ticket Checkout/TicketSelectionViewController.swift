@@ -18,10 +18,13 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var eventTitleLbl: UILabel!
     @IBOutlet weak var continueToCheckOutBtn: UIButton!
     @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var protectedTicketView: UIView!
+    @IBOutlet weak var unLockTF: UITextField!
+    @IBOutlet weak var unLockBtn: UIView!
     private var tickets: [EventTicket] = []
     var event: Event?
     var venueDetails: ClipVenue?
+    private var eventTicketId = [String]()
     private var totalSelectedTickets: Int {
         var total = 0
         tickets.forEach {
@@ -47,6 +50,9 @@ class TicketSelectionViewController: UIViewController {
     private func setupData() {
 
         guard let event = event else { return }
+        
+        let hasProtectedTicket = !(event.protectedEventTicket?.isEmpty ?? true)
+        protectedTicketView.isHidden = !hasProtectedTicket
 
         venueLogoImg.sd_setImage(
             with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
@@ -102,7 +108,47 @@ class TicketSelectionViewController: UIViewController {
  
         ticketTableView.reloadData()
     }
+    
+    private func getTicketByPassWord() {
+        EventPresenter.getEventTicketByPassWord(eventId: "", venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
+            if isSuccess {
+//                self.invalidPasswordLbl.isHidden = !(ticket?.count ?? 0 == 0)
+                let tickets = ticket ?? []
+                for tics in tickets {
+                    if self.eventTicketId.contains(where: { $0 == tics.id}) == false {
+                        self.eventTicketId.append(tics.id ?? "")
+                    }
+                }
+                self.protectedTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
+                    for data in tickets {
+                        if self.event?.protectedEventTicket?.contains(where: {$0.id == data.id}) ?? false == false {
+                            if self.event?.protectedEventTicket == nil {
+//                                self.protectedTickets = [data]
+                                self.event?.protectedEventTicket = [data]
+                            } else {
+//                                self.protectedTickets?.append(data)
+                                self.event?.protectedEventTicket?.append(data)
+                                
+                            }
+                        }
+                    }
+                self.unLockTF.text = ""
+                self.unLockPassword()
+                self.setupData()
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
+            }
+        }
+    }
+    
+    @objc func unLockPassword() {
+        unLockBtn.alpha = unLockTF.text ?? "" == "" ? 0.5 : 1
+        unLockBtn.isUserInteractionEnabled = unLockTF.text ?? "" == "" ? false : true
+    }
 
+    @IBAction func onClickUnLockBtn(_ sender: Any) {
+        
+    }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
         Navigate.to.back(self)
@@ -159,15 +205,9 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
         cell.plusBtn.tag = indexPath.row
         cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
+        cell.rsvpBtn.tag = indexPath.row
+        cell.rsvpBtn.addTarget(self, action: #selector(rsvpbtnClick), for: .touchUpInside)
         
-        if let remaining = tickets[indexPath.row].remainingQuantity, let selectedTicket = tickets[indexPath.row].selectedTicketCount, remaining <= selectedTicket {
-            cell.plusBtn.isHidden = false
-        }
-        if let count  = tickets[indexPath.row].selectedTicketCount, count != 0 {
-            cell.quantityLbl.isHidden = false
-            cell.quantityLbl.text = "\(count)"
-            cell.minusView.isHidden = false
-        }
         return cell
     }
     
@@ -186,6 +226,19 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         updateContinueBtnState()
         let indexPath = IndexPath(row: index, section: 0)
         ticketTableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    
+    @objc func rsvpbtnClick(_ sender: UIButton) {
+        let index = sender.tag
+        let selectedTickets = [tickets[index]]
+        guard let event = event else { return }
+        
+        Navigate.to.ticketCheckoutVC(
+            self,
+            event: event,
+            selectedTickets: selectedTickets
+        )
     }
 
     @objc func plusBtnClick(_ sender: UIButton) {

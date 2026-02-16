@@ -25,6 +25,8 @@ final class DiscoverAllVC: UIViewController {
     private var openHasMore = false
     private var closeFrom = 0
     private var closeHasMore = false
+    private var tonightEventSkip = 2
+    private var todaysEvents = [Event]()
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -37,6 +39,7 @@ final class DiscoverAllVC: UIViewController {
             self.updateShimmerView()
         }
         bindSelectedCity()
+        getTonightEvent()
     }
     
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
@@ -109,6 +112,28 @@ final class DiscoverAllVC: UIViewController {
         }
     }
     
+    
+    private func getTonightEvent() {
+        Loader.show()
+        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20")) { [weak self] isSuccess, errMsg, eventList, hasMore in
+            Loader.hide()
+            guard let self = self else { return }
+            
+            if self.tonightEventSkip == 0 {
+                self.todaysEvents.removeAll()
+            }
+            for event in eventList {
+                self.todaysEvents.append(event)
+            }
+            if hasMore {
+                self.tonightEventSkip = self.todaysEvents.count
+            }
+            isTonightEventInitialLoading = false
+            self.tonightEventCollectionView.reloadData()
+            Loader.hide()
+        }
+    }
+    
     private func updateShimmerView() {
         isTonightEventInitialLoading = false
         tonightEventCollectionView.reloadData()
@@ -157,7 +182,7 @@ final class DiscoverAllVC: UIViewController {
     }
    
     @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {
-        Navigate.to.eventDetailsVC(self)
+      
     }
 }
 
@@ -169,7 +194,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
                         ? 3
                         : min(openVenueList.count, 5)
         case tonightEventCollectionView:
-            return isTonightEventInitialLoading ? 3 : 5
+            return isTonightEventInitialLoading ? 3 : todaysEvents.count
         case allEventsCollectionView:
             return isAllEventInitialLoading ? 3 : 5
         default:
@@ -180,10 +205,20 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView {
         case tonightEventCollectionView:
-            let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
-            cell.shimmerView.isHidden = !isTonightEventInitialLoading
-            cell.shimmerView?.startAnimating()
-            return cell
+            if isTonightEventInitialLoading {
+                let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
+                cell.shimmerView.isHidden = !isTonightEventInitialLoading
+                cell.shimmerView?.startAnimating()
+                return cell
+            } else {
+                let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
+                cell.shimmerView.isHidden = true
+
+                let event = todaysEvents[indexPath.item]
+                cell.setupData(event: event)
+                return cell
+            }
+           
         case venueListCollectionView:
             let cell: VenueCVC = collectionView.dequeue(
                 withIdentifier: VenueCVC.identifier,
@@ -219,4 +254,31 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
             return UICollectionViewCell()
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+           switch collectionView {
+
+           case tonightEventCollectionView:
+               if isTonightEventInitialLoading { return }
+
+               let selectedEvent = todaysEvents[indexPath.item]
+               Navigate.to.eventDetailsVC(self, event: selectedEvent)
+
+           case venueListCollectionView:
+               if isVenueInitialLoading { return }
+
+               let selectedVenue = openVenueList[indexPath.item]
+//               Navigate.to.venueDetailsVC(self, venue: selectedVenue)
+
+           case allEventsCollectionView:
+               if isAllEventInitialLoading { return }
+
+//               let selectedEvent = allEvents[indexPath.item]   // make sure this array exists
+//               Navigate.to.eventDetailsVC(self, event: selectedEvent)
+
+           default:
+               break
+           }
+       }
 }

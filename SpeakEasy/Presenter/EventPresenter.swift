@@ -8,13 +8,13 @@
 import Foundation
 
 final class EventPresenter {
-    static func getEvents(from: Int? = 0, venueId: String, time: String = "FUTURE", venueTimeZone: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
+    static func getEvents(from: Int? = 0, venueId: String, time: String = "FUTURE", venueTimeZone: String? = nil, city: String? = nil, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ eventList: [Event], _ hasMore: Bool) -> Void) {
         let param = ["skip": from ?? 0,
-                     "venueId": venueId,
                      "version": "PUBLISHED",
                      "eventStatus": "APPROVED",
                      "timeVersion": time,
                      "status": "ENABLED",
+                     "city": city ?? "",
                      "orderBy": "startDateTime|asc"] as [String : Any]
         AFWrapper.getRequest(APIBuilder.`eventURL`(includes: ["eventTicket", "venue.venueSettings", "flyer", "customVenue"]), params: param, headers: Header.header(timeZone: venueTimeZone)) { response in
             

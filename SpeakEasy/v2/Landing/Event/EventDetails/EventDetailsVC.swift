@@ -44,6 +44,13 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var ticketsTitleLbl: UILabel!
     @IBOutlet weak var noHiddenFeesLbl: UILabel!
     @IBOutlet weak var buyNowBtnLbl: UILabel!
+    @IBOutlet weak var attendeesView: UIView!
+    @IBOutlet weak var imageListHiddenView: UIView!
+    @IBOutlet weak var lineUpHiddenView: UIView!
+    @IBOutlet weak var vipTablesView: UIView!
+    @IBOutlet weak var linkView: UIView!
+    @IBOutlet weak var guestListTitleLbl: UILabel!
+    @IBOutlet weak var youTubeSuperView: UIView!
     
     private var imagePagerVC: ImagePagerVC?
     private let lineUpCount = 6
@@ -52,7 +59,6 @@ class EventDetailsVC: UIViewController {
     private var isExpanded = false
     private let collapsedLines = 3
     private var fullText = ""
-    var eventId = "EVE-GLHDR1"
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
@@ -69,13 +75,11 @@ class EventDetailsVC: UIViewController {
         setupTableView()
         setupImagePager()
         getEventDetail()
-        getEventAttendees()
-
     }
     
     
     private func getEventDetail() {
-        if eventId  == "" {
+        guard let eventId  = self.event?.uniqueId else {
             return
         }
         Loader.show()
@@ -102,7 +106,30 @@ class EventDetailsVC: UIViewController {
                     self.eventTicketId.append(tic.id ?? "")
                 })
                 self.artists = self.event?.eventHasArtist?.filter( { $0.artist.status == "ENABLED" }) ?? []
+                if self.artists.isEmpty {
+                    self.lineUpHiddenView.isHidden = true
+                } else {
+                    self.lineUpHiddenView.isHidden = false
+                }
+              
+                
+                self.getEventAttendees()
                 self.lineUpCollectionView.reloadData()
+             
+                if let show = self.event?.showEventAttendees {
+                    print("Value from backend:", show)
+                    
+                    if show {
+                        self.attendeesView.isHidden = false
+                        self.getEventAttendees()
+                    } else {
+                        self.attendeesView.isHidden = true
+                    }
+                } else {
+                    print("showEventAttendees is nil")
+                    self.attendeesView.isHidden = true
+                }
+
                 self.setupData()
             }
         }
@@ -110,16 +137,34 @@ class EventDetailsVC: UIViewController {
     
     private func getEventAttendees() {
 
+        guard let eventId  = self.event?.uniqueId else {
+            return
+        }
         EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, message, data, code in
 
             guard let self = self else { return }
 
             if success {
                 self.attendees = data ?? []
-                self.totalAttendees = data?.count ?? 0
+                self.totalAttendees = self.attendees.count
+                
                 self.guestListCollectionView.reloadData()
-            } else {
-                print("Attendees error:", message ?? "")
+                self.attendeesView.isHidden = self.attendees.isEmpty
+            
+                if let firstAttendee = self.attendees.first {
+                    let firstName = firstAttendee.firstName ?? ""
+                    let count = self.attendees.count
+                    
+                    if count == 1 {
+                        self.guestListTitleLbl.text = "\(firstName) is going"
+                    } else if count > 1 {
+                        let othersCount = count - 1
+                        let otherText = othersCount == 1 ? "other" : "others"
+                        self.guestListTitleLbl.text = "\(firstName) and \(othersCount) \(otherText) going"
+                    }
+                } else {
+                    self.guestListTitleLbl.text = ""
+                }
             }
         }
     }
@@ -136,14 +181,23 @@ class EventDetailsVC: UIViewController {
         venueName.text = "\(venueDetails?.name ?? "")"
         venueAddressLbl.text = venueDetails?.address ?? ""
         venueTitleLbl.text = "\(venueDetails?.name ?? "")"
+        
+        if event?.isEnableOnlineTables ?? false {
+            self.vipTablesView.isHidden = false
+        } else {
+            self.vipTablesView.isHidden = true
+        }
+        
+        
         if let youtubeVideoLink = event?.youtubeVideoLink, !youtubeVideoLink.isEmpty {
-            self.youTubePlayerView.isHidden = false
+            self.youTubeSuperView.isHidden = false
+            self.youTubeSuperView.isHidden = false
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
                 playerView.load(withVideoId: id)
             }
         } else {
-            self.youTubePlayerView.isHidden = true
+            self.youTubeSuperView.isHidden = true
         }
         
         venueLogoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
@@ -210,7 +264,7 @@ class EventDetailsVC: UIViewController {
         if event?.eventTicketSettings?.isUpFront == true {
             filteredProtectedTickets = event?.modifiedPasswordProtectedTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         } else {
-            filteredProtectedTickets = event?.passwordProtrectedTickets?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+            filteredProtectedTickets = event?.protectedEventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         }
 //            if activeTickets == nil {
 //              activeTickets = filteredProtectedTickets
@@ -229,10 +283,14 @@ class EventDetailsVC: UIViewController {
         if event?.eventTicket == nil {
         } else {
             if event?.isPausedSellingAllTickets == true {
-            } else if event?.isSoldOutAllTickets == true {
                 ticketsTitleLbl.text = "Tickets from Free"
+            } else if event?.isSoldOutAllTickets == true {
+                ticketsTitleLbl.text = "It was a great time!"
+                buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
             } else if event?.eventTicket?.count ?? 0 == 0 {
-//                continueBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+                ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
+                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+                
 //                isNotSellingStage = true
 //                updateContinueBtn()
             } else {

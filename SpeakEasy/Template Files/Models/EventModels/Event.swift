@@ -38,14 +38,18 @@ struct Event: Codable {
 //    var updatedAt: String
 //    var floorPlanId: String?
     var eventTicket: [EventTicket]?
-    var passwordProtrectedTickets: [EventTicket]?
     var venue: ClipVenue?
     var eventHasArtist: [ArtistData]?
     var showAddress: Bool?
     var totalTickets: Int?
     var allowGuestCheckin: Bool?
     var eventTicketSettings: EventTicketSettings?
-    
+    var showEventAttendees: Bool?
+    var protectedEventTicket: [EventTicket]?
+    var isEnableOnlineTables: Bool
+    var isEnable3DMap: Bool
+    var isEnableReservationRequest: Bool
+    var eventAddOnTicket: [EventTicket]?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
         let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }
@@ -69,7 +73,7 @@ struct Event: Codable {
     var modifiedPasswordProtectedTicket: [EventTicket] {
         var ticketData = [EventTicket]()
         
-        passwordProtrectedTickets?.enumerated().forEach({ index, ticket in
+        protectedEventTicket?.enumerated().forEach({ index, ticket in
             ticketData.append(ticket)
             
             let taxRate = eventTicketSettings?.isEnableSalesTax == true ? Double(eventTicketSettings?.salesTax ?? 0) : 0 / 100.0
@@ -212,6 +216,7 @@ struct Event: Codable {
         try container.encode(description, forKey: .description)
         try container.encode(disclaimer, forKey: .disclaimer)
         try container.encode(upfront, forKey: .upfront)
+        try container.encode(showEventAttendees, forKey: .showEventAttendees)
 //        try container.encode(isDeleted, forKey: .isDeleted)
 //        try container.encode(createdAt, forKey: .createdAt)
 //        try container.encode(updatedAt, forKey: .updatedAt)

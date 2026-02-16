@@ -117,22 +117,18 @@
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFH-Qy-HBi">
-                                                <rect key="frame" x="36" y="0.0" width="60" height="36"/>
+                                                <rect key="frame" x="36" y="0.0" width="72" height="36"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8p-T5-xKp">
-                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="36"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="72" height="36"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="RSVP"/>
-                                                        <connections>
-                                                            <action selector="onClickRSVPBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="IP2-3j-iFO"/>
-                                                            <action selector="onTapPlus:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="EHO-vU-2zn"/>
-                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="60" id="LKS-Ue-WCC"/>
+                                                    <constraint firstAttribute="width" constant="72" id="LKS-Ue-WCC"/>
                                                     <constraint firstAttribute="trailing" secondItem="C8p-T5-xKp" secondAttribute="trailing" id="NCS-Pu-M6g"/>
                                                     <constraint firstAttribute="height" constant="36" id="Wce-I4-J56"/>
                                                     <constraint firstAttribute="bottom" secondItem="C8p-T5-xKp" secondAttribute="bottom" id="miS-hg-Hk5"/>
@@ -205,6 +201,7 @@
                 <outlet property="plusView" destination="Gz5-Bc-xEc" id="Ro3-yE-Avd"/>
                 <outlet property="priceLbl" destination="2xZ-Wa-6YF" id="wkK-Qh-kbB"/>
                 <outlet property="quantityLbl" destination="3Ka-YX-grf" id="8xG-Xl-YUh"/>
+                <outlet property="rsvpBtn" destination="C8p-T5-xKp" id="3Fk-tw-Tyg"/>
                 <outlet property="rsvpBtnView" destination="eFH-Qy-HBi" id="QAY-Hu-Rfb"/>
                 <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>

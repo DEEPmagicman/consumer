@@ -15,7 +15,10 @@
                 <outlet property="dateandtimeLbl" destination="ZIU-O8-eVe" id="cbw-Rc-gQV"/>
                 <outlet property="eventTitleLbl" destination="22C-en-57q" id="ngL-Jd-Gxe"/>
                 <outlet property="hiddenTicketField" destination="yqm-h6-9ME" id="h7k-m5-EOM"/>
+                <outlet property="protectedTicketView" destination="3EF-mc-0tR" id="M0Q-WJ-hUq"/>
                 <outlet property="ticketTableView" destination="E8z-Q1-vlH" id="ph2-ib-Oqf"/>
+                <outlet property="unLockBtn" destination="7in-M4-Z5o" id="hBb-Qo-e2G"/>
+                <outlet property="unLockTF" destination="yqm-h6-9ME" id="Xq8-cj-zCo"/>
                 <outlet property="venueLogoImg" destination="qsq-CS-o4P" id="ibe-8Q-ozk"/>
                 <outlet property="venueName" destination="1MJ-rX-z9x" id="7Je-lh-ieU"/>
                 <outlet property="venueName2" destination="7id-Hy-iWy" id="cBj-QB-DP4"/>
@@ -113,12 +116,12 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nc1-TR-YLd">
-                            <rect key="frame" x="0.0" y="268.66666666666669" width="393" height="36"/>
+                            <rect key="frame" x="0.0" y="268.66666666666669" width="393" height="0.0"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="RPA-K5-Qvo">
-                                    <rect key="frame" x="14" y="0.0" width="365" height="36"/>
+                                    <rect key="frame" x="14" y="0.0" width="365" height="0.0"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3EF-mc-0tR">
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3EF-mc-0tR">
                                             <rect key="frame" x="0.0" y="0.0" width="365" height="36"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RrB-LW-HTf">
@@ -166,7 +169,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                             <connections>
-                                                                <action selector="onClickLockBtn:" destination="-1" eventType="touchUpInside" id="uON-N4-qKE"/>
+                                                                <action selector="onClickUnLockBtn:" destination="-1" eventType="touchUpInside" id="vjg-pz-z2B"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -217,7 +220,7 @@
                             </constraints>
                         </view>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="E8z-Q1-vlH">
-                            <rect key="frame" x="16" y="304.66666666666674" width="361" height="499.33333333333326"/>
+                            <rect key="frame" x="16" y="268.66666666666669" width="361" height="535.33333333333326"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </tableView>
                     </subviews>

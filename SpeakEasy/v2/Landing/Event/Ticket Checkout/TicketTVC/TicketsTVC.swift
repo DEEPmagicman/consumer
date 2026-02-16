@@ -19,11 +19,8 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var ticketLeftLbl: UILabel!
     @IBOutlet weak var rsvpBtnView: UIView!
     @IBOutlet weak var inclFeesLbl: UILabel!
+    @IBOutlet weak var rsvpBtn: UIButton!
     
-    
-    var onIncrease: (() -> Void)?
-    var onDecrease: (() -> Void)?
-
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -32,14 +29,25 @@ class TicketsTVC: UITableViewCell {
         titleLbl.text = ticket.tierName
         
         let lowestPrice = ticket.price ?? 0
-     
-
+        
         if lowestPrice == 0 {
             priceLbl.text = "FREE"
             self.rsvpBtnView.isHidden = false
+            self.plusView.isHidden = true
         } else {
             priceLbl.text = "\(currency)\(Double(lowestPrice).decimalFormat(true))"
             self.rsvpBtnView.isHidden = true
+            
+            self.plusBtn.isHidden = false
+            self.plusView.isHidden = false
+            if let remaining = ticket.remainingQuantity, let selectedTicket = ticket.selectedTicketCount, remaining <= selectedTicket {
+                plusView.isHidden = false
+            }
+            if let count  = ticket.selectedTicketCount, count != 0 {
+                quantityLbl.isHidden = false
+                quantityLbl.text = "\(count)"
+                minusView.isHidden = false
+            }
         }
         
         let fee = ticket.extraFees ?? 0
@@ -81,21 +89,5 @@ class TicketsTVC: UITableViewCell {
         self.minusView.isHidden = true
         self.quantityLbl.isHidden = true
     }
-    
-    
-
-    @IBAction func onTapPlus(_ sender: Any) {
-        onIncrease?()
-    }
-
-    @IBAction func onTapMinus(_ sender: Any) {
-        onDecrease?()
-    }
-    
-    @IBAction func onClickRSVPBtn(_ sender: Any) {
-        
-
-    }
-    
 }
 

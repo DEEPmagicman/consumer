@@ -90,12 +90,13 @@ class TicketCheckoutVC: UIViewController {
             let price = ticket.price ?? 0
             return result + (Double(quantity) * price)
         }
-
-//        let fees = getFeesAndTaxes().reduce(0.0) { $0 + $1.amount }
-
-//        let grandTotal = subtotal + fees
-
-        totalAmountLbl.text = "\(currency)\(subtotal.decimalFormat(true))"
+        
+        if subtotal == 0 {
+            totalAmountLbl.text = "Free"
+        } else {
+            totalAmountLbl.text = "\(currency)\(subtotal.decimalFormat(true))"
+        }
+        
         if let hex = self.event?.whiteLabelColor {
               let color = UIColor(hex: hex)
             dateandtimeLbl.textColor = color
@@ -163,6 +164,11 @@ class TicketCheckoutVC: UIViewController {
     @IBAction func onClickSubmitPromoBtn(_ sender: Any) {
         
     }
+    
+    @IBAction func onClickCloseBtn(_ sender: Any) {
+        Navigate.to.back(self)
+    }
+    
     
     override func observeValue(forKeyPath keyPath: String?,
                                of object: Any?,

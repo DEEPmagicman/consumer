@@ -78,6 +78,9 @@
                                     </constraints>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" image="closeIc"/>
+                                    <connections>
+                                        <action selector="onClickCloseBtn:" destination="-1" eventType="touchUpInside" id="0hi-Jt-Gc9"/>
+                                    </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fedde Le Grand" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KXw-kb-skm">
                                     <rect key="frame" x="107.00000000000001" y="44" width="179.33333333333337" height="28.666666666666671"/>
@@ -372,7 +375,7 @@
                                                                             </constraints>
                                                                         </view>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zXO-rw-fQk">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="365" height="0.6666666666666643"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="365" height="0.66666666666666663"/>
                                                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20043684731067066" colorSpace="calibratedRGB"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="0.5" id="NgO-0K-g0i"/>

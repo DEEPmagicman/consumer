@@ -165,7 +165,7 @@ final class EventDetailVC: UIViewController {
         if event?.eventTicketSettings?.isUpFront == true {
             filteredProtectedTickets = event?.modifiedPasswordProtectedTicket.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         } else {
-            filteredProtectedTickets = event?.passwordProtrectedTickets?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
+            filteredProtectedTickets = event?.protectedEventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && ($0.issuedUnits ?? 0 >= $0.soldUnits ?? 0)} ?? []
         }
             if activeTickets == nil {
               activeTickets = filteredProtectedTickets
@@ -327,13 +327,13 @@ final class EventDetailVC: UIViewController {
                 }
                 self.unLockTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
                     for data in tickets {
-                        if self.event?.passwordProtrectedTickets?.contains(where: {$0.id == data.id}) ?? false == false {
-                            if self.event?.passwordProtrectedTickets == nil {
+                        if self.event?.protectedEventTicket?.contains(where: {$0.id == data.id}) ?? false == false {
+                            if self.event?.protectedEventTicket == nil {
 //                                self.protectedTickets = [data]
-                                self.event?.passwordProtrectedTickets = [data]
+                                self.event?.protectedEventTicket = [data]
                             } else {
 //                                self.protectedTickets?.append(data)
-                                self.event?.passwordProtrectedTickets?.append(data)
+                                self.event?.protectedEventTicket?.append(data)
                                 
                             }
                         }
@@ -644,7 +644,7 @@ extension EventDetailVC: UpdateDetailDelegate {
         Loader.show()
         event?.eventTicket?.removeAll()
         activeTickets?.removeAll()
-        event?.passwordProtrectedTickets?.removeAll()
+        event?.protectedEventTicket?.removeAll()
         unLockTicketView.isHidden = true
         updateContinueBtn(forceRemove: true)
         getEventDetail()
