@@ -412,4 +412,13 @@ final class Navigate {
         vc.selectedTickets = selectedTickets
         sender.pushVC(vc)
     }
+    
+    func tableSeatingVC(_ sender: UIViewController, seatingArea: SeatingArea) {
+        let vc = TableSeatingViewController(
+            nibName: "TableSeatingViewController",
+            bundle: nil
+        )
+        vc.seatingArea = seatingArea
+        sender.present(vc, animated: true)
+    }
 }

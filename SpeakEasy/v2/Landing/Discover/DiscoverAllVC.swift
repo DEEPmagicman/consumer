@@ -25,7 +25,7 @@ final class DiscoverAllVC: UIViewController {
     private var openHasMore = false
     private var closeFrom = 0
     private var closeHasMore = false
-    private var tonightEventSkip = 2
+    private var tonightEventSkip = 10
     private var todaysEvents = [Event]()
     
     private var cancellables = Set<AnyCancellable>()

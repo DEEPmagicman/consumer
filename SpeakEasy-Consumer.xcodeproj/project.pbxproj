@@ -59,6 +59,11 @@
 		04A202F22F3605D400900A27 /* EventLineUpCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F12F3605D400900A27 /* EventLineUpCVC.xib */; };
 		04A202F52F36060D00900A27 /* FAQsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */; };
 		04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F62F36061000900A27 /* FAQsTableViewCell.xib */; };
+		04A4331B2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
+		04A4331C2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
+		04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331D2F442DFB00FB119A /* TablePresenter.swift */; };
+		04A433212F444B3800FB119A /* TableSeatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */; };
+		04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A433202F444B3800FB119A /* TableSeatingViewController.xib */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
 		04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */; };
@@ -455,6 +460,10 @@
 		04A202F12F3605D400900A27 /* EventLineUpCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventLineUpCVC.xib; sourceTree = "<group>"; };
 		04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQsTableViewCell.swift; sourceTree = "<group>"; };
 		04A202F62F36061000900A27 /* FAQsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FAQsTableViewCell.xib; sourceTree = "<group>"; };
+		04A4331A2F442D9100FB119A /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		04A4331D2F442DFB00FB119A /* TablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePresenter.swift; sourceTree = "<group>"; };
+		04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSeatingViewController.swift; sourceTree = "<group>"; };
+		04A433202F444B3800FB119A /* TableSeatingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableSeatingViewController.xib; sourceTree = "<group>"; };
 		04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueTVC.swift; sourceTree = "<group>"; };
 		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
 		04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
@@ -926,6 +935,14 @@
 			path = FAQsTableViewCell;
 			sourceTree = "<group>";
 		};
+		04A433192F442D7000FB119A /* TableModel */ = {
+			isa = PBXGroup;
+			children = (
+				04A4331A2F442D9100FB119A /* Table.swift */,
+			);
+			path = TableModel;
+			sourceTree = "<group>";
+		};
 		04C2E9432F331CA000C5D4FC /* VenueTVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -990,6 +1007,7 @@
 				CEE520CB29ED653300B916C8 /* PaymentPresenter.swift */,
 				CE677F962A41720F0025421D /* InvitePresenter.swift */,
 				CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */,
+				04A4331D2F442DFB00FB119A /* TablePresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -1051,6 +1069,8 @@
 				6AF2B9F52F0BC9CF00069A90 /* TableBookingListVC.xib */,
 				6AF2B9F82F0BC9EF00069A90 /* TableRequestVC.swift */,
 				6AF2B9F92F0BC9EF00069A90 /* TableRequestVC.xib */,
+				04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */,
+				04A433202F444B3800FB119A /* TableSeatingViewController.xib */,
 			);
 			path = TablesCheckOutScreens;
 			sourceTree = "<group>";
@@ -1627,6 +1647,7 @@
 				CE0F423B29FBE69A0082723B /* Booking */,
 				29868364297567FB00CB827B /* EventModels */,
 				298683592975657200CB827B /* VenueModels */,
+				04A433192F442D7000FB119A /* TableModel */,
 				CE4867D9286F392900FD277E /* UserModel */,
 			);
 			path = Models;
@@ -2098,6 +2119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */,
+				04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */,
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				CEE02DB02EFB97C600AC7756 /* DiscoverDateFilterVC.storyboard in Resources */,
@@ -2291,6 +2313,7 @@
 				04862C142B9719DC00836598 /* ticketTypeTableViewCell.swift in Sources */,
 				2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */,
 				69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */,
+				04A4331B2F442D9100FB119A /* Table.swift in Sources */,
 				CEB6542C2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
 				04862C182B975F9000836598 /* QRClipVC.swift in Sources */,
 				691574662A0CD0EF002F303A /* Stripe.swift in Sources */,
@@ -2401,6 +2424,7 @@
 				CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */,
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
 				CE36C4712EFE513200F2C75B /* ShimmerView.swift in Sources */,
+				04A4331C2F442D9100FB119A /* Table.swift in Sources */,
 				6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */,
 				E16705AD28CA6B6E00644BF0 /* CitySelectionTableCell.swift in Sources */,
 				049DFCF22B17656C006BD200 /* ShowQRCodeVC.swift in Sources */,
@@ -2434,6 +2458,7 @@
 				0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */,
 				04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */,
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
+				04A433212F444B3800FB119A /* TableSeatingViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
@@ -2504,6 +2529,7 @@
 				CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
+				04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				CE8C62D92EF95965008D1FDF /* SideMenuVC.swift in Sources */,
 				69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */,

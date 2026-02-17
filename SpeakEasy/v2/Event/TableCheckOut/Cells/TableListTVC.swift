@@ -22,6 +22,9 @@ class TableListTVC: UITableViewCell {
         .foregroundColor: UIColor(hex: "#D2D5DB")
     ]
     
+    var onBookTap: (() -> Void)?
+
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -81,5 +84,10 @@ class TableListTVC: UITableViewCell {
 
         return text
     }
+    
+    @IBAction func bookButtonTapped(_ sender: UIButton) {
+        onBookTap?()
+    }
+
 
 }

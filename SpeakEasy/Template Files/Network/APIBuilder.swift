@@ -69,6 +69,7 @@ struct APIBuilder {
     static private let complete = "/complete"
     static private let paymentDetails = "/payment-details"
     static private let attendees = "/attendees"
+    static private let seatingAreas = "/seating-areas"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
@@ -170,6 +171,29 @@ struct APIBuilder {
     static func eventURL(includes: [String]) -> String {
         baseURL + route + event + "?" + includes.map { String(format: "include=%@", $0) }.joined(separator: "&")
     }
+        
+    static func seatingAreasURL(
+        eventId: String,
+        includes: [String] = [],
+        take: Int = 50,
+        skip: Int = 0,
+        page: Int = 1,
+        orderBy: String = "order|asc"
+    ) -> String {
+        
+        let base = SharedURL.tableBaseURL + route  + event + "/\(eventId)" + seatingAreas
+        
+        var queryItems: [String] = []
+        
+        queryItems += includes.map { "include=\($0)" }
+        queryItems.append("take=\(take)")
+        queryItems.append("skip=\(skip)")
+        queryItems.append("page=\(page)")
+        queryItems.append("orderBy=\(orderBy.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
+        
+        return base + "?" + queryItems.joined(separator: "&")
+    }
+
     
     static var recommendedEventURL: String {
         baseURL + route + event + recommendedEvents

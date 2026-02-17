@@ -89,7 +89,7 @@ extension TableRequestVC {
         // Fields
         stack.addArrangedSubview(makeInputField(icon: "calendar", placeholder: "Reservation date *", field: &dateField))
         stack.addArrangedSubview(makeInputField(icon: "clock", placeholder: "Arrival time *", field: &timeField))
-        stack.addArrangedSubview(makeInputField(icon: "person.2", placeholder: "Party size *", field: &partyField))
+        stack.addArrangedSubview(makeInputField(icon: "ic_outline-people", placeholder: "Party size *", field: &partyField))
 
         // Comment box
         stack.addArrangedSubview(makeCommentBox())
@@ -116,13 +116,14 @@ extension TableRequestVC {
         field: inout UITextField!
     ) -> UIView {
 
-        let iconView = UIImageView(image: UIImage(systemName: icon))
+        let iconView = UIImageView(image: UIImage(named: icon))
         iconView.tintColor = .black
         iconView.widthAnchor.constraint(equalToConstant: 18).isActive = true
+        iconView.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        iconView.contentMode = .scaleAspectFill
 
         let tf = UITextField()
 
-        // ✅ Placeholder color set here
         tf.attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [

@@ -49,7 +49,7 @@ final class Tables3DMapVC: UIViewController {
         setupCameraGestures()
         
         // replace with server URL
-        loadGLB_Local()
+        loadGLB_Local(from: "stage/url3dmap/d-1769428276878-lBfa.glb")
     }
 }
 
@@ -73,12 +73,25 @@ private extension Tables3DMapVC {
 
 private extension Tables3DMapVC {
     
-    func loadGLB_Local() {
-//        guard let url = Bundle.main.url(forResource: "hotel_map", withExtension: "glb") else {
-//            fatalError("GLB not found")
-//        }
-//        loadGLB(from: url)
+    func loadGLB_Local(from path: String) {
+        
+        let baseURL = "https://media.speakeasygo.com/"
+        
+        guard let url = URL(string: baseURL + path) else {
+            print("Invalid GLB URL")
+            return
+        }
+        
+        loadGLB(from: url)
     }
+
+//    
+//    func loadGLB_Local() {
+////        guard let url = Bundle.main.url(forResource: "hotel_map", withExtension: "glb") else {
+////            fatalError("GLB not found")
+////        }
+////        loadGLB(from: url)
+//    }
     
     // SERVER READY
     func loadGLB(from url: URL) {

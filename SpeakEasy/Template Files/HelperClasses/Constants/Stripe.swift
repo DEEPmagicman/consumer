@@ -20,6 +20,7 @@ struct SharedURL {
     static let baseURL = "https://preprod.speakeasygo.com"
     static let webBaseURL = "https://dev-consumer.speakeasygo.com"
     static let isEncryptionEnabled = false
+    static let tableBaseURL = "https://table-preprod.speakeasygo.com"
 #else
     static let baseURL = "https://production.speakeasygo.com"
     static let webBaseURL = "https://speakeasygo.com"
