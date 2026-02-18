@@ -21,11 +21,34 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var inclFeesLbl: UILabel!
     @IBOutlet weak var rsvpBtn: UIButton!
     
+    var onPlusTap: ((EventTicket) -> Void)?
+    var onMinusTap: ((EventTicket) -> Void)?
+    var onRSVPTap: ((EventTicket) -> Void)?
+    private var currentTicket: EventTicket?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
+    
+    override func prepareForReuse() {
+          super.prepareForReuse()
+          currentTicket = nil
+          onPlusTap = nil
+          onMinusTap = nil
+          onRSVPTap = nil
+        quantityLbl.isHidden = true
+        minusView.isHidden = true
+        rsvpBtnView.isHidden = true
+        plusView.isHidden = false
+        plusBtn.isEnabled = true
+        plusView.alpha = 1.0
+        inclFeesLbl.isHidden = true
+        ticketLeftLbl.isHidden = true
+
+      }
 
     func configure(ticket: EventTicket, currency: String, whiteLabelColor: String?) {
+        self.currentTicket = ticket
         titleLbl.text = ticket.tierName
         
         let lowestPrice = ticket.price ?? 0
@@ -88,6 +111,22 @@ class TicketsTVC: UITableViewCell {
     func hideMinusView() {
         self.minusView.isHidden = true
         self.quantityLbl.isHidden = true
+    }
+    
+    @IBAction func onClickMinusBtn(_ sender: Any) {
+        guard let t = currentTicket else { return }
+             onMinusTap?(t)
+        
+    }
+    
+    @IBAction func onClickPlusBtn(_ sender: Any) {
+        guard let t = currentTicket else { return }
+           onPlusTap?(t)
+    }
+    
+    @IBAction func onClickRSVPBtn(_ sender: Any) {
+        guard let t = currentTicket else { return }
+           onRSVPTap?(t)
     }
 }
 

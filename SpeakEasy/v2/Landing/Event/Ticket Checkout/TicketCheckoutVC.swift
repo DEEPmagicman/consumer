@@ -102,6 +102,44 @@ class TicketCheckoutVC: UIViewController {
             dateandtimeLbl.textColor = color
             purchaseTicketBtn.backgroundColor = color
         }
+        
+        if let customText = event?.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            
+            dateandtimeLbl.text = customText
+            
+        } else {
+            
+            let timezone = venueDetails?.useTimezone ?? ""
+            
+            let dateText = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            ) ?? ""
+            
+            let startTime = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            ) ?? ""
+            
+            let endTime = event?.endDateTime?.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            ) ?? "LATE"
+            
+            if !dateText.isEmpty && !startTime.isEmpty {
+                dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+            } else {
+                dateandtimeLbl.text = ""
+            }
+        }
+        
+        
+        
+        
 //        feesAndTxtTotalAmountLbl.text = "\(currency)\(grandTotal.decimalFormat(true))"
     }
     

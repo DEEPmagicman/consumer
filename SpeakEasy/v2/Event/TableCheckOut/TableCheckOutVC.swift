@@ -23,7 +23,9 @@ class TableCheckOutVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tablesListVC = TablesListVC()
+        let vc = TablesListVC()
+        vc.event = event
+        tablesListVC = vc
         setupChildVCs()
         setupUI()
     }

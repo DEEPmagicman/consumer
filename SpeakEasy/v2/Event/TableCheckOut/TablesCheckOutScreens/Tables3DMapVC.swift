@@ -30,12 +30,15 @@ final class Tables3DMapVC: UIViewController {
     
     private let sceneView = SCNView()
     private let tapCategory: Int = 4
+    var event: Event?
     
     private var sceneBounds: (min: SCNVector3, max: SCNVector3)?
     private var selectedSeatingId: String? = nil
     
     var parentByChildId: [String: SeatingAreaAPIModel] = [:]
     var seatingAreaByMeshName: [String: SeatingAreaDTO] = [:]
+    
+    private var seatingAreaById: [String: SeatingArea] = [:]
     
     private var currentYaw: Float = -Float.pi / 14
     private var currentPitch: Float = -Float.pi / 7
@@ -50,6 +53,40 @@ final class Tables3DMapVC: UIViewController {
         
         // replace with server URL
         loadGLB_Local(from: "stage/url3dmap/d-1769428276878-lBfa.glb")
+    }
+    
+    
+    private func fetchAllSeatingAreas(completion: @escaping () -> Void) {
+        guard let eventId = event?.id, !eventId.isEmpty else { completion(); return }
+
+        var all: [SeatingArea] = []
+        var skip = 0
+        var hasMore = true
+
+        func fetchNext() {
+            guard hasMore else {
+                self.seatingAreaById = Dictionary(uniqueKeysWithValues: all.compactMap { sa in
+                    guard let id = sa.id else { return nil }
+                    return (id, sa)
+                })
+                completion()
+                return
+            }
+
+            TablePresenter.getSeatingAreas(eventId: eventId, skip: skip) { [weak self] isSuccess, _, list, apiHasMore in
+                guard let self else { return }
+                if isSuccess {
+                    all.append(contentsOf: list)
+                    hasMore = apiHasMore
+                    skip += list.count
+                    fetchNext()
+                } else {
+                    completion()
+                }
+            }
+        }
+
+        fetchNext()
     }
 }
 
@@ -97,18 +134,18 @@ private extension Tables3DMapVC {
     func loadGLB(from url: URL) {
         GLTFAsset.load(with: url, options: [:]) { [weak self] _, status, asset, error, _ in
             guard let self, status == .complete, let asset, error == nil else { return }
-            
+
             DispatchQueue.main.async {
-                self.loadSeatingAreaMap()
-                self.buildMeshSeatingMap(asset: asset)
-                
-                let scene = SCNScene(gltfAsset: asset)
-                self.sceneView.scene = scene
-                
-                self.setupCamera(scene)
-                self.setupLights()
-                self.setupTapGesture()
-                self.renderParentDots(scene: scene)
+                self.fetchAllSeatingAreas {
+                    let scene = SCNScene(gltfAsset: asset)
+                    self.sceneView.scene = scene
+
+                    self.buildMeshSeatingMap(asset: asset)
+                    self.setupCamera(scene)
+                    self.setupLights()
+                    self.setupTapGesture()
+                    self.renderParentDots(scene: scene)
+                }
             }
         }
     }
@@ -137,39 +174,57 @@ private extension Tables3DMapVC {
 
 private extension Tables3DMapVC {
     
-    func buildMeshSeatingMap(asset: GLTFAsset) {
-        
+    private func buildMeshSeatingMap(asset: GLTFAsset) {
+
+        seatingAreaByMeshName.removeAll()
+
         for (index, mesh) in asset.meshes.enumerated() {
             guard let meshName = mesh.name else { continue }
-            
+
             let meshExtras = normalizeExtras(mesh.extras)
             let nodeExtras = index < asset.nodes.count ? normalizeExtras(asset.nodes[index].extras) : [:]
-            
-            // Mesh has priority
+
             let extras = meshExtras.merging(nodeExtras) { _, new in new }
             var dto: SeatingAreaDTO?
-            
+
+            // DJ tag handling stays same
             if extras["djtag"] != nil || extras["djboottag"] != nil {
                 dto = SeatingAreaDTO(id: nil, parentSeatingAreaId: nil, name: "DJ", highlight: nil, maxGuest: nil, isDJBoot: true)
             }
+
+            // ✅ Parent dot (seatingAreaTag)
             else if let tag = extras["seatingareatag"] as? String,
-                    let parent = parentByChildId[tag] {
+                    let sa = seatingAreaById[tag] {
                 dto = SeatingAreaDTO(
-                    id: parent.parentSeatingAreaId,
-                    parentSeatingAreaId: parent.parentSeatingAreaId,
-                    name: parent.name,
-                    highlight: parent.highlight,
-                    maxGuest: parent.maxGuest,
+                    id: sa.id,
+                    parentSeatingAreaId: sa.id,        // treat tag as parent id
+                    name: sa.name,
+                    highlight: sa.highlight,
+                    maxGuest: sa.maxGuest,
                     isDJBoot: false
                 )
             }
-            else if let id = extras["seatingareaid"] as? String, (extras["seatingareatag"] as? String) == nil, !id.isEmpty {
+
+            // ✅ Child dot (seatingAreaId)
+            else if let id = extras["seatingareaid"] as? String,
+                    let sa = seatingAreaById[id] {
+                dto = SeatingAreaDTO(
+                    id: sa.id,
+                    parentSeatingAreaId: nil,
+                    name: sa.name,
+                    highlight: sa.highlight,
+                    maxGuest: sa.maxGuest,
+                    isDJBoot: false
+                )
+            }
+
+            // fallback (if mesh has id but API didn’t return it)
+            else if let id = extras["seatingareaid"] as? String, !id.isEmpty {
                 dto = SeatingAreaDTO(id: id, parentSeatingAreaId: nil, name: "Seating \(id)", highlight: nil, maxGuest: nil, isDJBoot: false)
             }
-            
+
             if let dto {
                 seatingAreaByMeshName[meshName] = dto
-                print("🧩 Mesh mapped:", meshName, extras)
             }
         }
     }

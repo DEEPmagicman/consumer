@@ -68,7 +68,7 @@ class TableSeatingViewController: UIViewController {
         
         // Guests
         currentGuestCount = item.defaultGuest ?? 1
-        maxiMumGuestLbl.text = "Max \(item.maxGuest ?? 0) Guests"
+        maxiMumGuestLbl.text = "\(item.maxGuest ?? 0)"
         guestAndTimeLbl.text = "\(currentGuestCount)"
         
         updateGuestButtons()
@@ -186,6 +186,14 @@ class TableSeatingViewController: UIViewController {
             updateGuestButtons()
         
     }
-
+    
+    @IBAction func onClickCloseBtn(_ sender: Any) {
+        self.dismiss(animated: false)
+    }
+    
+    @IBAction func onClickOutSide(_ sender: Any) {
+        self.dismiss(animated: false)
+    }
+    
     
 }

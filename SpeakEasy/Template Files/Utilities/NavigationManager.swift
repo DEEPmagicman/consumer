@@ -419,6 +419,7 @@ final class Navigate {
             bundle: nil
         )
         vc.seatingArea = seatingArea
-        sender.present(vc, animated: true)
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.present(vc, animated: false)
     }
 }

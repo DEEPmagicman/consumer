@@ -25,6 +25,7 @@ struct EventTicket: Codable {
     var createdAt: String
     var updatedAt: String
     var eventTicketHasTier: [EventTicketHasTier]?
+    var eventTicketHasPassword: EventTicketHasPassword?
     var selectedTicketCount: Int?
     var extraFees: Double?
     var remainingQuantity: Int? {
@@ -98,6 +99,17 @@ struct EventTicketHasTier: Codable {
         try container.encode(updatedAt, forKey: .updatedAt)
     }
 }
+
+struct EventTicketHasPassword: Codable {
+    var id: String?
+    var password: String?
+    var status: String?
+    var isDeleted: Bool?
+    var createdAt: String?
+    var updatedAt: String?
+    var mongodbId: String?
+}
+
 
 struct CustomFee: Codable {
 

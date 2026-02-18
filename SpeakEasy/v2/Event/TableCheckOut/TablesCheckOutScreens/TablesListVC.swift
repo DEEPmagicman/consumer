@@ -22,6 +22,8 @@ class TablesListVC: UIViewController {
     private var mapVC: Tables3DMapVC?
     private var listVC: TableBookingListVC?
     private var requestVC: TableRequestVC?
+    var event: Event?
+    
     
     private var has3DMap = true
 //    private var sharedData: EventDataModel?
@@ -40,7 +42,10 @@ class TablesListVC: UIViewController {
         //                self?.updateChildren()
         //            }
         mapVC = Tables3DMapVC()
-        listVC = TableBookingListVC()
+        mapVC?.event = event
+        let vc =  TableBookingListVC()
+        vc.event = self.event
+        listVC = vc
         requestVC = TableRequestVC()
     }
     

@@ -51,12 +51,14 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var linkView: UIView!
     @IBOutlet weak var guestListTitleLbl: UILabel!
     @IBOutlet weak var youTubeSuperView: UIView!
+    @IBOutlet weak var policyViewMoreBtnView: UIView!
+    @IBOutlet weak var policyViewMoreBtn: UIButton!
     
     private var imagePagerVC: ImagePagerVC?
-    private let lineUpCount = 6
     private let faqCount = 5
     private var playerView: YTPlayerView!
     private var isExpanded = false
+    private var isPolicyLblExpanded = false
     private let collapsedLines = 3
     private var fullText = ""
     var venueDetails: ClipVenue?
@@ -177,6 +179,7 @@ class EventDetailsVC: UIViewController {
         venueName.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true) ? "\(event?.customVenue?.name ?? "") by \(venueDetails?.name ?? "")" : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         fullText = event?.description ?? ""
         setupExpandableLabel()
+        setupPolicyExpandableLabel()
         venueNameLbl.text = "\(venueDetails?.name ?? "")"
         venueName.text = "\(venueDetails?.name ?? "")"
         venueAddressLbl.text = venueDetails?.address ?? ""
@@ -251,6 +254,9 @@ class EventDetailsVC: UIViewController {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
             buyNowBtnView.backgroundColor = color
+        } else {
+            let color = UIColor(hex: "6D5EBD")
+            buyNowBtnView.backgroundColor = color
         }
         setupSocialLinks()
 //        artistTableView.reloadData()
@@ -284,12 +290,16 @@ class EventDetailsVC: UIViewController {
         } else {
             if event?.isPausedSellingAllTickets == true {
                 ticketsTitleLbl.text = "Tickets from Free"
+                buyNowBtnView.isUserInteractionEnabled = true
             } else if event?.isSoldOutAllTickets == true {
                 ticketsTitleLbl.text = "It was a great time!"
                 buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                buyNowBtnView.isUserInteractionEnabled = false
+                buyNowBtnView.backgroundColor = UIColor.lightGray
             } else if event?.eventTicket?.count ?? 0 == 0 {
                 ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
                 buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+                
                 
 //                isNotSellingStage = true
 //                updateContinueBtn()
@@ -330,16 +340,6 @@ class EventDetailsVC: UIViewController {
 //            organizerLocationView.addGestureRecognizer(tap)
 //        }
         
-        guard let html = event?.disclaimer,
-              let attributed = html.htmlToAttributedString else { return }
-
-        let mutable = NSMutableAttributedString(attributedString: attributed)
-        mutable.addAttribute(
-            .foregroundColor,
-            value: UIColor.label,
-            range: NSRange(location: 0, length: mutable.length)
-        )
-        policyLbl.attributedText = mutable
     }
     
     
@@ -395,6 +395,22 @@ class EventDetailsVC: UIViewController {
         } else {
             detailsLbl.numberOfLines = collapsedLines
             viewMoreBtn.setTitle("View More", for: .normal)
+        }
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @IBAction func onClickPolicyViewMoreBtn(_ sender: Any) {
+        isPolicyLblExpanded.toggle()
+
+        if isPolicyLblExpanded {
+            policyLbl.numberOfLines = 0
+            policyViewMoreBtn.setTitle("View Less", for: .normal)
+        } else {
+            policyLbl.numberOfLines = collapsedLines
+            policyViewMoreBtn.setTitle("View More", for: .normal)
         }
 
         UIView.animate(withDuration: 0.25) {
@@ -510,6 +526,28 @@ class EventDetailsVC: UIViewController {
         }
     }
     
+    private func setupPolicyExpandableLabel() {
+
+        guard let html = event?.disclaimer,
+              let attributed = html.htmlToAttributedString else { return }
+
+        let mutable = NSMutableAttributedString(attributedString: attributed)
+        mutable.addAttribute(
+            .foregroundColor,
+            value: UIColor.label,
+            range: NSRange(location: 0, length: mutable.length)
+        )
+
+        policyLbl.attributedText = mutable
+        policyLbl.numberOfLines = collapsedLines
+
+        policyViewMoreBtn.setTitle("View More", for: .normal)
+
+        DispatchQueue.main.async {
+            self.checkIfPolicyTextNeedsExpansion()
+        }
+    }
+    
     private func updateSwipeButtons() {
 
         guard let pager = imagePagerVC else { return }
@@ -538,6 +576,27 @@ class EventDetailsVC: UIViewController {
             viewMoreBtnView.isHidden = true
         }
     }
+    
+    private func checkIfPolicyTextNeedsExpansion() {
+
+        policyLbl.numberOfLines = 0
+
+        let fullHeight = policyLbl.sizeThatFits(
+            CGSize(width: policyLbl.frame.width,
+                   height: CGFloat.greatestFiniteMagnitude)
+        ).height
+
+        let maxCollapsedHeight = policyLbl.font.lineHeight * CGFloat(collapsedLines)
+
+        if fullHeight > maxCollapsedHeight {
+            policyLbl.numberOfLines = collapsedLines
+            policyViewMoreBtnView.isHidden = false
+        } else {
+            policyLbl.numberOfLines = 0
+            policyViewMoreBtnView.isHidden = true
+        }
+    }
+    
     
     func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
         let point = MKPointAnnotation()

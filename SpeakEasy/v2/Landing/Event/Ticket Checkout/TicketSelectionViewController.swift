@@ -21,10 +21,27 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var protectedTicketView: UIView!
     @IBOutlet weak var unLockTF: UITextField!
     @IBOutlet weak var unLockBtn: UIView!
+    @IBOutlet weak var addOnTicketTitleView: UIView!
+    @IBOutlet weak var addOnTicketTitleLbl: UILabel!
+
+    private enum TicketMode {
+        case normal
+        case addOn
+    }
+
+    private var mode: TicketMode = .normal
+
     private var tickets: [EventTicket] = []
+    private var normalTickets: [EventTicket] = []
+    private var addOnTickets: [EventTicket] = []
+
+    private var selectedNormalTickets: [EventTicket] = []
+
     var event: Event?
     var venueDetails: ClipVenue?
+
     private var eventTicketId = [String]()
+
     private var totalSelectedTickets: Int {
         var total = 0
         tickets.forEach {
@@ -34,23 +51,24 @@ class TicketSelectionViewController: UIViewController {
         }
         return total
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         if let venue = event?.venue {
             self.venueDetails = venue
         }
+
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
+
         setupData()
     }
-    
-    private func setupData() {
 
+    private func setupData() {
         guard let event = event else { return }
-        
+
         let hasProtectedTicket = !(event.protectedEventTicket?.isEmpty ?? true)
         protectedTicketView.isHidden = !hasProtectedTicket
 
@@ -58,80 +76,127 @@ class TicketSelectionViewController: UIViewController {
             with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage
         )
+
         venueName.text = venueDetails?.name ?? ""
         venueName2.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event.title
+        
+        if let customText = event.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            
+            dateandtimeLbl.text = customText
+            
+        } else {
+            
+            let timezone = venueDetails?.useTimezone ?? ""
+            
+            let dateText = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            )
+            
+            let startTime = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            )
+            
+            let endTime = event.endDateTime?.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            ) ?? "LATE"
+            
+            dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+        }
 
-        let timezone = venueDetails?.useTimezone ?? ""
-
-        let dateText = event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .EEEMMMD,
-            customTimeZone: timezone
-        )
-
-        let startTime = event.startDateTime.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .hmma,
-            customTimeZone: timezone
-        )
-
-        let endTime = event.endDateTime?.convertDateFormat(
-            from: .yyyyMMddHHmmss,
-            to: .hmma,
-            customTimeZone: timezone
-        ) ?? "LATE"
-
-        dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         if let hex = self.event?.whiteLabelColor {
-              let color = UIColor(hex: hex)
+            let color = UIColor(hex: hex)
             dateandtimeLbl.textColor = color
             continueToCheckOutBtn.backgroundColor = color
         }
-       
 
-        // Convert EventTicket → TicketModel
-     
+        func filterAvailable(_ list: [EventTicket]) -> [EventTicket] {
+            return list.filter { ticket in
+                let remaining = ticket.remainingQuantity ?? 0
+                let isNotDeleted = ticket.isDeleted == false
+                let isNotPaused = ticket.sellingPaused == false
+                return remaining > 0 && isNotDeleted && isNotPaused
+            }
+        }
 
-//        tickets = event.eventTicket?.compactMap { ticket in
-//            guard ticket.isDeleted == false,
-//                  ticket.sellingPaused == false else { return  }
-//
-//            return TicketModel(
-//                title: ticket.tierName ?? "",
-//                price: ticket.price ?? 0,
-//                quantity: 0,
-//                currency: currency
-//            )
-//        } ?? []
-        self.tickets = event.eventTicket ?? []
- 
+        normalTickets = filterAvailable(event.eventTicket ?? [])
+        addOnTickets  = filterAvailable(event.eventAddOnTicket ?? [])
+
+        // default mode
+        switchToNormalMode()
+    }
+
+    private func switchToNormalMode() {
+        mode = .normal
+        tickets = normalTickets
+
+        addOnTicketTitleView.isHidden = true
+        updateContinueButtonForMode()
+        updateContinueBtnState()
+        ticketTableView.reloadData()
+    }
+
+    private func switchToAddOnMode() {
+        mode = .addOn
+        tickets = addOnTickets
+
+        addOnTicketTitleView.isHidden = false
+        updateContinueButtonForMode()
+        updateContinueBtnState()
         ticketTableView.reloadData()
     }
     
+    private func refreshContinueButtonTitle() {
+        updateContinueButtonForMode()
+    }
+
+    private func updateContinueButtonForMode() {
+        switch mode {
+        case .normal:
+            continueToCheckOutBtn.setTitle("Continue to Checkout", for: .normal)
+            
+
+        case .addOn:
+            let anyAddOnSelected = addOnTickets.contains(where: { ($0.selectedTicketCount ?? 0) > 0 })
+                   continueToCheckOutBtn.setTitle(anyAddOnSelected ? "Continue to Checkout" : "NO THANKS", for: .normal)
+        }
+    }
+
     private func getTicketByPassWord() {
-        EventPresenter.getEventTicketByPassWord(eventId: "", venueTimeZone: venueDetails?.useTimezone, password: unLockTF.text ?? "") { isSuccess, errMsg, ticket in
+
+        EventPresenter.getEventTicketByPassWord(
+            eventId: self.event?.uniqueId ?? "",
+            venueTimeZone: venueDetails?.useTimezone,
+            password: unLockTF.text ?? ""
+        ) { isSuccess, errMsg, ticket in
+
             if isSuccess {
-//                self.invalidPasswordLbl.isHidden = !(ticket?.count ?? 0 == 0)
                 let tickets = ticket ?? []
+
                 for tics in tickets {
-                    if self.eventTicketId.contains(where: { $0 == tics.id}) == false {
+                    if self.eventTicketId.contains(where: { $0 == tics.id }) == false {
                         self.eventTicketId.append(tics.id ?? "")
                     }
                 }
+
                 self.protectedTicketView.isHidden = self.event?.totalTickets == self.eventTicketId.count
-                    for data in tickets {
-                        if self.event?.protectedEventTicket?.contains(where: {$0.id == data.id}) ?? false == false {
-                            if self.event?.protectedEventTicket == nil {
-//                                self.protectedTickets = [data]
-                                self.event?.protectedEventTicket = [data]
-                            } else {
-//                                self.protectedTickets?.append(data)
-                                self.event?.protectedEventTicket?.append(data)
-                                
-                            }
+
+                for data in tickets {
+                    if self.event?.protectedEventTicket?.contains(where: { $0.id == data.id }) ?? false == false {
+                        if self.event?.protectedEventTicket == nil {
+                            self.event?.protectedEventTicket = [data]
+                        } else {
+                            self.event?.protectedEventTicket?.append(data)
                         }
                     }
+                }
                 self.unLockTF.text = ""
                 self.unLockPassword()
                 self.setupData()
@@ -140,44 +205,219 @@ class TicketSelectionViewController: UIViewController {
             }
         }
     }
-    
+
     @objc func unLockPassword() {
-        unLockBtn.alpha = unLockTF.text ?? "" == "" ? 0.5 : 1
-        unLockBtn.isUserInteractionEnabled = unLockTF.text ?? "" == "" ? false : true
+        unLockBtn.alpha = (unLockTF.text ?? "").isEmpty ? 0.5 : 1
+        unLockBtn.isUserInteractionEnabled = !(unLockTF.text ?? "").isEmpty
     }
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {
-        
-    }
-    
-    @IBAction func onClickCloseBtn(_ sender: Any) {
-        Navigate.to.back(self)
-    }
-    
-    @IBAction func onClickLockBtn(_ sender: Any) {
-    }
-    
-    @IBAction func onClickContinueBtn(_ sender: Any) {
-        
-//        if UserDefault.shared.isGuest == true {
-//            Navigate.to.login(forceCreateAccount: true)
-//            return
-//        }
-        
-        let selectedTickets = tickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
-        
-        guard !selectedTickets.isEmpty else {
-            Alert.showToast("Please select at least one ticket")
+
+        let code = (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !code.isEmpty else { return }
+        guard var event = event else { return }
+
+        let protectedList = event.protectedEventTicket ?? []
+        guard !protectedList.isEmpty else {
+            protectedTicketView.isHidden = true
             return
         }
+
+        let matchedTickets = protectedList.filter { t in
+            let pass = t.eventTicketHasPassword?.password ?? ""
+            return pass.caseInsensitiveCompare(code) == .orderedSame
+        }
+
+        guard !matchedTickets.isEmpty else { return }
+
+        for ticket in matchedTickets {
+            if !normalTickets.contains(where: { $0.id == ticket.id }) {
+                normalTickets.append(ticket)
+            }
+        }
+
+        let unlockedIds = Set(matchedTickets.compactMap { $0.id })
+        event.protectedEventTicket = protectedList.filter { t in
+            guard let id = t.id else { return true }
+            return !unlockedIds.contains(id)
+        }
+
+        unLockTF.text = ""
+        unLockPassword()
+
+        protectedTicketView.isHidden = (event.protectedEventTicket ?? []).isEmpty
+
+        if mode == .normal {
+            tickets = normalTickets
+            ticketTableView.reloadData()
+        }
+    }
+
+
+    @IBAction func onClickCloseBtn(_ sender: Any) {
         
+        Navigate.to.back(self)
+        
+//        if mode == .addOn {
+//            switchToNormalMode()
+//        } else {
+//            Navigate.to.back(self)
+//        }
+    }
+
+    @IBAction func onClickLockBtn(_ sender: Any) {
+  
+    }
+
+    @IBAction func onClickContinueBtn(_ sender: Any) {
+
         guard let event = event else { return }
-        
-        Navigate.to.ticketCheckoutVC(
-            self,
-            event: event,
-            selectedTickets: selectedTickets
-        )
+
+        switch mode {
+
+        case .normal:
+            let selected = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+
+            guard !selected.isEmpty else {
+                Alert.showToast("Please select at least one ticket")
+                return
+            }
+
+            selectedNormalTickets = selected
+
+            if addOnTickets.isEmpty {
+                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: selectedNormalTickets)
+                return
+            }
+
+            switchToAddOnMode()
+
+        case .addOn:
+            let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+            
+            if selectedAddOns.isEmpty {
+                Navigate.to.ticketCheckoutVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedNormalTickets
+                )
+                return
+            }
+            
+            let finalTickets = selectedNormalTickets + selectedAddOns
+
+            Navigate.to.ticketCheckoutVC(
+                self,
+                event: event,
+                selectedTickets: finalTickets
+            )
+        }
+    }
+
+    private func indexForTicket(_ ticket: EventTicket) -> Int? {
+        guard let id = ticket.id else { return nil }
+        return tickets.firstIndex(where: { $0.id == id })
+    }
+
+    private func replaceTicketInCurrentMode(_ updated: EventTicket) {
+        guard let id = updated.id else { return }
+
+        switch mode {
+        case .normal:
+            if let idx = normalTickets.firstIndex(where: { $0.id == id }) {
+                normalTickets[idx] = updated
+            }
+            tickets = normalTickets
+
+        case .addOn:
+            if let idx = addOnTickets.firstIndex(where: { $0.id == id }) {
+                addOnTickets[idx] = updated
+            }
+            tickets = addOnTickets
+        }
+    }
+
+    private func handlePlus(ticket: EventTicket) {
+        guard let index = indexForTicket(ticket) else { return }
+
+        let totalTicket = tickets[index].selectedTicketCount ?? 0
+        let issuedUnits = tickets[index].issuedUnits ?? 0
+
+        if totalTicket < issuedUnits,
+           let remaining = tickets[index].remainingQuantity,
+           remaining > totalTicket {
+
+            tickets[index].selectedTicketCount = totalTicket + 1
+            replaceTicketInCurrentMode(tickets[index])
+
+            ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            updateContinueBtnState()
+            updateContinueButtonForMode()
+        } else {
+            Alert.showToast("Max Tickets Selected: create a separate order to purchase more")
+        }
+    }
+
+    private func handleMinus(ticket: EventTicket) {
+        guard let index = indexForTicket(ticket) else { return }
+        guard let totalTicket = tickets[index].selectedTicketCount else { return }
+
+        if totalTicket > 1 {
+            tickets[index].selectedTicketCount = totalTicket - 1
+        } else {
+            tickets[index].selectedTicketCount = nil
+        }
+
+        replaceTicketInCurrentMode(tickets[index])
+
+        ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        updateContinueBtnState()
+        updateContinueButtonForMode()
+    }
+
+    private func handleRSVP(ticket: EventTicket) {
+        guard let event = event else { return }
+
+        switch mode {
+
+        case .normal:
+            selectedNormalTickets = [ticket]
+
+            if addOnTickets.isEmpty {
+                Navigate.to.ticketCheckoutVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedNormalTickets
+                )
+            } else {
+                switchToAddOnMode()
+            }
+
+        case .addOn:
+            let finalTickets = selectedNormalTickets + [ticket]
+
+            Navigate.to.ticketCheckoutVC(
+                self,
+                event: event,
+                selectedTickets: finalTickets
+            )
+        }
+    }
+
+
+    private func updateContinueBtnState() {
+        switch mode {
+        case .normal:
+            let isHidden = totalSelectedTickets <= 0
+            continueToCheckOutBtn.isHidden = isHidden
+            continueButtonBottomConstraint.constant = isHidden ? 0 : 32
+
+        case .addOn:
+            continueToCheckOutBtn.isHidden = false
+            continueButtonBottomConstraint.constant = 32
+        }
+
+        view.layoutIfNeeded()
     }
 }
 
@@ -187,8 +427,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         return tickets.count
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TicketsTVC.identifier,
@@ -198,75 +437,24 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         }
 
         cell.selectionStyle = .none
+
         let ticket = tickets[indexPath.row]
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+
         cell.configure(ticket: ticket, currency: currency, whiteLabelColor: event?.whiteLabelColor)
-        cell.minusBtn.tag = indexPath.row
-        cell.minusBtn.addTarget(self, action: #selector(minusBtnClick), for: .touchUpInside)
-        cell.plusBtn.tag = indexPath.row
-        cell.plusBtn.addTarget(self, action: #selector(plusBtnClick), for: .touchUpInside)
-        cell.rsvpBtn.tag = indexPath.row
-        cell.rsvpBtn.addTarget(self, action: #selector(rsvpbtnClick), for: .touchUpInside)
-        
+
+        cell.onPlusTap = { [weak self] ticket in
+            self?.handlePlus(ticket: ticket)
+        }
+
+        cell.onMinusTap = { [weak self] ticket in
+            self?.handleMinus(ticket: ticket)
+        }
+
+        cell.onRSVPTap = { [weak self] ticket in
+            self?.handleRSVP(ticket: ticket)
+        }
+
         return cell
-    }
-    
-    @objc func minusBtnClick(_ sender: UIButton) {
-
-        let index = sender.tag
-        
-        guard let totalTicket = tickets[index].selectedTicketCount else { return }
-
-        if totalTicket > 1 {
-            tickets[index].selectedTicketCount = totalTicket - 1
-        } else {
-            tickets[index].selectedTicketCount = nil
-        }
-
-        updateContinueBtnState()
-        let indexPath = IndexPath(row: index, section: 0)
-        ticketTableView.reloadRows(at: [indexPath], with: .none)
-    }
-    
-    
-    @objc func rsvpbtnClick(_ sender: UIButton) {
-        let index = sender.tag
-        let selectedTickets = [tickets[index]]
-        guard let event = event else { return }
-        
-        Navigate.to.ticketCheckoutVC(
-            self,
-            event: event,
-            selectedTickets: selectedTickets
-        )
-    }
-
-    @objc func plusBtnClick(_ sender: UIButton) {
-
-        let index = sender.tag
-        let totalTicket = tickets[index].selectedTicketCount ?? 0
-        let issuedUnits = tickets[index].issuedUnits ?? 0
-
-        if totalTicket < issuedUnits {
-
-            if let remaining = tickets[index].remainingQuantity,
-               remaining > totalTicket {
-
-                tickets[index].selectedTicketCount = totalTicket + 1
-
-                let indexPath = IndexPath(row: index, section: 0)
-                ticketTableView.reloadRows(at: [indexPath], with: .none)
-                updateContinueBtnState()
-            }
-        } else {
-            Alert.showToast("Max ticket selection reached")
-        }
-    }
-    
-    private func updateContinueBtnState() {
-        let isHidden = totalSelectedTickets <= 0
-        continueToCheckOutBtn.isHidden = isHidden
-        continueButtonBottomConstraint.constant = isHidden ? 0 : 32
-        self.view.layoutIfNeeded()
     }
 }

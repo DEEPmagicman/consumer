@@ -12,7 +12,7 @@ class TableBookingListVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var seatingAreas: [SeatingArea] = []
-    var eventId: String = "6845064d-28fe-40cf-ac1b-6d1e5d4cacfa"
+    var event: Event?
     var skip: Int = 0
     var hasMore: Bool = true
     var isLoading: Bool = false
@@ -37,7 +37,7 @@ class TableBookingListVC: UIViewController {
         isLoading = true
         
         TablePresenter.getSeatingAreas(
-            eventId: eventId,
+            eventId: event?.id ?? "",
             skip: skip
         ) { [weak self] isSuccess, errMsg, list, apiHasMore in
             
