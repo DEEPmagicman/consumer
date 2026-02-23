@@ -126,6 +126,11 @@ struct Booking: Codable {
     }
 }
 
+struct FeeDisplayItem {
+    var title: String
+    var amount: Double
+}
+
 struct BookingHasItem: Codable {
 
     var id: String

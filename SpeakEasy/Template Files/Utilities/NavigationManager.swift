@@ -406,10 +406,11 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = []) {
+    func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
         let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
         vc.event = event
         vc.selectedTickets = selectedTickets
+        vc.bookingId = bookingId
         sender.pushVC(vc)
     }
     

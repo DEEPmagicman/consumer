@@ -168,6 +168,20 @@ class TicketSelectionViewController: UIViewController {
                    continueToCheckOutBtn.setTitle(anyAddOnSelected ? "Continue to Checkout" : "NO THANKS", for: .normal)
         }
     }
+    
+    private func buildTicketsPayload(from selected: [EventTicket]) -> [[String: Any]] {
+        var payload = [[String: Any]]()
+
+        selected.forEach {
+            payload.append([
+                "ticketId": $0.id ?? "",
+                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketPrice": $0.price ?? 0
+            ])
+        }
+
+        return payload
+    }
 
     private func getTicketByPassWord() {
 
@@ -277,16 +291,26 @@ class TicketSelectionViewController: UIViewController {
 
         case .normal:
             let selected = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
-
-            guard !selected.isEmpty else {
-                Alert.showToast("Please select at least one ticket")
-                return
-            }
+            guard !selected.isEmpty else { return }
 
             selectedNormalTickets = selected
 
             if addOnTickets.isEmpty {
-                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: selectedNormalTickets)
+                let ticketsPayload = buildTicketsPayload(from: selectedNormalTickets)
+
+                PaymentPresenter.createEventBookingV2(
+                    eventId: event.id,
+                    code: UserDefault.shared.user?.code ?? "+1",
+                    phone: UserDefault.shared.user?.phone ?? "8286902566",
+                    gender: "UNASSIGNED",
+                    userId: UserDefault.shared.user?.id ?? "68d3e52d-14de-43f1-a49d-37d9b5764f2d",
+                    tickets: ticketsPayload
+                ) { [weak self] isSuccess, errMsg, id, message in
+                    guard let self = self else { return }
+                    if isSuccess {
+                        Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: self.selectedNormalTickets, bookingId: id)
+                    }
+                }
                 return
             }
 
@@ -294,23 +318,22 @@ class TicketSelectionViewController: UIViewController {
 
         case .addOn:
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
-            
-            if selectedAddOns.isEmpty {
-                Navigate.to.ticketCheckoutVC(
-                    self,
-                    event: event,
-                    selectedTickets: selectedNormalTickets
-                )
-                return
-            }
-            
-            let finalTickets = selectedNormalTickets + selectedAddOns
+            let finalSelectedTickets = selectedNormalTickets + selectedAddOns
+            let ticketsPayload = buildTicketsPayload(from: finalSelectedTickets)
 
-            Navigate.to.ticketCheckoutVC(
-                self,
-                event: event,
-                selectedTickets: finalTickets
-            )
+            PaymentPresenter.createEventBookingV2(
+                eventId: event.id,
+                code: UserDefault.shared.user?.code ?? "+1",
+                phone: UserDefault.shared.user?.phone ?? "",
+                gender: "UNASSIGNED",
+                userId: UserDefault.shared.user?.id ?? "",
+                tickets: ticketsPayload
+            ) { [weak self] isSuccess, errMsg, id, message in
+                guard let self = self else { return }
+                if isSuccess {
+                    Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: finalSelectedTickets)
+                }
+            }
         }
     }
 
@@ -387,7 +410,7 @@ class TicketSelectionViewController: UIViewController {
                 Navigate.to.ticketCheckoutVC(
                     self,
                     event: event,
-                    selectedTickets: selectedNormalTickets
+                    selectedTickets: selectedNormalTickets, bookingId: nil
                 )
             } else {
                 switchToAddOnMode()
@@ -399,7 +422,7 @@ class TicketSelectionViewController: UIViewController {
             Navigate.to.ticketCheckoutVC(
                 self,
                 event: event,
-                selectedTickets: finalTickets
+                selectedTickets: finalTickets, bookingId: nil
             )
         }
     }
