@@ -54,4 +54,135 @@ final class TablePresenter {
             completion(false, nil, [], false)
         }
     }
+    
+    
+    static func createSeatingAreaBooking(
+        eventId: String,
+        seatingAreaId: String,
+        guests: Int,
+        queueId: String,
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ response: SeatingAreaBookingResponse?) -> Void
+    ) {
+
+        let url = APIBuilder.seatingAreasBookingCreateURL(
+            eventId: eventId,
+            includes: []
+        )
+
+        let params: [String: Any] = [
+            "items": [
+                [
+                    "seatingAreaId": seatingAreaId,
+                    "guests": guests
+                ]
+            ],
+            "queueId": queueId
+        ]
+
+        AFWrapper.postRequest(
+            url,
+            params: params,
+            headers: Header.header()
+        ) { response in
+
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(SeatingAreaBookingResponse.self, from: data)
+
+                if decoded.isSuccess {
+                    completion(true, nil, decoded)
+                } else {
+                    completion(false, decoded.message, decoded)
+                }
+
+            } catch {
+                completion(false, error.localizedDescription, nil)
+            }
+
+        } failure: { error in
+
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, "Something went wrong", nil)
+        }
+    }
+    
+    static func createReservationRequest(
+        firstName: String,
+        lastName: String,
+        email: String,
+        totalGuests: Int,
+        note: String?,
+        dob: String,
+        date: String,
+        time: String,
+        optedPolicy: Bool,
+        eventId: String,
+        seatingArea: String,
+        venueId: String,
+        token: String,
+        completion: @escaping (_ success: Bool, _ message: String?, _ response: [String: Any]?) -> Void
+    ) {
+
+        let url = APIBuilder.reservationRequestURL()
+
+        let params: [String: Any] = [
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "guests": [
+                "total": totalGuests
+            ],
+            "note": note ?? "",
+            "dob": dob,
+            "date": date,
+            "time": time,
+            "optedPolicy": optedPolicy,
+            "eventId": eventId,
+            "seatingArea": seatingArea
+        ]
+
+        var headers = Header.header()
+        headers["venue"] = venueId
+        headers["token"] = token
+
+        AFWrapper.postRequest(
+            url,
+            params: params,
+            headers: headers
+        ) { response in
+
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+
+            let message = dict["message"] as? String
+            let success = (dict["isSuccess"] as? Bool) ?? true
+
+            completion(success, message, dict)
+
+        } failure: { error in
+
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+
+            completion(false, "Something went wrong", nil)
+        }
+    }
+    
+    
+    
 }

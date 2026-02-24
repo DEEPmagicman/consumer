@@ -16,6 +16,7 @@ struct SeatingAreaResponse: Codable {
 
 struct SeatingArea: Codable {
     let id: String?
+    let parentSeatingAreaId: String?
     let name: String?
     let highlight: String?
     let minimum: Double?
@@ -29,6 +30,13 @@ struct SeatingArea: Codable {
     let depositWithFees: Double?
     
     let timeSlots: [tableTimeSlot]?
+    
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, highlight, minimum, deposit, maxGuest, defaultGuest, description,
+             hideCheckout, hidePricing, bookingType, depositWithFees, timeSlots
+        case parentSeatingAreaId = "parentSeatingAreaId"
+    }
 }
 
 struct tableTimeSlot: Codable {
@@ -37,4 +45,27 @@ struct tableTimeSlot: Codable {
     let minimum: Double?
     let deposit: Double?
     let depositType: String?
+}
+
+
+
+
+struct SeatingAreaBookingResponse: Codable {
+    let id: String
+    let eventId: String
+    let venueId: String
+    let status: String
+    let items: [BookingItem]
+    let createdAt: Int64
+    let clientIp: String?
+    let position: Int
+    let approxWait: Int
+    let isSuccess: Bool
+    let message: String?
+    let content: [String: String]?   
+}
+
+struct BookingItem: Codable {
+    let seatingAreaId: String
+    let guests: Int
 }

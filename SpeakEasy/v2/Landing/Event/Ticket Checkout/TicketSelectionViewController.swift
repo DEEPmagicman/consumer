@@ -324,9 +324,9 @@ class TicketSelectionViewController: UIViewController {
             PaymentPresenter.createEventBookingV2(
                 eventId: event.id,
                 code: UserDefault.shared.user?.code ?? "+1",
-                phone: UserDefault.shared.user?.phone ?? "",
+                phone: UserDefault.shared.user?.phone ?? "8286902566",
                 gender: "UNASSIGNED",
-                userId: UserDefault.shared.user?.id ?? "",
+                userId: UserDefault.shared.user?.id ?? "68d3e52d-14de-43f1-a49d-37d9b5764f2d",
                 tickets: ticketsPayload
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }

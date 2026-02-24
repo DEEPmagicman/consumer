@@ -423,4 +423,11 @@ final class Navigate {
         vc.modalPresentationStyle = .overCurrentContext
         sender.present(vc, animated: false)
     }
+    
+    
+    func tablePurchaseVC(_ sender: UIViewController) {
+        let vc = TablePurchaseVC(nibName: "TablePurchaseVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
 }

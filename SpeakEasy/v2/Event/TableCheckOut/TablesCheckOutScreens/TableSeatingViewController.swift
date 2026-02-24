@@ -172,7 +172,28 @@ class TableSeatingViewController: UIViewController {
           if item.hideCheckout == true {
               print("Inquiry flow")
           } else {
-              print("Proceed to checkout with \(currentGuestCount) guests")
+             
+              TablePresenter.createSeatingAreaBooking(
+                  eventId: "6845064d-28fe-40cf-ac1b-6d1e5d4cacfa",
+                  seatingAreaId: "1d185c73-ba96-4089-a763-5a63507552fb",
+                  guests: 3,
+                  queueId: "TABLE_BOOKING_QUEUE_26d0121926f54f50a4d72f3fbb6ff143"
+              ) { ok, err, booking in
+
+                  guard ok, let booking = booking else {
+                      print("Error:", err ?? "")
+                      return
+                  }
+
+                  print("QueueId:", booking.id)
+                  print("Status:", booking.status)
+                  print("Position:", booking.position)
+                  print("Approx Wait:", booking.approxWait, "mins")
+                  if let firstItem = booking.items.first {
+                      print("Seating Area:", firstItem.seatingAreaId)
+                      print("Guests:", firstItem.guests)
+                  }
+              }
           }
     }
 

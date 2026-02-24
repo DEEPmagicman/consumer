@@ -193,6 +193,26 @@ struct APIBuilder {
         
         return base + "?" + queryItems.joined(separator: "&")
     }
+    
+    static func seatingAreasBookingCreateURL(
+        eventId: String,
+        includes: [String] = []
+    ) -> String {
+
+        let base = SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + "/booking-create"
+
+        guard !includes.isEmpty else { return base }
+
+        let query = includes
+            .map { "include=\($0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")" }
+            .joined(separator: "&")
+
+        return base + "?" + query
+    }
+    
+    static func reservationRequestURL() -> String {
+        return SharedURL.tableBaseURL + route + "/reservation-request"
+    }
 
     
     static var recommendedEventURL: String {

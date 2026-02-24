@@ -70,6 +70,8 @@
 		04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */; };
 		04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */; };
 		04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */; };
+		04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */; };
+		04E63FCD2F4D635200295C04 /* TablePurchaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */; };
 		04FCDE252F3C56C700D10F90 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
 		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
@@ -468,6 +470,8 @@
 		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
 		04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
 		04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
+		04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePurchaseVC.swift; sourceTree = "<group>"; };
+		04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TablePurchaseVC.xib; sourceTree = "<group>"; };
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2966E32C2980F85E00B5E103 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -961,6 +965,15 @@
 			path = PaymentTVC;
 			sourceTree = "<group>";
 		};
+		04E63FC92F4D632F00295C04 /* TablePurchaseVC */ = {
+			isa = PBXGroup;
+			children = (
+				04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */,
+				04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */,
+			);
+			path = TablePurchaseVC;
+			sourceTree = "<group>";
+		};
 		2618555335F8CF7D7AAA33CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1061,6 +1074,7 @@
 		6AF2B9CB2F09473900069A90 /* TablesCheckOutScreens */ = {
 			isa = PBXGroup;
 			children = (
+				04E63FC92F4D632F00295C04 /* TablePurchaseVC */,
 				6AF2B9ED2F0BC0CA00069A90 /* TablesListVC.swift */,
 				6AF2B9EE2F0BC0CA00069A90 /* TablesListVC.xib */,
 				6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */,
@@ -2186,6 +2200,7 @@
 				6AF2B9E72F0BA1EC00069A90 /* Inter-Bold.ttf in Resources */,
 				6AF2B9E82F0BA1EC00069A90 /* Inter-Medium.ttf in Resources */,
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
+				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
 				6AF2B9EA2F0BA1EC00069A90 /* Inter-Light.ttf in Resources */,
 				6AF2B9EB2F0BA1EC00069A90 /* Inter-SemiBold.ttf in Resources */,
 				04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */,
@@ -2509,6 +2524,7 @@
 				CE45801A2EF94F9D00A873C4 /* PhotosVC.swift in Sources */,
 				04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */,
 				CE45A5B32C3BC9CA00E1FE3F /* DropDown+Appearance.swift in Sources */,
+				04E63FCD2F4D635200295C04 /* TablePurchaseVC.swift in Sources */,
 				BD7FA0ED294839DC00935275 /* SignInOptionViewController.swift in Sources */,
 				E15D6B6128BC39AC0076286C /* Splash.swift in Sources */,
 				046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */,
