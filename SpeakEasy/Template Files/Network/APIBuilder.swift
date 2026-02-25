@@ -213,8 +213,13 @@ struct APIBuilder {
     static func reservationRequestURL() -> String {
         return SharedURL.tableBaseURL + route + "/reservation-request"
     }
-
     
+    static func layoutURL(date: String) -> String {
+        let base = SharedURL.tableBaseURL + "/consumer/layout"
+        let q = "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        return base + "?" + q
+    }
+
     static var recommendedEventURL: String {
         baseURL + route + event + recommendedEvents
     }

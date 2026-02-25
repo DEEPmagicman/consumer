@@ -184,5 +184,41 @@ final class TablePresenter {
     }
     
     
+    static func getConsumerLayout(
+        date: String, 
+        completion: @escaping (_ success: Bool, _ message: String?, _ layout: ConsumerLayoutResponse?) -> Void
+    ) {
+
+        let url = APIBuilder.layoutURL(date: date)
+
+        AFWrapper.getRequest(
+            url,
+            params: nil,
+            headers: Header.header()
+        ) { response in
+
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(ConsumerLayoutResponse.self, from: data)
+                completion(true, nil, decoded)
+            } catch {
+                completion(false, error.localizedDescription, nil)
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            completion(false, "Something went wrong", nil)
+        }
+    }
+    
+    
     
 }

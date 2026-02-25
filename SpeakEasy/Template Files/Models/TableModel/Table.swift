@@ -47,9 +47,6 @@ struct tableTimeSlot: Codable {
     let depositType: String?
 }
 
-
-
-
 struct SeatingAreaBookingResponse: Codable {
     let id: String
     let eventId: String
@@ -68,4 +65,84 @@ struct SeatingAreaBookingResponse: Codable {
 struct BookingItem: Codable {
     let seatingAreaId: String
     let guests: Int
+}
+
+
+import Foundation
+
+struct ConsumerLayoutResponse: Codable {
+    let id: String?
+    let venueId: String?
+    let isDefault: Bool?
+    let isDeleted: Bool?
+    let status: String?
+    let createdAt: String?
+    let updatedAt: String?
+    let layoutHistories: [LayoutHistory]?
+}
+
+// MARK: - LayoutTableHistory
+struct LayoutHistory: Codable {
+    let id: String?
+    let layoutId: String?
+    let name: String?
+    let url3dMap: String?
+    let totalTables: Int?
+    let createdAt: String?
+    let layoutHistoryHas3DMaps: [Layout3DMap]?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case layoutId
+        case name
+        case url3dMap = "url3dMap"
+        case totalTables
+        case createdAt
+        case layoutHistoryHas3DMaps
+    }
+}
+
+struct Layout3DMap: Codable {
+    let id: String?
+    let layoutHistoryId: String?
+    let name: String?
+    let url3dMap: String?
+    let metadata: String?
+
+    let xPosition: Double?
+    let yPosition: Double?
+    let zPosition: Double?
+
+    let fieldOfView: Double?
+    let verticalRotationMin: Double?
+    let verticalRotationMax: Double?
+    let horizontalRotationMin: Double?
+    let horizontalRotationMax: Double?
+
+    let zoomMin: Double?
+    let zoomMax: Double?
+    let ratio: Double?
+
+    let order: Int?
+    let isDeleted: Bool?
+    let status: String?
+    let createdAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case layoutHistoryId
+        case name
+        case url3dMap = "url3dMap"
+        case metadata
+        case xPosition, yPosition, zPosition
+        case fieldOfView
+        case verticalRotationMin, verticalRotationMax
+        case horizontalRotationMin, horizontalRotationMax
+        case zoomMin, zoomMax
+        case ratio
+        case order
+        case isDeleted
+        case status
+        case createdAt
+    }
 }

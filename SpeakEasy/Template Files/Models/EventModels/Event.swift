@@ -245,6 +245,11 @@ struct Attendee: Codable {
     var firstName: String?
     var lastName: String?
     var consumerUserImage: ImageData?
+    var hasImage: Bool {
+           guard let key = consumerUserImage?.key?
+               .trimmingCharacters(in: .whitespacesAndNewlines) else { return false }
+           return !key.isEmpty
+       }
 
     static func parse(_ dict: [String: Any]) -> Attendee? {
         do {
@@ -255,6 +260,8 @@ struct Attendee: Codable {
             return nil
         }
     }
+    
+ 
 }
 
 struct ImageData: Codable {
@@ -313,6 +320,7 @@ struct EventTicketSettings: Codable {
     var salesTax: Double
     var isCustomFeeTaxable: Bool
     var isProcessingFeeTaxable: Bool
+    var showTicketListingOnMainScreen: Bool
 }
 
 struct Artists: Codable {

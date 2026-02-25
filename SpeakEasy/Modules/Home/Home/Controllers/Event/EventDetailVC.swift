@@ -254,6 +254,7 @@ final class EventDetailVC: UIViewController {
                     self.venueDetails = venue
                     self.ticketListTableView.reloadData()
                 }
+                
                 let ticket = self.event?.eventTicket ?? []
                 ticket.forEach({tic in
                     self.eventTicketId.append(tic.id ?? "")
