@@ -331,7 +331,7 @@ class TicketSelectionViewController: UIViewController {
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }
                 if isSuccess {
-                    Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: finalSelectedTickets)
+                    Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: finalSelectedTickets, bookingId: id)
                 }
             }
         }

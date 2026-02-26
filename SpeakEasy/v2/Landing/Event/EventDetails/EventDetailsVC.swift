@@ -48,7 +48,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var imageListHiddenView: UIView!
     @IBOutlet weak var lineUpHiddenView: UIView!
     @IBOutlet weak var vipTablesView: UIView!
-    @IBOutlet weak var linkView: UIView!
     @IBOutlet weak var guestListTitleLbl: UILabel!
     @IBOutlet weak var youTubeSuperView: UIView!
     @IBOutlet weak var policyViewMoreBtnView: UIView!
@@ -60,7 +59,9 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var unLockTF: UITextField!
     @IBOutlet weak var unLockBtn: UIView!
     @IBOutlet weak var ticketTableHeightConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var webSiteView: UIView!
+    @IBOutlet weak var webSiteTitleLbl: UILabel!
+    
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
     private var playerView: YTPlayerView!
@@ -80,6 +81,8 @@ class EventDetailsVC: UIViewController {
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
+    private var ticketTableObserver: NSKeyValueObservation?
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,9 +90,9 @@ class EventDetailsVC: UIViewController {
         setupTableView()
         setupImagePager()
         getEventDetail()
+        startTicketTableObserver()
     }
 
-    // ✅ Ticket-only
     private func setupTicketTable() {
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
@@ -179,6 +182,21 @@ class EventDetailsVC: UIViewController {
             }
         }
     }
+    
+    private func startTicketTableObserver() {
+        ticketTableObserver?.invalidate()
+
+        ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            guard let self else { return }
+            self.ticketTableHeightConstraint.constant = tableView.contentSize.height
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func stopTicketTableObserver() {
+        ticketTableObserver?.invalidate()
+        ticketTableObserver = nil
+    }
 
     private func sortAttendeesImageFirst(_ list: [Attendee]) -> [Attendee] {
         let withImage = list.filter { $0.hasImage }
@@ -206,6 +224,14 @@ class EventDetailsVC: UIViewController {
         } else {
             self.vipTablesView.isHidden = true
         }
+        
+        if let button = event?.additionalButtons?.first(where: { $0.isEnable }) {
+            self.webSiteTitleLbl.text = button.title
+            self.webSiteView.isHidden = false
+        } else {
+            self.webSiteView.isHidden = true
+        }
+        setupImagePager()
 
         // ✅ Ticket-only: inline list enable/disable
         let showInlineTickets = event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false
@@ -271,9 +297,11 @@ class EventDetailsVC: UIViewController {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
             buyNowBtnView.backgroundColor = color
+            webSiteView.borderColor = color
         } else {
             let color = UIColor(hex: "6D5EBD")
             buyNowBtnView.backgroundColor = color
+            webSiteView.borderColor = color
         }
 
         setupSocialLinks()
@@ -497,12 +525,10 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickLeftSwipeBtn(_ sender: Any) {
         imagePagerVC?.movePrevious()
-        updateSwipeButtons()
     }
 
     @IBAction func onClickRightSwipeBtn(_ sender: Any) {
         imagePagerVC?.moveNext()
-        updateSwipeButtons()
     }
 
     @IBAction func onClickBuyNow(_ sender: Any) {
@@ -522,6 +548,14 @@ class EventDetailsVC: UIViewController {
             Navigate.to.tableCheckOutVC(self, event: event)
         }
     }
+    
+    @IBAction func onClickWebSiteLinkView(_ sender: Any) {
+        if let button = event?.additionalButtons?.first(where: { $0.isEnable }),
+              let url = URL(string: button.link) {
+               UIApplication.shared.open(url)
+           }
+    }
+    
 
     @objc private func toggleDescription() {
 
@@ -575,25 +609,32 @@ class EventDetailsVC: UIViewController {
     }
 
     private func setupExpandableLabel() {
-
         guard let html = event?.description,
               let attributed = html.htmlToAttributedString else { return }
 
         let mutable = NSMutableAttributedString(attributedString: attributed)
-        mutable.addAttribute(
-            .foregroundColor,
-            value: UIColor.label,
-            range: NSRange(location: 0, length: mutable.length)
-        )
+
+        mutable.trimTrailingWhitespaceAndNewlines()
+        mutable.forceSystemFont15()
+        mutable.addAttribute(.foregroundColor,
+                             value: UIColor.label,
+                             range: NSRange(location: 0, length: mutable.length))
+
+        let style = NSMutableParagraphStyle()
+        style.paragraphSpacing = 0
+        style.paragraphSpacingBefore = 0
+        style.lineSpacing = 0
+        mutable.addAttribute(.paragraphStyle,
+                             value: style,
+                             range: NSRange(location: 0, length: mutable.length))
 
         detailsLbl.attributedText = mutable
         detailsLbl.numberOfLines = collapsedLines
-
+        detailsLbl.font = .systemFont(ofSize: 15)
         viewMoreBtn.setTitle("View More", for: .normal)
 
-        DispatchQueue.main.async {
-            self.checkIfTextNeedsExpansion()
-        }
+        view.layoutIfNeeded()
+        checkIfTextNeedsExpansion()
     }
 
     private func setupPolicyExpandableLabel() {
@@ -602,29 +643,30 @@ class EventDetailsVC: UIViewController {
               let attributed = html.htmlToAttributedString else { return }
 
         let mutable = NSMutableAttributedString(attributedString: attributed)
-        mutable.addAttribute(
-            .foregroundColor,
-            value: UIColor.label,
-            range: NSRange(location: 0, length: mutable.length)
-        )
+
+        mutable.trimTrailingWhitespaceAndNewlines()
+        mutable.forceSystemFont15()
+        mutable.addAttribute(.foregroundColor,
+                             value: UIColor.label,
+                             range: NSRange(location: 0, length: mutable.length))
+
+        let style = NSMutableParagraphStyle()
+        style.paragraphSpacing = 0
+        style.paragraphSpacingBefore = 0
+        style.lineSpacing = 0
+        mutable.addAttribute(.paragraphStyle,
+                             value: style,
+                             range: NSRange(location: 0, length: mutable.length))
 
         policyLbl.attributedText = mutable
         policyLbl.numberOfLines = collapsedLines
 
         policyViewMoreBtn.setTitle("View More", for: .normal)
 
-        DispatchQueue.main.async {
-            self.checkIfPolicyTextNeedsExpansion()
-        }
+        view.layoutIfNeeded()
+        checkIfPolicyTextNeedsExpansion()
     }
-
-    private func updateSwipeButtons() {
-
-        guard let pager = imagePagerVC else { return }
-
-        leftSwipeBtn.isHidden = pager.currentIndex == 0
-        rightSwipeBtn.isHidden = pager.currentIndex == pager.imageURLs.count - 1
-    }
+    
 
     private func checkIfTextNeedsExpansion() {
 
@@ -681,33 +723,19 @@ class EventDetailsVC: UIViewController {
 // MARK: - ImagePageVC (unchanged)
 class ImagePageVC: UIViewController {
 
+    var imageURL: String = ""
     private let imageView = UIImageView()
-    var imageURL: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        loadImage()
-    }
 
-    private func setupUI() {
         imageView.frame = view.bounds
         imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         view.addSubview(imageView)
-    }
 
-    private func loadImage() {
-        guard let imageURL,
-              let url = URL(string: imageURL) else { return }
-
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            guard let data, let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                self.imageView.image = image
-            }
-        }.resume()
+        imageView.sd_setImage(with: URL(string: imageURL))
     }
 }
 
@@ -759,7 +787,7 @@ extension EventDetailsVC: UICollectionViewDelegate,
                         numberOfItemsInSection section: Int) -> Int {
 
         if collectionView == guestListCollectionView {
-            return attendees.count
+            return min(attendees.count, 6)
         } else {
             return artists.count
         }
@@ -891,17 +919,26 @@ extension EventDetailsVC {
 
     func setupImagePager() {
 
-        let images = [
-            "https://picsum.photos/800/600?1",
-            "https://picsum.photos/800/600?2",
-            "https://picsum.photos/800/600?3"
-        ]
+        let gallery = (event?.eventGallery ?? [])
+            .filter { $0.status == "ENABLED" && $0.isDeleted == false }
 
-        let pagerVC = ImagePagerVC(
-            transitionStyle: .scroll,
-            navigationOrientation: .horizontal
-        )
-        pagerVC.imageURLs = images
+        let images = gallery.map { $0.key.imageURL }
+
+        guard !images.isEmpty else {
+            imageListHiddenView.isHidden = true
+            return
+        }
+
+        imageListHiddenView.isHidden = false
+
+        if let pagerVC = imagePagerVC {
+            pagerVC.setImages(images)
+            return
+        }
+
+        let pagerVC = ImagePagerVC(transitionStyle: .scroll,
+                                   navigationOrientation: .horizontal)
+        pagerVC.setImages(images)
 
         addChild(pagerVC)
         pagerVC.view.frame = imageListView.bounds
@@ -913,41 +950,73 @@ extension EventDetailsVC {
     }
 }
 
-class ImagePagerVC: UIPageViewController {
 
+
+class ImagePagerVC: UIPageViewController {
+    
     var imageURLs: [String] = []
     private var pages: [ImagePageVC] = []
     private(set) var currentIndex = 0
-
+    private var isTransitioning = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
         delegate = self
-        setupPages()
     }
-
-    private func setupPages() {
-        pages = imageURLs.map { url in
-            let vc = ImagePageVC()
-            vc.imageURL = url
-            return vc
-        }
-
+    
+    func setImages(_ urls: [String]) {
+        imageURLs = urls
+        buildPages()
+        
+        currentIndex = 0
         if let firstVC = pages.first {
             setViewControllers([firstVC], direction: .forward, animated: false)
         }
     }
+    
+    private func syncCurrentIndexFromVisible() {
+        guard let visible = viewControllers?.first as? ImagePageVC,
+              let idx = pages.firstIndex(where: { $0 === visible }) else { return }
+        currentIndex = idx
+    }
+    
+    private func buildPages() {
+        pages = imageURLs.map { url in
+              let vc = ImagePageVC()
+              vc.imageURL = url
+              return vc
+          }
 
+          currentIndex = 0
+          guard let first = pages.first else { return }   // ✅ prevents crash
+          setViewControllers([first], direction: .forward, animated: false)
+    }
+    
     func moveNext() {
-        guard currentIndex < pages.count - 1 else { return }
-        currentIndex += 1
-        setViewControllers([pages[currentIndex]], direction: .forward, animated: true)
+        guard pages.count > 1, !isTransitioning else { return }
+        syncCurrentIndexFromVisible()
+
+        let nextIndex = (currentIndex + 1) % pages.count
+        isTransitioning = true
+        setViewControllers([pages[nextIndex]], direction: .forward, animated: true) { [weak self] finished in
+            guard let self else { return }
+            self.isTransitioning = false
+            if finished { self.currentIndex = nextIndex }
+        }
     }
 
     func movePrevious() {
-        guard currentIndex > 0 else { return }
-        currentIndex -= 1
-        setViewControllers([pages[currentIndex]], direction: .reverse, animated: true)
+        guard pages.count > 1, !isTransitioning else { return }
+        syncCurrentIndexFromVisible()
+
+        let prevIndex = (currentIndex - 1 + pages.count) % pages.count
+        isTransitioning = true
+        setViewControllers([pages[prevIndex]], direction: .reverse, animated: true) { [weak self] finished in
+            guard let self else { return }
+            self.isTransitioning = false
+            if finished { self.currentIndex = prevIndex }
+        }
     }
 }
 
@@ -955,20 +1024,27 @@ extension ImagePagerVC: UIPageViewControllerDataSource, UIPageViewControllerDele
 
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard pages.count > 1,
+              let vc = viewController as? ImagePageVC,
+              let index = pages.firstIndex(where: { $0 === vc }) else { return nil }
 
-        guard let vc = viewController as? ImagePageVC else { return nil }
-        guard let index = pages.firstIndex(where: { $0 === vc }), index > 0 else { return nil }
-
-        return pages[index - 1]
+        let prev = (index - 1 + pages.count) % pages.count
+        return pages[prev]
     }
 
     func pageViewController(_ pageViewController: UIPageViewController,
                             viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard pages.count > 1,
+              let vc = viewController as? ImagePageVC,
+              let index = pages.firstIndex(where: { $0 === vc }) else { return nil }
 
-        guard let vc = viewController as? ImagePageVC else { return nil }
-        guard let index = pages.firstIndex(where: { $0 === vc }), index < pages.count - 1 else { return nil }
-
-        return pages[index + 1]
+        let next = (index + 1) % pages.count
+        return pages[next]
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            willTransitionTo pendingViewControllers: [UIViewController]) {
+        isTransitioning = true
     }
 
     func pageViewController(_ pageViewController: UIPageViewController,
@@ -976,14 +1052,15 @@ extension ImagePagerVC: UIPageViewControllerDataSource, UIPageViewControllerDele
                             previousViewControllers: [UIViewController],
                             transitionCompleted completed: Bool) {
 
-        guard completed,
-              let visibleVC = viewControllers?.first as? ImagePageVC,
-              let index = pages.firstIndex(where: { $0 === visibleVC }) else { return }
+        isTransitioning = false
 
-        currentIndex = index
+        guard completed,
+              let visible = viewControllers?.first as? ImagePageVC,
+              let idx = pages.firstIndex(where: { $0 === visible }) else { return }
+
+        currentIndex = idx
     }
 }
-
 // MARK: - YouTube (unchanged)
 extension EventDetailsVC: YTPlayerViewDelegate {
 
@@ -1024,3 +1101,30 @@ extension EventDetailsVC: YTPlayerViewDelegate {
     }
 }
 
+
+extension NSMutableAttributedString {
+    func trimTrailingWhitespaceAndNewlines() {
+        let ws = CharacterSet.whitespacesAndNewlines
+        while length > 0 {
+            let lastRange = NSRange(location: length - 1, length: 1)
+            let lastChar = (string as NSString).substring(with: lastRange)
+            if lastChar.rangeOfCharacter(from: ws) != nil {
+                deleteCharacters(in: lastRange)
+            } else {
+                break
+            }
+        }
+    }
+    
+    func forceSystemFont15() {
+         let base = UIFont.systemFont(ofSize: 15)
+
+         enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
+             // keep bold/italic traits if HTML had them
+             let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
+             let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
+             let newFont = UIFont(descriptor: descriptor, size: 15)
+             self.addAttribute(.font, value: newFont, range: range)
+         }
+     }
+}

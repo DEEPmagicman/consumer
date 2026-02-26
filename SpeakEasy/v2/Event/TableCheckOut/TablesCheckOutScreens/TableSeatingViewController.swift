@@ -8,11 +8,8 @@
 import UIKit
 
 class TableSeatingViewController: UIViewController {
-    
-    
+
     @IBOutlet weak var tableName: UILabel!
-//    @IBOutlet weak var totalAmount: UILabel!
-//    @IBOutlet weak var secondAmountLbl: UILabel!
     @IBOutlet weak var tableDetailLbl: UILabel!
     @IBOutlet weak var tableDescriptionLbl: UILabel!
     @IBOutlet weak var guestAndTimeLbl: UILabel!
@@ -21,200 +18,202 @@ class TableSeatingViewController: UIViewController {
     @IBOutlet weak var feesLbl: UILabel!
     @IBOutlet weak var increaseBtn: UIButton!
     @IBOutlet weak var decreaseBtn: UIButton!
-    
-    let infoTextAttributes: [NSAttributedString.Key: Any] = [
-        .font: AppFont.font(weight: .regular, size: 12),
-        .foregroundColor: UIColor(hex: "#D2D5DB")
-    ]
+    @IBOutlet weak var timeCollectionView: UICollectionView!
+    @IBOutlet weak var timeCollectionViewHeight: NSLayoutConstraint!
+
     var seatingArea: SeatingArea?
-    
 
-
-    private var currentGuestCount: Int = 0
-
+    private var currentGuestCount: Int = 1
+    private var timeSlots: [String] = ["6:00 PM", " 7:00 PM" , "8:30 PM",
+                                       "10:00 PM", " 7:00 PM"]
+    private var collectionObserver: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCollectionView()
         configureData()
+        observeCollectionHeight()
     }
     
+    private func setupCollectionView() {
+
+        timeCollectionView.register(TimeTagCVC.self,
+                                    forCellWithReuseIdentifier: TimeTagCVC.identifier)
+
+        timeCollectionView.delegate = self
+        timeCollectionView.dataSource = self
+        timeCollectionView.isScrollEnabled = false
+
+        if let layout = timeCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.scrollDirection = .vertical
+            layout.minimumLineSpacing = 8
+            layout.minimumInteritemSpacing = 8
+        }
+    }
     
+    private func observeCollectionHeight() {
+
+        collectionObserver = timeCollectionView.observe(\.contentSize,
+                                                          options: [.new]) { [weak self] collection, _ in
+            guard let self = self else { return }
+            self.timeCollectionViewHeight.constant = collection.contentSize.height
+        }
+    }
+
     private func configureData() {
-        
+
         guard let item = seatingArea else { return }
-        
+
         tableName.text = item.name
         tableDescriptionLbl.text = item.highlight?.isEmpty == false
             ? item.highlight
             : item.description
-        
-        // Pricing
-//        if item.hidePricing == true {
-////            totalAmount.text = ""
-//            secondAmountLbl.text = ""
-//        } else {
-//            
-//            if let deposit = item.depositWithFees {
-//                totalAmount.text = "$\(deposit.decimalFormat(true))"
-//            } else if let deposit = item.deposit {
-//                totalAmount.text = "$\(deposit.decimalFormat(true))"
-//            }
-//            
-//            if let minimum = item.minimum {
-//                secondAmountLbl.text = "$\(minimum.decimalFormat(true)) min."
-//                miniMumAmountLbl.text = "$\(minimum.decimalFormat(true))"
+
+        currentGuestCount = item.defaultGuest ?? 1
+        guestAndTimeLbl.text = "\(currentGuestCount)"
+        maxiMumGuestLbl.text = "\(item.maxGuest ?? 0)"
+        updateGuestButtons()
+
+        // Extract Time Slots
+//        if let slots = item.timeSlots {
+//            timeSlots = slots.compactMap { slot in
+//                guard let start = slot.startTime,
+//                      let startDate = start.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: true)
+//                else { return nil }
+//
+//                let startTime = startDate.string(format: .hmma, isUTC: false)
+//
+//                if let end = slot.endTime,
+//                   let endDate = end.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: true) {
+//                    let endTime = endDate.string(format: .hmma, isUTC: false)
+//                    return "\(startTime) - \(endTime)"
+//                }
+//
+//                return startTime
 //            }
 //        }
-        
-        // Guests
-        currentGuestCount = item.defaultGuest ?? 1
-        maxiMumGuestLbl.text = "\(item.maxGuest ?? 0)"
-        guestAndTimeLbl.text = "\(currentGuestCount)"
-        
-        updateGuestButtons()
-        
-        // Time slot
-        if let slot = item.timeSlots?.first,
-           let start = slot.startTime,
-           let startDate = start.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: true) {
-            
-            let startTime = startDate.string(format: .hmma, isUTC: false)
-            
-            var endTime = ""
-            if let end = slot.endTime,
-               let endDate = end.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: true) {
-                endTime = endDate.string(format: .hmma, isUTC: false)
-            }
-            
-            let finalTime = endTime.isEmpty ? startTime : "\(startTime) - \(endTime)"
-            
-            tableDetailLbl.attributedText = buildGuestsTimeText(
-                guests: "\(item.defaultGuest ?? 1) to \(item.maxGuest ?? 0) Guests",
-                time: finalTime
-            )
-        }
-        
-        // Fees
-        if let deposit = item.depositWithFees,
-           let base = item.deposit {
-            let fee = deposit - base
-            feesLbl.text = "$\(fee.decimalFormat(true))"
-        }
+
+        timeCollectionView.reloadData()
+        timeCollectionView.collectionViewLayout.invalidateLayout()
+        timeCollectionView.layoutIfNeeded()
     }
 
-    
     private func updateGuestButtons() {
-        
+
         guard let maxGuest = seatingArea?.maxGuest else { return }
-        
+
         increaseBtn.isEnabled = currentGuestCount < maxGuest
-        increaseBtn.alpha = currentGuestCount < maxGuest ? 1.0 : 0.5
-        
+        increaseBtn.alpha = increaseBtn.isEnabled ? 1 : 0.5
+
         decreaseBtn.isEnabled = currentGuestCount > 1
-        decreaseBtn.alpha = currentGuestCount > 1 ? 1.0 : 0.5
+        decreaseBtn.alpha = decreaseBtn.isEnabled ? 1 : 0.5
     }
 
-    func buildGuestsTimeText(
-        guests: String,
-        time: String
-    ) -> NSAttributedString {
+    // MARK: - Actions
 
-        let text = NSMutableAttributedString()
-
-        // icon
-        text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "person.2")))
-
-        // space after icon
-        text.append(NSAttributedString(string: " ", attributes: infoTextAttributes))
-
-        // guests text
-        text.append(NSAttributedString(string: guests, attributes: infoTextAttributes))
-
-        // exact gap between guest & time (image jaisa)
-        text.append(NSAttributedString(string: "  ", attributes: infoTextAttributes))
-
-        // icon
-        text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "clock")))
-
-        // space after icon
-        text.append(NSAttributedString(string: " ", attributes: infoTextAttributes))
-
-        // time text
-        text.append(NSAttributedString(string: time, attributes: infoTextAttributes))
-
-        return text
-    }
-    
-    func makeIconAttachment(systemName: String) -> NSTextAttachment {
-        let attachment = NSTextAttachment()
-        attachment.image = UIImage(systemName: systemName)?
-            .withTintColor(UIColor(hex: "#D2D5DB"), renderingMode: .alwaysOriginal)
-
-        attachment.bounds = CGRect(x: 0, y: -2, width: 14, height: 14)
-        return attachment
-    }
-    
     @IBAction func onClickIncreaseGuest(_ sender: Any) {
-        
         guard let maxGuest = seatingArea?.maxGuest else { return }
-            
-            if currentGuestCount < maxGuest {
-                currentGuestCount += 1
-                guestAndTimeLbl.text = "\(currentGuestCount)"
-            }
-            
-            updateGuestButtons()
-    }
 
-    @IBAction func onClickCheckoutBtn(_ sender: Any) {
-        guard let item = seatingArea else { return }
-          
-          if item.hideCheckout == true {
-              print("Inquiry flow")
-          } else {
-             
-              TablePresenter.createSeatingAreaBooking(
-                  eventId: "6845064d-28fe-40cf-ac1b-6d1e5d4cacfa",
-                  seatingAreaId: "1d185c73-ba96-4089-a763-5a63507552fb",
-                  guests: 3,
-                  queueId: "TABLE_BOOKING_QUEUE_26d0121926f54f50a4d72f3fbb6ff143"
-              ) { ok, err, booking in
-
-                  guard ok, let booking = booking else {
-                      print("Error:", err ?? "")
-                      return
-                  }
-
-                  print("QueueId:", booking.id)
-                  print("Status:", booking.status)
-                  print("Position:", booking.position)
-                  print("Approx Wait:", booking.approxWait, "mins")
-                  if let firstItem = booking.items.first {
-                      print("Seating Area:", firstItem.seatingAreaId)
-                      print("Guests:", firstItem.guests)
-                  }
-              }
-          }
+        if currentGuestCount < maxGuest {
+            currentGuestCount += 1
+            guestAndTimeLbl.text = "\(currentGuestCount)"
+        }
+        updateGuestButtons()
     }
 
     @IBAction func onClickDecreaseGuest(_ sender: Any) {
-        
         if currentGuestCount > 1 {
-                currentGuestCount -= 1
-                guestAndTimeLbl.text = "\(currentGuestCount)"
-            }
-            
-            updateGuestButtons()
-        
+            currentGuestCount -= 1
+            guestAndTimeLbl.text = "\(currentGuestCount)"
+        }
+        updateGuestButtons()
     }
-    
+
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        self.dismiss(animated: false)
+        dismiss(animated: false)
     }
-    
+
     @IBAction func onClickOutSide(_ sender: Any) {
-        self.dismiss(animated: false)
+        dismiss(animated: false)
     }
+}
+
+extension TableSeatingViewController: UICollectionViewDelegate,
+                                      UICollectionViewDataSource,
+                                      UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return timeSlots.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: TimeTagCVC.identifier,
+            for: indexPath
+        ) as! TimeTagCVC
+
+        cell.configure(with: timeSlots[indexPath.item])
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let text = timeSlots[indexPath.item]
+        let font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        let textWidth = text.size(withAttributes: [.font: font]).width
+
+        let padding: CGFloat = 32
+        let width = textWidth + padding
+
+        return CGSize(width: width, height: 32)
+    }
+}
+
+
+
+import UIKit
+
+final class TimeTagCVC: UICollectionViewCell {
     
-    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+
+        backgroundColor = .white
+        layer.cornerRadius = 8
+        layer.masksToBounds = true
+
+        contentView.addSubview(titleLabel)
+
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+    }
+
+    func configure(with text: String) {
+        titleLabel.text = text
+    }
 }

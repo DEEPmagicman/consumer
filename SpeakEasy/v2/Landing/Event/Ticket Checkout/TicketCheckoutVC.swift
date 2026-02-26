@@ -85,7 +85,7 @@ final class TicketCheckoutVC: UIViewController {
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
 
-        fetchPaymentIntentAndSetup(promoCode: promoCodeTextFeild.text ?? "")
+        fetchPaymentIntentAndSetup(promoCode: "")
     }
 
     deinit {
@@ -132,6 +132,10 @@ final class TicketCheckoutVC: UIViewController {
             let price = ticket.price ?? 0
             return result + (Double(quantity) * price)
         }
+        
+        
+        
+        
 
         totalAmountLbl.text = subtotal == 0 ? "Free" : "\(currency)\(subtotal.decimalFormat(true))"
 
@@ -259,14 +263,36 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func updateUIWithPaymentDetail(_ detail: PaymentDetail?) {
+
+        guard let detail = detail else {
+            feesAndTaxes = []
+            feesAndTaxesTitleView.isHidden = true
+            feesAndTaxesTableView.reloadData()
+            totalAmountLbl.text = "Free"
+            feesAndTxtTotalAmountLbl.text = ""
+            discountView.isHidden = true
+            discountToalLbl.isHidden = true
+            return
+        }
         feesAndTaxes = buildFeesArray(from: detail)
         feesAndTaxesTitleView.isHidden = feesAndTaxes.isEmpty
         feesAndTaxesTableView.reloadData()
 
-        let total = detail?.subTotal ?? 0
-        feesAndTxtTotalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        let total = detail.total
+        let subTotal = detail.subTotal   
 
-        let discount = detail?.discount ?? 0
+        let feesAmount = total - subTotal
+
+        if total <= 0 {
+            totalAmountLbl.text = "Free"
+            feesAndTxtTotalAmountLbl.text = ""
+        } else {
+            totalAmountLbl.text = "\(currency)\(total.decimalFormat(true))"
+            feesAndTxtTotalAmountLbl.text = "\(currency)\(feesAmount.decimalFormat(true))"
+        }
+
+        let discount = detail.discount ?? 0
+
         if discount > 0 {
             discountView.isHidden = false
             discountToalLbl.isHidden = false
@@ -276,7 +302,7 @@ final class TicketCheckoutVC: UIViewController {
             discountToalLbl.isHidden = true
         }
     }
-
+    
     private func setupStripePaymentSheet(clientSecret: String, ephemeralKey: String) {
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
 
@@ -436,7 +462,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
         if tableView == self.tableView {
             let ticket = selectedTickets[indexPath.row]
             let quantity = ticket.selectedTicketCount ?? 0
-            let price = ticket.price ?? 0
+            let price = (ticket.price ?? 0) - (ticket.extraFees ?? 0)
             let total = Double(quantity) * price
 
             cell.titleLbl.text = "\(quantity)x \(ticket.tierName)"

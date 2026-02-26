@@ -25,8 +25,8 @@ class EventGuestListCVC: UICollectionViewCell {
         bgView.clipsToBounds = true
 
         attendeesName.textAlignment = .center
-        attendeesName.textColor = .white
-        attendeesName.font = UIFont.boldSystemFont(ofSize: 14)
+        attendeesName.textColor = .black
+        attendeesName.font = UIFont.systemFont(ofSize: 14)
     }
 
     override func prepareForReuse() {
@@ -81,12 +81,14 @@ class EventGuestListCVC: UICollectionViewCell {
     private func gradientColors(for id: String) -> [UIColor] {
 
         let palettes: [[UIColor]] = [
-            [UIColor.systemPurple, UIColor.systemPink],
-            [UIColor.systemBlue, UIColor.systemTeal],
-            [UIColor.systemOrange, UIColor.systemRed],
-            [UIColor.systemGreen, UIColor.systemMint],
-            [UIColor.systemIndigo, UIColor.systemBlue],
-            [UIColor.systemPink, UIColor.systemOrange]
+            [UIColor(hex: "#f9d423"), UIColor(hex: "#ff4e50")],
+            [UIColor(hex: "#a1ffce"), UIColor(hex: "#faffd1")],
+            [UIColor(hex: "#fbc2eb"), UIColor(hex: "#a6c1ee")],
+            [UIColor(hex: "#fad0c4"), UIColor(hex: "#ffd1ff")],
+            [UIColor(hex: "#89f7fe"), UIColor(hex: "#66a6ff")],
+            [UIColor(hex: "#fbc2eb"), UIColor(hex: "#f9d423")],
+            [UIColor(hex: "#ffecd2"), UIColor(hex: "#fcb69f")],
+            [UIColor(hex: "#a18cd1"), UIColor(hex: "#fbc2eb")]
         ]
 
         let index = abs(id.hashValue) % palettes.count

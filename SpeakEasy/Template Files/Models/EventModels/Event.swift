@@ -39,6 +39,7 @@ struct Event: Codable {
 //    var floorPlanId: String?
     var eventTicket: [EventTicket]?
     var venue: ClipVenue?
+    var additionalButtons: [AdditionalButton]?
     var eventHasArtist: [ArtistData]?
     var showAddress: Bool?
     var totalTickets: Int?
@@ -49,6 +50,7 @@ struct Event: Codable {
     var isEnableOnlineTables: Bool
     var isEnable3DMap: Bool
     var isEnableReservationRequest: Bool
+    var eventGallery: [EventGallery]?
     var eventAddOnTicket: [EventTicket]?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
@@ -231,6 +233,12 @@ struct Event: Codable {
 }
 
 
+struct AdditionalButton: Codable {
+    let link: String
+    let title: String
+    let isEnable: Bool
+}
+
 struct AttendeesResponse: Codable {
     var total: Int?
     var list: [Attendee]?
@@ -268,6 +276,19 @@ struct ImageData: Codable {
     var id: String?
     var key: String?
 }
+
+struct EventGallery: Codable {
+    let id: String
+    let eventId: String
+    let key: String
+    let name: String?
+    let description: String?
+    let status: String
+    let isDeleted: Bool
+    let createdAt: String
+    let updatedAt: String
+}
+
 
 
 
