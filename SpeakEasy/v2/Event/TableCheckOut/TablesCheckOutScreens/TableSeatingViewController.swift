@@ -25,7 +25,7 @@ class TableSeatingViewController: UIViewController {
 
     private var currentGuestCount: Int = 1
     private var timeSlots: [String] = ["6:00 PM", " 7:00 PM" , "8:30 PM",
-                                       "10:00 PM", " 7:00 PM"]
+                                       "10:00 PM", " 7:00 PM", "10:00 PM", " 7:00 PM"]
     private var collectionObserver: NSKeyValueObservation?
 
     override func viewDidLoad() {
@@ -185,6 +185,7 @@ final class TimeTagCVC: UICollectionViewCell {
         label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
 
@@ -203,12 +204,13 @@ final class TimeTagCVC: UICollectionViewCell {
         backgroundColor = .white
         layer.cornerRadius = 8
         layer.masksToBounds = true
+        
 
         contentView.addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }

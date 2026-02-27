@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MHLoadingButton
 
 class TicketSelectionViewController: UIViewController {
 
@@ -16,7 +17,7 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var ticketTableView: UITableView!
     @IBOutlet weak var hiddenTicketField: UITextField!
     @IBOutlet weak var eventTitleLbl: UILabel!
-    @IBOutlet weak var continueToCheckOutBtn: UIButton!
+    @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var protectedTicketView: UIView!
     @IBOutlet weak var unLockTF: UITextField!
@@ -36,7 +37,7 @@ class TicketSelectionViewController: UIViewController {
     private var addOnTickets: [EventTicket] = []
 
     private var selectedNormalTickets: [EventTicket] = []
-
+    
     var event: Event?
     var venueDetails: ClipVenue?
 
@@ -62,6 +63,9 @@ class TicketSelectionViewController: UIViewController {
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
+        
+        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+        continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
 
         setupData()
     }
@@ -115,6 +119,7 @@ class TicketSelectionViewController: UIViewController {
             let color = UIColor(hex: hex)
             dateandtimeLbl.textColor = color
             continueToCheckOutBtn.backgroundColor = color
+            continueToCheckOutBtn.bgColor = color
         }
 
         func filterAvailable(_ list: [EventTicket]) -> [EventTicket] {
@@ -294,10 +299,11 @@ class TicketSelectionViewController: UIViewController {
             guard !selected.isEmpty else { return }
 
             selectedNormalTickets = selected
+           
 
             if addOnTickets.isEmpty {
                 let ticketsPayload = buildTicketsPayload(from: selectedNormalTickets)
-
+                continueToCheckOutBtn.showLoader(userInteraction: false)
                 PaymentPresenter.createEventBookingV2(
                     eventId: event.id,
                     code: UserDefault.shared.user?.code ?? "+1",
@@ -307,8 +313,11 @@ class TicketSelectionViewController: UIViewController {
                     tickets: ticketsPayload
                 ) { [weak self] isSuccess, errMsg, id, message in
                     guard let self = self else { return }
+                    continueToCheckOutBtn.hideLoader()
                     if isSuccess {
                         Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: self.selectedNormalTickets, bookingId: id)
+                    } else {
+                        Alert.showToast(errMsg ?? "Somthing went wrong")
                     }
                 }
                 return
@@ -320,7 +329,7 @@ class TicketSelectionViewController: UIViewController {
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let finalSelectedTickets = selectedNormalTickets + selectedAddOns
             let ticketsPayload = buildTicketsPayload(from: finalSelectedTickets)
-
+            continueToCheckOutBtn.showLoader(userInteraction: true)
             PaymentPresenter.createEventBookingV2(
                 eventId: event.id,
                 code: UserDefault.shared.user?.code ?? "+1",
@@ -330,8 +339,11 @@ class TicketSelectionViewController: UIViewController {
                 tickets: ticketsPayload
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }
+                continueToCheckOutBtn.hideLoader()
                 if isSuccess {
                     Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: finalSelectedTickets, bookingId: id)
+                } else {
+                    Alert.showToast(errMsg ?? "Somthing went wrong")
                 }
             }
         }

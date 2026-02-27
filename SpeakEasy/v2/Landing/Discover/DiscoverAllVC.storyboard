@@ -509,6 +509,7 @@
                     </view>
                     <connections>
                         <outlet property="allEventsCollectionView" destination="ZYF-n5-vMW" id="ajT-QT-uzn"/>
+                        <outlet property="todaysEventsView" destination="WXE-cQ-2Xm" id="Kaa-Tv-Xij"/>
                         <outlet property="tonightEventCollectionView" destination="83y-Sd-L9H" id="lju-a9-ytt"/>
                         <outlet property="venueListCollectionView" destination="Iuj-nc-bcY" id="dJg-PO-gd3"/>
                         <outlet property="venueTitleLable" destination="9TC-x7-joR" id="myn-uH-2w6"/>

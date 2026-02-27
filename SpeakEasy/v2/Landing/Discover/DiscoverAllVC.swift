@@ -14,6 +14,7 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var venueListCollectionView: UICollectionView!
     @IBOutlet weak var allEventsCollectionView: UICollectionView!
     @IBOutlet weak var venueTitleLable: UILabel!
+    @IBOutlet weak var todaysEventsView: UIView!
     
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
@@ -129,6 +130,11 @@ final class DiscoverAllVC: UIViewController {
                 self.tonightEventSkip = self.todaysEvents.count
             }
             isTonightEventInitialLoading = false
+            if todaysEvents.isEmpty {
+                self.todaysEventsView.isHidden = true
+            } else {
+                self.todaysEventsView.isHidden = false
+            }
             self.tonightEventCollectionView.reloadData()
             Loader.hide()
         }
@@ -151,6 +157,7 @@ final class DiscoverAllVC: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.setVenueListForSelectedCity()
+                self?.getTonightEvent()
             }
             .store(in: &cancellables)
     }

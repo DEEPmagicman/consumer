@@ -517,7 +517,7 @@
                                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                                     <state key="normal" image="ic_checkbox_unchecked"/>
                                                                     <connections>
-                                                                        <action selector="onClickAcceptCheckBox:" destination="-1" eventType="touchUpInside" id="TU0-Nq-Wqr"/>
+                                                                        <action selector="onClickChekBox:" destination="-1" eventType="touchUpInside" id="dZG-Bw-4CT"/>
                                                                     </connections>
                                                                 </button>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfp-JR-CoQ">

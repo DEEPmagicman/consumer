@@ -13,7 +13,7 @@
                 <outlet property="addOnTicketTitleLbl" destination="4QK-FH-w4h" id="QLw-cI-JAL"/>
                 <outlet property="addOnTicketTitleView" destination="WWA-Ux-jQc" id="Tav-ad-5DD"/>
                 <outlet property="continueButtonBottomConstraint" destination="quL-gL-Drw" id="olF-sB-scf"/>
-                <outlet property="continueToCheckOutBtn" destination="QdQ-iL-mlK" id="LbJ-HG-LoC"/>
+                <outlet property="continueToCheckOutBtn" destination="QdQ-iL-mlK" id="xc5-mY-Ib6"/>
                 <outlet property="dateandtimeLbl" destination="ZIU-O8-eVe" id="cbw-Rc-gQV"/>
                 <outlet property="eventTitleLbl" destination="22C-en-57q" id="ngL-Jd-Gxe"/>
                 <outlet property="hiddenTicketField" destination="yqm-h6-9ME" id="h7k-m5-EOM"/>
@@ -265,7 +265,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bdU-Qf-Ouc">
                             <rect key="frame" x="0.0" y="0.0" width="345" height="0.0"/>
                             <subviews>
-                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QdQ-iL-mlK">
+                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QdQ-iL-mlK" customClass="LoadingButton" customModule="MHLoadingButton">
                                     <rect key="frame" x="0.0" y="0.0" width="120" height="40"/>
                                     <color key="backgroundColor" red="0.42745098039215684" green="0.36862745098039218" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>

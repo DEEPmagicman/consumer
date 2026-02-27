@@ -61,6 +61,9 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var ticketTableHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var webSiteView: UIView!
     @IBOutlet weak var webSiteTitleLbl: UILabel!
+    @IBOutlet weak var bottemButtonView: UIStackView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var detailsTitleLbl: UILabel!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -82,6 +85,8 @@ class EventDetailsVC: UIViewController {
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
     private var ticketTableObserver: NSKeyValueObservation?
+    private var skeletonView: SkeletonOverlayView?
+    private var isLoading = false
 
 
     override func viewDidLoad() {
@@ -92,6 +97,14 @@ class EventDetailsVC: UIViewController {
         getEventDetail()
         startTicketTableObserver()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if isLoading {
+            skeletonView?.updateFrames()
+        }
+    }
 
     private func setupTicketTable() {
         ticketTableView.delegate = self
@@ -99,14 +112,47 @@ class EventDetailsVC: UIViewController {
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
         ticketTableView.isScrollEnabled = false
     }
+    
+    func showSkeleton() {
+
+        isLoading = true
+        view.layoutIfNeeded()
+
+        let targets: [UIView] = [
+            mainImg,
+            titleLbl,
+            venueLogo,
+            venueName,
+            timingLbl,
+            guestListCollectionView,
+            detailsLbl,
+            ticketsTitleLbl
+        ]
+
+        let sk = SkeletonOverlayView()
+        sk.show(over: view, targets: targets)
+
+        skeletonView = sk
+
+        self.scrollView.alpha = 0
+    }
+    
+    func hideSkeleton() {
+
+        isLoading = false
+        self.scrollView.alpha = 1
+
+        skeletonView?.hide()
+        skeletonView = nil
+    }
 
     private func getEventDetail() {
         guard let eventId  = self.event?.uniqueId else {
             return
         }
-        Loader.show()
+        showSkeleton()
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
-            Loader.hide()
+            self?.hideSkeleton()
             guard let self = self else {
                 return
             }
@@ -989,7 +1035,7 @@ class ImagePagerVC: UIPageViewController {
           }
 
           currentIndex = 0
-          guard let first = pages.first else { return }   // ✅ prevents crash
+          guard let first = pages.first else { return }   
           setViewControllers([first], direction: .forward, animated: false)
     }
     

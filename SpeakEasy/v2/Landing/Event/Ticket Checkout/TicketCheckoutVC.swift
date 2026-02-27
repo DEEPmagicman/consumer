@@ -59,6 +59,8 @@ final class TicketCheckoutVC: UIViewController {
     private var paymentDetail: PaymentDetail?
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
+    private var skeletonView: SkeletonOverlayView?
+    private var isLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,11 +110,10 @@ final class TicketCheckoutVC: UIViewController {
     private func getBooking(id: String?) {
         guard let id = id else { return }
 
-        if booking == nil { Loader.show() }
+        if booking == nil {  }
 
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
-            Loader.hide()
             if isSuccess {
                 self.booking = booking
                 self.reloadFeesUIFromBooking()
@@ -232,8 +233,6 @@ final class TicketCheckoutVC: UIViewController {
     private func fetchPaymentIntentAndSetup(promoCode: String) {
         guard let bookingId = bookingId else { return }
 
-        Loader.show()
-
         let coverTickets = buildCoverTicketsForPaymentIntent()
 
         PaymentPresenter.getPaymentIntent(
@@ -244,7 +243,6 @@ final class TicketCheckoutVC: UIViewController {
         ) { [weak self] isSuccess, _, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
 
             guard let self = self else { return }
-            Loader.hide()
 
             guard isSuccess, let clientSecret else { return }
 
@@ -380,38 +378,43 @@ final class TicketCheckoutVC: UIViewController {
             fetchPaymentIntentAndSetup(promoCode: promo)
         }
     }
-
+    
+    @IBAction func onClickChekBox(_ sender: Any) {
+        
+    }
     
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
-        if isPaymentInitiated { return }
-        isPaymentInitiated = true
-
-        if isFreeTicket {
-            isPaymentInitiated = false
-            createFreeEventBookingAndNavigate()
-            return
-        }
-
-        guard let paymentSheet else {
-            isPaymentInitiated = false
-            return
-        }
-
-        paymentSheet.present(from: self) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .completed:
-                self.isPaymentInitiated = false
-                self.completePaymentSuccess()
-
-            case .canceled:
-                self.isPaymentInitiated = false
-
-            case .failed:
-                self.isPaymentInitiated = false
-            }
-        }
+        
+        Navigate.to.ticketConfirmationVC(self)
+//        if isPaymentInitiated { return }
+//        isPaymentInitiated = true
+//
+//        if isFreeTicket {
+//            isPaymentInitiated = false
+//            createFreeEventBookingAndNavigate()
+//            return
+//        }
+//
+//        guard let paymentSheet else {
+//            isPaymentInitiated = false
+//            return
+//        }
+//
+//        paymentSheet.present(from: self) { [weak self] result in
+//            guard let self = self else { return }
+//
+//            switch result {
+//            case .completed:
+//                self.isPaymentInitiated = false
+//                self.completePaymentSuccess()
+//
+//            case .canceled:
+//                self.isPaymentInitiated = false
+//
+//            case .failed:
+//                self.isPaymentInitiated = false
+//            }
+//        }
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {

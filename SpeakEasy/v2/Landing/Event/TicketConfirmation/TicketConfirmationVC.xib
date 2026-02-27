@@ -9,7 +9,18 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TicketConfirmationVC" customModule="Speakeasy" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TicketConfirmationVC" customModule="Speakeasy" customModuleProvider="target">
+            <connections>
+                <outlet property="dateandtimeLbl" destination="2OY-kD-gra" id="ykZ-Mg-aZ4"/>
+                <outlet property="eventImgView" destination="b6y-Ie-SKV" id="9QD-sc-t4o"/>
+                <outlet property="eventTitleLbl" destination="22g-3V-iqU" id="Tod-S6-u3s"/>
+                <outlet property="noteView" destination="Gbt-Ve-iYJ" id="y73-Jf-cZo"/>
+                <outlet property="venueLogoImg" destination="QcZ-HN-WUU" id="nPe-jI-JMD"/>
+                <outlet property="venueName" destination="Hrt-Sc-EUs" id="GUU-Su-I3O"/>
+                <outlet property="venueName2" destination="cf2-Du-xfw" id="Vwd-28-HtC"/>
+                <outlet property="view" destination="JTH-uv-TlM" id="Qa6-89-vMR"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="JTH-uv-TlM">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
@@ -57,6 +68,9 @@
                                     </constraints>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" image="closeIc"/>
+                                    <connections>
+                                        <action selector="onClickCloseBtn:" destination="-1" eventType="touchUpInside" id="ifV-PF-GCK"/>
+                                    </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fedde Le Grand" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22g-3V-iqU">
                                     <rect key="frame" x="107.00000000000001" y="162" width="179.33333333333337" height="28.666666666666657"/>
@@ -99,12 +113,12 @@
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gbt-Ve-iYJ">
                             <rect key="frame" x="14" y="515.66666666666663" width="365" height="186.33333333333337"/>
-                            <mutableString key="text">Take a piece of E11EVEN with you anywhere you go HERE
+                            <string key="text">Take a piece of E11EVEN with you anywhere you go HERE
 DRESS CODE:
 Upscale and Stylish Nightlife attire. No oversized clothing, including but not limited to T-shirts and pants. No beachwear permitted, such as shorts, tank tops, flip-flops, baseball caps, jerseys, etc.
 
 NOTICE OF FILMING AND PHOTOGRAPHY
-VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDANCE CONSTITUTES YOUR CONSENT TO BE PHOTOGRAPHED, FILMED, AND/OR OTHERWISE RECORDED AND GIVES E11EVEN ALL USAGE RIGHTS AT THEIR DISCRETION</mutableString>
+VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDANCE CONSTITUTES YOUR CONSENT TO BE PHOTOGRAPHED, FILMED, AND/OR OTHERWISE RECORDED AND GIVES E11EVEN ALL USAGE RIGHTS AT THEIR DISCRETION</string>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -154,6 +168,9 @@ VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDA
                                     <real key="value" value="20"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="onClickViewtTicket:" destination="-1" eventType="touchUpInside" id="INj-sc-ciZ"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

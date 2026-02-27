@@ -430,4 +430,8 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
+    func ticketConfirmationVC(_ sender: UIViewController) {
+        let vc = TicketConfirmationVC(nibName: "TicketConfirmationVC", bundle: nil)
+        sender.pushVC(vc)
+    }
 }
