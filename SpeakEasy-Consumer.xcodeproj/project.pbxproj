@@ -8,12 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
+		040F377A2F52EDAF00473EBC /* SignUpDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */; };
 		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
 		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
 		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
 		042471522F51D18A00FC3F11 /* SkeletonOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042471512F51D18A00FC3F11 /* SkeletonOverlayView.swift */; };
 		0425E3C92F3460B8005E4130 /* EventDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */; };
 		0425E3CA2F3460B8005E4130 /* EventDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */; };
+		0426E1D82F52F08B005F474E /* LogInPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0426E1D72F52F08A005F474E /* LogInPopUpViewController.swift */; };
+		0426E1DA2F52F0BB005F474E /* VerifyNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0426E1D92F52F0BB005F474E /* VerifyNumberViewController.swift */; };
 		0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */; };
 		0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
@@ -69,10 +72,12 @@
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
 		04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */; };
 		04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */; };
+		04CC7BCD2F52CC8000ABB455 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CC7BCC2F52CC8000ABB455 /* SignUpViewController.swift */; };
 		04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */; };
 		04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */; };
 		04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */; };
 		04E63FCD2F4D635200295C04 /* TablePurchaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */; };
+		04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04FACD4E2F52B0C80022011C /* SignUp.storyboard */; };
 		04FCDE252F3C56C700D10F90 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
 		2966E3322980F85E00B5E103 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3302980F85E00B5E103 /* Main.storyboard */; };
@@ -419,11 +424,14 @@
 
 /* Begin PBXFileReference section */
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
+		040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpDetailsViewController.swift; sourceTree = "<group>"; };
 		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
 		04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerViewTVC.xib; sourceTree = "<group>"; };
 		042471512F51D18A00FC3F11 /* SkeletonOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonOverlayView.swift; sourceTree = "<group>"; };
 		0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailsVC.swift; sourceTree = "<group>"; };
 		0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventDetailsVC.xib; sourceTree = "<group>"; };
+		0426E1D72F52F08A005F474E /* LogInPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInPopUpViewController.swift; sourceTree = "<group>"; };
+		0426E1D92F52F0BB005F474E /* VerifyNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberViewController.swift; sourceTree = "<group>"; };
 		0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueDetailsVC.swift; sourceTree = "<group>"; };
 		0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueDetailsVC.xib; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -470,10 +478,12 @@
 		04A433202F444B3800FB119A /* TableSeatingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableSeatingViewController.xib; sourceTree = "<group>"; };
 		04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueTVC.swift; sourceTree = "<group>"; };
 		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
+		04CC7BCC2F52CC8000ABB455 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		04E254C62BFF490B00505774 /* PaymentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTableViewCell.swift; sourceTree = "<group>"; };
 		04E254C72BFF490B00505774 /* PaymentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentTableViewCell.xib; sourceTree = "<group>"; };
 		04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePurchaseVC.swift; sourceTree = "<group>"; };
 		04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TablePurchaseVC.xib; sourceTree = "<group>"; };
+		04FACD4E2F52B0C80022011C /* SignUp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignUp.storyboard; sourceTree = "<group>"; };
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2966E32C2980F85E00B5E103 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -974,6 +984,18 @@
 				04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */,
 			);
 			path = TablePurchaseVC;
+			sourceTree = "<group>";
+		};
+		04FACD4D2F52B07A0022011C /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				04FACD4E2F52B0C80022011C /* SignUp.storyboard */,
+				04CC7BCC2F52CC8000ABB455 /* SignUpViewController.swift */,
+				040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */,
+				0426E1D72F52F08A005F474E /* LogInPopUpViewController.swift */,
+				0426E1D92F52F0BB005F474E /* VerifyNumberViewController.swift */,
+			);
+			path = SignUp;
 			sourceTree = "<group>";
 		};
 		2618555335F8CF7D7AAA33CF /* Frameworks */ = {
@@ -1840,6 +1862,7 @@
 		CEF48B4E2EFA48F7006A6468 /* Landing */ = {
 			isa = PBXGroup;
 			children = (
+				04FACD4D2F52B07A0022011C /* SignUp */,
 				CEC6D6D12EF92B1C00A05672 /* Landing.storyboard */,
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
 				CE4580152EF94F4700A873C4 /* Orders.storyboard */,
@@ -2185,6 +2208,7 @@
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				04A202C82F36041300900A27 /* TicketsTVC.xib in Resources */,
 				04A202C92F36041300900A27 /* TicketCheckoutVC.xib in Resources */,
+				04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */,
 				04A202CA2F36041300900A27 /* TicketSelectionViewController.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
@@ -2406,6 +2430,7 @@
 				CAC4141428A478050007BA86 /* YearsCollectionViewCell.swift in Sources */,
 				04A202F52F36060D00900A27 /* FAQsTableViewCell.swift in Sources */,
 				6AF2B9FB2F0BC9EF00069A90 /* TableRequestVC.swift in Sources */,
+				040F377A2F52EDAF00473EBC /* SignUpDetailsViewController.swift in Sources */,
 				82847A8629828BA600611DC4 /* ticketTypeTableViewCell.swift in Sources */,
 				CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
@@ -2428,6 +2453,7 @@
 				CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */,
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CE954B992C392C8500BD3009 /* DropdownCustomCell.swift in Sources */,
+				0426E1DA2F52F0BB005F474E /* VerifyNumberViewController.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CEE02DAA2EFB93F600AC7756 /* DiscoverAllVC.swift in Sources */,
@@ -2469,6 +2495,7 @@
 				CEBCF6042D48E2FD00B640C8 /* PhoneNumberTextField.swift in Sources */,
 				045D2BFB2F3A163700842613 /* TicketConfirmationVC.swift in Sources */,
 				CEBCF6052D48E2FD00B640C8 /* MetadataTypes.swift in Sources */,
+				04CC7BCD2F52CC8000ABB455 /* SignUpViewController.swift in Sources */,
 				CEBCF6062D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
 				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
@@ -2536,6 +2563,7 @@
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
 				6AF2B9D02F09477300069A90 /* TableCheckOutVC.swift in Sources */,
 				CE48D8342EFA7CE100E7110B /* EventV2CVC.swift in Sources */,
+				0426E1D82F52F08B005F474E /* LogInPopUpViewController.swift in Sources */,
 				CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
 				CE45A5B42C3BC9CF00E1FE3F /* DropDownCell.swift in Sources */,
@@ -2843,7 +2871,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 223;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2938,7 +2966,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 224;
+				CURRENT_PROJECT_VERSION = 223;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

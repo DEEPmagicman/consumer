@@ -58,7 +58,7 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
-        Navigate.to.enterPhoneNumVc(self, isFromLogin: true)
+        Navigate.to.signUpViewControllerVc(self)
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {

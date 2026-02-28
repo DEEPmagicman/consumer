@@ -385,36 +385,36 @@ final class TicketCheckoutVC: UIViewController {
     
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
         
-        Navigate.to.ticketConfirmationVC(self)
-//        if isPaymentInitiated { return }
-//        isPaymentInitiated = true
-//
-//        if isFreeTicket {
-//            isPaymentInitiated = false
-//            createFreeEventBookingAndNavigate()
-//            return
-//        }
-//
-//        guard let paymentSheet else {
-//            isPaymentInitiated = false
-//            return
-//        }
-//
-//        paymentSheet.present(from: self) { [weak self] result in
-//            guard let self = self else { return }
-//
-//            switch result {
-//            case .completed:
-//                self.isPaymentInitiated = false
-//                self.completePaymentSuccess()
-//
-//            case .canceled:
-//                self.isPaymentInitiated = false
-//
-//            case .failed:
-//                self.isPaymentInitiated = false
-//            }
-//        }
+//        Navigate.to.ticketConfirmationVC(self)
+        if isPaymentInitiated { return }
+        isPaymentInitiated = true
+
+        if isFreeTicket {
+            isPaymentInitiated = false
+            createFreeEventBookingAndNavigate()
+            return
+        }
+
+        guard let paymentSheet else {
+            isPaymentInitiated = false
+            return
+        }
+
+        paymentSheet.present(from: self) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .completed:
+                self.isPaymentInitiated = false
+                self.completePaymentSuccess()
+
+            case .canceled:
+                self.isPaymentInitiated = false
+
+            case .failed:
+                self.isPaymentInitiated = false
+            }
+        }
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {

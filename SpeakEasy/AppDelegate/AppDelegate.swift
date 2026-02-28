@@ -234,7 +234,7 @@ extension AppDelegate {
 //        navigationController.navigationBar.isHidden = true
 //        self.window?.rootViewController = navigationController
         
-        let vc = AppDelegate.gotoTab
+        let vc = AppDelegate.gotoSignUp
         let navigation = UINavigationController(rootViewController: vc)
         navigation.navigationBar.isHidden = true
         self.window?.rootViewController = navigation
@@ -281,6 +281,12 @@ extension AppDelegate {
         } else {
             guestUserLastNavigation = (.appLaunch, "")
         }
+    }
+    
+    static var gotoSignUp: UIViewController {
+        let signUp = StoryboardAndXibManager.StoryBoard.signUp
+            .instantiateVC(withIdentifier: VerifyNumberViewController.self)
+        return signUp
     }
     
     static var gotoTab: UIViewController {

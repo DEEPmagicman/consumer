@@ -44,7 +44,7 @@ final class Navigate {
     }
     
     func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String, countryCode: String) {
-        let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(VerificationCodeViewController.self)
+        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(VerifyNumberViewController.self)
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp ?? ""
         vc.otpRef = otpRef ?? ""
@@ -364,6 +364,36 @@ final class Navigate {
         }
         sender.navigationController?.present(vc, animated: true)
 //        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+    func signUpDetailsViewControllerVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(SignUpDetailsViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func loginPopUpVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(LogInPopUpViewController.self)
+//        vc.modalPresentationStyle = .overCurrentContext
+        sender.navigationController?.pushViewController(vc, animated: true)
+//        sender.navigationController?.present(vc, animated: true)
+    }
+    
+    func verifyNumberPopUpVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(VerifyNumberViewController.self)
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.navigationController?.present(vc, animated: true)
+    }
+    
+    static var gotoSignUp: UIViewController {
+        let signUp = StoryboardAndXibManager.StoryBoard.signUp
+            .instantiateVC(withIdentifier: SignUpViewController.self)
+        return signUp
+    }
+    
+    func signUpViewControllerVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(SignUpViewController.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     
