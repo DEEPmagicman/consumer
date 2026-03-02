@@ -8,6 +8,17 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-Medium.ttf">
+            <string>Inter-Medium</string>
+        </array>
+        <array key="Inter-Regular.ttf">
+            <string>Inter-Regular</string>
+        </array>
+        <array key="Inter-SemiBold.ttf">
+            <string>Inter-SemiBold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TicketConfirmationVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
@@ -30,10 +41,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="728"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="39a-bM-gAN">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="236.66666666666666"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="231.66666666666666"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0q-f3-F2u">
-                                    <rect key="frame" x="127.33333333333333" y="118" width="138.66666666666669" height="20"/>
+                                    <rect key="frame" x="125.33333333333333" y="118" width="142.66666666666669" height="20"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="venueLogo" translatesAutoresizingMaskIntoConstraints="NO" id="QcZ-HN-WUU">
                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
@@ -43,8 +54,8 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hrt-Sc-EUs">
-                                            <rect key="frame" x="28.000000000000007" y="0.0" width="110.66666666666669" height="20"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <rect key="frame" x="28.000000000000007" y="0.0" width="114.66666666666669" height="20"/>
+                                            <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -72,21 +83,21 @@
                                         <action selector="onClickCloseBtn:" destination="-1" eventType="touchUpInside" id="ifV-PF-GCK"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fedde Le Grand" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22g-3V-iqU">
-                                    <rect key="frame" x="107.00000000000001" y="162" width="179.33333333333337" height="28.666666666666657"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fedde Le Grand" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="22g-3V-iqU">
+                                    <rect key="frame" x="105.66666666666667" y="162" width="181.66666666666663" height="29"/>
+                                    <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="24"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cf2-Du-xfw">
-                                    <rect key="frame" x="150.33333333333334" y="198.66666666666666" width="92.666666666666657" height="14"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                    <rect key="frame" x="147.33333333333334" y="199" width="98.333333333333343" height="14"/>
+                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Sep 19 at 9:00 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2OY-kD-gra">
-                                    <rect key="frame" x="111.33333333333333" y="216.66666666666666" width="170.33333333333337" height="20"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                    <rect key="frame" x="134.33333333333334" y="217" width="124.33333333333334" height="14.666666666666657"/>
+                                    <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                     <color key="textColor" red="0.42745098040000001" green="0.36862745099999999" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -95,42 +106,41 @@
                             <constraints>
                                 <constraint firstItem="cf2-Du-xfw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="39a-bM-gAN" secondAttribute="leading" constant="10" id="68q-CR-qKr"/>
                                 <constraint firstItem="2OY-kD-gra" firstAttribute="top" secondItem="cf2-Du-xfw" secondAttribute="bottom" constant="4" id="D1x-zJ-VIg"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="22g-3V-iqU" secondAttribute="trailing" constant="10" id="Qjj-PQ-6Qr"/>
                                 <constraint firstItem="b0q-f3-F2u" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="39a-bM-gAN" secondAttribute="leading" constant="10" id="V1b-Og-OU0"/>
                                 <constraint firstItem="y4e-hk-lcp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="b0q-f3-F2u" secondAttribute="trailing" constant="10" id="Vo2-Qd-uTN"/>
                                 <constraint firstItem="b0q-f3-F2u" firstAttribute="centerX" secondItem="39a-bM-gAN" secondAttribute="centerX" id="Wgl-V0-RH8"/>
                                 <constraint firstItem="cf2-Du-xfw" firstAttribute="top" secondItem="22g-3V-iqU" secondAttribute="bottom" constant="8" id="XzQ-eP-Ekv"/>
-                                <constraint firstItem="22g-3V-iqU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="39a-bM-gAN" secondAttribute="leading" constant="10" id="ZUO-Hd-Rpb"/>
                                 <constraint firstItem="22g-3V-iqU" firstAttribute="top" secondItem="b0q-f3-F2u" secondAttribute="bottom" constant="24" id="aum-wz-VNj"/>
                                 <constraint firstItem="22g-3V-iqU" firstAttribute="centerX" secondItem="39a-bM-gAN" secondAttribute="centerX" id="fs8-Ht-4xF"/>
                                 <constraint firstAttribute="bottom" secondItem="2OY-kD-gra" secondAttribute="bottom" id="mKz-dK-agT"/>
                                 <constraint firstAttribute="trailing" secondItem="y4e-hk-lcp" secondAttribute="trailing" constant="14" id="rJz-iW-KV9"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cf2-Du-xfw" secondAttribute="trailing" constant="10" id="rc7-Wj-ugh"/>
                                 <constraint firstItem="y4e-hk-lcp" firstAttribute="centerY" secondItem="b0q-f3-F2u" secondAttribute="centerY" id="sRC-zo-fyj"/>
+                                <constraint firstItem="22g-3V-iqU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="39a-bM-gAN" secondAttribute="leading" constant="10" id="tac-hB-qxC"/>
                                 <constraint firstItem="2OY-kD-gra" firstAttribute="centerX" secondItem="39a-bM-gAN" secondAttribute="centerX" id="xF7-N8-LXI"/>
                                 <constraint firstItem="cf2-Du-xfw" firstAttribute="centerX" secondItem="39a-bM-gAN" secondAttribute="centerX" id="yfn-6I-PXl"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gbt-Ve-iYJ">
-                            <rect key="frame" x="14" y="515.66666666666663" width="365" height="186.33333333333337"/>
+                            <rect key="frame" x="14" y="513" width="365" height="189"/>
                             <string key="text">Take a piece of E11EVEN with you anywhere you go HERE
 DRESS CODE:
 Upscale and Stylish Nightlife attire. No oversized clothing, including but not limited to T-shirts and pants. No beachwear permitted, such as shorts, tank tops, flip-flops, baseball caps, jerseys, etc.
 
 NOTICE OF FILMING AND PHOTOGRAPHY
 VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDANCE CONSTITUTES YOUR CONSENT TO BE PHOTOGRAPHED, FILMED, AND/OR OTHERWISE RECORDED AND GIVES E11EVEN ALL USAGE RIGHTS AT THEIR DISCRETION</string>
-                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A note from the venue:" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdc-f0-nL7">
-                            <rect key="frame" x="14" y="481.33333333333331" width="134" height="14.333333333333314"/>
-                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                            <rect key="frame" x="14" y="471" width="198.33333333333334" height="22"/>
+                            <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="18"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b6y-Ie-SKV">
-                            <rect key="frame" x="32" y="252.66666666666669" width="329" height="212.66666666666669"/>
+                            <rect key="frame" x="32" y="247.66666666666663" width="329" height="207.33333333333337"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -158,7 +168,7 @@ VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDA
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="IVf-zP-hNN"/>
                             </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
+                            <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="View ticket">
                                 <color key="titleColor" systemColor="labelColor"/>

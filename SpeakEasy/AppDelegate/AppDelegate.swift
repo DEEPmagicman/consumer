@@ -234,7 +234,7 @@ extension AppDelegate {
 //        navigationController.navigationBar.isHidden = true
 //        self.window?.rootViewController = navigationController
         
-        let vc = AppDelegate.gotoSignUp
+        let vc = AppDelegate.gotoTab
         let navigation = UINavigationController(rootViewController: vc)
         navigation.navigationBar.isHidden = true
         self.window?.rootViewController = navigation

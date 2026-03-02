@@ -30,6 +30,11 @@ final class LandingVC: UIViewController {
         showSegmentView(sender.tag)
     }
     
+    
+    @IBAction func onClickSearchBtn(_ sender: Any) {
+        
+    }
+    
     private func showSegmentView(_ index: Int) {
         segmentViewContainer.enumerated().forEach { enumeratedIndex, _ in
             segmentViewContainer[enumeratedIndex].isHidden = enumeratedIndex != index

@@ -374,9 +374,9 @@ final class Navigate {
     
     func loginPopUpVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(LogInPopUpViewController.self)
-//        vc.modalPresentationStyle = .overCurrentContext
-        sender.navigationController?.pushViewController(vc, animated: true)
-//        sender.navigationController?.present(vc, animated: true)
+        vc.modalPresentationStyle = .overCurrentContext
+//        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.navigationController?.present(vc, animated: true)
     }
     
     func verifyNumberPopUpVc(_ sender: UIViewController) {

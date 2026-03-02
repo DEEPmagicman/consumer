@@ -22,6 +22,7 @@ final class LogInPopUpViewController: UIViewController {
 
     private let phoneNumberUtility = PhoneNumberUtility()
     private var phoneNumber: PhoneNumber?
+    var onContinueToVerify: ((_ otp: String?, _ otpRef: String?, _ phone: String, _ countryCode: String, _ isFromLogin: Bool, _ isFromSettings: Bool) -> Void)?
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -142,14 +143,11 @@ final class LogInPopUpViewController: UIViewController {
                 self.continueBtn.hideLoader()
 
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(
-                        self,
-                        isFromLogin: true,
-                        otp: otp,
-                        otpRef: otpRef,
-                        phoneNum: self.phoneNumTextField.text ?? "",
-                        countryCode: countryCode
-                    )
+                    let phone = self.phoneNumTextField.text ?? ""
+                    self.dismiss(animated: true) { [weak self] in
+                        guard let self else { return }
+                        self.onContinueToVerify?(otp, otpRef, phone, countryCode, self.isFromLogin, self.isFromSettings)
+                    }
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
                 } else {
@@ -167,14 +165,12 @@ final class LogInPopUpViewController: UIViewController {
                 self.continueBtn.hideLoader()
 
                 if isSuccess {
-                    Navigate.to.enterVerificationCodeVc(
-                        self,
-                        isFromSettings: self.isFromSettings,
-                        otp: otp,
-                        otpRef: otpRef,
-                        phoneNum: self.phoneNumTextField.text ?? "",
-                        countryCode: countryCode
-                    )
+                    
+                    let phone = self.phoneNumTextField.text ?? ""
+                    self.dismiss(animated: true) { [weak self] in
+                        guard let self else { return }
+                        self.onContinueToVerify?(otp, otpRef, phone, countryCode, self.isFromLogin, self.isFromSettings)
+                    }
                 } else if errMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
                 } else {
@@ -190,13 +186,28 @@ final class LogInPopUpViewController: UIViewController {
 
                 if isSuccess {
                     UserDefault.shared.user?.phone = "\(phoneNum)"
-                    Navigate.to.enterVerificationCodeVc(
-                        self,
-                        otp: otp,
-                        otpRef: otpRef,
-                        phoneNum: self.phoneNumTextField.text ?? "",
-                        countryCode: countryCode
-                    )
+                    
+                    let phone = self.phoneNumTextField.text ?? ""
+                    self.dismiss(animated: true) { [weak self] in
+                        guard let self else { return }
+                        self.onContinueToVerify?(otp, otpRef, phone, countryCode, self.isFromLogin, self.isFromSettings)
+                    }
+                    
+//                    self.dismiss(animated: true) { [weak self] in
+//                        guard let self = self,
+//                              let presenterVC = self.presentingViewController ?? self.navigationController?.presentingViewController else { return }
+//
+//                        Navigate.to.enterVerificationCodeVc(
+//                            presenterVC,
+//                            isFromLogin: true,
+//                            otp: otp,
+//                            otpRef: otpRef,
+//                            phoneNum: self.phoneNumTextField.text ?? "",
+//                            countryCode: countryCode
+//                        )
+//                    }
+                    
+                    
                 } else if errorMsg == Constant.String.internetNotConnect {
                     self.view.endEditing(true)
                 } else {

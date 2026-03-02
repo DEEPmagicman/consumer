@@ -15,6 +15,8 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var allEventsCollectionView: UICollectionView!
     @IBOutlet weak var venueTitleLable: UILabel!
     @IBOutlet weak var todaysEventsView: UIView!
+    @IBOutlet weak var premiumExperiencesView: UIView!
+    @IBOutlet weak var premiumExerienceParentView: UIView!
     
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
@@ -43,6 +45,17 @@ final class DiscoverAllVC: UIViewController {
         getTonightEvent()
     }
     
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        premiumExperiencesView.setHorizontalGradientColor(
+            colors: [
+                UIColor(hex: "#292929").withAlphaComponent(0.1).cgColor,
+                UIColor(hex: "#FFCE51").withAlphaComponent(0.1).cgColor
+            ]
+        )
+    }
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
         if withLoader {
             Loader.show()

@@ -235,7 +235,7 @@ final class VerifyNumberViewController: UIViewController {
     }
 
     @IBAction func onClickBack(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
+        self.dismiss(animated: false)
     }
 
     // MARK: - Loader helper

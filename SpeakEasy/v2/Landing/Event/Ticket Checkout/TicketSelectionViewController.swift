@@ -289,7 +289,11 @@ class TicketSelectionViewController: UIViewController {
     }
 
     @IBAction func onClickContinueBtn(_ sender: Any) {
-
+        guard let user = UserDefault.shared.user else {
+            Navigate.to.loginPopUpVc(self)
+            return
+        }
+        
         guard let event = event else { return }
 
         switch mode {
@@ -306,10 +310,10 @@ class TicketSelectionViewController: UIViewController {
                 continueToCheckOutBtn.showLoader(userInteraction: false)
                 PaymentPresenter.createEventBookingV2(
                     eventId: event.id,
-                    code: UserDefault.shared.user?.code ?? "+1",
-                    phone: UserDefault.shared.user?.phone ?? "8286902566",
-                    gender: "UNASSIGNED",
-                    userId: UserDefault.shared.user?.id ?? "68d3e52d-14de-43f1-a49d-37d9b5764f2d",
+                    code: user.code,
+                    phone: user.phone,
+                    gender: user.gender,
+                    userId: user.id,
                     tickets: ticketsPayload
                 ) { [weak self] isSuccess, errMsg, id, message in
                     guard let self = self else { return }
@@ -332,10 +336,10 @@ class TicketSelectionViewController: UIViewController {
             continueToCheckOutBtn.showLoader(userInteraction: true)
             PaymentPresenter.createEventBookingV2(
                 eventId: event.id,
-                code: UserDefault.shared.user?.code ?? "+1",
-                phone: UserDefault.shared.user?.phone ?? "8286902566",
-                gender: "UNASSIGNED",
-                userId: UserDefault.shared.user?.id ?? "68d3e52d-14de-43f1-a49d-37d9b5764f2d",
+                code: user.code,
+                phone: user.phone,
+                gender: user.gender,
+                userId: user.id,
                 tickets: ticketsPayload
             ) { [weak self] isSuccess, errMsg, id, message in
                 guard let self = self else { return }

@@ -24,6 +24,28 @@ extension UIView {
     func removeGradientBackgroundColor() {
         layer.sublayers?.filter { $0.name == "gradientLayer" }.forEach { $0.removeFromSuperlayer() }
     }
+    
+    func setHorizontalGradientColor(
+            colors: [CGColor]
+        ) -> CAGradientLayer {
+
+            removeGradientBackgroundColor()
+
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = bounds
+            gradientLayer.colors = colors
+            gradientLayer.locations = [0, 1]
+
+            gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+            gradientLayer.endPoint   = CGPoint(x: 1.0, y: 0.5)
+
+            gradientLayer.name = "gradientLayer"
+
+            layer.insertSublayer(gradientLayer, at: 0)
+
+            return gradientLayer
+        }
+    
 }
 
 struct CommonConstant {

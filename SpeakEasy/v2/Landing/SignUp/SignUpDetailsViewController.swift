@@ -21,6 +21,7 @@ class SignUpDetailsViewController: UIViewController {
     
 
     @IBAction func onClickBackBtn(_ sender: Any) {
+        self.dismiss(animated: false)
     }
     
     
