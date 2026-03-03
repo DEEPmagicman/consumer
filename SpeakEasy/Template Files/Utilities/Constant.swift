@@ -87,6 +87,14 @@ struct Constant {
         static func poppinsRegular(size: CGFloat) -> UIFont {
             return UIFont(name: "Poppins-Regular", size: size)!
         }
+        
+        static func interRegular(size: CGFloat) -> UIFont {
+            return UIFont(name: "Inter-Regular", size: size)!
+        }
+        
+        static func interMedium(size: CGFloat) -> UIFont {
+            return UIFont(name: "Inter-Medium", size: size)!
+        }
     }
     
     struct Card {

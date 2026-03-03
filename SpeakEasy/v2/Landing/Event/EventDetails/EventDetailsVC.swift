@@ -8,6 +8,7 @@
 import UIKit
 import MapKit
 import YouTubeiOSPlayerHelper
+import Hero
 
 class EventDetailsVC: UIViewController {
 
@@ -87,23 +88,33 @@ class EventDetailsVC: UIViewController {
     private var ticketTableObserver: NSKeyValueObservation?
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
+    var heroIndex: Int = 0
 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        hero.isEnabled = true
         setupCollectionViews()
         setupTableView()
         setupImagePager()
         getEventDetail()
         startTicketTableObserver()
+        setupData()
+        
+        hero.isEnabled = true
+        navigationController?.hero.isEnabled = true
+        
+        mainImg.hero.id = "event.image.\(heroIndex)"
+        titleLbl.hero.id = "event.title.\(heroIndex)"
+      
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if isLoading {
-            skeletonView?.updateFrames()
-        }
+//        if isLoading {
+//            skeletonView?.updateFrames()
+//        }
     }
 
     private func setupTicketTable() {
@@ -150,7 +161,7 @@ class EventDetailsVC: UIViewController {
         guard let eventId  = self.event?.uniqueId else {
             return
         }
-        showSkeleton()
+//        showSkeleton()
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             self?.hideSkeleton()
             guard let self = self else {

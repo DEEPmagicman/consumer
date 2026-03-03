@@ -424,9 +424,11 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func eventDetailsVC(_ sender: UIViewController, event: Event?) {
+    static func eventDetailsVC(_ sender: UIViewController, event: Event?, heroIndex: Int) {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event = event
+        vc.venueDetails = event?.venue
+        vc.heroIndex = heroIndex
         sender.pushVC(vc)
     }
     

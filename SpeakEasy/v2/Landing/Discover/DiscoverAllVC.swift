@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Hero
 
 final class DiscoverAllVC: UIViewController {
     
@@ -43,6 +44,9 @@ final class DiscoverAllVC: UIViewController {
         }
         bindSelectedCity()
         getTonightEvent()
+        hero.isEnabled = true
+        navigationController?.hero.isEnabled = true
+        navigationController?.hero.navigationAnimationType = .auto
     }
     
     
@@ -57,12 +61,8 @@ final class DiscoverAllVC: UIViewController {
         )
     }
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
-        if withLoader {
-            Loader.show()
-        }
         presenter.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
-                Loader.hide()
                 return
             }
             if isSuccess {
@@ -88,17 +88,12 @@ final class DiscoverAllVC: UIViewController {
                 Alert.showToast("Venue detail updated")
             }
             #endif
-            Loader.hide()
         }
     }
     
     private func fetchAllCloseVenueForMVP(withLoader: Bool = true) {
-        if withLoader {
-            Loader.show()
-        }
         presenter.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
             guard let self = self else {
-                Loader.hide()
                 return
             }
             if isSuccess {
@@ -122,15 +117,12 @@ final class DiscoverAllVC: UIViewController {
                 Alert.showToast("Venue detail updated")
             }
             #endif
-            Loader.hide()
         }
     }
     
     
     private func getTonightEvent() {
-        Loader.show()
         EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20")) { [weak self] isSuccess, errMsg, eventList, hasMore in
-            Loader.hide()
             guard let self = self else { return }
             
             if self.tonightEventSkip == 0 {
@@ -149,7 +141,6 @@ final class DiscoverAllVC: UIViewController {
                 self.todaysEventsView.isHidden = false
             }
             self.tonightEventCollectionView.reloadData()
-            Loader.hide()
         }
     }
     
@@ -236,6 +227,8 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
 
                 let event = todaysEvents[indexPath.item]
                 cell.setupData(event: event)
+                cell.bgImage.hero.id = "event.image.\(indexPath.item)"
+                cell.eventTitleLbl.hero.id = "event.title.\(indexPath.item)"
                 return cell
             }
            
@@ -281,9 +274,8 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
 
            case tonightEventCollectionView:
                if isTonightEventInitialLoading { return }
-
                let selectedEvent = todaysEvents[indexPath.item]
-               Navigate.to.eventDetailsVC(self, event: selectedEvent)
+               Navigate.eventDetailsVC(self, event: selectedEvent, heroIndex: indexPath.item)
 
            case venueListCollectionView:
                if isVenueInitialLoading { return }

@@ -276,12 +276,6 @@ class TicketSelectionViewController: UIViewController {
     @IBAction func onClickCloseBtn(_ sender: Any) {
         
         Navigate.to.back(self)
-        
-//        if mode == .addOn {
-//            switchToNormalMode()
-//        } else {
-//            Navigate.to.back(self)
-//        }
     }
 
     @IBAction func onClickLockBtn(_ sender: Any) {
@@ -396,6 +390,28 @@ class TicketSelectionViewController: UIViewController {
             Alert.showToast("Max Tickets Selected: create a separate order to purchase more")
         }
     }
+    
+//    private func handlePlus(ticket: EventTicket) {
+//        guard let index = indexForTicket(ticket) else { return }
+//
+//        let totalTicket = tickets[index].selectedTicketCount ?? 0
+//        let issuedUnits = tickets[index].issuedUnits ?? 0
+//
+//        if totalTicket < issuedUnits,
+//           let remaining = tickets[index].remainingQuantity,
+//           remaining > totalTicket {
+//
+//            tickets[index].selectedTicketCount = totalTicket + 1
+//            replaceTicketInCurrentMode(tickets[index])
+//
+//            ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+//            updateContinueBtnState()
+//            updateContinueButtonForMode()
+//        } else {
+//            Alert.showToast("Max Tickets Selected: create a separate order to purchase more")
+//        }
+//    }
+
 
     private func handleMinus(ticket: EventTicket) {
         guard let index = indexForTicket(ticket) else { return }
@@ -444,19 +460,51 @@ class TicketSelectionViewController: UIViewController {
     }
 
 
-    private func updateContinueBtnState() {
+    private func updateContinueBtnState(animated: Bool = true) {
+        let shouldShow: Bool
         switch mode {
         case .normal:
-            let isHidden = totalSelectedTickets <= 0
-            continueToCheckOutBtn.isHidden = isHidden
-            continueButtonBottomConstraint.constant = isHidden ? 0 : 32
-
+            shouldShow = totalSelectedTickets > 0
         case .addOn:
-            continueToCheckOutBtn.isHidden = false
-            continueButtonBottomConstraint.constant = 32
+            shouldShow = true
         }
 
-        view.layoutIfNeeded()
+        let hiddenBottom: CGFloat = -continueToCheckOutBtn.bounds.height - 24   // off screen
+        let shownBottom: CGFloat = 32
+
+        let applyState = {
+            self.continueToCheckOutBtn.isHidden = false
+            self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
+            self.continueToCheckOutBtn.alpha = shouldShow ? 1 : 0
+            self.view.layoutIfNeeded()
+        }
+
+        if !animated {
+            applyState()
+            self.continueToCheckOutBtn.isHidden = !shouldShow
+            return
+        }
+
+        if shouldShow && continueToCheckOutBtn.isHidden {
+            continueToCheckOutBtn.isHidden = false
+            continueToCheckOutBtn.alpha = 0
+            continueButtonBottomConstraint.constant = hiddenBottom
+            view.layoutIfNeeded()
+        }
+
+        UIView.animate(
+            withDuration: 0.35,
+            delay: 0,
+            usingSpringWithDamping: 0.88,
+            initialSpringVelocity: 0.6,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            applyState()
+        } completion: { _ in
+            if !shouldShow {
+                self.continueToCheckOutBtn.isHidden = true
+            }
+        }
     }
 }
 

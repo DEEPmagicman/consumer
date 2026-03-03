@@ -40,6 +40,7 @@
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
 		046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
+		04749CFD2F56AB6F0035898F /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 04749CFC2F56AB6F0035898F /* Hero */; };
 		0475E3252BECEAA200E4801C /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		0475E3262BECEB4600E4801C /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		0475E3272BECEB9800E4801C /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
@@ -781,6 +782,7 @@
 			files = (
 				CEDB817A2AA1FAC100DAD9FE /* StripeApplePay in Frameworks */,
 				6AF2B9C62F09400800069A90 /* GLTFKit2 in Frameworks */,
+				04749CFD2F56AB6F0035898F /* Hero in Frameworks */,
 				CECDD9F02B986DFC007E94A7 /* Reachability in Frameworks */,
 				CEDB81872AA20A9600DAD9FE /* FSCalendar in Frameworks */,
 				CEDB81812AA20A1D00DAD9FE /* Alamofire in Frameworks */,
@@ -2070,6 +2072,7 @@
 				CE19C1AA2CA44469007050ED /* MHLoadingButton */,
 				6AF2B9C52F09400800069A90 /* GLTFKit2 */,
 				04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */,
+				04749CFC2F56AB6F0035898F /* Hero */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -2116,6 +2119,7 @@
 				CE19C1A92CA44469007050ED /* XCRemoteSwiftPackageReference "loading-buttons-ios" */,
 				6AF2B9C12F093C5100069A90 /* XCRemoteSwiftPackageReference "GLTFKit2" */,
 				04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
+				04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -3081,6 +3085,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HeroTransitions/Hero.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.4;
+			};
+		};
 		04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/youtube/youtube-ios-player-helper";
@@ -3180,6 +3192,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		04749CFC2F56AB6F0035898F /* Hero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */;
+			productName = Hero;
+		};
 		04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */;

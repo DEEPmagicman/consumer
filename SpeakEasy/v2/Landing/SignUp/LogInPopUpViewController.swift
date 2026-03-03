@@ -35,7 +35,7 @@ final class LogInPopUpViewController: UIViewController {
         phoneNumTextField.delegate = self
 
         // Button
-        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.bgColor = .white
         continueBtn.indicator = MaterialLoadingIndicator(color: .white)
         setContinueEnabled(false)
 
@@ -52,9 +52,9 @@ final class LogInPopUpViewController: UIViewController {
 
         var options = CountryCodePickerOptions()
         options.backgroundColor = Constant.Color.backgroundColor
-        options.textLabelFont = Constant.Font.poppinsRegular(size: 15)
+        options.textLabelFont = Constant.Font.interRegular(size: 14)
         options.textLabelColor = Constant.Color.textLabelColor
-        options.detailTextLabelFont = Constant.Font.poppinsRegular(size: 15)
+        options.detailTextLabelFont = Constant.Font.interRegular(size: 14)
         phoneNumTextField.withDefaultPickerUIOptions = options
     }
     
@@ -68,7 +68,7 @@ final class LogInPopUpViewController: UIViewController {
         let attributedString = NSMutableAttributedString(
             string: fullText,
             attributes: [
-                .font: Constant.Font.poppinsRegular(size: 12) ?? UIFont.systemFont(ofSize: 12),
+                .font: Constant.Font.interRegular(size: 12) ?? UIFont.systemFont(ofSize: 12),
                 .foregroundColor: UIColor.white
             ]
         )
@@ -78,7 +78,7 @@ final class LogInPopUpViewController: UIViewController {
 
         let highlightAttributes: [NSAttributedString.Key: Any] = [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .font: Constant.Font.poppinsRegular(size: 12) ?? UIFont.boldSystemFont(ofSize: 12),
+            .font: Constant.Font.interRegular(size: 12) ?? UIFont.boldSystemFont(ofSize: 12),
             .foregroundColor: UIColor.white
         ]
 
