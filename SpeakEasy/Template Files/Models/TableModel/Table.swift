@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum BookingType: String, Codable {
+    case `default` = "DEFAULT"
+    case timeWise = "TIME_WISE"
+}
+
 struct SeatingAreaResponse: Codable {
     let total: Int?
     let list: [SeatingArea]?
@@ -26,7 +31,8 @@ struct SeatingArea: Codable {
     let description: String?
     let hideCheckout: Bool?
     let hidePricing: Bool?
-    let bookingType: String?
+    let bookingType: BookingType?
+    let inquiryEnabled: Bool?
     let depositWithFees: Double?
     
     let timeSlots: [tableTimeSlot]?
@@ -34,7 +40,7 @@ struct SeatingArea: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id, name, highlight, minimum, deposit, maxGuest, defaultGuest, description,
-             hideCheckout, hidePricing, bookingType, depositWithFees, timeSlots
+             hideCheckout, hidePricing, bookingType, depositWithFees, timeSlots, inquiryEnabled
         case parentSeatingAreaId = "parentSeatingAreaId"
     }
 }

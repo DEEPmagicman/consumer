@@ -65,6 +65,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var bottemButtonView: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var detailsTitleLbl: UILabel!
+    @IBOutlet weak var tableBookNowButtonView: UIView!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -93,6 +94,11 @@ class EventDetailsVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        tableBookNowButtonView.layer.cornerRadius = tableBookNowButtonView.frame.height / 2
+//           tableBookNowButtonView.clipsToBounds = true
+        buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
+        
         hero.isEnabled = true
         setupCollectionViews()
         setupTableView()
@@ -105,12 +111,13 @@ class EventDetailsVC: UIViewController {
         navigationController?.hero.isEnabled = true
         
         mainImg.hero.id = "event.image.\(heroIndex)"
-        titleLbl.hero.id = "event.title.\(heroIndex)"
+//        titleLbl.hero.id = "event.title.\(heroIndex)"
       
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+       
 
 //        if isLoading {
 //            skeletonView?.updateFrames()

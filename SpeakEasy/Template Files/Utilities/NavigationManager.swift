@@ -52,7 +52,8 @@ final class Navigate {
         vc.isForEmail = isForEmail
         vc.phoneNum = phoneNum
         vc.countryCode = countryCode
-        sender.navigationController?.pushViewController(vc, animated: true)
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
     func enterNameVc(_ sender: UIViewController) {
@@ -372,11 +373,13 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func loginPopUpVc(_ sender: UIViewController) {
+    func loginPopUpVc(_ sender: UIViewController) -> LogInPopUpViewController {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(LogInPopUpViewController.self)
         vc.modalPresentationStyle = .overCurrentContext
-//        sender.navigationController?.pushViewController(vc, animated: true)
-        sender.navigationController?.present(vc, animated: true)
+        vc.modalTransitionStyle = .crossDissolve
+
+        sender.present(vc, animated: true)
+        return vc
     }
     
     func verifyNumberPopUpVc(_ sender: UIViewController) {

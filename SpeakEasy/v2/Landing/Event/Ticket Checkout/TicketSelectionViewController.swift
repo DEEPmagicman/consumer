@@ -284,10 +284,22 @@ class TicketSelectionViewController: UIViewController {
 
     @IBAction func onClickContinueBtn(_ sender: Any) {
         guard let user = UserDefault.shared.user else {
-            Navigate.to.loginPopUpVc(self)
+            let loginVC = Navigate.to.loginPopUpVc(self)
+
+            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, isFromLogin, isFromSettings in
+                guard let self else { return }
+
+                Navigate.to.enterVerificationCodeVc(
+                    self,
+                    isFromLogin: true,
+                    otp: otp,
+                    otpRef: otpRef,
+                    phoneNum: phone,
+                    countryCode: countryCode
+                )
+            }
             return
         }
-        
         guard let event = event else { return }
 
         switch mode {
@@ -544,4 +556,14 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         let ticket = tickets[indexPath.row]
+
+         let currentCount = ticket.selectedTicketCount ?? 0
+         guard currentCount == 0 else { return }
+
+         handlePlus(ticket: ticket)
+     }
+    
 }

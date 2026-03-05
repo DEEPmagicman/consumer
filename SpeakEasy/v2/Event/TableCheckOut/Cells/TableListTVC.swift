@@ -74,7 +74,9 @@ class TableListTVC: UITableViewCell {
         text.append(NSAttributedString(string: "  ", attributes: infoTextAttributes))
 
         // icon
-        text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "clock")))
+        if !time.isEmpty {
+            text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "clock")))
+        }
 
         // space after icon
         text.append(NSAttributedString(string: " ", attributes: infoTextAttributes))

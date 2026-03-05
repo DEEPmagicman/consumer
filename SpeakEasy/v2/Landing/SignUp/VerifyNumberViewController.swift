@@ -26,6 +26,7 @@ final class VerifyNumberViewController: UIViewController {
     var isFromLogin = false
     var isFromSettings = false
     var isForEmail = false
+    var onOtpSuccess: (() -> Void)?
 
     private var onBoardingDelegate = OnBoardingPresenter()
     private var settingDelegate = SettingPresenter()
@@ -41,7 +42,7 @@ final class VerifyNumberViewController: UIViewController {
         setOtpView()
 
         // Buttons setup
-        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.bgColor = .white
         continueBtn.indicator = MaterialLoadingIndicator(color: .white)
 
         resendBtn.bgColor = .clear
@@ -75,7 +76,7 @@ final class VerifyNumberViewController: UIViewController {
         otpFieldView.fieldBorderWidth = 1
         otpFieldView.defaultBorderColor = UIColor(hex: "#737373")
         otpFieldView.cursorColor = Constant.Color.purpleColor
-        otpFieldView.filledBorderColor = Constant.Color.purpleColor
+        otpFieldView.filledBorderColor = .white
         otpFieldView.displayType = .roundedCorner
         otpFieldView.fieldSize = 50
         otpFieldView.separatorSpace = 5

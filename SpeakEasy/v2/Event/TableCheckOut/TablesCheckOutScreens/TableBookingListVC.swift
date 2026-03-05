@@ -99,30 +99,46 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
             cell.totalAmount.text = ""
             cell.secondAmountLbl.text = ""
         } else {
-            
-            if let deposit = item.depositWithFees {
-                cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
-            } else if let deposit = item.deposit {
-                cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
+            if item.bookingType == .timeWise {
+                
+                if let slot = item.timeSlots?.first {
+                    
+                    if let deposit = slot.deposit {
+                        cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
+                    }
+                    
+                    if let minimum = slot.minimum {
+                        cell.secondAmountLbl.text = "$\(minimum) min."
+                    }
+                }
+            } else {
+                if let deposit = item.depositWithFees {
+                    cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
+                } else if let deposit = item.deposit {
+                    cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
+                }
+                
+                if let minimum = item.minimum {
+                    cell.secondAmountLbl.text = "$\(minimum) min."
+                }
             }
             
-            if let minimum = item.minimum {
-                cell.secondAmountLbl.text = "$\(minimum) min."
-            }
         }
         
         let minGuest = item.defaultGuest ?? 0
         let maxGuest = item.maxGuest ?? 0
 
-        let guestsText: String
-
-        if minGuest > 0 && maxGuest > 0  {
-            guestsText = "\(minGuest) to \(maxGuest) Guests"
-        } else if maxGuest > 0 {
-            guestsText = "Up to \(maxGuest) Guests"
-        } else {
-            guestsText = "Guests"
-        }
+        let guestsText: String = {
+            if minGuest > 0 && maxGuest > 0 {
+                return minGuest == maxGuest
+                ? "\(minGuest) Guests"
+                : "\(minGuest) to \(maxGuest) Guests"
+            } else if maxGuest > 0 {
+                return "\(maxGuest) Guests"
+            } else {
+                return "Guests"
+            }
+        }()
 
         
         if let slot = item.timeSlots?.first,
@@ -164,5 +180,16 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == seatingAreas.count - 1 {
             fetchSeatingAreas()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+            let selectedItem = self.seatingAreas[indexPath.row]
+            
+            if selectedItem.hideCheckout == true {
+                print("Inquire tapped for:", selectedItem.name ?? "")
+            } else {
+                Navigate.to.tableSeatingVC(self, seatingArea: selectedItem)
+            }
     }
 }
