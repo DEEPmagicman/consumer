@@ -256,11 +256,14 @@ final class VerifyNumberViewController: UIViewController {
                 self.continueBtn.hideLoader()
 
                 if isSuccess {
-                    if UserDefault.shared.user?.isProfileCompleted == true {
-                        AppDelegate.gotoTab
-                    } else {
-                        Navigate.to.enterNameVc(self)
-                    }
+                    self.dismiss(animated: true) { [weak self] in
+                            self?.onOtpSuccess?()
+                        }
+//                    if UserDefault.shared.user?.isProfileCompleted == true {
+//                        AppDelegate.gotoTab
+//                    } else {
+//                        Navigate.to.enterNameVc(self)
+//                    }
                 } else {
                     Alert.showAlertSheet(style: .alert,
                                          title: errorMsg ?? Constant.String.somethingWrong,

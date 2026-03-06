@@ -296,7 +296,9 @@ class TicketSelectionViewController: UIViewController {
                     otpRef: otpRef,
                     phoneNum: phone,
                     countryCode: countryCode
-                )
+                ) { [weak self] in
+                    self?.onClickContinueBtn(self as Any)
+                }
             }
             return
         }

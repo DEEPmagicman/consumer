@@ -11,6 +11,7 @@ class TicketItemTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var amountLbl: UILabel!
+    @IBOutlet weak var titleTopConstraint: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()

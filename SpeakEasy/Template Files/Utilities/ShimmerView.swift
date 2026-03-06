@@ -7,7 +7,6 @@
 
 import UIKit
 
-//@IBDesignable
 final class ShimmerView: UIView {
 
     var gradientColorOne: CGColor = UIColor(white: 0.24, alpha: 0.4).cgColor
@@ -17,28 +16,28 @@ final class ShimmerView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradientLayer?.frame = self.bounds
-        layer.cornerRadius = cornerRadius
+        gradientLayer?.frame = bounds
+        layer.cornerRadius = 8
+        clipsToBounds = true
     }
     
-    func addGradientLayer() -> CAGradientLayer {
+    private func addGradientLayer() -> CAGradientLayer {
+        gradientLayer?.removeFromSuperlayer()
         
         let gradientLayer = CAGradientLayer()
-        
-        gradientLayer.frame = self.bounds
+        gradientLayer.frame = bounds
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.4)
         gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
         gradientLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorTwo, gradientColorOne]
         gradientLayer.locations = [0.0, 0.48, 0.52, 1.0]
-        self.layer.addSublayer(gradientLayer)
-        self.layer.cornerRadius = 8
-        self.clipsToBounds = true
+        layer.addSublayer(gradientLayer)
+        layer.cornerRadius = 8
+        clipsToBounds = true
         self.gradientLayer = gradientLayer
         return gradientLayer
     }
     
-    func addAnimation() -> CABasicAnimation {
-        
+    private func addAnimation() -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: "locations")
         animation.fromValue = [-1.0, -0.7, -0.4, 0.0]
         animation.toValue = [1.0, 1.3, 1.7, 2.0]
@@ -49,16 +48,13 @@ final class ShimmerView: UIView {
     }
     
     func startAnimating() {
-        
         let gradientLayer = addGradientLayer()
-        let animation = addAnimation()
-       
-        gradientLayer.add(animation, forKey: animation.keyPath)
+        gradientLayer.add(addAnimation(), forKey: "shimmerAnimation")
     }
     
     func stopAnimating() {
-        gradientLayer?.removeFromSuperlayer()
         gradientLayer?.removeAllAnimations()
+        gradientLayer?.removeFromSuperlayer()
+        gradientLayer = nil
     }
-
 }

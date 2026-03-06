@@ -379,6 +379,7 @@ class EventDetailsVC: UIViewController {
             } else if event?.isSoldOutAllTickets == true {
                 ticketsTitleLbl.text = "It was a great time!"
                 buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                buyNowBtnLbl.textColor = .black
                 buyNowBtnView.isUserInteractionEnabled = false
                 buyNowBtnView.backgroundColor = UIColor.lightGray
             } else if event?.eventTicket?.count ?? 0 == 0 {
@@ -773,14 +774,37 @@ class EventDetailsVC: UIViewController {
     }
 
     func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
+
+        mapView.delegate = self
+        if #available(iOS 16.0, *) {
+            var config = MKStandardMapConfiguration(elevationStyle: .flat)
+            config.emphasisStyle = .muted
+            config.pointOfInterestFilter = .excludingAll
+            mapView.preferredConfiguration = config
+        } else {
+            mapView.mapType = .mutedStandard
+            mapView.pointOfInterestFilter = .excludingAll
+        }
+        mapView.showsCompass = false
+        mapView.showsScale = false
+        mapView.showsTraffic = false
+        mapView.showsBuildings = false
+        mapView.isRotateEnabled = false
+        mapView.isPitchEnabled = false
+        mapView.removeAnnotations(mapView.annotations)
+
         let point = MKPointAnnotation()
         point.title = title
         point.coordinate = coordinate
-        point.accessibilityNavigationStyle = .separate
-        mapView.removeAnnotations(mapView.annotations)
         mapView.addAnnotation(point)
-        let viewRegion = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200, longitudinalMeters: 200)
-        mapView.setRegion(viewRegion, animated: true)
+        let region = MKCoordinateRegion(
+            center: coordinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+        )
+
+        mapView.setRegion(region, animated: false)
+        mapView.layer.cornerRadius = 16
+        mapView.clipsToBounds = true
     }
 }
 
@@ -1192,3 +1216,27 @@ extension NSMutableAttributedString {
          }
      }
 }
+
+extension EventDetailsVC: MKMapViewDelegate {
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+        let id = "venuePin"
+
+        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
+
+        if view == nil {
+            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+        }
+
+        view?.annotation = annotation
+
+        if let marker = view as? MKMarkerAnnotationView {
+            marker.markerTintColor = .systemBlue
+            marker.titleVisibility = .hidden
+        }
+
+        return view
+    }
+}
+

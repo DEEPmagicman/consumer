@@ -9,6 +9,7 @@ import UIKit
 import PassKit
 import StripeApplePay
 import StripePaymentSheet
+import MHLoadingButton
 
 final class TicketCheckoutVC: UIViewController {
 
@@ -33,6 +34,9 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var feesAndTaxesTitleView: UIView!
     @IBOutlet weak var feesAndTaxesContainerView: UIView!
     @IBOutlet weak var discountToalLbl: UILabel!
+    @IBOutlet weak var shimmerView: UIView!
+    @IBOutlet weak var feesDropDowenIc: UIImageView!
+    @IBOutlet weak var addPromoCodeBtn: LoadingButton!
     
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
@@ -59,8 +63,10 @@ final class TicketCheckoutVC: UIViewController {
     private var paymentDetail: PaymentDetail?
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
-    private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
+    private var shimmerBlocks: [ShimmerView] = []
+    private var isBookingLoaded = false
+    private var isPaymentIntentLoaded = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +74,7 @@ final class TicketCheckoutVC: UIViewController {
         if let venue = event?.venue {
             self.venueDetails = venue
         }
+
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -78,16 +85,31 @@ final class TicketCheckoutVC: UIViewController {
         feesAndTaxesTableView.dataSource = self
         feesAndTaxesTableView.register(TicketItemTableViewCell.nib,
                                        forCellReuseIdentifier: TicketItemTableViewCell.identifier)
+        
+        addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
+        addPromoCodeBtn.bgColor = .clear
+        updatePromoButtonIcon()
 
         setupHeaderData()
         startCountdown()
         calculateTotal()
+        showCheckoutShimmer()
         getBooking(id: bookingId)
 
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
 
         fetchPaymentIntentAndSetup(promoCode: "")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.addTarget(self, action: #selector(handleBackSwipe))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
     }
 
     deinit {
@@ -108,16 +130,22 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func getBooking(id: String?) {
-        guard let id = id else { return }
-
+        
+        guard let id = id else {
+            isBookingLoaded = true
+            hideCheckoutShimmerIfNeeded()
+            return
+        }
+        
         if booking == nil {  }
-
+        
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
             if isSuccess {
                 self.booking = booking
                 self.reloadFeesUIFromBooking()
             }
+            self.isBookingLoaded = true
         }
     }
 
@@ -125,6 +153,18 @@ final class TicketCheckoutVC: UIViewController {
         feesAndTaxes = buildFeesArray(from: booking?.fees)
         feesAndTaxesTitleView.isHidden = feesAndTaxes.isEmpty
         feesAndTaxesTableView.reloadData()
+    }
+    
+    private func updatePromoButtonIcon() {
+        let imageName = isPromoCodeApplied ? "trash" : "ArrowRight"
+        
+        if isPromoCodeApplied {
+            addPromoCodeBtn.setImage(UIImage(systemName: imageName), for: .normal)
+            addPromoCodeBtn.tintColor = .white
+        } else {
+            addPromoCodeBtn.setImage(UIImage(named: imageName), for: .normal)
+            addPromoCodeBtn.tintColor = nil
+        }
     }
 
     private func calculateTotal() {
@@ -215,8 +255,12 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func timerExpired() {
-        timerLbl.text = "Ticket hold expired"
-        navigationController?.popToRootViewController(animated: true)
+        let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            self.countdownTimer?.invalidate()
+            self.cancelBooking()
+            Navigate.to.back(self)
+        }
+        Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
 
     private func buildCoverTicketsForPaymentIntent() -> [[String: Any]] {
@@ -230,8 +274,16 @@ final class TicketCheckoutVC: UIViewController {
         return coverTickets
     }
 
-    private func fetchPaymentIntentAndSetup(promoCode: String) {
-        guard let bookingId = bookingId else { return }
+    private func fetchPaymentIntentAndSetup(
+        promoCode: String,
+        completion: ((_ isSuccess: Bool) -> Void)? = nil
+    ) {
+        guard let bookingId = bookingId else {
+            isPaymentIntentLoaded = true
+            hideCheckoutShimmerIfNeeded()
+            completion?(false)
+            return
+        }
 
         let coverTickets = buildCoverTicketsForPaymentIntent()
 
@@ -240,11 +292,20 @@ final class TicketCheckoutVC: UIViewController {
             selectedTickets: coverTickets,
             promoCode: promoCode,
             type: .singleTickedEvent
-        ) { [weak self] isSuccess, _, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
+        ) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
 
             guard let self = self else { return }
 
-            guard isSuccess, let clientSecret else { return }
+            defer {
+                self.isPaymentIntentLoaded = true
+                self.hideCheckoutShimmerIfNeeded()
+                completion?(isSuccess)
+            }
+
+            guard isSuccess, let clientSecret else {
+                Alert.showToast(errMsg ?? "Something went wrong")
+                return
+            }
 
             self.isFreeTicket = isFreeTicket
             self.paymentIntentClientSecret = clientSecret
@@ -327,6 +388,7 @@ final class TicketCheckoutVC: UIViewController {
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: nil) { [weak self] isSuccess, _ in
             guard let self = self else { return }
             if isSuccess {
+                countdownTimer?.invalidate()
                 Navigate.to.showQRCode(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
             }
         }
@@ -357,25 +419,50 @@ final class TicketCheckoutVC: UIViewController {
             }
         }
     }
+    
+    private func cancelBooking() {
+        countdownTimer?.invalidate()
+        PaymentPresenter.cancelBooking(bookingId: bookingId ?? "") { _, _ in
+        }
+    }
 
-    // MARK: - Actions
     @IBAction func onClickSubmitPromoBtn(_ sender: Any) {
         let promo = (promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 
+        addPromoCodeBtn.showLoader(userInteraction: false)
+
         if isPromoCodeApplied {
-            isPromoCodeApplied = false
-            appliedPromoCode = ""
-            promoCodeTextFeild.isUserInteractionEnabled = true
-            promoCodeTextFeild.alpha = 1
-            promoCodeTextFeild.text = ""
-            fetchPaymentIntentAndSetup(promoCode: "")
+            fetchPaymentIntentAndSetup(promoCode: "", completion: { [weak self] isSuccess in
+                guard let self else { return }
+                self.addPromoCodeBtn.hideLoader()
+
+                if isSuccess {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                    self.promoCodeTextFeild.isUserInteractionEnabled = true
+                    self.promoCodeTextFeild.alpha = 1
+                    self.promoCodeTextFeild.text = ""
+                    self.updatePromoButtonIcon()
+                }
+            })
         } else {
-            if promo.isEmpty { return }
-            isPromoCodeApplied = true
-            appliedPromoCode = promo
-            promoCodeTextFeild.isUserInteractionEnabled = false
-            promoCodeTextFeild.alpha = 0.5
-            fetchPaymentIntentAndSetup(promoCode: promo)
+            guard !promo.isEmpty else {
+                addPromoCodeBtn.hideLoader()
+                return
+            }
+
+            fetchPaymentIntentAndSetup(promoCode: promo, completion: { [weak self] isSuccess in
+                guard let self else { return }
+                self.addPromoCodeBtn.hideLoader()
+
+                if isSuccess {
+                    self.isPromoCodeApplied = true
+                    self.appliedPromoCode = promo
+                    self.promoCodeTextFeild.isUserInteractionEnabled = false
+                    self.promoCodeTextFeild.alpha = 0.5
+                    self.updatePromoButtonIcon()
+                }
+            })
         }
     }
     
@@ -418,6 +505,7 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        cancelBooking()
         Navigate.to.back(self)
     }
 
@@ -427,9 +515,20 @@ final class TicketCheckoutVC: UIViewController {
     
 
     @IBAction func onClickAddPromoCode(_ sender: Any) {
+
+        let isHidden = promoCodeView.isHidden
         
-        self.promoCodeView.isHidden.toggle()
+        UIView.animate(withDuration: 0.25) {
+            self.feesDropDowenIc.transform = isHidden
+            ? CGAffineTransform(rotationAngle: .pi)
+            : .identity
+            
+            self.view.layoutIfNeeded()
+        }
+        
+        promoCodeView.isHidden.toggle()
     }
+
     override func observeValue(forKeyPath keyPath: String?,
                                of object: Any?,
                                change: [NSKeyValueChangeKey : Any]?,
@@ -443,6 +542,108 @@ final class TicketCheckoutVC: UIViewController {
             }
         }
     }
+    
+    @objc private func handleBackSwipe() {
+        navigationController?.interactivePopGestureRecognizer?.removeTarget(self, action: #selector(handleBackSwipe))
+        cancelBooking()
+    }
+    
+    private func showCheckoutShimmer() {
+        shimmerView.isHidden = false
+        shimmerView.subviews.forEach { $0.removeFromSuperview() }
+        shimmerBlocks.removeAll()
+
+        let content = UIView()
+        shimmerView.addSubview(content)
+        content.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            content.topAnchor.constraint(equalTo: shimmerView.topAnchor),
+            content.leadingAnchor.constraint(equalTo: shimmerView.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: shimmerView.trailingAnchor),
+            content.bottomAnchor.constraint(equalTo: shimmerView.bottomAnchor)
+        ])
+
+        func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerView {
+            let v = ShimmerView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            v.layer.cornerRadius = corner
+            v.clipsToBounds = true
+            NSLayoutConstraint.activate([
+                v.heightAnchor.constraint(equalToConstant: height)
+            ])
+            if let width {
+                v.widthAnchor.constraint(equalToConstant: width).isActive = true
+            }
+            shimmerBlocks.append(v)
+            return v
+        }
+
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 14
+        content.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: content.topAnchor, constant: 12),
+            stack.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 16),
+            stack.trailingAnchor.constraint(equalTo: content.trailingAnchor, constant: -16),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor, constant: -16)
+        ])
+
+        // first divider line
+        let line1 = UIView()
+        line1.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        line1.translatesAutoresizingMaskIntoConstraints = false
+        line1.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        stack.addArrangedSubview(line1)
+
+        // row 1
+        let row1 = UIStackView()
+        row1.axis = .horizontal
+        row1.alignment = .center
+        row1.distribution = .equalSpacing
+        row1.addArrangedSubview(makeBlock(height: 14, width: 120))
+        row1.addArrangedSubview(makeBlock(height: 14, width: 58))
+        stack.addArrangedSubview(row1)
+
+        // row 2
+        let row2 = UIStackView()
+        row2.axis = .horizontal
+        row2.alignment = .center
+        row2.distribution = .equalSpacing
+        row2.addArrangedSubview(makeBlock(height: 14, width: 120))
+        row2.addArrangedSubview(makeBlock(height: 14, width: 58))
+        stack.addArrangedSubview(row2)
+
+        // second divider line
+        let line2 = UIView()
+        line2.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        line2.translatesAutoresizingMaskIntoConstraints = false
+        line2.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        stack.addArrangedSubview(line2)
+
+        // row 3
+        let row3 = UIStackView()
+        row3.axis = .horizontal
+        row3.alignment = .center
+        row3.distribution = .equalSpacing
+        row3.addArrangedSubview(makeBlock(height: 14, width: 100))
+        row3.addArrangedSubview(makeBlock(height: 14, width: 48))
+        stack.addArrangedSubview(row3)
+
+        shimmerBlocks.forEach { $0.startAnimating() }
+    }
+
+    private func hideCheckoutShimmerIfNeeded() {
+        guard isBookingLoaded, isPaymentIntentLoaded else { return }
+
+        shimmerBlocks.forEach { $0.stopAnimating() }
+        shimmerView.isHidden = true
+    }
+    
+    
 }
 
 extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
@@ -461,6 +662,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
         ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
         cell.selectionStyle = .none
+        cell.titleTopConstraint.constant = (indexPath.row == 0) ? 0 : 12
 
         if tableView == self.tableView {
             let ticket = selectedTickets[indexPath.row]

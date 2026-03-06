@@ -43,8 +43,20 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func enterVerificationCodeVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false, isForEmail: Bool = false, otp: String? = "", otpRef: String? = "", phoneNum: String, countryCode: String) {
+    func enterVerificationCodeVc(
+        _ sender: UIViewController,
+        isFromLogin: Bool = false,
+        isFromSettings: Bool = false,
+        isForEmail: Bool = false,
+        otp: String? = "",
+        otpRef: String? = "",
+        phoneNum: String,
+        countryCode: String,
+        onSuccess: (() -> Void)? = nil
+    ) {
+
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(VerifyNumberViewController.self)
+
         vc.isFromLogin = isFromLogin
         vc.currectOtp = otp ?? ""
         vc.otpRef = otpRef ?? ""
@@ -52,8 +64,10 @@ final class Navigate {
         vc.isForEmail = isForEmail
         vc.phoneNum = phoneNum
         vc.countryCode = countryCode
+        vc.onOtpSuccess = onSuccess
+
         vc.modalPresentationStyle = .overCurrentContext
-        sender.navigationController?.present(vc, animated: true, completion: nil)
+        sender.navigationController?.present(vc, animated: true)
     }
     
     func enterNameVc(_ sender: UIViewController) {

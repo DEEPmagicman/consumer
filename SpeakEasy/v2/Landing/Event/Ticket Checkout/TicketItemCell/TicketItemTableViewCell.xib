@@ -62,6 +62,7 @@
             <connections>
                 <outlet property="amountLbl" destination="IZh-SH-nNd" id="rf5-fv-UEh"/>
                 <outlet property="titleLbl" destination="u5w-fp-1LJ" id="CpQ-bN-Bvj"/>
+                <outlet property="titleTopConstraint" destination="5rq-ks-MPH" id="BDE-ko-mpv"/>
             </connections>
             <point key="canvasLocation" x="-249.61832061068702" y="89.788732394366207"/>
         </tableViewCell>
