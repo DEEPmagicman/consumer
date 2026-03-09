@@ -16,11 +16,14 @@ class TableBookingListVC: UIViewController {
     var skip: Int = 0
     var hasMore: Bool = true
     var isLoading: Bool = false
+    private var showShimmer = true
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupTableView()
+        showShimmer = true
         fetchSeatingAreas()
     }
     
@@ -44,6 +47,7 @@ class TableBookingListVC: UIViewController {
             guard let self = self else { return }
             
             self.isLoading = false
+            self.showShimmer = false
             
             if isSuccess {
                 
@@ -52,6 +56,7 @@ class TableBookingListVC: UIViewController {
                 self.skip += list.count
                 
                 self.tableView.reloadData()
+                
             } else {
                 print(errMsg ?? "Error fetching seating areas")
             }
@@ -63,21 +68,33 @@ class TableBookingListVC: UIViewController {
 extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        if showShimmer {
+            return 6
+        }
+
         return seatingAreas.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let cell: TableListTVC = tableView.dequeue(
             withIdentifier: TableListTVC.identifier,
             for: indexPath
         )
-        
+
         cell.selectionStyle = .none
-        
+
+        if showShimmer {
+            cell.startShimmer()
+            return cell
+        }
+
+        cell.stopShimmer()
+
         let item = seatingAreas[indexPath.row]
-        
+
         cell.onBookTap = { [weak self] in
             guard let self = self else { return }
             
@@ -86,90 +103,109 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
             if selectedItem.hideCheckout == true {
                 print("Inquire tapped for:", selectedItem.name ?? "")
             } else {
-                Navigate.to.tableSeatingVC(self, seatingArea: selectedItem)
+                Navigate.to.tableSeatingVC(
+                    self,
+                    seatingArea: selectedItem,
+                    event: self.event
+                ) { time, guestCount, seatingArea, event in
+                    
+                    Navigate.to.tablePurchaseVC(self)
+                    
+                    print("Selected Time:", time)
+                    print("Guest Count:", guestCount)
+                }
             }
         }
 
         cell.tableName.text = item.name
+
         cell.tableDescriptionLbl.text = item.highlight?.isEmpty == false
             ? item.highlight
             : item.description
-        
+
         if item.hidePricing == true {
             cell.totalAmount.text = ""
             cell.secondAmountLbl.text = ""
         } else {
+
             if item.bookingType == .timeWise {
-                
+
                 if let slot = item.timeSlots?.first {
-                    
+
                     if let deposit = slot.deposit {
                         cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
                     }
-                    
+
                     if let minimum = slot.minimum {
                         cell.secondAmountLbl.text = "$\(minimum) min."
                     }
                 }
+
             } else {
+
                 if let deposit = item.depositWithFees {
                     cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
                 } else if let deposit = item.deposit {
                     cell.totalAmount.text = "$\(String(format: "%.2f", deposit))"
                 }
-                
+
                 if let minimum = item.minimum {
                     cell.secondAmountLbl.text = "$\(minimum) min."
                 }
             }
-            
         }
-        
+
         let minGuest = item.defaultGuest ?? 0
         let maxGuest = item.maxGuest ?? 0
 
         let guestsText: String = {
+
             if minGuest > 0 && maxGuest > 0 {
                 return minGuest == maxGuest
                 ? "\(minGuest) Guests"
                 : "\(minGuest) to \(maxGuest) Guests"
-            } else if maxGuest > 0 {
+            }
+            else if maxGuest > 0 {
                 return "\(maxGuest) Guests"
-            } else {
+            }
+            else {
                 return "Guests"
             }
+
         }()
 
-        
         if let slot = item.timeSlots?.first,
            let start = slot.startTime,
            let startDate = start.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: false) {
-            
+
             let startTime = startDate.string(format: .hmma, isUTC: false)
-            
+
             var endTime = ""
-            
+
             if let end = slot.endTime,
                let endDate = end.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: false) {
-                
+
                 endTime = endDate.string(format: .hmma, isUTC: false)
             }
-            
+
             let finalTime = endTime.isEmpty ? startTime : "\(startTime) - \(endTime)"
-            
+
             cell.tableDetailLbl.attributedText = cell.buildGuestsTimeText(
                 guests: guestsText,
                 time: finalTime
             )
+
         } else {
+
             cell.tableDetailLbl.attributedText = cell.buildGuestsTimeText(
                 guests: guestsText,
                 time: ""
             )
         }
-        
+
         cell.bookBtn.isHidden = false
         cell.bookBtn.setTitle(item.hideCheckout == true ? "Inquire" : "Book", for: .normal)
+
         return cell
     }
     
@@ -184,12 +220,22 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-            let selectedItem = self.seatingAreas[indexPath.row]
-            
-            if selectedItem.hideCheckout == true {
-                print("Inquire tapped for:", selectedItem.name ?? "")
-            } else {
-                Navigate.to.tableSeatingVC(self, seatingArea: selectedItem)
+        let selectedItem = self.seatingAreas[indexPath.row]
+        
+        if selectedItem.hideCheckout == true {
+            print("Inquire tapped for:", selectedItem.name ?? "")
+        } else {
+            Navigate.to.tableSeatingVC(
+                self,
+                seatingArea: selectedItem,
+                event: self.event
+            ) { time, guestCount, seatingArea, event in
+                
+                Navigate.to.tablePurchaseVC(self)
+                
+                print("Selected Time:", time)
+                print("Guest Count:", guestCount)
             }
+        }
     }
 }

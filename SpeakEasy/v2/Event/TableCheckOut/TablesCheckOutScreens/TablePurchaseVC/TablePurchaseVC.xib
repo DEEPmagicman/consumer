@@ -25,6 +25,24 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TablePurchaseVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="addPromoCodeBtn" destination="aeO-Eq-4N5" id="lbi-Zz-dxW"/>
+                <outlet property="dateandtimeLbl" destination="1zF-H9-yrb" id="HBe-y8-Uyi"/>
+                <outlet property="discountView" destination="cdp-a8-8Sb" id="9Ca-BC-LM5"/>
+                <outlet property="eventTitleLbl" destination="fLh-e8-cmQ" id="cKz-QA-uFi"/>
+                <outlet property="feesAndTaxesTableView" destination="Jmf-FN-pKU" id="dWt-Fa-k1d"/>
+                <outlet property="feesAndTaxesTableViewHeight" destination="iPa-lh-n2Z" id="xhY-eE-xfC"/>
+                <outlet property="feesAndTxtTotalAmountLbl" destination="Uqw-pC-4ac" id="aaN-e8-J59"/>
+                <outlet property="promoCodeTextFeild" destination="oF7-4D-ht0" id="SaW-vO-FVm"/>
+                <outlet property="promoCodeView" destination="5Wp-zJ-bvx" id="mba-pc-fZU"/>
+                <outlet property="purchaseTicketBtn" destination="JxE-ml-Z3n" id="ejr-Q4-buv"/>
+                <outlet property="submitPromoCodeBtn" destination="Ur1-2b-sjL" id="4v1-2i-7kF"/>
+                <outlet property="tableView" destination="Auu-CJ-tlB" id="Uib-GC-K8K"/>
+                <outlet property="tableViewHeight" destination="nuT-av-OvY" id="ztB-pR-KKA"/>
+                <outlet property="timerLbl" destination="ehC-Qg-ZIt" id="O9s-1X-wWD"/>
+                <outlet property="totalAmountLbl" destination="nfS-58-qk8" id="Jgm-r3-9n8"/>
+                <outlet property="venueLogoImg" destination="EWy-Sz-Wu3" id="6bp-pl-xNs"/>
+                <outlet property="venueName" destination="BAR-my-tsl" id="DQb-5q-Xum"/>
+                <outlet property="venueName2" destination="HB5-oO-4I0" id="vIn-G4-uU0"/>
                 <outlet property="view" destination="zUS-B6-FvG" id="ckj-0P-83b"/>
             </connections>
         </placeholder>
@@ -75,6 +93,9 @@
                                     </constraints>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" image="closeIc"/>
+                                    <connections>
+                                        <action selector="onClickCloseBtn:" destination="-1" eventType="touchUpInside" id="FBl-SR-MKq"/>
+                                    </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fedde Le Grand" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLh-e8-cmQ">
                                     <rect key="frame" x="105.33333333333333" y="44" width="182.33333333333337" height="29.333333333333329"/>
@@ -514,7 +535,7 @@
                                                                                                                 <constraint firstAttribute="width" constant="20" id="xnt-l5-uA9"/>
                                                                                                             </constraints>
                                                                                                         </imageView>
-                                                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ur1-2b-sjL">
+                                                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ur1-2b-sjL" customClass="LoadingButton" customModule="MHLoadingButton">
                                                                                                             <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                                                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                                                                         </button>

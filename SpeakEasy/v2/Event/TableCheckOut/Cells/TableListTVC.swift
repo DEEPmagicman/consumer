@@ -16,7 +16,7 @@ class TableListTVC: UITableViewCell {
     @IBOutlet weak var tableDetailLbl: UILabel!
     @IBOutlet weak var tableDescriptionLbl: UILabel!
     @IBOutlet weak var bookBtn: UIButton!
-    
+    @IBOutlet weak var shimmerView: ShimmerView!
     let infoTextAttributes: [NSAttributedString.Key: Any] = [
         .font: AppFont.font(weight: .regular, size: 12),
         .foregroundColor: UIColor(hex: "#D2D5DB")
@@ -43,7 +43,30 @@ class TableListTVC: UITableViewCell {
             guests: "10 to 12 guests",
             time: "9:00 PM - 11:00 PM"
         )
+        stopShimmer()
     }
+    
+    func startShimmer() {
+          shimmerView.isHidden = false
+          shimmerView.startAnimating()
+          tableName.isHidden = true
+          totalAmount.isHidden = true
+          secondAmountLbl.isHidden = true
+          tableDetailLbl.isHidden = true
+          tableDescriptionLbl.isHidden = true
+          bookBtn.isHidden = true
+      }
+
+      func stopShimmer() {
+          shimmerView.stopAnimating()
+          shimmerView.isHidden = true
+          tableName.isHidden = false
+          totalAmount.isHidden = false
+          secondAmountLbl.isHidden = false
+          tableDetailLbl.isHidden = false
+          tableDescriptionLbl.isHidden = false
+          bookBtn.isHidden = false
+      }
     
     func makeIconAttachment(systemName: String) -> NSTextAttachment {
         let attachment = NSTextAttachment()
@@ -90,6 +113,4 @@ class TableListTVC: UITableViewCell {
     @IBAction func bookButtonTapped(_ sender: UIButton) {
         onBookTap?()
     }
-
-
 }

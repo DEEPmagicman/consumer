@@ -21,6 +21,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TableSeatingViewController" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="conitnueToCheckOutBtn" destination="TUA-gQ-ITx" id="7u5-b6-R9J"/>
                 <outlet property="decreaseBtn" destination="jtz-WJ-d0z" id="Lxa-0Z-kMD"/>
                 <outlet property="feesLbl" destination="YBx-C1-fLd" id="4bc-oW-eU6"/>
                 <outlet property="guestAndTimeLbl" destination="b3o-u0-j4h" id="3TN-dX-8N0"/>
@@ -473,19 +474,13 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nt6-3x-fE2">
                                             <rect key="frame" x="0.0" y="50" width="329" height="40"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Continue to checkout" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yZa-Xl-VHl">
-                                                    <rect key="frame" x="16" y="13" width="297" height="14"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TUA-gQ-ITx">
                                                     <rect key="frame" x="0.0" y="0.0" width="329" height="40"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" red="0.42745098039215684" green="0.36862745098039218" blue="0.74117647058823533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                    <state key="normal">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="Continue to checkout">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -499,17 +494,11 @@
                                             </subviews>
                                             <color key="backgroundColor" red="0.42745098040000001" green="0.36862745099999999" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="yZa-Xl-VHl" secondAttribute="trailing" constant="16" id="2Yj-WN-iGB"/>
-                                                <constraint firstItem="yZa-Xl-VHl" firstAttribute="top" secondItem="nt6-3x-fE2" secondAttribute="top" constant="13" id="I7j-WQ-cIr"/>
                                                 <constraint firstAttribute="trailing" secondItem="TUA-gQ-ITx" secondAttribute="trailing" id="Iky-2R-WUQ"/>
                                                 <constraint firstAttribute="bottom" secondItem="TUA-gQ-ITx" secondAttribute="bottom" id="Ktk-bR-bRB"/>
-                                                <constraint firstItem="yZa-Xl-VHl" firstAttribute="centerY" secondItem="nt6-3x-fE2" secondAttribute="centerY" id="LL4-ej-BUN"/>
-                                                <constraint firstItem="yZa-Xl-VHl" firstAttribute="leading" secondItem="nt6-3x-fE2" secondAttribute="leading" constant="16" id="NOs-Pb-6a0"/>
                                                 <constraint firstAttribute="height" constant="40" id="UVq-N9-2On"/>
                                                 <constraint firstItem="TUA-gQ-ITx" firstAttribute="top" secondItem="nt6-3x-fE2" secondAttribute="top" id="e0t-QG-53D"/>
-                                                <constraint firstAttribute="bottom" secondItem="yZa-Xl-VHl" secondAttribute="bottom" constant="13" id="rLW-Ru-gky"/>
                                                 <constraint firstItem="TUA-gQ-ITx" firstAttribute="leading" secondItem="nt6-3x-fE2" secondAttribute="leading" id="sNq-vI-XZ3"/>
-                                                <constraint firstItem="yZa-Xl-VHl" firstAttribute="centerX" secondItem="nt6-3x-fE2" secondAttribute="centerX" id="xbF-Mx-403"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

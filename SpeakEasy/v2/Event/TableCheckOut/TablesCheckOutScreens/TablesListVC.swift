@@ -15,46 +15,49 @@ class TablesListVC: UIViewController {
 
     @IBOutlet weak var switchContainerView: UIView!
     @IBOutlet weak var contentContainerView: UIView!
-    
+
     private var optionSwitchView: TopOptionSwitchView!
-    private var optionSwitchList = ["3D Map", "List", "Request"]
-    
     private var mapVC: Tables3DMapVC?
     private var listVC: TableBookingListVC?
     private var requestVC: TableRequestVC?
+
     var event: Event?
-    
-    
-    private var has3DMap = true
-//    private var sharedData: EventDataModel?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
         fetchData()
         setupTopSwitch()
         setupChildVCs()
-        showChild(mapVC!)
+        showDefaultScreen()
     }
-    
+
     private func fetchData() {
-        //            API.getEventData { [weak self] data in
-        //                self?.sharedData = data
-        //                self?.updateChildren()
-        //            }
-        mapVC = Tables3DMapVC()
-        mapVC?.event = event
-        let vc =  TableBookingListVC()
-        vc.event = self.event
-        listVC = vc
-        requestVC = TableRequestVC()
+
+        if event?.isEnable3DMap == true {
+            let vc = Tables3DMapVC()
+            vc.event = event
+            mapVC = vc
+        }
+
+        if event?.isEnableOnlineTables == true {
+            let vc = TableBookingListVC()
+            vc.event = event
+            listVC = vc
+        }
+
+        if event?.isEnableReservationRequest == true {
+            requestVC = TableRequestVC()
+        }
     }
-    
+
     private func setupTopSwitch() {
 
         optionSwitchView = TopOptionSwitchView()
         switchContainerView.addSubview(optionSwitchView)
 
         optionSwitchView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             optionSwitchView.topAnchor.constraint(equalTo: switchContainerView.topAnchor),
             optionSwitchView.bottomAnchor.constraint(equalTo: switchContainerView.bottomAnchor),
@@ -62,10 +65,21 @@ class TablesListVC: UIViewController {
             optionSwitchView.trailingAnchor.constraint(equalTo: switchContainerView.trailingAnchor)
         ])
 
-        // Dynamic options
-        optionSwitchView.options = has3DMap
-            ? optionSwitchList
-        : ["List", "Request"]
+        var options: [String] = []
+
+        if event?.isEnable3DMap == true {
+            options.append("3D Map")
+        }
+
+        if event?.isEnableOnlineTables == true {
+            options.append("List")
+        }
+
+        if event?.isEnableReservationRequest == true {
+            options.append("Request")
+        }
+
+        optionSwitchView.options = options
 
         optionSwitchView.onSelectionChange = { [weak self] index in
             self?.handleSelection(index)
@@ -82,6 +96,33 @@ class TablesListVC: UIViewController {
             if let mapVC = mapVC {
                 showChild(mapVC)
             }
+
+        case "List":
+            if let listVC = listVC {
+                showChild(listVC)
+            }
+
+        case "Request":
+            if let requestVC = requestVC {
+                showChild(requestVC)
+            }
+
+        default:
+            break
+        }
+    }
+
+    private func showDefaultScreen() {
+
+        guard let firstOption = optionSwitchView.options.first else { return }
+
+        switch firstOption {
+
+        case "3D Map":
+            if let mapVC = mapVC {
+                showChild(mapVC)
+            }
+
         case "List":
             if let listVC = listVC {
                 showChild(listVC)
@@ -105,7 +146,7 @@ class TablesListVC: UIViewController {
 
         vc.view.isHidden = false
     }
-    
+
     private func setupChildVCs() {
 
         if let mapVC = mapVC {
@@ -120,10 +161,12 @@ class TablesListVC: UIViewController {
             addChildView(requestVC)
         }
     }
-    
+
     private func addChildView(_ vc: UIViewController) {
+
         addChild(vc)
         contentContainerView.addSubview(vc.view)
+
         vc.view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -134,11 +177,5 @@ class TablesListVC: UIViewController {
         ])
 
         vc.didMove(toParent: self)
-    }
-    
-    private func updateChildren() {
-//        [mapVC, listVC, requestVC].forEach {
-//            ($0 as? MainDataConsumer)?.update(with: sharedData!)
-//        }
     }
 }

@@ -463,12 +463,28 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func tableSeatingVC(_ sender: UIViewController, seatingArea: SeatingArea) {
+    func tableSeatingVC(
+        _ sender: UIViewController,
+        seatingArea: SeatingArea,
+        event: Event?,
+        completion: ((_ time: String,
+                      _ guestCount: Int,
+                      _ seatingArea: SeatingArea?,
+                      _ event: Event?) -> Void)? = nil
+    ) {
+
         let vc = TableSeatingViewController(
             nibName: "TableSeatingViewController",
             bundle: nil
         )
+
         vc.seatingArea = seatingArea
+        vc.event = event
+
+        vc.onSelectionUpdate = { time, guestCount, seatingArea, event in
+            completion?(time, guestCount, seatingArea, event)
+        }
+
         vc.modalPresentationStyle = .overCurrentContext
         sender.present(vc, animated: false)
     }

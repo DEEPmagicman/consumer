@@ -23,12 +23,18 @@ class TableSeatingViewController: UIViewController {
     @IBOutlet weak var selectedTimeLbl: UILabel!
     @IBOutlet weak var timeCollectionViewParentView: UIView!
     @IBOutlet weak var inquireView: UIView!
+    @IBOutlet weak var conitnueToCheckOutBtn: UIButton!
     
     var seatingArea: SeatingArea?
-
+    var event: Event?
     private var currentGuestCount: Int = 1
     private var timeSlots: [String] = []
     private var selectedIndex: Int = 0
+    var onSelectionUpdate: ((_ time: String,
+                             _ guestCount: Int,
+                             _ seatingArea: SeatingArea?,
+                             _ event: Event?) -> Void)?
+    
     
     let infoTextAttributes: [NSAttributedString.Key: Any] = [
         .font: AppFont.font(weight: .regular, size: 12),
@@ -107,7 +113,6 @@ class TableSeatingViewController: UIViewController {
             }
 
         } else {
-            
             if let minimum = item.minimum {
                 miniMumAmountLbl.text = "$\(minimum) min."
             }
@@ -158,9 +163,9 @@ class TableSeatingViewController: UIViewController {
         }()
         
         if item.inquiryEnabled ?? false {
-            self.inquireView.isHidden = true
-        } else {
             self.inquireView.isHidden = false
+        } else {
+            self.inquireView.isHidden = true
         }
         
         if item.bookingType == .timeWise {
@@ -216,6 +221,12 @@ class TableSeatingViewController: UIViewController {
             timeCollectionView.layoutIfNeeded()
         } else {
             timeCollectionViewParentView.isHidden = true
+        }
+        
+        if let hex = event?.whiteLabelColor {
+              let color = UIColor(hex: hex)
+            conitnueToCheckOutBtn.backgroundColor = color
+            
         }
     }
     
@@ -279,7 +290,15 @@ class TableSeatingViewController: UIViewController {
     }
     
     @IBAction func onClickCheckOutBtn(_ sender: Any) {
-        Navigate.to.tablePurchaseVC(self)
+        let selectedTime = timeSlots.indices.contains(selectedIndex)
+               ? timeSlots[selectedIndex]
+               : ""
+
+        self.dismiss(animated: true)
+           onSelectionUpdate?(selectedTime,
+                              currentGuestCount,
+                              seatingArea,
+                              event)
     }
 }
 
@@ -301,7 +320,12 @@ extension TableSeatingViewController: UICollectionViewDelegate,
         ) as! TimeTagCVC
 
         let text = timeSlots[indexPath.item]
-        cell.configure(with: text, isSelected: indexPath.item == selectedIndex)
+        var selectedColor: UIColor? = nil
+           if let hex = event?.whiteLabelColor {
+               selectedColor = UIColor(hex: hex)
+           }
+        
+        cell.configure(with: text, isSelected: indexPath.item == selectedIndex, selectedColor: selectedColor)
         return cell
     }
     
@@ -342,6 +366,7 @@ final class TimeTagCVC: UICollectionViewCell {
         label.textAlignment = .center
         return label
     }()
+    
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -369,12 +394,13 @@ final class TimeTagCVC: UICollectionViewCell {
         ])
     }
 
-    func configure(with text: String, isSelected: Bool) {
+    func configure(with text: String, isSelected: Bool,
+    selectedColor: UIColor?) {
         
         titleLabel.text = text
         
         if isSelected {
-            backgroundColor = UIColor(hex: "#7C3AED") // selected color
+            backgroundColor = selectedColor ?? UIColor(hex: "#7C3AED")
             titleLabel.textColor = .white
         } else {
             backgroundColor = .white
