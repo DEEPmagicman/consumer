@@ -230,4 +230,39 @@ final class EventPresenter {
             completion(false, nil, [])
         }
     }
+    
+    static func getTicketLinks(
+        eventId: String,
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ links: [EventTicketLink]?) -> Void
+    ) {
+
+        AFWrapper.getRequest(
+            APIBuilder.ticketLinksURL(eventId: eventId), headers: Header.header(timeZone: "")
+        ) { response in
+
+            guard let responseArray = response as? [[String: Any]] else {
+                completion(false, nil, [])
+                return
+            }
+
+            if let links = [EventTicketLink].parse(responseArray) {
+                completion(true, nil, links)
+            } else {
+                completion(false, "internal error", [])
+            }
+
+        } failure: { error in
+
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [])
+                return
+            }
+
+            completion(false, nil, [])
+        }
+    }
+    
+    
 }

@@ -47,7 +47,9 @@ class TablesListVC: UIViewController {
         }
 
         if event?.isEnableReservationRequest == true {
-            requestVC = TableRequestVC()
+            let vc = TableRequestVC()
+            vc.event = event
+            requestVC = vc
         }
     }
 
@@ -87,7 +89,8 @@ class TablesListVC: UIViewController {
     }
 
     private func handleSelection(_ index: Int) {
-
+        
+        view.endEditing(true)
         let title = optionSwitchView.options[index]
 
         switch title {

@@ -204,3 +204,16 @@ extension [CustomFees] {
     }
 }
 
+struct EventTicketLink: Codable {
+    let id: String?
+    let eventId: String?
+    let eventTicketId: String?
+    let linkState: String?
+    let targetEventTicketId: String?
+    let linkAction: String?
+    let status: String?
+    let isDeleted: Bool?
+    let createdAt: String?
+    let updatedAt: String?
+    
+}

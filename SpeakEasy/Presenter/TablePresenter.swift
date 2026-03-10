@@ -128,7 +128,7 @@ final class TablePresenter {
         time: String,
         optedPolicy: Bool,
         eventId: String,
-        seatingArea: String,
+        seatingArea: String?,
         venueId: String,
         token: String,
         completion: @escaping (_ success: Bool, _ message: String?, _ response: [String: Any]?) -> Void
