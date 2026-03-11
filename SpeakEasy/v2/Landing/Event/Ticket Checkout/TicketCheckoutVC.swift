@@ -389,7 +389,7 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
-                Navigate.to.showQRCode(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
+                Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
             }
         }
     }

@@ -495,8 +495,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func ticketConfirmationVC(_ sender: UIViewController) {
+    func ticketConfirmationVC(_ sender: UIViewController , booking: Booking?, bookingId: String, type: PaymentIntentType) {
         let vc = TicketConfirmationVC(nibName: "TicketConfirmationVC", bundle: nil)
+        vc.bookingId = bookingId
         sender.pushVC(vc)
     }
 }

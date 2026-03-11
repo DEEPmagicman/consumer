@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -37,19 +38,35 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fat Joe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUy-mk-uj8">
-                                <rect key="frame" x="67.666666666666671" y="148" width="49" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fat Joe FAT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUy-mk-uj8">
+                                <rect key="frame" x="53.333333333333336" y="148" width="77.333333333333314" height="17"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yT7-fj-aho">
+                                <rect key="frame" x="53.333333333333336" y="148" width="77.333333333333314" height="17"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hAa-Uh-ox2">
+                                <rect key="frame" x="30" y="16" width="124" height="124"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="yT7-fj-aho" firstAttribute="bottom" secondItem="AUy-mk-uj8" secondAttribute="bottom" id="2in-41-ps7"/>
+                            <constraint firstItem="yT7-fj-aho" firstAttribute="top" secondItem="AUy-mk-uj8" secondAttribute="top" id="8dj-e1-MY4"/>
+                            <constraint firstItem="hAa-Uh-ox2" firstAttribute="leading" secondItem="Vac-gj-B1s" secondAttribute="leading" id="AkG-Tz-Rut"/>
+                            <constraint firstItem="hAa-Uh-ox2" firstAttribute="bottom" secondItem="Vac-gj-B1s" secondAttribute="bottom" id="EId-0J-Y53"/>
                             <constraint firstItem="Vac-gj-B1s" firstAttribute="top" secondItem="zQQ-rl-MHD" secondAttribute="top" constant="16" id="Jk2-5X-7b5"/>
                             <constraint firstItem="AUy-mk-uj8" firstAttribute="top" secondItem="Vac-gj-B1s" secondAttribute="bottom" constant="8" id="YLR-Eh-eag"/>
+                            <constraint firstItem="yT7-fj-aho" firstAttribute="leading" secondItem="AUy-mk-uj8" secondAttribute="leading" id="eAe-bt-LqR"/>
                             <constraint firstItem="AUy-mk-uj8" firstAttribute="centerX" secondItem="Vac-gj-B1s" secondAttribute="centerX" id="eOm-tt-89R"/>
+                            <constraint firstItem="hAa-Uh-ox2" firstAttribute="trailing" secondItem="Vac-gj-B1s" secondAttribute="trailing" id="m9l-3F-Bmm"/>
                             <constraint firstItem="Vac-gj-B1s" firstAttribute="centerX" secondItem="zQQ-rl-MHD" secondAttribute="centerX" id="vBN-ph-3eX"/>
+                            <constraint firstItem="yT7-fj-aho" firstAttribute="trailing" secondItem="AUy-mk-uj8" secondAttribute="trailing" id="wqi-p4-mWG"/>
+                            <constraint firstItem="hAa-Uh-ox2" firstAttribute="top" secondItem="Vac-gj-B1s" secondAttribute="top" id="xh3-bE-YmO"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -63,13 +80,18 @@
             </constraints>
             <size key="customSize" width="184" height="182"/>
             <connections>
+                <outlet property="imageShimmerView" destination="hAa-Uh-ox2" id="Vq2-bC-7X9"/>
                 <outlet property="imageView" destination="Vac-gj-B1s" id="sHR-NL-n2C"/>
                 <outlet property="nameLbl" destination="AUy-mk-uj8" id="Ekc-GW-HT0"/>
+                <outlet property="textSimmerView" destination="yT7-fj-aho" id="ffK-du-u4p"/>
             </connections>
             <point key="canvasLocation" x="-174.04580152671755" y="140.14084507042253"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="demo venue" width="156" height="156"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

@@ -66,6 +66,14 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
+    @IBOutlet weak var policyView: UIView!
+    @IBOutlet weak var venueLogoShimmerView: ShimmerView!
+    @IBOutlet weak var ticketShimmerView: ShimmerView!
+    @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
+    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
+    @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
+    @IBOutlet weak var ticketTitleStackView: UIStackView!
+    
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -100,30 +108,21 @@ class EventDetailsVC: UIViewController {
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
         
         hero.isEnabled = true
+        setupData()
         setupCollectionViews()
         setupTableView()
         setupImagePager()
         getEventDetail()
         startTicketTableObserver()
-        setupData()
+    
         
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
-        
-        mainImg.hero.id = "event.image.\(heroIndex)"
+        mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
 //        titleLbl.hero.id = "event.title.\(heroIndex)"
       
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-       
-
-//        if isLoading {
-//            skeletonView?.updateFrames()
-//        }
-    }
-
     private func setupTicketTable() {
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
@@ -132,43 +131,36 @@ class EventDetailsVC: UIViewController {
     }
     
     func showSkeleton() {
-
-        isLoading = true
         view.layoutIfNeeded()
 
-        let targets: [UIView] = [
-            mainImg,
-            titleLbl,
-            venueLogo,
-            venueName,
-            timingLbl,
-            guestListCollectionView,
-            detailsLbl,
-            ticketsTitleLbl
-        ]
+        ticketShimmerView.isHidden = false
+        ticketTitleShimmerView.isHidden = false
+        buyNowBtnShimmerView.isHidden = false
+        ticketTitleStackShimmerView.isHidden = false
+        ticketTitleStackView.isHidden = true
 
-        let sk = SkeletonOverlayView()
-        sk.show(over: view, targets: targets)
-
-        skeletonView = sk
-
-        self.scrollView.alpha = 0
+        ticketShimmerView.startAnimating()
+        ticketTitleShimmerView.startAnimating()
+        buyNowBtnShimmerView.startAnimating()
     }
     
     func hideSkeleton() {
+        ticketShimmerView.stopAnimating()
+        ticketTitleShimmerView.stopAnimating()
+        buyNowBtnShimmerView.stopAnimating()
 
-        isLoading = false
-        self.scrollView.alpha = 1
-
-        skeletonView?.hide()
-        skeletonView = nil
+        ticketShimmerView.isHidden = true
+        ticketTitleShimmerView.isHidden = true
+        buyNowBtnShimmerView.isHidden = true
+        ticketTitleStackShimmerView.isHidden = true
+        ticketTitleStackView.isHidden = false
     }
 
     private func getEventDetail() {
         guard let eventId  = self.event?.uniqueId else {
             return
         }
-//        showSkeleton()
+        showSkeleton()
         EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             self?.hideSkeleton()
             guard let self = self else {
@@ -280,7 +272,13 @@ class EventDetailsVC: UIViewController {
         setupPolicyExpandableLabel()
         venueNameLbl.text = "\(venueDetails?.name ?? "")"
         venueName.text = "\(venueDetails?.name ?? "")"
-        venueAddressLbl.text = venueDetails?.address ?? ""
+        let addressComponents = [
+            venueDetails?.address,
+            venueDetails?.city,
+            venueDetails?.pinCode
+        ].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+         .filter { !$0.isEmpty }
+        venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = "\(venueDetails?.name ?? "")"
 
         if event?.isEnableOnlineTables ?? false {
@@ -705,8 +703,12 @@ class EventDetailsVC: UIViewController {
     private func setupPolicyExpandableLabel() {
 
         guard let html = event?.disclaimer,
-              let attributed = html.htmlToAttributedString else { return }
+              let attributed = html.htmlToAttributedString else {
+            self.policyView.isHidden = true
+            return
+        }
 
+        self.policyView.isHidden = false
         let mutable = NSMutableAttributedString(attributedString: attributed)
 
         mutable.trimTrailingWhitespaceAndNewlines()
