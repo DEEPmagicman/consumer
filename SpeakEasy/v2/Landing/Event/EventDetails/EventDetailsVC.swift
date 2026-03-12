@@ -136,6 +136,7 @@ class EventDetailsVC: UIViewController {
         ticketShimmerView.isHidden = false
         ticketTitleShimmerView.isHidden = false
         buyNowBtnShimmerView.isHidden = false
+        buyNowBtnShimmerView.cornerRadius = 30
         ticketTitleStackShimmerView.isHidden = false
         ticketTitleStackView.isHidden = true
 
@@ -977,7 +978,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             cell.configure(
                 ticket: ticket,
                 currency: currency,
-                whiteLabelColor: event?.whiteLabelColor
+                whiteLabelColor: event?.whiteLabelColor, eventTicketSetting: self.event?.eventTicketSettings
             )
 
             cell.onPlusTap = { [weak self] ticket in

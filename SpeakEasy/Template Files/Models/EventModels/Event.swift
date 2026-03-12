@@ -337,6 +337,8 @@ struct EventTicketSettings: Codable {
     var isUpFront: Bool
     var isProcessingFeePassToCustomer: Bool
     var isEnableSalesTax: Bool
+    var hideSoldOut: Bool
+    var hideLowInventory: Bool
 //    var salesTaxName: String
     var salesTax: Double
     var isCustomFeeTaxable: Bool

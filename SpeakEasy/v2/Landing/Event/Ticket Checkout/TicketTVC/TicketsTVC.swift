@@ -20,113 +20,171 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var rsvpBtnView: UIView!
     @IBOutlet weak var inclFeesLbl: UILabel!
     @IBOutlet weak var rsvpBtn: UIButton!
+    @IBOutlet weak var soldOutView: UIView!
+//    @IBOutlet weak var discriptionLbl: UILabel!
     
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
     private var currentTicket: EventTicket?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
+
     override func prepareForReuse() {
-          super.prepareForReuse()
-          currentTicket = nil
-          onPlusTap = nil
-          onMinusTap = nil
-          onRSVPTap = nil
+        super.prepareForReuse()
+        currentTicket = nil
+        onPlusTap = nil
+        onMinusTap = nil
+        onRSVPTap = nil
+
+        resetUI()
+    }
+
+    private func resetUI() {
+        titleLbl.attributedText = nil
+        titleLbl.text = nil
+        titleLbl.isHidden = false
+        priceLbl.isHidden = false
         quantityLbl.isHidden = true
         minusView.isHidden = true
-        rsvpBtnView.isHidden = true
         plusView.isHidden = false
+        plusBtn.isHidden = false
         plusBtn.isEnabled = true
         plusView.alpha = 1.0
+        rsvpBtnView.isHidden = true
         inclFeesLbl.isHidden = true
         ticketLeftLbl.isHidden = true
+        soldOutView.isHidden = true
+    }
 
-      }
+    private func remainingQuantity(for ticket: EventTicket) -> Int {
+        if let remaining = ticket.remainingQuantity {
+            return remaining
+        }
+        let issued = ticket.issuedUnits ?? 0
+        let sold = ticket.soldUnits ?? 0
+        return max(issued - sold, 0)
+    }
 
-    func configure(ticket: EventTicket, currency: String, whiteLabelColor: String?) {
-        self.currentTicket = ticket
+    private func isSoldOut(_ ticket: EventTicket) -> Bool {
+        return remainingQuantity(for: ticket) <= 0
+    }
+
+    private func applySoldOutUI(ticket: EventTicket) {
+        let text = ticket.tierName
+
+        let attributedText = NSAttributedString(
+            string: text,
+            attributes: [
+                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                .foregroundColor: UIColor.white
+            ]
+        )
+
+        titleLbl.attributedText = attributedText
+
+        soldOutView.isHidden = false
+        priceLbl.isHidden = true
+        quantityLbl.isHidden = true
+        minusView.isHidden = true
+        plusView.isHidden = true
+        rsvpBtnView.isHidden = true
+        inclFeesLbl.isHidden = true
+        ticketLeftLbl.isHidden = true
+    }
+
+    private func applyNormalUI(
+        ticket: EventTicket,
+        currency: String,
+        whiteLabelColor: String?,
+        shouldShowLeftLabel: Bool
+    ) {
         titleLbl.text = ticket.tierName
-        
-        let lowestPrice = ticket.price ?? 0
-        
-        if lowestPrice == 0 {
+        let price = ticket.price ?? 0
+
+        if price == 0 {
             priceLbl.text = "FREE"
-            self.rsvpBtnView.isHidden = false
-            self.plusView.isHidden = true
+            rsvpBtnView.isHidden = false
+            plusView.isHidden = true
         } else {
-            priceLbl.text = "\(currency)\(Double(lowestPrice).decimalFormat(true))"
-            self.rsvpBtnView.isHidden = true
-            
-            self.plusBtn.isHidden = false
-            self.plusView.isHidden = false
-            if let remaining = ticket.remainingQuantity, let selectedTicket = ticket.selectedTicketCount, remaining <= selectedTicket {
-                plusView.isHidden = false
-            }
-            if let count  = ticket.selectedTicketCount, count != 0 {
+            priceLbl.text = "\(currency)\(Double(price).decimalFormat(true))"
+            rsvpBtnView.isHidden = true
+            plusBtn.isHidden = false
+            plusView.isHidden = false
+
+            if let count = ticket.selectedTicketCount, count > 0 {
                 quantityLbl.isHidden = false
                 quantityLbl.text = "\(count)"
                 minusView.isHidden = false
             }
         }
-        
-        let fee = ticket.extraFees ?? 0
-        let symbol = currency
 
+        let fee = ticket.extraFees ?? 0
         if fee > 0 {
             inclFeesLbl.isHidden = false
-            inclFeesLbl.text = "(Incl. \(symbol)\(fee.decimalFormat(true)) in fees)"
+            inclFeesLbl.text = "(Incl. \(currency)\(fee.decimalFormat(true)) in fees)"
         } else {
             inclFeesLbl.isHidden = true
         }
-        
-        if let remaining = ticket.remainingQuantity {
+
+        let remaining = remainingQuantity(for: ticket)
+
+        if shouldShowLeftLabel && remaining > 0 && remaining < 20 {
 
             ticketLeftLbl.isHidden = false
-            if remaining == 0 {
-                ticketLeftLbl.text = "Sold Out"
-            } else {
-                ticketLeftLbl.text = "Only \(remaining) left"
-            }
-            
+            ticketLeftLbl.text = "Only \(remaining) left"
+
             if let hex = whiteLabelColor {
-                  let color = UIColor(hex: hex)
-                ticketLeftLbl.textColor = color
+                ticketLeftLbl.textColor = UIColor(hex: hex)
             }
 
         } else {
             ticketLeftLbl.isHidden = true
         }
+    }
 
+    func configure(
+        ticket: EventTicket,
+        currency: String,
+        whiteLabelColor: String?,
+        eventTicketSetting: EventTicketSettings?
+    ) {
+        self.currentTicket = ticket
+        resetUI()
+
+        let soldOut = isSoldOut(ticket)
+        if soldOut {
+            applySoldOutUI(
+                ticket: ticket
+            )
+        } else {
+            applyNormalUI(
+                ticket: ticket,
+                currency: currency,
+                whiteLabelColor: whiteLabelColor,
+                shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
+            )
+        }
     }
-    
-    func showMinusView(ticket: EventTicket) {
-//        self.minusView.isHidden = ticket.quantity < 0
-//        self.quantityLbl.isHidden = ticket.quantity < 0
-    }
-    
+
     func hideMinusView() {
-        self.minusView.isHidden = true
-        self.quantityLbl.isHidden = true
+        minusView.isHidden = true
+        quantityLbl.isHidden = true
     }
-    
+
     @IBAction func onClickMinusBtn(_ sender: Any) {
-        guard let t = currentTicket else { return }
-             onMinusTap?(t)
-        
+        guard let ticket = currentTicket else { return }
+        guard !isSoldOut(ticket) else { return }
+        onMinusTap?(ticket)
     }
-    
+
     @IBAction func onClickPlusBtn(_ sender: Any) {
-        guard let t = currentTicket else { return }
-           onPlusTap?(t)
+        guard let ticket = currentTicket else { return }
+        guard !isSoldOut(ticket) else { return }
+        onPlusTap?(ticket)
     }
-    
+
     @IBAction func onClickRSVPBtn(_ sender: Any) {
-        guard let t = currentTicket else { return }
-           onRSVPTap?(t)
+        guard let ticket = currentTicket else { return }
+        guard !isSoldOut(ticket) else { return }
+        onRSVPTap?(ticket)
     }
 }
-

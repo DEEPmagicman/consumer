@@ -159,6 +159,36 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
+                                            <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLv-SK-N5k">
+                                                <rect key="frame" x="36" y="0.0" width="72" height="36"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NzX-uO-SDM">
+                                                        <rect key="frame" x="0.0" y="0.0" width="72" height="36"/>
+                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" title="Sold Out">
+                                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="onClickRSVPBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="LPY-rm-qkN"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="NzX-uO-SDM" secondAttribute="trailing" id="5Rg-Rf-T1C"/>
+                                                    <constraint firstItem="NzX-uO-SDM" firstAttribute="leading" secondItem="PLv-SK-N5k" secondAttribute="leading" id="9aU-h5-ae5"/>
+                                                    <constraint firstAttribute="bottom" secondItem="NzX-uO-SDM" secondAttribute="bottom" id="Jcl-Ld-iO7"/>
+                                                    <constraint firstItem="NzX-uO-SDM" firstAttribute="top" secondItem="PLv-SK-N5k" secondAttribute="top" id="NF9-8t-bnx"/>
+                                                    <constraint firstAttribute="width" constant="72" id="S22-Qc-ALY"/>
+                                                    <constraint firstAttribute="height" constant="36" id="TSr-1m-Bwi"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="18"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                         </subviews>
                                     </stackView>
                                 </subviews>
@@ -221,6 +251,7 @@
                 <outlet property="quantityLbl" destination="3Ka-YX-grf" id="8xG-Xl-YUh"/>
                 <outlet property="rsvpBtn" destination="C8p-T5-xKp" id="3Fk-tw-Tyg"/>
                 <outlet property="rsvpBtnView" destination="eFH-Qy-HBi" id="QAY-Hu-Rfb"/>
+                <outlet property="soldOutView" destination="PLv-SK-N5k" id="3jN-YA-U7U"/>
                 <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>
             </connections>

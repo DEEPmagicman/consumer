@@ -1,5 +1,5 @@
 {
-  "originHash" : "1b952dbeb3e98c3616fe74d408979f81e53dd03efed7a49dccdd07dd91ba5ead",
+  "originHash" : "42ba6ce53bb3afc1a68c6281380b2e6e3224af9a08c6fe7bf245a6006f9ba5de",
   "pins" : [
     {
       "identity" : "abseil-cpp-swiftpm",
@@ -60,7 +60,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/warrenm/GLTFKit2",
       "state" : {
-        "revision" : "287ca203e23d32bc69cb1ae771eaaa9f70ca741a",
+        "revision" : "e69e354c4f31ea07b7816b8cbe2ddb28e897d073",
         "version" : "0.5.15"
       }
     },

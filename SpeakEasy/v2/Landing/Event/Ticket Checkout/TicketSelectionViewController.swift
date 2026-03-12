@@ -63,18 +63,78 @@ class TicketSelectionViewController: UIViewController {
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
-        
         continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
         continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
 
         setupData()
     }
+    
+    private func venueNow() -> Date {
+        let tz = venueDetails?.useTimezone ?? TimeZone.current.identifier
+        let timeZone = TimeZone(identifier: tz) ?? .current
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        formatter.timeZone = timeZone
+        
+        return formatter.date(from: formatter.string(from: Date())) ?? Date()
+    }
+
+    private func ticketDate(_ value: String?) -> Date? {
+        guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        return value.toDate(withFormat: .yyyyMMddHHmmss)
+    }
+
+    private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
+        let remaining = ticket.remainingQuantity ?? max((ticket.issuedUnits ?? 0) - (ticket.soldUnits ?? 0), 0)
+        return remaining <= 0
+        
+    }
+    
+    private func shouldHideSoldOutTicket(_ ticket: EventTicket) -> Bool {
+        let hideSoldOut = event?.eventTicketSettings?.hideSoldOut == true
+        return isTicketSoldOut(ticket) && hideSoldOut
+    }
+
+    private func isTicketSaleStarted(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
+        guard let startSaleDate = ticketDate(ticket.beginSale) else {
+            return true
+        }
+        return now >= startSaleDate
+    }
+
+    private func isTicketSaleNotEnded(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
+
+        guard let endSaleDate = ticketDate(ticket.endSale) else {
+            return true
+        }
+        return now <= endSaleDate
+    }
+
+    private func isTicketAvailableForDisplay(_ ticket: EventTicket) -> Bool {
+        let isNotDeleted = ticket.isDeleted == false
+        let isNotPaused = ticket.sellingPaused == false
+        let saleStarted = isTicketSaleStarted(ticket)
+        let saleNotEnded = isTicketSaleNotEnded(ticket)
+        let hideBecauseSoldOut = shouldHideSoldOutTicket(ticket)
+
+        return isNotDeleted &&
+               isNotPaused &&
+               saleStarted &&
+               saleNotEnded &&
+               !hideBecauseSoldOut
+    }
+
+    private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
+        return list.filter { isTicketAvailableForDisplay($0) }
+    }
 
     private func setupData() {
         guard let event = event else { return }
-
-        let hasProtectedTicket = !(event.protectedEventTicket?.isEmpty ?? true)
-        protectedTicketView.isHidden = !hasProtectedTicket
 
         venueLogoImg.sd_setImage(
             with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
@@ -84,34 +144,34 @@ class TicketSelectionViewController: UIViewController {
         venueName.text = venueDetails?.name ?? ""
         venueName2.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event.title
-        
+
         if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            
+
             dateandtimeLbl.text = customText
-            
+
         } else {
-            
+
             let timezone = venueDetails?.useTimezone ?? ""
-            
+
             let dateText = event.startDateTime.convertDateFormat(
                 from: .yyyyMMddHHmmss,
                 to: .EEEMMMD,
                 customTimeZone: timezone
             )
-            
+
             let startTime = event.startDateTime.convertDateFormat(
                 from: .yyyyMMddHHmmss,
                 to: .hmma,
                 customTimeZone: timezone
             )
-            
+
             let endTime = event.endDateTime?.convertDateFormat(
                 from: .yyyyMMddHHmmss,
                 to: .hmma,
                 customTimeZone: timezone
             ) ?? "LATE"
-            
+
             dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         }
 
@@ -122,19 +182,11 @@ class TicketSelectionViewController: UIViewController {
             continueToCheckOutBtn.bgColor = color
         }
 
-        func filterAvailable(_ list: [EventTicket]) -> [EventTicket] {
-            return list.filter { ticket in
-                let remaining = ticket.remainingQuantity ?? 0
-                let isNotDeleted = ticket.isDeleted == false
-                let isNotPaused = ticket.sellingPaused == false
-                return remaining > 0 && isNotDeleted && isNotPaused
-            }
-        }
+        normalTickets = filterAvailableTickets(event.eventTicket ?? [])
+        addOnTickets = filterAvailableTickets(event.eventAddOnTicket ?? [])
+        let protectedVisibleCandidates = filterAvailableTickets(event.protectedEventTicket ?? [])
+        protectedTicketView.isHidden = protectedVisibleCandidates.isEmpty
 
-        normalTickets = filterAvailable(event.eventTicket ?? [])
-        addOnTickets  = filterAvailable(event.eventAddOnTicket ?? [])
-
-        // default mode
         switchToNormalMode()
     }
 
@@ -231,7 +283,6 @@ class TicketSelectionViewController: UIViewController {
     }
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {
-
         let code = (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !code.isEmpty else { return }
         guard var event = event else { return }
@@ -247,24 +298,37 @@ class TicketSelectionViewController: UIViewController {
             return pass.caseInsensitiveCompare(code) == .orderedSame
         }
 
-        guard !matchedTickets.isEmpty else { return }
+        guard !matchedTickets.isEmpty else {
+            Alert.showToast("Invalid password")
+            return
+        }
 
-        for ticket in matchedTickets {
+        let validUnlockedTickets = filterAvailableTickets(matchedTickets)
+
+        guard !validUnlockedTickets.isEmpty else {
+            Alert.showToast("This ticket is sold out, paused, or sale has ended")
+            return
+        }
+
+        for ticket in validUnlockedTickets {
             if !normalTickets.contains(where: { $0.id == ticket.id }) {
                 normalTickets.append(ticket)
             }
         }
 
-        let unlockedIds = Set(matchedTickets.compactMap { $0.id })
+        let unlockedIds = Set(validUnlockedTickets.compactMap { $0.id })
         event.protectedEventTicket = protectedList.filter { t in
             guard let id = t.id else { return true }
             return !unlockedIds.contains(id)
         }
 
+        self.event = event
+
         unLockTF.text = ""
         unLockPassword()
 
-        protectedTicketView.isHidden = (event.protectedEventTicket ?? []).isEmpty
+        let remainingProtected = filterAvailableTickets(event.protectedEventTicket ?? [])
+        protectedTicketView.isHidden = remainingProtected.isEmpty
 
         if mode == .normal {
             tickets = normalTickets
@@ -274,9 +338,9 @@ class TicketSelectionViewController: UIViewController {
 
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: "bookingId", type: .singleTickedEvent)
+//        Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: "bookingId", type: .singleTickedEvent)
         
-//        Navigate.to.back(self)
+        Navigate.to.back(self)
     }
 
     @IBAction func onClickLockBtn(_ sender: Any) {
@@ -543,7 +607,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         let ticket = tickets[indexPath.row]
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
-        cell.configure(ticket: ticket, currency: currency, whiteLabelColor: event?.whiteLabelColor)
+        cell.configure(ticket: ticket, currency: currency, whiteLabelColor: event?.whiteLabelColor, eventTicketSetting: self.event?.eventTicketSettings)
 
         cell.onPlusTap = { [weak self] ticket in
             self?.handlePlus(ticket: ticket)
