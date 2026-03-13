@@ -122,7 +122,7 @@ final class DiscoverAllVC: UIViewController {
     
     
     private func getTonightEvent() {
-        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20")) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] isSuccess, errMsg, eventList, hasMore in
             guard let self = self else { return }
             
             if self.tonightEventSkip == 0 {

@@ -42,6 +42,8 @@ struct Event: Codable {
     var additionalButtons: [AdditionalButton]?
     var eventHasArtist: [ArtistData]?
     var showAddress: Bool?
+    var hideEventEnd: Bool?
+    var eventTicketGroupHasTicket: EventTicketGroupHasTicket?
     var totalTickets: Int?
     var allowGuestCheckin: Bool?
     var eventTicketSettings: EventTicketSettings?
@@ -230,6 +232,24 @@ struct Event: Codable {
         try container.encode(totalTickets, forKey: .totalTickets)
         try container.encode(allowGuestCheckin, forKey: .allowGuestCheckin)
     }
+}
+
+struct EventTicketGroupHasTicket: Codable {
+    var id: String?
+    var eventTicketGroupId: String?
+    var eventTicketId: String?
+    var createdAt: String?
+    var updatedAt: String?
+    var eventTicketGroup: EventTicketGroup?
+}
+
+struct EventTicketGroup: Codable {
+    var id: String?
+    var name: String?
+    var order: Int?
+    var eventId: String?
+    var createdAt: String?
+    var updatedAt: String?
 }
 
 

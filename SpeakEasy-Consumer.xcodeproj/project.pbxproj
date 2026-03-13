@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0408FBF52F63ECB9003F5563 /* GroupTicketTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0408FBF32F63ECB9003F5563 /* GroupTicketTVC.swift */; };
+		0408FBF62F63ECB9003F5563 /* GroupTicketTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */; };
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
 		040F377A2F52EDAF00473EBC /* SignUpDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */; };
 		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
@@ -424,6 +426,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0408FBF32F63ECB9003F5563 /* GroupTicketTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupTicketTVC.swift; sourceTree = "<group>"; };
+		0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupTicketTVC.xib; sourceTree = "<group>"; };
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpDetailsViewController.swift; sourceTree = "<group>"; };
 		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
@@ -802,6 +806,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0408FBF22F63EC7C003F5563 /* GroupTicketTVC */ = {
+			isa = PBXGroup;
+			children = (
+				0408FBF32F63ECB9003F5563 /* GroupTicketTVC.swift */,
+				0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */,
+			);
+			path = GroupTicketTVC;
+			sourceTree = "<group>";
+		};
 		0425E3C52F34604F005E4130 /* Event */ = {
 			isa = PBXGroup;
 			children = (
@@ -907,6 +920,7 @@
 		04A202C22F36041300900A27 /* TicketTVC */ = {
 			isa = PBXGroup;
 			children = (
+				0408FBF22F63EC7C003F5563 /* GroupTicketTVC */,
 				04A202C02F36041300900A27 /* TicketsTVC.swift */,
 				04A202C12F36041300900A27 /* TicketsTVC.xib */,
 			);
@@ -2171,6 +2185,7 @@
 				04A202EC2F36059F00900A27 /* EventGuestListCVC.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
 				CEE02DB32EFBAE8300AC7756 /* DateSelectionCVC.xib in Resources */,
+				0408FBF62F63ECB9003F5563 /* GroupTicketTVC.xib in Resources */,
 				CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */,
 				CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */,
 				CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */,
@@ -2612,6 +2627,7 @@
 				04E254C82BFF490B00505774 /* PaymentTableViewCell.swift in Sources */,
 				2986836629756E8600CB827B /* Event.swift in Sources */,
 				6AF2B9F32F0BC57C00069A90 /* TopOptionSwitchView.swift in Sources */,
+				0408FBF52F63ECB9003F5563 /* GroupTicketTVC.swift in Sources */,
 				CE775F0D2EFBE2B00010CE79 /* DateSelectionHeader.swift in Sources */,
 				CAC4141828A478050007BA86 /* DatePickerHelper.swift in Sources */,
 			);
@@ -2673,7 +2689,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 229;
+				CURRENT_PROJECT_VERSION = 230;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2711,7 +2727,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 229;
+				CURRENT_PROJECT_VERSION = 230;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2875,7 +2891,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 229;
+				CURRENT_PROJECT_VERSION = 230;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2970,7 +2986,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 229;
+				CURRENT_PROJECT_VERSION = 230;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

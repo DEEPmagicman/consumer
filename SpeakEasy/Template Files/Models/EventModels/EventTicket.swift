@@ -26,7 +26,11 @@ struct EventTicket: Codable {
     var updatedAt: String
     var eventTicketHasTier: [EventTicketHasTier]?
     var eventTicketHasPassword: EventTicketHasPassword?
+    var eventTicketGroupHasTicket: EventTicketGroupHasTicket?
     var selectedTicketCount: Int?
+    var sellInMultiples: Bool?
+    var miniPurchaseQuantity: Int?
+    var maxPurchaseQuantity: Int?
     var extraFees: Double?
     var remainingQuantity: Int? {
         (issuedUnits ?? 0) - (soldUnits ?? 0)

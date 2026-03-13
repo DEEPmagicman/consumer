@@ -73,6 +73,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
     @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
     @IBOutlet weak var ticketTitleStackView: UIStackView!
+    @IBOutlet weak var eventAddressView: UIView!
     
     
     private var imagePagerVC: ImagePagerVC?
@@ -102,9 +103,6 @@ class EventDetailsVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        tableBookNowButtonView.layer.cornerRadius = tableBookNowButtonView.frame.height / 2
-//           tableBookNowButtonView.clipsToBounds = true
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
         
         hero.isEnabled = true
@@ -119,7 +117,6 @@ class EventDetailsVC: UIViewController {
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-//        titleLbl.hero.id = "event.title.\(heroIndex)"
       
     }
     
@@ -273,6 +270,7 @@ class EventDetailsVC: UIViewController {
         setupPolicyExpandableLabel()
         venueNameLbl.text = "\(venueDetails?.name ?? "")"
         venueName.text = "\(venueDetails?.name ?? "")"
+        eventAddressView.isHidden = !(event?.showAddress ?? true) ? true : false
         let addressComponents = [
             venueDetails?.address,
             venueDetails?.city,
@@ -343,14 +341,24 @@ class EventDetailsVC: UIViewController {
                 customTimeZone: timezone
             ) ?? ""
 
-            let endTime = event?.endDateTime?.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .hmma,
-                customTimeZone: timezone
-            ) ?? "LATE"
-
             if !dateText.isEmpty && !startTime.isEmpty {
-                timingLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+
+                let hideEnd = event?.hideEventEnd == true
+                let hasEndTime = !(event?.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+                if hideEnd || !hasEndTime {
+                    timingLbl.text = "\(dateText) at \(startTime)"
+                } else {
+
+                    let endTime = event?.endDateTime?.convertDateFormat(
+                        from: .yyyyMMddHHmmss,
+                        to: .hmma,
+                        customTimeZone: timezone
+                    ) ?? ""
+
+                    timingLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+                }
+
             } else {
                 timingLbl.text = ""
             }

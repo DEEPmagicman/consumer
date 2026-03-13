@@ -21,12 +21,23 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var inclFeesLbl: UILabel!
     @IBOutlet weak var rsvpBtn: UIButton!
     @IBOutlet weak var soldOutView: UIView!
-//    @IBOutlet weak var discriptionLbl: UILabel!
-    
+    @IBOutlet weak var bgView: UIView!
+    @IBOutlet weak var discriptionLbl: UILabel!
+    @IBOutlet weak var viewMoreBtnView: UIView!
+    @IBOutlet weak var viewMoreBtn: UIButton!
+
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
+    var onDescriptionToggle: (() -> Void)?
+
     private var currentTicket: EventTicket?
+    private let collapsedLines = 3
+    private var isDescriptionExpanded = false
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
 
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -34,7 +45,8 @@ class TicketsTVC: UITableViewCell {
         onPlusTap = nil
         onMinusTap = nil
         onRSVPTap = nil
-
+        onDescriptionToggle = nil
+        isDescriptionExpanded = false
         resetUI()
     }
 
@@ -42,6 +54,7 @@ class TicketsTVC: UITableViewCell {
         titleLbl.attributedText = nil
         titleLbl.text = nil
         titleLbl.isHidden = false
+
         priceLbl.isHidden = false
         quantityLbl.isHidden = true
         minusView.isHidden = true
@@ -53,6 +66,16 @@ class TicketsTVC: UITableViewCell {
         inclFeesLbl.isHidden = true
         ticketLeftLbl.isHidden = true
         soldOutView.isHidden = true
+
+        discriptionLbl.text = nil
+        discriptionLbl.numberOfLines = collapsedLines
+        discriptionLbl.isHidden = true
+
+        viewMoreBtnView.isHidden = true
+        viewMoreBtn.setTitle("View More", for: .normal)
+
+        bgView.layer.borderWidth = 0
+        bgView.layer.borderColor = UIColor.clear.cgColor
     }
 
     private func remainingQuantity(for ticket: EventTicket) -> Int {
@@ -69,10 +92,8 @@ class TicketsTVC: UITableViewCell {
     }
 
     private func applySoldOutUI(ticket: EventTicket) {
-        let text = ticket.tierName
-
         let attributedText = NSAttributedString(
-            string: text,
+            string: ticket.tierName,
             attributes: [
                 .strikethroughStyle: NSUnderlineStyle.single.rawValue,
                 .foregroundColor: UIColor.white
@@ -91,14 +112,47 @@ class TicketsTVC: UITableViewCell {
         ticketLeftLbl.isHidden = true
     }
 
+    private func setupDescription(_ text: String?) {
+        let descriptionText = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !descriptionText.isEmpty else {
+            discriptionLbl.isHidden = true
+            viewMoreBtnView.isHidden = true
+            return
+        }
+
+        discriptionLbl.isHidden = false
+        discriptionLbl.text = descriptionText
+        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
+        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
+
+        layoutIfNeeded()
+
+        let fullHeight = discriptionLbl.sizeThatFits(
+            CGSize(width: discriptionLbl.frame.width, height: .greatestFiniteMagnitude)
+        ).height
+
+        let collapsedHeight = discriptionLbl.font.lineHeight * CGFloat(collapsedLines)
+
+        if fullHeight > collapsedHeight {
+            viewMoreBtnView.isHidden = false
+        } else {
+            viewMoreBtnView.isHidden = true
+            discriptionLbl.numberOfLines = 0
+        }
+    }
+
     private func applyNormalUI(
         ticket: EventTicket,
         currency: String,
         whiteLabelColor: String?,
         shouldShowLeftLabel: Bool
     ) {
+        titleLbl.attributedText = nil
         titleLbl.text = ticket.tierName
+
         let price = ticket.price ?? 0
+        setupDescription(ticket.tierDescription)
 
         if price == 0 {
             priceLbl.text = "FREE"
@@ -128,14 +182,12 @@ class TicketsTVC: UITableViewCell {
         let remaining = remainingQuantity(for: ticket)
 
         if shouldShowLeftLabel && remaining > 0 && remaining < 20 {
-
             ticketLeftLbl.isHidden = false
             ticketLeftLbl.text = "Only \(remaining) left"
 
             if let hex = whiteLabelColor {
                 ticketLeftLbl.textColor = UIColor(hex: hex)
             }
-
         } else {
             ticketLeftLbl.isHidden = true
         }
@@ -145,16 +197,20 @@ class TicketsTVC: UITableViewCell {
         ticket: EventTicket,
         currency: String,
         whiteLabelColor: String?,
-        eventTicketSetting: EventTicketSettings?
+        eventTicketSetting: EventTicketSettings?,
+        isDescriptionExpanded: Bool = false
     ) {
         self.currentTicket = ticket
+        self.isDescriptionExpanded = isDescriptionExpanded
         resetUI()
 
-        let soldOut = isSoldOut(ticket)
-        if soldOut {
-            applySoldOutUI(
-                ticket: ticket
-            )
+        let isSelected = (ticket.selectedTicketCount ?? 0) > 0
+        bgView.layer.borderWidth = isSelected ? 1 : 0
+        bgView.layer.borderColor = UIColor.white.cgColor
+
+        if isSoldOut(ticket) {
+            applySoldOutUI(ticket: ticket)
+            setupDescription(ticket.tierDescription)
         } else {
             applyNormalUI(
                 ticket: ticket,
@@ -186,5 +242,12 @@ class TicketsTVC: UITableViewCell {
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
         onRSVPTap?(ticket)
+    }
+
+    @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        isDescriptionExpanded.toggle()
+        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
+        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
+        onDescriptionToggle?()
     }
 }

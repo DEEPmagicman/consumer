@@ -512,7 +512,7 @@
                                                             <rect key="frame" x="0.0" y="211.66666666666666" width="365" height="71.999999999999972"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2mI-pc-ZAc">
-                                                                    <rect key="frame" x="14" y="16" width="16" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="16" width="16" height="16"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="16" id="PWX-gB-hzz"/>
                                                                         <constraint firstAttribute="width" constant="16" id="xY5-86-Y59"/>
@@ -524,7 +524,7 @@
                                                                     </connections>
                                                                 </button>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sfp-JR-CoQ">
-                                                                    <rect key="frame" x="38" y="16" width="313" height="40"/>
+                                                                    <rect key="frame" x="24" y="16" width="327" height="40"/>
                                                                     <string key="text">I agree to receive marketing related text messages from E11EVEN. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for support.</string>
                                                                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -536,7 +536,7 @@
                                                                 <constraint firstItem="sfp-JR-CoQ" firstAttribute="leading" secondItem="2mI-pc-ZAc" secondAttribute="trailing" constant="8" id="6xC-GH-itq"/>
                                                                 <constraint firstItem="sfp-JR-CoQ" firstAttribute="top" secondItem="2mI-pc-ZAc" secondAttribute="top" id="98h-B9-o9D"/>
                                                                 <constraint firstAttribute="trailing" secondItem="sfp-JR-CoQ" secondAttribute="trailing" constant="14" id="Nyp-te-3Q0"/>
-                                                                <constraint firstItem="2mI-pc-ZAc" firstAttribute="leading" secondItem="xCJ-7Y-nnF" secondAttribute="leading" constant="14" id="b8g-t7-774"/>
+                                                                <constraint firstItem="2mI-pc-ZAc" firstAttribute="leading" secondItem="xCJ-7Y-nnF" secondAttribute="leading" id="b8g-t7-774"/>
                                                                 <constraint firstItem="2mI-pc-ZAc" firstAttribute="top" secondItem="xCJ-7Y-nnF" secondAttribute="top" constant="16" id="o16-rQ-SFo"/>
                                                                 <constraint firstAttribute="bottom" secondItem="sfp-JR-CoQ" secondAttribute="bottom" constant="16" id="veb-3U-8f6"/>
                                                             </constraints>
@@ -724,7 +724,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
