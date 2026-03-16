@@ -9,15 +9,39 @@ import UIKit
 
 class FAQsTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var questionLbl: UILabel!
+    @IBOutlet weak var dropDowenBtn: UIImageView!
+    @IBOutlet weak var ansLbl: UILabel!
+    @IBOutlet weak var ansView: UIView!
+    
+
+    var onToggle: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+
+        ansLbl.numberOfLines = 0
+        ansView.isHidden = true
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        onToggle = nil
     }
-    
+
+    func configure(title: String, content: String, isExpanded: Bool) {
+        questionLbl.text = title
+        ansLbl.text = content
+
+        ansLbl.isHidden = !isExpanded
+        ansView.isHidden = !isExpanded
+
+        dropDowenBtn.transform = isExpanded
+            ? CGAffineTransform(rotationAngle: .pi/2)
+            : .identity
+    }
+
+    @IBAction func onClickQuestionView(_ sender: Any) {
+        onToggle?()
+    }
 }

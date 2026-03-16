@@ -264,5 +264,40 @@ final class EventPresenter {
         }
     }
     
+    static func getEventFAQs(
+        eventId: String,
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ faqs: [EventFAQ]?,
+                               _ errCode: Int?) -> Void
+    ) {
+
+        AFWrapper.getRequest(
+            APIBuilder.faqsURL(eventId: eventId),
+            headers: Header.header()
+        ) { response in
+
+            guard let responseArray = response as? [[String: Any]] else {
+                completion(false, nil, nil, nil)
+                return
+            }
+
+            do {
+                let data = try JSONSerialization.data(withJSONObject: responseArray)
+                let decoded = try JSONDecoder().decode([EventFAQ].self, from: data)
+                completion(true, nil, decoded, nil)
+            } catch {
+                print("FAQ decoding error:", error)
+                completion(false, "Parsing failed", nil, nil)
+            }
+
+        } failure: { error in
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil, nil)
+                return
+            }
+            completion(false, error?.localizedDescription, nil, nil)
+        }
+    }
     
 }

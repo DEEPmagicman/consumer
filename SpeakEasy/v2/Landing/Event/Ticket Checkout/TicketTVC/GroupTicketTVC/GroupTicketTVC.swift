@@ -18,13 +18,17 @@ class GroupTicketTVC: UITableViewCell {
     var currency: String = "$"
     var whiteLabelColor: String?
     var eventTicketSetting: EventTicketSettings?
+    var expandedTicketDescriptions: Set<String> = []
+    var disabledTicketIds: Set<String> = []
 
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
+    var onRowTap: ((EventTicket) -> Void)?
+    var onDescriptionToggle: ((EventTicket) -> Void)?
     var onHeightChanged: (() -> Void)?
 
-    private var isExpanded = true
+    private var isExpanded = false
     private var ticketTableObserver: NSKeyValueObservation?
 
     override func awakeFromNib() {
@@ -34,8 +38,6 @@ class GroupTicketTVC: UITableViewCell {
         ticketListTableView.dataSource = self
         ticketListTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
         ticketListTableView.isScrollEnabled = false
-        ticketListTableView.rowHeight = UITableView.automaticDimension
-        ticketListTableView.estimatedRowHeight = 140
 
         startTicketTableObserver()
     }
@@ -45,6 +47,8 @@ class GroupTicketTVC: UITableViewCell {
         onPlusTap = nil
         onMinusTap = nil
         onRSVPTap = nil
+        onRowTap = nil
+        onDescriptionToggle = nil
         onHeightChanged = nil
     }
 
@@ -67,13 +71,17 @@ class GroupTicketTVC: UITableViewCell {
         tickets: [EventTicket],
         currency: String,
         whiteLabelColor: String?,
-        eventTicketSetting: EventTicketSettings?
+        eventTicketSetting: EventTicketSettings?,
+        expandedTicketDescriptions: Set<String>,
+        disabledTicketIds: Set<String>
     ) {
         self.groupTitle.text = groupName
         self.tickets = tickets
         self.currency = currency
         self.whiteLabelColor = whiteLabelColor
         self.eventTicketSetting = eventTicketSetting
+        self.expandedTicketDescriptions = expandedTicketDescriptions
+        self.disabledTicketIds = disabledTicketIds
 
         ticketListTableView.isHidden = !isExpanded
         ticketListTableView.reloadData()
@@ -87,6 +95,9 @@ class GroupTicketTVC: UITableViewCell {
         ticketListTableView.layoutIfNeeded()
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
         onHeightChanged?()
+        expandBnt.transform = isExpanded
+            ? CGAffineTransform(rotationAngle: .pi)
+            : .identity
     }
 }
 
@@ -105,13 +116,19 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
 
+        cell.isFromGroupTicket = true
+
         let ticket = tickets[indexPath.row]
+        let isDescriptionExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
+        let isDisabled = disabledTicketIds.contains(ticket.id ?? "")
 
         cell.configure(
             ticket: ticket,
             currency: currency,
             whiteLabelColor: whiteLabelColor,
-            eventTicketSetting: eventTicketSetting
+            eventTicketSetting: eventTicketSetting,
+            isDescriptionExpanded: isDescriptionExpanded,
+            isLinkDisabled: isDisabled
         )
 
         cell.onPlusTap = { [weak self] ticket in
@@ -128,13 +145,21 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
 
         cell.onDescriptionToggle = { [weak self] in
             guard let self = self else { return }
-            self.ticketListTableView.beginUpdates()
-            self.ticketListTableView.endUpdates()
-            self.ticketListTableView.layoutIfNeeded()
-            self.tableViewHeight.constant = self.isExpanded ? self.ticketListTableView.contentSize.height : 0
+
+            self.onDescriptionToggle?(ticket)
             self.onHeightChanged?()
         }
 
+        cell.selectionStyle = .none
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let ticket = tickets[indexPath.row]
+        let currentCount = ticket.selectedTicketCount ?? 0
+        let isDisabled = disabledTicketIds.contains(ticket.id ?? "")
+        guard !isDisabled else { return }
+        guard currentCount == 0 else { return }
+        onRowTap?(ticket)
     }
 }

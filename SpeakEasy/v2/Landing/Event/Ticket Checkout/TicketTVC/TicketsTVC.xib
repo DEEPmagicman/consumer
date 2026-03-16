@@ -25,6 +25,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="466" height="210"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sda-8e-jtS">
+                        <rect key="frame" x="0.0" y="15" width="466" height="1"/>
+                        <color key="backgroundColor" white="1" alpha="0.19698795802156691" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="RCG-gl-5tL"/>
+                        </constraints>
+                    </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O1l-C6-mnB">
                         <rect key="frame" x="0.0" y="16" width="466" height="194"/>
                         <subviews>
@@ -34,7 +41,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJz-Tb-tfB">
                                         <rect key="frame" x="0.0" y="0.0" width="434" height="31.666666666666668"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission Female General Admission  Female General Admission  " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8T-Xq-ve2">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission   " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8T-Xq-ve2">
                                                 <rect key="frame" x="0.0" y="0.0" width="338.33333333333331" height="31.666666666666668"/>
                                                 <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -219,6 +226,30 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
+                                            <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K1K-Xe-Cpo">
+                                                <rect key="frame" x="36" y="0.0" width="32" height="36"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="COMING SOON" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aX9-Ng-7um">
+                                                        <rect key="frame" x="16" y="10" width="0.0" height="16"/>
+                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="aX9-Ng-7um" firstAttribute="top" secondItem="K1K-Xe-Cpo" secondAttribute="top" constant="10" id="KMZ-YI-b0p"/>
+                                                    <constraint firstAttribute="height" constant="36" id="kOU-uS-jAe"/>
+                                                    <constraint firstAttribute="trailing" secondItem="aX9-Ng-7um" secondAttribute="trailing" constant="16" id="l3v-k9-vH5"/>
+                                                    <constraint firstItem="aX9-Ng-7um" firstAttribute="leading" secondItem="K1K-Xe-Cpo" secondAttribute="leading" constant="16" id="mfh-es-B4h"/>
+                                                    <constraint firstAttribute="bottom" secondItem="aX9-Ng-7um" secondAttribute="bottom" constant="10" id="zhE-7r-J9q"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="18"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                             <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLv-SK-N5k">
                                                 <rect key="frame" x="36" y="0.0" width="72" height="36"/>
                                                 <subviews>
@@ -279,9 +310,6 @@
                             <constraint firstAttribute="trailing" secondItem="EYV-9A-N1h" secondAttribute="trailing" constant="16" id="eu6-db-F2x"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="10"/>
-                            </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                 <color key="value" white="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </userDefinedRuntimeAttribute>
@@ -293,16 +321,20 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
+                    <constraint firstItem="Sda-8e-jtS" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="3Vl-sl-cbj"/>
                     <constraint firstAttribute="trailing" secondItem="O1l-C6-mnB" secondAttribute="trailing" id="46D-Kh-YjS"/>
                     <constraint firstItem="O1l-C6-mnB" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Odr-yg-oez"/>
+                    <constraint firstAttribute="trailing" secondItem="Sda-8e-jtS" secondAttribute="trailing" id="Ztp-gV-FoA"/>
                     <constraint firstItem="O1l-C6-mnB" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="a0E-VP-xC3"/>
                     <constraint firstAttribute="bottom" secondItem="O1l-C6-mnB" secondAttribute="bottom" id="cfp-uV-Hpu"/>
+                    <constraint firstItem="O1l-C6-mnB" firstAttribute="top" secondItem="Sda-8e-jtS" secondAttribute="bottom" id="rpi-o2-RWJ"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="bgView" destination="O1l-C6-mnB" id="jvC-o4-lhh"/>
+                <outlet property="comingSoonView" destination="K1K-Xe-Cpo" id="E2U-11-q4s"/>
                 <outlet property="discriptionLbl" destination="sFM-N5-Ebz" id="FV3-MC-PFl"/>
                 <outlet property="inclFeesLbl" destination="C7f-sw-9Cv" id="pqF-qm-GKJ"/>
                 <outlet property="minusBtn" destination="wMp-1o-9bC" id="7oL-Mi-yCc"/>
@@ -316,6 +348,8 @@
                 <outlet property="soldOutView" destination="PLv-SK-N5k" id="3jN-YA-U7U"/>
                 <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>
+                <outlet property="topConstraint" destination="a0E-VP-xC3" id="vAm-Xk-syq"/>
+                <outlet property="topSapraterView" destination="Sda-8e-jtS" id="311-9M-LEa"/>
                 <outlet property="viewMoreBtn" destination="77H-4L-qxe" id="sbd-Mv-FGt"/>
                 <outlet property="viewMoreBtnView" destination="4oD-Jb-AHF" id="eK8-lS-I2B"/>
             </connections>

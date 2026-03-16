@@ -25,15 +25,23 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var discriptionLbl: UILabel!
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var viewMoreBtn: UIButton!
-
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    @IBOutlet weak var comingSoonView: UIView!
+    @IBOutlet weak var topSapraterView: UIView!
+    
+    
+    
+    
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
     var onDescriptionToggle: (() -> Void)?
+    var isFromGroupTicket: Bool = false
 
     private var currentTicket: EventTicket?
     private let collapsedLines = 3
     private var isDescriptionExpanded = false
+    private var isLinkDisabled = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -47,6 +55,7 @@ class TicketsTVC: UITableViewCell {
         onRSVPTap = nil
         onDescriptionToggle = nil
         isDescriptionExpanded = false
+        isLinkDisabled = false
         resetUI()
     }
 
@@ -62,10 +71,15 @@ class TicketsTVC: UITableViewCell {
         plusBtn.isHidden = false
         plusBtn.isEnabled = true
         plusView.alpha = 1.0
+        minusBtn.isEnabled = true
+        minusView.alpha = 1.0
+        rsvpBtn.isEnabled = true
         rsvpBtnView.isHidden = true
+        rsvpBtnView.alpha = 1.0
         inclFeesLbl.isHidden = true
         ticketLeftLbl.isHidden = true
         soldOutView.isHidden = true
+        contentView.alpha = 1.0
 
         discriptionLbl.text = nil
         discriptionLbl.numberOfLines = collapsedLines
@@ -76,6 +90,16 @@ class TicketsTVC: UITableViewCell {
 
         bgView.layer.borderWidth = 0
         bgView.layer.borderColor = UIColor.clear.cgColor
+        
+        if isFromGroupTicket {
+            bgView.layer.cornerRadius = 0
+            topConstraint.constant = 0
+            topSapraterView.isHidden = false
+        } else {
+            bgView.layer.cornerRadius = 10
+            topConstraint.constant = 12
+            topSapraterView.isHidden = true
+        }
     }
 
     private func remainingQuantity(for ticket: EventTicket) -> Int {
@@ -88,7 +112,7 @@ class TicketsTVC: UITableViewCell {
     }
 
     private func isSoldOut(_ ticket: EventTicket) -> Bool {
-        return remainingQuantity(for: ticket) <= 0
+        remainingQuantity(for: ticket) <= 0
     }
 
     private func applySoldOutUI(ticket: EventTicket) {
@@ -110,6 +134,14 @@ class TicketsTVC: UITableViewCell {
         rsvpBtnView.isHidden = true
         inclFeesLbl.isHidden = true
         ticketLeftLbl.isHidden = true
+    }
+
+    private func applyComingSoonUI() {
+        quantityLbl.isHidden = false
+        quantityLbl.text = "Coming soon"
+        minusView.isHidden = true
+        plusView.isHidden = true
+        rsvpBtnView.isHidden = true
     }
 
     private func setupDescription(_ text: String?) {
@@ -198,26 +230,33 @@ class TicketsTVC: UITableViewCell {
         currency: String,
         whiteLabelColor: String?,
         eventTicketSetting: EventTicketSettings?,
-        isDescriptionExpanded: Bool = false
+        isDescriptionExpanded: Bool = false,
+        isLinkDisabled: Bool = false
     ) {
         self.currentTicket = ticket
         self.isDescriptionExpanded = isDescriptionExpanded
+        self.isLinkDisabled = isLinkDisabled
         resetUI()
 
         let isSelected = (ticket.selectedTicketCount ?? 0) > 0
-        bgView.layer.borderWidth = isSelected ? 1 : 0
+        bgView.layer.borderWidth = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
         bgView.layer.borderColor = UIColor.white.cgColor
 
         if isSoldOut(ticket) {
             applySoldOutUI(ticket: ticket)
             setupDescription(ticket.tierDescription)
-        } else {
-            applyNormalUI(
-                ticket: ticket,
-                currency: currency,
-                whiteLabelColor: whiteLabelColor,
-                shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
-            )
+            return
+        }
+
+        applyNormalUI(
+            ticket: ticket,
+            currency: currency,
+            whiteLabelColor: whiteLabelColor,
+            shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
+        )
+
+        if isLinkDisabled {
+            applyComingSoonUI()
         }
     }
 
@@ -227,18 +266,21 @@ class TicketsTVC: UITableViewCell {
     }
 
     @IBAction func onClickMinusBtn(_ sender: Any) {
+        guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
         onMinusTap?(ticket)
     }
 
     @IBAction func onClickPlusBtn(_ sender: Any) {
+        guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
         onPlusTap?(ticket)
     }
 
     @IBAction func onClickRSVPBtn(_ sender: Any) {
+        guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
         onRSVPTap?(ticket)

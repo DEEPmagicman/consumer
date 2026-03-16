@@ -314,18 +314,26 @@ extension TableSeatingViewController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCell(
+        guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TimeTagCVC.identifier,
             for: indexPath
-        ) as! TimeTagCVC
+        ) as? TimeTagCVC else {
+            return UICollectionViewCell()
+        }
 
         let text = timeSlots[indexPath.item]
+
         var selectedColor: UIColor? = nil
-           if let hex = event?.whiteLabelColor {
-               selectedColor = UIColor(hex: hex)
-           }
-        
-        cell.configure(with: text, isSelected: indexPath.item == selectedIndex, selectedColor: selectedColor)
+        if let hex = event?.whiteLabelColor {
+            selectedColor = UIColor(hex: hex)
+        }
+
+        cell.configure(
+            with: text,
+            isSelected: indexPath.item == selectedIndex,
+            selectedColor: selectedColor
+        )
+
         return cell
     }
     

@@ -309,9 +309,17 @@ struct EventGallery: Codable {
     let updatedAt: String
 }
 
-
-
-
+struct EventFAQ: Codable {
+    let id: String?
+    let eventId: String?
+    let title: String?
+    let content: String?
+    let order: Int?
+    let status: String?
+    let isDeleted: Bool?
+    let createdAt: String?
+    let updatedAt: String?
+}
 
 //struct Event: Codable {
 //

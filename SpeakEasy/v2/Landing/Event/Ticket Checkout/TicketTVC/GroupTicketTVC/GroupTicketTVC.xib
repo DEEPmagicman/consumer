@@ -29,28 +29,29 @@
                                 <rect key="frame" x="0.0" y="0.0" width="678" height="242"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJj-5I-MEe">
-                                        <rect key="frame" x="0.0" y="0.0" width="678" height="42"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="678" height="242"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UN9-6Y-hFx">
-                                                <rect key="frame" x="12" y="12" width="566" height="18"/>
+                                                <rect key="frame" x="12" y="12" width="566" height="218"/>
                                                 <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Voz-rN-DAk">
-                                                <rect key="frame" x="0.0" y="0.0" width="678" height="42"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="678" height="242"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <connections>
                                                     <action selector="onClickExpandBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="rcy-xP-BEI"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-cD-ZqA">
-                                                <rect key="frame" x="650" y="12" width="16" height="16"/>
+                                                <rect key="frame" x="646" y="12" width="20" height="20"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="16" id="LNe-4F-ErQ"/>
-                                                    <constraint firstAttribute="width" constant="16" id="OJh-Ev-NxC"/>
+                                                    <constraint firstAttribute="height" constant="20" id="LNe-4F-ErQ"/>
+                                                    <constraint firstAttribute="width" constant="20" id="OJh-Ev-NxC"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" image="downArr"/>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.5" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -68,18 +69,24 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="12"/>
+                                                <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3Xp-fj-xhg">
-                                        <rect key="frame" x="0.0" y="42" width="678" height="200"/>
+                                    <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="3Xp-fj-xhg">
+                                        <rect key="frame" x="0.0" y="242" width="678" height="200"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="xph-ys-d6e"/>
                                         </constraints>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableView>
                                 </subviews>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -110,4 +117,7 @@
             <point key="canvasLocation" x="73.282442748091597" y="188.02816901408451"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="downArr" width="29" height="29"/>
+    </resources>
 </document>

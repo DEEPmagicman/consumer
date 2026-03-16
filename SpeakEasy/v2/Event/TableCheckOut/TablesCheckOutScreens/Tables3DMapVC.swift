@@ -6,6 +6,7 @@ import simd
 import ObjectiveC.runtime
 
 // MARK: - Global Constants
+// swiftlint:disable all
 private enum PinStyle {
     static let normalColor = UIColor.systemGreen
     static let selectedColor = UIColor.systemPink

@@ -10,6 +10,7 @@ import MapKit
 import YouTubeiOSPlayerHelper
 import Hero
 
+// swiftlint:disable all
 class EventDetailsVC: UIViewController {
 
     @IBOutlet weak var guestListCollectionView: UICollectionView!
@@ -74,7 +75,8 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
     @IBOutlet weak var ticketTitleStackView: UIStackView!
     @IBOutlet weak var eventAddressView: UIView!
-    
+    @IBOutlet weak var faqsTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var faqsView: UIView!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -83,6 +85,7 @@ class EventDetailsVC: UIViewController {
     private var isPolicyLblExpanded = false
     private let collapsedLines = 3
     private var fullText = ""
+    private var faqsTableObserver: NSKeyValueObservation?
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
@@ -99,6 +102,8 @@ class EventDetailsVC: UIViewController {
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
     var heroIndex: Int = 0
+    private var faqs: [EventFAQ] = []
+    private var expandedFAQIndex: Int?
 
 
     override func viewDidLoad() {
@@ -112,12 +117,27 @@ class EventDetailsVC: UIViewController {
         setupImagePager()
         getEventDetail()
         startTicketTableObserver()
-    
-        
+        startFAQsTableObserver()
+        getEventFAQs()
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
       
+    }
+    
+    deinit {
+        ticketTableObserver?.invalidate()
+        faqsTableObserver?.invalidate()
+    }
+    
+    private func startFAQsTableObserver() {
+        faqsTableObserver?.invalidate()
+
+        faqsTableObserver = faqsTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            guard let self = self else { return }
+            self.faqsTableViewHeight.constant = tableView.contentSize.height
+            self.view.layoutIfNeeded()
+        }
     }
     
     private func setupTicketTable() {
@@ -233,6 +253,27 @@ class EventDetailsVC: UIViewController {
                 } else {
                     self.guestListTitleLbl.text = ""
                 }
+            }
+        }
+    }
+    
+    private func getEventFAQs() {
+        guard let eventId = event?.uniqueId else { return }
+
+        EventPresenter.getEventFAQs(eventId: eventId) { [weak self] isSuccess, errMsg, faqs, errCode in
+            guard let self = self else { return }
+
+            if isSuccess {
+                self.faqs = faqs ?? []
+                if !self.faqs.isEmpty {
+                    self.faqsView.isHidden = false
+                    self.faqsTableView.reloadData()
+                } else {
+                    self.faqsView.isHidden = true
+                }
+                
+            } else {
+                print(errMsg ?? "FAQ API failed")
             }
         }
     }
@@ -873,8 +914,6 @@ extension EventDetailsVC {
             forCellReuseIdentifier: FAQsTableViewCell.identifier
         )
         faqsTableView.tableFooterView = UIView()
-        faqsTableView.estimatedRowHeight = 80
-        faqsTableView.rowHeight = UITableView.automaticDimension
     }
 }
 
@@ -962,9 +1001,11 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         if tableView == ticketTableView {
             return tickets.count
         }
+
         if tableView == faqsTableView {
-            return faqCount
+            return faqs.count
         }
+
         return 0
     }
 
@@ -973,12 +1014,15 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
         if tableView == ticketTableView {
 
-            let cell = tableView.dequeueReusableCell(
+            guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: TicketsTVC.identifier,
                 for: indexPath
-            ) as! TicketsTVC
+            ) as? TicketsTVC else {
+                return UITableViewCell()
+            }
 
             cell.selectionStyle = .none
+            cell.isFromGroupTicket = false
 
             let ticket = tickets[indexPath.row]
             let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -986,7 +1030,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             cell.configure(
                 ticket: ticket,
                 currency: currency,
-                whiteLabelColor: event?.whiteLabelColor, eventTicketSetting: self.event?.eventTicketSettings
+                whiteLabelColor: event?.whiteLabelColor,
+                eventTicketSetting: event?.eventTicketSettings
             )
 
             cell.onPlusTap = { [weak self] ticket in
@@ -1004,12 +1049,71 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
 
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: FAQsTableViewCell.identifier,
-            for: indexPath
-        ) as! FAQsTableViewCell
+        guard let cell = tableView.dequeueReusableCell(
+              withIdentifier: FAQsTableViewCell.identifier,
+              for: indexPath
+          ) as? FAQsTableViewCell else {
+              return UITableViewCell()
+          }
 
-        return cell
+          let faq = faqs[indexPath.row]
+          let isExpanded = expandedFAQIndex == indexPath.row
+
+          cell.configure(
+              title: faq.title ?? "",
+              content: faq.content?.fromHTML ?? "",
+              isExpanded: isExpanded
+          )
+
+        cell.onToggle = { [weak self] in
+            guard let self = self else { return }
+
+            let previousExpandedIndex = self.expandedFAQIndex
+
+            if self.expandedFAQIndex == indexPath.row {
+                self.expandedFAQIndex = nil
+            } else {
+                self.expandedFAQIndex = indexPath.row
+            }
+
+            var indexPaths: [IndexPath] = [indexPath]
+
+            if let previousExpandedIndex,
+               previousExpandedIndex != indexPath.row {
+                indexPaths.append(IndexPath(row: previousExpandedIndex, section: 0))
+            }
+
+            UIView.performWithoutAnimation {
+                self.faqsTableView.reloadRows(at: indexPaths, with: .none)
+            }
+
+            self.faqsTableView.beginUpdates()
+            self.faqsTableView.endUpdates()
+
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction]
+            ) {
+                self.faqsTableView.layoutIfNeeded()
+                self.faqsTableViewHeight.constant = self.faqsTableView.contentSize.height
+                self.view.layoutIfNeeded()
+            }
+        }
+
+          return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard tableView == faqsTableView else { return }
+
+        if expandedFAQIndex == indexPath.row {
+            expandedFAQIndex = nil
+        } else {
+            expandedFAQIndex = indexPath.row
+        }
+
+        tableView.reloadData()
     }
 }
 
