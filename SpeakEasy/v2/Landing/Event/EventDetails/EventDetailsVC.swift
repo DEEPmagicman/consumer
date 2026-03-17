@@ -77,7 +77,12 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var eventAddressView: UIView!
     @IBOutlet weak var faqsTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var faqsView: UIView!
-    
+    @IBOutlet weak var lockIcon: UIImageView!
+    @IBOutlet weak var buyNowBtnSuperView: UIView!
+    @IBOutlet weak var continueToCheckOutView: UIView!
+    @IBOutlet weak var groupTableView: UITableView!
+    @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
+
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
     private var playerView: YTPlayerView!
@@ -86,50 +91,62 @@ class EventDetailsVC: UIViewController {
     private let collapsedLines = 3
     private var fullText = ""
     private var faqsTableObserver: NSKeyValueObservation?
+    private var ticketTableObserver: NSKeyValueObservation?
+    private var groupTableObserver: NSKeyValueObservation?
+
     var venueDetails: ClipVenue?
     var event: Event?
     var promoteId = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
 
-    // MARK: - Ticket only (inline listing)
     private var tickets: [EventTicket] = []
     private var normalTickets: [EventTicket] = []
+    private var groupedNormalTickets: [(groupName: String, tickets: [EventTicket])] = []
+    private var expandedTicketDescriptions: Set<String> = []
+    private var ticketLinks: [EventTicketLink] = []
+    private var disabledTicketIds: Set<String> = []
 
     private var attendees: [Attendee] = []
     private var totalAttendees = 0
-    private var ticketTableObserver: NSKeyValueObservation?
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
     var heroIndex: Int = 0
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
 
+    private var totalSelectedTickets: Int {
+        let normalTotal = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        let groupedTotal = groupedNormalTickets
+            .flatMap { $0.tickets }
+            .reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        return normalTotal + groupedTotal
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
-        
+
         hero.isEnabled = true
         setupData()
         setupCollectionViews()
         setupTableView()
         setupImagePager()
-        getEventDetail()
         startTicketTableObserver()
+        startGroupTableObserver()
         startFAQsTableObserver()
-        getEventFAQs()
-        hero.isEnabled = true
-        navigationController?.hero.isEnabled = true
+
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-      
+
+        getEventDetail()
     }
-    
+
     deinit {
         ticketTableObserver?.invalidate()
+        groupTableObserver?.invalidate()
         faqsTableObserver?.invalidate()
     }
-    
+
     private func startFAQsTableObserver() {
         faqsTableObserver?.invalidate()
 
@@ -139,14 +156,34 @@ class EventDetailsVC: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
+
+    private func startTicketTableObserver() {
+        ticketTableObserver?.invalidate()
+
+        ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            guard let self = self else { return }
+            self.ticketTableHeightConstraint.constant = tableView.contentSize.height
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func startGroupTableObserver() {
+        groupTableObserver?.invalidate()
+
+        groupTableObserver = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            guard let self = self else { return }
+            self.groupTableViewHeight.constant = tableView.contentSize.height
+            self.view.layoutIfNeeded()
+        }
+    }
+
     private func setupTicketTable() {
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
         ticketTableView.isScrollEnabled = false
     }
-    
+
     func showSkeleton() {
         view.layoutIfNeeded()
 
@@ -161,7 +198,7 @@ class EventDetailsVC: UIViewController {
         ticketTitleShimmerView.startAnimating()
         buyNowBtnShimmerView.startAnimating()
     }
-    
+
     func hideSkeleton() {
         ticketShimmerView.stopAnimating()
         ticketTitleShimmerView.stopAnimating()
@@ -175,16 +212,22 @@ class EventDetailsVC: UIViewController {
     }
 
     private func getEventDetail() {
-        guard let eventId  = self.event?.uniqueId else {
+        guard let eventId = self.event?.uniqueId else {
             return
         }
+
         showSkeleton()
-        EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+
+        EventPresenter.getEventDetail(
+            eventId: eventId,
+            venueTimeZone: venueDetails?.useTimezone,
+            promotionLinkId: promoteId
+        ) { [weak self] isSuccess, errMsg, eventDetail, errCode in
             self?.hideSkeleton()
-            guard let self = self else {
-                return
-            }
+
+            guard let self = self else { return }
             self.view.alpha = 1
+
             if eventDetail == nil {
                 if errCode == 404 && self.promoteId != "" {
                     self.promoteId = ""
@@ -192,44 +235,46 @@ class EventDetailsVC: UIViewController {
                 } else {
                     // zero case
                 }
-            } else {
-                self.event = eventDetail
-                if let venue = eventDetail?.venue {
-                    self.venueDetails = venue
-                }
+                return
+            }
 
-                let ticket = self.event?.eventTicket ?? []
-                ticket.forEach({ tic in
-                    self.eventTicketId.append(tic.id ?? "")
-                })
+            self.event = eventDetail
+            if let venue = eventDetail?.venue {
+                self.venueDetails = venue
+            }
 
-                self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
-                self.lineUpHiddenView.isHidden = self.artists.isEmpty
-                self.lineUpCollectionView.reloadData()
+            self.eventTicketId.removeAll()
+            let ticket = self.event?.eventTicket ?? []
+            ticket.forEach { tic in
+                self.eventTicketId.append(tic.id ?? "")
+            }
 
-                if let show = self.event?.showEventAttendees {
-                    if show {
-                        self.attendeesView.isHidden = false
-                        self.getEventAttendees()
-                    } else {
-                        self.attendeesView.isHidden = true
-                    }
+            self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
+            self.lineUpHiddenView.isHidden = self.artists.isEmpty
+            self.lineUpCollectionView.reloadData()
+
+            if let show = self.event?.showEventAttendees {
+                if show {
+                    self.attendeesView.isHidden = false
+                    self.getEventAttendees()
                 } else {
                     self.attendeesView.isHidden = true
                 }
-
-                self.setupData()
+            } else {
+                self.attendeesView.isHidden = true
             }
+
+            self.getEventFAQs()
+            self.getTicketLinksAndRefresh()
         }
     }
 
     private func getEventAttendees() {
-
-        guard let eventId  = self.event?.uniqueId else {
+        guard let eventId = self.event?.uniqueId else {
             return
         }
-        EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, message, data, code in
 
+        EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, message, data, code in
             guard let self = self else { return }
 
             if success {
@@ -256,7 +301,7 @@ class EventDetailsVC: UIViewController {
             }
         }
     }
-    
+
     private func getEventFAQs() {
         guard let eventId = event?.uniqueId else { return }
 
@@ -265,32 +310,180 @@ class EventDetailsVC: UIViewController {
 
             if isSuccess {
                 self.faqs = faqs ?? []
-                if !self.faqs.isEmpty {
-                    self.faqsView.isHidden = false
-                    self.faqsTableView.reloadData()
-                } else {
-                    self.faqsView.isHidden = true
-                }
-                
+                self.faqsView.isHidden = self.faqs.isEmpty
+                self.faqsTableView.reloadData()
+                self.faqsTableView.layoutIfNeeded()
+                self.faqsTableViewHeight.constant = self.faqsTableView.contentSize.height
             } else {
-                print(errMsg ?? "FAQ API failed")
+                self.faqsView.isHidden = true
             }
         }
     }
-    
-    private func startTicketTableObserver() {
-        ticketTableObserver?.invalidate()
 
-        ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
-            guard let self else { return }
-            self.ticketTableHeightConstraint.constant = tableView.contentSize.height
-            self.view.layoutIfNeeded()
+    private func getTicketLinksAndRefresh() {
+        guard let eventId = event?.uniqueId else {
+            setupData()
+            return
+        }
+
+        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, errMsg, links in
+            guard let self = self else { return }
+
+            if isSuccess {
+                self.ticketLinks = links ?? []
+            } else {
+                self.ticketLinks = []
+            }
+
+            self.setupData()
         }
     }
 
-    private func stopTicketTableObserver() {
-        ticketTableObserver?.invalidate()
-        ticketTableObserver = nil
+    private func venueNow() -> Date {
+        let tz = venueDetails?.useTimezone ?? TimeZone.current.identifier
+        let timeZone = TimeZone(identifier: tz) ?? .current
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        formatter.timeZone = timeZone
+
+        return formatter.date(from: formatter.string(from: Date())) ?? Date()
+    }
+
+    private func ticketDate(_ value: String?) -> Date? {
+        guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        return value.toDate(withFormat: .yyyyMMddHHmmss)
+    }
+
+    private func isTicketSoldOut(_ ticket: EventTicket) -> Bool {
+        let remaining = ticket.remainingQuantity ?? max((ticket.issuedUnits ?? 0) - (ticket.soldUnits ?? 0), 0)
+        return remaining <= 0
+    }
+
+    private func shouldHideSoldOutTicket(_ ticket: EventTicket) -> Bool {
+        let hideSoldOut = event?.eventTicketSettings?.hideSoldOut == true
+        return isTicketSoldOut(ticket) && hideSoldOut
+    }
+
+    private func isTicketSaleStarted(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
+        guard let startSaleDate = ticketDate(ticket.beginSale) else {
+            return true
+        }
+        return now >= startSaleDate
+    }
+
+    private func isTicketSaleNotEnded(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
+        guard let endSaleDate = ticketDate(ticket.endSale) else {
+            return true
+        }
+        return now <= endSaleDate
+    }
+
+    private func isTicketSaleEnded(_ ticket: EventTicket) -> Bool {
+        let now = venueNow()
+        guard let endSaleDate = ticketDate(ticket.endSale) else {
+            return false
+        }
+        return now > endSaleDate
+    }
+
+    private func isTicketAvailableForDisplay(_ ticket: EventTicket) -> Bool {
+        let isNotDeleted = ticket.isDeleted == false
+        let isNotPaused = ticket.sellingPaused == false
+        let saleStarted = isTicketSaleStarted(ticket)
+        let saleNotEnded = isTicketSaleNotEnded(ticket)
+        let hideBecauseSoldOut = shouldHideSoldOutTicket(ticket)
+
+        return isNotDeleted &&
+               isNotPaused &&
+               saleStarted &&
+               saleNotEnded &&
+               !hideBecauseSoldOut
+    }
+
+    private func linkedState(for ticket: EventTicket, in allTickets: [EventTicket]) -> (isHidden: Bool, isDisabled: Bool) {
+        guard let ticketId = ticket.id else { return (false, false) }
+
+        let validLinks = ticketLinks.filter {
+            $0.eventTicketId == ticketId &&
+            $0.status == "ENABLED" &&
+            $0.isDeleted == false
+        }
+
+        guard !validLinks.isEmpty else {
+            return (false, false)
+        }
+
+        var shouldHide = false
+        var shouldDisable = false
+
+        for link in validLinks {
+            guard let targetId = link.targetEventTicketId,
+                  let targetTicket = allTickets.first(where: { $0.id == targetId }) else {
+                continue
+            }
+
+            let action = link.linkAction ?? ""
+            let state = link.linkState ?? ""
+
+            var conditionMatched = false
+
+            switch action {
+            case "SELLS_OUT":
+                conditionMatched = isTicketSoldOut(targetTicket)
+            case "SALE_END":
+                conditionMatched = isTicketSaleEnded(targetTicket)
+            default:
+                conditionMatched = false
+            }
+
+            if conditionMatched {
+                switch state {
+                case "HIDDEN_UNTIL":
+                    shouldHide = false
+                case "DISABLE_UNTIL":
+                    shouldDisable = false
+                default:
+                    break
+                }
+            } else {
+                switch state {
+                case "HIDDEN_UNTIL":
+                    shouldHide = true
+                case "DISABLE_UNTIL":
+                    shouldDisable = true
+                default:
+                    break
+                }
+            }
+        }
+
+        return (shouldHide, shouldDisable)
+    }
+
+    private func filterAvailableTickets(_ list: [EventTicket]) -> [EventTicket] {
+        let allTickets = (event?.eventTicket ?? []) + (event?.eventAddOnTicket ?? []) + (event?.protectedEventTicket ?? [])
+
+        return list.filter { ticket in
+            guard isTicketAvailableForDisplay(ticket) else { return false }
+
+            let state = linkedState(for: ticket, in: allTickets)
+
+            if let id = ticket.id, state.isDisabled {
+                disabledTicketIds.insert(id)
+            }
+
+            return !state.isHidden
+        }
+    }
+
+    private func isTicketDisabledByLink(_ ticket: EventTicket) -> Bool {
+        guard let id = ticket.id else { return false }
+        return disabledTicketIds.contains(id)
     }
 
     private func sortAttendeesImageFirst(_ list: [Attendee]) -> [Attendee] {
@@ -300,98 +493,111 @@ class EventDetailsVC: UIViewController {
     }
 
     private func setupData() {
-        mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-        backGroundBlureImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-        titleLbl.text = event?.title ?? "Untitle Event"
-        venueName.text = (event?.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-            ? "\(event?.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
+        guard let event = event else { return }
+
+        disabledTicketIds.removeAll()
+
+        mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        titleLbl.text = event.title ?? "Untitle Event"
+        venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
+            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
             : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
-        fullText = event?.description ?? ""
+        fullText = event.description ?? ""
         setupExpandableLabel()
         setupPolicyExpandableLabel()
-        venueNameLbl.text = "\(venueDetails?.name ?? "")"
-        venueName.text = "\(venueDetails?.name ?? "")"
-        eventAddressView.isHidden = !(event?.showAddress ?? true) ? true : false
+        venueNameLbl.text = venueDetails?.name ?? ""
+        venueName.text = venueDetails?.name ?? ""
+        eventAddressView.isHidden = !(event.showAddress ?? true)
+
         let addressComponents = [
             venueDetails?.address,
             venueDetails?.city,
             venueDetails?.pinCode
         ].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-         .filter { !$0.isEmpty }
+            .filter { !$0.isEmpty }
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
-        venueTitleLbl.text = "\(venueDetails?.name ?? "")"
+        venueTitleLbl.text = venueDetails?.name ?? ""
 
-        if event?.isEnableOnlineTables ?? false {
-            self.vipTablesView.isHidden = false
+        if event.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
+            buyNowBtnSuperView.isHidden = true
+            continueToCheckOutView.isHidden = true
         } else {
-            self.vipTablesView.isHidden = true
+            buyNowBtnSuperView.isHidden = false
+            continueToCheckOutView.isHidden = true
         }
-        
-        if let button = event?.additionalButtons?.first(where: { $0.isEnable }) {
-            self.webSiteTitleLbl.text = button.title
-            self.webSiteView.isHidden = false
+
+        vipTablesView.isHidden = !(event.isEnableOnlineTables ?? false)
+
+        if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
+            webSiteTitleLbl.text = button.title
+            webSiteView.isHidden = false
         } else {
-            self.webSiteView.isHidden = true
+            webSiteView.isHidden = true
         }
+
         setupImagePager()
 
-        // ✅ Ticket-only: inline list enable/disable
-        let showInlineTickets = event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false
+        let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
         ticketHidenView.isHidden = !showInlineTickets
 
         if showInlineTickets {
-            setupTicketTable()
             setupInlineTicketData()
+        } else {
+            tickets = []
+            normalTickets = []
+            groupedNormalTickets = []
+            ticketTableView.reloadData()
+            groupTableView.reloadData()
+            ticketTableHeightConstraint.constant = 0
+            groupTableViewHeight.constant = 0
+            protectedTicketView.isHidden = true
         }
 
-        if let youtubeVideoLink = event?.youtubeVideoLink, !youtubeVideoLink.isEmpty {
-            self.youTubeSuperView.isHidden = false
+        if let youtubeVideoLink = event.youtubeVideoLink, !youtubeVideoLink.isEmpty {
+            youTubeSuperView.isHidden = false
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
                 playerView.load(withVideoId: id)
             }
         } else {
-            self.youTubeSuperView.isHidden = true
+            youTubeSuperView.isHidden = true
         }
 
         venueLogoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
         venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
+
         updateLocationOnMap(
             to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0),
-            with: event?.customVenue?.name ?? "Venue"
+            with: event.customVenue?.name ?? "Venue"
         )
 
-        if let customText = event?.openTimeCustomText,
+        if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-
             timingLbl.text = customText
-
         } else {
-
             let timezone = venueDetails?.useTimezone ?? ""
 
-            let dateText = event?.startDateTime.convertDateFormat(
+            let dateText = event.startDateTime.convertDateFormat(
                 from: .yyyyMMddHHmmss,
                 to: .EEEMMMD,
                 customTimeZone: timezone
-            ) ?? ""
+            )
 
-            let startTime = event?.startDateTime.convertDateFormat(
+            let startTime = event.startDateTime.convertDateFormat(
                 from: .yyyyMMddHHmmss,
                 to: .hmma,
                 customTimeZone: timezone
-            ) ?? ""
+            )
 
             if !dateText.isEmpty && !startTime.isEmpty {
-
-                let hideEnd = event?.hideEventEnd == true
-                let hasEndTime = !(event?.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+                let hideEnd = event.hideEventEnd == true
+                let hasEndTime = !(event.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
 
                 if hideEnd || !hasEndTime {
                     timingLbl.text = "\(dateText) at \(startTime)"
                 } else {
-
-                    let endTime = event?.endDateTime?.convertDateFormat(
+                    let endTime = event.endDateTime?.convertDateFormat(
                         from: .yyyyMMddHHmmss,
                         to: .hmma,
                         customTimeZone: timezone
@@ -399,42 +605,42 @@ class EventDetailsVC: UIViewController {
 
                     timingLbl.text = "\(dateText) at \(startTime) - \(endTime)"
                 }
-
             } else {
                 timingLbl.text = ""
             }
         }
 
-        if let hexColor = event?.whiteLabelColor {
+        if let hexColor = event.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
+            continueToCheckOutBtn.backgroundColor = color
         } else {
             let color = UIColor(hex: "6D5EBD")
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
+            continueToCheckOutBtn.backgroundColor = color
         }
 
         setupSocialLinks()
 
-        // (your existing ticket header text logic kept as-is)
-        if event?.eventTicket == nil {
+        if event.eventTicket == nil {
         } else {
-            if event?.isPausedSellingAllTickets == true {
+            if event.isPausedSellingAllTickets == true {
                 ticketsTitleLbl.text = "Tickets from Free"
                 buyNowBtnView.isUserInteractionEnabled = true
-            } else if event?.isSoldOutAllTickets == true {
+            } else if event.isSoldOutAllTickets == true {
                 ticketsTitleLbl.text = "It was a great time!"
                 buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 buyNowBtnLbl.textColor = .black
                 buyNowBtnView.isUserInteractionEnabled = false
                 buyNowBtnView.backgroundColor = UIColor.lightGray
-            } else if event?.eventTicket?.count ?? 0 == 0 {
+            } else if event.eventTicket?.count ?? 0 == 0 {
                 ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
                 buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
             } else {
-                let lowestPrice = event?.lowestPriceTicket?.price ?? 0
+                let lowestPrice = event.lowestPriceTicket?.price ?? 0
                 let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
                 if lowestPrice == 0 {
@@ -451,24 +657,52 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    // MARK: - Ticket only
-    private func setupInlineTicketData() {
-        guard let event else { return }
+    private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupName: String, tickets: [EventTicket])]) {
+        var nonGrouped: [EventTicket] = []
+        var groupedMap: [String: (groupName: String, tickets: [EventTicket])] = [:]
 
-        func filterAvailable(_ list: [EventTicket]) -> [EventTicket] {
-            list.filter { t in
-                let remaining = t.remainingQuantity ?? 0
-                let isNotDeleted = t.isDeleted == false
-                let isNotPaused = t.sellingPaused == false
-                return remaining > 0 && isNotDeleted && isNotPaused
+        for ticket in list {
+            if let group = ticket.eventTicketGroupHasTicket?.eventTicketGroup,
+               let groupId = group.id,
+               !groupId.isEmpty {
+
+                let groupName = group.name ?? ""
+
+                if groupedMap[groupId] != nil {
+                    groupedMap[groupId]?.tickets.append(ticket)
+                } else {
+                    groupedMap[groupId] = (groupName: groupName, tickets: [ticket])
+                }
+            } else {
+                nonGrouped.append(ticket)
             }
         }
 
-        normalTickets = filterAvailable(event.eventTicket ?? [])
+        return (nonGrouped, Array(groupedMap.values))
+    }
+
+    private func setupInlineTicketData() {
+        guard let event else { return }
+
+        disabledTicketIds.removeAll()
+
+        let visibleNormalTickets = filterAvailableTickets(event.eventTicket ?? [])
+        let normalSplit = makeGroupedTickets(from: visibleNormalTickets)
+
+        normalTickets = normalSplit.nonGrouped
+        groupedNormalTickets = normalSplit.grouped
         tickets = normalTickets
 
+        let protectedVisibleCandidates = filterAvailableTickets(event.protectedEventTicket ?? [])
+        protectedTicketView.isHidden = protectedVisibleCandidates.isEmpty
+        lockIcon.isHidden = protectedVisibleCandidates.isEmpty
+
+        groupTableView.isHidden = groupedNormalTickets.isEmpty
+
         ticketTableView.reloadData()
+        groupTableView.reloadData()
         updateTicketTableHeight()
+        updateGroupTableHeight()
         updateContinueBtnState()
     }
 
@@ -477,51 +711,101 @@ class EventDetailsVC: UIViewController {
         ticketTableHeightConstraint.constant = ticketTableView.contentSize.height
     }
 
+    private func updateGroupTableHeight() {
+        groupTableView.layoutIfNeeded()
+        groupTableViewHeight.constant = groupTableView.contentSize.height
+    }
+
+    private func syncUpdatedTicketToEvent(_ updatedTicket: EventTicket) {
+        guard let id = updatedTicket.id else { return }
+
+        if let idx = normalTickets.firstIndex(where: { $0.id == id }) {
+            normalTickets[idx] = updatedTicket
+        }
+
+        for groupIndex in groupedNormalTickets.indices {
+            if let ticketIndex = groupedNormalTickets[groupIndex].tickets.firstIndex(where: { $0.id == id }) {
+                groupedNormalTickets[groupIndex].tickets[ticketIndex] = updatedTicket
+            }
+        }
+
+        if let idx = tickets.firstIndex(where: { $0.id == id }) {
+            tickets[idx] = updatedTicket
+        }
+
+        if let idx = event?.eventTicket?.firstIndex(where: { $0.id == id }) {
+            event?.eventTicket?[idx] = updatedTicket
+        }
+
+        if let idx = event?.protectedEventTicket?.firstIndex(where: { $0.id == id }) {
+            event?.protectedEventTicket?[idx] = updatedTicket
+        }
+    }
+
     private func handlePlus(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
         guard let index = tickets.firstIndex(where: { $0.id == ticket.id }) else { return }
 
-        let total = tickets[index].selectedTicketCount ?? 0
-        let issuedUnits = tickets[index].issuedUnits ?? 0
+        let currentTicket = tickets[index]
+        let currentCount = currentTicket.selectedTicketCount ?? 0
+        let issuedUnits = currentTicket.issuedUnits ?? 0
+        let remaining = currentTicket.remainingQuantity ?? max(issuedUnits - (currentTicket.soldUnits ?? 0), 0)
 
-        if total < issuedUnits,
-           let remaining = tickets[index].remainingQuantity,
-           remaining > total {
+        let minPurchaseQuantity = max(currentTicket.miniPurchaseQuantity ?? 1, 1)
+        let maxPurchaseQuantity = currentTicket.maxPurchaseQuantity ?? Int.max
+        let isSellInMultiples = currentTicket.sellInMultiples == true
 
-            tickets[index].selectedTicketCount = total + 1
+        let nextCount: Int
+        if isSellInMultiples {
+            nextCount = currentCount == 0 ? minPurchaseQuantity : currentCount + minPurchaseQuantity
+        } else {
+            nextCount = currentCount + 1
+        }
 
-            // keep normalTickets in sync by id (safe)
-            if let idx = normalTickets.firstIndex(where: { $0.id == tickets[index].id }) {
-                normalTickets[idx] = tickets[index]
-            }
+        let maxAllowed = min(issuedUnits, remaining, maxPurchaseQuantity)
+
+        if nextCount <= maxAllowed {
+            var updatedTicket = currentTicket
+            updatedTicket.selectedTicketCount = nextCount
+            syncUpdatedTicketToEvent(updatedTicket)
 
             ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
             updateContinueBtnState()
             updateTicketTableHeight()
+        } else {
+            Alert.showToast("Max tickets selected: create a separate order to purchase more.")
         }
     }
 
     private func handleMinus(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
         guard let index = tickets.firstIndex(where: { $0.id == ticket.id }) else { return }
 
-        let total = tickets[index].selectedTicketCount ?? 0
+        let currentTicket = tickets[index]
+        let currentCount = currentTicket.selectedTicketCount ?? 0
+        guard currentCount > 0 else { return }
 
-        if total > 1 {
-            tickets[index].selectedTicketCount = total - 1
+        let minPurchaseQuantity = max(currentTicket.miniPurchaseQuantity ?? 1, 1)
+        let isSellInMultiples = currentTicket.sellInMultiples == true
+
+        let nextCount: Int
+        if isSellInMultiples {
+            nextCount = currentCount - minPurchaseQuantity
         } else {
-            tickets[index].selectedTicketCount = nil
+            nextCount = currentCount - 1
         }
 
-        if let idx = normalTickets.firstIndex(where: { $0.id == tickets[index].id }) {
-            normalTickets[idx] = tickets[index]
-        }
+        var updatedTicket = currentTicket
+        updatedTicket.selectedTicketCount = nextCount > 0 ? nextCount : nil
+        syncUpdatedTicketToEvent(updatedTicket)
 
         ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
         updateContinueBtnState()
         updateTicketTableHeight()
     }
 
-    // ✅ Ticket-only: RSVP handler required because you call it from cell closures
     private func handleRSVP(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
         guard let event else { return }
 
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
@@ -530,49 +814,192 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        Navigate.to.ticketCheckoutVC(
-            self,
-            event: event,
-            selectedTickets: [ticket],
-            bookingId: nil
-        )
+        var selectedTicket = ticket
+        if (selectedTicket.selectedTicketCount ?? 0) == 0 {
+            selectedTicket.selectedTicketCount = 1
+        }
+
+        createInlineBookingAndCheckout(selectedTickets: [selectedTicket])
+    }
+
+    private func handleGroupPlus(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
+        guard let ticketId = ticket.id else { return }
+
+        for groupIndex in groupedNormalTickets.indices {
+            guard let ticketIndex = groupedNormalTickets[groupIndex].tickets.firstIndex(where: { $0.id == ticketId }) else { continue }
+
+            let currentTicket = groupedNormalTickets[groupIndex].tickets[ticketIndex]
+            let currentCount = currentTicket.selectedTicketCount ?? 0
+            let issuedUnits = currentTicket.issuedUnits ?? 0
+            let remaining = currentTicket.remainingQuantity ?? max(issuedUnits - (currentTicket.soldUnits ?? 0), 0)
+
+            let minPurchaseQuantity = max(currentTicket.miniPurchaseQuantity ?? 1, 1)
+            let maxPurchaseQuantity = currentTicket.maxPurchaseQuantity ?? Int.max
+            let isSellInMultiples = currentTicket.sellInMultiples == true
+
+            let nextCount: Int
+            if isSellInMultiples {
+                nextCount = currentCount == 0 ? minPurchaseQuantity : currentCount + minPurchaseQuantity
+            } else {
+                nextCount = currentCount + 1
+            }
+
+            let maxAllowed = min(issuedUnits, remaining, maxPurchaseQuantity)
+
+            if nextCount <= maxAllowed {
+                var updatedTicket = currentTicket
+                updatedTicket.selectedTicketCount = nextCount
+                syncUpdatedTicketToEvent(updatedTicket)
+
+                updateContinueBtnState()
+                updateGroupTableHeight()
+                groupTableView.reloadData()
+            } else {
+                Alert.showToast("Max tickets selected: create a separate order to purchase more.")
+            }
+            return
+        }
+    }
+
+    private func handleGroupMinus(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
+        guard let ticketId = ticket.id else { return }
+
+        for groupIndex in groupedNormalTickets.indices {
+            guard let ticketIndex = groupedNormalTickets[groupIndex].tickets.firstIndex(where: { $0.id == ticketId }) else { continue }
+
+            let currentTicket = groupedNormalTickets[groupIndex].tickets[ticketIndex]
+            let currentCount = currentTicket.selectedTicketCount ?? 0
+            guard currentCount > 0 else { return }
+
+            let minPurchaseQuantity = max(currentTicket.miniPurchaseQuantity ?? 1, 1)
+            let isSellInMultiples = currentTicket.sellInMultiples == true
+
+            let nextCount: Int
+            if isSellInMultiples {
+                nextCount = currentCount - minPurchaseQuantity
+            } else {
+                nextCount = currentCount - 1
+            }
+
+            var updatedTicket = currentTicket
+            updatedTicket.selectedTicketCount = nextCount > 0 ? nextCount : nil
+            syncUpdatedTicketToEvent(updatedTicket)
+
+            updateContinueBtnState()
+            updateGroupTableHeight()
+            groupTableView.reloadData()
+            return
+        }
+    }
+
+    private func handleGroupRSVP(ticket: EventTicket) {
+        guard !isTicketDisabledByLink(ticket) else { return }
+        guard let event else { return }
+
+        let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
+        if hasAddOn {
+            Navigate.to.ticketSelectionVc(self, event: event)
+            return
+        }
+
+        var selectedTicket = ticket
+        if (selectedTicket.selectedTicketCount ?? 0) == 0 {
+            selectedTicket.selectedTicketCount = 1
+        }
+
+        createInlineBookingAndCheckout(selectedTickets: [selectedTicket])
     }
 
     private func updateContinueBtnState() {
-        let totalSelected = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
-        continueToCheckOutBtn.isHidden = totalSelected == 0
+        continueToCheckOutView.isHidden = totalSelectedTickets == 0
     }
 
     @IBAction func onClickInlineContinue(_ sender: Any) {
         guard let event else { return }
 
-        let selected = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+        let selectedNormal = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
+        let selectedGrouped = groupedNormalTickets
+            .flatMap { $0.tickets }
+            .filter { ($0.selectedTicketCount ?? 0) > 0 }
+
+        let selected = selectedNormal + selectedGrouped
         guard !selected.isEmpty else { return }
 
-        // ✅ You said: if add-on exists -> go TicketSelection screen (don’t handle add-on inline)
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
         if hasAddOn {
             Navigate.to.ticketSelectionVc(self, event: event)
             return
         }
 
-        Navigate.to.ticketCheckoutVC(
-            self,
-            event: event,
-            selectedTickets: selected,
-            bookingId: nil
-        )
+        createInlineBookingAndCheckout(selectedTickets: selected)
+    }
+    
+    private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
+        guard let user = UserDefault.shared.user else {
+            let loginVC = Navigate.to.loginPopUpVc(self)
+
+            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, isFromLogin, isFromSettings in
+                guard let self else { return }
+
+                Navigate.to.enterVerificationCodeVc(
+                    self,
+                    isFromLogin: true,
+                    otp: otp,
+                    otpRef: otpRef,
+                    phoneNum: phone,
+                    countryCode: countryCode
+                ) { [weak self] in
+                    self?.createInlineBookingAndCheckout(selectedTickets: selectedTickets)
+                }
+            }
+            return
+        }
+
+        guard let event = event else { return }
+
+        let ticketsPayload = selectedTickets.map {
+            [
+                "ticketId": $0.id ?? "",
+                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketPrice": $0.price ?? 0
+            ]
+        }
+
+        continueToCheckOutBtn.isUserInteractionEnabled = false
+
+        PaymentPresenter.createEventBookingV2(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: ticketsPayload
+        ) { [weak self] isSuccess, errMsg, id, message in
+            guard let self = self else { return }
+
+            self.continueToCheckOutBtn.isUserInteractionEnabled = true
+
+            if isSuccess {
+                Navigate.to.ticketCheckoutVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedTickets,
+                    bookingId: id
+                )
+            } else {
+                Alert.showToast(errMsg ?? "Somthing went wrong")
+            }
+        }
     }
 
-    // MARK: - Social (unchanged)
     private func configureSocialIcon(_ imageView: UIImageView, url: String?) {
-
         imageView.gestureRecognizers?.forEach { imageView.removeGestureRecognizer($0) }
 
         guard let link = url,
               !link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               let validURL = URL(string: link) else {
-
             imageView.isHidden = true
             return
         }
@@ -586,7 +1013,6 @@ class EventDetailsVC: UIViewController {
     }
 
     private func setupSocialLinks() {
-
         let websiteUrl = event?.venue?.venueSettings?.websiteUrl
         let instagramUrl = event?.venue?.venueSettings?.instagramUrl
         let tiktokUrl = event?.venue?.venueSettings?.tiktokUrl
@@ -602,9 +1028,7 @@ class EventDetailsVC: UIViewController {
         configureSocialIcon(youTubeImageView, url: youtubeUrl)
     }
 
-    // MARK: - Actions (unchanged)
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
-
         isExpanded.toggle()
 
         if isExpanded {
@@ -661,17 +1085,71 @@ class EventDetailsVC: UIViewController {
             Navigate.to.tableCheckOutVC(self, event: event)
         }
     }
-    
+
     @IBAction func onClickWebSiteLinkView(_ sender: Any) {
         if let button = event?.additionalButtons?.first(where: { $0.isEnable }),
-              let url = URL(string: button.link) {
-               UIApplication.shared.open(url)
-           }
+           let url = URL(string: button.link) {
+            UIApplication.shared.open(url)
+        }
     }
-    
+
+    @IBAction func onClickUnLockBtn(_ sender: Any) {
+        let code = (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !code.isEmpty else { return }
+        guard var event = event else { return }
+
+        let protectedList = event.protectedEventTicket ?? []
+
+        let alreadyUnlocked = (event.eventTicket ?? []).contains { ticket in
+            let pass = ticket.eventTicketHasPassword?.password ?? ""
+            return pass.caseInsensitiveCompare(code) == .orderedSame
+        }
+
+        if alreadyUnlocked {
+            Alert.showToast("Tickets already unlocked")
+            return
+        }
+
+        let displayableProtectedList = filterAvailableTickets(protectedList)
+
+        guard !displayableProtectedList.isEmpty else {
+            protectedTicketView.isHidden = true
+            return
+        }
+
+        let matchedTickets = displayableProtectedList.filter { ticket in
+            let pass = ticket.eventTicketHasPassword?.password ?? ""
+            return pass.caseInsensitiveCompare(code) == .orderedSame
+        }
+
+        guard !matchedTickets.isEmpty else {
+            Alert.showToast("Invalid password please try again")
+            return
+        }
+
+        let validUnlockedTickets = filterAvailableTickets(matchedTickets)
+
+        if event.eventTicket == nil {
+            event.eventTicket = []
+        }
+
+        for ticket in validUnlockedTickets where !(event.eventTicket?.contains(where: { $0.id == ticket.id }) ?? false) {
+            event.eventTicket?.append(ticket)
+        }
+
+        let unlockedIds = Set(validUnlockedTickets.compactMap { $0.id })
+        event.protectedEventTicket = protectedList.filter { ticket in
+            guard let id = ticket.id else { return true }
+            return !unlockedIds.contains(id)
+        }
+
+        self.event = event
+        unLockTF.text = ""
+
+        setupData()
+    }
 
     @objc private func toggleDescription() {
-
         isExpanded.toggle()
 
         if isExpanded {
@@ -686,7 +1164,6 @@ class EventDetailsVC: UIViewController {
     }
 
     @objc private func handleSocialTap(_ sender: UITapGestureRecognizer) {
-
         guard let view = sender.view else { return }
 
         var selectedURL: String?
@@ -751,7 +1228,6 @@ class EventDetailsVC: UIViewController {
     }
 
     private func setupPolicyExpandableLabel() {
-
         guard let html = event?.disclaimer,
               let attributed = html.htmlToAttributedString else {
             self.policyView.isHidden = true
@@ -777,16 +1253,13 @@ class EventDetailsVC: UIViewController {
 
         policyLbl.attributedText = mutable
         policyLbl.numberOfLines = collapsedLines
-
         policyViewMoreBtn.setTitle("View More", for: .normal)
 
         view.layoutIfNeeded()
         checkIfPolicyTextNeedsExpansion()
     }
-    
 
     private func checkIfTextNeedsExpansion() {
-
         detailsLbl.numberOfLines = 0
 
         let fullHeight = detailsLbl.sizeThatFits(
@@ -806,7 +1279,6 @@ class EventDetailsVC: UIViewController {
     }
 
     private func checkIfPolicyTextNeedsExpansion() {
-
         policyLbl.numberOfLines = 0
 
         let fullHeight = policyLbl.sizeThatFits(
@@ -826,7 +1298,6 @@ class EventDetailsVC: UIViewController {
     }
 
     func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
-
         mapView.delegate = self
         if #available(iOS 16.0, *) {
             var config = MKStandardMapConfiguration(elevationStyle: .flat)
@@ -837,6 +1308,7 @@ class EventDetailsVC: UIViewController {
             mapView.mapType = .mutedStandard
             mapView.pointOfInterestFilter = .excludingAll
         }
+
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.showsTraffic = false
@@ -849,6 +1321,7 @@ class EventDetailsVC: UIViewController {
         point.title = title
         point.coordinate = coordinate
         mapView.addAnnotation(point)
+
         let region = MKCoordinateRegion(
             center: coordinate,
             span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
@@ -860,7 +1333,6 @@ class EventDetailsVC: UIViewController {
     }
 }
 
-// MARK: - ImagePageVC (unchanged)
 class ImagePageVC: UIViewController {
 
     var imageURL: String = ""
@@ -879,7 +1351,6 @@ class ImagePageVC: UIViewController {
     }
 }
 
-// MARK: - Setup collections/tables (unchanged)
 extension EventDetailsVC {
 
     func setupCollectionViews() {
@@ -914,6 +1385,23 @@ extension EventDetailsVC {
             forCellReuseIdentifier: FAQsTableViewCell.identifier
         )
         faqsTableView.tableFooterView = UIView()
+        faqsTableView.isScrollEnabled = false
+
+        ticketTableView.delegate = self
+        ticketTableView.dataSource = self
+        ticketTableView.register(
+            TicketsTVC.nib,
+            forCellReuseIdentifier: TicketsTVC.identifier
+        )
+        ticketTableView.isScrollEnabled = false
+
+        groupTableView.delegate = self
+        groupTableView.dataSource = self
+        groupTableView.register(
+            GroupTicketTVC.nib,
+            forCellReuseIdentifier: GroupTicketTVC.identifier
+        )
+        groupTableView.isScrollEnabled = false
     }
 }
 
@@ -935,7 +1423,6 @@ extension EventDetailsVC: UICollectionViewDelegate,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         if collectionView == guestListCollectionView {
-
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EventGuestListCVC.identifier,
                 for: indexPath
@@ -943,15 +1430,15 @@ extension EventDetailsVC: UICollectionViewDelegate,
 
             let attendee = attendees[indexPath.item]
             cell.configure(with: attendee)
-
             return cell
         } else if collectionView == lineUpCollectionView {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: EventLineUpCVC.identifier,
                 for: indexPath
             ) as! EventLineUpCVC
-            let artists = artists[indexPath.item]
-            cell.configure(with: artists)
+
+            let artist = artists[indexPath.item]
+            cell.configure(with: artist)
             return cell
         }
 
@@ -964,13 +1451,10 @@ extension EventDetailsVC: UICollectionViewDelegate,
         if collectionView == guestListCollectionView {
             _ = attendees[indexPath.item]
         } else if collectionView == lineUpCollectionView {
-
             let artistData = artists[indexPath.item]
             let webUrl = artistData.artist.instagramUsername
-            if !webUrl.isEmpty {
-                if let url = URL(string: webUrl) {
-                    UIApplication.shared.open(url)
-                }
+            if !webUrl.isEmpty, let url = URL(string: webUrl) {
+                UIApplication.shared.open(url)
             }
         }
     }
@@ -1002,6 +1486,10 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             return tickets.count
         }
 
+        if tableView == groupTableView {
+            return groupedNormalTickets.count
+        }
+
         if tableView == faqsTableView {
             return faqs.count
         }
@@ -1013,7 +1501,6 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if tableView == ticketTableView {
-
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: TicketsTVC.identifier,
                 for: indexPath
@@ -1026,12 +1513,15 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
             let ticket = tickets[indexPath.row]
             let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+            let isExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
 
             cell.configure(
                 ticket: ticket,
                 currency: currency,
                 whiteLabelColor: event?.whiteLabelColor,
-                eventTicketSetting: event?.eventTicketSettings
+                eventTicketSetting: event?.eventTicketSettings,
+                isDescriptionExpanded: isExpanded,
+                isLinkDisabled: isTicketDisabledByLink(ticket)
             )
 
             cell.onPlusTap = { [weak self] ticket in
@@ -1046,24 +1536,114 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 self?.handleRSVP(ticket: ticket)
             }
 
+            cell.onDescriptionToggle = { [weak self] in
+                guard let self = self, let id = ticket.id else { return }
+
+                if self.expandedTicketDescriptions.contains(id) {
+                    self.expandedTicketDescriptions.remove(id)
+                } else {
+                    self.expandedTicketDescriptions.insert(id)
+                }
+
+                tableView.beginUpdates()
+                tableView.endUpdates()
+                self.updateTicketTableHeight()
+            }
+
+            return cell
+        }
+
+        if tableView == groupTableView {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: GroupTicketTVC.identifier,
+                for: indexPath
+            ) as? GroupTicketTVC else {
+                return UITableViewCell()
+            }
+
+            let item = groupedNormalTickets[indexPath.row]
+            let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+
+            cell.configure(
+                groupName: item.groupName,
+                tickets: item.tickets,
+                currency: currency,
+                whiteLabelColor: event?.whiteLabelColor,
+                eventTicketSetting: event?.eventTicketSettings,
+                expandedTicketDescriptions: expandedTicketDescriptions,
+                disabledTicketIds: disabledTicketIds
+            )
+
+            cell.selectionStyle = .none
+
+            cell.onPlusTap = { [weak self] ticket in
+                self?.handleGroupPlus(ticket: ticket)
+            }
+
+            cell.onMinusTap = { [weak self] ticket in
+                self?.handleGroupMinus(ticket: ticket)
+            }
+
+            cell.onRSVPTap = { [weak self] ticket in
+                self?.handleGroupRSVP(ticket: ticket)
+            }
+
+            cell.onRowTap = { [weak self] ticket in
+                self?.handleGroupPlus(ticket: ticket)
+            }
+
+            cell.onDescriptionToggle = { [weak self] ticket in
+                guard let self = self, let id = ticket.id else { return }
+
+                if self.expandedTicketDescriptions.contains(id) {
+                    self.expandedTicketDescriptions.remove(id)
+                } else {
+                    self.expandedTicketDescriptions.insert(id)
+                }
+
+                self.groupTableView.beginUpdates()
+                self.groupTableView.endUpdates()
+                self.groupTableView.layoutIfNeeded()
+                self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+            }
+
+            cell.onHeightChanged = { [weak self] in
+                guard let self = self else { return }
+
+                UIView.performWithoutAnimation {
+                    self.groupTableView.performBatchUpdates(nil)
+                }
+
+                UIView.animate(
+                    withDuration: 0.28,
+                    delay: 0,
+                    usingSpringWithDamping: 0.95,
+                    initialSpringVelocity: 0.2,
+                    options: [.curveEaseInOut, .allowUserInteraction]
+                ) {
+                    self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+                    self.view.layoutIfNeeded()
+                }
+            }
+
             return cell
         }
 
         guard let cell = tableView.dequeueReusableCell(
-              withIdentifier: FAQsTableViewCell.identifier,
-              for: indexPath
-          ) as? FAQsTableViewCell else {
-              return UITableViewCell()
-          }
+            withIdentifier: FAQsTableViewCell.identifier,
+            for: indexPath
+        ) as? FAQsTableViewCell else {
+            return UITableViewCell()
+        }
 
-          let faq = faqs[indexPath.row]
-          let isExpanded = expandedFAQIndex == indexPath.row
+        let faq = faqs[indexPath.row]
+        let isExpanded = expandedFAQIndex == indexPath.row
 
-          cell.configure(
-              title: faq.title ?? "",
-              content: faq.content?.fromHTML ?? "",
-              isExpanded: isExpanded
-          )
+        cell.configure(
+            title: faq.title ?? "",
+            content: faq.content?.fromHTML ?? "",
+            isExpanded: isExpanded
+        )
 
         cell.onToggle = { [weak self] in
             guard let self = self else { return }
@@ -1101,27 +1681,36 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             }
         }
 
-          return cell
+        return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard tableView == faqsTableView else { return }
+        if tableView == faqsTableView {
+            if expandedFAQIndex == indexPath.row {
+                expandedFAQIndex = nil
+            } else {
+                expandedFAQIndex = indexPath.row
+            }
 
-        if expandedFAQIndex == indexPath.row {
-            expandedFAQIndex = nil
-        } else {
-            expandedFAQIndex = indexPath.row
+            tableView.reloadData()
+            return
         }
 
-        tableView.reloadData()
+        guard tableView == ticketTableView else { return }
+
+        let ticket = tickets[indexPath.row]
+        guard !isTicketDisabledByLink(ticket) else { return }
+
+        let currentCount = ticket.selectedTicketCount ?? 0
+        guard currentCount == 0 else { return }
+
+        handlePlus(ticket: ticket)
     }
 }
 
-// MARK: - Image pager (only tiny compile-safe identity checks)
 extension EventDetailsVC {
 
     func setupImagePager() {
-
         let gallery = (event?.eventGallery ?? [])
             .filter { $0.status == "ENABLED" && $0.isDeleted == false }
 
@@ -1153,49 +1742,47 @@ extension EventDetailsVC {
     }
 }
 
-
-
 class ImagePagerVC: UIPageViewController {
-    
+
     var imageURLs: [String] = []
     private var pages: [ImagePageVC] = []
     private(set) var currentIndex = 0
     private var isTransitioning = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
         delegate = self
     }
-    
+
     func setImages(_ urls: [String]) {
         imageURLs = urls
         buildPages()
-        
+
         currentIndex = 0
         if let firstVC = pages.first {
             setViewControllers([firstVC], direction: .forward, animated: false)
         }
     }
-    
+
     private func syncCurrentIndexFromVisible() {
         guard let visible = viewControllers?.first as? ImagePageVC,
               let idx = pages.firstIndex(where: { $0 === visible }) else { return }
         currentIndex = idx
     }
-    
+
     private func buildPages() {
         pages = imageURLs.map { url in
-              let vc = ImagePageVC()
-              vc.imageURL = url
-              return vc
-          }
+            let vc = ImagePageVC()
+            vc.imageURL = url
+            return vc
+        }
 
-          currentIndex = 0
-          guard let first = pages.first else { return }   
-          setViewControllers([first], direction: .forward, animated: false)
+        currentIndex = 0
+        guard let first = pages.first else { return }
+        setViewControllers([first], direction: .forward, animated: false)
     }
-    
+
     func moveNext() {
         guard pages.count > 1, !isTransitioning else { return }
         syncCurrentIndexFromVisible()
@@ -1244,7 +1831,7 @@ extension ImagePagerVC: UIPageViewControllerDataSource, UIPageViewControllerDele
         let next = (index + 1) % pages.count
         return pages[next]
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController,
                             willTransitionTo pendingViewControllers: [UIViewController]) {
         isTransitioning = true
@@ -1264,11 +1851,10 @@ extension ImagePagerVC: UIPageViewControllerDataSource, UIPageViewControllerDele
         currentIndex = idx
     }
 }
-// MARK: - YouTube (unchanged)
+
 extension EventDetailsVC: YTPlayerViewDelegate {
 
     func setupYouTubePlayer() {
-
         playerView = YTPlayerView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         playerView.delegate = self
@@ -1304,7 +1890,6 @@ extension EventDetailsVC: YTPlayerViewDelegate {
     }
 }
 
-
 extension NSMutableAttributedString {
     func trimTrailingWhitespaceAndNewlines() {
         let ws = CharacterSet.whitespacesAndNewlines
@@ -1318,24 +1903,22 @@ extension NSMutableAttributedString {
             }
         }
     }
-    
-    func forceSystemFont15() {
-         let base = UIFont.systemFont(ofSize: 15)
 
-         enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
-             // keep bold/italic traits if HTML had them
-             let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
-             let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
-             let newFont = UIFont(descriptor: descriptor, size: 15)
-             self.addAttribute(.font, value: newFont, range: range)
-         }
-     }
+    func forceSystemFont15() {
+        let base = UIFont.systemFont(ofSize: 15)
+
+        enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
+            let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
+            let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
+            let newFont = UIFont(descriptor: descriptor, size: 15)
+            self.addAttribute(.font, value: newFont, range: range)
+        }
+    }
 }
 
 extension EventDetailsVC: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-
         let id = "venuePin"
 
         var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
@@ -1354,4 +1937,3 @@ extension EventDetailsVC: MKMapViewDelegate {
         return view
     }
 }
-

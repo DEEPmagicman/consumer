@@ -105,18 +105,6 @@ class TicketSelectionViewController: UIViewController {
         getTicketLinksAndSetup()
 //        setupData()
     }
-    
-    private func venueNow() -> Date {
-        let tz = venueDetails?.useTimezone ?? TimeZone.current.identifier
-        let timeZone = TimeZone(identifier: tz) ?? .current
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
-        formatter.timeZone = timeZone
-        
-        return formatter.date(from: formatter.string(from: Date())) ?? Date()
-    }
-
     private func ticketDate(_ value: String?) -> Date? {
         guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return nil
@@ -136,19 +124,22 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func isTicketSaleStarted(_ ticket: EventTicket) -> Bool {
-        let now = venueNow()
+        let now = Date.venueNow(timezone: venueDetails?.useTimezone)
+
         guard let startSaleDate = ticketDate(ticket.beginSale) else {
             return true
         }
+
         return now >= startSaleDate
     }
 
     private func isTicketSaleNotEnded(_ ticket: EventTicket) -> Bool {
-        let now = venueNow()
+        let now = Date.venueNow(timezone: venueDetails?.useTimezone)
 
         guard let endSaleDate = ticketDate(ticket.endSale) else {
             return true
         }
+
         return now <= endSaleDate
     }
 
@@ -189,7 +180,7 @@ class TicketSelectionViewController: UIViewController {
     }
     
     private func isTicketSaleEnded(_ ticket: EventTicket) -> Bool {
-        let now = venueNow()
+        let now = Date.venueNow(timezone: venueDetails?.useTimezone)
 
         guard let endSaleDate = ticketDate(ticket.endSale) else {
             return false

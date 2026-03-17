@@ -152,6 +152,17 @@ extension String {
         }
         return result
     }
+    
+    func toVenueDate(timezone: String?) -> Date? {
+        guard !self.isEmpty else { return nil }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: timezone ?? "") ?? .current
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        return formatter.date(from: self)
+    }
 }
 
 extension Bundle {

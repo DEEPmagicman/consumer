@@ -296,7 +296,6 @@
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="lBb-Pv-dV5" secondAttribute="bottom" id="7mq-WI-PIm"/>
-                                <constraint firstItem="lBb-Pv-dV5" firstAttribute="height" secondItem="quD-X3-Sg2" secondAttribute="height" priority="250" id="AtE-eI-Oao"/>
                                 <constraint firstAttribute="trailing" secondItem="lBb-Pv-dV5" secondAttribute="trailing" id="KvQ-wa-5Z3"/>
                                 <constraint firstItem="lBb-Pv-dV5" firstAttribute="leading" secondItem="quD-X3-Sg2" secondAttribute="leading" id="PBa-Pb-N9T"/>
                                 <constraint firstItem="lBb-Pv-dV5" firstAttribute="width" secondItem="quD-X3-Sg2" secondAttribute="width" priority="250" id="PwN-23-5L7"/>

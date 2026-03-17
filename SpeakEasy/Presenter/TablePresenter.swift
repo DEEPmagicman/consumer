@@ -55,10 +55,11 @@ final class TablePresenter {
         }
     }
     
-    
     static func createSeatingAreaBooking(
         eventId: String,
         seatingAreaId: String,
+        timeSlotId: String?,
+        venueId: String,
         guests: Int,
         queueId: String,
         completion: @escaping (_ isSuccess: Bool,
@@ -70,21 +71,21 @@ final class TablePresenter {
             eventId: eventId,
             includes: []
         )
-
+        var item: [String: Any] = [
+            "seatingAreaId": seatingAreaId,
+            "guests": guests
+        ]
+        if let timeSlotId = timeSlotId, !timeSlotId.isEmpty {
+            item["timeSlotId"] = timeSlotId
+        }
         let params: [String: Any] = [
-            "items": [
-                [
-                    "seatingAreaId": seatingAreaId,
-                    "guests": guests
-                ]
-            ],
+            "items": [item],
             "queueId": queueId
         ]
-
         AFWrapper.postRequest(
             url,
             params: params,
-            headers: Header.header()
+            headers: Header.header(venueId: venueId)
         ) { response in
 
             guard let dict = response as? [String: Any] else {
@@ -99,7 +100,7 @@ final class TablePresenter {
                 if decoded.isSuccess {
                     completion(true, nil, decoded)
                 } else {
-                    completion(false, decoded.message, decoded)
+                    completion(false, decoded.message ?? "Failed", decoded)
                 }
 
             } catch {
@@ -108,12 +109,11 @@ final class TablePresenter {
 
         } failure: { error in
 
-            if let err = error as? NSError, err.code == 0 {
-                completion(false, err.domain, nil)
-                return
+            if let err = error as? NSError {
+                completion(false, err.localizedDescription, nil)
+            } else {
+                completion(false, "Something went wrong", nil)
             }
-
-            completion(false, "Something went wrong", nil)
         }
     }
     

@@ -486,6 +486,12 @@ final class Navigate {
         }
 
         vc.modalPresentationStyle = .overCurrentContext
+        let transition = CATransition()
+        transition.duration = 0.35
+        transition.type = .moveIn
+        transition.subtype = .fromTop
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        sender.view.window?.layer.add(transition, forKey: kCATransition)
         sender.present(vc, animated: false)
     }
     

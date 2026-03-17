@@ -134,6 +134,18 @@ extension Date {
         let ageComponents = calendar.dateComponents([.year], from: self, to: now)
         return ageComponents.year ?? 0
     }
+    
+    static func venueNow(timezone: String?) -> Date {
+          let tz = timezone ?? TimeZone.current.identifier
+          let timeZone = TimeZone(identifier: tz) ?? .current
+
+          let formatter = DateFormatter()
+          formatter.locale = Locale(identifier: "en_US_POSIX")
+          formatter.timeZone = timeZone
+          formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+          return formatter.date(from: formatter.string(from: Date())) ?? Date()
+      }
 }
 
 extension Double {

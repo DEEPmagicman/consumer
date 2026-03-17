@@ -22,6 +22,10 @@ struct SeatingAreaResponse: Codable {
 struct SeatingArea: Codable {
     let id: String?
     let parentSeatingAreaId: String?
+    let eventId: String?
+    let venueId: String?
+    let order: Int?
+
     let name: String?
     let highlight: String?
     let minimum: Double?
@@ -29,28 +33,46 @@ struct SeatingArea: Codable {
     let maxGuest: Int?
     let defaultGuest: Int?
     let description: String?
+
+    let issuedInternalInventory: Int?
+    let issuedPublicInventory: Int?
+    let soldInternalInventory: Int?
+    let soldPublicInventory: Int?
+    let inCartPublicInventory: Int?
+
+    let bookingType: BookingType?
+    let minExtraPersons: Int?
+    let extraPersonCharge: Double?
+    let depositType: String?
+
+    let beginSale: String?
+    let endSale: String?
+    let type: String?
+
+    let inquiryEnabled: Bool?
     let hideCheckout: Bool?
     let hidePricing: Bool?
-    let bookingType: BookingType?
-    let inquiryEnabled: Bool?
+    let isDeleted: Bool?
+    let status: String?
+
+    let createdAt: String?
+    let updatedAt: String?
+
+    let timeSlots: [TableTimeSlot]?
     let depositWithFees: Double?
-    
-    let timeSlots: [tableTimeSlot]?
-    
-    
-    enum CodingKeys: String, CodingKey {
-        case id, name, highlight, minimum, deposit, maxGuest, defaultGuest, description,
-             hideCheckout, hidePricing, bookingType, depositWithFees, timeSlots, inquiryEnabled
-        case parentSeatingAreaId = "parentSeatingAreaId"
-    }
+    let additionalFees: Double?
 }
 
-struct tableTimeSlot: Codable {
+struct TableTimeSlot: Codable {
     let startTime: String?
     let endTime: String?
     let minimum: Double?
     let deposit: Double?
     let depositType: String?
+    let depositWithFees: Double?
+
+    let issuedPublicInventory: Int?
+    let soldPublicInventory: Int?
 }
 
 struct SeatingAreaBookingResponse: Codable {

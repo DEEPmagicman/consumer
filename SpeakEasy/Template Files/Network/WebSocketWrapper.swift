@@ -242,4 +242,3 @@ extension WebSocketCallBackDelegate {
     func checkinBarBooking(barItems: [BarTabHasItem]) {}
     func uncheckBarBooking(barItems: [BarTabHasItem]) {}
 }
-
