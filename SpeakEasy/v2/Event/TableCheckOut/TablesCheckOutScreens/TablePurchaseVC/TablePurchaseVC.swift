@@ -34,7 +34,6 @@ final class TablePurchaseVC: UIViewController {
     @IBOutlet weak var purchaseTicketBtn: UIButton!
     @IBOutlet weak var timerLbl: UILabel!
     @IBOutlet weak var promoCodeTextFeild: UITextField!
-    @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var feesAndTaxesTitleView: UIView!
     @IBOutlet weak var discountToalLbl: UILabel!
@@ -45,6 +44,12 @@ final class TablePurchaseVC: UIViewController {
     @IBOutlet weak var tableMinimumDepositLbl: UILabel!
     @IBOutlet weak var promoCodeTextFeildView: UIView!
     @IBOutlet weak var feesAndTaxesTableParentView: UIView!
+    @IBOutlet weak var policyLbl: UILabel!
+    @IBOutlet weak var termsLbl: UILabel!
+    @IBOutlet weak var privacyPolicyLbl: UILabel!
+    @IBOutlet weak var questionsORcommentsView: UIView!
+    @IBOutlet weak var questionAndCommentTextView: UITextView!
+    
     
     var queueId: String?
     var seatingAreas: [SeatingArea] = []
@@ -228,7 +233,7 @@ final class TablePurchaseVC: UIViewController {
             ? "\(approxWait / 60) min \(approxWait % 60) sec"
             : "\(approxWait) sec"
 
-        timerLbl.text = "You are #\(position) in queue. Wait ~ \(timeText)"
+//        timerLbl.text = "You are #\(position) in queue. Wait ~ \(timeText)"
     }
 
     private func handlePayment(_ booking: SeatingAreaBookingResponse) {
@@ -517,6 +522,56 @@ final class TablePurchaseVC: UIViewController {
         shimmerBlocks.forEach { $0.stopAnimating() }
         shimmerView.isHidden = true
     }
+    
+    private func updateUIAfterPromoCode(_ breakdown: PriceBreakdown) {
+        let base = Double(breakdown.base ?? 0)
+        let discount = Double(breakdown.discount ?? 0)
+        let gratuity = Double(breakdown.gratuity ?? 0)
+        let salesTax = Double(breakdown.salesTax ?? 0)
+
+        var items: [FeeDisplayItem] = []
+
+        if gratuity > 0 {
+            items.append(FeeDisplayItem(
+                title: breakdown.gratuityName ?? "Gratuity",
+                amount: gratuity
+            ))
+        }
+
+        if salesTax > 0 {
+            items.append(FeeDisplayItem(
+                title: breakdown.salesTaxName ?? "Sales Tax",
+                amount: salesTax
+            ))
+        }
+
+     
+        feesAndTaxes = items
+        feesAndTaxesTitleView.isHidden = items.isEmpty
+        feesAndTaxesTableParentView.isHidden = items.isEmpty
+        feesAndTaxesTableView.reloadData()
+        feesAndTaxesTableView.layoutIfNeeded()
+        feesAndTaxesTableViewHeight.constant = feesAndTaxesTableView.contentSize.height
+
+        if discount > 0 {
+            discountView.isHidden = false
+            discountToalLbl.isHidden = false
+            discountToalLbl.text = "-\(currency)\(discount.decimalFormat(true))"
+        } else {
+            discountView.isHidden = true
+            discountToalLbl.isHidden = true
+            discountToalLbl.text = ""
+        }
+
+        let total = max(base + gratuity + salesTax + items.reduce(0) { $0 + $1.amount } - discount, 0)
+        let feesOnly = max(total - base, 0)
+
+        tableMinimumDepositLbl.text = "\(currency)\(base.decimalFormat(true))"
+        totalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        feesAndTxtTotalAmountLbl.text = feesOnly > 0 ? "\(currency)\(feesOnly.decimalFormat(true))" : ""
+
+        view.layoutIfNeeded()
+    }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
         BookingQueueSocketManager.shared.disconnect()
@@ -541,15 +596,38 @@ final class TablePurchaseVC: UIViewController {
 
         submitPromoCodeBtn.showLoader(userInteraction: false)
 
-        if isPromoCodeApplied {
-            isPromoCodeApplied = false
-            appliedPromoCode = ""
-            promoCodeTextFeild.text = ""
-            promoCodeTextFeild.isUserInteractionEnabled = true
-            promoCodeTextFeild.alpha = 1
-            updatePromoButtonIcon()
+        guard let eventId = event?.id,
+              let venueId = venueDetails?.id ?? event?.venue?.id,
+              let tableBookingId = booking?.content?.tableBooking?.id,
+              !tableBookingId.isEmpty else {
             submitPromoCodeBtn.hideLoader()
-            Alert.showToast("Promo code removed")
+            Alert.showToast("Booking details not found")
+            return
+        }
+
+        if isPromoCodeApplied {
+            TablePresenter.removeCode(
+                eventId: eventId,
+                tableBookingId: tableBookingId,
+                venueId: venueId
+            ) { [weak self] success, message, data in
+                guard let self = self else { return }
+
+                self.submitPromoCodeBtn.hideLoader()
+
+                if success, let data = data {
+                    self.isPromoCodeApplied = false
+                    self.appliedPromoCode = ""
+                    self.promoCodeTextFeild.text = ""
+                    self.promoCodeTextFeild.isUserInteractionEnabled = true
+                    self.promoCodeTextFeild.alpha = 1
+                    self.updatePromoButtonIcon()
+                    self.updateUIAfterPromoCode(data)
+                    Alert.showToast("Promo code removed")
+                } else {
+                    Alert.showToast(message ?? "Failed to remove promo code")
+                }
+            }
             return
         }
 
@@ -558,17 +636,29 @@ final class TablePurchaseVC: UIViewController {
             return
         }
 
-        // Table promo backend hook is not available in the shared code.
-        // UI state is handled here safely.
-        isPromoCodeApplied = true
-        appliedPromoCode = promo
-        promoCodeTextFeild.isUserInteractionEnabled = false
-        promoCodeTextFeild.alpha = 0.5
-        updatePromoButtonIcon()
-        submitPromoCodeBtn.hideLoader()
-        Alert.showToast("Promo code applied")
-    }
+        TablePresenter.applyCode(
+            eventId: eventId,
+            tableBookingId: tableBookingId,
+            code: promo,
+            venueId: venueId
+        ) { [weak self] success, message, data in
+            guard let self = self else { return }
 
+            self.submitPromoCodeBtn.hideLoader()
+
+            if success, let data = data {
+                self.isPromoCodeApplied = true
+                self.appliedPromoCode = promo
+                self.promoCodeTextFeild.isUserInteractionEnabled = false
+                self.promoCodeTextFeild.alpha = 0.5
+                self.updatePromoButtonIcon()
+                self.updateUIAfterPromoCode(data)
+                Alert.showToast("Promo code applied")
+            } else {
+                Alert.showToast(message ?? "Failed to apply promo code")
+            }
+        }
+    }
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
         if isPaymentInitiated { return }
         isPaymentInitiated = true
@@ -605,7 +695,11 @@ final class TablePurchaseVC: UIViewController {
     @IBAction func onClickFeesAndTaxes(_ sender: Any) {
         feesAndTaxesTableParentView.isHidden.toggle()
     }
-
+    
+    @IBAction func onClickAddNote(_ sender: Any) {
+        questionsORcommentsView.isHidden.toggle()
+    }
+    
     override func observeValue(
         forKeyPath keyPath: String?,
         of object: Any?,
