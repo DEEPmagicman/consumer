@@ -30,7 +30,7 @@ final class AFWrapper: NSObject {
         }
         
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { responseObject in
                 
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
@@ -71,7 +71,7 @@ final class AFWrapper: NSObject {
                         }
                         let decryptedResponse = encryptedResponse.decrypted()
                         success(decryptedResponse)
-                    }  else if shouldForceLogout && responseCode == 401 {
+                    } else if shouldForceLogout && responseCode == 401 {
                         TokenManager.shared.addPendingRequest( {
                             self.postRequest(strURL, params: parameters, headers: headers, isJsonEncoding: isJsonEncoding, shouldForceLogout: shouldForceLogout, success: success, failure: failure)
                         })
@@ -102,7 +102,7 @@ final class AFWrapper: NSObject {
         }
         
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .post, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default: URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { responseObject in
                 
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
@@ -132,7 +132,7 @@ final class AFWrapper: NSObject {
                         }
                         let decryptedResponse = encryptedResponse.decrypted()
                         success(decryptedResponse)
-                    }  else {
+                    } else {
                         forceLogout()
                         failure(response.result.error)
                     }
@@ -145,7 +145,7 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func patchRequest(_ strURL: String, params:  [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func patchRequest(_ strURL: String, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         
         if !Connectivity.isConnectedToInternet {
             success(nil)
@@ -154,7 +154,7 @@ final class AFWrapper: NSObject {
         }
         
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .patch, parameters: params, encoding: JSONEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .patch, parameters: params, encoding: JSONEncoding.default, headers: Header.updateToken(headers)).responseJSON { responseObject in
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)
@@ -201,7 +201,7 @@ final class AFWrapper: NSObject {
                         } else {
                             success(decryptedBoolResponse)
                         }
-                    }  else if responseCode == 401 {
+                    } else if responseCode == 401 {
                         TokenManager.shared.addPendingRequest( {
                             self.patchRequest(strURL, params: parameters, headers: headers, success: success, failure: failure)
                         })
@@ -320,7 +320,7 @@ final class AFWrapper: NSObject {
         }
     }
     
-    static func getRequest(_ strURL: String, isForCard:Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
+    static func getRequest(_ strURL: String, isForCard: Bool = false, params: [String: Any]? = nil, headers: [String: String]?, success: @escaping DefaultAPISuccessClosure, failure: @escaping DefaultAPIFailureClosure) {
         if !Connectivity.isConnectedToInternet {
             failure(nil)
             return
@@ -353,16 +353,16 @@ final class AFWrapper: NSObject {
         } else {
             let req = Alamofire.request(strURL, method: .get, parameters: params, headers: Header.updateToken(headers)).responseString(queue: nil, encoding: .utf8) { response in
                 switch response.result {
-                case .success(_):
+                case .success:
                     if let responseCode = response.response?.statusCode {
                         if responseCode == 200 || responseCode == 201 {
                             guard let responseInString = response.result.value else {
                                 return
                             }
-                            if isForCard{
+                            if isForCard {
                                 let decryptedResponse = responseInString.decryptedArry()
                                 success(decryptedResponse ?? [:])
-                            }else{
+                            } else {
                                 if let decryptedResponse = responseInString.decrypted() {
                                     success(decryptedResponse)
                                 } else if let decryptedResponseArr = responseInString.decryptedArry() {
@@ -443,7 +443,7 @@ final class AFWrapper: NSObject {
             return
         }
         if !SharedURL.isEncryptionEnabled {
-            let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { (responseObject) -> Void in
+            let req = Alamofire.request(strURL, method: .put, parameters: params, encoding: isJsonEncoding ? JSONEncoding.default : URLEncoding.default, headers: Header.updateToken(headers)).responseJSON { responseObject in
                 if let responseCode = responseObject.response?.statusCode {
                     if responseCode == 200 || responseCode == 201 {
                         success(responseObject.result.value)

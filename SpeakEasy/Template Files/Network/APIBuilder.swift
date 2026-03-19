@@ -77,15 +77,15 @@ struct APIBuilder {
     static private let faq = "/faq"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
-    static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.CLIENT_ID + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.REDIRECT_URI + "&show_dialog=false"
+    static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.clientId + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.redirectURI + "&show_dialog=false"
     static private let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let getInstagramImages = "https://graph.instagram.com/me/media?fields=id,media_url,media_type,username&access_token=%@"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"
     static let getInstagramChilds = "https://graph.instagram.com/%@/children?fields=id,media_url,media_type&access_token=%@"
     
-    static let CLIENT_ID = Constant.String.spotifyClientId
-    static let SESSION_KEY = "spotifySessionKey"
-    static let REDIRECT_URI = Constant.String.spotifyDirectUri
+    static let clientId = Constant.String.spotifyClientId
+//    static let SESSION_KEY = "spotifySessionKey"
+    static let redirectURI = Constant.String.spotifyDirectUri
     static let SCOPE = "user-read-email"
     static let spotifyURL = "https://api.spotify.com/v1/me"
     
@@ -232,8 +232,8 @@ struct APIBuilder {
     
     static func layoutURL(date: String) -> String {
         let base = SharedURL.tableBaseURL + "/consumer/layout"
-        let q = "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-        return base + "?" + q
+        let qry = "date=\(date.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        return base + "?" + qry
     }
     
     static func ticketLinksURL(eventId: String) -> String {
@@ -308,7 +308,7 @@ struct APIBuilder {
         baseURL + route + auth + changePassword
     }
     
-    static func MVPVenueDetailURL(_ id: String) -> String{
+    static func MVPVenueDetailURL(_ id: String) -> String {
         baseURL + route + cover + "/\(id)"
     }
     
@@ -324,7 +324,6 @@ struct APIBuilder {
         baseURL + route + booking + "/\(bookingId)"
     }
     
-
     static func addOnBookingAPI(_ bookingId: String) -> String {
         baseURL + route + addOns + "/\(bookingId)"
     }
@@ -364,7 +363,6 @@ struct APIBuilder {
         }
         return url
     }
-    
     
     static func successAddOnsPaymentURL(_ bookingId: String) -> String {
         return baseURL + route + payment + addOns  + "/" + bookingId + statusSuccess

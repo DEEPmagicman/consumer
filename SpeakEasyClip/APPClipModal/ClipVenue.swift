@@ -133,27 +133,27 @@ struct ClipVenue: Codable {
         if speakEasyCharges == "INCREMENTAL" {
             if ticketPrice <= 10 {
                 amountTransferToSE = 0.5
-            } else if (ticketPrice <= 20 && ticketPrice > 10) {
+            } else if ticketPrice > 10 && ticketPrice <= 20 {
                 amountTransferToSE = 1
-            } else if (ticketPrice <= 100 && ticketPrice > 20) {
+            } else if ticketPrice > 20 && ticketPrice <= 100 {
                 amountTransferToSE = 2
-            } else if (ticketPrice > 100) {
+            } else if ticketPrice > 100 {
                 amountTransferToSE = 5
             }
         }
         if speakEasyCharges == "DIFFRENT_PRICE" {
-            if CoverTicketGeneral.contains(ticketName) {
+            if coverTicketGeneral.contains(ticketName) {
                 amountTransferToSE = 1
-            } else if CoverTicketVIP.contains(ticketName) {
+            } else if coverTicketVIP.contains(ticketName) {
                 amountTransferToSE = 2
             } else {
                 amountTransferToSE = 0.5
             }
         }
         if speakEasyCharges == "TAO_PRICING" {
-            if CoverTicketGeneral.contains(ticketName) {
+            if coverTicketGeneral.contains(ticketName) {
                 amountTransferToSE = 0.29
-            } else if CoverTicketVIP.contains(ticketName) {
+            } else if coverTicketVIP.contains(ticketName) {
                 amountTransferToSE = 2
             } else {
                 amountTransferToSE = 0.5
@@ -459,16 +459,16 @@ enum TicketPriceType {
     case CUSTOM
 }
 
-let CoverTicketGeneral = [
+let coverTicketGeneral = [
   "GENERALTICKET",
   "General Admission",
   "Female General Admission",
   "Male General Admission",
   "General Admission - Male",
-  "General Admission - Female",
+  "General Admission - Female"
 ]
 
-let CoverTicketVIP = [
+let coverTicketVIP = [
   "SKIPLINETICKET",
   "Skip The Line",
   "Skip The Line-Female",
@@ -480,8 +480,8 @@ let CoverTicketVIP = [
   "Skip the Line - Female",
   "VIP Skip Line",
   "VIP Skip Line - Male",
-  "VIP Skip Line - Female",
-];
+  "VIP Skip Line - Female"
+]
 
 struct CustomFeeSettings: Codable {
     var isEnableCustomFee: Bool

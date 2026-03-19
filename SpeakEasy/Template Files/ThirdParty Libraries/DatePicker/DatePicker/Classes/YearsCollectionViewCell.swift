@@ -79,8 +79,8 @@ extension YearsCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         selection.selectionChanged()
-        if let p = parent {
-            p.YearOrMonthChanged()
+        if let parent = parent {
+            parent.yearOrMonthChanged()
         }
     }
 
@@ -96,7 +96,7 @@ extension YearsCollectionViewCell: UICollectionViewDelegate, UICollectionViewDat
 
     func select(year: Int) {
         guard let indexPathRow = items.firstIndex(of: year)  else { return }
-        let indexPath: IndexPath = [0,(indexPathRow + paddingCells / 2)]
+        let indexPath: IndexPath = [0, (indexPathRow + paddingCells / 2)]
         scrollToYear(at: indexPath)
     }
 

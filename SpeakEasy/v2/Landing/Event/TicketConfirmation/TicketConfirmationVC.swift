@@ -16,7 +16,7 @@ class TicketConfirmationVC: UIViewController {
     @IBOutlet weak var eventTitleLbl: UILabel!
     @IBOutlet weak var noteView: UILabel!
     @IBOutlet weak var eventImgView: UIImageView!
-    @IBOutlet weak var viewTicketBtn : UIButton!
+    @IBOutlet weak var viewTicketBtn: UIButton!
     
     var booking: Booking?
     var venueDetails: ClipVenue?
@@ -25,7 +25,7 @@ class TicketConfirmationVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let id = self.bookingId {
+        if self.bookingId != nil {
             getBooking(id: "93f6f680-5440-4efc-a5f2-d67af29be773")
         }
     }
@@ -107,18 +107,16 @@ class TicketConfirmationVC: UIViewController {
         }
     }
     
-
     @IBAction func onClickViewtTicket(_ sender: Any) {
         
     }
-    
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
         self.dismiss(animated: false)
     }
     
     private func getBooking(id: String) {
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
+        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
             if isSuccess {
                 self.booking = booking

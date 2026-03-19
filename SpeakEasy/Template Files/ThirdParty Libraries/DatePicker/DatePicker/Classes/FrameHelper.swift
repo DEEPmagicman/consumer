@@ -19,7 +19,6 @@ class FrameHelper {
 
     var yearlessDayColumns = 7
 
-
     private init() {}
 
     func getYearlessPopOverSize(for width: CGFloat) -> CGSize {

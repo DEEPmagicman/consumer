@@ -28,7 +28,6 @@ class TableSeatingViewController: UIViewController {
     @IBOutlet weak var viewMoreBtn: UIButton!
     @IBOutlet weak var timeZoneView: UIView!
     
-    
     var seatingArea: SeatingArea?
     var event: Event?
     private var currentGuestCount: Int = 1
@@ -40,7 +39,6 @@ class TableSeatingViewController: UIViewController {
                              _ guestCount: Int,
                              _ seatingArea: SeatingArea?,
                              _ event: Event?) -> Void)?
-    
     
     let infoTextAttributes: [NSAttributedString.Key: Any] = [
         .font: AppFont.font(weight: .regular, size: 12),
@@ -88,7 +86,6 @@ class TableSeatingViewController: UIViewController {
         updatePricing(for: 0)
     }
     
-    
     func updatePricing(for index: Int) {
         
         guard let item = seatingArea else { return }
@@ -99,8 +96,6 @@ class TableSeatingViewController: UIViewController {
             return
         }
         
-        
-
         if item.bookingType == .timeWise {
             
             if let slot = item.timeSlots?[index] {
@@ -143,10 +138,7 @@ class TableSeatingViewController: UIViewController {
     private func configureData() {
         guard let item = seatingArea else { return }
 
-        let venueTimeZone = event?.venue?.timezone
-            ?? event?.venue?.useTimezone
-            ?? TimeZone.current.identifier
-
+//        let venueTimeZone = event?.venue?.timezone ?? event?.venue?.useTimezone ?? TimeZone.current.identifier
 
         tableName.text = item.name
         tableDetailLbl.text = item.highlight?.isEmpty == false
@@ -302,7 +294,6 @@ class TableSeatingViewController: UIViewController {
         }
     }
     
-    
     func buildGuestsTimeText(
         guests: String,
         time: String
@@ -431,7 +422,7 @@ extension TableSeatingViewController: UICollectionViewDelegate,
 
         let text = timeSlots[indexPath.item]
 
-        var selectedColor: UIColor? = nil
+        var selectedColor: UIColor?
         if let hex = event?.whiteLabelColor {
             selectedColor = UIColor(hex: hex)
         }
@@ -468,10 +459,6 @@ extension TableSeatingViewController: UICollectionViewDelegate,
     }
 }
 
-
-
-import UIKit
-
 final class TimeTagCVC: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
@@ -483,7 +470,6 @@ final class TimeTagCVC: UICollectionViewCell {
         return label
     }()
     
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -500,7 +486,6 @@ final class TimeTagCVC: UICollectionViewCell {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         
-
         contentView.addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
@@ -510,8 +495,7 @@ final class TimeTagCVC: UICollectionViewCell {
         ])
     }
 
-    func configure(with text: String, isSelected: Bool,
-    selectedColor: UIColor?) {
+    func configure(with text: String, isSelected: Bool, selectedColor: UIColor?) {
         
         titleLabel.text = text
         

@@ -114,7 +114,6 @@ struct EventTicketHasPassword: Codable {
     var mongodbId: String?
 }
 
-
 struct CustomFee: Codable {
 
     var title: String

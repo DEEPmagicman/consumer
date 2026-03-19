@@ -14,7 +14,7 @@ class DaysCollectionViewCell: UICollectionViewCell {
     var parent: PickerViewController?
     var updating = false
 
-    var mode: DatePickerMode = .Basic
+    var mode: DatePickerMode = .basic
 
     var selectedIndexPath: IndexPath?
 
@@ -200,11 +200,11 @@ extension DaysCollectionViewCell : UICollectionViewDelegate, UICollectionViewDat
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch self.mode {
-        case .Basic:
+        case .basic:
             return getBasicModeCell(for: indexPath)
-        case .MinMax:
+        case .minMax:
             return getMinMaxModeCell(for: indexPath)
-        case .Yearless:
+        case .yearless:
             return getYearlessModeCell(for: indexPath)
         }
     }

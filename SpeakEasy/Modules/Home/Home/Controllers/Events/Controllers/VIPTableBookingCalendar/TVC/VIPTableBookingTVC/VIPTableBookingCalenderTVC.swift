@@ -21,29 +21,25 @@ class VIPTableBookingCalenderTVC: UITableViewCell {
         self.collectionView.delegate = self
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-    
     var arrayAssociatedEvent: [TopEventDataSet] = []
     
-    func setData(seeAll: Bool){
+    func setData(seeAll: Bool) {
         self.viewSeperator.isHidden = seeAll
         self.viewSeeAll.isHidden = !seeAll
     }
     
-    func setTableSelectionData(seeAll: Bool){
+    func setTableSelectionData(seeAll: Bool) {
         self.viewSeperator.isHidden = !seeAll
         self.viewSeeAll.isHidden = !seeAll
     }
 }
-//MARK: - Helper methods
+// MARK: - Helper methods
 extension VIPTableBookingCalenderTVC {
-    private func registerCell(){
+    private func registerCell() {
         self.collectionView.register(UINib(nibName: "EventCVC", bundle: nil), forCellWithReuseIdentifier: "EventCVC")
     }
 }
-//MARK: - UICollectionViewDataSource
+// MARK: - UICollectionViewDataSource
 extension VIPTableBookingCalenderTVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrayAssociatedEvent.count
@@ -57,10 +53,10 @@ extension VIPTableBookingCalenderTVC: UICollectionViewDataSource {
         return cell
     }
 }
-//MARK: - UICollectionViewDelegateFlowLayout
+// MARK: - UICollectionViewDelegateFlowLayout
 extension VIPTableBookingCalenderTVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = 150.0//collectionView.frame.width / 2.5
+        let width = 150.0 // collectionView.frame.width / 2.5
         let height = collectionView.frame.height
         let size = CGSize(width: width, height: height)
         return size

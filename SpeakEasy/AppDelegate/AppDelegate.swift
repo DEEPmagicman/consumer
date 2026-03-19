@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        guard let incomingURL = userActivity.webpageURL else {
+        guard userActivity.webpageURL != nil else {
             return true
         }
 //        handleForURL(incomingURL)
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         RemoteConfigHelper.shared.getRemoteConfigValues()
-        window = UIWindow(frame:UIScreen.main.bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         launchApplication()
 //        Bundle.FlagIcons = Bundle(for: type(of: self))
         return true
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = vc
     }
 }
-//MARK: - Application flow
+// MARK: - Application flow
 extension AppDelegate {
     private func launchApplication() {
         let controller = Splash()

@@ -252,7 +252,6 @@ struct EventTicketGroup: Codable {
     var updatedAt: String?
 }
 
-
 struct AdditionalButton: Codable {
     let link: String
     let title: String
@@ -265,7 +264,6 @@ struct AttendeesResponse: Codable {
     var hasMany: Bool?
     var count: Int?
 }
-
 
 struct Attendee: Codable {
 
@@ -289,7 +287,6 @@ struct Attendee: Codable {
         }
     }
     
- 
 }
 
 struct ImageData: Codable {
@@ -321,7 +318,7 @@ struct EventFAQ: Codable {
     let updatedAt: String?
 }
 
-//struct Event: Codable {
+// struct Event: Codable {
 //
 //    let id: String
 //    let uniqueId: String?
@@ -353,8 +350,7 @@ struct EventFAQ: Codable {
 //    let eventTicketSettings: EventTicketSettings?
 //
 //    let hasPurchasedTicket: Bool?
-//}
-
+// }
 
 struct ArtistData: Codable {
     var artist: Artists

@@ -64,7 +64,6 @@
             phoneNumTextField.withDefaultPickerUIOptions = options
         }
         
-        
         private func setupTermsLabel() {
 
             let fullText = """
@@ -74,7 +73,7 @@
             let attributedString = NSMutableAttributedString(
                 string: fullText,
                 attributes: [
-                    .font: Constant.Font.interRegular(size: 12) ?? UIFont.systemFont(ofSize: 12),
+                    .font: Constant.Font.interRegular(size: 12),
                     .foregroundColor: UIColor.white
                 ]
             )
@@ -84,7 +83,7 @@
 
             let highlightAttributes: [NSAttributedString.Key: Any] = [
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
-                .font: Constant.Font.interRegular(size: 12) ?? UIFont.boldSystemFont(ofSize: 12),
+                .font: Constant.Font.interRegular(size: 12),
                 .foregroundColor: UIColor.white
             ]
 
@@ -98,8 +97,6 @@
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
             termsAndPrivacyLbl.addGestureRecognizer(tapGesture)
         }
-        
-        
 
         private func setContinueEnabled(_ enabled: Bool) {
             continueBtn.isUserInteractionEnabled = enabled
@@ -212,7 +209,6 @@
     //                            countryCode: countryCode
     //                        )
     //                    }
-                        
                         
                     } else if errorMsg == Constant.String.internetNotConnect {
                         self.view.endEditing(true)

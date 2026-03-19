@@ -168,7 +168,7 @@ final class PaymentPresenter {
             } else if let error = responseDic["error"] as? String, let message = responseDic["message"] as? String {
                 completion(false, error, "", message)
             } else {
-                completion(false, "Alert","", "Booking failed")
+                completion(false, "Alert", "", "Booking failed")
             }
 
         } failure: { error in

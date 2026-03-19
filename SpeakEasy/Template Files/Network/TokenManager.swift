@@ -59,4 +59,3 @@ class TokenManager {
         pendingRequests.append(request)
     }
 }
-

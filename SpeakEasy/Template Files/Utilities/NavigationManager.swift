@@ -78,7 +78,7 @@ final class Navigate {
         }
     }
     
-    func presentConfirmPopUp(_ sender: UIViewController,text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
+    func presentConfirmPopUp(_ sender: UIViewController, text1: String, text2: String, text3: String, isYesOrNoBtn: Bool = false) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(ConfirmPopUpViewController.self)
         vc.modalPresentationStyle = .overCurrentContext
         vc.confirmPopUpDelegate = sender as? ConfirmPopUpDelegate
@@ -118,7 +118,7 @@ final class Navigate {
         }
     }
     
-    func SetProfilePicVc(_ sender: UIViewController) {
+    func setProfilePicVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SetProfilePictureViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -381,7 +381,6 @@ final class Navigate {
 //        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    
     func signUpDetailsViewControllerVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(SignUpDetailsViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
@@ -412,7 +411,6 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(SignUpViewController.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
-    
     
     func allVenueVC(_ sender: UIViewController) {
         let vc = AllVenueVC(nibName: "AllVenueVC", bundle: nil)
@@ -495,7 +493,6 @@ final class Navigate {
         sender.present(vc, animated: false)
     }
     
-    
     func tablePurchaseVC(_ sender: UIViewController, queueId: String, event: Event, seatingAreas: [SeatingArea]) {
         let vc = TablePurchaseVC(nibName: "TablePurchaseVC", bundle: nil)
         vc.queueId = queueId
@@ -504,7 +501,7 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func ticketConfirmationVC(_ sender: UIViewController , booking: Booking?, bookingId: String, type: PaymentIntentType) {
+    func ticketConfirmationVC(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
         let vc = TicketConfirmationVC(nibName: "TicketConfirmationVC", bundle: nil)
         vc.bookingId = bookingId
         sender.pushVC(vc)

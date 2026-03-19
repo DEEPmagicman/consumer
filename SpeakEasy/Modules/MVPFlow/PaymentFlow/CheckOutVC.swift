@@ -267,7 +267,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         exitBgDate = Date()
         let diff = exitBgDate.timeIntervalSince(enterBgDate)
         enterBgDate = exitBgDate
-        count = count - Int(diff)
+        count -= Int(diff)
     }
     
     @objc func enterBackGround() {
@@ -275,17 +275,17 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int) {
-        return (((seconds % 3600) / 60),((seconds % 3600) % 60))
+        return (((seconds % 3600) / 60), ((seconds % 3600) % 60))
     }
     
-    func makeTimeString(minutes: Int, seconds : Int) -> String {
+    func makeTimeString(minutes: Int, seconds: Int) -> String {
         "\(String(format: "%01d", minutes)):\(String(format: "%02d", seconds))"
     }
     
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
-            self.count = self.count - 1
+            self.count -= 1
             if self.count <= 0 {
                 timer.invalidate()
                 self.crossTimeLimit()
@@ -350,7 +350,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedQuantity ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id,message  in
+            PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id, _  in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -378,7 +378,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                                        "ticketQuantity": $0.selectedTicketCount ?? 0])
             }
             Loader.show()
-            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id, message  in
+            PaymentPresenter.createEventBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, promoteId: promoteId) { [weak self] isSuccess, errMsg, id, _  in
                 guard let self = self else {
                     Loader.hide()
                     return
@@ -496,7 +496,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.ephemeralKey = ephemeralKey
                 self.setUpPaymentBottomSheet()
             } else {
-                Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
     }
@@ -508,7 +508,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                             "ticketQuantity": $0.selectedTicketCount ?? 0])
         }
         Loader.show()
-        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id,message  in
+        PaymentPresenter.createEventFreeBooking(eventId: event?.id ?? "", phone: UserDefault.shared.user?.phone ?? "", userId: UserDefault.shared.user?.id ?? "", tickets: tickets, bookingId: bookingId) { [weak self] isSuccess, errMsg, id, _  in
             guard let self = self else {
                 Loader.hide()
                 return
@@ -597,7 +597,6 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         return false
     }
 
-    
     private func displayPayment() {
         if self.paymentDetail?.customFees?.count ?? 0 == 0 && self.paymentDetail?.customFee ?? 0 > 0 {
             let paymentDetails = self.paymentDetail
@@ -749,10 +748,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
         var answers = [[String: Any]]()
         
-        _ = questionAnswers.map ({ ans in
-            answers.append(["eventQuestionId": ans.key,
-                            "answer": ans.value])
-        })
+        answers = questionAnswers.map { ans in
+            [
+                "eventQuestionId": ans.key,
+                "answer": ans.value
+            ]
+        }
         
         if type == .singleTickedEvent && eventQuestions.count != 0 && !isEventQueAnsCollected {
             if !setAnswerData {
@@ -841,7 +842,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         paymentRequest.paymentSummaryItems = [
             // The final line should represent your company;
             // it'll be prepended with the word "Pay" (that is, "Pay iHats, Inc $50")
-            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice)),
+            PKPaymentSummaryItem(label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)", amount: NSDecimalNumber(value: totalPrice))
         ]
         paymentRequest.requiredBillingContactFields = []
         // Initialize an STPApplePayContext instance
@@ -854,7 +855,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (()-> Void)) {
+    private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (() -> Void)) {
         Loader.show()
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
             Loader.hide()
@@ -870,7 +871,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func addOnsPaymentSuccess(completion: @escaping (()-> Void)) {
+    private func addOnsPaymentSuccess(completion: @escaping (() -> Void)) {
         Loader.show()
         var mainBookingId = ""
         if bookingType == .FREE {
@@ -890,14 +891,14 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         }
     }
     
-    private func createFreeBooking(completion: @escaping (()-> Void)) {
+    private func createFreeBooking(completion: @escaping (() -> Void)) {
         var appClipTickets = [[String: Any]]()
         selectedCoverTickets.forEach {
             appClipTickets.append(["ticketId": $0.id,
                                    "ticketQuantity": $0.selectedQuantity ?? 0])
         }
         Loader.show()
-        PaymentPresenter.createCoverFreeBooking(coverTickets: appClipTickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id,message  in
+        PaymentPresenter.createCoverFreeBooking(coverTickets: appClipTickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id, _  in
             Loader.hide()
             guard let self = self else { return }
             if isSuccess, let id = id {
@@ -995,7 +996,7 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView == questionTableView {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "EventQuestionTVC", for: indexPath) as! EventQuestionTVC
+            let cell: EventQuestionTVC = tableView.dequeue(withIdentifier: EventQuestionTVC.identifier, for: indexPath)
             cell.dropDownBtn.isUserInteractionEnabled = !isEventQueAnsCollected
             cell.textQuestionView.isUserInteractionEnabled = !isEventQueAnsCollected
             cell.checkBox.isUserInteractionEnabled = !isEventQueAnsCollected
@@ -1034,13 +1035,13 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             cell.questionType = question.questionType
             return cell
         } else if tableView == customFeesTableView {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
+            let cell: CustomFeeTVC = tableView.dequeue(withIdentifier: CustomFeeTVC.identifier, for: indexPath)
             let customFee = self.paymentDetail?.customFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
             cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
+            let cell: TicketDetailTVC = tableView.dequeue(withIdentifier: TicketDetailTVC.identifier, for: indexPath)
             switch type {
             case .appClip:
                 if tableView == ticketListTableView {
@@ -1121,8 +1122,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
     func didValueChange(venueId: String, uniqueId: String, isPriceUpdated: Bool) {
         if isPaymentInitiated { return }
         if self.navigationController?.viewControllers.last is CheckOutVC && venue?.uniqueId ?? "" == uniqueId {
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
@@ -1134,7 +1134,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                 }
             }
             if isPriceUpdated {
-                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+                Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices", actions: [okAction])
             }
         }
     }
@@ -1147,8 +1147,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
             coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
         })
         if coverTickets.count != 0 {
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
@@ -1159,7 +1158,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices", actions: [okAction])
         }
     }
     
@@ -1171,8 +1170,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
             upSellTickets = selectedAddOnsItem.filter({ $0.id == tick.id})
         })
         if upSellTickets.count != 0 {
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
@@ -1183,13 +1181,12 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "The venue updated their prices", actions: [okAction])
         }
     }
     
     func updateVenueStatus(venueId: String, venueStatus: String) {
-        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-            UIAlertAction in
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
             if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                 viewC.isKind(of: MVPVenueListVc.self)
             }) {
@@ -1200,14 +1197,13 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                 self.navigationController?.popToViewController(vc, animated: true)
             }
         }
-        Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking",actions: [okAction])
+        Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to close booking", actions: [okAction])
     }
     
     func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
         if isPaymentInitiated { return }
         if self.navigationController?.viewControllers.last is CheckOutVC && venue?.uniqueId ?? "" == uniqueId && type == .appClip {
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: MVPVenueListVc.self)
                 }) {
@@ -1218,7 +1214,7 @@ extension CheckOutVC: WebSocketCallBackDelegate {
                     self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's ticket",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Venue your trying to booking, updated it's ticket", actions: [okAction])
         }
     }
     
@@ -1227,20 +1223,15 @@ extension CheckOutVC: WebSocketCallBackDelegate {
         if selectedEventTicket.count == 0 { return }
         let eventTickets = selectedEventTicket.filter({ $0.id == ticket.id})
         if eventTickets.count != 0 {
-            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) {
-                UIAlertAction in
+            let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { _ in
                 self.cancelBooking()
                 if let vc = self.navigationController?.viewControllers.first(where: { viewC in
                     viewC.isKind(of: EventDetailVC.self)
                 }) {
                     self.navigationController?.popToViewController(vc, animated: true)
-                } else if let vc = self.navigationController?.viewControllers.first(where: { viewC in
-                    viewC.isKind(of: EventDetailVC.self)
-                }) {
-                    self.navigationController?.popToViewController(vc, animated: true)
                 }
             }
-            Alert.showAlertSheet(style: .alert, title: "Update", message: "Event updated it's ticket price",actions: [okAction])
+            Alert.showAlertSheet(style: .alert, title: "Update", message: "Event updated it's ticket price", actions: [okAction])
         }
     }
 }

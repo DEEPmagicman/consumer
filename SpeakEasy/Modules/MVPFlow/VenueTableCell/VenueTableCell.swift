@@ -1,5 +1,5 @@
 //
-//  venueTableCell.swift
+//  VenueTableCell.swift
 //  SpeakEasy-Consumer
 //
 //  Created by avi on 26/01/23.
@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class venueTableCell: UITableViewCell {
+class VenueTableCell: UITableViewCell {
 
     @IBOutlet weak var venueEventImg: UIImageView!
     @IBOutlet weak var liveLbl: UILabel!
@@ -20,10 +20,6 @@ class venueTableCell: UITableViewCell {
     @IBOutlet weak var bookNowHeight: NSLayoutConstraint!
 //    @IBOutlet weak var updatedAtLbl: UILabelDeviceClass!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
     func setData(data: ClipVenue) {
         let imgUrl = "\(SharedURL.amazonStorage)\(data.venueAttachment?.first?.key ?? "")"
         let logoUrl = "\(SharedURL.amazonStorage)\(data.logo?.key ?? "")"
@@ -31,7 +27,7 @@ class venueTableCell: UITableViewCell {
         self.logoImg.sd_setImage(with: URL( string: logoUrl), completed: nil)
         self.eventNameLbl.text = data.name
 //        self.locationLbl.text = data.address
-//        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a)
+//        self.updatedAtLbl.text = data.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmmA)
         let path = UIBezierPath(roundedRect: liveView.bounds, byRoundingCorners: [.topRight, .bottomLeft], cornerRadii: CGSize(width: 10, height: 10))
         let maskLayer = CAShapeLayer()
         maskLayer.path = path.cgPath

@@ -110,7 +110,7 @@ class UpSellTicketVC: UIViewController {
             getUpsellTicket()
         }
         
-        ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        ticketTypeTableView.register(UINib(nibName: "TicketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "TicketTypeTableViewCell")
         ticketTypeTableView.register(UINib(nibName: "FooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "FooterView")
         upSellTitle.text = venueDetails?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "Upsell Items"
         upSellDescription.text = venueDetails?.venueSettings?.addOnsBookingSettings?.description ?? ""
@@ -213,7 +213,7 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTableViewCell", for: indexPath) as! TicketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
         if venueDetails?.venueSettings?.addOnsBookingSettings?.isUpFront == true {
@@ -246,10 +246,10 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
             Alert.showToast(Constant.String.maxTicketSelectionReached)
             return
         }
-        if (tableView.cellForRow(at: indexPath) as? ticketTypeTableViewCell) != nil {
+        if (tableView.cellForRow(at: indexPath) as? TicketTypeTableViewCell) != nil {
             if  upSellTicket[indexPath.row].selectedQuantity == nil || upSellTicket[indexPath.row].selectedQuantity == 0 {
                 var quantity = upSellTicket[indexPath.row].selectedQuantity ?? 0
-                quantity = quantity + 1
+                quantity += 1
                 self.upSellTicket[indexPath.row].selectedQuantity = quantity
             }
             updateContinueBtn()

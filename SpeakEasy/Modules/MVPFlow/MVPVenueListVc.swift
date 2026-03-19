@@ -33,7 +33,7 @@ final class MVPVenueListVc: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
-        venueListTableView.register(UINib(nibName: "venueTableCell", bundle: nil), forCellReuseIdentifier: "venueTableCell")
+        venueListTableView.register(UINib(nibName: "VenueTableCell", bundle: nil), forCellReuseIdentifier: "VenueTableCell")
         fetchAllOpenVenueForMVP()
 //        fetchAllCloseVenueForMVP()
         RemoteConfigHelper.shared.getRemoteConfigValues(showSoftUpdate: true)
@@ -174,7 +174,7 @@ extension MVPVenueListVc: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "venueTableCell", for: indexPath) as! venueTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "VenueTableCell", for: indexPath) as! VenueTableCell
         var data: ClipVenue?
         data = openVenueList[indexPath.row]
         if let data = data {

@@ -320,14 +320,13 @@ class TicketSelectionViewController: UIViewController {
         switchToNormalMode()
     }
     
-    
     private func getTicketLinksAndSetup() {
         guard let eventId = event?.uniqueId else {
             setupData()
             return
         }
 
-        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, errMsg, links in
+        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
             guard let self = self else { return }
 
             if isSuccess {
@@ -554,7 +553,7 @@ class TicketSelectionViewController: UIViewController {
         guard let user = UserDefault.shared.user else {
             let loginVC = Navigate.to.loginPopUpVc(self)
 
-            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, isFromLogin, isFromSettings in
+            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
                 guard let self else { return }
 
                 Navigate.to.enterVerificationCodeVc(
@@ -595,7 +594,7 @@ class TicketSelectionViewController: UIViewController {
                     gender: user.gender,
                     userId: user.id,
                     tickets: ticketsPayload
-                ) { [weak self] isSuccess, errMsg, id, message in
+                ) { [weak self] isSuccess, errMsg, id, _ in
                     guard let self = self else { return }
                     continueToCheckOutBtn.hideLoader()
                     if isSuccess {
@@ -621,7 +620,7 @@ class TicketSelectionViewController: UIViewController {
                 gender: user.gender,
                 userId: user.id,
                 tickets: ticketsPayload
-            ) { [weak self] isSuccess, errMsg, id, message in
+            ) { [weak self] isSuccess, errMsg, id, _ in
                 guard let self = self else { return }
                 continueToCheckOutBtn.hideLoader()
                 if isSuccess {

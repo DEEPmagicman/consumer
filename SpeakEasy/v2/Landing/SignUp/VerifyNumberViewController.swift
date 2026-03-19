@@ -124,13 +124,13 @@ final class VerifyNumberViewController: UIViewController {
     // MARK: - Timer
     private func startTimer() {
         timer.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] t in
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self else { return }
 
             self.count -= 1
 
             if self.count <= 0 {
-                t.invalidate()
+                timer.invalidate()
                 self.timerLbl.text = ""
                 self.setResendEnabled(true)
                 return

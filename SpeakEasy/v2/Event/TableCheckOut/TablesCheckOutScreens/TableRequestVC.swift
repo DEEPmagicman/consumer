@@ -370,7 +370,7 @@ extension TableRequestVC {
             
             let loginVC = Navigate.to.loginPopUpVc(suitablePresenter())
             
-            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, isFromLogin, isFromSettings in
+            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
                 guard let self = self else { return }
                 
                 Navigate.to.enterVerificationCodeVc(
@@ -418,10 +418,10 @@ extension TableRequestVC {
         
         guard let user = UserDefault.shared.user else { return }
         
-        let firstName = user.firstName ?? ""
-        let lastName = user.lastName ?? ""
-        let email = user.email ?? ""
-        let dob = user.dateOfBirth ?? ""
+        let firstName = user.firstName
+        let lastName = user.lastName
+        let email = user.email
+        let dob = user.dateOfBirth
         
         let guests = Int(payload.partySize) ?? 0
         
@@ -439,7 +439,7 @@ extension TableRequestVC {
             seatingArea: nil,
             venueId: event?.venue?.id ?? "",
             token: UserDefault.shared.accessToken ?? ""
-        ) { success, message, response in
+        ) { success, message, _ in
             
             DispatchQueue.main.async {
                 if success {

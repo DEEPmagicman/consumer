@@ -28,7 +28,7 @@ class ButtonCollectionViewCell: UICollectionViewCell {
      - Parameter date: date displayed on button
      - Parameter clicked: call back when button is clicked
      */
-    func setup(date: Date, clicked: @escaping() -> Void) {
+    func setup(date: Date, clicked: @escaping () -> Void) {
         self.callBack = clicked
         style()
     }

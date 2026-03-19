@@ -49,7 +49,6 @@ final class DiscoverAllVC: UIViewController {
         navigationController?.hero.navigationAnimationType = .auto
     }
     
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -61,7 +60,7 @@ final class DiscoverAllVC: UIViewController {
         )
     }
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
-        presenter.getVenueListForMVP(from: openFrom,status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
+        presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
                 return
             }
@@ -92,7 +91,7 @@ final class DiscoverAllVC: UIViewController {
     }
     
     private func fetchAllCloseVenueForMVP(withLoader: Bool = true) {
-        presenter.getVenueListForMVP(from: closeFrom,status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
+        presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
             guard let self = self else {
                 return
             }
@@ -120,9 +119,8 @@ final class DiscoverAllVC: UIViewController {
         }
     }
     
-    
     private func getTonightEvent() {
-        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] _, _, eventList, hasMore in
             guard let self = self else { return }
             
             if self.tonightEventSkip == 0 {
@@ -280,7 +278,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
            case venueListCollectionView:
                if isVenueInitialLoading { return }
 
-               let selectedVenue = openVenueList[indexPath.item]
+//               let selectedVenue = openVenueList[indexPath.item]
 //               Navigate.to.venueDetailsVC(self, venue: selectedVenue)
 
            case allEventsCollectionView:

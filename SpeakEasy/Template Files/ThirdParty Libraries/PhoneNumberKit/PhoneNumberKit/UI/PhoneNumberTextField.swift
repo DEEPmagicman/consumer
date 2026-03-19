@@ -522,11 +522,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         updateTextFieldDidEndEditing(textField)
-        if let _delegate = _delegate {
-            if _delegate.responds(to: #selector(textFieldDidEndEditing(_:reason:))) {
-                _delegate.textFieldDidEndEditing?(textField, reason: reason)
+        if let delegate = _delegate {
+            if delegate.responds(to: #selector(textFieldDidEndEditing(_:reason:))) {
+                delegate.textFieldDidEndEditing?(textField, reason: reason)
             } else {
-                _delegate.textFieldDidEndEditing?(textField)
+                delegate.textFieldDidEndEditing?(textField)
             }
         }
     }

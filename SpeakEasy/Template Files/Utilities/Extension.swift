@@ -17,7 +17,7 @@ extension CLLocation {
                 completion("")
                 return
             }
-            if let town = placeMark.locality, let country = placeMark.country, let state = placeMark.administrativeArea {
+            if let town = placeMark.locality, placeMark.country != nil, placeMark.administrativeArea != nil {
                 completion(town)
             } else {
                 completion("")
@@ -48,7 +48,7 @@ extension CLLocationManager {
 
 extension String {
     var validateDouble: Bool {
-        if let _ = Double(self) {
+        if Double(self) != nil {
             return true
         } else {
             return false
@@ -127,7 +127,7 @@ extension Date {
         return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth())!
     }
     
-    var age: Int{
+    var age: Int {
         let now = Date()
         let calendar = Calendar.current
         

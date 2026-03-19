@@ -34,19 +34,19 @@ final class SignUpViewController: UIViewController {
     private let genders = ["Female", "Male", "Non-binary", "Prefer not to say"]
 
     private lazy var dobPicker: UIDatePicker = {
-        let p = UIDatePicker()
-        p.preferredDatePickerStyle = .wheels
-        p.datePickerMode = .date
-        p.maximumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) // basic safety
-        p.addTarget(self, action: #selector(didChangeDOB), for: .valueChanged)
-        return p
+        let picker = UIDatePicker()
+        picker.preferredDatePickerStyle = .wheels
+        picker.datePickerMode = .date
+        picker.maximumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) // basic safety
+        picker.addTarget(self, action: #selector(didChangeDOB), for: .valueChanged)
+        return picker
     }()
 
     private lazy var genderPicker: UIPickerView = {
-        let p = UIPickerView()
-        p.dataSource = self
-        p.delegate = self
-        return p
+        let picker = UIPickerView()
+        picker.dataSource = self
+        picker.delegate = self
+        return picker
     }()
 
     private lazy var accessoryToolbar: UIToolbar = {
@@ -115,10 +115,10 @@ final class SignUpViewController: UIViewController {
                 emailTextFeild.text = formatDOB(selectedDOB)
                 dobPicker.date = selectedDOB
             } else {
-                let d = Calendar.current.date(byAdding: .year, value: -18, to: Date()) ?? Date()
-                selectedDOB = d
-                dobPicker.date = d
-                emailTextFeild.text = formatDOB(d)
+                let date = Calendar.current.date(byAdding: .year, value: -18, to: Date()) ?? Date()
+                selectedDOB = date
+                dobPicker.date = date
+                emailTextFeild.text = formatDOB(date)
             }
 
             emailTextFeild.becomeFirstResponder()
@@ -181,12 +181,12 @@ final class SignUpViewController: UIViewController {
             return true
 
         case .gender:
-            let g = (emailTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-            if g.isEmpty {
+            let gen = (emailTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if gen.isEmpty {
                 showError("Please select a gender.")
                 return false
             }
-            selectedGender = g
+            selectedGender = gen
             return true
         }
     }
@@ -278,9 +278,9 @@ extension SignUpViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let g = genders[row]
-        selectedGender = g
-        emailTextFeild.text = g
+        let gen = genders[row]
+        selectedGender = gen
+        emailTextFeild.text = gen
         hideError()
     }
 }

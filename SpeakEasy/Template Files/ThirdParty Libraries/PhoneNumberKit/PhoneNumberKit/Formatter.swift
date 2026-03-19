@@ -29,7 +29,7 @@ final class Formatter {
         if let regionMetadata = regionMetadata {
             formattedNationalNumber = self.formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
             if let formattedExtension = formatExtension(phoneNumber.numberExtension, regionMetadata: regionMetadata) {
-                formattedNationalNumber = formattedNationalNumber + formattedExtension
+                formattedNationalNumber += formattedExtension
             }
         }
         return formattedNationalNumber

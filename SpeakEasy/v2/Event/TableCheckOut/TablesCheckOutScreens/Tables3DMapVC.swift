@@ -1,4 +1,3 @@
-
 import UIKit
 import SceneKit
 import GLTFKit2
@@ -6,7 +5,7 @@ import simd
 import ObjectiveC.runtime
 
 // MARK: - Global Constants
-// swiftlint:disable all
+
 private enum PinStyle {
     static let normalColor = UIColor.systemGreen
     static let selectedColor = UIColor.systemPink
@@ -18,7 +17,6 @@ enum CameraConfig {
     static let maxOrtho: Double = 60
 }
 
-
 final class Tables3DMapVC: UIViewController {
 
     @IBOutlet weak var mapView: UIView!
@@ -29,7 +27,7 @@ final class Tables3DMapVC: UIViewController {
     var event: Event?
 
     private var sceneBounds: (min: SCNVector3, max: SCNVector3)?
-    private var selectedSeatingId: String? = nil
+    private var selectedSeatingId: String?
 
     var parentByChildId: [String: SeatingAreaAPIModel] = [:]
     var seatingAreaByMeshName: [String: SeatingAreaDTO] = [:]
@@ -75,7 +73,6 @@ final class Tables3DMapVC: UIViewController {
            applyPage(animated: false, direction: .none)
     }
 
-
     private func fetchAllSeatingAreas(completion: @escaping () -> Void) {
         guard let eventId = event?.id, !eventId.isEmpty else { completion(); return }
 
@@ -94,7 +91,7 @@ final class Tables3DMapVC: UIViewController {
             }
 
             TablePresenter.getSeatingAreas(eventId: eventId, skip: skip) { [weak self] isSuccess, _, list, apiHasMore in
-                guard let self else { return }
+                guard self != nil else { return }
                 if isSuccess {
                     all.append(contentsOf: list)
                     hasMore = apiHasMore
@@ -109,7 +106,6 @@ final class Tables3DMapVC: UIViewController {
         fetchNext()
     }
     
-    
     func fetchLayOut() {
         TablePresenter.getConsumerLayout(date: "2026-02-25") { [weak self] ok, msg, layout in
             guard let self else { return }
@@ -117,7 +113,6 @@ final class Tables3DMapVC: UIViewController {
             DispatchQueue.main.async {
                 if ok, let layout {
                  
-
                     self.roomItems = layout.layoutHistories?.first?.layoutHistoryHas3DMaps ?? []
                     self.pagedRoomItems =  self.roomItems.chunked(into: 3)
 
@@ -135,7 +130,6 @@ final class Tables3DMapVC: UIViewController {
             }
         }
     }
-    
     
     private func applyPage(animated: Bool, direction: ZoneSelectorView.PageDirection) {
         guard !pagedRoomItems.isEmpty else { return }
@@ -181,11 +175,11 @@ final class Tables3DMapVC: UIViewController {
         let item = page[selectedIndexInPage]
 
         guard let glb = item.url3dMap, !glb.isEmpty else {
-            print("No 3D map for room:", item.name)
+            print("No 3D map for room:", item.name ?? "")
             return
         }
 
-        print("Loading room:", item.name, "glb:", glb)
+        print("Loading room:", item.name ?? "", "glb:", glb)
 
         // call your loader
         loadGLB_Local(from: glb)
@@ -324,20 +318,20 @@ private extension Tables3DMapVC {
         seatingAreaByMeshName.removeAll()
 
         func string(_ extras: [String: Any], keys: [String]) -> String? {
-            for k in keys {
-                if let s = extras[k] as? String, !s.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    return s
+            for key in keys {
+                if let ss = extras[key] as? String, !ss.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    return ss
                 }
-                if let s = extras[k] as? NSString {
-                    let v = String(s)
-                    if !v.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return v }
+                if let ss = extras[key] as? NSString {
+                    let vv = String(ss)
+                    if !vv.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return vv }
                 }
             }
             return nil
         }
 
         func hasAny(_ extras: [String: Any], keys: [String]) -> Bool {
-            for k in keys where extras[k] != nil { return true }
+            for key in keys where extras[key] != nil { return true }
             return false
         }
 
@@ -428,8 +422,6 @@ private extension Tables3DMapVC {
         sceneView.addGestureRecognizer(doubleTap)
     }
 
-
-
     func setupCameraGestures() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
@@ -438,7 +430,7 @@ private extension Tables3DMapVC {
         sceneView.addGestureRecognizer(pinch)
     }
 
-    @objc func handleDoubleTap(_ g: UITapGestureRecognizer) {
+    @objc func handleDoubleTap(_ ges: UITapGestureRecognizer) {
         guard let cam = cameraNode.camera else { return }
 
         // ✅ Zoom in by a step, clamp
@@ -449,10 +441,10 @@ private extension Tables3DMapVC {
         SCNTransaction.commit()
     }
 
-    @objc func handlePan(_ g: UIPanGestureRecognizer) {
+    @objc func handlePan(_ ges: UIPanGestureRecognizer) {
 
-        let delta = g.translation(in: sceneView)
-        g.setTranslation(.zero, in: sceneView)
+        let delta = ges.translation(in: sceneView)
+        ges.setTranslation(.zero, in: sceneView)
 
         let sensitivity: Float = 0.005
 
@@ -487,11 +479,11 @@ private extension Tables3DMapVC {
 //        )
 //    }
 
-    @objc func handleTap(_ g: UITapGestureRecognizer) {
-        let p = g.location(in: sceneView)
+    @objc func handleTap(_ ges: UITapGestureRecognizer) {
+        let pp = ges.location(in: sceneView)
 
         // ✅ Better hit test (don’t miss thin nodes)
-        let hits = sceneView.hitTest(p, options: [
+        let hits = sceneView.hitTest(pp, options: [
             SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue,
             SCNHitTestOption.boundingBoxOnly: false,
             SCNHitTestOption.ignoreHiddenNodes: true
@@ -939,7 +931,6 @@ private extension Tables3DMapVC {
         sceneView.pointOfView = cameraNode
     }
 
-
     func setupLights() {
 
         let ambient = SCNLight()
@@ -1006,18 +997,18 @@ private extension Tables3DMapVC {
         return node.simdConvertPosition(localCenter, to: nil)
     }
 
-    @objc func handlePinch(_ g: UIPinchGestureRecognizer) {
+    @objc func handlePinch(_ ges: UIPinchGestureRecognizer) {
 
         guard let cam = cameraNode.camera else { return }
 
         // ✅ Smooth zoom
         // pinch > 1 => zoom in (scale smaller)
         // pinch < 1 => zoom out (scale bigger)
-        let zoomFactor = Double(1 / g.scale)
+        let zoomFactor = Double(1 / ges.scale)
         let newScale = cam.orthographicScale * zoomFactor
 
         cam.orthographicScale = min(max(newScale, CameraConfig.minOrtho), CameraConfig.maxOrtho)
-        g.scale = 1
+        ges.scale = 1
     }
 }
 
@@ -1075,11 +1066,6 @@ extension Dictionary {
         )
     }
 }
-
-
-
-
-import UIKit
 
 final class ZoneSelectorView: UIView {
 
@@ -1223,7 +1209,6 @@ final class ZoneSelectorView: UIView {
 
         pillContainer.addSubview(innerStack)
 
-       
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -1242,7 +1227,7 @@ final class ZoneSelectorView: UIView {
             leftButton.widthAnchor.constraint(equalToConstant: 30),
             leftButton.heightAnchor.constraint(equalToConstant: 30),
             rightButton.widthAnchor.constraint(equalToConstant: 30),
-            rightButton.heightAnchor.constraint(equalToConstant: 30),
+            rightButton.heightAnchor.constraint(equalToConstant: 30)
         ])
 
         // Swipe gestures
@@ -1274,17 +1259,17 @@ final class ZoneSelectorView: UIView {
         segmentButtons.removeAll()
 
         for (idx, title) in currentItems.enumerated() {
-            let b = UIButton(type: .system)
-            b.setTitle(title, for: .normal)
-            b.setTitleColor(.white, for: .normal)
-            b.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-            b.backgroundColor = .clear
-            b.cornerRadius = 8
-            b.clipsToBounds = true
-            b.tag = idx
-            b.addTarget(self, action: #selector(didTapSegment(_:)), for: .touchUpInside)
-            segmentButtons.append(b)
-            segmentsStack.addArrangedSubview(b)
+            let btn = UIButton(type: .system)
+            btn.setTitle(title, for: .normal)
+            btn.setTitleColor(.white, for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+            btn.backgroundColor = .clear
+            btn.cornerRadius = 8
+            btn.clipsToBounds = true
+            btn.tag = idx
+            btn.addTarget(self, action: #selector(didTapSegment(_:)), for: .touchUpInside)
+            segmentButtons.append(btn)
+            segmentsStack.addArrangedSubview(btn)
         }
 
         // If items are fewer than 1, keep selection hidden
@@ -1311,10 +1296,10 @@ final class ZoneSelectorView: UIView {
         onNextPage?()
     }
 
-    @objc private func handleSwipe(_ g: UISwipeGestureRecognizer) {
-        if g.direction == .left {
+    @objc private func handleSwipe(_ ges: UISwipeGestureRecognizer) {
+        if ges.direction == .left {
             didTapRight()
-        } else if g.direction == .right {
+        } else if ges.direction == .right {
             didTapLeft()
         }
     }
@@ -1353,8 +1338,8 @@ final class ZoneSelectorView: UIView {
 
         let target = frameInPill.insetBy(dx: -expandX, dy: expandY)
 
-        for (i, b) in segmentButtons.enumerated() {
-            b.alpha = (i == selectedIndex) ? 1.0 : 0.85
+        for (ii, bb) in segmentButtons.enumerated() {
+            bb.alpha = (ii == selectedIndex) ? 1.0 : 0.85
         }
 
         let applyFrame = {

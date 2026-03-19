@@ -18,7 +18,7 @@ extension Date {
     }
 }
 
-enum DateFormat:String {
+enum DateFormat: String {
     case MMddyyyy = "MM/dd/yyyy"
     case MMMMDDYYYY = "MMMM dd, yyyy"
     case yyyyMMddTHHmmssSSSz = "yyyy-MM-dd'T'HH:mm:ss.SSSz"
@@ -26,7 +26,7 @@ enum DateFormat:String {
     case YYYYMMDD = "yyyy-MM-dd"
     case EEEEMMMD = "EEEE, MMM d"
     case EEEMMMD = "EEE, MMM d"
-    case hmm_a = "h:mm a"
+    case hmmA = "h:mm a"
     case hmma = "h:mma"
     case HHmmss = "HH:mm:ss"
     case MMMMddHHmm = "MMMM dd 'at' h:mm a"
@@ -37,4 +37,3 @@ enum DateFormat:String {
     case MMDDYYYYHMMA = "MM/dd/yyyy h:mm a"
     case MMMD = "MMM d"
 }
-

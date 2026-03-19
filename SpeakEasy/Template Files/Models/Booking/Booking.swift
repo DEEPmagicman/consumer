@@ -143,18 +143,18 @@ struct BookingHasItem: Codable {
     var updatedAt: String
     var ticketCustomName: String?
     // MARK: app side parameters
-    var selectedQuantity: Int? = nil
-    var checkedInQuantity: Int? = nil
+    var selectedQuantity: Int?
+    var checkedInQuantity: Int?
     
     private enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case ticketId = "ticketId"
-        case ticketName = "ticketName"
-        case ticketPrice = "ticketPrice"
-        case bookingId = "bookingId"
-        case isDeleted = "isDeleted"
-        case createdAt = "createdAt"
-        case updatedAt = "updatedAt"
+        case id
+        case ticketId
+        case ticketName
+        case ticketPrice
+        case bookingId
+        case isDeleted
+        case createdAt
+        case updatedAt
         case ticketCustomName
     }
 
@@ -342,8 +342,8 @@ struct AddOnsBookingHasItem: Codable {
     var addOnsBookingId: String
     var addOnsId: String
     // MARK: app side parameters
-    var selectedQuantity: Int? = nil
-    var checkedInQuantity: Int? = nil
+    var selectedQuantity: Int?
+    var checkedInQuantity: Int?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

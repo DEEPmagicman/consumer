@@ -16,7 +16,7 @@ final class OnBoardingPresenter {
                 completion("", "", false, nil)
                 return
             }
-            completion(responseDic["otp"] as? String , otpref, true, nil)
+            completion(responseDic["otp"] as? String, otpref, true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -98,10 +98,10 @@ final class OnBoardingPresenter {
     }
     
     func signUpOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
-        let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
+        let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         AFWrapper.postRequest(APIBuilder.signUpOTPVerifyURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String:Any] else {
+            guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String:Any], let sessionDic = responseDic["session"] as? [String: Any] else {
                 completion(false, nil)
                 return
             }
@@ -112,7 +112,7 @@ final class OnBoardingPresenter {
             UserDefault.shared.isGuest = false
             let user = User(fromDictionary: userDic)
             UserDefault.shared.user = user
-            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["":""])
+            UserDefault.shared.user?.image = ImageDetail(fromDictionary: imageDic ?? ["": ""])
             completion(true, nil)
 
         } failure: { error in
@@ -146,7 +146,7 @@ final class OnBoardingPresenter {
         }
     }
             
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg:String?) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName, fName != "" {
             param["firstName"] = fName
@@ -199,10 +199,10 @@ final class OnBoardingPresenter {
         AFWrapper.patchRequest(APIBuilder.userProfileURL, params: param, headers: Header.header()) { response in
             
             guard response is [String: Any] else {
-                completion(false,nil)
+                completion(false, nil)
                 return
             }
-            completion(true,nil)
+            completion(true, nil)
 
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -210,10 +210,9 @@ final class OnBoardingPresenter {
                 return
             }
             print(error ?? "")
-            completion(false,nil)
+            completion(false, nil)
         }
     }
-    
     
     func uploadPhotoApi(image: UIImage, completion: @escaping (_ imgUrl: String, _ isSuccess: Bool) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 1) else {
@@ -237,7 +236,7 @@ final class OnBoardingPresenter {
     
     func socialMediaConnectAPi(email: String,socialType: String,socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool,_ errorMsg: String?) -> Void) {
         
-        let tsocialIdParts = socialId.components(separatedBy: ".")
+//        let tsocialIdParts = socialId.components(separatedBy: ".")
      
         var param = ["email": email, "socialType": socialType, "socialId": socialId]
         if socialType == SocialType.apple.rawValue {
@@ -254,7 +253,7 @@ final class OnBoardingPresenter {
 
         AFWrapper.patchRequest(APIBuilder.socialMediaConnectURL, params: param, headers: Header.header()) { response in
             
-            guard let responseDic = response as? [String: Any] else {
+            guard response is [String: Any] else {
                 completion(false, nil)
                 return
             }
@@ -270,7 +269,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func socialMediaLoginAPi(email: String,socialType: String, socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+    func socialMediaLoginAPi(email: String, socialType: String, socialId: String, nonce: String? = nil, firstName: String? = "", lastName: String? = "", completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         
         var param = ["email": email, "socialType": socialType, "socialId": socialId]
         if socialType == SocialType.apple.rawValue {
@@ -312,7 +311,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func getCurrentUserDetail(completion: @escaping(_ isSuccess: Bool) -> Void) {
+    func getCurrentUserDetail(completion: @escaping (_ isSuccess: Bool) -> Void) {
         AFWrapper.getRequest(APIBuilder.whoAmIURL, params: nil, headers: Header.header()) { response in
             
             guard let responseDic = response as? NSDictionary, let userDic = responseDic["user"] as? [String: Any], let sessionDic = responseDic["session"] as? [String: Any]? else {
@@ -343,8 +342,8 @@ final class OnBoardingPresenter {
         }
     }
     
-    static func deleteUser(completion: @escaping(_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
-        AFWrapper.deleteRequest(APIBuilder.deleteUserURL, headers: Header.header()) { response in
+    static func deleteUser(completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+        AFWrapper.deleteRequest(APIBuilder.deleteUserURL, headers: Header.header()) { _ in
             completion(true, nil)
         } failure: { error in
             if let err = error as? NSError, err.code == 0 {
@@ -356,7 +355,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    static func logout(completion: @escaping(_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+    static func logout(completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         AFWrapper.postRequest(APIBuilder.logoutAPI, headers: Header.header()) { _ in
             completion(true, nil)
         } failure: { error in

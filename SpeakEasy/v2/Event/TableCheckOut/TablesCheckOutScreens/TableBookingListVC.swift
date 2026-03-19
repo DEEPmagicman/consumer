@@ -1,3 +1,5 @@
+// swiftlint: disable all
+
 import UIKit
 
 class TableBookingListVC: UIViewController {
@@ -76,8 +78,11 @@ class TableBookingListVC: UIViewController {
                 !conditions.isSoldOut &&
                 !conditions.isPaused &&
                 !conditions.isSaleEnded
-
-            isValid ? visible.append(item) : filteredOut.append(item)
+            if isValid {
+                visible.append(item)
+            } else {
+                filteredOut.append(item)
+            }
         }
 
         return (visible, filteredOut)
@@ -137,7 +142,7 @@ class TableBookingListVC: UIViewController {
 
         guard area.bookingType == .timeWise else { return
             
-            (Double(area.minimum ?? 0) , Double(area.depositWithFees ?? 0)  ) }
+            (Double(area.minimum ?? 0), Double(area.depositWithFees ?? 0)) }
 
         let availableSlots = (area.timeSlots ?? []).filter {
             ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0)
@@ -214,11 +219,11 @@ class TableBookingListVC: UIViewController {
                 venueId: event?.venue?.id ?? "",
                 guests: guestCount,
                 queueId: queueId
-            ) { isSuccess, errMsg, response in
+            ) { isSuccess, errMsg, _ in
                 
                 if isSuccess {
                     if let event = self.event {
-                        Navigate.to.tablePurchaseVC(self,queueId: queueId, event: event, seatingAreas: self.seatingAreas)
+                        Navigate.to.tablePurchaseVC(self, queueId: queueId, event: event, seatingAreas: self.seatingAreas)
                     }
                 } else {
                     print(errMsg ?? "Booking failed")

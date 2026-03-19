@@ -84,11 +84,11 @@ final class UpSellClipVC: UIViewController {
         if venue?.speakEasyCharges == "INCREMENTAL" {
             if ticketPrice <= 10 {
                 amountTransferToSE = 0.5
-            } else if (ticketPrice <= 20 && ticketPrice > 10) {
+            } else if ticketPrice > 10 && ticketPrice <= 20 {
                 amountTransferToSE = 1
-            } else if (ticketPrice <= 100 && ticketPrice > 20) {
+            } else if ticketPrice > 20 && ticketPrice <= 100 {
                 amountTransferToSE = 2
-            } else if (ticketPrice > 100) {
+            } else if ticketPrice > 100 {
                 amountTransferToSE = 5
             }
         }
@@ -108,7 +108,7 @@ final class UpSellClipVC: UIViewController {
         upSellTicket = tics
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        tableView.register(UINib(nibName: "TicketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "TicketTypeTableViewCell")
         upSellTitle.text = venue?.venueSettings?.addOnsBookingSettings?.pageTitle ?? "UpSell"
         upSellDescription.text = venue?.venueSettings?.addOnsBookingSettings?.description ?? "-"
         if let color = self.venue?.venueSettings?.whiteLabelColor {
@@ -170,7 +170,7 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTableViewCell", for: indexPath) as! TicketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
         if venue?.venueSettings?.addOnsBookingSettings?.isUpFront == true {
@@ -203,10 +203,10 @@ extension UpSellClipVC: UITableViewDelegate, UITableViewDataSource {
             self.alertPopup("Alert", "Max ticket selection reached")
             return
         }
-        if (tableView.cellForRow(at: indexPath) as? ticketTypeTableViewCell) != nil {
+        if (tableView.cellForRow(at: indexPath) as? TicketTypeTableViewCell) != nil {
             if  upSellTicket[indexPath.row].selectedQuantity == nil || upSellTicket[indexPath.row].selectedQuantity == 0 {
                 var quantity = upSellTicket[indexPath.row].selectedQuantity ?? 0
-                quantity = quantity + 1
+                quantity += 1
                 self.upSellTicket[indexPath.row].selectedQuantity = quantity
             }
             updateContinueBtn()

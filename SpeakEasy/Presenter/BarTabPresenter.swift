@@ -31,7 +31,7 @@ final class BarTabPresenter {
         }
     }
     
-    static func barTabPaymentCompleteAPI(barId: String, paymentId: String, completion: @escaping(_ isSuccess: Bool, _ errMsg: String?, _ barTab: BarTab?) -> Void) {
+    static func barTabPaymentCompleteAPI(barId: String, paymentId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ barTab: BarTab?) -> Void) {
         
         AFWrapper.postRequest(APIBuilder.barTabPaymentComplete(barId: barId, paymentId: paymentId), headers: Header.header()) { response in
             
@@ -54,8 +54,7 @@ final class BarTabPresenter {
         }
     }
     
-    
-    static func getBarTabPaymentDetails(posCheckId: String, completion: @escaping(_ isSuccess: Bool, _ errMsg: String?, _ barTabBooking: BarTabBooking?) -> Void) {
+    static func getBarTabPaymentDetails(posCheckId: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ barTabBooking: BarTabBooking?) -> Void) {
         AFWrapper.getRequest(APIBuilder.barTabPaymentDetails(posCheckId: posCheckId), headers: Header.header()) { response in
             guard let responseDic = response as? [String: Any] else {
                 completion(false, nil, nil)

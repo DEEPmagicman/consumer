@@ -90,7 +90,7 @@ final class InviteLinkVC: UIViewController {
         dressCodeLbl.text = inviteObj?.venue.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: inviteObj?.venue.latitude ?? 0, longitude: inviteObj?.venue.longitude ?? 0), with: inviteObj?.venue.name)
         dateLbl.text = inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .EEEMMMD, customTimeZone: inviteObj?.venue.useTimezone ?? "")
-        timingLbl.text = "\(Constant.String.dotDoorsOpenAt) \(inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a, customTimeZone: inviteObj?.venue.useTimezone ?? "") ?? "")"
+        timingLbl.text = "\(Constant.String.dotDoorsOpenAt) \(inviteObj?.guestList?.startTime.convertDateFormat(from: .yyyyMMddTHHmmssSSSz, to: .hmmA, customTimeZone: inviteObj?.venue.useTimezone ?? "") ?? "")"
         updateContinueBtn(show: true)
         if inviteObj?.venue.website ?? "" != "" {
             locationImg.image = UIImage(named: "ic-link")

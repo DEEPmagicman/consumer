@@ -58,8 +58,7 @@ final class RemoteConfigHelper {
     
     func forceUpdateAlert() {
         if isShowingAlert { return }
-        let okAction = UIAlertAction(title: "Update", style: UIAlertAction.Style.default) {
-            UIAlertAction in
+        let okAction = UIAlertAction(title: "Update", style: UIAlertAction.Style.default) { _ in
             self.openAppStore()
         }
         isShowingAlert = true
@@ -68,12 +67,10 @@ final class RemoteConfigHelper {
     
     func softUpdateAlert() {
         if isShowingAlert { return }
-        let okAction = UIAlertAction(title: "Update", style: UIAlertAction.Style.default) {
-            UIAlertAction in
+        let okAction = UIAlertAction(title: "Update", style: UIAlertAction.Style.default) { _ in
             self.openAppStore()
         }
-        let cancelAction = UIAlertAction(title: "Skip", style: UIAlertAction.Style.cancel) {
-            UIAlertAction in
+        let cancelAction = UIAlertAction(title: "Skip", style: UIAlertAction.Style.cancel) { _ in
             self.isShowingAlert = false
         }
         isShowingAlert = true

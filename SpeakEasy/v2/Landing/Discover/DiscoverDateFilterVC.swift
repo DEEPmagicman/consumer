@@ -39,13 +39,7 @@ extension DiscoverDateFilterVC: UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
         if kind == UICollectionView.elementKindSectionHeader {
-            let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: "DateSelectionHeader",
-                for: indexPath
-            ) as! DateSelectionHeader
-
-//            header.titleLabel.text = "Section \(indexPath.section)"
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "DateSelectionHeader", for: indexPath)
             return header
         }
 

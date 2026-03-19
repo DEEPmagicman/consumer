@@ -10,7 +10,6 @@ import MapKit
 import YouTubeiOSPlayerHelper
 import Hero
 
-// swiftlint:disable all
 class EventDetailsVC: UIViewController {
 
     @IBOutlet weak var guestListCollectionView: UICollectionView!
@@ -222,7 +221,7 @@ class EventDetailsVC: UIViewController {
             eventId: eventId,
             venueTimeZone: venueDetails?.useTimezone,
             promotionLinkId: promoteId
-        ) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+        ) { [weak self] _, _, eventDetail, errCode in
             self?.hideSkeleton()
 
             guard let self = self else { return }
@@ -274,7 +273,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, message, data, code in
+        EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, _, data, _ in
             guard let self = self else { return }
 
             if success {
@@ -305,7 +304,7 @@ class EventDetailsVC: UIViewController {
     private func getEventFAQs() {
         guard let eventId = event?.uniqueId else { return }
 
-        EventPresenter.getEventFAQs(eventId: eventId) { [weak self] isSuccess, errMsg, faqs, errCode in
+        EventPresenter.getEventFAQs(eventId: eventId) { [weak self] isSuccess, _, faqs, _ in
             guard let self = self else { return }
 
             if isSuccess {
@@ -326,7 +325,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, errMsg, links in
+        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
             guard let self = self else { return }
 
             if isSuccess {
@@ -499,11 +498,11 @@ class EventDetailsVC: UIViewController {
 
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-        titleLbl.text = event.title ?? "Untitle Event"
+        titleLbl.text = event.title
         venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
             ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
             : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
-        fullText = event.description ?? ""
+        fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
         venueNameLbl.text = venueDetails?.name ?? ""
@@ -527,7 +526,7 @@ class EventDetailsVC: UIViewController {
             continueToCheckOutView.isHidden = true
         }
 
-        vipTablesView.isHidden = !(event.isEnableOnlineTables ?? false)
+        vipTablesView.isHidden = !(event.isEnableOnlineTables)
 
         if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
             webSiteTitleLbl.text = button.title
@@ -940,7 +939,7 @@ class EventDetailsVC: UIViewController {
         guard let user = UserDefault.shared.user else {
             let loginVC = Navigate.to.loginPopUpVc(self)
 
-            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, isFromLogin, isFromSettings in
+            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
                 guard let self else { return }
 
                 Navigate.to.enterVerificationCodeVc(
@@ -961,7 +960,7 @@ class EventDetailsVC: UIViewController {
 
         let ticketsPayload = selectedTickets.map {
             [
-                "ticketId": $0.id ?? "",
+                "ticketId": ($0.id ?? "") ?? "",
                 "ticketQuantity": $0.selectedTicketCount ?? 0,
                 "ticketPrice": $0.price ?? 0
             ]
@@ -976,7 +975,7 @@ class EventDetailsVC: UIViewController {
             gender: user.gender,
             userId: user.id,
             tickets: ticketsPayload
-        ) { [weak self] isSuccess, errMsg, id, message in
+        ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else { return }
 
             self.continueToCheckOutBtn.isUserInteractionEnabled = true
@@ -1300,7 +1299,7 @@ class EventDetailsVC: UIViewController {
     func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
         mapView.delegate = self
         if #available(iOS 16.0, *) {
-            var config = MKStandardMapConfiguration(elevationStyle: .flat)
+            let config = MKStandardMapConfiguration(elevationStyle: .flat)
             config.emphasisStyle = .muted
             config.pointOfInterestFilter = .excludingAll
             mapView.preferredConfiguration = config
@@ -1423,20 +1422,12 @@ extension EventDetailsVC: UICollectionViewDelegate,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         if collectionView == guestListCollectionView {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: EventGuestListCVC.identifier,
-                for: indexPath
-            ) as! EventGuestListCVC
-
+            let cell: EventGuestListCVC = collectionView.dequeue(withIdentifier: EventGuestListCVC.identifier, for: indexPath)
             let attendee = attendees[indexPath.item]
             cell.configure(with: attendee)
             return cell
         } else if collectionView == lineUpCollectionView {
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: EventLineUpCVC.identifier,
-                for: indexPath
-            ) as! EventLineUpCVC
-
+            let cell: EventLineUpCVC = collectionView.dequeue(withIdentifier: EventLineUpCVC.identifier, for: indexPath)
             let artist = artists[indexPath.item]
             cell.configure(with: artist)
             return cell

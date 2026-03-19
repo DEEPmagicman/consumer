@@ -15,7 +15,6 @@ final class EventCVC: UICollectionViewCell {
     @IBOutlet weak var bgImg: UIImageView!
     @IBOutlet weak var bgImage: UIImageView!
     
-    
     func setupData(event: Event) {
         bgImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
@@ -54,8 +53,6 @@ final class EventCVC: UICollectionViewCell {
                 eventTimeLbl.text = ""
             }
         }
-        
-        
     }
     
 }

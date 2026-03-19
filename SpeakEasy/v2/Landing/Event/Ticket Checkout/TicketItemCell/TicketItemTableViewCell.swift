@@ -13,13 +13,4 @@ class TicketItemTableViewCell: UITableViewCell {
     @IBOutlet weak var amountLbl: UILabel!
     @IBOutlet weak var titleTopConstraint: NSLayoutConstraint!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-    }
-    
 }

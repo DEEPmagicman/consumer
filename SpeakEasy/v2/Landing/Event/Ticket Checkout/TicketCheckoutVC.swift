@@ -75,7 +75,6 @@ final class TicketCheckoutVC: UIViewController {
             self.venueDetails = venue
         }
 
-
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TicketItemTableViewCell.nib,
@@ -173,10 +172,6 @@ final class TicketCheckoutVC: UIViewController {
             let price = ticket.price ?? 0
             return result + (Double(quantity) * price)
         }
-        
-        
-        
-        
 
         totalAmountLbl.text = subtotal == 0 ? "Free" : "\(currency)\(subtotal.decimalFormat(true))"
 
@@ -220,7 +215,6 @@ final class TicketCheckoutVC: UIViewController {
 
         var items: [FeeDisplayItem] = []
 
-     
         if fees.customFee > 0 {
             items.append(FeeDisplayItem(title: fees.customFeeName ?? "Custom Fee", amount: fees.customFee))
         }
@@ -401,7 +395,7 @@ final class TicketCheckoutVC: UIViewController {
         let ticketsPayload: [[String: Any]] = selectedTickets.map {
             [
                 "ticketId": $0.id ?? "",
-                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketQuantity": ($0.selectedTicketCount ?? 0) ?? 0,
                 "ticketPrice": $0.price ?? 0
             ]
         }
@@ -514,7 +508,6 @@ final class TicketCheckoutVC: UIViewController {
         feesAndTaxesContainerView.isHidden.toggle()
     }
     
-
     @IBAction func onClickAddPromoCode(_ sender: Any) {
 
         let isHidden = promoCodeView.isHidden
@@ -530,10 +523,7 @@ final class TicketCheckoutVC: UIViewController {
         promoCodeView.isHidden.toggle()
     }
 
-    override func observeValue(forKeyPath keyPath: String?,
-                               of object: Any?,
-                               change: [NSKeyValueChangeKey : Any]?,
-                               context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
 
         if keyPath == "contentSize", let table = object as? UITableView {
             if table == self.tableView {
@@ -566,18 +556,18 @@ final class TicketCheckoutVC: UIViewController {
         ])
 
         func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerView {
-            let v = ShimmerView()
-            v.translatesAutoresizingMaskIntoConstraints = false
-            v.layer.cornerRadius = corner
-            v.clipsToBounds = true
+            let view = ShimmerView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.layer.cornerRadius = corner
+            view.clipsToBounds = true
             NSLayoutConstraint.activate([
-                v.heightAnchor.constraint(equalToConstant: height)
+                view.heightAnchor.constraint(equalToConstant: height)
             ])
             if let width {
-                v.widthAnchor.constraint(equalToConstant: width).isActive = true
+                view.widthAnchor.constraint(equalToConstant: width).isActive = true
             }
-            shimmerBlocks.append(v)
-            return v
+            shimmerBlocks.append(view)
+            return view
         }
 
         let stack = UIStackView()
@@ -643,7 +633,6 @@ final class TicketCheckoutVC: UIViewController {
         shimmerBlocks.forEach { $0.stopAnimating() }
         shimmerView.isHidden = true
     }
-    
     
 }
 

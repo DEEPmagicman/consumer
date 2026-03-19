@@ -135,4 +135,3 @@ protocol SelectedDateDelegate: AnyObject {
 extension SelectedDateDelegate {
     func selectedDateRange(startDate: String?, endDate: String?) { }
 }
-

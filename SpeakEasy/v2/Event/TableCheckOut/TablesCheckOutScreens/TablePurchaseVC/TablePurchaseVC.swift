@@ -85,7 +85,6 @@ final class TablePurchaseVC: UIViewController {
         showCheckoutShimmer()
         setupSocket()
 
-        
         tableView.register(TableItemsTVC.nib,
                            forCellReuseIdentifier: TableItemsTVC.identifier)
         
@@ -199,7 +198,7 @@ final class TablePurchaseVC: UIViewController {
             let item = TableBookingCheckoutItem(
                 id: area.id ?? "",
                 name: area.name ?? "",
-                guests: bookingItem.guests ?? 0,
+                guests: bookingItem.guests,
                 minimum: bookingItem.calculatedMinimum ?? 0,
                 deposit: bookingItem.calculatedDeposit ?? 0,
                 timeSlot: nil
@@ -234,7 +233,6 @@ final class TablePurchaseVC: UIViewController {
 
     private func handlePayment(_ booking: SeatingAreaBookingResponse) {
 
-        
         self.booking = booking
         self.currentBookingId = booking.content?.tableBooking?.id ?? ""
         self.paymentIntentClientSecret = booking.content?.clientSecret ?? ""
@@ -338,13 +336,12 @@ final class TablePurchaseVC: UIViewController {
     }
     
     private func toDouble(_ value: Any?) -> Double {
-        if let v = value as? Double { return v }
-        if let v = value as? Int { return Double(v) }
-        if let v = value as? String { return Double(v) ?? 0 }
+        if let value = value as? Double { return value }
+        if let value = value as? Int { return Double(value) }
+        if let value = value as? String { return Double(value) ?? 0 }
         return 0
     }
-
-
+    
     private func setupStripePaymentSheet(clientSecret: String) {
         STPAPIClient.shared.publishableKey = Stripe.publishableKey
 
@@ -450,18 +447,18 @@ final class TablePurchaseVC: UIViewController {
         ])
 
         func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerView {
-            let v = ShimmerView()
-            v.translatesAutoresizingMaskIntoConstraints = false
-            v.layer.cornerRadius = corner
-            v.clipsToBounds = true
+            let view = ShimmerView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.layer.cornerRadius = corner
+            view.clipsToBounds = true
             NSLayoutConstraint.activate([
-                v.heightAnchor.constraint(equalToConstant: height)
+                view.heightAnchor.constraint(equalToConstant: height)
             ])
             if let width {
-                v.widthAnchor.constraint(equalToConstant: width).isActive = true
+                view.widthAnchor.constraint(equalToConstant: width).isActive = true
             }
-            shimmerBlocks.append(v)
-            return v
+            shimmerBlocks.append(view)
+            return view
         }
 
         let stack = UIStackView()
@@ -527,7 +524,7 @@ final class TablePurchaseVC: UIViewController {
     }
 
     @IBAction func onClickAddPromoCode(_ sender: Any) {
-        let isHidden = promoCodeTextFeildView.isHidden
+//        let isHidden = promoCodeTextFeildView.isHidden
 
 //        UIView.animate(withDuration: 0.25) {
 //            self.feesDropDowenIc.transform = isHidden

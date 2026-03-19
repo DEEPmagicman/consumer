@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 enum DatePickerMode {
-    case Basic
-    case MinMax
-    case Yearless
+    case basic
+    case minMax
+    case yearless
 }
 
 public class DatePicker {
@@ -51,8 +51,8 @@ public class DatePicker {
     // MARK: Setup
 
     // Basic setup, returns a date in the next 100 years from today
-    public func setup(beginWith: Date? = nil, selected: @escaping(_ selected: Bool, _ date: Date?) -> Void) {
-        vc.mode = .Basic
+    public func setup(beginWith: Date? = nil, selected: @escaping (_ selected: Bool, _ date: Date?) -> Void) {
+        vc.mode = .basic
         if let begin = beginWith {
             vc.set(date: begin)
         } else {
@@ -62,28 +62,28 @@ public class DatePicker {
     }
 
     // Setup with a min and max date
-    public func setup(beginWith: Date? = nil, min:Date, max: Date, selected: @escaping(_ selected: Bool, _ date: Date?) -> Void) {
-        vc.mode = .Basic
+    public func setup(beginWith: Date? = nil, min:Date, max: Date, selected: @escaping (_ selected: Bool, _ date: Date?) -> Void) {
+        vc.mode = .basic
         if let begin = beginWith {
             vc.set(date: begin)
         } else {
             vc.set(date: min)
         }
-        vc.mode = .MinMax
+        vc.mode = .minMax
         vc.maxDate = max
         vc.minDate = min
         vc.callBack = selected
     }
 
     // Setup without years
-    public func setupYearless(minMonth: Int? = nil, minDay: Int? = nil, maxMonth: Int? = nil, maxDay: Int? = nil, selected: @escaping(_ selected: Bool, _ month: Int?,_ day: Int?) -> Void) {
+    public func setupYearless(minMonth: Int? = nil, minDay: Int? = nil, maxMonth: Int? = nil, maxDay: Int? = nil, selected: @escaping (_ selected: Bool, _ month: Int?, _ day: Int?) -> Void) {
         vc.minDay = minDay ?? 1
         vc.minMonth = minMonth ?? 1
         vc.maxMonth = maxMonth ?? 12
         vc.maxDay = maxDay ?? DatePickerHelper.shared.daysIn(month: vc.maxMonth, year: vc.year)
         vc.day = minDay ?? 1
         vc.month = minMonth ?? 1
-        vc.mode = .Yearless
+        vc.mode = .yearless
         vc.yearlessCallBack = selected
     }
 
@@ -97,13 +97,13 @@ public class DatePicker {
     
     private func display_(in parent: UIViewController) {
         self.parentVC = parent
-        vc.displayMode = .Bottom
+        vc.displayMode = .bottom
         vc.display(on: parent)
     }
 
     // Display as popover on button
     @available(*, deprecated, message: "Use show() instead")
-    public func displayPopOver(on: UIView, in parent: UIViewController, width: CGFloat? = nil, completion: @escaping ()-> Void) {
+    public func displayPopOver(on: UIView, in parent: UIViewController, width: CGFloat? = nil, completion: @escaping () -> Void) {
         display_PopOver(on: on, in: parent, width: width, completion: completion)
     }
     
@@ -112,17 +112,17 @@ public class DatePicker {
         parent.view.endEditing(true)
 
         // set mode
-        vc.displayMode = .PopOver
+        vc.displayMode = .popOver
 
         // size
-        if let w = width {
-            self.popoverWidth = w
-            self.popoverHeight = w * FrameHelper.ratio
+        if let width = width {
+            self.popoverWidth = width
+            self.popoverHeight = width * FrameHelper.ratio
         }
 
         var frameSize = CGSize(width: popoverWidth, height: popoverHeight)
 
-        if vc.mode == .Yearless {
+        if vc.mode == .yearless {
             frameSize = FrameHelper.shared.getYearlessPopOverSize(for: popoverWidth)
         }
 
@@ -162,7 +162,6 @@ public class DatePicker {
 }
 
 extension DatePicker {
-    
     
     /// Show date picker in the indicated UIViewController
     /// For iPad suppoet:

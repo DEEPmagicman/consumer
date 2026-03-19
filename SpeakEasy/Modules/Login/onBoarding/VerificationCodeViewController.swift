@@ -74,7 +74,7 @@ final class VerificationCodeViewController: UIViewController {
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] timer in
             guard let self = self else { return }
-            self.count = self.count - 1
+            self.count -= 1
             if self.count <= 0 {
                 timer.invalidate()
                 self.resendBtn.alpha = 1
@@ -91,10 +91,10 @@ final class VerificationCodeViewController: UIViewController {
     }
     
     func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int) {
-        return (((seconds % 3600) / 60),((seconds % 3600) % 60))
+        return (((seconds % 3600) / 60), ((seconds % 3600) % 60))
     }
     
-    func makeTimeString(minutes: Int, seconds : Int) -> String {
+    func makeTimeString(minutes: Int, seconds: Int) -> String {
         "in \(String(format: "%02d", seconds))s"
     }
     
@@ -124,7 +124,7 @@ final class VerificationCodeViewController: UIViewController {
         resendBtn.showLoader(userInteraction: false)
 //        self.view.isUserInteractionEnabled = false
         if isFromLogin {
-            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess,errorMsg  in
+            self.onBoardingDelegate.loginResendOtpApi(otpref: self.otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg  in
                 guard let self = self else { return }
                 
                 hideResendButtonLoader()
@@ -132,7 +132,7 @@ final class VerificationCodeViewController: UIViewController {
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
-                    print("*-*\(self.currectOtp)")
+                    print("*-*\(currectOtp ?? "")")
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -151,7 +151,7 @@ final class VerificationCodeViewController: UIViewController {
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
-                            print("*-*\(self.currectOtp)")
+                            print("*-*\(currectOtp ?? "")")
                         } else {
                             if errMsg != nil {
                                 Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -168,7 +168,7 @@ final class VerificationCodeViewController: UIViewController {
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
-                            print("*-*\(self.currectOtp)")
+                            print("*-*\(self.currectOtp ?? "")")
                         } else {
                             if errMsg != nil {
                                 Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -186,7 +186,7 @@ final class VerificationCodeViewController: UIViewController {
                     if isSuccess {
                         self.otpRef = otpRef
                         self.currectOtp = otp
-                        print("*-*\(self.currectOtp)")
+                        print("*-*\(self.currectOtp ?? "")")
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -237,7 +237,7 @@ final class VerificationCodeViewController: UIViewController {
 //                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
                         if isSuccess {
-                            for controller in self.navigationController!.viewControllers{
+                            for controller in self.navigationController!.viewControllers {
                                 if controller.isKind(of: PersonalInformationViewController.self) {
                                     self.navigationController?.popToViewController(controller, animated: true) }
                             }
@@ -261,7 +261,7 @@ final class VerificationCodeViewController: UIViewController {
 //                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
                         if isSuccess {
-                            for controller in self.navigationController!.viewControllers{
+                            for controller in self.navigationController!.viewControllers {
                                 if controller.isKind(of: PersonalInformationViewController.self) {
                                     self.navigationController?.popToViewController(controller, animated: true) }
                             }

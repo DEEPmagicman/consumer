@@ -29,9 +29,6 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var comingSoonView: UIView!
     @IBOutlet weak var topSapraterView: UIView!
     
-    
-    
-    
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
@@ -42,10 +39,6 @@ class TicketsTVC: UITableViewCell {
     private let collapsedLines = 3
     private var isDescriptionExpanded = false
     private var isLinkDisabled = false
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 
     override func prepareForReuse() {
         super.prepareForReuse()

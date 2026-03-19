@@ -96,10 +96,9 @@ final class EventDetailVC: UIViewController {
         headerTitleLbl.isHidden = true
         headerView.backgroundColor = .clear
         scrollView.delegate = self
-        // TODO: add webSocket to sync tier left ticket
         // WebSocketWrapper.shared.delegate.append(self)
         updateContinueBtn(forceRemove: true)
-        ticketListTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        ticketListTableView.register(UINib(nibName: "TicketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "TicketTypeTableViewCell")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
@@ -117,7 +116,7 @@ final class EventDetailVC: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(openAppleMap))
         mapView.addGestureRecognizer(tap)
         mapView.isScrollEnabled = false
-        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
+        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
         WebSocketWrapper.shared.delegate.append(self)
         unLockTF.addTarget(self, action: #selector(unLockPassword), for: .allEvents)
         unLockBtn.alpha = 0.5
@@ -235,7 +234,7 @@ final class EventDetailVC: UIViewController {
             view.alpha = 0
         }
         Loader.show()
-        EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] isSuccess, errMsg, eventDetail, errCode in
+        EventPresenter.getEventDetail(eventId: eventId, venueTimeZone: venueDetails?.useTimezone, promotionLinkId: promoteId) { [weak self] _, _, eventDetail, errCode in
             Loader.hide()
             guard let self = self else {
                 return
@@ -275,7 +274,6 @@ final class EventDetailVC: UIViewController {
     @objc func openFullImage() {
         updateContinueBtn(forceRemove: true)
         Navigate.to.presentGSImageViewerController(self, imageView: mainImg)
-        // TODO: check and remove full screen vc
 //        Navigate.to.fullScreenImg(self, imgURL: (event?.flyer?.key ?? "").imageURL)
     }
     
@@ -519,7 +517,7 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableView {
         case ticketListTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTableViewCell", for: indexPath) as! TicketTypeTableViewCell
             cell.ticketTypeLbl.text = activeTickets?[indexPath.row].tierName
             cell.infoLbl.text = activeTickets?[indexPath.row].tierDescription
             if activeTickets?[indexPath.row].price ?? 0 == 0 {

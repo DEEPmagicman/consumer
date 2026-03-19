@@ -140,7 +140,7 @@ final class MVPVenueDetailVc: UIViewController {
         headerView.backgroundColor = .clear
         scrollView.delegate = self
         backBtn.isHidden = isFromAppClip
-        ticketTypeTableView.register(UINib(nibName: "ticketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "ticketTypeTableViewCell")
+        ticketTypeTableView.register(UINib(nibName: "TicketTypeTableViewCell", bundle: nil), forCellReuseIdentifier: "TicketTypeTableViewCell")
         ticketListHeightObservation = ticketTypeTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.tableViewHeight.constant = self.ticketTypeTableView.contentSize.height
@@ -221,7 +221,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getTonightEvent() {
         Loader.show()
-        EventPresenter.getEvents(from: tonightEventSkip ,venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: tonightEventSkip,venueId: venueId, time: "TODAY", venueTimeZone: venueDetails?.useTimezone) { [weak self] _, _, eventList, hasMore in
             Loader.hide()
             guard let self = self else { return }
             
@@ -243,7 +243,7 @@ final class MVPVenueDetailVc: UIViewController {
     
     private func getUpcomingEvent() {
         Loader.show()
-        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, time: "UPCOMING", venueTimeZone: venueDetails?.useTimezone) { [weak self] isSuccess, errMsg, eventList, hasMore in
+        EventPresenter.getEvents(from: upcomingEventSkip, venueId: venueId, time: "UPCOMING", venueTimeZone: venueDetails?.useTimezone) { [weak self] _, _, eventList, hasMore in
             Loader.hide()
             guard let self = self else { return }
             
@@ -283,11 +283,11 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func setUpUI() {
-        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment?.first?.key ?? "").imageURL),completed: nil)
+        venueBgImg.sd_setImage(with: URL(string: (venueDetails?.venueAttachment?.first?.key ?? "").imageURL), completed: nil)
         getUpsellTicket()
-        logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
-        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
-        organizerVenueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),completed: nil)
+        logoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
+        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
+        organizerVenueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
         venueTitleNameLbl.text = venueDetails?.name
         cityNameLbl.text = venueDetails?.city
         headerVenueName.text = venueDetails?.name
@@ -325,7 +325,7 @@ final class MVPVenueDetailVc: UIViewController {
             closeTicketView.isHidden = true
             venuePageTitleView.isHidden = false
         }
-        updatedAtLbl.text = venueDetails?.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmm_a) ?? ""
+        updatedAtLbl.text = venueDetails?.updatedAt.displayUpdatedAgo(from: .yyyyMMddTHHmmssSSSz, to: .hmmA) ?? ""
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: venueDetails?.name)
         if venueDetails?.venueSettings?.isOrganizer == true {
             cityNameLbl.isHidden = true
@@ -353,7 +353,7 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func getUpsellTicket() {
-        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, hasMore, _ in
+        MVPPresenter.getUpSellItem(skip: 0, doormanId: doormanId, venueId: venueId) {[weak self] isSuccess, errMsg, upSellItem, _, _ in
             guard let self = self else { return }
             Loader.hide()
             if isSuccess {
@@ -367,8 +367,9 @@ final class MVPVenueDetailVc: UIViewController {
     }
     
     private func updateCloseViewVisibility() {
-        if (events.count == 0 && todaysEvents.count == 0 && (venueDetails?.coverTicket?.allSatisfy({ ticket in
-            ticket.status == "DISABLED"
+        if (events.count == 0 && todaysEvents.count == 0 &&
+            (venueDetails?.coverTicket?.allSatisfy({ ticket in
+                ticket.status == "DISABLED"
         }) == true)) {
             closeTicketView.isHidden = false
         } else {
@@ -444,7 +445,7 @@ final class MVPVenueDetailVc: UIViewController {
             }
             continueBtn.showLoader(userInteraction: false)
             self.view.isUserInteractionEnabled = false
-            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, message in
+            PaymentPresenter.createCoverFreeBooking(coverTickets: tickets, venueId: venueDetails?.id ?? "") { [weak self] isSuccess, errMsg, id, _ in
                 guard let self = self else { return }
                 self.continueBtn.hideLoader()
                 self.view.isUserInteractionEnabled = true
@@ -497,7 +498,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableView {
         case ticketTypeTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
+            let cell: TicketTypeTableViewCell = tableView.dequeue(withIdentifier: TicketTypeTableViewCell.identifier, for: indexPath)
             let ticket = venueDetails?.coverTicket?[indexPath.row]
             cell.ticketTypeLbl.text = ticket?.customName ?? "" == "" ? ticket?.name : ticket?.customName
             cell.infoLbl.text = ticket?.description
@@ -551,18 +552,17 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.layoutIfNeeded()
             return cell
         case openingHoursTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "HoursTVC", for: indexPath) as! HoursTVC
+            let cell: HoursTVC = tableView.dequeue(withIdentifier: HoursTVC.identifier, for: indexPath)
             cell.setData(venueDetails?.openHours[indexPath.row], timezone: venueDetails?.useTimezone ?? "")
             return cell
         case upcomingTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PurchaseDetailsTVC", for: indexPath) as! PurchaseDetailsTVC
+            let cell: PurchaseDetailsTVC = tableView.dequeue(withIdentifier: PurchaseDetailsTVC.identifier, for: indexPath)
             let event = self.events[indexPath.row]
             cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.eventNameLbl.text = event.title
             
             cell.dateLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .DD)
             cell.monthLbl.text = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .MMM)
-            
             
             if event.isPausedSellingAllTickets {
                 cell.ticketCountLbl.text = Constant.String.salePaused.uppercased()
@@ -584,7 +584,7 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.layoutIfNeeded()
             return cell
         case todaysEventTableView:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "PurchaseDetailsTVC", for: indexPath) as! PurchaseDetailsTVC
+            let cell: PurchaseDetailsTVC = tableView.dequeue(withIdentifier: PurchaseDetailsTVC.identifier, for: indexPath)
             let event = self.todaysEvents[indexPath.row]
             cell.bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
             cell.eventNameLbl.text = event.title
@@ -828,4 +828,3 @@ extension MVPVenueDetailVc: UpdateDetailDelegate {
         updateContinueBtn(forceRemove: true)
     }
 }
-

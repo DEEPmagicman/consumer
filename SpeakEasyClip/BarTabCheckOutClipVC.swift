@@ -198,7 +198,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -224,7 +224,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    func createBooking(completion: @escaping (()-> Void)) {
+    func createBooking(completion: @escaping (() -> Void)) {
         let countryCode = phoneNumTextField?.flagButton.titleLabel?.text?.components(separatedBy: .whitespaces).joined().filter { $0.isASCII } ?? "+1"
         if !validateEmail {
             emailValidationLbl.isHidden = false
@@ -283,7 +283,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         request.httpMethod = "POST"
         request.httpBody = postData
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -302,7 +302,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         task.resume()
     }
     
-    private func paymentStatus(completion: @escaping (()-> Void)) {
+    private func paymentStatus(completion: @escaping (() -> Void)) {
         let barTabId = barTabData?.barTab.id ?? ""
         let paymentId = barTabData?.barTab.barTabPayments?.first?.id ?? ""
         guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabId)/payments/\(paymentId)/complete") else { return }
@@ -314,21 +314,21 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         
         request.httpMethod = "POST"
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 self.alertPopup("Alert", "Data not found")
                 return
             }
             AppClipLoader.hideLoader()
-            if let data = try? JSONDecoder().decode(BarTab.self, from: data) {
+            if (try? JSONDecoder().decode(BarTab.self, from: data)) != nil {
                 completion()
             }
         }
         task.resume()
     }
     
-    private func getBarBooking(completion: @escaping (()-> Void)) {
+    private func getBarBooking(completion: @escaping (() -> Void)) {
         guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/bar-tab/\(barTabData?.barTab.id ?? "")/payment-details") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
@@ -338,7 +338,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
         
         request.httpMethod = "GET"
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
             guard let self = self else { return }
             guard let data = data else {
                 AppClipLoader.hideLoader()
@@ -527,7 +527,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private func onClickCreditCardPay() {
         // MARK: Start the checkout process
         isPaymentInitiated = true
-        self.createBooking() {
+        self.createBooking {
             DispatchQueue.main.async {
                 self.paymentSheet?.present(from: self) { paymentResult in
                     // MARK: Handle the payment result
@@ -538,7 +538,7 @@ final class BarTabCheckOutClipVC: UIViewController, ApplePayContextDelegate {
                         }
                         
                         self.paymentStatus {
-                            self.getBarBooking() {
+                            self.getBarBooking {
                                 self.navigateToQR()
                             }
                         }
@@ -622,7 +622,7 @@ extension BarTabCheckOutClipVC {
             }
             
             self.paymentStatus {
-                self.getBarBooking() {
+                self.getBarBooking {
                     self.navigateToQR()
                 }
             }

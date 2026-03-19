@@ -49,7 +49,7 @@ final class WebSocketWrapper: NSObject {
     }
     
     @objc func setArrData() {
-        socket?.on("COVER_TICKET") { data, ack in
+        socket?.on("COVER_TICKET") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [[String: Any]] else {
                 return
             }
@@ -63,7 +63,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("ADDONS_TICKET") { data, ack in
+        socket?.on("ADDONS_TICKET") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [[String: Any]] else {
                 return
             }
@@ -77,7 +77,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("EVENT_TICKET") { data, ack in
+        socket?.on("EVENT_TICKET") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any] else {
                 return
             }
@@ -91,7 +91,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("CHECK_IN_BOOKING") { data, ack in
+        socket?.on("CHECK_IN_BOOKING") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["bookingHasCheckIn"] as? [[String: Any]], let bookingId = content["id"] as? String else {
                 return
             }
@@ -105,7 +105,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("UNCHECK_BOOKING") { data, ack in
+        socket?.on("UNCHECK_BOOKING") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["bookingHasCheckIn"] as? [[String: Any]], let bookingId = content["id"] as? String else {
                 return
             }
@@ -119,7 +119,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("CHECK_IN_ADDONS") { data, ack in
+        socket?.on("CHECK_IN_ADDONS") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["addOnsBookingHasCheckIn"] as? [[String: Any]], let bookingId = content["id"] as? String else {
                 return
             }
@@ -133,7 +133,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("UNCHECK_ADDONS") { data, ack in
+        socket?.on("UNCHECK_ADDONS") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["addOnsBookingHasCheckIn"] as? [[String: Any]], let bookingId = content["id"] as? String else {
                 return
             }
@@ -147,7 +147,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("CHECK_IN_BAR_TAB") { data, ack in
+        socket?.on("CHECK_IN_BAR_TAB") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["barTabHasItems"] as? [[String: Any]] else {
                 return
             }
@@ -161,7 +161,7 @@ final class WebSocketWrapper: NSObject {
             }
         }
         
-        socket?.on("UNCHECK_BAR_TAB") { data, ack in
+        socket?.on("UNCHECK_BAR_TAB") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let checkInData = content["barTabHasItems"] as? [[String: Any]] else {
                 return
             }
@@ -178,7 +178,7 @@ final class WebSocketWrapper: NSObject {
     
     private func addEventListener() {
         
-        socket?.on("VENUE") { data, ack in
+        socket?.on("VENUE") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["venueId"] as? String, let venueStatus = content["venueStatus"] as? String else {
                 return
             }
@@ -193,14 +193,14 @@ final class WebSocketWrapper: NSObject {
             self.isSocketConnected = false
         }
         
-        socket?.on("DOORMAN_SETTINGS") { data, ack in
+        socket?.on("DOORMAN_SETTINGS") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let venueId = content["id"] as? String, let uniqueId = content["uniqueId"] as? String else {
                 return
             }
             self.delegate.forEach { $0.didGenderWiseTicketChange(venueId: venueId, uniqueId: uniqueId) }
         }
         
-        socket?.on("updatedEvent") { data, ack in
+        socket?.on("updatedEvent") { data, _ in
             guard let arr = data as? [[String: Any]], let dic = arr.first, let content = dic["content"] as? [String: Any], let eventId = content["eventId"] as? String else {
                 return
             }

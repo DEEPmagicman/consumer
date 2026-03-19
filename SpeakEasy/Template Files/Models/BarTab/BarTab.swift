@@ -52,8 +52,8 @@ struct BarTabHasItem: Codable {
     var isCheckedIn: Bool?
     var coverTicket: CoverTicket?
     // MARK: app side parameters
-    var selectedQuantity: Int? = nil
-    var checkedInQuantity: Int? = nil
+    var selectedQuantity: Int?
+    var checkedInQuantity: Int?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

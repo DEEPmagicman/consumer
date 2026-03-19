@@ -10,7 +10,7 @@ import SVProgressHUD
 
 struct Loader {
 
-    static var isVisible:Bool {
+    static var isVisible: Bool {
         get {
             return SVProgressHUD.isVisible()
         }
@@ -35,7 +35,7 @@ struct Loader {
         }
     }
     
-    static func show(progress:Double) {
+    static func show(progress: Double) {
         self.config()
         SVProgressHUD.showProgress(Float(progress))
     }

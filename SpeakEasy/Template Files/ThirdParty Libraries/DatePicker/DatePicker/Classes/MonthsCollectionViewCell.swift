@@ -73,8 +73,8 @@ extension MonthsCollectionViewCell: UICollectionViewDelegate, UICollectionViewDa
     }
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        if let p = parent {
-            p.YearOrMonthChanged()
+        if let parent = parent {
+            parent.yearOrMonthChanged()
         }
     }
 

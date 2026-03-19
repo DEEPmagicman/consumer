@@ -37,7 +37,6 @@ final class SelectLocationVC: UIViewController {
         fetchCityList()
     }
 
-    
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
@@ -49,7 +48,6 @@ final class SelectLocationVC: UIViewController {
         tableView.reloadData()
     }
 
-    
     @objc private func textDidChange() {
         let searchText = searchTextfeild.text?
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -67,7 +65,6 @@ final class SelectLocationVC: UIViewController {
         tableView.reloadData()
     }
 
-    
     private func fetchCityList() {
         mvpPresenter.mvpCityListAPi { [weak self] cityList, isSuccess, errMsg in
             guard let self = self else {
@@ -100,7 +97,6 @@ extension SelectLocationVC: UITableViewDelegate, UITableViewDataSource {
         return displayList.count
     }
 
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell: SelectLocationTVC = tableView.dequeue(

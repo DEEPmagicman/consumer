@@ -5,9 +5,9 @@
 //  Created by Paras on 05/01/26.
 //
 
-//protocol MainDataConsumer: AnyObject {
+// protocol MainDataConsumer: AnyObject {
 //    func update(with data: EventDataModel)
-//}
+// }
 
 import UIKit
 

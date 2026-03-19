@@ -77,8 +77,8 @@ final class TopOptionSwitchView: UIView {
     private func updateSelection(index: Int) {
         selectedIndex = index
 
-        for (i, button) in buttons.enumerated() {
-            if i == index {
+        for (ind, button) in buttons.enumerated() {
+            if ind == index {
                 button.backgroundColor = UIColor(hex: "#292929")
             } else {
                 button.backgroundColor = .clear

@@ -14,7 +14,7 @@ final class EnterNameViewController: UIViewController {
     @IBOutlet private weak var lastNameTextField: UITextField!
     @IBOutlet private weak var DOBTextField: UITextField!
     @IBOutlet private weak var emailTextField: UITextField!
-    @IBOutlet private weak var ContinueBtn: LoadingButton!
+    @IBOutlet private weak var continueBtn: LoadingButton!
     @IBOutlet private weak var firstNameAndLastNameInfo: UILabel!
     @IBOutlet weak var femaleBtn: UIButton!
     @IBOutlet weak var maleBtn: UIButton!
@@ -49,10 +49,10 @@ final class EnterNameViewController: UIViewController {
         lastNameTextField.alpha = UserDefault.shared.user?.lastName ?? "" != "" ? 0.7 : 1
         
         emailTextField.text = UserDefault.shared.user?.email
-        ContinueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
-        ContinueBtn.indicator = MaterialLoadingIndicator(color: .white)
-        ContinueBtn.isUserInteractionEnabled = false
-        ContinueBtn.alpha = 0.5
+        continueBtn.bgColor = Constant.Color.primaryBlue ?? .clear
+        continueBtn.indicator = MaterialLoadingIndicator(color: .white)
+        continueBtn.isUserInteractionEnabled = false
+        continueBtn.alpha = 0.5
         textFieldDidChangeSelection(firstNameTextField)
     }
     
@@ -92,8 +92,8 @@ final class EnterNameViewController: UIViewController {
     }
     
     private func continueBtnValidation(isValid: Bool) {
-        ContinueBtn.isUserInteractionEnabled = isValid ? true : false
-        ContinueBtn.alpha = isValid ? 1 : 0.5
+        continueBtn.isUserInteractionEnabled = isValid ? true : false
+        continueBtn.alpha = isValid ? 1 : 0.5
     }
     
     private var validateFields: Bool {
@@ -122,13 +122,13 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
     }
     
     func confirmDetail() {
-        ContinueBtn.showLoader(userInteraction: false)
+        continueBtn.showLoader(userInteraction: false)
         self.view.isUserInteractionEnabled = false
-        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: "", email: emailTextField.text ?? "", dob: DOBTextField.text, gender: gender) { [weak self] isSuccess,errorMsg  in
+        presenter.editUserProfileApi(fName: firstNameTextField.text ?? "", lName: lastNameTextField.text ?? "", nickName: "", email: emailTextField.text ?? "", dob: DOBTextField.text, gender: gender) { [weak self] isSuccess, errorMsg  in
             
             guard let self = self else { return }
             
-            ContinueBtn.hideLoader()
+            continueBtn.hideLoader()
             self.view.isUserInteractionEnabled = true
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTextField.text ?? ""
@@ -136,7 +136,7 @@ extension EnterNameViewController: ConfirmPopUpDelegate {
                 UserDefault.shared.user?.dateOfBirth = self.DOBTextField.text ?? ""
                 UserDefault.shared.user?.email = self.emailTextField.text ?? ""
                 UserDefault.shared.user?.gender = self.gender
-                Navigate.to.SetProfilePicVc(self)
+                Navigate.to.setProfilePicVc(self)
             } else {
                 if errorMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")

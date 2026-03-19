@@ -1,5 +1,5 @@
 //
-//  ticketTypeTableViewCell.swift
+//  TicketTypeTableViewCell.swift
 //  SpeakEasy-Consumer
 //
 //  Created by avi on 26/01/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ticketTypeTableViewCell: UITableViewCell {
+class TicketTypeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var ticketTypeLbl: UILabel!
     @IBOutlet weak var infoLbl: UILabel!
@@ -20,7 +20,4 @@ class ticketTypeTableViewCell: UITableViewCell {
     @IBOutlet weak var lblExtraFeesValue: UILabel!
     @IBOutlet weak var bgView: UIView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }
