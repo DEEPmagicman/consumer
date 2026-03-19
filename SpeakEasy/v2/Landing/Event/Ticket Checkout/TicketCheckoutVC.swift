@@ -220,14 +220,15 @@ final class TicketCheckoutVC: UIViewController {
 
         var items: [FeeDisplayItem] = []
 
-        if fees.processingFee > 0 {
-            items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
-        }
+     
         if fees.customFee > 0 {
             items.append(FeeDisplayItem(title: fees.customFeeName ?? "Custom Fee", amount: fees.customFee))
         }
         if (fees.salesTax ?? 0) > 0 {
             items.append(FeeDisplayItem(title: fees.salesTaxName ?? "Sales Tax", amount: fees.salesTax ?? 0))
+        }
+        if fees.processingFee > 0 {
+            items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
         }
         return items
     }

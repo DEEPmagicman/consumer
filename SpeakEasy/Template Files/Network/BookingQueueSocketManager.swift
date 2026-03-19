@@ -2,14 +2,12 @@
 //  BookingQueueSocketManager.swift
 //  SpeakEasy-Consumer
 //
-//  Created by MAC on 17/03/26.
-//
 
 import Foundation
 import SocketIO
 
 protocol BookingQueueSocketDelegate: AnyObject {
-    func didUpdateQueue(position: Int, approxWait: Int, status: String, message: String?)
+    func didUpdateQueue(seatingAreaBooking: SeatingAreaBookingResponse?)
 }
 
 final class BookingQueueSocketManager {
@@ -38,7 +36,6 @@ final class BookingQueueSocketManager {
         socket = manager?.defaultSocket
 
         addListeners()
-
         socket?.connect()
     }
 
@@ -50,6 +47,8 @@ final class BookingQueueSocketManager {
     func reconnectQueue() {
         guard let queueId = currentQueueId else { return }
 
+        print("📤 Emitting reconnect for:", queueId)
+
         socket?.emit("reconnect-event-table-booking-queue", [
             "id": queueId
         ])
@@ -57,36 +56,67 @@ final class BookingQueueSocketManager {
 
     private func addListeners() {
 
-        socket?.on(clientEvent: .connect) { _, _ in
-            self.isConnected = true
-            self.reconnectQueue()
-        }
+        guard let queueId = currentQueueId else { return }
 
-        socket?.on(clientEvent: .disconnect) { _, _ in
-            self.isConnected = false
-        }
+        socket?.off(queueId)
 
-        socket?.on("table-booking-queue-update") { data, _ in
+        socket?.on(queueId) { [weak self] data, _ in
+            guard let self = self else { return }
+
             print("📩 Queue Update:", data)
 
             guard
                 let arr = data as? [[String: Any]],
-                let dict = arr.first
+                let first = arr.first
             else { return }
 
-            let position = dict["position"] as? Int ?? 0
-            let approxWait = dict["approxWait"] as? Int ?? 0
-            let status = dict["status"] as? String ?? ""
-            let message = dict["message"] as? String
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: first)
+                let decoded = try JSONDecoder().decode(QueueSocketResponse.self, from: jsonData)
 
-            DispatchQueue.main.async {
-                self.delegate?.didUpdateQueue(
-                    position: position,
-                    approxWait: approxWait,
-                    status: status,
-                    message: message
-                )
+                let content = decoded.content
+
+                print("🔥 CALLBACK TRIGGERED:", content.status)
+
+                DispatchQueue.main.async {
+                    self.delegate?.didUpdateQueue(seatingAreaBooking: content)
+                }
+
+                switch content.status {
+
+                case "queued":
+                    print("🟡 In Queue:", content.position)
+
+                case "payment":
+                    let clientSecret = content.content?.clientSecret
+                    let bookingId = content.content?.tableBooking?.id
+
+                    print("💳 Client Secret:", clientSecret ?? "")
+                    print("🧾 Booking ID:", bookingId ?? "")
+
+                case "failed":
+                    print(" Failed:", content.message ?? "")
+
+                default:
+                    break
+                }
+
+            } catch {
+                print("Parsing error:", error)
             }
+        }
+
+        socket?.on(clientEvent: .connect) { [weak self] _, _ in
+            guard let self = self else { return }
+
+            print("✅ Socket Connected")
+            self.isConnected = true
+            self.reconnectQueue()
+        }
+        
+        socket?.on(clientEvent: .disconnect) { [weak self] _, _ in
+            print("❌ Socket Disconnected")
+            self?.isConnected = false
         }
     }
 }

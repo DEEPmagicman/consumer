@@ -70,6 +70,8 @@ struct APIBuilder {
     static private let paymentDetails = "/payment-details"
     static private let attendees = "/attendees"
     static private let seatingAreas = "/seating-areas"
+    static private let applyCode = "/apply-code"
+    static private let removeCode = "/remove-code"
     static private let ticket = "/ticket"
     static private let links = "/links"
     static private let faq = "/faq"
@@ -211,6 +213,17 @@ struct APIBuilder {
             .joined(separator: "&")
 
         return base + "?" + query
+    }
+    
+    static func seatingAreaApplyCode(
+        eventId: String
+    ) -> String {
+        let base = SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + applyCode
+        return base
+    }
+    
+    static func seatingAreaRemoveCode(eventId: String) -> String {
+        return SharedURL.tableBaseURL + route + event + "/\(eventId)" + seatingAreas + removeCode
     }
     
     static func reservationRequestURL() -> String {

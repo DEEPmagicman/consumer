@@ -496,8 +496,11 @@ final class Navigate {
     }
     
     
-    func tablePurchaseVC(_ sender: UIViewController) {
+    func tablePurchaseVC(_ sender: UIViewController, queueId: String, event: Event, seatingAreas: [SeatingArea]) {
         let vc = TablePurchaseVC(nibName: "TablePurchaseVC", bundle: nil)
+        vc.queueId = queueId
+        vc.event = event
+        vc.seatingAreas = seatingAreas
         sender.pushVC(vc)
     }
     

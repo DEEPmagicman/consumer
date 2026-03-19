@@ -124,8 +124,6 @@ class TableBookingListVC: UIViewController {
         return (isFutureTicket, isSaleEnded, isSoldOut, isPaused, isEnabled)
     }
 
-    // MARK: - HELPERS
-
     private func formatGuestCount(min: Int, max: Int) -> String {
         if min > 0 && max > 0 {
             return min == max ? "\(min) Guests" : "\(min) to \(max) Guests"
@@ -137,7 +135,9 @@ class TableBookingListVC: UIViewController {
 
     private func getLowestPricedAvailableSlot(for area: SeatingArea) -> (min: Double, deposit: Double)? {
 
-        guard area.bookingType == .timeWise else { return nil }
+        guard area.bookingType == .timeWise else { return
+            
+            (Double(area.minimum ?? 0) , Double(area.depositWithFees ?? 0)  ) }
 
         let availableSlots = (area.timeSlots ?? []).filter {
             ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0)
@@ -168,7 +168,7 @@ class TableBookingListVC: UIViewController {
         let venueTZ = TimeZone(identifier: timezone)
 
         let slots = (area.timeSlots ?? [])
-            .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
+//            .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
             .sorted { ($0.startTime ?? "") < ($1.startTime ?? "") }
 
         guard let first = slots.first,
@@ -179,10 +179,15 @@ class TableBookingListVC: UIViewController {
         let startText = startDate.toString(dateFormat: .hmma, timeZone: venueTZ)
 
         if let last = slots.last,
-           let end = last.endTime,
+           let end = last.startTime,
            let endDate = end.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: false) {
 
             let endText = endDate.toString(dateFormat: .hmma, timeZone: venueTZ)
+
+            if startText == endText {
+                return startText
+            }
+
             return "\(startText) - \(endText)"
         }
 
@@ -201,7 +206,6 @@ class TableBookingListVC: UIViewController {
             guard let self = self else { return }
             let uuid = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased()
             let queueId = "TABLE_BOOKING_QUEUE_\(uuid)"
-            UserDefaults.standard.set(queueId, forKey: "TABLE_BOOKING_QUEUE_ID")
 
             TablePresenter.createSeatingAreaBooking(
                 eventId: self.event?.id ?? "",
@@ -213,12 +217,9 @@ class TableBookingListVC: UIViewController {
             ) { isSuccess, errMsg, response in
                 
                 if isSuccess {
-                    Navigate.to.tablePurchaseVC(self)
-                    BookingQueueSocketManager.shared.connect(
-                            queueId: queueId
-                        )
-//                    BookingQueueSocketManager.shared.delegate = self
-
+                    if let event = self.event {
+                        Navigate.to.tablePurchaseVC(self,queueId: queueId, event: event, seatingAreas: self.seatingAreas)
+                    }
                 } else {
                     print(errMsg ?? "Booking failed")
                 }
@@ -235,7 +236,7 @@ class TableBookingListVC: UIViewController {
         formatter.numberStyle = .currency
         formatter.currencyCode = currencyCode ?? "USD"
         formatter.maximumFractionDigits = 2
-        formatter.minimumFractionDigits = 0
+        formatter.minimumFractionDigits = 2
         return formatter.string(from: NSNumber(value: amount ?? 0)) ?? "$0"
     }
 }

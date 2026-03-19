@@ -220,5 +220,83 @@ final class TablePresenter {
     }
     
     
+    static func applyCode(
+        eventId: String,
+        tableBookingId: String,
+        code: String,
+        venueId: String,
+        completion: @escaping (_ success: Bool,
+                               _ message: String?,
+                               _ data: PriceBreakdown?) -> Void
+    ) {
+        
+        let url = APIBuilder.seatingAreaApplyCode(eventId: eventId)
+        
+        let params: [String: Any] = [
+            "tableBookingId": tableBookingId,
+            "code": code
+        ]
+        
+        var headers = Header.header()
+        headers["venue"] = venueId
+        
+        AFWrapper.postRequest(url, params: params, headers: headers) { response in
+            
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+            
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(PriceBreakdown.self, from: data)
+                completion(true, nil, decoded)
+            } catch {
+                completion(false, error.localizedDescription, nil)
+            }
+            
+        } failure: { error in
+            completion(false, error?.localizedDescription, nil)
+        }
+    }
+    
+    static func removeCode(
+        eventId: String,
+        tableBookingId: String,
+        venueId: String,
+        completion: @escaping (_ success: Bool,
+                               _ message: String?,
+                               _ data: PriceBreakdown?) -> Void
+    ) {
+        
+        let url = APIBuilder.seatingAreaRemoveCode(eventId: eventId)
+        
+        let params: [String: Any] = [
+            "tableBookingId": tableBookingId
+        ]
+        
+        var headers = Header.header()
+        headers["venue"] = venueId
+        
+        AFWrapper.postRequest(url, params: params, headers: headers) { response in
+            
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+            
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(PriceBreakdown.self, from: data)
+                completion(true, nil, decoded)
+            } catch {
+                completion(false, error.localizedDescription, nil)
+            }
+            
+        } failure: { error in
+            completion(false, error?.localizedDescription, nil)
+        }
+    }
+    
     
 }

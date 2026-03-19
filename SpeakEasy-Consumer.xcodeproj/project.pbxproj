@@ -38,6 +38,8 @@
 		045D2BFC2F3A163700842613 /* TicketConfirmationVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D2BFA2F3A163700842613 /* TicketConfirmationVC.xib */; };
 		0462B9832F3F0A1700E29D6D /* TicketItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462B9812F3F0A1700E29D6D /* TicketItemTableViewCell.swift */; };
 		0462B9842F3F0A1700E29D6D /* TicketItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0462B9822F3F0A1700E29D6D /* TicketItemTableViewCell.xib */; };
+		0463D2982F6AB37B00DC3B2A /* TableItemsTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0463D2972F6AB37B00DC3B2A /* TableItemsTVC.xib */; };
+		0463D2992F6AB37B00DC3B2A /* TableItemsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0463D2962F6AB37B00DC3B2A /* TableItemsTVC.swift */; };
 		04664BAB2F69835C00C6EB3A /* BookingQueueSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04664BAA2F69835C00C6EB3A /* BookingQueueSocketManager.swift */; };
 		046866532B0F280F00E498CF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046866522B0F280F00E498CF /* FooterView.swift */; };
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
@@ -457,6 +459,8 @@
 		045D2BFA2F3A163700842613 /* TicketConfirmationVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketConfirmationVC.xib; sourceTree = "<group>"; };
 		0462B9812F3F0A1700E29D6D /* TicketItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketItemTableViewCell.swift; sourceTree = "<group>"; };
 		0462B9822F3F0A1700E29D6D /* TicketItemTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketItemTableViewCell.xib; sourceTree = "<group>"; };
+		0463D2962F6AB37B00DC3B2A /* TableItemsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableItemsTVC.swift; sourceTree = "<group>"; };
+		0463D2972F6AB37B00DC3B2A /* TableItemsTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableItemsTVC.xib; sourceTree = "<group>"; };
 		04664BAA2F69835C00C6EB3A /* BookingQueueSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingQueueSocketManager.swift; sourceTree = "<group>"; };
 		046866522B0F280F00E498CF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
@@ -901,6 +905,15 @@
 			path = TicketItemCell;
 			sourceTree = "<group>";
 		};
+		0463D2952F6AB34100DC3B2A /* TableItemsTVC */ = {
+			isa = PBXGroup;
+			children = (
+				0463D2962F6AB37B00DC3B2A /* TableItemsTVC.swift */,
+				0463D2972F6AB37B00DC3B2A /* TableItemsTVC.xib */,
+			);
+			path = TableItemsTVC;
+			sourceTree = "<group>";
+		};
 		046866512B0F27B700E498CF /* FooterView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1127,6 +1140,7 @@
 				6AF2B9F92F0BC9EF00069A90 /* TableRequestVC.xib */,
 				04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */,
 				04A433202F444B3800FB119A /* TableSeatingViewController.xib */,
+				0463D2952F6AB34100DC3B2A /* TableItemsTVC */,
 			);
 			path = TablesCheckOutScreens;
 			sourceTree = "<group>";
@@ -2191,6 +2205,7 @@
 				0408FBF62F63ECB9003F5563 /* GroupTicketTVC.xib in Resources */,
 				CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */,
 				CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */,
+				0463D2982F6AB37B00DC3B2A /* TableItemsTVC.xib in Resources */,
 				CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */,
 				CE4580162EF94F4700A873C4 /* Orders.storyboard in Resources */,
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
@@ -2634,6 +2649,7 @@
 				0408FBF52F63ECB9003F5563 /* GroupTicketTVC.swift in Sources */,
 				CE775F0D2EFBE2B00010CE79 /* DateSelectionHeader.swift in Sources */,
 				CAC4141828A478050007BA86 /* DatePickerHelper.swift in Sources */,
+				0463D2992F6AB37B00DC3B2A /* TableItemsTVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2693,7 +2709,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 233;
+				CURRENT_PROJECT_VERSION = 234;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2731,7 +2747,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 233;
+				CURRENT_PROJECT_VERSION = 234;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2895,7 +2911,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 233;
+				CURRENT_PROJECT_VERSION = 234;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2990,7 +3006,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 233;
+				CURRENT_PROJECT_VERSION = 234;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

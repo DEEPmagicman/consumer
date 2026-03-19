@@ -87,16 +87,65 @@ struct SeatingAreaBookingResponse: Codable {
     let approxWait: Int
     let isSuccess: Bool
     let message: String?
-    let content: [String: String]?   
+    let content: QueueInnerContent?
 }
 
 struct BookingItem: Codable {
     let seatingAreaId: String
     let guests: Int
+    let calculatedMinimum: Double?
+    let calculatedDeposit: Double?
+    let extraGuests: Int?
 }
 
+struct QueueInnerContent: Codable {
+    let clientSecret: String?
+    let tableBooking: TableBooking?
+}
 
-import Foundation
+struct TableBooking: Codable {
+    let id: String
+    let venueId: String
+    let paymentIntent: String?
+    let paymentId: String?
+    let bookingSourceType: String?
+    let bookingSource: String?
+    let paymentStatus: String?
+    let isDeleted: Bool?
+    let createdAt: String
+    let updatedAt: String
+    let notes: String?
+    let eventPromoCodeId: String?
+    let tableBookingPriceBreakdown: PriceBreakdown?
+}
+
+struct PriceBreakdown: Codable {
+
+    let id: String?
+    let base: Int?
+    let discount: Int?
+    let gratuity: Int?
+    let gratuityName: String?
+    let salesTax: Int?
+    let salesTaxName: String?
+//    let seFees: Int?
+//    let stripeFees: Double?
+//    let total: Double?
+
+    let tableBookingPriceBreakdownHasCustomFees: [TableCustomFee]?
+}
+
+struct TableCustomFee: Codable {
+    let id: String?
+    let name: String?
+//    let fee: Double?
+    let createdAt: String?
+    let tableBookingPriceBreakdownId: String?
+}
+
+struct QueueSocketResponse: Codable {
+    let content: SeatingAreaBookingResponse
+}
 
 struct ConsumerLayoutResponse: Codable {
     let id: String?
