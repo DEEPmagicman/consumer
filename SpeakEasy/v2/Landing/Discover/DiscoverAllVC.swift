@@ -276,10 +276,10 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
                Navigate.eventDetailsVC(self, event: selectedEvent, heroIndex: indexPath.item)
 
            case venueListCollectionView:
-               if isVenueInitialLoading { return }
+//               if isVenueInitialLoading { return }
 
 //               let selectedVenue = openVenueList[indexPath.item]
-//               Navigate.to.venueDetailsVC(self, venue: selectedVenue)
+               Navigate.to.venueVC(self)
 
            case allEventsCollectionView:
                if isAllEventInitialLoading { return }

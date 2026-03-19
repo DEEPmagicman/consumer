@@ -506,4 +506,9 @@ final class Navigate {
         vc.bookingId = bookingId
         sender.pushVC(vc)
     }
+    
+    func venueVC(_ sender: UIViewController) {
+        let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+        sender.pushVC(vc)
+    }
 }
