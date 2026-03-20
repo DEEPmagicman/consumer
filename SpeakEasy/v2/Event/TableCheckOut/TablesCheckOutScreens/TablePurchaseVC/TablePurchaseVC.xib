@@ -48,6 +48,8 @@
                 <outlet property="tableMinimumDepositLbl" destination="zKC-wj-jJY" id="Vad-fa-xt7"/>
                 <outlet property="tableView" destination="Auu-CJ-tlB" id="Uib-GC-K8K"/>
                 <outlet property="tableViewHeight" destination="nuT-av-OvY" id="ztB-pR-KKA"/>
+                <outlet property="termViewMoreBtn" destination="xxb-nl-fKR" id="gPW-Fh-3pP"/>
+                <outlet property="termViewMoreView" destination="Ws1-6b-u1h" id="aBh-4n-1p7"/>
                 <outlet property="termsLbl" destination="4i3-GS-DbB" id="RJ6-yz-Lkl"/>
                 <outlet property="timerLbl" destination="ehC-Qg-ZIt" id="O9s-1X-wWD"/>
                 <outlet property="totalAmountLbl" destination="nfS-58-qk8" id="Jgm-r3-9n8"/>
@@ -155,10 +157,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="518.33333333333337"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hnN-0u-OPK">
-                                            <rect key="frame" x="0.0" y="0.0" width="393" height="659.66666666666663"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="595.66666666666663"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1Qy-xF-8M6">
-                                                    <rect key="frame" x="14" y="0.0" width="365" height="659.66666666666663"/>
+                                                    <rect key="frame" x="14" y="0.0" width="365" height="595.66666666666663"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyS-zd-Zxu">
                                                             <rect key="frame" x="0.0" y="0.0" width="365" height="30"/>
@@ -196,7 +198,7 @@
                                                             </constraints>
                                                         </tableView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1Fz-FU-Hqo">
-                                                            <rect key="frame" x="0.0" y="38" width="365" height="98"/>
+                                                            <rect key="frame" x="0.0" y="38" width="365" height="34"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N3a-G0-sht">
                                                                     <rect key="frame" x="0.0" y="0.0" width="365" height="34"/>
@@ -235,8 +237,8 @@
                                                                         <constraint firstItem="mVS-zN-EJe" firstAttribute="leading" secondItem="N3a-G0-sht" secondAttribute="leading" id="wFB-zA-elp"/>
                                                                     </constraints>
                                                                 </view>
-                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zHi-Ur-EAb">
-                                                                    <rect key="frame" x="0.0" y="34.000000000000028" width="365" height="64"/>
+                                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zHi-Ur-EAb">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="365" height="64"/>
                                                                     <subviews>
                                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="SNE-is-KPG">
                                                                             <rect key="frame" x="8" y="8" width="349" height="48"/>
@@ -272,7 +274,7 @@
                                                             </constraints>
                                                         </stackView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5f0-VH-Ajm">
-                                                            <rect key="frame" x="0.0" y="144.00000000000003" width="365" height="20"/>
+                                                            <rect key="frame" x="0.0" y="80.000000000000028" width="365" height="20"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fm8-dD-S9h">
                                                                     <rect key="frame" x="0.0" y="0.0" width="365" height="20"/>
@@ -314,7 +316,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pdw-A3-ZwX">
-                                                            <rect key="frame" x="0.0" y="172.00000000000003" width="365" height="20"/>
+                                                            <rect key="frame" x="0.0" y="108.00000000000003" width="365" height="20"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8e-8A-MRU">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50.666666666666664" height="20"/>
@@ -381,7 +383,7 @@
                                                             </constraints>
                                                         </view>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Jrd-CS-hBn">
-                                                            <rect key="frame" x="0.0" y="200.00000000000003" width="365" height="0.0"/>
+                                                            <rect key="frame" x="0.0" y="136.00000000000003" width="365" height="0.0"/>
                                                             <subviews>
                                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TJc-5Q-asT">
                                                                     <rect key="frame" x="0.0" y="0.0" width="365" height="100"/>
@@ -413,7 +415,7 @@
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </stackView>
                                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u2a-Zx-H0i">
-                                                            <rect key="frame" x="0.0" y="204.00000000000003" width="365" height="21"/>
+                                                            <rect key="frame" x="0.0" y="140.00000000000003" width="365" height="21"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hpX-WB-lx6">
                                                                     <rect key="frame" x="0.0" y="0.0" width="365" height="21"/>
@@ -455,7 +457,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G0B-pi-gxq">
-                                                            <rect key="frame" x="0.0" y="208.00000000000003" width="365" height="29.666666666666657"/>
+                                                            <rect key="frame" x="0.0" y="144.00000000000003" width="365" height="29.666666666666657"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdc-r7-NCE">
                                                                     <rect key="frame" x="0.0" y="0.0" width="111.33333333333333" height="17"/>
@@ -598,7 +600,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cdp-a8-8Sb">
-                                                            <rect key="frame" x="0.0" y="245.66666666666663" width="365" height="32"/>
+                                                            <rect key="frame" x="0.0" y="181.66666666666666" width="365" height="32"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdB-pI-TRo">
                                                                     <rect key="frame" x="0.0" y="0.0" width="37" height="20"/>
@@ -637,7 +639,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1yw-8S-OOo">
-                                                            <rect key="frame" x="0.0" y="285.66666666666663" width="365" height="281.66666666666663"/>
+                                                            <rect key="frame" x="0.0" y="221.66666666666666" width="365" height="281.66666666666674"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ze-TO-AlQ">
                                                                     <rect key="frame" x="16.000000000000004" y="16" width="41.333333333333343" height="17"/>
@@ -646,7 +648,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="gBl-jh-e0O">
-                                                                    <rect key="frame" x="16" y="43.00000000000005" width="349" height="72.333333333333314"/>
+                                                                    <rect key="frame" x="16" y="42.999999999999993" width="349" height="72.333333333333314"/>
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parties Must Be at Minimum Equal Number of Male/Female. All tables require a matching credit card and ID. " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4i3-GS-DbB">
                                                                             <rect key="frame" x="0.0" y="0.0" width="349" height="72.333333333333329"/>
@@ -667,6 +669,9 @@
                                                                                     <state key="normal" title="View more">
                                                                                         <color key="titleColor" red="0.82352941180000006" green="0.83529411760000005" blue="0.85882352939999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                     </state>
+                                                                                    <connections>
+                                                                                        <action selector="onClickTermViewMoreBtn:" destination="-1" eventType="touchUpInside" id="wbD-Fc-yyW"/>
+                                                                                    </connections>
                                                                                 </button>
                                                                             </subviews>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -690,7 +695,7 @@
                                                                             </constraints>
                                                                             <color key="tintColor" red="0.1529411765" green="0.1529411765" blue="0.1529411765" alpha="1" colorSpace="calibratedRGB"/>
                                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                                            <state key="normal" image="ic_checkbox_unchecked"/>
+                                                                            <state key="normal" image="unChecked"/>
                                                                         </button>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VdF-QS-BFY">
                                                                             <rect key="frame" x="38" y="11.999999999999993" width="299" height="116.33333333333331"/>
@@ -736,7 +741,7 @@ I AGREE TO BRING THE CREDIT CARD USED TO PURCHASE ONLINE AND MATCHING GOVERNMENT
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="weV-YI-bsI">
-                                                            <rect key="frame" x="0.0" y="575.33333333333337" width="365" height="84.333333333333371"/>
+                                                            <rect key="frame" x="0.0" y="511.33333333333331" width="365" height="84.333333333333314"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9v1-bO-UjZ">
                                                                     <rect key="frame" x="14" y="16" width="16" height="16"/>
@@ -787,7 +792,7 @@ I AGREE TO BRING THE CREDIT CARD USED TO PURCHASE ONLINE AND MATCHING GOVERNMENT
                                     </constraints>
                                 </scrollView>
                                 <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pt8-Jt-uME">
-                                    <rect key="frame" x="0.0" y="29.666666666666686" width="393" height="248"/>
+                                    <rect key="frame" x="0.0" y="-42.333333333333314" width="393" height="184"/>
                                     <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="calibratedRGB"/>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Tn-dF-Phe">
@@ -944,6 +949,7 @@ I AGREE TO BRING THE CREDIT CARD USED TO PURCHASE ONLINE AND MATCHING GOVERNMENT
         <image name="downArr" width="29" height="29"/>
         <image name="ic-PlusWhite" width="14" height="14"/>
         <image name="ic_checkbox_unchecked" width="16" height="16"/>
+        <image name="unChecked" width="20" height="20"/>
         <image name="venueLogo" width="20" height="20"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

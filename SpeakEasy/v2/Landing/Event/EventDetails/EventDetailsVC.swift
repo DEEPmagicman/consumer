@@ -1896,12 +1896,12 @@ extension NSMutableAttributedString {
     }
 
     func forceSystemFont15() {
-        let base = UIFont.systemFont(ofSize: 15)
+        let base = Constant.Font.interRegular(size: 12)
 
         enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
             let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
             let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
-            let newFont = UIFont(descriptor: descriptor, size: 15)
+            let newFont = UIFont(descriptor: descriptor, size: 12)
             self.addAttribute(.font, value: newFont, range: range)
         }
     }

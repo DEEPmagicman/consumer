@@ -80,4 +80,9 @@ extension String {
     public func attributable() -> NSMutableAttributedString {
         return NSMutableAttributedString(string: self)
     }
+    
+    public var containsHTMLLink: Bool {
+        contains("<a href=")
+    }
+
 }

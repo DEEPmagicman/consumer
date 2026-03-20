@@ -64,6 +64,7 @@ struct SeatingArea: Codable {
 }
 
 struct TableTimeSlot: Codable {
+    let id: String?
     let startTime: String?
     let endTime: String?
     let minimum: Double?
@@ -96,6 +97,9 @@ struct BookingItem: Codable {
     let calculatedMinimum: Double?
     let calculatedDeposit: Double?
     let extraGuests: Int?
+    let timeSlotId: String?
+    let timeSlot: TableTimeSlot?
+
 }
 
 struct QueueInnerContent: Codable {
@@ -122,25 +126,67 @@ struct TableBooking: Codable {
 struct PriceBreakdown: Codable {
 
     let id: String?
-    let base: Int?
-    let discount: Int?
-    let gratuity: Int?
+    let base: Double?
+    let discount: Double?
+    let gratuity: Double?
     let gratuityName: String?
-    let salesTax: Int?
+    let salesTax: Double?
     let salesTaxName: String?
-//    let seFees: Int?
-//    let stripeFees: Double?
-//    let total: Double?
-
+    let seFees: Double?
+    let stripeFees: Double?
+    let total: Double?
     let tableBookingPriceBreakdownHasCustomFees: [TableCustomFee]?
+
+    enum CodingKeys: String, CodingKey {
+        case id, base, discount, gratuity, gratuityName, salesTax, salesTaxName
+        case seFees, stripeFees, total
+        case tableBookingPriceBreakdownHasCustomFees
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try? container.decode(String.self, forKey: .id)
+
+        base = try container.decodeFlexibleDouble(forKey: .base)
+        discount = try container.decodeFlexibleDouble(forKey: .discount)
+        gratuity = try container.decodeFlexibleDouble(forKey: .gratuity)
+        salesTax = try container.decodeFlexibleDouble(forKey: .salesTax)
+        seFees = try container.decodeFlexibleDouble(forKey: .seFees)
+
+        stripeFees = try container.decodeFlexibleDouble(forKey: .stripeFees)
+        total = try container.decodeFlexibleDouble(forKey: .total)
+
+        gratuityName = try? container.decode(String.self, forKey: .gratuityName)
+        salesTaxName = try? container.decode(String.self, forKey: .salesTaxName)
+
+        tableBookingPriceBreakdownHasCustomFees =
+            try? container.decode([TableCustomFee].self,
+                                  forKey: .tableBookingPriceBreakdownHasCustomFees)
+    }
 }
 
 struct TableCustomFee: Codable {
     let id: String?
     let name: String?
-//    let fee: Double?
+    let fee: Double?
     let createdAt: String?
     let tableBookingPriceBreakdownId: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, fee, createdAt, tableBookingPriceBreakdownId
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try? container.decode(String.self, forKey: .id)
+        name = try? container.decode(String.self, forKey: .name)
+        fee = try container.decodeFlexibleDouble(forKey: .fee)
+        createdAt = try? container.decode(String.self, forKey: .createdAt)
+        tableBookingPriceBreakdownId =
+            try? container.decode(String.self, forKey: .tableBookingPriceBreakdownId)
+    }
 }
 
 struct QueueSocketResponse: Codable {
@@ -221,5 +267,207 @@ struct Layout3DMap: Codable {
         case isDeleted
         case status
         case createdAt
+    }
+}
+
+struct TableBookingConfirmResponse: Codable {
+    let reservations: [Reservation]
+    let tableBooking: ConfirmedTableBooking
+}
+
+struct Reservation: Codable {
+    let id: String?
+    let uniqueId: String?
+    let venueId: String?
+    let date: String?
+    let guests: ReservationGuests?
+    let minimumType: String?
+    let comps: Double?
+    let compsType: String?
+    let minimum: Double?
+    let time: String?
+    let confirmationSMS: Bool?
+    let note: String?
+    let cancelNote: String?
+    let bookedByType: String?
+    let venueUserId: String?
+    let microsEmployeeId: String?
+    let assignedToUserId: String?
+    let assignedToAt: String?
+    let seatingArea: String?
+    let seatingArrangementId: String?
+    let timeSlotId: String?
+    let extraPersons: Int?
+    let seatedAt: String?
+    let checkInAt: String?
+    let checkInGuests: Int?
+    let reservationStatus: String?
+    let isDeleted: Bool?
+    let paymentStatus: String?
+    let isAnyPaylinkRefunded: Bool?
+    let paidPaylinkAmount: Double?
+    let status: String?
+    let createdAt: String?
+    let updatedAt: String?
+    let posChecks: String?
+    let tableBookingId: String?
+    let lastMessage: String?
+    let lastMessageAt: String?
+    let isReadLastMessage: Bool?
+    let lastMessageService: String?
+    let totalSpend: Double?
+    let requiredPayment: Bool?
+    let sendReservationReminder: Bool?
+    let consumerUserHasBooking: [ConsumerUserBooking]?
+    let seatingArrangement: ReservationSeatingArrangement?
+}
+
+struct ReservationGuests: Codable {
+    let male: Int?
+    let total: Int?
+    let female: Int?
+}
+
+struct ConsumerUserBooking: Codable {
+    let id: String?
+    let uniqueId: String?
+    let firstName: String?
+    let lastName: String?
+    let gender: String?
+    let dob: String?
+    let birthYear: String?
+    let birthDay: String?
+    let birthMonth: String?
+    let email: String?
+    let receiveNotification: Bool?
+    let instagramUserId: String?
+    let linkedIn: String?
+    let faceRecognitionConsent: Bool?
+    let consumerState: String?
+    let code: String?
+    let phone: String?
+    let phoneVerified: Bool?
+    let timezone: String?
+    let status: String?
+    let isSocial: Bool?
+    let isDeleted: Bool?
+    let isProfileCompleted: Bool?
+    let lastLogin: String?
+    let createdAt: String?
+    let updatedAt: String?
+    let stripeCustId: String?
+    let consumerUserTempPhoneId: String?
+    let consumerUserTempEmailId: String?
+    let consumerUserResetPasswordDataId: String?
+    let consumerUserInvitationDataId: String?
+    let consumerUserImageId: String?
+    let consumerUserMongodbId: String?
+    let appclipUserMongodbId: String?
+    let firstNameLastName: String?
+    let lastNameFirstName: String?
+    let fullPhoneNumber: String?
+    let consumerUserImage: ConsumerUserImage?
+}
+
+struct ConsumerUserImage: Codable {
+    let id: String?
+    let key: String?
+    let name: String?
+    let description: String?
+}
+
+struct ReservationSeatingArrangement: Codable {
+    let eventId: String?
+}
+
+struct ConfirmedTableBooking: Codable {
+    let id: String?
+    let venueId: String?
+    let notes: String?
+    let paymentIntent: String?
+    let paymentId: String?
+    let bookingSourceType: String?
+    let bookingSource: String?
+    let paymentStatus: String?
+    let isDeleted: Bool?
+    let createdAt: String?
+    let updatedAt: String?
+    let eventPromoCodeId: String?
+    let promotionLinkId: String?
+    let isMigrated: Bool?
+    let reservations: [Reservation]?
+    let tableBookingDetails: TableBookingDetails?
+    let tableBookingHasItems: [TableBookingItem]?
+    let tableBookingPriceBreakdown: PriceBreakdown?
+}
+
+struct TableBookingDetails: Codable {
+    let id: String?
+    let tableBookingId: String?
+    let tableBookingSettings: TableBookingSettings?
+    let ip: String?
+    let holder: String?
+    let comapny: String?
+    let type: String?
+    let card: String?
+}
+
+struct TableBookingSettings: Codable {
+    let id: String?
+    let salesTax: Double?
+    let isUpFront: Bool?
+    let customFees: [BookingCustomFeeSetting]?
+    let stripeFlat: Double?
+    let stripePerc: Double?
+    let gratuityFee: Double?
+    let salesTaxName: String?
+    let gratuityFeeName: String?
+    let gratuityFeeType: String?
+    let isEnableGratuity: Bool?
+    let isEnableSalesTax: Bool?
+    let speakeasyFeeFlat: Double?
+    let speakeasyFeePerc: Double?
+    let isEnableCustomFee: Bool?
+    let isGratuityTaxable: Bool?
+    let isProcessingFeeTaxable: Bool?
+    let isProcessingFeePassToCustomer: Bool?
+}
+
+struct BookingCustomFeeSetting: Codable {
+    let customFee: Double?
+    let customFeeName: String?
+    let customFeeType: String?
+    let isEnableCustomFee: Bool?
+    let isCustomFeeTaxable: Bool?
+}
+
+struct TableBookingItem: Codable {
+    let id: String?
+    let tableBookingId: String?
+    let seatingAreaId: String?
+    let isDeleted: Bool?
+    let createdAt: String?
+    let updatedAt: String?
+}
+
+
+extension KeyedDecodingContainer {
+
+    func decodeFlexibleDouble(forKey key: KeyedDecodingContainer<K>.Key) throws -> Double? {
+
+        if let value = try? self.decodeIfPresent(Double.self, forKey: key) {
+            return value
+        }
+
+        if let value = try? self.decodeIfPresent(Int.self, forKey: key) {
+            return Double(value)
+        }
+
+        if let value = try? self.decodeIfPresent(String.self, forKey: key),
+           let doubleValue = Double(value) {
+            return doubleValue
+        }
+
+        return nil
     }
 }

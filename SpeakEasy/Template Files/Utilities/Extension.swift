@@ -348,3 +348,23 @@ extension Decodable {
         }
     }
 }
+
+
+extension UITextView {
+
+    func setPlaceholder(_ text: String) {
+        let placeholderLabel = UILabel()
+        placeholderLabel.text = text
+        placeholderLabel.textColor = .lightGray
+        placeholderLabel.font = self.font
+        placeholderLabel.sizeToFit()
+        placeholderLabel.frame.origin = CGPoint(x: 5, y: 8)
+        placeholderLabel.tag = 999
+
+        self.addSubview(placeholderLabel)
+
+        NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self, queue: .main) { _ in
+            placeholderLabel.isHidden = !self.text.isEmpty
+        }
+    }
+}

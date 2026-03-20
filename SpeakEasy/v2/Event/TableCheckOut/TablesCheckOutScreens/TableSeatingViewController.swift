@@ -35,6 +35,7 @@ class TableSeatingViewController: UIViewController {
     private var selectedIndex: Int = 0
     private var isExpanded = false
     private let collapsedLines = 3
+    private var selectedSlot: TableTimeSlot?
     var onSelectionUpdate: ((_ time: String,
                              _ guestCount: Int,
                              _ seatingArea: SeatingArea?,
@@ -98,7 +99,9 @@ class TableSeatingViewController: UIViewController {
         
         if item.bookingType == .timeWise {
             
-            if let slot = item.timeSlots?[index] {
+            guard item.timeSlots?.indices.contains(index) == true else { return }
+
+              if let slot = item.timeSlots?[index] {
                 
                 if let minimum = slot.minimum {
                     miniMumAmountLbl.text = "$\(minimum) min."
@@ -133,6 +136,19 @@ class TableSeatingViewController: UIViewController {
             guard let self = self else { return }
             self.timeCollectionViewHeight.constant = collection.contentSize.height
         }
+    }
+    
+    private func formatTime(_ time: String?) -> String {
+        guard let time,
+              let date = time.dateFormatter(
+                formate: .yyyyMMddTHHmmssSSSz,
+                isTimeZoneChanged: true,
+                isUTC: false
+              )
+        else { return "" }
+
+        let venueTZ = TimeZone(identifier: event?.venue?.useTimezone ?? "") ?? .current
+        return date.toString(dateFormat: .hmma, timeZone: venueTZ)
     }
 
     private func configureData() {
@@ -252,13 +268,15 @@ class TableSeatingViewController: UIViewController {
 
                 if !timeSlots.isEmpty {
                     selectedIndex = 0
-                    selectedTimeLbl.text = timeSlots[0]
+                    selectedSlot = sortedSlots[0]
+                    selectedTimeLbl.text = formatTime(selectedSlot?.startTime)
                     timeCollectionView.isHidden = false
                     timeCollectionView.reloadData()
                     timeCollectionView.collectionViewLayout.invalidateLayout()
                     timeCollectionView.layoutIfNeeded()
                 } else {
                     selectedIndex = 0
+                    selectedSlot = nil
                     selectedTimeLbl.text = ""
                     timeCollectionView.isHidden = true
                 }
@@ -372,9 +390,7 @@ class TableSeatingViewController: UIViewController {
     }
     
     @IBAction func onClickCheckOutBtn(_ sender: Any) {
-        let selectedTime = timeSlots.indices.contains(selectedIndex)
-               ? timeSlots[selectedIndex]
-               : ""
+        let selectedTime = selectedSlot?.id ?? ""
 
         self.dismiss(animated: true)
            onSelectionUpdate?(selectedTime,
@@ -438,7 +454,9 @@ extension TableSeatingViewController: UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        guard timeSlots.indices.contains(indexPath.item) else { return }
         selectedIndex = indexPath.item
+        selectedSlot = seatingArea?.timeSlots?[indexPath.item]
         selectedTimeLbl.text = timeSlots[indexPath.item]
         updatePricing(for: indexPath.item)
         collectionView.reloadData()

@@ -298,5 +298,61 @@ final class TablePresenter {
         }
     }
     
+    static func confirmSeatingAreaBooking(
+        eventId: String,
+        queueId: String,
+        tableBookingId: String,
+        consumerUserId: String,
+        optedPolicy: Bool,
+        notes: String?,
+        venueId: String,
+        completion: @escaping (_ success: Bool,
+                               _ message: String?,
+                               _ response: TableBookingConfirmResponse?) -> Void
+    ) {
+        
+        let url = APIBuilder.seatingAreaBookingConfirmURL(eventId: eventId)
+        
+        let params: [String: Any] = [
+            "queueId": queueId,
+            "tableBookingId": tableBookingId,
+            "guestInfo": [
+                "consumerUserId": consumerUserId
+            ],
+            "optedPolicy": optedPolicy,
+            "notes": notes ?? ""
+        ]
+        
+        let headers = Header.header(venueId: venueId)
+        
+        AFWrapper.postRequest(
+            url,
+            params: params,
+            headers: headers
+        ) { response in
+            
+            guard let dict = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+            
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict)
+                let decoded = try JSONDecoder().decode(TableBookingConfirmResponse.self, from: data)
+                completion(true, nil, decoded)
+            } catch {
+                completion(false, error.localizedDescription, nil)
+            }
+            
+        } failure: { error in
+            
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            
+            completion(false, error?.localizedDescription ?? "Something went wrong", nil)
+        }
+    }
     
 }

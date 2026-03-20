@@ -49,7 +49,8 @@ final class TablePurchaseVC: UIViewController {
     @IBOutlet weak var privacyPolicyLbl: UILabel!
     @IBOutlet weak var questionsORcommentsView: UIView!
     @IBOutlet weak var questionAndCommentTextView: UITextView!
-    
+    @IBOutlet weak var termViewMoreBtn: UIButton!
+    @IBOutlet weak var termViewMoreView: UIView!
     
     var queueId: String?
     var seatingAreas: [SeatingArea] = []
@@ -57,7 +58,9 @@ final class TablePurchaseVC: UIViewController {
     var venueDetails: ClipVenue?
     var selectedGuestCount: Int = 0
     var selectedTime: String = ""
-
+    
+    private var isTermsExpanded = false
+    private let termsCollapsedLines = 4
     private var booking: SeatingAreaBookingResponse?
     private var feesAndTaxes: [FeeDisplayItem] = []
     private var checkoutItems: [TableBookingCheckoutItem] = []
@@ -72,6 +75,8 @@ final class TablePurchaseVC: UIViewController {
     private var isFreeBooking = false
     private var isPromoCodeApplied = false
     private var appliedPromoCode: String = ""
+    private var isPolicyAccepted = true
+    private var confirmedBookingResponse: TableBookingConfirmResponse?
 
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -83,6 +88,7 @@ final class TablePurchaseVC: UIViewController {
         if let venue = event?.venue {
             self.venueDetails = venue
         }
+        questionAndCommentTextView.setPlaceholder("Questions or comments")
 
         setupUI()
         setupHeaderData()
@@ -151,7 +157,11 @@ final class TablePurchaseVC: UIViewController {
         venueName.text = venueDetails?.name
         venueName2.text = venueDetails?.name
         eventTitleLbl.text = event?.title
-
+    
+//        if let tableBookingPolicy = event?.venue?.venueSettings?.tableBookingPolicy {
+//
+//        }
+       
         if let hex = event?.whiteLabelColor {
             let color = UIColor(hex: hex)
             dateandtimeLbl.textColor = color
@@ -186,6 +196,80 @@ final class TablePurchaseVC: UIViewController {
                 ? "\(dateText) at \(startTime) - \(endTime)"
                 : ""
         }
+        
+        setHTMLText(event?.venue?.venueSettings?.tableBookingImportantInformation,
+                    on: privacyPolicyLbl,
+                    textColor: .black,
+                    linkColor: .systemBlue)
+        
+     
+
+        setHTMLText(event?.venue?.venueSettings?.tableBookingTermsAndCondition,
+                    on: termsLbl,
+                    linkColor: .systemBlue)
+        setupTermsExpandableLabel()
+        
+    }
+    
+    private func setupTermsExpandableLabel() {
+        termsLbl.numberOfLines = termsCollapsedLines
+        termViewMoreBtn.setTitle("View More", for: .normal)
+
+        view.layoutIfNeeded()
+        checkIfTermsNeedsExpansion()
+    }
+    
+    private func checkIfTermsNeedsExpansion() {
+        termsLbl.numberOfLines = 0
+
+        let fullHeight = termsLbl.sizeThatFits(
+            CGSize(width: termsLbl.frame.width,
+                   height: CGFloat.greatestFiniteMagnitude)
+        ).height
+
+        let maxCollapsedHeight = termsLbl.font.lineHeight * CGFloat(termsCollapsedLines)
+
+        if fullHeight > maxCollapsedHeight {
+            termsLbl.numberOfLines = termsCollapsedLines
+            termViewMoreView.isHidden = false
+        } else {
+            termsLbl.numberOfLines = 0
+            termViewMoreView.isHidden = true
+        }
+    }
+    
+    @objc private func handleHTMLLabelTap(_ gesture: UITapGestureRecognizer) {
+        guard let label = gesture.view as? UILabel,
+              let attributedText = label.attributedText else { return }
+
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: label.bounds.size)
+
+        textContainer.lineFragmentPadding = 0
+        textContainer.lineBreakMode = label.lineBreakMode
+        textContainer.maximumNumberOfLines = label.numberOfLines
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        let location = gesture.location(in: label)
+        let index = layoutManager.characterIndex(
+            for: location,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+
+        guard index < attributedText.length else { return }
+
+        let attrs = attributedText.attributes(at: index, effectiveRange: nil)
+
+        if let url = attrs[.link] as? URL {
+            UIApplication.shared.open(url)
+        } else if let urlString = attrs[.link] as? String,
+                  let url = URL(string: urlString) {
+            UIApplication.shared.open(url)
+        }
     }
 
     private func configureSelectedTableData() {
@@ -206,7 +290,7 @@ final class TablePurchaseVC: UIViewController {
                 guests: bookingItem.guests,
                 minimum: bookingItem.calculatedMinimum ?? 0,
                 deposit: bookingItem.calculatedDeposit ?? 0,
-                timeSlot: nil
+                timeSlot: getStartTime(from: bookingItem.timeSlot?.startTime)
             )
 
             checkoutItems.append(item)
@@ -216,6 +300,148 @@ final class TablePurchaseVC: UIViewController {
         tableView.reloadData()
         tableView.layoutIfNeeded()
         tableViewHeight.constant = tableView.contentSize.height
+    }
+    
+    private func confirmTableBooking(completion: @escaping (_ success: Bool) -> Void) {
+        guard let eventId = event?.id,
+              let queueId = queueId,
+              !queueId.isEmpty,
+              !currentBookingId.isEmpty,
+              let venueId = venueDetails?.id ?? event?.venue?.id,
+              let consumerUserId = UserDefault.shared.user?.id,
+              !consumerUserId.isEmpty else {
+            Alert.showToast("Booking details not found")
+            completion(false)
+            return
+        }
+
+        let notesText = questionAndCommentTextView.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let notes = notesText == "Questions or comments" ? "" : (notesText ?? "")
+
+        TablePresenter.confirmSeatingAreaBooking(
+            eventId: eventId,
+            queueId: queueId,
+            tableBookingId: currentBookingId,
+            consumerUserId: consumerUserId,
+            optedPolicy: isPolicyAccepted,
+            notes: notes,
+            venueId: venueId
+        ) { [weak self] success, message, response in
+            guard let self = self else { return }
+
+            if success, let response = response {
+                self.confirmedBookingResponse = response
+                completion(true)
+            } else {
+                Alert.showToast(message ?? "Failed to confirm table booking")
+                completion(false)
+            }
+        }
+    }
+    
+    
+    private func getStartTime(from startTime: String?) -> String {
+        guard let startTime,
+              let date = startTime.dateFormatter(formate: .yyyyMMddTHHmmssSSSz, isUTC: true)
+        else { return "" }
+
+        let timezone = event?.venue?.timezone
+            ?? event?.venue?.useTimezone
+            ?? TimeZone.current.identifier
+
+        let venueTZ = TimeZone(identifier: timezone)
+
+        return date.toString(dateFormat: .hmma, timeZone: venueTZ)
+    }
+    
+    private func setHTMLText(_ html: String?,
+                             on label: UILabel,
+                             textColor: UIColor = .label,
+                             linkColor: UIColor = .systemBlue) {
+
+        guard let html,
+              let attributed = html.htmlToAttributedString else {
+            label.attributedText = nil
+            label.isUserInteractionEnabled = false
+            return
+        }
+
+        let mutable = NSMutableAttributedString(attributedString: attributed)
+
+        mutable.trimTrailingWhitespaceAndNewlines()
+        mutable.forceSystemFont15()
+
+        mutable.addAttribute(.foregroundColor,
+                             value: textColor,
+                             range: NSRange(location: 0, length: mutable.length))
+
+        let style = NSMutableParagraphStyle()
+        style.paragraphSpacing = 0
+        style.paragraphSpacingBefore = 0
+        style.lineSpacing = 0
+
+        mutable.addAttribute(.paragraphStyle,
+                             value: style,
+                             range: NSRange(location: 0, length: mutable.length))
+
+        mutable.enumerateAttribute(.link,
+                                   in: NSRange(location: 0, length: mutable.length),
+                                   options: []) { value, range, _ in
+            if value != nil {
+                mutable.addAttribute(.foregroundColor, value: linkColor, range: range)
+                mutable.addAttribute(.underlineStyle,
+                                     value: NSUnderlineStyle.single.rawValue,
+                                     range: range)
+            }
+        }
+
+        label.attributedText = mutable
+        label.numberOfLines = 0
+
+        if html.containsHTMLLink {
+            label.isUserInteractionEnabled = true
+
+            if label.gestureRecognizers?.isEmpty ?? true {
+                let tap = UITapGestureRecognizer(target: self, action: #selector(handleHTMLLabelTap(_:)))
+                label.addGestureRecognizer(tap)
+            }
+        } else {
+            label.isUserInteractionEnabled = false
+        }
+    }
+    
+    private var infoTextAttributes: [NSAttributedString.Key: Any] {
+        [
+            .font: AppFont.font(weight: .regular, size: 12),
+            .foregroundColor: UIColor(hex: "#D2D5DB")
+        ]
+    }
+
+    private func makeIconAttachment(systemName: String) -> NSTextAttachment {
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(systemName: systemName)?
+            .withTintColor(UIColor(hex: "#D2D5DB"), renderingMode: .alwaysOriginal)
+        attachment.bounds = CGRect(x: 0, y: -2, width: 14, height: 14)
+        return attachment
+    }
+
+    private func buildGuestsTimeText(guests: Int, time: String?) -> NSAttributedString {
+        let text = NSMutableAttributedString()
+
+        let guestText = guests == 1 ? "1 Guest" : "\(guests) Guests"
+
+        text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "person.2")))
+        text.append(NSAttributedString(string: " ", attributes: infoTextAttributes))
+        text.append(NSAttributedString(string: guestText, attributes: infoTextAttributes))
+
+        if let time, !time.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            text.append(NSAttributedString(string: "   ", attributes: infoTextAttributes))
+            text.append(NSAttributedString(attachment: makeIconAttachment(systemName: "clock")))
+            text.append(NSAttributedString(string: " ", attributes: infoTextAttributes))
+            text.append(NSAttributedString(string: "\(time) Arrival Time", attributes: infoTextAttributes))
+        }
+
+        return text
     }
 
     private func setupSocket() {
@@ -282,20 +508,23 @@ final class TablePurchaseVC: UIViewController {
     
     private func updateUI(_ breakdown: PriceBreakdown) {
 
-        let base = toDouble(breakdown.base)
-        let discount = toDouble(breakdown.discount)
-        let gratuity = toDouble(breakdown.gratuity)
-        let salesTax = toDouble(breakdown.salesTax)
-//        let stripeFee = toDouble(breakdown.stripeFees)
-//        let total = toDouble(breakdown.total)
+        let base = breakdown.base ?? 0
+        let discount = breakdown.discount ?? 0
+        let gratuity = breakdown.gratuity ?? 0
+        let salesTax = breakdown.salesTax ?? 0
+        let seFee = breakdown.seFees ?? 0
+        let stripeFee = breakdown.stripeFees ?? 0
+        let total = breakdown.total ?? 0
 
-//        isFreeBooking = total <= 0
+        let processingFee = seFee + stripeFee
+
+        isFreeBooking = total <= 0
 
         var items: [FeeDisplayItem] = []
 
-//        if stripeFee > 0 {
-//            items.append(FeeDisplayItem(title: "Processing Fee", amount: stripeFee))
-//        }
+        if processingFee > 0 {
+            items.append(FeeDisplayItem(title: "Processing Fee", amount: processingFee))
+        }
 
         if gratuity > 0 {
             items.append(FeeDisplayItem(title: breakdown.gratuityName ?? "Gratuity", amount: gratuity))
@@ -305,25 +534,25 @@ final class TablePurchaseVC: UIViewController {
             items.append(FeeDisplayItem(title: breakdown.salesTaxName ?? "Sales Tax", amount: salesTax))
         }
 
-//        breakdown.tableBookingPriceBreakdownHasCustomFees?.forEach {
-//            let fee = toDouble($0.fee)
-//            if fee > 0 {
-//                items.append(FeeDisplayItem(title: $0.name ?? "Fee", amount: fee))
-//            }
-//        }
+        breakdown.tableBookingPriceBreakdownHasCustomFees?.forEach {
+            let fee = $0.fee ?? 0
+            if fee > 0 {
+                items.append(FeeDisplayItem(title: $0.name ?? "Fee", amount: fee))
+            }
+        }
 
         feesAndTaxes = items
         feesAndTaxesTitleView.isHidden = items.isEmpty
         feesAndTaxesTableView.reloadData()
 
-//        totalAmountLbl.text = total <= 0
-//            ? "Free"
-//            : "\(currency)\(total.decimalFormat(true))"
-//
-//        let totalFeesAmount = total - base + discount
-//        feesAndTxtTotalAmountLbl.text = totalFeesAmount > 0
-//            ? "\(currency)\(totalFeesAmount.decimalFormat(true))"
-//            : ""
+        totalAmountLbl.text = total <= 0
+            ? "Free"
+            : "\(currency)\(total.decimalFormat(true))"
+
+        let totalFeesAmount = total - base + discount
+        feesAndTxtTotalAmountLbl.text = totalFeesAmount > 0
+            ? "\(currency)\(totalFeesAmount.decimalFormat(true))"
+            : ""
 
         if discount > 0 {
             discountView.isHidden = false
@@ -370,31 +599,12 @@ final class TablePurchaseVC: UIViewController {
     }
 
     private func completePaymentSuccess() {
-        guard !paymentId.isEmpty, !currentBookingId.isEmpty else {
+        confirmTableBooking { [weak self] success in
+            guard let self = self, success else { return }
+
             let alert = UIAlertController(
                 title: "Success",
-                message: "Table booking payment completed.",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-                Navigate.to.back(self)
-            })
-            present(alert, animated: true)
-            return
-        }
-
-        PaymentPresenter.successPayment(
-            paymentHistoryId: paymentId,
-            bookingId: currentBookingId,
-            optedPolicy: nil
-        ) { [weak self] isSuccess, _ in
-            guard let self = self else { return }
-
-            let alert = UIAlertController(
-                title: isSuccess ? "Success" : "Payment Submitted",
-                message: isSuccess
-                    ? "Your table booking payment was successful."
-                    : "Your payment was submitted successfully.",
+                message: "Your table booking was completed successfully.",
                 preferredStyle: .alert
             )
 
@@ -404,18 +614,6 @@ final class TablePurchaseVC: UIViewController {
 
             self.present(alert, animated: true)
         }
-    }
-
-    private func completeFreeBookingSuccess() {
-        let alert = UIAlertController(
-            title: "Success",
-            message: "Your table booking was completed successfully.",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            Navigate.to.back(self)
-        })
-        present(alert, animated: true)
     }
 
     private func updatePromoButtonIcon() {
@@ -665,7 +863,7 @@ final class TablePurchaseVC: UIViewController {
 
         if isFreeBooking {
             isPaymentInitiated = false
-            completeFreeBookingSuccess()
+            self.completePaymentSuccess()
             return
         }
 
@@ -698,6 +896,19 @@ final class TablePurchaseVC: UIViewController {
     
     @IBAction func onClickAddNote(_ sender: Any) {
         questionsORcommentsView.isHidden.toggle()
+    }
+    
+    
+    @IBAction func onClickTermViewMoreBtn(_ sender: Any) {
+        isTermsExpanded.toggle()
+
+        if isTermsExpanded {
+            termsLbl.numberOfLines = 0
+            termViewMoreBtn.setTitle("View Less", for: .normal)
+        } else {
+            termsLbl.numberOfLines = termsCollapsedLines
+            termViewMoreBtn.setTitle("View More", for: .normal)
+        }
     }
     
     override func observeValue(
@@ -773,7 +984,10 @@ extension TablePurchaseVC: UITableViewDelegate, UITableViewDataSource {
             
             let item = checkoutItems[indexPath.row]
             cell.name.text = item.name
-            cell.guestLbl.text = "\(item.guests)"
+            cell.guestLbl.attributedText = buildGuestsTimeText(
+                guests: item.guests,
+                time: item.timeSlot
+            )
             let minimumAmount = convertPriceFormat(item.minimum, nil)
             cell.minimumSpendLbl.text = "\(minimumAmount) spend minimum"
             return cell

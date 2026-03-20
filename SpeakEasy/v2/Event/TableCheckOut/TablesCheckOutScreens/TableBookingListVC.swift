@@ -215,7 +215,7 @@ class TableBookingListVC: UIViewController {
             TablePresenter.createSeatingAreaBooking(
                 eventId: self.event?.id ?? "",
                 seatingAreaId: item.id ?? "",
-                timeSlotId: nil,
+                timeSlotId: item.bookingType == .default ? nil : time,
                 venueId: event?.venue?.id ?? "",
                 guests: guestCount,
                 queueId: queueId
@@ -231,7 +231,6 @@ class TableBookingListVC: UIViewController {
             }
 
             print("Queue ID:", queueId)
-            print("Selected Time:", time)
             print("Guest Count:", guestCount)
         }
     }

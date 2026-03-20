@@ -333,6 +333,10 @@ struct VenueSettings: Codable {
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
     var barTabBookingPolicy: String?
+    var tableBookingTermsAndCondition: String?
+    var tableBookingImportantInformation: String?
+    var tableBookingPolicy: String?
+    var reservationRequestPolicy: String?
     var websiteUrl: String?
     var instagramUrl: String?
     var tiktokUrl: String?
