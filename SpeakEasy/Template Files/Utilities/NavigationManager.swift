@@ -512,4 +512,9 @@ final class Navigate {
         vc.venueDetails = venueDetails
         sender.pushVC(vc)
     }
+    
+    func coverTicketListVC(_ sender: UIViewController) {
+        let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)
+        sender.pushVC(vc)
+    }
 }

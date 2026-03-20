@@ -123,6 +123,13 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JEk-4h-oV2">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="50"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <connections>
+                                                <action selector="onClickBuyTicket:" destination="-1" eventType="touchUpInside" id="cd0-eH-9Hc"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
@@ -130,12 +137,16 @@
                                         <constraint firstItem="6Ho-q0-JfV" firstAttribute="top" secondItem="DME-EC-huY" secondAttribute="top" id="4Td-pA-qQv"/>
                                         <constraint firstAttribute="trailing" secondItem="6Ho-q0-JfV" secondAttribute="trailing" id="7Vd-Jo-KZr"/>
                                         <constraint firstItem="Bsc-KD-xgJ" firstAttribute="centerY" secondItem="DME-EC-huY" secondAttribute="centerY" id="DFq-Md-dK4"/>
+                                        <constraint firstAttribute="trailing" secondItem="JEk-4h-oV2" secondAttribute="trailing" id="LFE-ZZ-CQl"/>
                                         <constraint firstAttribute="height" constant="50" id="N5c-1w-8Ci"/>
+                                        <constraint firstAttribute="bottom" secondItem="JEk-4h-oV2" secondAttribute="bottom" id="OTi-EG-aNO"/>
                                         <constraint firstItem="6Ho-q0-JfV" firstAttribute="leading" secondItem="DME-EC-huY" secondAttribute="leading" id="P3o-nd-Yvn"/>
                                         <constraint firstItem="FUY-CC-sY4" firstAttribute="leading" secondItem="DME-EC-huY" secondAttribute="leading" constant="10" id="RwR-cM-KvV"/>
                                         <constraint firstAttribute="bottom" secondItem="6Ho-q0-JfV" secondAttribute="bottom" id="TSb-te-Lok"/>
                                         <constraint firstItem="ZuA-yk-a2V" firstAttribute="top" secondItem="FUY-CC-sY4" secondAttribute="bottom" constant="2" id="X3M-yy-lHT"/>
+                                        <constraint firstItem="JEk-4h-oV2" firstAttribute="leading" secondItem="DME-EC-huY" secondAttribute="leading" id="Yf5-kA-DaC"/>
                                         <constraint firstAttribute="bottom" secondItem="ZuA-yk-a2V" secondAttribute="bottom" constant="9" id="Zgu-LX-Qt5"/>
+                                        <constraint firstItem="JEk-4h-oV2" firstAttribute="top" secondItem="DME-EC-huY" secondAttribute="top" id="bam-rH-XhU"/>
                                         <constraint firstItem="FUY-CC-sY4" firstAttribute="top" secondItem="DME-EC-huY" secondAttribute="top" constant="9" id="knD-rK-LDo"/>
                                         <constraint firstAttribute="trailing" secondItem="Bsc-KD-xgJ" secondAttribute="trailing" constant="10" id="zRA-Pn-xVI"/>
                                     </constraints>
@@ -167,7 +178,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="dH5-KX-vWd" secondAttribute="trailing" id="yN3-7C-r3a"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-209.92366412213741" y="298.23943661971833"/>
+            <point key="canvasLocation" x="-209.92366412213741" y="297.88732394366201"/>
         </view>
     </objects>
 </document>

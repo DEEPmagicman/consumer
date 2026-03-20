@@ -292,6 +292,10 @@
 		CE565476299CAC95009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565477299CB426009CE55C /* WebSocketWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE565475299CAC95009CE55C /* WebSocketWrapper.swift */; };
 		CE565478299CF741009CE55C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2966E3332980F86000B5E103 /* Assets.xcassets */; };
+		CE59ED672F6D544900831974 /* CoverTicketListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59ED652F6D544900831974 /* CoverTicketListVC.swift */; };
+		CE59ED682F6D544900831974 /* CoverTicketListVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE59ED662F6D544900831974 /* CoverTicketListVC.xib */; };
+		CE59ED6C2F6D5ADC00831974 /* CoverTicketTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */; };
+		CE59ED6D2F6D5ADC00831974 /* CoverTicketTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */; };
 		CE5A091C2D534BD0000729BF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = CE5A091B2D534BD0000729BF /* Localizable.xcstrings */; };
 		CE65D67B298D24B800DE1E8A /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE677F942A4169EA0025421D /* InviteLinkVC.swift */; };
@@ -718,6 +722,10 @@
 		CE557D582E150EFE0035C75A /* BarTabQRCodeClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabQRCodeClipVC.swift; sourceTree = "<group>"; };
 		CE565472299CA9A3009CE55C /* ReachabilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityManager.swift; sourceTree = "<group>"; };
 		CE565475299CAC95009CE55C /* WebSocketWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketWrapper.swift; sourceTree = "<group>"; };
+		CE59ED652F6D544900831974 /* CoverTicketListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverTicketListVC.swift; sourceTree = "<group>"; };
+		CE59ED662F6D544900831974 /* CoverTicketListVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoverTicketListVC.xib; sourceTree = "<group>"; };
+		CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverTicketTVC.swift; sourceTree = "<group>"; };
+		CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoverTicketTVC.xib; sourceTree = "<group>"; };
 		CE5A091B2D534BD0000729BF /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		CE65D67A298D24B800DE1E8A /* ClipVenue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipVenue.swift; sourceTree = "<group>"; };
 		CE677F942A4169EA0025421D /* InviteLinkVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteLinkVC.swift; sourceTree = "<group>"; };
@@ -1785,6 +1793,15 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
+		CE59ED692F6D5AC000831974 /* TVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */,
+				CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */,
+			);
+			path = TVC;
+			sourceTree = "<group>";
+		};
 		CE65D679298D248900DE1E8A /* APPClipModal */ = {
 			isa = PBXGroup;
 			children = (
@@ -1825,6 +1842,16 @@
 				CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */,
 			);
 			path = ArtistListTVC;
+			sourceTree = "<group>";
+		};
+		CE9020012F6D4A99008727A4 /* Cover */ = {
+			isa = PBXGroup;
+			children = (
+				CE59ED692F6D5AC000831974 /* TVC */,
+				CE59ED652F6D544900831974 /* CoverTicketListVC.swift */,
+				CE59ED662F6D544900831974 /* CoverTicketListVC.xib */,
+			);
+			path = Cover;
 			sourceTree = "<group>";
 		};
 		CE954B8B2C39156F00BD3009 /* EventQuestionTVC */ = {
@@ -1920,6 +1947,7 @@
 		CEC6D6D02EF9261400A05672 /* v2 */ = {
 			isa = PBXGroup;
 			children = (
+				CE9020012F6D4A99008727A4 /* Cover */,
 				CE0BA9272F6BFDE500AB8996 /* Venue */,
 				6AF2B9C22F093ECC00069A90 /* Event */,
 				CE0906492EFBEB2E00936E9D /* TVC */,
@@ -2303,6 +2331,7 @@
 				0462B9842F3F0A1700E29D6D /* TicketItemTableViewCell.xib in Resources */,
 				CE48D8312EFA714300E7110B /* VenueCVC.xib in Resources */,
 				82847A8729828BA600611DC4 /* TicketTypeTableViewCell.xib in Resources */,
+				CE59ED682F6D544900831974 /* CoverTicketListVC.xib in Resources */,
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
 				0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */,
@@ -2355,6 +2384,7 @@
 				CE4580142EF94E3300A873C4 /* Discover.storyboard in Resources */,
 				CE48D8352EFA7CE100E7110B /* EventV2CVC.xib in Resources */,
 				6AF2B9F62F0BC9CF00069A90 /* TableBookingListVC.xib in Resources */,
+				CE59ED6D2F6D5ADC00831974 /* CoverTicketTVC.xib in Resources */,
 				CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */,
 				CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */,
 			);
@@ -2569,6 +2599,7 @@
 				CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */,
 				CAC4141628A478050007BA86 /* DayHeaderCollectionViewCell.swift in Sources */,
 				CE954B992C392C8500BD3009 /* DropdownCustomCell.swift in Sources */,
+				CE59ED672F6D544900831974 /* CoverTicketListVC.swift in Sources */,
 				0426E1DA2F52F0BB005F474E /* VerifyNumberViewController.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
@@ -2631,6 +2662,7 @@
 				CE4580122EF94D8300A873C4 /* DiscoverVC.swift in Sources */,
 				CEE02DAE2EFB97A700AC7756 /* DiscoverDateFilterVC.swift in Sources */,
 				CED54E442C3E8ABF00D3A942 /* EventCheckoutVC.swift in Sources */,
+				CE59ED6C2F6D5ADC00831974 /* CoverTicketTVC.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				BD3FB24F294068B900BE7713 /* StoryboardAndXibManager.swift in Sources */,
 				BD942F4129595E1A00D52115 /* OnBoardingPresenter.swift in Sources */,

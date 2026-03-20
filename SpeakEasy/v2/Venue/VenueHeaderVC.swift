@@ -17,4 +17,8 @@ final class VenueHeaderVC: UIViewController {
         super.viewDidLoad()
         
     }
+    
+    @IBAction func onClickBuyTicket(_ sender: Any) {
+        Navigate.to.coverTicketListVC(self)
+    }
 }
