@@ -313,6 +313,8 @@
 		CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB895299F60200083059B /* MVPStartScreenVC.swift */; };
 		CE8C62D92EF95965008D1FDF /* SideMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */; };
 		CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */; };
+		CE901FFE2F6D2544008727A4 /* VenueExperiencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */; };
+		CE901FFF2F6D2544008727A4 /* VenueExperiencesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE954B8E2C39159500BD3009 /* EventQuestionTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE954B8C2C39159500BD3009 /* EventQuestionTVC.swift */; };
@@ -737,6 +739,8 @@
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
 		CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuVC.swift; sourceTree = "<group>"; };
 		CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SideMenuVC.xib; sourceTree = "<group>"; };
+		CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueExperiencesVC.swift; sourceTree = "<group>"; };
+		CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueExperiencesVC.xib; sourceTree = "<group>"; };
 		CE954B8C2C39159500BD3009 /* EventQuestionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQuestionTVC.swift; sourceTree = "<group>"; };
 		CE954B8D2C39159500BD3009 /* EventQuestionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQuestionTVC.xib; sourceTree = "<group>"; };
 		CE954B972C392C8500BD3009 /* DropdownCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownCustomCell.swift; sourceTree = "<group>"; };
@@ -1458,6 +1462,8 @@
 				CE0BA92E2F6C158800AB8996 /* VenueEventsVC.xib */,
 				0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */,
 				0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */,
+				CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */,
+				CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */,
 			);
 			path = Venue;
 			sourceTree = "<group>";
@@ -2313,6 +2319,7 @@
 				6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */,
 				04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */,
 				6AF2B9EF2F0BC0CA00069A90 /* TablesListVC.xib in Resources */,
+				CE901FFF2F6D2544008727A4 /* VenueExperiencesVC.xib in Resources */,
 				82847A792982485B00611DC4 /* Home.storyboard in Resources */,
 				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
 				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
@@ -2689,6 +2696,7 @@
 				04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */,
 				CAC4140E28A478050007BA86 /* MonthCollectionViewCell.swift in Sources */,
 				CE8C62D92EF95965008D1FDF /* SideMenuVC.swift in Sources */,
+				CE901FFE2F6D2544008727A4 /* VenueExperiencesVC.swift in Sources */,
 				69AEA1822A0E4BBA00B8AA5D /* BundleExtension.swift in Sources */,
 				CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */,
 				CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */,

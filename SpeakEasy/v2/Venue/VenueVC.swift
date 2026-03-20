@@ -10,19 +10,28 @@ import UIKit
 final class VenueVC: UIViewController {
     
     @IBOutlet weak var venueView: UIView!
+    @IBOutlet weak var venueName: UILabel!
+    @IBOutlet weak var venueLogo: UIImageView!
     
     var header: VenueHeaderVC?
     var segmentedScrollView = SJSegmentedViewController()
     
+    var venueDetails: ClipVenue?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        venueName.text = venueDetails?.name ?? "Venue"
+        let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
+        self.venueLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
+        
         setUpSegmentVC()
     }
     
     private func setUpSegmentVC() {
         let header = VenueHeaderVC(nibName: "VenueHeaderVC", bundle: nil)
         self.header = header
-        segmentedScrollView.headerViewHeight = 245
+        segmentedScrollView.headerViewHeight = 110
         
         segmentedScrollView.delegate = self
         segmentedScrollView.segmentBounces = false
@@ -30,15 +39,19 @@ final class VenueVC: UIViewController {
         if let font = UIFont(name: "poppins-medium", size: 15) {
             segmentedScrollView.segmentTitleFont = font
         }
-        segmentedScrollView.selectedSegmentViewHeight = 4
+        segmentedScrollView.selectedSegmentViewHeight = 2
         segmentedScrollView.headerViewController = header
         
         let vc1 = VenueEventsVC(nibName: "VenueEventsVC", bundle: nil)
         vc1.title = "Events"
         
-        let vc2 = VenueDetailsVC(nibName: "VenueDetailsVC", bundle: nil)
-        vc2.title = "Details"
-        segmentedScrollView.segmentControllers = [vc1, vc2]
+        let vc2 = VenueExperiencesVC(nibName: "VenueExperiencesVC", bundle: nil)
+        vc2.title = "Experiences"
+        
+        let vc3 = VenueDetailsVC(nibName: "VenueDetailsVC", bundle: nil)
+        vc3.venueDetails = venueDetails
+        vc3.title = "Details"
+        segmentedScrollView.segmentControllers = [vc1, vc2, vc3]
         segmentedScrollView.segmentShadow = SJShadow(offset: CGSize(width: 0, height: 0), color: .white, radius: 0, opacity: 0.4)
         
         segmentedScrollView.headerViewOffsetHeight = 0
@@ -57,7 +70,6 @@ final class VenueVC: UIViewController {
             segmentedScrollView.view.bottomAnchor.constraint(equalTo: venueView.bottomAnchor)
         ])
         segmentedScrollView.segmentedScrollView.backgroundColor = .red
-        segmentedScrollView.selectedSegmentViewHeight = 0.5
         segmentedScrollView.didMove(toParent: self)
     }
     

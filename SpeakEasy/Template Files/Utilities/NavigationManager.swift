@@ -507,8 +507,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func venueVC(_ sender: UIViewController) {
+    func venueVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
         let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+        vc.venueDetails = venueDetails
         sender.pushVC(vc)
     }
 }

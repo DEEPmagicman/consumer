@@ -7,9 +7,16 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-SemiBold.ttf">
+            <string>Inter-SemiBold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VenueVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="venueLogo" destination="xhi-9o-YK3" id="5qX-bW-5Rb"/>
+                <outlet property="venueName" destination="ALN-3l-0qS" id="bN5-sl-oLd"/>
                 <outlet property="venueView" destination="LtE-MV-TC6" id="5ov-YO-cqB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -63,29 +70,55 @@
                         <constraint firstItem="EaM-fZ-gSA" firstAttribute="leading" secondItem="thO-mw-1Fg" secondAttribute="leading" constant="20" id="wvl-IZ-isU"/>
                     </constraints>
                 </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.xbox" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="xhi-9o-YK3">
+                    <rect key="frame" x="146.66666666666666" y="95.666666666666686" width="100" height="99"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="TfQ-P4-Aqv"/>
+                        <constraint firstAttribute="width" constant="100" id="hg7-Ox-Gf5"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ALN-3l-0qS">
+                    <rect key="frame" x="16" y="205" width="361" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="U5Y-vD-X2a"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LtE-MV-TC6">
-                    <rect key="frame" x="0.0" y="99" width="393" height="753"/>
+                    <rect key="frame" x="0.0" y="230" width="393" height="622"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ALN-3l-0qS" secondAttribute="trailing" constant="16" id="2aX-Vs-7gN"/>
                 <constraint firstAttribute="trailing" secondItem="LtE-MV-TC6" secondAttribute="trailing" id="43z-QF-gJD"/>
+                <constraint firstItem="xhi-9o-YK3" firstAttribute="top" secondItem="thO-mw-1Fg" secondAttribute="bottom" id="55n-v3-UH4"/>
                 <constraint firstAttribute="bottom" secondItem="ZAk-Zy-jps" secondAttribute="bottom" id="5Rn-v7-Yyq"/>
                 <constraint firstItem="thO-mw-1Fg" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="6K1-G8-yju"/>
                 <constraint firstItem="thO-mw-1Fg" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="BBl-vQ-Dbt"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Kao-2P-RWG"/>
                 <constraint firstItem="LtE-MV-TC6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OyM-GH-CtZ"/>
-                <constraint firstItem="LtE-MV-TC6" firstAttribute="top" secondItem="thO-mw-1Fg" secondAttribute="bottom" constant="4" id="Rh7-5N-pOb"/>
                 <constraint firstAttribute="bottom" secondItem="y0Q-Fq-rSB" secondAttribute="bottom" id="UE1-vB-32b"/>
+                <constraint firstItem="LtE-MV-TC6" firstAttribute="top" secondItem="ALN-3l-0qS" secondAttribute="bottom" id="VDc-ML-SZe"/>
                 <constraint firstAttribute="bottom" secondItem="LtE-MV-TC6" secondAttribute="bottom" id="XSg-B9-3nB"/>
                 <constraint firstItem="ZAk-Zy-jps" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="dMk-BN-hWB"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fde-bu-GX4"/>
                 <constraint firstItem="ZAk-Zy-jps" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="hgV-7p-IKw"/>
+                <constraint firstItem="ALN-3l-0qS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="hzJ-wc-FvR"/>
                 <constraint firstItem="ZAk-Zy-jps" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mjm-2d-nz6"/>
+                <constraint firstItem="ALN-3l-0qS" firstAttribute="top" secondItem="xhi-9o-YK3" secondAttribute="bottom" constant="10" id="rag-r6-3qY"/>
                 <constraint firstItem="thO-mw-1Fg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="tZU-ZP-4je"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="yBI-sS-eoq"/>
+                <constraint firstItem="xhi-9o-YK3" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="zCD-Rq-ZUF"/>
             </constraints>
             <point key="canvasLocation" x="-22.137404580152669" y="89.436619718309871"/>
         </view>
@@ -93,6 +126,7 @@
     <resources>
         <image name="SampleVenue1" width="358" height="242"/>
         <image name="backArrowV2" width="24" height="24"/>
+        <image name="logo.xbox" catalog="system" width="128" height="123"/>
         <image name="shareIconV2" width="20" height="20"/>
     </resources>
 </document>

@@ -10,7 +10,6 @@ import UIKit
 final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()

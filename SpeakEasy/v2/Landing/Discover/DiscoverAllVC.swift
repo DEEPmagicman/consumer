@@ -120,7 +120,7 @@ final class DiscoverAllVC: UIViewController {
     }
     
     private func getTonightEvent() {
-        EventPresenter.getEvents(from: tonightEventSkip ,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] _, _, eventList, hasMore in
+        EventPresenter.getEvents(from: tonightEventSkip,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] _, _, eventList, hasMore in
             guard let self = self else { return }
             
             if self.tonightEventSkip == 0 {
@@ -276,10 +276,10 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
                Navigate.eventDetailsVC(self, event: selectedEvent, heroIndex: indexPath.item)
 
            case venueListCollectionView:
-//               if isVenueInitialLoading { return }
+               if isVenueInitialLoading { return }
 
-//               let selectedVenue = openVenueList[indexPath.item]
-               Navigate.to.venueVC(self)
+               let selectedVenue = openVenueList[indexPath.item]
+               Navigate.to.venueVC(self, venueDetails: selectedVenue)
 
            case allEventsCollectionView:
                if isAllEventInitialLoading { return }
