@@ -541,8 +541,8 @@ class TicketSelectionViewController: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
-//        Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: "bookingId", type: .singleTickedEvent)
-        Navigate.to.back(self)
+        Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: "be5af872-e29d-4115-93ab-6660d47662eb", type: .singleTickedEvent)
+//        Navigate.to.back(self)
     }
 
     @IBAction func onClickLockBtn(_ sender: Any) {

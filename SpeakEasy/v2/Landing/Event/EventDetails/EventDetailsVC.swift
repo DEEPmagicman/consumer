@@ -113,6 +113,7 @@ class EventDetailsVC: UIViewController {
     var heroIndex: Int = 0
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
+    private var autoScrollTimer: Timer?
 
     private var totalSelectedTickets: Int {
         let normalTotal = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
@@ -139,11 +140,28 @@ class EventDetailsVC: UIViewController {
 
         getEventDetail()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopAutoScroll()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startAutoScrollIfNeeded()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        view.layoutIfNeeded() 
+    }
 
     deinit {
         ticketTableObserver?.invalidate()
         groupTableObserver?.invalidate()
         faqsTableObserver?.invalidate()
+        stopAutoScroll()
     }
 
     private func startFAQsTableObserver() {
@@ -1700,36 +1718,63 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension EventDetailsVC {
-
+    
     func setupImagePager() {
         let gallery = (event?.eventGallery ?? [])
             .filter { $0.status == "ENABLED" && $0.isDeleted == false }
-
+        
         let images = gallery.map { $0.key.imageURL }
-
+        
         guard !images.isEmpty else {
             imageListHiddenView.isHidden = true
+            stopAutoScroll()
             return
         }
-
+        
         imageListHiddenView.isHidden = false
-
+        
         if let pagerVC = imagePagerVC {
             pagerVC.setImages(images)
+            startAutoScrollIfNeeded()
             return
         }
-
-        let pagerVC = ImagePagerVC(transitionStyle: .scroll,
-                                   navigationOrientation: .horizontal)
+        
+        let pagerVC = ImagePagerVC(
+            transitionStyle: .scroll,
+            navigationOrientation: .horizontal
+        )
         pagerVC.setImages(images)
-
+        
         addChild(pagerVC)
         pagerVC.view.frame = imageListView.bounds
         pagerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         imageListView.addSubview(pagerVC.view)
         pagerVC.didMove(toParent: self)
-
+        
         imagePagerVC = pagerVC
+        
+        startAutoScrollIfNeeded() // ✅ added
+    }
+    
+    private func startAutoScrollIfNeeded() {
+        stopAutoScroll()
+
+        guard let pagerVC = imagePagerVC,
+              pagerVC.imageURLs.count > 1 else { return }
+
+        autoScrollTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self,
+                      let pager = self.imagePagerVC else { return }
+
+                pager.moveNext()
+            }
+        }
+    }
+    
+    private func stopAutoScroll() {
+        autoScrollTimer?.invalidate()
+        autoScrollTimer = nil
     }
 }
 

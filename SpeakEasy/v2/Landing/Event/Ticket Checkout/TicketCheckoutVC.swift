@@ -11,6 +11,13 @@ import StripeApplePay
 import StripePaymentSheet
 import MHLoadingButton
 
+
+enum DummyQuestionType {
+    case text
+    case dropdown
+    case checkbox
+}
+
 final class TicketCheckoutVC: UIViewController {
 
     // MARK: - IBOutlets
@@ -37,12 +44,16 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var shimmerView: UIView!
     @IBOutlet weak var feesDropDowenIc: UIImageView!
     @IBOutlet weak var addPromoCodeBtn: LoadingButton!
+    @IBOutlet weak var customQuestionTableView: UITableView!
+    @IBOutlet weak var customQuestionTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var customQuestionView: UIView!
     
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
     var event: Event?
     var booking: Booking?
     var bookingId: String?
+    var dummyQuestions: [DummyQuestionType] = [.text, .dropdown, .checkbox]
 
     private var countdownTimer: Timer?
     private var remainingSeconds: Int = 5 * 60
@@ -67,6 +78,7 @@ final class TicketCheckoutVC: UIViewController {
     private var shimmerBlocks: [ShimmerView] = []
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +96,15 @@ final class TicketCheckoutVC: UIViewController {
         feesAndTaxesTableView.dataSource = self
         feesAndTaxesTableView.register(TicketItemTableViewCell.nib,
                                        forCellReuseIdentifier: TicketItemTableViewCell.identifier)
+        
+        customQuestionTableView.delegate = self
+        customQuestionTableView.dataSource = self
+        customQuestionTableView.register(CustomQuestionTextFieldCell.nib,
+                                         forCellReuseIdentifier: CustomQuestionTextFieldCell.identifier)
+        customQuestionTableView.register(CustomQuestionDropdownCell.nib,
+                                         forCellReuseIdentifier: CustomQuestionDropdownCell.identifier)
+        customQuestionTableView.register(CustomQuestionCheckboxCell.nib,
+                                         forCellReuseIdentifier: CustomQuestionCheckboxCell.identifier)
         
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
@@ -639,22 +660,29 @@ final class TicketCheckoutVC: UIViewController {
 extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == self.tableView { return selectedTickets.count }
-        return feesAndTaxes.count
+
+        if tableView == self.tableView {
+            return selectedTickets.count
+        } else if tableView == self.feesAndTaxesTableView {
+            return feesAndTaxes.count
+        } else if tableView == self.customQuestionTableView {
+            return dummyQuestions.count
+        }
+
+        return 0
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: TicketItemTableViewCell.identifier,
-            for: indexPath
-        ) as? TicketItemTableViewCell else { return UITableViewCell() }
-
-        cell.selectionStyle = .none
-        cell.titleTopConstraint.constant = (indexPath.row == 0) ? 0 : 12
-
         if tableView == self.tableView {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: TicketItemTableViewCell.identifier,
+                for: indexPath
+            ) as? TicketItemTableViewCell else { return UITableViewCell() }
+
+            cell.selectionStyle = .none
+
             let ticket = selectedTickets[indexPath.row]
             let quantity = ticket.selectedTicketCount ?? 0
             let price = (ticket.price ?? 0) - (ticket.extraFees ?? 0)
@@ -662,12 +690,56 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.titleLbl.text = "\(quantity)x \(ticket.tierName)"
             cell.amountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-        } else {
+
+            return cell
+        }
+
+        if tableView == self.feesAndTaxesTableView {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: TicketItemTableViewCell.identifier,
+                for: indexPath
+            ) as? TicketItemTableViewCell else { return UITableViewCell() }
+
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
             cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+
+            return cell
         }
 
-        return cell
+        if tableView == self.customQuestionTableView {
+
+            let item = dummyQuestions[indexPath.row]
+
+            switch item {
+
+            case .text:
+                guard let cell = tableView.dequeueReusableCell(
+                    withIdentifier: CustomQuestionTextFieldCell.identifier,
+                    for: indexPath
+                ) as? CustomQuestionTextFieldCell else { return UITableViewCell() }
+                cell.selectionStyle = .none
+                return cell
+
+            case .dropdown:
+                guard let cell = tableView.dequeueReusableCell(
+                    withIdentifier: CustomQuestionDropdownCell.identifier,
+                    for: indexPath
+                ) as? CustomQuestionDropdownCell else { return UITableViewCell() }
+                cell.selectionStyle = .none
+                return cell
+
+            case .checkbox:
+                
+                guard let cell = tableView.dequeueReusableCell(
+                    withIdentifier: CustomQuestionCheckboxCell.identifier,
+                    for: indexPath
+                ) as? CustomQuestionCheckboxCell else { return UITableViewCell() }
+                cell.selectionStyle = .none
+                return cell
+            }
+        }
+
+        return UITableViewCell()
     }
 }

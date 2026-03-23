@@ -14,9 +14,10 @@ class TicketConfirmationVC: UIViewController {
     @IBOutlet weak var venueName2: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
     @IBOutlet weak var eventTitleLbl: UILabel!
-    @IBOutlet weak var noteView: UILabel!
+    @IBOutlet weak var noteLbl: UILabel!
     @IBOutlet weak var eventImgView: UIImageView!
     @IBOutlet weak var viewTicketBtn: UIButton!
+    @IBOutlet weak var viewTicketBtnView: UIView!
     
     var booking: Booking?
     var venueDetails: ClipVenue?
@@ -25,9 +26,7 @@ class TicketConfirmationVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if self.bookingId != nil {
-            getBooking(id: "93f6f680-5440-4efc-a5f2-d67af29be773")
-        }
+        getBooking(id: bookingId ?? "be5af872-e29d-4115-93ab-6660d47662eb")
     }
     
     private func setupData() {
@@ -38,6 +37,7 @@ class TicketConfirmationVC: UIViewController {
             with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage
         )
+        event = booking.event
 
         venueName.text = venueDetails?.name ?? ""
         venueName2.text = venueDetails?.name ?? ""
@@ -48,71 +48,44 @@ class TicketConfirmationVC: UIViewController {
         )
         if let hexColor = event?.whiteLabelColor {
             let color = UIColor(hex: hexColor)
-            viewTicketBtn.backgroundColor = color
+            viewTicketBtnView.backgroundColor = color
+            dateandtimeLbl.textColor = color
         }
         
-        noteView.text = booking.note ?? ""
+        let timezone = venueDetails?.useTimezone ?? ""
+
+        let dateText = event?.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .EEEMMMD,
+            customTimeZone: timezone
+        )
+
+        let startTime = event?.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .hmma,
+            customTimeZone: timezone
+        )
+
+        let endTime = event?.endDateTime?.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .hmma,
+            customTimeZone: timezone
+        ) ?? ""
+
+        dateandtimeLbl.text = "\(dateText ?? "") at \(startTime ?? "") - \(endTime)"
+        
+        noteLbl.text = booking.note ?? ""
         if let customText = event?.venue?.dressCode,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-
-            dateandtimeLbl.text = """
-            Take a piece of E11EVEN with you anywhere you go HERE
-
-            DRESS CODE:
-            Upscale and stylish nightlife attire. No oversized clothing, including but not limited to T-shirts and pants. No beachwear permitted, such as shorts, tank tops, flip-flops, baseball caps, jerseys, etc.
-
-            NOTICE OF FILMING AND PHOTOGRAPHY
-            Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            
-                        NOTICE OF FILMING AND PHOTOGRAPHY
-                        Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            
-            
-                        NOTICE OF FILMING AND PHOTOGRAPHY
-                        Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            
-                        NOTICE OF FILMING AND PHOTOGRAPHY
-                        Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            
-                        NOTICE OF FILMING AND PHOTOGRAPHY
-                        Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            
-                        NOTICE OF FILMING AND PHOTOGRAPHY
-                        Video and photography may occur while on E11EVEN Miami premises. Your attendance constitutes your consent to be photographed, filmed, and/or otherwise recorded and gives E11EVEN all usage rights at their discretion.
-            """
-
-        } else {
-
-            let timezone = venueDetails?.useTimezone ?? ""
-
-            let dateText = event?.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .EEEMMMD,
-                customTimeZone: timezone
-            )
-
-            let startTime = event?.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .hmma,
-                customTimeZone: timezone
-            )
-
-            let endTime = event?.endDateTime?.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .hmma,
-                customTimeZone: timezone
-            ) ?? "LATE"
-
-            dateandtimeLbl.text = "\(dateText ?? "") at \(startTime ?? "") - \(endTime)"
         }
     }
     
     @IBAction func onClickViewtTicket(_ sender: Any) {
-        
+        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId ?? "", type: .singleTickedEvent)
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        self.dismiss(animated: false)
+        Navigate.to.back(self)
     }
     
     private func getBooking(id: String) {

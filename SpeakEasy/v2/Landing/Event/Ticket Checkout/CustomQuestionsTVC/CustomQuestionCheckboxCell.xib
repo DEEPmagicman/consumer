@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-Regular.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="57" id="KGk-i7-Jjw" customClass="CustomQuestionCheckboxCell" customModule="Speakeasy" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="374" height="57"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="374" height="57"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O2t-Mp-2yM">
+                        <rect key="frame" x="0.0" y="0.0" width="374" height="57"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HmR-6e-hF3">
+                                <rect key="frame" x="0.0" y="5" width="22" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="O67-i2-7PF"/>
+                                    <constraint firstAttribute="height" constant="22" id="a8A-Go-qK0"/>
+                                </constraints>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="unChecked"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="yesssss" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2FY-WE-n0E">
+                                <rect key="frame" x="30.000000000000004" y="8.6666666666666679" width="45.333333333333343" height="14.666666666666668"/>
+                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2FY-WE-n0E" firstAttribute="centerY" secondItem="HmR-6e-hF3" secondAttribute="centerY" id="14s-Q4-4X7"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="HmR-6e-hF3" secondAttribute="bottom" constant="5" id="SSv-U7-DWQ"/>
+                            <constraint firstItem="HmR-6e-hF3" firstAttribute="leading" secondItem="O2t-Mp-2yM" secondAttribute="leading" id="cbg-n6-0AP"/>
+                            <constraint firstItem="2FY-WE-n0E" firstAttribute="leading" secondItem="HmR-6e-hF3" secondAttribute="trailing" constant="8" id="uDM-3h-cdl"/>
+                            <constraint firstItem="HmR-6e-hF3" firstAttribute="top" secondItem="O2t-Mp-2yM" secondAttribute="top" constant="5" id="uQJ-0J-TjZ"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="O2t-Mp-2yM" secondAttribute="trailing" id="NDF-on-OB2"/>
+                    <constraint firstItem="O2t-Mp-2yM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="QFU-1w-62Y"/>
+                    <constraint firstItem="O2t-Mp-2yM" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="pQc-ut-omP"/>
+                    <constraint firstAttribute="bottom" secondItem="O2t-Mp-2yM" secondAttribute="bottom" id="q0O-UE-BnW"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <point key="canvasLocation" x="-444.27480916030532" y="46.83098591549296"/>
+        </tableViewCell>
+        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="nsc-dq-VrF">
+            <rect key="frame" x="0.0" y="0.0" width="75" height="35"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <state key="normal" title="Button"/>
+            <buttonConfiguration key="configuration" style="plain" title="Button"/>
+            <point key="canvasLocation" x="-372" y="109"/>
+        </button>
+    </objects>
+    <resources>
+        <image name="unChecked" width="20" height="20"/>
+    </resources>
+</document>

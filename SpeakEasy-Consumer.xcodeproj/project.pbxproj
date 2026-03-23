@@ -49,6 +49,12 @@
 		0475E3252BECEAA200E4801C /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		0475E3262BECEB4600E4801C /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		0475E3272BECEB9800E4801C /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B24A928D5044B00B2FF7A /* Date+Extension.swift */; };
+		047B3B1C2F714A270085B3FC /* CustomQuestionTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B3B1A2F714A270085B3FC /* CustomQuestionTextFieldCell.swift */; };
+		047B3B1D2F714A270085B3FC /* CustomQuestionTextFieldCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047B3B1B2F714A270085B3FC /* CustomQuestionTextFieldCell.xib */; };
+		047B3B202F714A4B0085B3FC /* CustomQuestionDropdownCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B3B1E2F714A4B0085B3FC /* CustomQuestionDropdownCell.swift */; };
+		047B3B212F714A4B0085B3FC /* CustomQuestionDropdownCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047B3B1F2F714A4B0085B3FC /* CustomQuestionDropdownCell.xib */; };
+		047B3B242F714A700085B3FC /* CustomQuestionCheckboxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047B3B222F714A700085B3FC /* CustomQuestionCheckboxCell.swift */; };
+		047B3B252F714A700085B3FC /* CustomQuestionCheckboxCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047B3B232F714A700085B3FC /* CustomQuestionCheckboxCell.xib */; };
 		04862C112B96FE3300836598 /* UpSellClipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04862C102B96FE3300836598 /* UpSellClipVC.swift */; };
 		04862C132B9719A500836598 /* TicketTypeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 82847A8529828BA600611DC4 /* TicketTypeTableViewCell.xib */; };
 		04862C142B9719DC00836598 /* TicketTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A8429828BA600611DC4 /* TicketTypeTableViewCell.swift */; };
@@ -486,6 +492,12 @@
 		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
 		046E586F2AA075C200FAA0F6 /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
+		047B3B1A2F714A270085B3FC /* CustomQuestionTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuestionTextFieldCell.swift; sourceTree = "<group>"; };
+		047B3B1B2F714A270085B3FC /* CustomQuestionTextFieldCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQuestionTextFieldCell.xib; sourceTree = "<group>"; };
+		047B3B1E2F714A4B0085B3FC /* CustomQuestionDropdownCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuestionDropdownCell.swift; sourceTree = "<group>"; };
+		047B3B1F2F714A4B0085B3FC /* CustomQuestionDropdownCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQuestionDropdownCell.xib; sourceTree = "<group>"; };
+		047B3B222F714A700085B3FC /* CustomQuestionCheckboxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuestionCheckboxCell.swift; sourceTree = "<group>"; };
+		047B3B232F714A700085B3FC /* CustomQuestionCheckboxCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQuestionCheckboxCell.xib; sourceTree = "<group>"; };
 		04862C102B96FE3300836598 /* UpSellClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpSellClipVC.swift; sourceTree = "<group>"; };
 		04862C172B975F9000836598 /* QRClipVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRClipVC.swift; sourceTree = "<group>"; };
 		048CF2522BF22EC500F0D0D7 /* MaintenanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceVC.swift; sourceTree = "<group>"; };
@@ -961,6 +973,19 @@
 			path = FooterView;
 			sourceTree = "<group>";
 		};
+		047B3B152F71492A0085B3FC /* CustomQuestionsTVC */ = {
+			isa = PBXGroup;
+			children = (
+				047B3B1A2F714A270085B3FC /* CustomQuestionTextFieldCell.swift */,
+				047B3B1B2F714A270085B3FC /* CustomQuestionTextFieldCell.xib */,
+				047B3B1E2F714A4B0085B3FC /* CustomQuestionDropdownCell.swift */,
+				047B3B1F2F714A4B0085B3FC /* CustomQuestionDropdownCell.xib */,
+				047B3B222F714A700085B3FC /* CustomQuestionCheckboxCell.swift */,
+				047B3B232F714A700085B3FC /* CustomQuestionCheckboxCell.xib */,
+			);
+			path = CustomQuestionsTVC;
+			sourceTree = "<group>";
+		};
 		048CF2502BF22E6300F0D0D7 /* Maintenance */ = {
 			isa = PBXGroup;
 			children = (
@@ -983,6 +1008,7 @@
 		04A202C72F36041300900A27 /* Ticket Checkout */ = {
 			isa = PBXGroup;
 			children = (
+				047B3B152F71492A0085B3FC /* CustomQuestionsTVC */,
 				0462B9802F3F09E300E29D6D /* TicketItemCell */,
 				04A202C22F36041300900A27 /* TicketTVC */,
 				04A202C32F36041300900A27 /* TicketSelectionViewController.swift */,
@@ -2285,6 +2311,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				047B3B252F714A700085B3FC /* CustomQuestionCheckboxCell.xib in Resources */,
 				920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */,
 				04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */,
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
@@ -2335,6 +2362,7 @@
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
 				0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */,
+				047B3B1D2F714A270085B3FC /* CustomQuestionTextFieldCell.xib in Resources */,
 				CE954B8F2C39159500BD3009 /* EventQuestionTVC.xib in Resources */,
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
@@ -2355,6 +2383,7 @@
 				CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				CEC6D6D22EF92B1C00A05672 /* Landing.storyboard in Resources */,
+				047B3B212F714A4B0085B3FC /* CustomQuestionDropdownCell.xib in Resources */,
 				048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */,
 				CE0BA9302F6C158800AB8996 /* VenueEventsVC.xib in Resources */,
 				CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */,
@@ -2580,6 +2609,7 @@
 				CECE37102F6BF9640087A33A /* SJShadow.swift in Sources */,
 				CECE37112F6BF9640087A33A /* SJSegmentView.swift in Sources */,
 				CECE37122F6BF9640087A33A /* SJContentView.swift in Sources */,
+				047B3B202F714A4B0085B3FC /* CustomQuestionDropdownCell.swift in Sources */,
 				CECE37132F6BF9640087A33A /* SJSegmentTab.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
 				CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */,
@@ -2611,6 +2641,7 @@
 				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,
+				047B3B1C2F714A270085B3FC /* CustomQuestionTextFieldCell.swift in Sources */,
 				CE4867D1286F358800FD277E /* CAPSPageMenu.swift in Sources */,
 				042471522F51D18A00FC3F11 /* SkeletonOverlayView.swift in Sources */,
 				CE2605F229E55C2B00C46EFA /* EventDetailVC.swift in Sources */,
@@ -2683,6 +2714,7 @@
 				0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */,
 				CAC4140128A478040007BA86 /* UIApplication.swift in Sources */,
 				9257CAA12B988DD4009CE697 /* EncryptDecrypt.swift in Sources */,
+				047B3B242F714A700085B3FC /* CustomQuestionCheckboxCell.swift in Sources */,
 				CE4580202EF94FFB00A873C4 /* SearchVC.swift in Sources */,
 				CE09064C2EFBEB4000936E9D /* DateSelectionTVC.swift in Sources */,
 				CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */,
@@ -2821,7 +2853,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 236;
+				CURRENT_PROJECT_VERSION = 237;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2859,7 +2891,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 236;
+				CURRENT_PROJECT_VERSION = 237;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3023,7 +3055,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 236;
+				CURRENT_PROJECT_VERSION = 237;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3118,7 +3150,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 236;
+				CURRENT_PROJECT_VERSION = 237;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
