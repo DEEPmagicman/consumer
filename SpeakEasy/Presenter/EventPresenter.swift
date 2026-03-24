@@ -300,4 +300,49 @@ final class EventPresenter {
         }
     }
     
+    static func getInstagramProfile(
+        instagramUserId: String,
+        completion: @escaping (_ isSuccess: Bool,
+                               _ errMsg: String?,
+                               _ profileData: InstagramProfile?) -> Void
+    ) {
+        
+        let params: [String: Any] = [
+            "instagramUserId": instagramUserId
+        ]
+        
+        AFWrapper.postRequest(
+            APIBuilder.getInstaGramProfile,
+            params: params,
+            headers: Header.header()
+        ) { response in
+            
+            guard let responseDic = response as? [String: Any] else {
+                completion(false, "Invalid response", nil)
+                return
+            }
+            if let error = responseDic["error"] as? String {
+                completion(false, error, nil)
+                return
+            }
+        
+            do {
+                let data = try JSONSerialization.data(withJSONObject: responseDic)
+                let decoded = try JSONDecoder().decode(InstagramProfile.self, from: data)
+                completion(true, nil, decoded)
+            } catch {
+                print("Decoding error:", error)
+                completion(false, "Parsing failed", nil)
+            }
+            
+        } failure: { error in
+            
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, nil)
+                return
+            }
+            
+            completion(false, error?.localizedDescription, nil)
+        }
+    }
 }

@@ -271,11 +271,19 @@ struct Attendee: Codable {
     var firstName: String?
     var lastName: String?
     var consumerUserImage: ImageData?
+    let instagramUserId: String?
     var hasImage: Bool {
            guard let key = consumerUserImage?.key?
                .trimmingCharacters(in: .whitespacesAndNewlines) else { return false }
            return !key.isEmpty
        }
+    
+    
+    var fullName: String {
+        let first = firstName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let last = lastName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return "\(first) \(last)".trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 
     static func parse(_ dict: [String: Any]) -> Attendee? {
         do {
@@ -416,4 +424,11 @@ struct CustomVenue: Codable {
         try container.encode(lat, forKey: .lat)
         try container.encode(lng, forKey: .lng)
     }
+}
+
+struct InstagramProfile: Codable {
+    let instagramUserId: String?
+    let profilePictureKey: String?
+    let profilePictureFilename: String?
+    let message: String?
 }

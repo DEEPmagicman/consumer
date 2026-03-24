@@ -128,6 +128,10 @@ class EventDetailsVC: UIViewController {
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
 
         hero.isEnabled = true
+        navigationController?.hero.isEnabled = true
+        mainImg.hero.id = "event.image.\(heroIndex)"
+          titleLbl.hero.id = "event.title.\(heroIndex)"
+        
         setupData()
         setupCollectionViews()
         setupTableView()
@@ -932,6 +936,23 @@ class EventDetailsVC: UIViewController {
     private func updateContinueBtnState() {
         continueToCheckOutView.isHidden = totalSelectedTickets == 0
     }
+    
+    private func showGuestListPopup() {
+        guard !attendees.isEmpty else { return }
+
+        let vc = GuestListPopupVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        vc.attendees = attendees
+        present(vc, animated: false)
+    }
+    
+    private func showIntsaPopup() {
+        let vc = InstagramUsernamePopupVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        present(vc, animated: false)
+    }
 
     @IBAction func onClickInlineContinue(_ sender: Any) {
         guard let event else { return }
@@ -1108,6 +1129,21 @@ class EventDetailsVC: UIViewController {
            let url = URL(string: button.link) {
             UIApplication.shared.open(url)
         }
+    }
+    
+    
+    @IBAction func onClickViewGuestListBtn(_ sender: Any) {
+        if UserDefault.shared.isLoggedIn ??  false {
+            if let intsaGramId = UserDefault.shared.user?.instagramId  {
+                showGuestListPopup()
+            } else {
+                showIntsaPopup()
+            }
+          
+        } else {
+            Alert.showToast("please login ot purches ticket for view gurst list")
+        }
+        
     }
 
     @IBAction func onClickUnLockBtn(_ sender: Any) {

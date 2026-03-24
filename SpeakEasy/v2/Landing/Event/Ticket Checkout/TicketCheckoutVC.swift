@@ -54,6 +54,44 @@ final class TicketCheckoutVC: UIViewController {
     var booking: Booking?
     var bookingId: String?
     var dummyQuestions: [DummyQuestionType] = [.text, .dropdown, .checkbox]
+    
+    var eventQuestions = [Questions]()
+    var questionAnswers = [String: Any]()
+    var isEventQueAnsCollected = false
+    private var questionHeightObservation: NSKeyValueObservation?    
+    private var setAnswerData: Bool {
+
+        var requiredIndex = [Int]()
+
+        for (index, element) in eventQuestions.enumerated() {
+            if !element.isOptional {
+                requiredIndex.append(index)
+            }
+        }
+
+        var requiredEmptyIndex = [Int]()
+
+        for index in requiredIndex {
+            let q = eventQuestions[index]
+            let id = q.id
+
+            if q.questionType == "MULTI_SELECT" {
+                if questionAnswers[id] as? [String] ?? [] == [] {
+                    requiredEmptyIndex.append(index)
+                }
+            } else if q.questionType == "SINGLE_SELECT" || q.questionType == "TEXT" {
+                if questionAnswers[id] as? String ?? "" == "" {
+                    requiredEmptyIndex.append(index)
+                }
+            } else {
+                if questionAnswers[id] as? Bool ?? false == false {
+                    requiredEmptyIndex.append(index)
+                }
+            }
+        }
+
+        return requiredEmptyIndex.isEmpty
+    }
 
     private var countdownTimer: Timer?
     private var remainingSeconds: Int = 5 * 60
@@ -106,6 +144,14 @@ final class TicketCheckoutVC: UIViewController {
         customQuestionTableView.register(CustomQuestionCheckboxCell.nib,
                                          forCellReuseIdentifier: CustomQuestionCheckboxCell.identifier)
         
+        customQuestionTableView.register(EventQuestionTVC.nib,
+                                         forCellReuseIdentifier: EventQuestionTVC.identifier)
+
+        questionHeightObservation = customQuestionTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+            guard let self = self else { return }
+            self.customQuestionTableViewHeight.constant = self.customQuestionTableView.contentSize.height
+        }
+                
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
         updatePromoButtonIcon()
@@ -115,6 +161,7 @@ final class TicketCheckoutVC: UIViewController {
         calculateTotal()
         showCheckoutShimmer()
         getBooking(id: bookingId)
+        getEventQuestions()
 
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
@@ -166,6 +213,22 @@ final class TicketCheckoutVC: UIViewController {
                 self.reloadFeesUIFromBooking()
             }
             self.isBookingLoaded = true
+        }
+    }
+    
+    private func getEventQuestions() {
+        PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
+            guard let self = self else { return }
+
+            if isSuccess {
+                self.eventQuestions = questions?.filter({ $0.isDeleted == false }) ?? []
+//                self.customQuestionView.isHidden = self.eventQuestions.isEmpty
+                DispatchQueue.main.async {
+                    self.customQuestionTableView.reloadData()
+                }
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? "Error", message: "")
+            }
         }
     }
 
@@ -666,7 +729,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
         } else if tableView == self.feesAndTaxesTableView {
             return feesAndTaxes.count
         } else if tableView == self.customQuestionTableView {
-            return dummyQuestions.count
+            return eventQuestions.count
         }
 
         return 0
@@ -709,37 +772,70 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
 
         if tableView == self.customQuestionTableView {
 
-            let item = dummyQuestions[indexPath.row]
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: EventQuestionTVC.identifier,
+                for: indexPath
+            ) as? EventQuestionTVC else { return UITableViewCell() }
 
-            switch item {
+            let question = eventQuestions[indexPath.row]
 
-            case .text:
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: CustomQuestionTextFieldCell.identifier,
-                    for: indexPath
-                ) as? CustomQuestionTextFieldCell else { return UITableViewCell() }
-                cell.selectionStyle = .none
-                return cell
+            cell.delegate = self
+            cell.selectedIndex = indexPath.row
+            cell.questionType = question.questionType
 
-            case .dropdown:
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: CustomQuestionDropdownCell.identifier,
-                    for: indexPath
-                ) as? CustomQuestionDropdownCell else { return UITableViewCell() }
-                cell.selectionStyle = .none
-                return cell
+            cell.questionNameLbl.text = "\(question.question) \(question.isOptional == false ? "*" : "")"
+            cell.checkBoxQuestionLbl.text = cell.questionNameLbl.text
 
-            case .checkbox:
-                
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: CustomQuestionCheckboxCell.identifier,
-                    for: indexPath
-                ) as? CustomQuestionCheckboxCell else { return UITableViewCell() }
-                cell.selectionStyle = .none
-                return cell
+            cell.multiSelectView.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
+            cell.checkBoxView.isHidden = !(question.questionType == "CHECKBOX")
+            cell.textQuestionView.isHidden = !(question.questionType == "TEXT")
+            cell.questionView.isHidden = question.questionType == "CHECKBOX"
+
+            cell.options = question.eventQuestionHasOption?.map { $0.option } ?? []
+
+            let isEnabled = !isEventQueAnsCollected
+            cell.dropDownBtn.isUserInteractionEnabled = isEnabled
+            cell.textQuestionView.isUserInteractionEnabled = isEnabled
+            cell.checkBox.isUserInteractionEnabled = isEnabled
+            cell.multiSelectView.isUserInteractionEnabled = isEnabled
+            cell.selectionStyle = .none
+
+            if let answer = questionAnswers[question.id] {
+                if let str = answer as? String {
+                    if question.questionType == "TEXT" {
+                        cell.textQuestionView.text = str
+                    } else {
+                        cell.multiSelectLbl.text = str
+                    }
+                } else if let arr = answer as? [String] {
+                    cell.multiSelectLbl.text = arr.joined(separator: ", ")
+                } else if let bool = answer as? Bool {
+                    cell.checkBox.isSelected = bool
+                }
             }
+
+            return cell
         }
 
         return UITableViewCell()
+    }
+}
+
+
+extension TicketCheckoutVC: DropDownDelegate {
+
+    func textAns(ans: String, index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
+    }
+
+    func boolAns(ans: Bool, index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
+    }
+
+    func multipleAns(ans: [String], index: Int) {
+        let id = eventQuestions[index].id
+        questionAnswers[id] = ans
     }
 }

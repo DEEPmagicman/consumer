@@ -146,7 +146,7 @@ final class OnBoardingPresenter {
         }
     }
             
-    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
+    func editUserProfileApi(fName: String? = nil, lName: String? = nil, nickName: String? = nil, email: String? = nil, password: String? = nil, dob: String? = nil, gender: String? = nil, image: ImageDetail? = nil, city: String? = nil, vibeIds: [String]? = nil, drinkIds: [String]? = nil, instagramToken: String? = nil, spotifyToken: String? = nil, instagramUserId: String? = nil, isProfileCompleted: Bool? = nil, completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void) {
         var param: [String: Any] = [:]
         if let fName = fName, fName != "" {
             param["firstName"] = fName
@@ -195,7 +195,10 @@ final class OnBoardingPresenter {
         if let isProfileCompleted = isProfileCompleted {
             param["isProfileCompleted"] = isProfileCompleted
         }
-        
+        if let instagramUserId = instagramUserId {
+            param["instagramUserId"] = instagramUserId
+        }
+
         AFWrapper.patchRequest(APIBuilder.userProfileURL, params: param, headers: Header.header()) { response in
             
             guard response is [String: Any] else {

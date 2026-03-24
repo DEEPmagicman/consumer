@@ -301,7 +301,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="361" height="60"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="VIP Tables" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ka-ka-Zwu">
-                                                                    <rect key="frame" x="10" y="9.9999999999999982" width="80.666666666666671" height="20.333333333333329"/>
+                                                                    <rect key="frame" x="10" y="9.9999999999999982" width="74.666666666666671" height="20.333333333333329"/>
                                                                     <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="16"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <nil key="highlightedColor"/>
@@ -327,7 +327,7 @@
                                                                             </connections>
                                                                         </button>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Book Now" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPa-1P-ZGQ">
-                                                                            <rect key="frame" x="16" y="12.666666666666742" width="59" height="14.666666666666664"/>
+                                                                            <rect key="frame" x="16" y="13" width="59" height="14"/>
                                                                             <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="12"/>
                                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <nil key="highlightedColor"/>
@@ -593,7 +593,7 @@
                                                     <rect key="frame" x="0.0" y="76" width="361" height="38"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ls7-Ju-Alu">
-                                                            <rect key="frame" x="0.0" y="0.0" width="52.333333333333336" height="28"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="48.666666666666664" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="28" id="45o-H0-xjV"/>
                                                             </constraints>
@@ -614,7 +614,7 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="361" height="20"/>
                                                                     <subviews>
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uOJ-Mj-X4E">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="77" height="20"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="71" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="uSc-5N-oVG"/>
                                                                             </constraints>
@@ -680,6 +680,9 @@
                                                                     <buttonConfiguration key="configuration" style="plain" title="View Guestlist">
                                                                         <fontDescription key="titleFontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                                                     </buttonConfiguration>
+                                                                    <connections>
+                                                                        <action selector="onClickViewGuestListBtn:" destination="-1" eventType="touchUpInside" id="eIx-2d-quu"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="cSa-oj-Auc">
                                                                     <rect key="frame" x="0.0" y="36" width="377" height="60"/>
@@ -853,7 +856,7 @@
                                                                     <rect key="frame" x="0.0" y="4" width="361" height="20"/>
                                                                     <subviews>
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wds-5O-lBI">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="77" height="20"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="71" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="JQP-qB-xW4"/>
                                                                             </constraints>
@@ -901,7 +904,7 @@
                                                     <rect key="frame" x="0.0" y="122" width="361" height="158"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FAQs" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="UtC-G7-9BB">
-                                                            <rect key="frame" x="0.0" y="16" width="35.666666666666664" height="20"/>
+                                                            <rect key="frame" x="0.0" y="16" width="34" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="N46-X7-pJH"/>
                                                             </constraints>
@@ -972,7 +975,7 @@
                                                     <rect key="frame" x="0.0" y="492.00000000000011" width="361" height="271.33333333333337"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="29 NE 11th St, Miami, 33132" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYG-fT-Pkc">
-                                                            <rect key="frame" x="0.0" y="0.0" width="194.66666666666666" height="18.333333333333332"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="192.33333333333334" height="18.333333333333332"/>
                                                             <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="15"/>
                                                             <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -1276,16 +1279,16 @@
                                     </constraints>
                                 </stackView>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YC6-Op-uUt">
-                                    <rect key="frame" x="285" y="20.666666666666629" width="92" height="40"/>
+                                    <rect key="frame" x="287.66666666666669" y="20.666666666666629" width="89.333333333333314" height="40"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Buy Now" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x8j-iV-OnB">
-                                            <rect key="frame" x="16" y="11.333333333333371" width="60" height="17"/>
+                                            <rect key="frame" x="16.000000000000004" y="11.666666666666741" width="57.333333333333343" height="16.333333333333329"/>
                                             <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="14"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHG-PF-Hm5">
-                                            <rect key="frame" x="0.0" y="0.0" width="92" height="40"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="89.333333333333329" height="40"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -1321,7 +1324,7 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zNt-vj-EYP" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
-                                    <rect key="frame" x="285" y="20.666666666666629" width="92" height="40"/>
+                                    <rect key="frame" x="287.66666666666669" y="20.666666666666629" width="89.333333333333314" height="40"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="Pqy-Cs-51Q"/>
@@ -1465,7 +1468,7 @@
         <image name="lockIc" width="20" height="20"/>
         <image name="shareIconV2" width="20" height="20"/>
         <namedColor name="AccentColor">
-            <color red="0.52941176470588236" green="0.77254901960784317" blue="0.25098039215686274" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.52899998426437378" green="0.77300000190734863" blue="0.25099998712539673" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="TouchBarBezel">
             <color red="0.79607843137254897" green="0.18823529411764706" blue="0.8784313725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

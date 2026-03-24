@@ -95,6 +95,14 @@ struct Constant {
         static func interMedium(size: CGFloat) -> UIFont {
             return UIFont(name: "Inter-Medium", size: size)!
         }
+        
+        static func interSemiBold(size: CGFloat) -> UIFont {
+            return UIFont(name: "Inter-SemiBold", size: size)!
+        }
+        
+        static func interBold(size: CGFloat) -> UIFont {
+            return UIFont(name: "Inter-Bold", size: size)!
+        }
     }
     
     struct Card {

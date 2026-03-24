@@ -25,10 +25,10 @@ struct User {
     var phoneVerified: Bool
     var status: String
     var image: ImageDetail
-//    var instagramId: String
+    var instagramId: String?
 //    var instagramToken: String?
 //    var instaNextPageURL: String?
-//    var instaUserName: String?
+    var instaUserName: String?
 //    var spotifyId: String
     var isDeleted: Bool
     var lastLogin: String

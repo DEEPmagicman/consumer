@@ -546,7 +546,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m1F-Ch-F3U">
-                                                            <rect key="frame" x="0.0" y="283.66666666666663" width="365" height="348"/>
+                                                            <rect key="frame" x="0.0" y="283.66666666666663" width="365" height="332"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additional Information" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlK-0p-4U0">
                                                                     <rect key="frame" x="16" y="16" width="349" height="0.0"/>
@@ -555,7 +555,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="pwM-cA-m9x">
-                                                                    <rect key="frame" x="16" y="32" width="333" height="300"/>
+                                                                    <rect key="frame" x="16" y="16" width="333" height="300"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="300" id="q6O-Nf-VeV"/>
@@ -567,11 +567,16 @@
                                                                 <constraint firstItem="jlK-0p-4U0" firstAttribute="leading" secondItem="m1F-Ch-F3U" secondAttribute="leading" constant="16" id="83F-l1-9kd"/>
                                                                 <constraint firstAttribute="trailing" secondItem="pwM-cA-m9x" secondAttribute="trailing" constant="16" id="R9r-Cr-qeD"/>
                                                                 <constraint firstItem="jlK-0p-4U0" firstAttribute="top" secondItem="m1F-Ch-F3U" secondAttribute="top" constant="16" id="e9M-ix-efZ"/>
-                                                                <constraint firstItem="pwM-cA-m9x" firstAttribute="top" secondItem="jlK-0p-4U0" secondAttribute="bottom" constant="16" id="f0F-Hn-EV0"/>
+                                                                <constraint firstItem="pwM-cA-m9x" firstAttribute="top" secondItem="jlK-0p-4U0" secondAttribute="bottom" id="f0F-Hn-EV0"/>
                                                                 <constraint firstAttribute="trailing" secondItem="jlK-0p-4U0" secondAttribute="trailing" id="flM-tu-FeO"/>
                                                                 <constraint firstAttribute="bottom" secondItem="pwM-cA-m9x" secondAttribute="bottom" constant="16" id="j7r-6r-Ukg"/>
                                                                 <constraint firstItem="pwM-cA-m9x" firstAttribute="leading" secondItem="m1F-Ch-F3U" secondAttribute="leading" constant="16" id="uVk-Dn-DiD"/>
                                                             </constraints>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                    <real key="value" value="4"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -595,7 +600,7 @@
                                     </constraints>
                                 </scrollView>
                                 <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hTo-sI-YuL">
-                                    <rect key="frame" x="0.0" y="-120.33333333333331" width="393" height="184"/>
+                                    <rect key="frame" x="0.0" y="-120.33333333333333" width="393" height="184"/>
                                     <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="asF-HP-rFn">
@@ -756,7 +761,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

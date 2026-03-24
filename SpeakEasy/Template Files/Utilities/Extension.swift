@@ -300,6 +300,40 @@ extension UIView {
     }
 }
 
+extension UIView {
+
+    func applyGradient(id: String) {
+        layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        let colors = gradientColors(for: id)
+
+        let gradient = CAGradientLayer()
+        gradient.frame = bounds
+        gradient.cornerRadius = bounds.height / 2
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 1)
+
+        layer.insertSublayer(gradient, at: 0)
+    }
+
+    private func gradientColors(for id: String) -> [UIColor] {
+        let palettes: [[UIColor]] = [
+            [UIColor(hex: "#f9d423"), UIColor(hex: "#ff4e50")],
+            [UIColor(hex: "#a1ffce"), UIColor(hex: "#faffd1")],
+            [UIColor(hex: "#fbc2eb"), UIColor(hex: "#a6c1ee")],
+            [UIColor(hex: "#fad0c4"), UIColor(hex: "#ffd1ff")],
+            [UIColor(hex: "#89f7fe"), UIColor(hex: "#66a6ff")],
+            [UIColor(hex: "#fbc2eb"), UIColor(hex: "#f9d423")],
+            [UIColor(hex: "#ffecd2"), UIColor(hex: "#fcb69f")],
+            [UIColor(hex: "#a18cd1"), UIColor(hex: "#fbc2eb")]
+        ]
+
+        let index = abs(id.hashValue) % palettes.count
+        return palettes[index]
+    }
+}
+
 extension UITapGestureRecognizer {
     func didTapAttributedTextInLabel(label: UILabel, inRange targetRange: NSRange) -> Bool {
         let layoutManager = NSLayoutManager()

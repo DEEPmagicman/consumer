@@ -20,4 +20,8 @@ class CustomQuestionDropdownCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    @IBAction func onClickDropdowenBtn(_ sender: Any) {
+        
+        
+    }
 }
