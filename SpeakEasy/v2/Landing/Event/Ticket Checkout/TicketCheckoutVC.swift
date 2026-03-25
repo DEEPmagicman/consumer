@@ -47,6 +47,8 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var customQuestionTableView: UITableView!
     @IBOutlet weak var customQuestionTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var customQuestionView: UIView!
+    @IBOutlet weak var privacyPolicyLbl: UILabel!
+    @IBOutlet weak var checkBox: UIButton!
     
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
@@ -194,6 +196,7 @@ final class TicketCheckoutVC: UIViewController {
         venueName.text = venueDetails?.name
         venueName2.text = venueDetails?.name
         eventTitleLbl.text = event?.title
+        privacyPolicyLbl.text = "I agree to receive marketing related text messages from \(venueDetails?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
     }
 
     private func getBooking(id: String?) {
@@ -545,10 +548,20 @@ final class TicketCheckoutVC: UIViewController {
         }
     }
     
-    @IBAction func onClickChekBox(_ sender: Any) {
-        
+    @IBAction func onClickCheckBox(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        let image = sender.isSelected ? UIImage(named: "checkBox") : UIImage(named: "ic_checkbox_unchecked")
+        sender.setImage(image, for: .normal)
+        sender.titleLabel?.textColor = .white
+
+        UIView.animate(withDuration: 0.15, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+        }) { _ in
+            UIView.animate(withDuration: 0.15) {
+                sender.transform = .identity
+            }
+        }
     }
-    
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
         
 //        Navigate.to.ticketConfirmationVC(self)
@@ -585,25 +598,21 @@ final class TicketCheckoutVC: UIViewController {
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
         cancelBooking()
-        Navigate.to.back(self)
+        navigationController?.popToRootViewController(animated: false)
+
     }
 
     @IBAction func onClickFeesAndTaxes(_ sender: Any) {
+        let isHidden = feesAndTaxesContainerView.isHidden
         feesAndTaxesContainerView.isHidden.toggle()
-    }
-    
-    @IBAction func onClickAddPromoCode(_ sender: Any) {
-
-        let isHidden = promoCodeView.isHidden
-        
         UIView.animate(withDuration: 0.25) {
             self.feesDropDowenIc.transform = isHidden
             ? CGAffineTransform(rotationAngle: .pi)
             : .identity
-            
-            self.view.layoutIfNeeded()
         }
-        
+    }
+    
+    @IBAction func onClickAddPromoCode(_ sender: Any) {
         promoCodeView.isHidden.toggle()
     }
 
@@ -766,6 +775,7 @@ extension TicketCheckoutVC: UITableViewDelegate, UITableViewDataSource {
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
             cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
+            cell.selectionStyle = .none
 
             return cell
         }

@@ -402,3 +402,30 @@ extension UITextView {
         }
     }
 }
+
+extension NSMutableAttributedString {
+    func trimTrailingWhitespaceAndNewlines() {
+        let ws = CharacterSet.whitespacesAndNewlines
+        while length > 0 {
+            let lastRange = NSRange(location: length - 1, length: 1)
+            let lastChar = (string as NSString).substring(with: lastRange)
+            if lastChar.rangeOfCharacter(from: ws) != nil {
+                deleteCharacters(in: lastRange)
+            } else {
+                break
+            }
+        }
+    }
+
+    func forceSystemFont15() {
+        let base = Constant.Font.interRegular(size: 12)
+
+        enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
+            let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
+            let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
+            let newFont = UIFont(descriptor: descriptor, size: 12)
+            self.addAttribute(.font, value: newFont, range: range)
+        }
+    }
+}
+

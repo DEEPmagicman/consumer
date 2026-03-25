@@ -28,6 +28,7 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var comingSoonView: UIView!
     @IBOutlet weak var topSapraterView: UIView!
+    @IBOutlet weak var shimmerView: ShimmerView!
     
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
@@ -49,6 +50,8 @@ class TicketsTVC: UITableViewCell {
         onDescriptionToggle = nil
         isDescriptionExpanded = false
         isLinkDisabled = false
+        shimmerView.stopAnimating()
+        shimmerView.isHidden = true
         resetUI()
     }
 
@@ -135,6 +138,18 @@ class TicketsTVC: UITableViewCell {
         minusView.isHidden = true
         plusView.isHidden = true
         rsvpBtnView.isHidden = true
+    }
+    
+    func showShimmer() {
+        shimmerView.isHidden = false
+        bgView.isHidden = true
+        shimmerView.startAnimating()
+    }
+    
+    func hideShimmer() {
+        shimmerView.stopAnimating()
+        shimmerView.isHidden = true
+        bgView.isHidden = false
     }
 
     private func setupDescription(_ text: String?) {

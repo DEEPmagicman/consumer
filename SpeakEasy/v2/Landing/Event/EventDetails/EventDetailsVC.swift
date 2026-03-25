@@ -67,7 +67,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var venueLogoShimmerView: ShimmerView!
     @IBOutlet weak var ticketShimmerView: ShimmerView!
     @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
     @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
@@ -81,7 +80,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
-
+    
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
     private var playerView: YTPlayerView!
@@ -211,7 +210,7 @@ class EventDetailsVC: UIViewController {
         ticketShimmerView.isHidden = false
         ticketTitleShimmerView.isHidden = false
         buyNowBtnShimmerView.isHidden = false
-        buyNowBtnShimmerView.cornerRadius = 30
+//        buyNowBtnShimmerView.cornerRadius = 30
         ticketTitleStackShimmerView.isHidden = false
         ticketTitleStackView.isHidden = true
 
@@ -586,7 +585,29 @@ class EventDetailsVC: UIViewController {
         }
 
         venueLogoImg.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
-        venueLogo.sd_setImage(with: URL(string: (venueDetails?.logo?.key ?? "").imageURL), completed: nil)
+        
+        
+        if let imageUrlString = venueDetails?.logo?.key.imageURL,
+           let url = URL(string: imageUrlString) {
+            
+            venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
+                guard let self = self else { return }
+
+                self.venueLogo.alpha = 0
+                self.venueLogo.transform = CGAffineTransform(translationX: -50, y: 0)
+
+                UIView.animate(withDuration: 0.4,
+                               delay: 0,
+                               options: [.curveEaseOut],
+                               animations: {
+                    self.venueLogo.isHidden = false
+                    self.venueLogo.alpha = 1
+                    self.venueLogo.transform = .identity
+                }, completion: nil)
+            }
+        } else {
+            venueLogo.isHidden = true
+        }
 
         updateLocationOnMap(
             to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0),
@@ -831,7 +852,7 @@ class EventDetailsVC: UIViewController {
 
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
         if hasAddOn {
-            Navigate.to.ticketSelectionVc(self, event: event)
+            Navigate.to.ticketSelectionVc(self, event: event, mode: .addOn)
             return
         }
 
@@ -921,7 +942,7 @@ class EventDetailsVC: UIViewController {
 
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
         if hasAddOn {
-            Navigate.to.ticketSelectionVc(self, event: event)
+            Navigate.to.ticketSelectionVc(self, event: event, mode: .addOn)
             return
         }
 
@@ -951,6 +972,21 @@ class EventDetailsVC: UIViewController {
         let vc = InstagramUsernamePopupVC()
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
+        vc.onSubmitUsername = { [weak self] profileData in
+            guard let self = self else { return }
+            if let data = profileData {
+                showInstagramProfileFoundPopup(instagramProfile: data)
+            }
+        }
+        present(vc, animated: false)
+    }
+    
+    private func showInstagramProfileFoundPopup(instagramProfile: InstagramProfile) {
+        let vc = InstagramProfileFoundPopupVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        vc.imageURL = instagramProfile.profilePictureKey
+        vc.instaProfileData = instagramProfile
         present(vc, animated: false)
     }
 
@@ -967,7 +1003,7 @@ class EventDetailsVC: UIViewController {
 
         let hasAddOn = !(event.eventAddOnTicket?.isEmpty ?? true)
         if hasAddOn {
-            Navigate.to.ticketSelectionVc(self, event: event)
+            Navigate.to.ticketSelectionVc(self, event: event, mode: .addOn)
             return
         }
 
@@ -1005,7 +1041,6 @@ class EventDetailsVC: UIViewController {
             ]
         }
 
-        continueToCheckOutBtn.isUserInteractionEnabled = false
 
         PaymentPresenter.createEventBookingV2(
             eventId: event.id,
@@ -1017,7 +1052,6 @@ class EventDetailsVC: UIViewController {
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else { return }
 
-            self.continueToCheckOutBtn.isUserInteractionEnabled = true
 
             if isSuccess {
                 Navigate.to.ticketCheckoutVC(
@@ -1108,7 +1142,7 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickBuyNow(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.ticketSelectionVc(self, event: event)
+            Navigate.to.ticketSelectionVc(self, event: event, mode: .normal)
         }
     }
 
@@ -1130,11 +1164,10 @@ class EventDetailsVC: UIViewController {
             UIApplication.shared.open(url)
         }
     }
-    
-    
+        
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
         if UserDefault.shared.isLoggedIn ??  false {
-            if let intsaGramId = UserDefault.shared.user?.instagramId  {
+            if let intsaGramId = UserDefault.shared.user?.instagramUserId  {
                 showGuestListPopup()
             } else {
                 showIntsaPopup()
@@ -1554,6 +1587,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
             }
 
             cell.selectionStyle = .none
+            cell.hideShimmer()
             cell.isFromGroupTicket = false
 
             let ticket = tickets[indexPath.row]
@@ -1789,7 +1823,7 @@ extension EventDetailsVC {
         
         imagePagerVC = pagerVC
         
-        startAutoScrollIfNeeded() // ✅ added
+        startAutoScrollIfNeeded()
     }
     
     private func startAutoScrollIfNeeded() {
@@ -1811,116 +1845,6 @@ extension EventDetailsVC {
     private func stopAutoScroll() {
         autoScrollTimer?.invalidate()
         autoScrollTimer = nil
-    }
-}
-
-class ImagePagerVC: UIPageViewController {
-
-    var imageURLs: [String] = []
-    private var pages: [ImagePageVC] = []
-    private(set) var currentIndex = 0
-    private var isTransitioning = false
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        dataSource = self
-        delegate = self
-    }
-
-    func setImages(_ urls: [String]) {
-        imageURLs = urls
-        buildPages()
-
-        currentIndex = 0
-        if let firstVC = pages.first {
-            setViewControllers([firstVC], direction: .forward, animated: false)
-        }
-    }
-
-    private func syncCurrentIndexFromVisible() {
-        guard let visible = viewControllers?.first as? ImagePageVC,
-              let idx = pages.firstIndex(where: { $0 === visible }) else { return }
-        currentIndex = idx
-    }
-
-    private func buildPages() {
-        pages = imageURLs.map { url in
-            let vc = ImagePageVC()
-            vc.imageURL = url
-            return vc
-        }
-
-        currentIndex = 0
-        guard let first = pages.first else { return }
-        setViewControllers([first], direction: .forward, animated: false)
-    }
-
-    func moveNext() {
-        guard pages.count > 1, !isTransitioning else { return }
-        syncCurrentIndexFromVisible()
-
-        let nextIndex = (currentIndex + 1) % pages.count
-        isTransitioning = true
-        setViewControllers([pages[nextIndex]], direction: .forward, animated: true) { [weak self] finished in
-            guard let self else { return }
-            self.isTransitioning = false
-            if finished { self.currentIndex = nextIndex }
-        }
-    }
-
-    func movePrevious() {
-        guard pages.count > 1, !isTransitioning else { return }
-        syncCurrentIndexFromVisible()
-
-        let prevIndex = (currentIndex - 1 + pages.count) % pages.count
-        isTransitioning = true
-        setViewControllers([pages[prevIndex]], direction: .reverse, animated: true) { [weak self] finished in
-            guard let self else { return }
-            self.isTransitioning = false
-            if finished { self.currentIndex = prevIndex }
-        }
-    }
-}
-
-extension ImagePagerVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
-
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard pages.count > 1,
-              let vc = viewController as? ImagePageVC,
-              let index = pages.firstIndex(where: { $0 === vc }) else { return nil }
-
-        let prev = (index - 1 + pages.count) % pages.count
-        return pages[prev]
-    }
-
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard pages.count > 1,
-              let vc = viewController as? ImagePageVC,
-              let index = pages.firstIndex(where: { $0 === vc }) else { return nil }
-
-        let next = (index + 1) % pages.count
-        return pages[next]
-    }
-
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            willTransitionTo pendingViewControllers: [UIViewController]) {
-        isTransitioning = true
-    }
-
-    func pageViewController(_ pageViewController: UIPageViewController,
-                            didFinishAnimating finished: Bool,
-                            previousViewControllers: [UIViewController],
-                            transitionCompleted completed: Bool) {
-
-        isTransitioning = false
-
-        guard completed,
-              let visible = viewControllers?.first as? ImagePageVC,
-              let idx = pages.firstIndex(where: { $0 === visible }) else { return }
-
-        currentIndex = idx
     }
 }
 
@@ -1959,32 +1883,6 @@ extension EventDetailsVC: YTPlayerViewDelegate {
             .queryItems?
             .first(where: { $0.name == "v" })?
             .value
-    }
-}
-
-extension NSMutableAttributedString {
-    func trimTrailingWhitespaceAndNewlines() {
-        let ws = CharacterSet.whitespacesAndNewlines
-        while length > 0 {
-            let lastRange = NSRange(location: length - 1, length: 1)
-            let lastChar = (string as NSString).substring(with: lastRange)
-            if lastChar.rangeOfCharacter(from: ws) != nil {
-                deleteCharacters(in: lastRange)
-            } else {
-                break
-            }
-        }
-    }
-
-    func forceSystemFont15() {
-        let base = Constant.Font.interRegular(size: 12)
-
-        enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
-            let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
-            let descriptor = base.fontDescriptor.withSymbolicTraits(traits) ?? base.fontDescriptor
-            let newFont = UIFont(descriptor: descriptor, size: 12)
-            self.addAttribute(.font, value: newFont, range: range)
-        }
     }
 }
 

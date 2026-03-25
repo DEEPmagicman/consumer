@@ -35,6 +35,7 @@
 		044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
+		045B4AA82F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045B4AA72F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift */; };
 		045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */; };
 		045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */; };
 		045D2BFB2F3A163700842613 /* TicketConfirmationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D2BF92F3A163700842613 /* TicketConfirmationVC.swift */; };
@@ -83,6 +84,7 @@
 		04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A433202F444B3800FB119A /* TableSeatingViewController.xib */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
+		04AE50A72F73CCB20080878C /* ImagePagerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AE50A62F73CCB20080878C /* ImagePagerVC.swift */; };
 		04C2E9462F331D1C00C5D4FC /* VenueTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */; };
 		04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */; };
 		04CC7BCD2F52CC8000ABB455 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CC7BCC2F52CC8000ABB455 /* SignUpViewController.swift */; };
@@ -485,6 +487,7 @@
 		044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInBottomSheet.swift; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
+		045B4AA72F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramProfileFoundPopupVC.swift; sourceTree = "<group>"; };
 		045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDetailsTVC.swift; sourceTree = "<group>"; };
 		045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PurchaseDetailsTVC.xib; sourceTree = "<group>"; };
 		045D2BF92F3A163700842613 /* TicketConfirmationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketConfirmationVC.swift; sourceTree = "<group>"; };
@@ -523,6 +526,7 @@
 		04A4331D2F442DFB00FB119A /* TablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePresenter.swift; sourceTree = "<group>"; };
 		04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSeatingViewController.swift; sourceTree = "<group>"; };
 		04A433202F444B3800FB119A /* TableSeatingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableSeatingViewController.xib; sourceTree = "<group>"; };
+		04AE50A62F73CCB20080878C /* ImagePagerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePagerVC.swift; sourceTree = "<group>"; };
 		04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueTVC.swift; sourceTree = "<group>"; };
 		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
 		04CC7BCC2F52CC8000ABB455 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -897,7 +901,9 @@
 				04A202E62F36054200900A27 /* EventGuestListCVC */,
 				0425E3C72F3460B8005E4130 /* EventDetailsVC.swift */,
 				0437220D2F72925C00E4F985 /* GuestListPopupVC.swift */,
+				04AE50A62F73CCB20080878C /* ImagePagerVC.swift */,
 				0437220F2F7292EE00E4F985 /* InstagramUsernamePopupVC.swift */,
+				045B4AA72F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift */,
 				043722112F7294AA00E4F985 /* GuestListPopupCell.swift */,
 				0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */,
 			);
@@ -2693,6 +2699,7 @@
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				04A433212F444B3800FB119A /* TableSeatingViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
+				045B4AA82F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift in Sources */,
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				CE45A5B72C3BC9DB00E1FE3F /* DPDUIView+Extension.swift in Sources */,
@@ -2707,6 +2714,7 @@
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				BD3FB24F294068B900BE7713 /* StoryboardAndXibManager.swift in Sources */,
 				BD942F4129595E1A00D52115 /* OnBoardingPresenter.swift in Sources */,
+				04AE50A72F73CCB20080878C /* ImagePagerVC.swift in Sources */,
 				CE954B8E2C39159500BD3009 /* EventQuestionTVC.swift in Sources */,
 				CAC413FF28A478040007BA86 /* Double.swift in Sources */,
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
@@ -2865,7 +2873,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 238;
+				CURRENT_PROJECT_VERSION = 239;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2903,7 +2911,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 238;
+				CURRENT_PROJECT_VERSION = 239;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3067,7 +3075,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 238;
+				CURRENT_PROJECT_VERSION = 239;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3162,7 +3170,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 238;
+				CURRENT_PROJECT_VERSION = 239;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

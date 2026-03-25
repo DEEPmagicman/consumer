@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -321,13 +322,26 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="akt-eO-uWh" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="16" width="466" height="194"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="O1l-C6-mnB" secondAttribute="trailing" id="46D-Kh-YjS"/>
+                    <constraint firstItem="akt-eO-uWh" firstAttribute="top" secondItem="O1l-C6-mnB" secondAttribute="top" id="4H6-ec-sI9"/>
+                    <constraint firstItem="akt-eO-uWh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="CP7-Rr-4U4"/>
                     <constraint firstItem="O1l-C6-mnB" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Odr-yg-oez"/>
+                    <constraint firstAttribute="bottom" secondItem="akt-eO-uWh" secondAttribute="bottom" id="Xpi-mX-BJR"/>
                     <constraint firstItem="O1l-C6-mnB" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="a0E-VP-xC3"/>
                     <constraint firstAttribute="bottom" secondItem="O1l-C6-mnB" secondAttribute="bottom" id="cfp-uV-Hpu"/>
+                    <constraint firstAttribute="trailing" secondItem="akt-eO-uWh" secondAttribute="trailing" id="zcV-NP-4gJ"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -345,6 +359,7 @@
                 <outlet property="quantityLbl" destination="3Ka-YX-grf" id="8xG-Xl-YUh"/>
                 <outlet property="rsvpBtn" destination="C8p-T5-xKp" id="3Fk-tw-Tyg"/>
                 <outlet property="rsvpBtnView" destination="eFH-Qy-HBi" id="QAY-Hu-Rfb"/>
+                <outlet property="shimmerView" destination="akt-eO-uWh" id="zz1-kE-BNe"/>
                 <outlet property="soldOutView" destination="PLv-SK-N5k" id="3jN-YA-U7U"/>
                 <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>
@@ -359,5 +374,8 @@
     <resources>
         <image name="decreaseIc" width="36" height="36"/>
         <image name="increaseIc" width="36" height="36"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

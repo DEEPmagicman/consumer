@@ -25,7 +25,7 @@ struct User {
     var phoneVerified: Bool
     var status: String
     var image: ImageDetail
-    var instagramId: String?
+    var instagramUserId: String?
 //    var instagramToken: String?
 //    var instaNextPageURL: String?
     var instaUserName: String?
@@ -60,6 +60,7 @@ struct User {
         case phoneVerified = "phone_verified"
         case status = "status"
         case image = "image"
+        case instagramUserId = "instagramUserId"
 //        case instagramId = "instagram_id"
 //        case instagramToken
 //        case instaNextPageURL
@@ -105,6 +106,7 @@ struct User {
 //        self.vibeIds = dictionary["vibeIds"] as? Array ?? []
 //        self.drinkIds = dictionary["drinkIds"] as? Array ?? []
         self.stripeCusId = dictionary["stripeCustId"] as? String ?? ""
+        self.instagramUserId = dictionary["instagramUserId"] as? String ?? ""
         self.isProfileCompleted = dictionary["isProfileCompleted"] as? Bool ?? false
         self.isSocial = dictionary["isSocial"] as? Bool ?? false
     }
@@ -128,6 +130,7 @@ extension User: Decodable, Encodable {
         phone = (try? values.decode(String.self, forKey: .phone)) ?? ""
         phoneVerified = (try? values.decode(Bool.self, forKey: .phoneVerified)) ?? false
         status = (try? values.decode(String.self, forKey: .status)) ?? ""
+        instagramUserId = (try? values.decode(String.self, forKey: .instagramUserId)) ?? ""
         image = (try? values.decode(ImageDetail.self, forKey: .image)) ?? ImageDetail(fromDictionary: [:])
 //        instagramId = (try? values.decode(String.self, forKey: .instagramId)) ?? ""
 //        instagramToken = try? values.decode(String.self, forKey: .instagramToken)
@@ -175,6 +178,7 @@ extension User: Decodable, Encodable {
 //        try val.encode(vibeIds, forKey: .vibeIds)
 //        try val.encode(drinkIds, forKey: .drinkIds)
         try val.encode(stripeCusId, forKey: .stripeCusId)
+        try val.encode(instagramUserId, forKey: .instagramUserId)
         try val.encode(isProfileCompleted, forKey: .isProfileCompleted)
         try val.encode(isSocial, forKey: .isSocial)
     }

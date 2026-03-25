@@ -14,6 +14,11 @@
 import UIKit
 import MHLoadingButton
 
+ enum TicketMode {
+    case normal
+    case addOn
+}
+
 class TicketSelectionViewController: UIViewController {
 
     @IBOutlet weak var venueLogoImg: UIImageView!
@@ -33,13 +38,9 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-    
-    private enum TicketMode {
-        case normal
-        case addOn
-    }
+   
 
-    private var mode: TicketMode = .normal
+    var mode: TicketMode = .normal
 
     private var tickets: [EventTicket] = []
     private var normalTickets: [EventTicket] = []
@@ -55,6 +56,7 @@ class TicketSelectionViewController: UIViewController {
     
     var event: Event?
     var venueDetails: ClipVenue?
+    private var isLoading = true
 
     private var eventTicketId = [String]()
 
@@ -103,7 +105,9 @@ class TicketSelectionViewController: UIViewController {
         continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
         
         getTicketLinksAndSetup()
+        setupHeaderData()
 //        setupData()
+        
     }
     private func ticketDate(_ value: String?) -> Date? {
         guard let value = value, !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -250,6 +254,56 @@ class TicketSelectionViewController: UIViewController {
 
         return (shouldHide, shouldDisable)
     }
+    
+    private func setupHeaderData() {
+        guard let event = event else { return }
+
+        venueLogoImg.sd_setImage(
+            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+            placeholderImage: Constant.Icon.uploadImage
+        )
+
+        venueName.text = venueDetails?.name ?? ""
+        venueName2.text = venueDetails?.name ?? ""
+        eventTitleLbl.text = event.title
+
+        if let customText = event.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+
+            dateandtimeLbl.text = customText
+
+        } else {
+
+            let timezone = venueDetails?.useTimezone ?? ""
+
+            let dateText = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            )
+
+            let startTime = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            )
+
+            let endTime = event.endDateTime?.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            ) ?? "LATE"
+
+            dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+        }
+
+        if let hex = self.event?.whiteLabelColor {
+            let color = UIColor(hex: hex)
+            dateandtimeLbl.textColor = color
+            continueToCheckOutBtn.backgroundColor = color
+            continueToCheckOutBtn.bgColor = color
+        }
+    }
 
     private func setupData() {
         guard let event = event else { return }
@@ -317,11 +371,18 @@ class TicketSelectionViewController: UIViewController {
         let protectedVisibleCandidates = filterAvailableTickets(event.protectedEventTicket ?? [])
         protectedTicketView.isHidden = protectedVisibleCandidates.isEmpty
 
-        switchToNormalMode()
+        if mode == .addOn {
+            switchToAddOnMode()
+        } else {
+            switchToNormalMode()
+        }
     }
     
     private func getTicketLinksAndSetup() {
+        isLoading = true
+        ticketTableView.reloadData()
         guard let eventId = event?.uniqueId else {
+            isLoading = false
             setupData()
             return
         }
@@ -334,7 +395,8 @@ class TicketSelectionViewController: UIViewController {
             } else {
                 self.ticketLinks = []
             }
-
+            
+            self.isLoading = false
             self.setupData()
         }
     }
@@ -889,7 +951,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == ticketTableView {
-            return tickets.count
+            return isLoading ? 5 : tickets.count
         } else if tableView == groupTableView {
             return groupedNormalTickets.count
         }
@@ -907,42 +969,46 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             }
 
             cell.selectionStyle = .none
-
-            let ticket = tickets[indexPath.row]
-            let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
-            let isExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
-
-            cell.configure(
-                ticket: ticket,
-                currency: currency,
-                whiteLabelColor: event?.whiteLabelColor,
-                eventTicketSetting: self.event?.eventTicketSettings,
-                isDescriptionExpanded: isExpanded,
-                isLinkDisabled: isTicketDisabledByLink(ticket)
-            )
-
-            cell.onPlusTap = { [weak self] ticket in
-                self?.handlePlus(ticket: ticket)
-            }
-
-            cell.onMinusTap = { [weak self] ticket in
-                self?.handleMinus(ticket: ticket)
-            }
-
-            cell.onRSVPTap = { [weak self] ticket in
-                self?.handleRSVP(ticket: ticket)
-            }
-            
-            cell.onDescriptionToggle = { [weak self] in
-                guard let self = self, let id = ticket.id else { return }
-                if self.expandedTicketDescriptions.contains(id) {
-                    self.expandedTicketDescriptions.remove(id)
-                } else {
-                    self.expandedTicketDescriptions.insert(id)
+            if isLoading {
+                cell.showShimmer()
+            } else {
+                let ticket = tickets[indexPath.row]
+                let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+                let isExpanded = expandedTicketDescriptions.contains(ticket.id ?? "")
+                
+                cell.hideShimmer()
+                cell.configure(
+                    ticket: ticket,
+                    currency: currency,
+                    whiteLabelColor: event?.whiteLabelColor,
+                    eventTicketSetting: self.event?.eventTicketSettings,
+                    isDescriptionExpanded: isExpanded,
+                    isLinkDisabled: isTicketDisabledByLink(ticket)
+                )
+                
+                cell.onPlusTap = { [weak self] ticket in
+                    self?.handlePlus(ticket: ticket)
                 }
                 
-                tableView.beginUpdates()
-                tableView.endUpdates()
+                cell.onMinusTap = { [weak self] ticket in
+                    self?.handleMinus(ticket: ticket)
+                }
+                
+                cell.onRSVPTap = { [weak self] ticket in
+                    self?.handleRSVP(ticket: ticket)
+                }
+                
+                cell.onDescriptionToggle = { [weak self] in
+                    guard let self = self, let id = ticket.id else { return }
+                    if self.expandedTicketDescriptions.contains(id) {
+                        self.expandedTicketDescriptions.remove(id)
+                    } else {
+                        self.expandedTicketDescriptions.insert(id)
+                    }
+                    
+                    tableView.beginUpdates()
+                    tableView.endUpdates()
+                }
             }
 
             return cell

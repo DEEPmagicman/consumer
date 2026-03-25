@@ -35,9 +35,6 @@ final class GuestListPopupVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        attendees.forEach { attendee in
-            attendees.append(attendee)
-        }
         setupUI()
         setupTableView()
         reloadUI()

@@ -17,8 +17,6 @@ final class ShimmerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer?.frame = bounds
-        layer.cornerRadius = 8
-        clipsToBounds = true
     }
     
     private func addGradientLayer() -> CAGradientLayer {
@@ -31,7 +29,6 @@ final class ShimmerView: UIView {
         gradientLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorTwo, gradientColorOne]
         gradientLayer.locations = [0.0, 0.48, 0.52, 1.0]
         layer.addSublayer(gradientLayer)
-        layer.cornerRadius = 8
         clipsToBounds = true
         self.gradientLayer = gradientLayer
         return gradientLayer

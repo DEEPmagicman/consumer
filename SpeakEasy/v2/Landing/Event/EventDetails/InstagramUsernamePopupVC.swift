@@ -4,7 +4,7 @@ import MHLoadingButton
 final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
 
     var onSkipTap: (() -> Void)?
-    var onSubmitUsername: ((String, InstagramProfile?) -> Void)?
+    var onSubmitUsername: ((InstagramProfile?) -> Void)?
 
     private let dimmedView = UIView()
     private let popupView = UIView()
@@ -271,37 +271,31 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
                 self.setLoading(false)
 
                 if isSuccess {
-                    
-                    self.onSubmitUsername?(username, profileData)
                     self.updateUserProfile(instagramUserId: username)
-                    self.dismissPopup()
+                    self.animateOut { [weak self] in
+                               guard let self = self else { return }
+                               self.dismiss(animated: false) {
+                                   self.onSubmitUsername?(profileData)
+                               }
+                           }
                 } else {
-                    Alert.showToast(errMsg ?? "Something went wrong")
+                    Alert.showToast("Instagram ID not found. Please enter a valid ID.")
+
                 }
             }
         }
     }
     
     private func updateUserProfile(instagramUserId: String) {
-        
-        Loader.show()
-        
         onBoardingPresenter.editUserProfileApi(instagramUserId: instagramUserId) { [weak self] isSuccess, errorMsg in
-            guard let self = self else {
-                Loader.hide()
-                return
-            }
-
             DispatchQueue.main.async {
-                
                 if isSuccess {
-                    UserDefault.shared.user?.instagramId = instagramUserId
-                } else {
-                    let message = errorMsg ?? Constant.String.somethingWrong
-                    Alert.showAlertSheet(style: .alert, title: message, message: "")
+                    if var user = UserDefault.shared.user {
+                        user.instagramUserId = instagramUserId
+                        UserDefault.shared.user = user
+                    }
+
                 }
-                
-                Loader.hide()
             }
         }
     }
