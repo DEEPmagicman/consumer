@@ -44,6 +44,7 @@ final class VenueVC: UIViewController {
         
         let vc1 = VenueEventsVC(nibName: "VenueEventsVC", bundle: nil)
         vc1.title = "Events"
+        vc1.venueId = venueDetails?.id ?? ""
         
         let vc2 = VenueExperiencesVC(nibName: "VenueExperiencesVC", bundle: nil)
         vc2.title = "Experiences"
@@ -84,5 +85,6 @@ extension VenueVC: SJSegmentedViewControllerDelegate, ScrollCallBackDelegate {
     }
     
     func onChangeScrollListener(lastContentOffset: CGFloat, offSet: CGFloat) {
+        
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,16 +21,23 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VenueDetailsVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="addressLbl" destination="1CK-Lt-5vZ" id="6nA-Uv-wax"/>
+                <outlet property="fbIcon" destination="s9y-OG-m5O" id="RQd-AF-my0"/>
+                <outlet property="instaIcon" destination="siR-xj-Auy" id="bmc-XY-FDm"/>
                 <outlet property="mainScrollView" destination="c6c-M2-UZt" id="WjE-z3-Wi6"/>
                 <outlet property="mapView" destination="dhe-2p-Ojd" id="C8d-wb-CEG"/>
                 <outlet property="tableView" destination="9oR-qh-UHt" id="x8M-yy-aPj"/>
                 <outlet property="tableViewHeight" destination="sbw-Rk-P7B" id="aZk-Hk-qXl"/>
+                <outlet property="tiktokIcon" destination="Nsl-dA-A34" id="kfY-Yu-FwP"/>
                 <outlet property="venueAboutLbl" destination="BOs-Jr-QJL" id="zEJ-Kb-l22"/>
                 <outlet property="view" destination="SSL-Br-AWR" id="Vm7-a9-aA9"/>
                 <outlet property="viewMoreBtn" destination="pkQ-Dl-DkL" id="2iQ-4o-yOD"/>
                 <outlet property="viewMoreBtnView" destination="i7i-77-tkN" id="eKQ-0u-d9t"/>
                 <outlet property="viewMoreLbl" destination="4LV-5X-QgN" id="Mad-g1-aio"/>
                 <outlet property="viewMoreLblHeight" destination="g9B-Wv-JB6" id="O19-sO-yYt"/>
+                <outlet property="websiteIcon" destination="zdC-N6-1wf" id="zNn-3P-bgd"/>
+                <outlet property="xIcon" destination="jjm-35-pxo" id="Wzy-ku-567"/>
+                <outlet property="youtubeIcon" destination="tL3-3f-B6o" id="kAa-hC-FtT"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -231,7 +238,7 @@
                                                         <constraint firstItem="PXH-6J-dB5" firstAttribute="leading" secondItem="3cM-e3-PqD" secondAttribute="leading" constant="16" id="b1b-0d-s3q"/>
                                                     </constraints>
                                                 </view>
-                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="9oR-qh-UHt">
+                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="9oR-qh-UHt">
                                                     <rect key="frame" x="0.0" y="22" width="393" height="50"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
