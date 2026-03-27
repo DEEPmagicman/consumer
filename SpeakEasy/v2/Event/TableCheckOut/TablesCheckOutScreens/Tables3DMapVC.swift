@@ -45,11 +45,6 @@ final class Tables3DMapVC: UIViewController {
 
     private var currentPageIndex: Int = 0
     private var selectedIndexInPage: Int = 0
-    var whiteLabelColor: UIColor = .white {
-        didSet {
-            pillContainer.layer.borderColor = whiteLabelColor.cgColor
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -1148,6 +1143,13 @@ final class ZoneSelectorView: UIView {
     private let bgColor = UIColor.clear
     private let pillFill = UIColor(white: 0.10, alpha: 1.0)
     private let selectedFill = UIColor(white: 0.20, alpha: 0.5)
+    
+    var whiteLabelColor: UIColor = .white {
+        didSet {
+            pillContainer.layer.borderColor = whiteLabelColor.cgColor
+        }
+    }
+
 
     // MARK: - Init
 
