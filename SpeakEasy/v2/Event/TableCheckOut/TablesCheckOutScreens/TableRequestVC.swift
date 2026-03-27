@@ -135,6 +135,10 @@ extension TableRequestVC {
         tf.font = AppFont.font(.inter, weight: .medium, size: 14)
         tf.textColor = .black
         tf.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        if placeholder == "Party size *" {
+            tf.keyboardType = .numberPad
+            tf.inputAccessoryView = makeToolbar(selector: #selector(doneTapped))
+        }
         field = tf
         
         let hStack = UIStackView(arrangedSubviews: [iconView, tf])

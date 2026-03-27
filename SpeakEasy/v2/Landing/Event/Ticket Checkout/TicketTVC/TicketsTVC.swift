@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MHLoadingButton
 
 class TicketsTVC: UITableViewCell {
 
@@ -19,7 +20,7 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var ticketLeftLbl: UILabel!
     @IBOutlet weak var rsvpBtnView: UIView!
     @IBOutlet weak var inclFeesLbl: UILabel!
-    @IBOutlet weak var rsvpBtn: UIButton!
+    @IBOutlet weak var rsvpBtn: LoadingButton!
     @IBOutlet weak var soldOutView: UIView!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var discriptionLbl: UILabel!
@@ -198,6 +199,7 @@ class TicketsTVC: UITableViewCell {
             priceLbl.text = "FREE"
             rsvpBtnView.isHidden = false
             plusView.isHidden = true
+            rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
         } else {
             priceLbl.text = "\(currency)\(Double(price).decimalFormat(true))"
             rsvpBtnView.isHidden = true

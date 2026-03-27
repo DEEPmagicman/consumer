@@ -48,9 +48,9 @@ final class VerificationCodeViewController: UIViewController {
         startTimer()
         resendBtn.alpha = 0.5
         resendBtn.isUserInteractionEnabled = false
-        if Utility.isDebug {
-            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
-        }
+//        if Utility.isDebug {
+//            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,7 +132,6 @@ final class VerificationCodeViewController: UIViewController {
                 if isSuccess {
                     self.otpRef = otpRef
                     self.currectOtp = otp
-                    print("*-*\(currectOtp ?? "")")
                 } else {
                     if errorMsg != nil {
                         Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -168,7 +167,6 @@ final class VerificationCodeViewController: UIViewController {
                         if isSuccess {
                             self.otpRef = otpRef
                             self.currectOtp = otp
-                            print("*-*\(self.currectOtp ?? "")")
                         } else {
                             if errMsg != nil {
                                 Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
@@ -186,7 +184,6 @@ final class VerificationCodeViewController: UIViewController {
                     if isSuccess {
                         self.otpRef = otpRef
                         self.currectOtp = otp
-                        print("*-*\(self.currectOtp ?? "")")
                     } else {
                         if errorMsg != nil {
                             Alert.showAlertSheet(style: .alert, title: errorMsg, message: "")
@@ -228,7 +225,6 @@ final class VerificationCodeViewController: UIViewController {
                     otpFieldView.initializeUI()
                 }
             }
-            print("*-*login")
         } else {
             if isFromSettings {
                 if isForEmail {

@@ -25,10 +25,6 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ca-TB-OPd">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="784"/>
-                    <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose your seating area" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gik-O4-ybj">
                     <rect key="frame" x="14" y="134" width="169.66666666666666" height="22"/>
                     <constraints>
@@ -90,6 +86,10 @@
                         <constraint firstAttribute="height" constant="24" id="tdf-sa-bj5"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ca-TB-OPd">
+                    <rect key="frame" x="0.0" y="166" width="393" height="618"/>
+                    <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQR-HP-PDY" customClass="ZoneSelectorView" customModule="Speakeasy" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="714" width="393" height="70"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -101,7 +101,6 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="1Ca-TB-OPd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="2bz-Xd-5MY"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="lQR-HP-PDY" secondAttribute="trailing" id="6t5-l5-KaH"/>
                 <constraint firstItem="lQR-HP-PDY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="AV9-FJ-wWn"/>
                 <constraint firstItem="7Df-xJ-1A1" firstAttribute="centerY" secondItem="gik-O4-ybj" secondAttribute="centerY" id="AbI-Yh-KCU"/>
@@ -110,11 +109,12 @@
                 <constraint firstItem="7Df-xJ-1A1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gik-O4-ybj" secondAttribute="trailing" constant="10" id="KGU-NY-PPS"/>
                 <constraint firstItem="gik-O4-ybj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="14" id="LNy-qc-WR5"/>
                 <constraint firstItem="gik-O4-ybj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="NEh-Yy-bJa"/>
+                <constraint firstItem="1Ca-TB-OPd" firstAttribute="top" secondItem="gik-O4-ybj" secondAttribute="bottom" constant="10" id="bqJ-Sl-0na"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1Ca-TB-OPd" secondAttribute="bottom" id="d25-dX-EkD"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1Ca-TB-OPd" secondAttribute="trailing" id="fji-57-F9V"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="7Df-xJ-1A1" secondAttribute="trailing" constant="14" id="j6j-hc-QKV"/>
             </constraints>
-            <point key="canvasLocation" x="59" y="120"/>
+            <point key="canvasLocation" x="58.778625954198468" y="119.71830985915494"/>
         </view>
     </objects>
 </document>

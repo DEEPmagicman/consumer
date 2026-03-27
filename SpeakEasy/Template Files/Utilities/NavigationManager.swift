@@ -381,8 +381,11 @@ final class Navigate {
 //        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func signUpDetailsViewControllerVc(_ sender: UIViewController) {
+    func signUpDetailsViewControllerVc(_ sender: UIViewController, email: String, dob: String, gender: String) {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(SignUpDetailsViewController.self)
+        vc.email = email
+        vc.dob = dob
+        vc.gender = gender
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -399,12 +402,6 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(VerifyNumberViewController.self)
         vc.modalPresentationStyle = .overCurrentContext
         sender.navigationController?.present(vc, animated: true)
-    }
-    
-    static var gotoSignUp: UIViewController {
-        let signUp = StoryboardAndXibManager.StoryBoard.signUp
-            .instantiateVC(withIdentifier: SignUpViewController.self)
-        return signUp
     }
     
     func signUpViewControllerVc(_ sender: UIViewController) {

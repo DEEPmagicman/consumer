@@ -8,14 +8,17 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Inter-Medium.ttf">
+            <string>Inter-Medium</string>
+        </array>
         <array key="Inter-Regular.ttf">
             <string>Inter-Regular</string>
         </array>
+        <array key="Inter-SemiBold.ttf">
+            <string>Inter-SemiBold</string>
+        </array>
         <array key="Poppins-Medium.ttf">
             <string>Poppins-Medium</string>
-        </array>
-        <array key="Poppins-Regular.ttf">
-            <string>Poppins-Regular</string>
         </array>
     </customFonts>
     <scenes>
@@ -43,24 +46,24 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="49G-fm-i9z">
-                                        <rect key="frame" x="171" y="9" width="51" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <rect key="frame" x="172.66666666666666" y="9" width="48" height="17"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What’s your email?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NMA-Dx-phj">
-                                        <rect key="frame" x="14" y="60" width="365" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <rect key="frame" x="14" y="60.000000000000007" width="365" height="23.333333333333336"/>
+                                        <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TUV-fb-E5q">
-                                        <rect key="frame" x="20" y="92" width="353" height="50"/>
+                                        <rect key="frame" x="14" y="91.333333333333343" width="365" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="D2r-dN-sg2">
-                                                <rect key="frame" x="8" y="12" width="337" height="26"/>
+                                                <rect key="frame" x="8" y="12" width="349" height="26"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="20"/>
+                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
                                             </textField>
                                         </subviews>
@@ -85,19 +88,19 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter a valid email address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LrW-wr-XOA">
-                                        <rect key="frame" x="20" y="150" width="129.33333333333334" height="12"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <rect key="frame" x="13.999999999999993" y="149.33333333333331" width="120.33333333333331" height="12"/>
+                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WgP-SO-tab" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="152.66666666666666" y="186" width="88" height="40"/>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.698822773678202" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <rect key="frame" x="152.66666666666666" y="185.33333333333331" width="88" height="40"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="88" id="aQ2-jI-xWK"/>
+                                            <constraint firstAttribute="width" constant="88" id="4ri-Qs-bxu"/>
                                             <constraint firstAttribute="height" constant="40" id="wW6-WB-7Tu"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="14"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Next">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -121,11 +124,10 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="uwh-aE-8Ej" firstAttribute="leading" secondItem="Yox-u0-dUu" secondAttribute="leading" constant="15" id="6aL-Es-W86"/>
-                                    <constraint firstAttribute="trailing" secondItem="TUV-fb-E5q" secondAttribute="trailing" constant="20" id="8oG-Yv-xfM"/>
+                                    <constraint firstAttribute="trailing" secondItem="TUV-fb-E5q" secondAttribute="trailing" constant="14" id="8oG-Yv-xfM"/>
                                     <constraint firstItem="NMA-Dx-phj" firstAttribute="centerX" secondItem="Yox-u0-dUu" secondAttribute="centerX" id="BTM-LJ-lKo"/>
                                     <constraint firstItem="uwh-aE-8Ej" firstAttribute="top" secondItem="Yox-u0-dUu" secondAttribute="top" id="Cz5-Bd-UBS"/>
                                     <constraint firstItem="49G-fm-i9z" firstAttribute="centerX" secondItem="Yox-u0-dUu" secondAttribute="centerX" id="EKL-ll-86b"/>
-                                    <constraint firstItem="TUV-fb-E5q" firstAttribute="leading" secondItem="Yox-u0-dUu" secondAttribute="leading" constant="20" id="GBy-JW-BFT"/>
                                     <constraint firstItem="NMA-Dx-phj" firstAttribute="leading" secondItem="Yox-u0-dUu" secondAttribute="leading" constant="14" id="QbK-Zh-LiT"/>
                                     <constraint firstItem="TUV-fb-E5q" firstAttribute="top" secondItem="NMA-Dx-phj" secondAttribute="bottom" constant="8" id="Uzn-ft-s4T"/>
                                     <constraint firstItem="WgP-SO-tab" firstAttribute="top" secondItem="TUV-fb-E5q" secondAttribute="bottom" constant="44" id="fBd-El-Zd9"/>
@@ -134,6 +136,7 @@
                                     <constraint firstItem="49G-fm-i9z" firstAttribute="centerY" secondItem="uwh-aE-8Ej" secondAttribute="centerY" id="muj-Xi-xFH"/>
                                     <constraint firstItem="NMA-Dx-phj" firstAttribute="top" secondItem="uwh-aE-8Ej" secondAttribute="bottom" constant="25" id="ovJ-3O-KYC"/>
                                     <constraint firstItem="LrW-wr-XOA" firstAttribute="leading" secondItem="TUV-fb-E5q" secondAttribute="leading" id="q2o-Qe-pKE"/>
+                                    <constraint firstItem="TUV-fb-E5q" firstAttribute="leading" secondItem="NMA-Dx-phj" secondAttribute="leading" id="vXF-BZ-Nyo"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -184,27 +187,27 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzS-Rb-CQe">
-                                        <rect key="frame" x="171.33333333333334" y="9" width="50.666666666666657" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <rect key="frame" x="172.66666666666666" y="9.3333333333333268" width="48" height="16.333333333333329"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What’s your name?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hw3-ta-DFk">
-                                        <rect key="frame" x="14" y="60" width="365" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <rect key="frame" x="14" y="60.000000000000007" width="365" height="23.333333333333336"/>
+                                        <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="pr4-ha-AZe">
-                                        <rect key="frame" x="14" y="92" width="365" height="108"/>
+                                        <rect key="frame" x="14" y="91.333333333333343" width="365" height="96"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nyr-yW-LSl">
-                                                <rect key="frame" x="0.0" y="0.0" width="365" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="365" height="44"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tog-J4-Qdl">
-                                                        <rect key="frame" x="8" y="12" width="357" height="26"/>
+                                                        <rect key="frame" x="8" y="12" width="357" height="20"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                        <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
                                                     </textField>
                                                 </subviews>
@@ -212,7 +215,7 @@
                                                 <constraints>
                                                     <constraint firstItem="Tog-J4-Qdl" firstAttribute="leading" secondItem="nyr-yW-LSl" secondAttribute="leading" constant="8" id="N7i-Xc-7xu"/>
                                                     <constraint firstItem="Tog-J4-Qdl" firstAttribute="top" secondItem="nyr-yW-LSl" secondAttribute="top" constant="12" id="TDj-qg-Fvh"/>
-                                                    <constraint firstAttribute="height" constant="50" id="fbZ-sT-BDa"/>
+                                                    <constraint firstAttribute="height" constant="44" id="fbZ-sT-BDa"/>
                                                     <constraint firstAttribute="bottom" secondItem="Tog-J4-Qdl" secondAttribute="bottom" constant="12" id="g3v-m8-7eM"/>
                                                     <constraint firstAttribute="trailing" secondItem="Tog-J4-Qdl" secondAttribute="trailing" id="hCd-lg-Xoh"/>
                                                 </constraints>
@@ -229,12 +232,12 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GJJ-eo-Yop">
-                                                <rect key="frame" x="0.0" y="58" width="365" height="50"/>
+                                                <rect key="frame" x="0.0" y="51.999999999999972" width="365" height="44"/>
                                                 <subviews>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I0A-Vq-TXH" customClass="PhoneNumberTextField" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="8" y="12" width="349" height="26"/>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I0A-Vq-TXH">
+                                                        <rect key="frame" x="8" y="12" width="349" height="20"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                        <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="phonePad" textContentType="tel"/>
                                                     </textField>
                                                 </subviews>
@@ -243,7 +246,7 @@
                                                     <constraint firstAttribute="bottom" secondItem="I0A-Vq-TXH" secondAttribute="bottom" constant="12" id="Bq8-zQ-3B4"/>
                                                     <constraint firstAttribute="trailing" secondItem="I0A-Vq-TXH" secondAttribute="trailing" constant="8" id="Krg-0q-uoi"/>
                                                     <constraint firstItem="I0A-Vq-TXH" firstAttribute="top" secondItem="GJJ-eo-Yop" secondAttribute="top" constant="12" id="Lrn-gD-G2X"/>
-                                                    <constraint firstAttribute="height" constant="50" id="TVr-Ao-Hq9"/>
+                                                    <constraint firstAttribute="height" constant="44" id="TVr-Ao-Hq9"/>
                                                     <constraint firstItem="I0A-Vq-TXH" firstAttribute="leading" secondItem="GJJ-eo-Yop" secondAttribute="leading" constant="8" id="hF5-3Z-oQB"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
@@ -261,13 +264,13 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zvU-HL-WOt" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="152.66666666666666" y="606" width="88" height="40"/>
+                                        <rect key="frame" x="143" y="606" width="107" height="40"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="UEj-F0-N2e"/>
-                                            <constraint firstAttribute="width" constant="88" id="rlt-0c-aqt"/>
+                                            <constraint firstAttribute="width" constant="107" id="rlt-0c-aqt"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="14"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Sign up">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -288,26 +291,26 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Some venues require your name match the one on your ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uax-sw-FVg">
-                                        <rect key="frame" x="14" y="208" width="279" height="12"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <rect key="frame" x="14" y="195.33333333333331" width="260.33333333333331" height="11.666666666666657"/>
+                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keep me in the loop about events I'd love." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SvJ-Pa-ZxZ">
-                                        <rect key="frame" x="40" y="255" width="353" height="12"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <rect key="frame" x="40" y="242.33333333333331" width="353" height="11.666666666666657"/>
+                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t1A-VN-Lc2" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="14" y="253" width="16" height="16"/>
+                                        <rect key="frame" x="14" y="240" width="16" height="16"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="16" id="L6T-sg-4tD"/>
                                             <constraint firstAttribute="width" constant="16" id="tLh-eg-bDW"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" image="checkBoxEmpty"/>
+                                        <state key="normal" image="ic_checkbox_unchecked"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="0.0"/>
@@ -355,7 +358,9 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="firstNameTextFeild" destination="Tog-J4-Qdl" id="Aui-Q4-gyy"/>
+                        <outlet property="firstNameTextField" destination="Tog-J4-Qdl" id="UtV-YI-jQV"/>
+                        <outlet property="lastNameTextField" destination="I0A-Vq-TXH" id="sLh-6d-Dcw"/>
+                        <outlet property="signUpBtn" destination="zvU-HL-WOt" id="T8l-Ft-UUC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SI3-OJ-XUV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -379,22 +384,22 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crm-QE-wQP">
-                                <rect key="frame" x="16" y="264.66666666666669" width="361" height="323.00000000000006"/>
+                                <rect key="frame" x="16" y="271.33333333333337" width="361" height="309.33333333333337"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login or Sign Up" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ihm-SD-yRz">
-                                        <rect key="frame" x="105.33333333333333" y="32" width="150.33333333333337" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <rect key="frame" x="105" y="32" width="151" height="24"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your number to find or create your account" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MRl-nb-veX">
-                                        <rect key="frame" x="16" y="64" width="329" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <rect key="frame" x="16" y="64" width="329" height="16.333333333333329"/>
+                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rd9-tz-IP3">
-                                        <rect key="frame" x="20" y="105" width="321" height="50"/>
+                                        <rect key="frame" x="20" y="104.33333333333337" width="321" height="50"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="XXX-XXX-XXXX" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R7Q-e1-1q7" customClass="PhoneNumberTextField" customModule="Speakeasy" customModuleProvider="target">
                                                 <rect key="frame" x="8" y="12" width="313" height="26"/>
@@ -423,12 +428,12 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DvZ-6x-knS" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="20" y="179" width="321" height="48"/>
+                                        <rect key="frame" x="20" y="178.33333333333337" width="321" height="48"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.752105283065581" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="w3T-p8-d2t"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="CONTINUE">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -449,9 +454,9 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hxy-qY-Xjy">
-                                        <rect key="frame" x="20" y="243" width="321" height="48"/>
+                                        <rect key="frame" x="20" y="242.33333333333331" width="321" height="35"/>
                                         <string key="text">By continuing you agree to the terms of service and privacy policy. We'll text you a verification code and event updates if you opt in. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for support.</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -520,25 +525,25 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kyy-lS-8w0">
-                                <rect key="frame" x="16" y="260" width="361" height="332"/>
+                                <rect key="frame" x="16" y="262.66666666666663" width="361" height="326.66666666666663"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify Your Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nqZ-8h-Cc9">
-                                        <rect key="frame" x="91.333333333333329" y="32" width="178.66666666666669" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <rect key="frame" x="94.666666666666686" y="32" width="172" height="24"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4CQ-Kz-YFS">
-                                        <rect key="frame" x="16" y="64" width="329" height="38"/>
+                                        <rect key="frame" x="16" y="64" width="329" height="32.666666666666657"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter verification code sent to " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3kR-dq-b4K">
-                                                <rect key="frame" x="65.666666666666671" y="0.0" width="197.66666666666663" height="17"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <rect key="frame" x="69" y="0.0" width="191" height="16.333333333333332"/>
+                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cD1-ay-Vb0">
-                                                <rect key="frame" x="219.66666666666666" y="11" width="30" height="33"/>
+                                                <rect key="frame" x="213.33333333333334" y="9.6666666666666288" width="30" height="30"/>
                                                 <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="Edit">
@@ -549,8 +554,8 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="773 234 2345" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GQQ-AV-aVP">
-                                                <rect key="frame" x="115.33333333333334" y="17" width="98.333333333333343" height="21"/>
-                                                <fontDescription key="fontDescription" name="Poppins-Regular" family="Poppins" pointSize="15"/>
+                                                <rect key="frame" x="121.66666666666666" y="16.333333333333314" width="85.666666666666657" height="16.333333333333329"/>
+                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -567,7 +572,7 @@
                                         </constraints>
                                     </view>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gDK-Ki-tIr">
-                                        <rect key="frame" x="0.0" y="126" width="361" height="55"/>
+                                        <rect key="frame" x="0.0" y="120.66666666666663" width="361" height="55"/>
                                         <subviews>
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LDm-X9-mmO" customClass="OTPFieldView" customModule="OTPFieldView">
                                                 <rect key="frame" x="0.0" y="0.0" width="361" height="55"/>
@@ -598,12 +603,12 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L9E-XB-Fak" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="20" y="205" width="321" height="48"/>
+                                        <rect key="frame" x="20" y="199.66666666666663" width="321" height="48"/>
                                         <color key="backgroundColor" red="0.82352941176470584" green="0.83529411764705885" blue="0.85882352941176465" alpha="0.7906494140625" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="MyO-yz-RXT"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="14"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="CONTINUE">
                                             <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -624,11 +629,11 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uBX-ue-gcR" customClass="LoadingButton" customModule="MHLoadingButton">
-                                        <rect key="frame" x="131" y="277" width="99" height="23"/>
+                                        <rect key="frame" x="139" y="271.66666666666669" width="83" height="23"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="23" id="zov-sk-jQJ"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="15"/>
+                                        <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="14"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Resend code">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -688,7 +693,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="checkBoxEmpty" width="22" height="22"/>
         <image name="ic-leftArrow" width="28" height="28"/>
+        <image name="ic_checkbox_unchecked" width="16" height="16"/>
     </resources>
 </document>

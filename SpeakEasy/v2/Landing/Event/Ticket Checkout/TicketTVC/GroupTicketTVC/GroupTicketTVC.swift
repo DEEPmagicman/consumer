@@ -130,6 +130,7 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
             isDescriptionExpanded: isDescriptionExpanded,
             isLinkDisabled: isDisabled
         )
+        cell.hideShimmer()
 
         cell.onPlusTap = { [weak self] ticket in
             self?.onPlusTap?(ticket)
@@ -160,6 +161,9 @@ extension GroupTicketTVC: UITableViewDelegate, UITableViewDataSource {
         let isDisabled = disabledTicketIds.contains(ticket.id ?? "")
         guard !isDisabled else { return }
         guard currentCount == 0 else { return }
-        onRowTap?(ticket)
+        let price = ticket.price ?? 0
+        if price != 0 {
+            onRowTap?(ticket)
+        }
     }
 }

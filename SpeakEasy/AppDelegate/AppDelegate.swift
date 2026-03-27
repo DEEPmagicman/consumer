@@ -79,7 +79,7 @@ extension AppDelegate {
         self.window?.rootViewController = tutorialNavigation
         if isNavigateToDetail {
 //            Navigate.to.connectAccountVc(controller)
-            Navigate.to.enterNameVc(controller)
+            Navigate.to.signUpViewControllerVc(controller)
         } else if forceCreateAccount {
             Navigate.to.enterPhoneNumVc(controller)
         }
@@ -91,7 +91,8 @@ extension AppDelegate {
         tutorialNavigation.navigationBar.isHidden = true
         tutorialNavigation.modalTransitionStyle = .crossDissolve
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
-        Navigate.to.enterNameVc(controller)
+//        Navigate.to.enterNameVc(controller)
+        Navigate.to.signUpViewControllerVc(controller)
         self.window?.rootViewController = tutorialNavigation
     }
     

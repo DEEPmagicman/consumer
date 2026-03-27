@@ -56,9 +56,9 @@ final class VerifyNumberViewController: UIViewController {
         timerLbl.text = makeTimeString(minutes: time.0, seconds: time.1)
         startTimer()
 
-        if Utility.isDebug {
-            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
-        }
+//        if Utility.isDebug {
+//            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
+//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

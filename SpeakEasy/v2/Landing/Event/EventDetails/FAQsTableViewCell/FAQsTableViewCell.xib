@@ -26,10 +26,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="464" height="151"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Z40-Ow-G2R">
-                                <rect key="frame" x="5" y="0.0" width="443" height="151"/>
+                                <rect key="frame" x="10" y="0.0" width="438" height="151"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l46-GT-la2">
-                                        <rect key="frame" x="0.0" y="0.0" width="443" height="101"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="438" height="101"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightArrow" translatesAutoresizingMaskIntoConstraints="NO" id="RgP-fX-0fY">
                                                 <rect key="frame" x="0.0" y="42.666666666666664" width="16" height="16"/>
@@ -39,14 +39,14 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZA-9C-EK8">
-                                                <rect key="frame" x="22" y="10" width="421" height="81"/>
+                                                <rect key="frame" x="24" y="10" width="414" height="81"/>
                                                 <string key="text">what is the time? what is the time?what is the time?what is the time?what is the time?what is the time?what is the time?what is the time?</string>
                                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rAn-Q9-AIW">
-                                                <rect key="frame" x="0.0" y="0.0" width="443" height="101"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="438" height="101"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <connections>
                                                     <action selector="onClickQuestionView:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="eIz-MR-znH"/>
@@ -57,7 +57,7 @@
                                         <constraints>
                                             <constraint firstItem="oZA-9C-EK8" firstAttribute="centerY" secondItem="RgP-fX-0fY" secondAttribute="centerY" id="3CC-R6-ikc"/>
                                             <constraint firstAttribute="bottom" secondItem="rAn-Q9-AIW" secondAttribute="bottom" id="4vc-Je-QO5"/>
-                                            <constraint firstItem="oZA-9C-EK8" firstAttribute="leading" secondItem="RgP-fX-0fY" secondAttribute="trailing" constant="6" id="7JG-H3-lao"/>
+                                            <constraint firstItem="oZA-9C-EK8" firstAttribute="leading" secondItem="RgP-fX-0fY" secondAttribute="trailing" constant="8" id="7JG-H3-lao"/>
                                             <constraint firstAttribute="trailing" secondItem="oZA-9C-EK8" secondAttribute="trailing" id="FkU-Nb-GtK"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="oZA-9C-EK8" secondAttribute="bottom" constant="10" id="R63-yo-uUC"/>
                                             <constraint firstAttribute="trailing" secondItem="rAn-Q9-AIW" secondAttribute="trailing" id="VUN-gC-mTD"/>
@@ -69,10 +69,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LS-EJ-HRh">
-                                        <rect key="frame" x="0.0" y="101" width="443" height="50"/>
+                                        <rect key="frame" x="0.0" y="101" width="438" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="YES time is 8 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iOU-70-zOe">
-                                                <rect key="frame" x="6" y="0.0" width="437" height="50"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="438" height="50"/>
                                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -80,7 +80,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="iOU-70-zOe" firstAttribute="leading" secondItem="1LS-EJ-HRh" secondAttribute="leading" constant="6" id="1N4-c7-7mH"/>
+                                            <constraint firstItem="iOU-70-zOe" firstAttribute="leading" secondItem="1LS-EJ-HRh" secondAttribute="leading" id="1N4-c7-7mH"/>
                                             <constraint firstAttribute="bottom" secondItem="iOU-70-zOe" secondAttribute="bottom" id="C1X-IT-Y2N"/>
                                             <constraint firstAttribute="trailing" secondItem="iOU-70-zOe" secondAttribute="trailing" id="fby-n5-fiw"/>
                                             <constraint firstItem="iOU-70-zOe" firstAttribute="top" secondItem="1LS-EJ-HRh" secondAttribute="top" id="kLL-EA-01q"/>
@@ -105,7 +105,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Z40-Ow-G2R" firstAttribute="leading" secondItem="2mG-4y-rB0" secondAttribute="leading" constant="5" id="MSI-ep-FLj"/>
+                            <constraint firstItem="Z40-Ow-G2R" firstAttribute="leading" secondItem="2mG-4y-rB0" secondAttribute="leading" constant="10" id="MSI-ep-FLj"/>
                             <constraint firstAttribute="bottom" secondItem="Jo3-Os-7Xi" secondAttribute="bottom" id="Nqf-Uo-n1O"/>
                             <constraint firstAttribute="trailing" secondItem="Z40-Ow-G2R" secondAttribute="trailing" constant="16" id="VHG-cZ-tMt"/>
                             <constraint firstAttribute="bottom" secondItem="Z40-Ow-G2R" secondAttribute="bottom" id="Veo-Iy-Z5N"/>

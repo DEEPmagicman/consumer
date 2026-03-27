@@ -30,8 +30,7 @@ final class SignUpViewController: UIViewController {
     private var enteredEmail: String?
     private var selectedDOB: Date?
     private var selectedGender: String?
-
-    private let genders = ["Female", "Male", "Non-binary", "Prefer not to say"]
+    private let genders = ["Female", "Male", "Prefer not to say"]
 
     private lazy var dobPicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -64,6 +63,8 @@ final class SignUpViewController: UIViewController {
         setupUI()
         setupTextField()
         configureForCurrentStep()
+        
+        emailTextFeild.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
 
     private func setupUI() {
@@ -76,14 +77,27 @@ final class SignUpViewController: UIViewController {
         nextBtn.layer.cornerRadius = nextBtn.bounds.height / 2
         nextBtn.clipsToBounds = true
     }
-
+    
     private func setupTextField() {
         emailTextFeild.delegate = self
         emailTextFeild.inputAccessoryView = accessoryToolbar
         emailTextFeild.autocorrectionType = .no
         emailTextFeild.spellCheckingType = .no
     }
-
+    
+    private func updateNextButtonState() {
+        switch step {
+        case .email:
+            let text = (emailTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            let shouldEnable = !text.isEmpty
+            nextBtn.isEnabled = shouldEnable
+            nextBtn.backgroundColor = UIColor.white.withAlphaComponent(shouldEnable ? 1.0 : 0.7)
+        case .dob, .gender:
+            nextBtn.isEnabled = true
+            nextBtn.backgroundColor = UIColor.white.withAlphaComponent(1.0)
+        }
+    }
+    
     private func configureForCurrentStep() {
         hideError()
 
@@ -99,7 +113,6 @@ final class SignUpViewController: UIViewController {
             emailTextFeild.reloadInputViews()
             emailTextFeild.becomeFirstResponder()
 
-            backBtn.isHidden = true
             nextBtn.setTitle("Next", for: .normal)
 
         case .dob:
@@ -150,6 +163,7 @@ final class SignUpViewController: UIViewController {
             backBtn.isHidden = false
             nextBtn.setTitle("Next", for: .normal)
         }
+        updateNextButtonState()
     }
 
     private func validateCurrentStep() -> Bool {
@@ -190,6 +204,17 @@ final class SignUpViewController: UIViewController {
             return true
         }
     }
+    
+    func getFormattedGender(_ gender: String) -> String {
+        switch gender.lowercased() {
+        case "male":
+            return "MALE"
+        case "female":
+            return "FEMALE"
+        default:
+            return "OTHER"
+        }
+    }
 
     private func isValidEmail(_ email: String) -> Bool {
         let pattern = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
@@ -223,7 +248,7 @@ final class SignUpViewController: UIViewController {
         hideError()
         switch step {
         case .email:
-            break
+            Navigate.to.back(self)
         case .dob:
             step = .email
         case .gender:
@@ -240,7 +265,8 @@ final class SignUpViewController: UIViewController {
         case .dob:
             step = .gender
         case .gender:
-            Navigate.to.signUpDetailsViewControllerVc(self)
+            let formattedGender = getFormattedGender(selectedGender ?? "")
+            Navigate.to.signUpDetailsViewControllerVc(self, email: enteredEmail ?? "", dob: self.formatDOB(self.selectedDOB ?? Date()), gender: formattedGender)
         }
     }
 
@@ -252,6 +278,23 @@ final class SignUpViewController: UIViewController {
 
     @objc private func doneTapped() {
         view.endEditing(true)
+    }
+    
+    @objc private func textFieldDidChange() {
+        if step == .email {
+            let text = (emailTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+
+            if text.isEmpty {
+                hideError()
+            } else {
+                let isValid = isValidEmail(text)
+                if isValid {
+                    hideError()
+                }
+            }
+        }
+
+        updateNextButtonState()
     }
 }
 

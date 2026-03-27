@@ -49,6 +49,8 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var customQuestionView: UIView!
     @IBOutlet weak var privacyPolicyLbl: UILabel!
     @IBOutlet weak var checkBox: UIButton!
+    @IBOutlet weak var promoCodeParentView: UIView!
+    @IBOutlet weak var feesAndTaxesParentTableView: UIView!
     
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
@@ -119,7 +121,6 @@ final class TicketCheckoutVC: UIViewController {
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -158,9 +159,9 @@ final class TicketCheckoutVC: UIViewController {
         addPromoCodeBtn.bgColor = .clear
         updatePromoButtonIcon()
 
+        calculateTotal()
         setupHeaderData()
         startCountdown()
-        calculateTotal()
         showCheckoutShimmer()
         getBooking(id: bookingId)
         getEventQuestions()
@@ -168,7 +169,9 @@ final class TicketCheckoutVC: UIViewController {
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
 
-        fetchPaymentIntentAndSetup(promoCode: "")
+        if !isFreeTicket {
+            fetchPaymentIntentAndSetup(promoCode: "")
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -192,6 +195,13 @@ final class TicketCheckoutVC: UIViewController {
             with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage
         )
+        if isFreeTicket {
+            promoCodeParentView.isHidden = true
+            feesAndTaxesParentTableView.isHidden = true
+        } else {
+            promoCodeParentView.isHidden = false
+            feesAndTaxesParentTableView.isHidden = false
+        }
 
         venueName.text = venueDetails?.name
         venueName2.text = venueDetails?.name
@@ -216,6 +226,7 @@ final class TicketCheckoutVC: UIViewController {
                 self.reloadFeesUIFromBooking()
             }
             self.isBookingLoaded = true
+            hideCheckoutShimmerIfNeeded()
         }
     }
     
@@ -261,6 +272,10 @@ final class TicketCheckoutVC: UIViewController {
         }
 
         totalAmountLbl.text = subtotal == 0 ? "Free" : "\(currency)\(subtotal.decimalFormat(true))"
+        self.isFreeTicket = subtotal == 0
+        if isFreeTicket {
+            purchaseTicketBtn.setTitle("REDEEM TICKETS", for: .normal)
+        }
 
         if let hex = event?.whiteLabelColor {
             let color = UIColor(hex: hex)
@@ -340,7 +355,7 @@ final class TicketCheckoutVC: UIViewController {
         let okAction = UIAlertAction(title: "Ok", style: .default) { _ in
             self.countdownTimer?.invalidate()
             self.cancelBooking()
-            Navigate.to.back(self)
+            self.navigationController?.popToRootViewController(animated: false)
         }
         Alert.showAlertSheet(style: .alert, title: "Sorry, your ticket reservation has expired, please try again", message: "", actions: [okAction])
     }
@@ -721,8 +736,11 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func hideCheckoutShimmerIfNeeded() {
-        guard isBookingLoaded, isPaymentIntentLoaded else { return }
-
+        if isFreeTicket {
+            guard isBookingLoaded else { return }
+        } else {
+            guard isBookingLoaded, isPaymentIntentLoaded else { return }
+        }
         shimmerBlocks.forEach { $0.stopAnimating() }
         shimmerView.isHidden = true
     }

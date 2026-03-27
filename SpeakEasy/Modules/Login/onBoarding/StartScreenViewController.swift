@@ -54,16 +54,59 @@ final class StartScreenViewController: UIViewController {
     }
     
     @IBAction func onClickCreateAccount(_ sender: Any) {
-        Navigate.to.enterPhoneNumVc(self)
+//        Navigate.to.signUpViewControllerVc(self)
+        let loginVC = Navigate.to.loginPopUpVc(self)
+
+        loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
+            guard let self else { return }
+
+            Navigate.to.enterVerificationCodeVc(
+                self,
+                isFromLogin: true,
+                otp: otp,
+                otpRef: otpRef,
+                phoneNum: phone,
+                countryCode: countryCode
+            ) { [weak self] in
+                
+            
+            }
+        }
+        return
     }
     
     @IBAction func onClickSignIn(_ sender: Any) {
-        Navigate.to.signUpViewControllerVc(self)
+        //        Navigate.to.loginPopUpVc(self)
+        
+        let loginVC = Navigate.to.loginPopUpVc(self)
+        
+        loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
+            guard let self else { return }
+            
+            Navigate.to.enterVerificationCodeVc(
+                self,
+                isFromLogin: true,
+                otp: otp,
+                otpRef: otpRef,
+                phoneNum: phone,
+                countryCode: countryCode
+            ) { [weak self] in
+                guard let self else { return }
+                if UserDefault.shared.user?.isProfileCompleted == true {
+                    AppDelegate.shared.changeRootViewController()
+                } else {
+                    Navigate.to.signUpViewControllerVc(self)
+                }
+            }
+        }
+        return
+    
+        //        Navigate.to.signUpViewControllerVc(self)
     }
     
     @IBAction func onClickAsGuest(_ sender: Any) {
         UserDefault.shared.isGuest = true
-        UserDefault.shared.isLoggedIn = true
+        UserDefault.shared.isLoggedIn = false
         AppDelegate.shared.changeRootViewController()
     }
 }

@@ -39,7 +39,6 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
    
-
     var mode: TicketMode = .normal
 
     private var tickets: [EventTicket] = []
@@ -780,9 +779,16 @@ class TicketSelectionViewController: UIViewController {
         updateContinueButtonForMode()
     }
 
-    private func handleRSVP(ticket: EventTicket) {
-        guard !isTicketDisabledByLink(ticket) else { return }
-        guard let event = event else { return }
+    private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
+        cell.rsvpBtn.showLoader(userInteraction: false)
+        guard !isTicketDisabledByLink(ticket) else {
+            cell.rsvpBtn.hideLoader()
+            return
+        }
+        guard let event = event else {
+            cell.rsvpBtn.hideLoader()
+            return
+        }
 
         switch mode {
 
@@ -790,16 +796,19 @@ class TicketSelectionViewController: UIViewController {
             selectedNormalTickets = [ticket]
 
             if addOnTickets.isEmpty {
+                cell.rsvpBtn.hideLoader()
                 Navigate.to.ticketCheckoutVC(
                     self,
                     event: event,
                     selectedTickets: selectedNormalTickets, bookingId: nil
                 )
             } else {
+                cell.rsvpBtn.hideLoader()
                 switchToAddOnMode()
             }
 
         case .addOn:
+            cell.rsvpBtn.hideLoader()
             let finalTickets = selectedNormalTickets + [ticket]
 
             Navigate.to.ticketCheckoutVC(
@@ -995,7 +1004,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 
                 cell.onRSVPTap = { [weak self] ticket in
-                    self?.handleRSVP(ticket: ticket)
+                    self?.handleRSVP(ticket: ticket, cell: cell)
                 }
                 
                 cell.onDescriptionToggle = { [weak self] in

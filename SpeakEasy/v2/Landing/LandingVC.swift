@@ -30,7 +30,6 @@ final class LandingVC: UIViewController {
         showSegmentView(sender.tag)
     }
     
-    
     @IBAction func onClickSearchBtn(_ sender: Any) {
         
     }

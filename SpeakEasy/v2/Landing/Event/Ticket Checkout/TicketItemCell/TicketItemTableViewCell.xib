@@ -26,13 +26,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="385" height="85"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2x Female General Admission" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u5w-fp-1LJ">
-                                <rect key="frame" x="0.0" y="12" width="196" height="73"/>
+                                <rect key="frame" x="0.0" y="8" width="196" height="77"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$30.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IZh-SH-nNd">
-                                <rect key="frame" x="337.33333333333331" y="40" width="47.666666666666686" height="17"/>
+                                <rect key="frame" x="337.33333333333331" y="38" width="47.666666666666686" height="17"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -42,7 +42,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="u5w-fp-1LJ" firstAttribute="leading" secondItem="67C-yO-wDP" secondAttribute="leading" id="4U4-WI-q7T"/>
-                            <constraint firstItem="u5w-fp-1LJ" firstAttribute="top" secondItem="67C-yO-wDP" secondAttribute="top" constant="12" id="5rq-ks-MPH"/>
+                            <constraint firstItem="u5w-fp-1LJ" firstAttribute="top" secondItem="67C-yO-wDP" secondAttribute="top" constant="8" id="5rq-ks-MPH"/>
                             <constraint firstItem="IZh-SH-nNd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="u5w-fp-1LJ" secondAttribute="trailing" constant="5" id="EZp-Wc-CAU"/>
                             <constraint firstAttribute="trailing" secondItem="IZh-SH-nNd" secondAttribute="trailing" id="TPI-Xk-cxr"/>
                             <constraint firstAttribute="bottom" secondItem="u5w-fp-1LJ" secondAttribute="bottom" id="TX4-1o-JAZ"/>

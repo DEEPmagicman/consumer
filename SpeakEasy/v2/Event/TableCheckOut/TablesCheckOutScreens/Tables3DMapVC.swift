@@ -45,6 +45,11 @@ final class Tables3DMapVC: UIViewController {
 
     private var currentPageIndex: Int = 0
     private var selectedIndexInPage: Int = 0
+    var whiteLabelColor: UIColor = .white {
+        didSet {
+            pillContainer.layer.borderColor = whiteLabelColor.cgColor
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,12 +145,15 @@ final class Tables3DMapVC: UIViewController {
 
         let hasLeft = currentPageIndex > 0
         let hasRight = currentPageIndex < (pagedRoomItems.count - 1)
+        let shouldShowArrows = pagedRoomItems.count > 1
+
+        selectedIndexInPage = 0
 
         zoneSelector.setItems(
             names,
-            hasMoreLeft: hasLeft,
-            hasMoreRight: hasRight,
-            selectedIndex: min(selectedIndexInPage, max(names.count - 1, 0)),
+            hasMoreLeft: shouldShowArrows && hasLeft,
+            hasMoreRight: shouldShowArrows && hasRight,
+            selectedIndex: selectedIndexInPage,
             animated: animated,
             direction: direction
         )
@@ -271,10 +279,10 @@ private extension Tables3DMapVC {
                     self.sceneView.scene = scene
 
                     self.buildMeshSeatingMap(asset: asset)
-                    self.setupCamera(scene)
                     self.setupLights()
-                    self.setupTapGesture()
                     self.renderParentDots(scene: scene)
+                    self.setupCamera(scene)             
+                    self.setupTapGesture()
                 }
             }
         }
@@ -885,50 +893,54 @@ private extension Tables3DMapVC {
 
     func setupCamera(_ scene: SCNScene) {
 
-        // Use the scene’s real bounds
-        let minVec = scene.rootNode.boundingBox.min
-        let maxVec = scene.rootNode.boundingBox.max
-        sceneBounds = (minVec, maxVec)
+        var minX: Float = .greatestFiniteMagnitude
+        var minZ: Float = .greatestFiniteMagnitude
+        var maxX: Float = -.greatestFiniteMagnitude
+        var maxZ: Float = -.greatestFiniteMagnitude
+        var minY: Float = .greatestFiniteMagnitude
 
-        // Center of model
-        let center = SCNVector3(
-            (minVec.x + maxVec.x) / 2,
-            (minVec.y + maxVec.y) / 2,
-            (minVec.z + maxVec.z) / 2
-        )
+        scene.rootNode.enumerateHierarchy { node, _ in
+            guard node.geometry != nil else { return }
+            let worldMin = node.convertPosition(node.boundingBox.min, to: nil)
+            let worldMax = node.convertPosition(node.boundingBox.max, to: nil)
+            minX = Swift.min(minX, worldMin.x, worldMax.x)
+            maxX = Swift.max(maxX, worldMin.x, worldMax.x)
+            minZ = Swift.min(minZ, worldMin.z, worldMax.z)
+            maxZ = Swift.max(maxZ, worldMin.z, worldMax.z)
+            minY = Swift.min(minY, worldMin.y, worldMax.y)
+        }
+        let centerX = (minX + maxX) / 2
+        let centerZ = (minZ + maxZ) / 2
+        let pivotY  = minY
 
-        // Size of model (largest axis)
-        let sizeX = maxVec.x - minVec.x
-        let sizeZ = maxVec.z - minVec.z
+        let sizeX = maxX - minX
+        let sizeZ = maxZ - minZ
         let sceneSize = max(sizeX, sizeZ)
 
-        // Camera
         let cam = SCNCamera()
         cam.usesOrthographicProjection = true
         cam.zNear = 0.01
-        cam.zFar = 10000
-
-        // ✅ Fit to your available container (mapView height matters)
-        // More padding = smaller zoom (more space around model)
-        let padding: Double = 1.15
-        cam.orthographicScale = Double(sceneSize) * padding
+        cam.zFar  = 10_000
+        let padding: Double = 1.2
+        cam.orthographicScale = Double(sceneSize / 2) * padding
 
         cameraNode.camera = cam
-
-        // ✅ Place camera (distance doesn’t zoom in ortho, but affects perspective of billboards)
-        cameraNode.position = SCNVector3(0, Float(sceneSize) * 0.6, Float(sceneSize) * 0.6)
-
-        // ✅ Orbit pivot at model center
-        cameraOrbit.position = center
+        let dist = sceneSize * 0.8
+        cameraNode.position = SCNVector3(0, dist, dist)
+        cameraNode.look(at: SCNVector3Zero)
+        cameraOrbit.position = SCNVector3(centerX, pivotY, centerZ)
         cameraOrbit.addChildNode(cameraNode)
-
-        // Initial angles (slightly top-down)
         currentPitch = -Float.pi / 6
         currentYaw   = -Float.pi / 10
         cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
 
         scene.rootNode.addChildNode(cameraOrbit)
         sceneView.pointOfView = cameraNode
+
+        sceneBounds = (
+            SCNVector3(minX, minY, minZ),
+            SCNVector3(maxX, minY, maxZ)
+        )
     }
 
     func setupLights() {
@@ -1109,7 +1121,7 @@ final class ZoneSelectorView: UIView {
 
     enum PageDirection { case none, next, prev }
 
-    private var currentItems: [String] = ["Test123", "Heart", "Live"]
+    private var currentItems: [String] = []
     private var selectedIndex: Int = 0
 
     private var hasMoreLeft: Bool = false
@@ -1314,8 +1326,9 @@ final class ZoneSelectorView: UIView {
     private func setArrow(_ button: UIButton, enabled: Bool) {
         button.isEnabled = enabled
         UIView.animate(withDuration: 0.15) {
-            button.alpha = enabled ? 1.0 : 0.35
+            button.alpha = enabled ? 1.0 : 0.0
         }
+        button.isHidden = !enabled
     }
 
     // MARK: - Selection Capsule

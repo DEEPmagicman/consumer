@@ -9,6 +9,7 @@ import UIKit
 import MapKit
 import YouTubeiOSPlayerHelper
 import Hero
+import MHLoadingButton
 
 class EventDetailsVC: UIViewController {
 
@@ -54,7 +55,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var policyViewMoreBtnView: UIView!
     @IBOutlet weak var policyViewMoreBtn: UIButton!
     @IBOutlet weak var ticketHidenView: UIView!
-    @IBOutlet weak var continueToCheckOutBtn: UIButton!
     @IBOutlet weak var ticketTableView: UITableView!
     @IBOutlet weak var protectedTicketView: UIView!
     @IBOutlet weak var unLockTF: UITextField!
@@ -80,6 +80,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -657,12 +658,16 @@ class EventDetailsVC: UIViewController {
             timingLbl.textColor = color
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
-            continueToCheckOutBtn.backgroundColor = color
+            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+            continueToCheckOutBtn.bgColor = color
+            
         } else {
             let color = UIColor(hex: "6D5EBD")
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
             continueToCheckOutBtn.backgroundColor = color
+            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+            continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
         }
 
         setupSocialLinks()
@@ -993,6 +998,7 @@ class EventDetailsVC: UIViewController {
     @IBAction func onClickInlineContinue(_ sender: Any) {
         guard let event else { return }
 
+     
         let selectedNormal = normalTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
         let selectedGrouped = groupedNormalTickets
             .flatMap { $0.tickets }
@@ -1011,6 +1017,8 @@ class EventDetailsVC: UIViewController {
     }
     
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
+        continueToCheckOutBtn.showLoader(userInteraction: false)
+        
         guard let user = UserDefault.shared.user else {
             let loginVC = Navigate.to.loginPopUpVc(self)
 
@@ -1051,6 +1059,7 @@ class EventDetailsVC: UIViewController {
             tickets: ticketsPayload
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else { return }
+            continueToCheckOutBtn.hideLoader()
 
 
             if isSuccess {
