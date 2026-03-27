@@ -15,7 +15,9 @@ workflows:
     environment:
       ios_signing:
         distribution_type: ad_hoc
-        bundle_identifier: "com.project.speakeasy-consumer"
+        bundle_identifier:
+        - "com.project.speakeasy-consumer"
+        - "com.project.speakeasy-consumer.Clip"
 
       vars:
         XCODE_WORKSPACE: "SpeakEasy-Consumer.xcworkspace"
