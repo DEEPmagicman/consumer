@@ -13,12 +13,15 @@ import UIKit
 
 final class VenueHeaderVC: UIViewController {
     
+    var venueDetails: ClipVenue?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
     }
     
+    
     @IBAction func onClickBuyTicket(_ sender: Any) {
-        Navigate.to.coverTicketListVC(self)
+        Navigate.to.coverTicketListVC(self, venueDetails: venueDetails)
     }
 }

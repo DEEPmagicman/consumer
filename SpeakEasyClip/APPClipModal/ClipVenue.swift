@@ -264,6 +264,7 @@ struct CoverTicket: Codable {
     var updatedAt: String?
     var coverType: String?
     var coverTicketLocalizations: [CoverTicketLocalizations]?
+    
     // MARK: app side parameters
     var selectedQuantity: Int?
     var isCustom: Bool {

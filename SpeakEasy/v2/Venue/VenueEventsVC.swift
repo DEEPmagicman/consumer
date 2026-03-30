@@ -10,6 +10,7 @@ import UIKit
 final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource {
     
     @IBOutlet weak var tableView: UITableView!
+    
     var venueId = ""
     private var events: [Event] = []
     private var skip = 0
@@ -22,6 +23,10 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+          tap.cancelsTouchesInView = false
+          tableView.addGestureRecognizer(tap)
 
         getEvents()
         
@@ -83,8 +88,13 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         
         let event = events[indexPath.row]
         cell.configure(with: event)
-        
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
+        Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -95,6 +105,16 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         
         if offsetY > contentHeight - height - 100 {
             getEvents()
+        }
+    }
+    
+    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        let point = gesture.location(in: tableView)
+        
+        if let indexPath = tableView.indexPathForRow(at: point) {
+            let event = events[indexPath.row]
+            print("Tapped working ✅")
+            Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
         }
     }
 }
