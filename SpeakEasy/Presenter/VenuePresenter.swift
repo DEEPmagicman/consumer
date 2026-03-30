@@ -51,4 +51,46 @@ final class VenuePresenter {
             completion(false, nil, nil, nil)
         }
     }
+    
+    static func getEventVenues(
+        venueId: String, skip: Int,
+        time: String,
+        completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ list: [Event], _ hasMore: Bool) -> Void
+    ) {
+        
+        let url = APIBuilder.venueEvents(
+            venueId: venueId,
+            includes: ["venue.venueAttachment", "flyer", "eventTicketLinks", "eventTicket"],
+            take: 5,
+            skip: skip,
+            timeVersion: time,
+            orderBy: "startDateTime|asc"
+        )
+        
+        AFWrapper.getRequest(
+            url,
+            params: nil,
+            headers: Header.header()
+        ) { response in
+            
+            do {
+                let data = try JSONSerialization.data(withJSONObject: response)
+                let decoded = try JSONDecoder().decode(EventResponse.self, from: data)
+                
+                completion(true, nil, decoded.list, decoded.hasMany)
+                
+            } catch {
+                completion(false, error.localizedDescription, [], false)
+            }
+            
+        } failure: { error in
+            
+            if let err = error as? NSError, err.code == 0 {
+                completion(false, err.domain, [], false)
+                return
+            }
+            
+            completion(false, nil, [], false)
+        }
+    }
 }

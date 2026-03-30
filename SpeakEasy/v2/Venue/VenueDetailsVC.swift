@@ -8,8 +8,20 @@
 import UIKit
 import MapKit
 
+struct SocialPlatform {
+    let iconView: UIImageView
+    let urlString: String?
+}
+
 final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSource {
     
+    @IBOutlet weak var tiktokIcon: UIImageView!
+    @IBOutlet weak var youtubeIcon: UIImageView!
+    @IBOutlet weak var xIcon: UIImageView!
+    @IBOutlet weak var fbIcon: UIImageView!
+    @IBOutlet weak var websiteIcon: UIImageView!
+    @IBOutlet weak var instaIcon: UIImageView!
+    @IBOutlet weak var addressLbl: UILabel!
     @IBOutlet weak var mainScrollView: UIScrollView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var venueAboutLbl: UILabel!
@@ -20,17 +32,35 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     
-    var venueDetails: ClipVenue?
+    var venueDetails: ClipVenue? {
+        didSet {
+            if isViewLoaded {
+                configureUI()
+            }
+        }
+    }
+    
+    private var events: [Event] = []
+    private var skip = 0
+    private var hasMore = true
+    private var isLoading = false
+    private var page = 1
+    
     private var ticketListHeightObservation: NSKeyValueObservation?
+    
+    var socialPlatforms: [SocialPlatform] {
+        return [
+            SocialPlatform(iconView: fbIcon, urlString: venueDetails?.venueSettings?.facebookUrl),
+            SocialPlatform(iconView: instaIcon, urlString: venueDetails?.venueSettings?.instagramUrl),
+            SocialPlatform(iconView: xIcon, urlString: venueDetails?.venueSettings?.xUrl),
+            SocialPlatform(iconView: youtubeIcon, urlString: venueDetails?.venueSettings?.youtubeUrl),
+            SocialPlatform(iconView: tiktokIcon, urlString: venueDetails?.venueSettings?.tiktokUrl),
+            SocialPlatform(iconView: websiteIcon, urlString: venueDetails?.venueSettings?.websiteUrl)
+        ]
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateLocationOnMap(
-            to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0),
-            with: venueDetails?.name ?? "Venue"
-        )
-        handleViewMore()
-        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
@@ -38,6 +68,47 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             guard let self = self else { return }
             self.tableViewHeight.constant = self.tableView.contentSize.height
             self.tableView.layoutIfNeeded()
+        }
+        configureUI()
+    }
+    
+    private func configureUI() {
+        setupSocialIcons()
+        handleViewMore()
+        updateLocationOnMap(
+            to: CLLocationCoordinate2D(
+                latitude: venueDetails?.latitude ?? 0,
+                longitude: venueDetails?.longitude ?? 0
+            ),
+            with: venueDetails?.name ?? "Venue"
+        )
+        
+        let parts = [
+            venueDetails?.address,
+            venueDetails?.city,
+            venueDetails?.code
+        ].compactMap { $0 }
+
+        addressLbl.text = parts.joined(separator: ", ")
+    }
+    
+    func setupSocialIcons() {
+        for platform in socialPlatforms {
+            
+            guard let urlString = platform.urlString,
+                  let url = URL(string: urlString),
+                  !urlString.isEmpty else {
+                platform.iconView.isHidden = true
+                continue
+            }
+            
+            platform.iconView.isHidden = false
+            platform.iconView.isUserInteractionEnabled = true
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSocialTap(_:)))
+            platform.iconView.addGestureRecognizer(tapGesture)
+            
+            platform.iconView.accessibilityHint = urlString
         }
     }
     
@@ -74,6 +145,49 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
         mapView.setRegion(region, animated: false)
         mapView.layer.cornerRadius = 16
         mapView.clipsToBounds = true
+    }
+    
+    func getEvents() {
+        
+        guard !isLoading else { return }
+        guard hasMore else { return }
+        
+        isLoading = true
+        
+        VenuePresenter.getEventVenues(
+            venueId: venueDetails?.id ?? "",
+            skip: page, time: "PAST"
+        ) { [weak self] isSuccess, errMsg, list, hasMore in
+            
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+            
+            if isSuccess {
+                self.events.append(contentsOf: list)
+                self.hasMore = hasMore
+                
+                if hasMore {
+                    self.page += 1
+                }
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            } else {
+                print(errMsg ?? "Error")
+            }
+        }
+    }
+    
+    @objc func handleSocialTap(_ sender: UITapGestureRecognizer) {
+        guard let view = sender.view as? UIImageView,
+              let urlString = view.accessibilityHint,
+              let url = URL(string: urlString) else { return }
+        
+        UIApplication.shared.open(url)
     }
     
     @IBAction func onClickViewMore(_ sender: UIButton) {
@@ -127,11 +241,34 @@ extension VenueDetailsVC: MKMapViewDelegate {
 
 extension VenueDetailsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        4
+        events.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell: VenueEventTVC = tableView.dequeue(withIdentifier: VenueEventTVC.identifier, for: indexPath)
+        
+        let event = events[indexPath.row]
+        cell.configure(with: event)
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if indexPath.row == events.count - 3 {
+            getEvents()
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height - 100 {
+            getEvents()
+        }
     }
 }

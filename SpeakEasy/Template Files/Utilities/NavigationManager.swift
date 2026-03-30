@@ -511,8 +511,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func coverTicketListVC(_ sender: UIViewController) {
+    func coverTicketListVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
         let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)
+        vc.venueDetails = venueDetails
         sender.pushVC(vc)
     }
 }

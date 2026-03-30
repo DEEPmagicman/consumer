@@ -9,4 +9,47 @@ import UIKit
 
 final class VenueEventTVC: UITableViewCell {
     
+    @IBOutlet weak var eventImg: UIImageView!
+    @IBOutlet weak var bottomLbl: UILabel!
+    @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var eventTitleLbl: UILabel!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        eventImg.contentMode = .scaleAspectFill
+        eventImg.clipsToBounds = true
+        eventImg.layer.cornerRadius = 10
+    }
+    
+    func configure(with event: Event) {
+        
+        eventTitleLbl.text = event.title
+        dateLbl.text = formatDateRange(
+            start: event.startDateTime,
+            end: event.endDateTime ?? ""
+        )
+        bottomLbl.text = event.venue?.name ?? "Unknown Venue"
+        eventImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+       
+    }
+}
+
+private func formatDateRange(start: String, end: String) -> String {
+    
+    let inputFormatter = DateFormatter()
+    inputFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    
+    let outputFormatter = DateFormatter()
+    outputFormatter.dateFormat = "dd MMM, hh:mm a"
+    
+    guard let startDate = inputFormatter.date(from: start),
+          let endDate = inputFormatter.date(from: end) else {
+        return ""
+    }
+    
+    let startStr = outputFormatter.string(from: startDate)
+    let endStr = outputFormatter.string(from: endDate)
+    
+    return "\(startStr) - \(endStr)"
 }

@@ -77,6 +77,7 @@ struct APIBuilder {
     static private let faq = "/faq"
     static private let bookingConfirm = "/booking-confirm"
     static private let getInstagramProfile = "/get-instagram-profile"
+    static private let consumer = "/consumer"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.clientId + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.redirectURI + "&show_dialog=false"
@@ -436,6 +437,33 @@ struct APIBuilder {
     
     static func barTabPaymentDetails(posCheckId: String) -> String {
         baseURL + route + barTab + "/\(posCheckId)" + paymentDetails
+    }
+    
+    static func venueEvents(
+        venueId: String,
+        includes: [String] = [],
+        take: Int = 20,
+        skip: Int = 0,
+        timeVersion: String,
+        orderBy: String = "order|asc"
+    ) -> String {
+        
+        let base = SharedURL.baseURL + consumer  + event
+        
+        var queryItems: [String] = []
+        
+        queryItems += includes.map { "include=\($0)" }
+        queryItems.append("take=\(take)")
+        queryItems.append("skip=\(skip)")
+        queryItems.append("version=PUBLISHED")
+        queryItems.append("status=ENABLED")
+        queryItems.append("eventStatus=APPROVED")
+        queryItems.append("timeVersion=\(timeVersion)")
+        queryItems.append("venueId=\(venueId)")
+        queryItems.append("include=eventTicket")
+        queryItems.append("orderBy=\(orderBy.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
+        
+        return base + "?" + queryItems.joined(separator: "&")
     }
 }
 

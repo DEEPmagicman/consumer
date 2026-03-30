@@ -234,6 +234,11 @@ struct Event: Codable {
     }
 }
 
+struct EventResponse: Codable {
+    let list: [Event]
+    let hasMany: Bool
+}
+
 struct EventTicketGroupHasTicket: Codable {
     var id: String?
     var eventTicketGroupId: String?

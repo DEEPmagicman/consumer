@@ -15,6 +15,7 @@ final class VenueVC: UIViewController {
     
     var header: VenueHeaderVC?
     var segmentedScrollView = SJSegmentedViewController()
+    var presenter = MVPPresenter()
     
     var venueDetails: ClipVenue?
     
@@ -26,10 +27,34 @@ final class VenueVC: UIViewController {
         self.venueLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
         
         setUpSegmentVC()
+        getVenueDetails()
+    }
+    
+    private func getVenueDetails() {
+        presenter.getVenuesDetailForaMVP(
+            venueId: venueDetails?.uniqueId ?? "",
+            venueTimeZone: venueDetails?.useTimezone ?? "",
+            doormanId: ""
+        ) { [weak self] isSuccess, errMsg, venueDetail in
+            
+            guard let self = self else { return }
+            
+            if isSuccess, let venue = venueDetail {
+                self.venueDetails = venue
+                setUpSegmentVC()
+            } else {
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? "Something went wrong",
+                    message: ""
+                )
+            }
+        }
     }
     
     private func setUpSegmentVC() {
         let header = VenueHeaderVC(nibName: "VenueHeaderVC", bundle: nil)
+        header.venueDetails = self.venueDetails
         self.header = header
         segmentedScrollView.headerViewHeight = 110
         
@@ -44,6 +69,7 @@ final class VenueVC: UIViewController {
         
         let vc1 = VenueEventsVC(nibName: "VenueEventsVC", bundle: nil)
         vc1.title = "Events"
+        vc1.venueId = venueDetails?.id ?? ""
         
         let vc2 = VenueExperiencesVC(nibName: "VenueExperiencesVC", bundle: nil)
         vc2.title = "Experiences"
@@ -69,7 +95,7 @@ final class VenueVC: UIViewController {
             segmentedScrollView.view.topAnchor.constraint(equalTo: venueView.topAnchor),
             segmentedScrollView.view.bottomAnchor.constraint(equalTo: venueView.bottomAnchor)
         ])
-        segmentedScrollView.segmentedScrollView.backgroundColor = .red
+        segmentedScrollView.segmentedScrollView.backgroundColor = .clear
         segmentedScrollView.didMove(toParent: self)
     }
     
@@ -84,5 +110,6 @@ extension VenueVC: SJSegmentedViewControllerDelegate, ScrollCallBackDelegate {
     }
     
     func onChangeScrollListener(lastContentOffset: CGFloat, offSet: CGFloat) {
+        
     }
 }

@@ -11,25 +11,110 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     
     @IBOutlet weak var tableView: UITableView!
     
+    var venueId = ""
+    private var events: [Event] = []
+    private var skip = 0
+    private var hasMore = true
+    private var isLoading = false
+    private var page = 1
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+          tap.cancelsTouchesInView = false
+          tableView.addGestureRecognizer(tap)
+
+        getEvents()
+        
     }
     
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
         tableView
     }
+    
+    func getEvents() {
+        
+        guard !isLoading else { return }
+        guard hasMore else { return }
+        
+        isLoading = true
+        
+        VenuePresenter.getEventVenues(venueId: venueId, skip: skip, time: "UPCOMING") { [weak self] isSuccess, errMsg, list, hasMore in
+            
+            guard let self = self else { return }
+            
+            if isSuccess {
+                if list.isEmpty {
+                    self.hasMore = false
+                    return
+                }
+                
+                let newItems = list.filter { newEvent in
+                    !self.events.contains(where: { $0.id == newEvent.id })
+                }
+                
+                self.events.append(contentsOf: newItems)
+                
+                self.skip = self.events.count
+                
+                self.hasMore = hasMore
+                
+                print("skip:", self.skip, "received:", list.count)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                
+                self.isLoading = false
+            } else {
+                print(errMsg ?? "Error")
+            }
+        }
+    }
 }
 
 extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        events.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell: VenueEventTVC = tableView.dequeue(withIdentifier: VenueEventTVC.identifier, for: indexPath)
+        
+        let event = events[indexPath.row]
+        cell.configure(with: event)
+        cell.selectionStyle = .none
+        return cell
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: VenueEventTVC = tableView.dequeue(withIdentifier: VenueEventTVC.identifier, for: indexPath)
-        return cell
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let event = events[indexPath.row]
+        Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height - 100 {
+            getEvents()
+        }
+    }
+    
+    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        let point = gesture.location(in: tableView)
+        
+        if let indexPath = tableView.indexPathForRow(at: point) {
+            let event = events[indexPath.row]
+            print("Tapped working ✅")
+            Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
+        }
     }
 }
