@@ -12,6 +12,7 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var venueView: UIView!
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var venueLogo: UIImageView!
+    @IBOutlet weak var bgImage: UIImageView!
     
     var header: VenueHeaderVC?
     var segmentedScrollView = SJSegmentedViewController()
@@ -25,6 +26,15 @@ final class VenueVC: UIViewController {
         venueName.text = venueDetails?.name ?? "Venue"
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         self.venueLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
+        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        if let url = URL(string: imageUrlString) {
+            bgImage.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "newSpeakeasy")
+            )
+        } else {
+            bgImage.image = UIImage(named: "newSpeakeasy")
+        }
         
         setUpSegmentVC()
         getVenueDetails()

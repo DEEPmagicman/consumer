@@ -31,6 +31,8 @@ final class VenueEventTVC: UITableViewCell {
         )
         bottomLbl.text = event.venue?.name ?? "Unknown Venue"
         eventImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        eventImg.hero.id = "event.image.\(event.id)"
+          eventTitleLbl.hero.id = "event.title.\(event.id)"
        
     }
 }

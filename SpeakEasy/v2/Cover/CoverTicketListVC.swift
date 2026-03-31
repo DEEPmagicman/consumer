@@ -178,8 +178,16 @@ private extension CoverTicketListVC {
     func setupScreen() {
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
-        bgImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
         
+        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        if let url = URL(string: imageUrlString) {
+            bgImage.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "newSpeakeasy")
+            )
+        } else {
+            bgImage.image = UIImage(named: "newSpeakeasy")
+        }
         venueName.text = venueDetails?.name ?? ""
         timeLbl.text = venueDetails?.timezone
         
@@ -384,16 +392,14 @@ private extension CoverTicketListVC {
     
     func proceedToFinalCheckout() {
         guard !selectedCoverTickets.isEmpty else { return }
-        
+
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
-            Navigate.to.checkOutVC(
+            Navigate.to.coverCheckOutVC(
                 self,
                 venue: venueDetails,
                 selectedCoverTickets: selectedCoverTickets,
-                selectedEventTicket: [],
                 selectedAddOnsItem: selectedAddOns,
                 totalPrice: 0,
-                type: .appClip,
                 bookingType: bookingType
             )
         } else {

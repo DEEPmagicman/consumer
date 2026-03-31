@@ -94,6 +94,8 @@
 		04E63FCD2F4D635200295C04 /* TablePurchaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E63FCA2F4D635200295C04 /* TablePurchaseVC.swift */; };
 		04E8F67C2F72496A00F45536 /* CustomQuestionCheckboxCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E8F67B2F72496A00F45536 /* CustomQuestionCheckboxCell.xib */; };
 		04E8F67D2F72496A00F45536 /* CustomQuestionCheckboxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E8F67A2F72496A00F45536 /* CustomQuestionCheckboxCell.swift */; };
+		04EA6B872F7B839A00B5B087 /* CoverTicketCheckOutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EA6B852F7B839A00B5B087 /* CoverTicketCheckOutVC.swift */; };
+		04EA6B882F7B839A00B5B087 /* CoverTicketCheckOutVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04EA6B862F7B839A00B5B087 /* CoverTicketCheckOutVC.xib */; };
 		04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04FACD4E2F52B0C80022011C /* SignUp.storyboard */; };
 		04FCDE252F3C56C700D10F90 /* YouTubeiOSPlayerHelper in Frameworks */ = {isa = PBXBuildFile; productRef = 04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */; };
 		2966E32D2980F85E00B5E103 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32C2980F85E00B5E103 /* SceneDelegate.swift */; };
@@ -536,6 +538,8 @@
 		04E63FCB2F4D635200295C04 /* TablePurchaseVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TablePurchaseVC.xib; sourceTree = "<group>"; };
 		04E8F67A2F72496A00F45536 /* CustomQuestionCheckboxCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuestionCheckboxCell.swift; sourceTree = "<group>"; };
 		04E8F67B2F72496A00F45536 /* CustomQuestionCheckboxCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQuestionCheckboxCell.xib; sourceTree = "<group>"; };
+		04EA6B852F7B839A00B5B087 /* CoverTicketCheckOutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverTicketCheckOutVC.swift; sourceTree = "<group>"; };
+		04EA6B862F7B839A00B5B087 /* CoverTicketCheckOutVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoverTicketCheckOutVC.xib; sourceTree = "<group>"; };
 		04FACD4E2F52B0C80022011C /* SignUp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SignUp.storyboard; sourceTree = "<group>"; };
 		2966E3282980F85E00B5E103 /* SpeakEasyClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeakEasyClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2966E32A2980F85E00B5E103 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1891,6 +1895,8 @@
 				CE59ED692F6D5AC000831974 /* TVC */,
 				CE59ED652F6D544900831974 /* CoverTicketListVC.swift */,
 				CE59ED662F6D544900831974 /* CoverTicketListVC.xib */,
+				04EA6B852F7B839A00B5B087 /* CoverTicketCheckOutVC.swift */,
+				04EA6B862F7B839A00B5B087 /* CoverTicketCheckOutVC.xib */,
 			);
 			path = Cover;
 			sourceTree = "<group>";
@@ -2276,7 +2282,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -2336,6 +2342,7 @@
 				04A202EC2F36059F00900A27 /* EventGuestListCVC.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
 				CEE02DB32EFBAE8300AC7756 /* DateSelectionCVC.xib in Resources */,
+				04EA6B882F7B839A00B5B087 /* CoverTicketCheckOutVC.xib in Resources */,
 				0408FBF62F63ECB9003F5563 /* GroupTicketTVC.xib in Resources */,
 				CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */,
 				CAC4141A28A478050007BA86 /* Picker.storyboard in Resources */,
@@ -2467,9 +2474,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2611,6 +2622,7 @@
 				82847A8629828BA600611DC4 /* TicketTypeTableViewCell.swift in Sources */,
 				CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
+				04EA6B872F7B839A00B5B087 /* CoverTicketCheckOutVC.swift in Sources */,
 				82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */,
 				BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */,
 				CAC413F828A478040007BA86 /* NSAttributedString.swift in Sources */,
@@ -2869,7 +2881,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 241;
+				CURRENT_PROJECT_VERSION = 243;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2907,7 +2919,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 241;
+				CURRENT_PROJECT_VERSION = 243;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3071,7 +3083,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 241;
+				CURRENT_PROJECT_VERSION = 243;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3166,7 +3178,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 241;
+				CURRENT_PROJECT_VERSION = 243;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3377,7 +3389,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -3485,12 +3497,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */

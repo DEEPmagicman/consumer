@@ -225,8 +225,8 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
 
                 let event = todaysEvents[indexPath.item]
                 cell.setupData(event: event)
-                cell.bgImage.hero.id = "event.image.\(indexPath.item)"
-                cell.eventTitleLbl.hero.id = "event.title.\(indexPath.item)"
+                cell.bgImage.hero.id = "event.image.\(event.id)"
+                cell.eventTitleLbl.hero.id = "event.title.\(event.id)"
                 return cell
             }
            
@@ -273,7 +273,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
            case tonightEventCollectionView:
                if isTonightEventInitialLoading { return }
                let selectedEvent = todaysEvents[indexPath.item]
-               Navigate.eventDetailsVC(self, event: selectedEvent, heroIndex: indexPath.item)
+               Navigate.eventDetailsVC(self, event: selectedEvent)
 
            case venueListCollectionView:
                if isVenueInitialLoading { return }

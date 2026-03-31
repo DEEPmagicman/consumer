@@ -48,7 +48,6 @@
             phoneNumTextField.withFlag = true
             phoneNumTextField.withExamplePlaceholder = true
             
-            // ✅ MATCH FONT
             phoneNumTextField.font = Constant.Font.interRegular(size: 14)
             phoneNumTextField.flagButton.titleLabel?.font = Constant.Font.interRegular(size: 14)
             phoneNumTextField.flagButton.setTitleColor(.white, for: .normal)

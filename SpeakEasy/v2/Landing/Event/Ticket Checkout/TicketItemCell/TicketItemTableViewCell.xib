@@ -50,6 +50,7 @@
                         </constraints>
                     </view>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="67C-yO-wDP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="7Dr-0V-zgk"/>
                     <constraint firstAttribute="bottom" secondItem="67C-yO-wDP" secondAttribute="bottom" id="Jym-Aw-yi0"/>

@@ -248,6 +248,10 @@ struct UpSellTicket: Codable {
     var addOns: AddOns?
     // MARK: app side parameters
     var selectedQuantity: Int?
+    var calculatedNetPrice: Double {
+            let fees = extraFees ?? 0
+            return price - fees
+        }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

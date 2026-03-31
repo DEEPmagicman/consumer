@@ -129,8 +129,11 @@ class EventDetailsVC: UIViewController {
 
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
-        mainImg.hero.id = "event.image.\(heroIndex)"
-          titleLbl.hero.id = "event.title.\(heroIndex)"
+//        mainImg.hero.id = "event.image.\(heroIndex)"
+//          titleLbl.hero.id = "event.title.\(heroIndex)"
+//        
+        mainImg.hero.id = "event.image.\(event?.id ?? "")"
+        titleLbl.hero.id = "event.title.\(event?.id ?? "")"
         
         setupData()
         setupCollectionViews()

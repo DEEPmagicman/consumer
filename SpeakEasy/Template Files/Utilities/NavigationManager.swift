@@ -201,6 +201,23 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func coverCheckOutVC(_ sender: UIViewController,
+                         venue: ClipVenue?,
+                         selectedCoverTickets: [CoverTicket],
+                         selectedAddOnsItem: [UpSellTicket],
+                         totalPrice: Double,
+                         bookingType: TicketPriceType = .PAID) {
+        let vc = CoverTicketCheckOutVC(nibName: "CoverTicketCheckOutVC", bundle: nil)
+        vc.selectedCoverTickets = selectedCoverTickets
+        vc.selectedAddOnsItem = selectedAddOnsItem
+        vc.totalPrice = totalPrice
+        vc.venue = venue
+        vc.bookingType = bookingType
+        vc.updateDelegate = sender as? UpdateDetailDelegate
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ShowQRCodeVC.self)
         vc.booking = booking
@@ -436,11 +453,10 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    static func eventDetailsVC(_ sender: UIViewController, event: Event?, heroIndex: Int) {
+    static func eventDetailsVC(_ sender: UIViewController, event: Event?) {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event = event
         vc.venueDetails = event?.venue
-        vc.heroIndex = heroIndex
         sender.pushVC(vc)
     }
     

@@ -94,7 +94,7 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let event = events[indexPath.row]
-        Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
+        Navigate.eventDetailsVC(self, event: event)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -114,7 +114,7 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         if let indexPath = tableView.indexPathForRow(at: point) {
             let event = events[indexPath.row]
             print("Tapped working ✅")
-            Navigate.eventDetailsVC(self, event: event, heroIndex: indexPath.item)
+            Navigate.eventDetailsVC(self, event: event)
         }
     }
 }
