@@ -114,4 +114,10 @@ extension AllVenueVC: UITableViewDelegate, UITableViewDataSource {
             fetchVenues(showLoader: false)
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let venue = venueList[indexPath.row]
+        Navigate.to.venueVC(self, venueDetails: venue)
+    }
 }

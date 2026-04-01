@@ -18,6 +18,8 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var todaysEventsView: UIView!
     @IBOutlet weak var premiumExperiencesView: UIView!
     @IBOutlet weak var premiumExerienceParentView: UIView!
+    @IBOutlet weak var eventsInCityTitleLbl: UILabel!
+    
     
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
@@ -172,6 +174,7 @@ final class DiscoverAllVC: UIViewController {
     private func setVenueListForSelectedCity() {
         let city = resolvedCity()
         venueTitleLable.text = "Venues in \(city)"
+        eventsInCityTitleLbl.text = "Events in \(city)"
         fetchAllOpenVenueForMVP()
     }
 

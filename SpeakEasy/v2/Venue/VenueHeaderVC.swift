@@ -15,10 +15,18 @@ final class VenueHeaderVC: UIViewController {
     
     var venueDetails: ClipVenue?
     
+    @IBOutlet weak var coverTicketView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupUI()
     }
+    
+    private func setupUI() {
+        let isEmpty = venueDetails?.coverTicket?.isEmpty ?? true
+        coverTicketView.isHidden = isEmpty
+    }
+    
     
     
     @IBAction func onClickBuyTicket(_ sender: Any) {

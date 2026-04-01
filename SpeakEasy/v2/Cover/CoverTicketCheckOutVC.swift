@@ -105,10 +105,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
         setupUI()
         setupTableViews()
-        setupObservers()
         setupHeaderData()
         calculateBaseSubtotal()
-        startCountdown()
+//        startCountdown()
         showCheckoutShimmer()
 
         if !selectedCoverTickets.isEmpty && bookingType != .FREE {
@@ -147,7 +146,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         purchaseTicketBtn.isUserInteractionEnabled = false
 
         promoCodeView.isHidden = true
-        feesAndTaxesContainerView.isHidden = false
         discountView.isHidden = true
 
         checkBox.setImage(UIImage(named: "ic_checkbox_unchecked"), for: .normal)
@@ -215,11 +213,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         upSellTicketsTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         upSellFeesAndTaxTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
-    }
-
-    private func setupObservers() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickFeesAndTaxesHeader))
-        feesAndTaxesTitleView.addGestureRecognizer(tap)
     }
 
     private func setupHeaderData() {
@@ -380,17 +373,6 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         shimmerView.isHidden = true
     }
     
-    @objc private func onClickFeesAndTaxesHeader() {
-        let isHidden = feesAndTaxesContainerView.isHidden
-        feesAndTaxesContainerView.isHidden.toggle()
-
-        UIView.animate(withDuration: 0.25) {
-            self.feesDropDowenIc.transform = isHidden
-                ? CGAffineTransform(rotationAngle: .pi)
-                : .identity
-        }
-    }
-    
     @IBAction func onClickUpSellFeesAndTaxes(_ sender: Any) {
         let isHidden = upSellfeesAndTaxesContainerView.isHidden
         upSellfeesAndTaxesContainerView.isHidden.toggle()
@@ -406,6 +388,16 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         cancelBooking()
     }
     
+    @IBAction func onClickFeesAndTaxesBtn(_ sender: Any) {
+        let isHidden = feesAndTaxesContainerView.isHidden
+        feesAndTaxesContainerView.isHidden.toggle()
+
+        UIView.animate(withDuration: 0.25) {
+            self.feesDropDowenIc.transform = isHidden
+                ? CGAffineTransform(rotationAngle: .pi)
+                : .identity
+        }
+    }
 }
 
 extension CoverTicketCheckOutVC {
@@ -431,7 +423,7 @@ extension CoverTicketCheckOutVC {
     private func updateTimerLabel() {
         let minutes = remainingSeconds / 60
         let seconds = remainingSeconds % 60
-        timerLbl.text = "\(String(format: "%01d", minutes)):\(String(format: "%02d", seconds))"
+//        timerLbl.text = "\(String(format: "%01d", minutes)):\(String(format: "%02d", seconds))"
     }
 
     private func timerExpired() {
@@ -510,10 +502,8 @@ extension CoverTicketCheckOutVC {
             ])
         }
 
-        Loader.show()
         PaymentPresenter.createCoverBooking(coverTickets: tickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else {
-                Loader.hide()
                 return
             }
 
@@ -522,7 +512,6 @@ extension CoverTicketCheckOutVC {
                 self.isBookingLoaded = true
                 self.fetchPaymentIntentAndSetup(promoCode: self.isPromoCodeApplied ? self.appliedPromoCode : "")
             } else {
-                Loader.hide()
                 self.isBookingLoaded = true
                 self.hideCheckoutShimmerIfNeeded()
                 Alert.showAlertSheet(style: .alert,
@@ -533,7 +522,6 @@ extension CoverTicketCheckOutVC {
     }
 
     private func fetchPaymentIntentAndSetup(promoCode: String) {
-        Loader.show()
 
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             [
@@ -550,7 +538,6 @@ extension CoverTicketCheckOutVC {
         ) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
 
             guard let self = self else { return }
-            Loader.hide()
 
             if isSuccess, let clientSecret = clientSecret {
                 self.isFreeTicket = isFreeTicket
@@ -628,7 +615,12 @@ extension CoverTicketCheckOutVC {
         var items: [FeeDisplayItem] = []
 
         guard let detail = detail else { return [] }
-
+        
+        let subtotal = detail.subTotal
+        if subtotal > 0 {
+            items.append(FeeDisplayItem(title: "Subtotal", amount: subtotal))
+        }
+         
         if let customFees = detail.customFees, !customFees.isEmpty {
             customFees.forEach {
                 items.append(FeeDisplayItem(title: $0.name, amount: $0.fee ?? 0))
@@ -664,13 +656,13 @@ extension CoverTicketCheckOutVC {
         self.totalPrice = grandTotal
 
         coverTicketStackView.isHidden = selectedCoverTickets.isEmpty
-        feesAndTaxesTitleView.isHidden = feesAndTaxes.isEmpty
         feesAndTaxesParentTableView.isHidden = selectedCoverTickets.isEmpty || feesAndTaxes.isEmpty
         upSellTicketStackView.isHidden = selectedAddOnsItem.isEmpty
         upSellfeesAndTaxesContainerView.superview?.isHidden = selectedAddOnsItem.isEmpty
 
         totalAmountLbl.text = grandTotal <= 0 ? "Free" : "\(currency)\(grandTotal.decimalFormat(true))"
         feesAndTxtTotalAmountLbl.text = coverFeesTotal <= 0 ? "" : "\(currency)\(coverFeesTotal.decimalFormat(true))"
+        coverTicketTotal.text = coverTotal <= 0 ? "Free" : "\(currency)\(coverTotal.decimalFormat(true))"
 
         upSellTotalLbl.text = upSellTotal <= 0 ? "Free" : "\(currency)\(upSellTotal.decimalFormat(true))"
 
@@ -889,9 +881,7 @@ extension CoverTicketCheckOutVC {
 extension CoverTicketCheckOutVC {
 
     private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping (() -> Void)) {
-        Loader.show()
         PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: optedPolicy) { isSuccess, errMsg in
-            Loader.hide()
             if isSuccess {
                 completion()
             } else {
@@ -901,14 +891,12 @@ extension CoverTicketCheckOutVC {
     }
 
     private func addOnsPaymentSuccess(completion: @escaping (() -> Void)) {
-        Loader.show()
         var mainBookingId = ""
         if bookingType == .FREE {
             mainBookingId = bookingId
         }
 
         PaymentPresenter.successAddOnsPayment(bookingId: addOnsBookingId ?? "", mainBookingId: mainBookingId) { isSuccess, errMsg in
-            Loader.hide()
             if isSuccess {
                 completion()
             } else {
@@ -925,9 +913,7 @@ extension CoverTicketCheckOutVC {
             ]
         }
 
-        Loader.show()
         PaymentPresenter.createCoverFreeBooking(coverTickets: appClipTickets, venueId: venue?.id ?? "") { [weak self] isSuccess, errMsg, id, _ in
-            Loader.hide()
             guard let self = self else { return }
 
             if isSuccess, let id = id {
@@ -942,7 +928,7 @@ extension CoverTicketCheckOutVC {
     private func cancelBooking() {
         countdownTimer?.invalidate()
         PaymentPresenter.cancelBooking(bookingId: bookingId) { _, _ in
-            Navigate.to.back(self)
+            self.navigationController?.popToRootViewController(animated: false)
         }
     }
 }

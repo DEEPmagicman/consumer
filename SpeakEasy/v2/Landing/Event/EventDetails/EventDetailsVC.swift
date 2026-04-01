@@ -234,6 +234,58 @@ class EventDetailsVC: UIViewController {
         ticketTitleStackShimmerView.isHidden = true
         ticketTitleStackView.isHidden = false
     }
+    
+    func updateLineUpView() {
+        let shouldHide = artists.isEmpty
+        
+        if shouldHide {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.lineUpHiddenView.alpha = 0
+                self.lineUpHiddenView.transform = CGAffineTransform(translationX: 0, y: -10)
+            }) { _ in
+                self.lineUpHiddenView.isHidden = true
+            }
+        } else {
+            self.lineUpHiddenView.isHidden = false
+            self.lineUpHiddenView.alpha = 0
+            self.lineUpHiddenView.transform = CGAffineTransform(translationX: 0, y: -10)
+
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseOut], animations: {
+                self.lineUpHiddenView.alpha = 1
+                self.lineUpHiddenView.transform = .identity
+            }, completion: nil)
+        }
+    }
+    
+    func updateAttendeesView(animated: Bool = true) {
+        let shouldHide = attendees.isEmpty
+        
+        if shouldHide {
+            guard !attendeesView.isHidden else { return }
+            
+            UIView.animate(withDuration: animated ? 0.3 : 0.0, animations: {
+                self.attendeesView.alpha = 0
+                self.attendeesView.transform = CGAffineTransform(translationX: 0, y: -10)
+            }) { _ in
+                self.attendeesView.isHidden = true
+            }
+            
+        } else {
+            guard attendeesView.isHidden else { return }
+            
+            attendeesView.isHidden = false
+            attendeesView.alpha = 0
+            attendeesView.transform = CGAffineTransform(translationX: 0, y: -10)
+            
+            UIView.animate(withDuration: animated ? 0.3 : 0.0,
+                           delay: 0,
+                           options: [.curveEaseOut],
+                           animations: {
+                self.attendeesView.alpha = 1
+                self.attendeesView.transform = .identity
+            })
+        }
+    }
 
     private func getEventDetail() {
         guard let eventId = self.event?.uniqueId else {
@@ -272,14 +324,10 @@ class EventDetailsVC: UIViewController {
             ticket.forEach { tic in
                 self.eventTicketId.append(tic.id ?? "")
             }
-
-            self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
-            self.lineUpHiddenView.isHidden = self.artists.isEmpty
             self.lineUpCollectionView.reloadData()
 
             if let show = self.event?.showEventAttendees {
                 if show {
-                    self.attendeesView.isHidden = false
                     self.getEventAttendees()
                 } else {
                     self.attendeesView.isHidden = true
@@ -287,6 +335,10 @@ class EventDetailsVC: UIViewController {
             } else {
                 self.attendeesView.isHidden = true
             }
+            
+            self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
+            
+            updateLineUpView()
 
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
@@ -306,7 +358,7 @@ class EventDetailsVC: UIViewController {
                 self.totalAttendees = self.attendees.count
 
                 self.guestListCollectionView.reloadData()
-                self.attendeesView.isHidden = self.attendees.isEmpty
+                self.updateAttendeesView()
 
                 if let firstAttendee = self.attendees.first {
                     let firstName = firstAttendee.firstName ?? ""
@@ -1019,6 +1071,10 @@ class EventDetailsVC: UIViewController {
         createInlineBookingAndCheckout(selectedTickets: selected)
     }
     
+    @IBAction func onClickVenueTitle(_ sender: Any) {
+        Navigate.to.venueVC(self, venueDetails: self.venueDetails)
+    }
+
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
         continueToCheckOutBtn.showLoader(userInteraction: false)
         

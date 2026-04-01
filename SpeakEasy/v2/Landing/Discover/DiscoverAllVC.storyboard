@@ -615,6 +615,7 @@
                     </view>
                     <connections>
                         <outlet property="allEventsCollectionView" destination="ZYF-n5-vMW" id="ajT-QT-uzn"/>
+                        <outlet property="eventsInCityTitleLbl" destination="8Ot-ZB-Ecr" id="86C-Je-F6W"/>
                         <outlet property="premiumExerienceParentView" destination="k4U-Ul-kyS" id="8nN-2P-hXM"/>
                         <outlet property="premiumExperiencesView" destination="wU7-2d-jDN" id="EgE-db-Y5C"/>
                         <outlet property="todaysEventsView" destination="WXE-cQ-2Xm" id="Kaa-Tv-Xij"/>

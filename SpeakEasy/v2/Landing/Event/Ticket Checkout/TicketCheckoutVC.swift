@@ -11,7 +11,6 @@ import StripeApplePay
 import StripePaymentSheet
 import MHLoadingButton
 
-
 enum DummyQuestionType {
     case text
     case dropdown

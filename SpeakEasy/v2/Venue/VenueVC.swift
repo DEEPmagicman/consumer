@@ -36,7 +36,7 @@ final class VenueVC: UIViewController {
             bgImage.image = UIImage(named: "newSpeakeasy")
         }
         
-        setUpSegmentVC()
+//        setUpSegmentVC()
         getVenueDetails()
     }
     

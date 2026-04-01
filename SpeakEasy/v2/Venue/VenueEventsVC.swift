@@ -17,6 +17,7 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     private var hasMore = true
     private var isLoading = false
     private var page = 1
+    private var isShimmerLoading = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,56 +44,75 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
         
         isLoading = true
         
-        VenuePresenter.getEventVenues(venueId: venueId, skip: skip, time: "UPCOMING") { [weak self] isSuccess, errMsg, list, hasMore in
+        VenuePresenter.getEventVenues(
+            venueId: venueId,
+            skip: skip,
+            time: "UPCOMING"
+        ) { [weak self] isSuccess, errMsg, list, hasMore in
             
             guard let self = self else { return }
             
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+            
             if isSuccess {
-                if list.isEmpty {
-                    self.hasMore = false
-                    return
-                }
                 
                 let newItems = list.filter { newEvent in
                     !self.events.contains(where: { $0.id == newEvent.id })
                 }
                 
                 self.events.append(contentsOf: newItems)
-                
                 self.skip = self.events.count
-                
                 self.hasMore = hasMore
                 
-                print("skip:", self.skip, "received:", list.count)
-                
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    self.stopShimmer()
                 }
                 
-                self.isLoading = false
             } else {
                 print(errMsg ?? "Error")
             }
         }
     }
+    
+    private func startShimmer() {
+        isShimmerLoading = true
+        tableView.reloadData()
+    }
+
+    private func stopShimmer() {
+        isShimmerLoading = false
+        tableView.reloadData()
+    }
 }
 
 extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        events.count
+        return isShimmerLoading ? 6 : events.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: VenueEventTVC = tableView.dequeue(withIdentifier: VenueEventTVC.identifier, for: indexPath)
+        let cell: VenueEventTVC = tableView.dequeue(
+            withIdentifier: VenueEventTVC.identifier,
+            for: indexPath
+        )
         
-        let event = events[indexPath.row]
-        cell.configure(with: event)
+        if isShimmerLoading {
+            cell.startShimmer()
+        } else {
+            let event = events[indexPath.row]
+            cell.configure(with: event)
+        }
+        
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !isShimmerLoading else { return }
+        
         let event = events[indexPath.row]
         Navigate.eventDetailsVC(self, event: event)
     }

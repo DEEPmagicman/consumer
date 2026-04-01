@@ -13,6 +13,7 @@ final class VenueEventTVC: UITableViewCell {
     @IBOutlet weak var bottomLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var eventTitleLbl: UILabel!
+    @IBOutlet weak var shimmerView: ShimmerView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,18 +23,50 @@ final class VenueEventTVC: UITableViewCell {
         eventImg.layer.cornerRadius = 10
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        stopShimmer()
+    }
+    
+    func startShimmer() {
+        shimmerView.isHidden = false
+        shimmerView.startAnimating()
+        
+        eventImg.isHidden = true
+        eventTitleLbl.isHidden = true
+        dateLbl.isHidden = true
+        bottomLbl.isHidden = true
+    }
+    
+    func stopShimmer() {
+        shimmerView.stopAnimating()
+        shimmerView.isHidden = true
+        
+        eventImg.isHidden = false
+        eventTitleLbl.isHidden = false
+        dateLbl.isHidden = false
+        bottomLbl.isHidden = false
+    }
+        
     func configure(with event: Event) {
+        stopShimmer()
         
         eventTitleLbl.text = event.title
+        
         dateLbl.text = formatDateRange(
             start: event.startDateTime,
             end: event.endDateTime ?? ""
         )
+        
         bottomLbl.text = event.venue?.name ?? "Unknown Venue"
-        eventImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        
+        eventImg.sd_setImage(
+            with: URL(string: (event.flyer?.key ?? "").imageURL),
+            placeholderImage: Constant.Icon.uploadImage
+        )
+        
         eventImg.hero.id = "event.image.\(event.id)"
-          eventTitleLbl.hero.id = "event.title.\(event.id)"
-       
+        eventTitleLbl.hero.id = "event.title.\(event.id)"
     }
 }
 

@@ -28,8 +28,7 @@ final class CoverTicketListVC: UIViewController {
     
     private var coverTicketCount: [Int: Int] = [:]
     private var upSellTicketCount: [Int: Int] = [:]
-    
-    private var expandedIndexSet: Set<Int> = []
+    private var expandedIndexSet: Set<String> = []
     private var hasMoreUpSell = false
     private var bookingType: TicketPriceType = .FREE
     
@@ -346,11 +345,7 @@ private extension CoverTicketListVC {
 //                setContinueButtonTitle("CHECKOUT")
             }
             
-            UIView.animate(withDuration: 0.25) {
-                self.continueToChekoutBtn.alpha = shouldShow ? 1 : 0
-            } completion: { _ in
-                self.continueToChekoutBtn.isHidden = !shouldShow
-            }
+            updateCheckoutButton(shouldShow: shouldShow)
             
         case .addOns:
             let shouldShow = hasAnyCoverSelection
@@ -361,14 +356,42 @@ private extension CoverTicketListVC {
 //                setContinueButtonTitle(title)
             }
             
-            UIView.animate(withDuration: 0.25) {
-                self.continueToChekoutBtn.alpha = shouldShow ? 1 : 0
-            } completion: { _ in
-                self.continueToChekoutBtn.isHidden = !shouldShow
-            }
+            updateCheckoutButton(shouldShow: shouldShow)
         }
         
         bookingType = hasPaidCoverTicket ? .PAID : .FREE
+    }
+    
+    func updateCheckoutButton(shouldShow: Bool) {
+        
+        if shouldShow {
+            continueToChekoutBtn.isHidden = false
+            continueToChekoutBtn.alpha = 0
+            continueToChekoutBtn.transform = CGAffineTransform(translationX: 0, y: 80)
+
+            UIView.animate(
+                withDuration: 0.4,
+                delay: 0,
+                usingSpringWithDamping: 0.85,
+                initialSpringVelocity: 0.6,
+                options: [.curveEaseOut, .allowUserInteraction]
+            ) {
+                self.continueToChekoutBtn.alpha = 1
+                self.continueToChekoutBtn.transform = .identity
+            }
+
+        } else {
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                options: [.curveEaseIn, .allowUserInteraction]
+            ) {
+                self.continueToChekoutBtn.alpha = 0
+                self.continueToChekoutBtn.transform = CGAffineTransform(translationX: 0, y: 80)
+            } completion: { _ in
+                self.continueToChekoutBtn.isHidden = true
+            }
+        }
     }
     
     func animateRowReload(at indexPath: IndexPath) {
@@ -443,8 +466,6 @@ extension CoverTicketListVC {
             proceedToFinalCheckout()
         }
     }
-    
-    
     
     private func createFreeBooking() {
         guard !selectedCoverTickets.isEmpty else { return }
@@ -548,7 +569,8 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             
             cell.configure(
                 description: ticket.description,
-                isExpanded: expandedIndexSet.contains(indexPath.row)
+                isExpanded: expandedIndexSet.contains(ticket.id ?? ""),
+                id: ticket.id
             )
             
             cell.priceLbl.text = displayPrice(for: ticket)
@@ -562,8 +584,11 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             
             let count = coverTicketCount[indexPath.row] ?? 0
             cell.ticketCount.text = "\(count)"
-            cell.minusBtnView.isHidden = count == 0
-            cell.ticketCountView.isHidden = count == 0
+            
+            let shouldShow = count > 0
+            cell.minusBtnView.isHidden = !shouldShow
+            cell.ticketCountView.isHidden = !shouldShow
+            
             
         case .addOns:
             let ticket = upSellTickets[indexPath.row]
@@ -571,7 +596,8 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             cell.titleLbl.text = ticket.addOns?.name ?? ""
             cell.configure(
                 description: ticket.addOns?.description,
-                isExpanded: expandedIndexSet.contains(indexPath.row)
+                isExpanded: expandedIndexSet.contains(ticket.id ?? ""),
+                id: ticket.id
             )
             
             cell.priceLbl.text = displayPrice(for: ticket, at: indexPath.row)
@@ -585,20 +611,25 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             
             let count = upSellTicketCount[indexPath.row] ?? 0
             cell.ticketCount.text = "\(count)"
-            cell.minusBtnView.isHidden = count == 0
-            cell.ticketCountView.isHidden = count == 0
+            
+            let shouldShow = count > 0
+            cell.minusBtnView.isHidden = !shouldShow
+            cell.ticketCountView.isHidden = !shouldShow
         }
         
-        cell.onDescriptionToggle = { [weak self] in
-            guard let self = self else { return }
-            
-            if self.expandedIndexSet.contains(indexPath.row) {
-                self.expandedIndexSet.remove(indexPath.row)
+        cell.onDescriptionToggle = { [weak self, weak cell] _ in
+            guard let self = self,
+                  let cell = cell,
+                  let indexPath = self.tableView.indexPath(for: cell) else { return }
+
+            if self.expandedIndexSet.contains(indexPath.row.description) {
+                self.expandedIndexSet.remove(indexPath.row.description)
             } else {
-                self.expandedIndexSet.insert(indexPath.row)
+                self.expandedIndexSet.insert(indexPath.row.description)
             }
-            
-            self.tableView.reloadRows(at: [indexPath], with: .automatic)
+
+            self.tableView.reloadData()
+            self.tableView.performBatchUpdates(nil, completion: nil)
         }
         
         cell.plusBtn.tag = indexPath.row
