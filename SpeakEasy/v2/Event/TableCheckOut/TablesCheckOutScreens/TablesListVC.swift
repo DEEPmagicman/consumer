@@ -34,7 +34,7 @@ class TablesListVC: UIViewController {
 
     private func fetchData() {
 
-        if event?.isEnable3DMap == true {
+        if event?.isEnable3DMap ?? false && event?.isEnableOnlineTables ?? false {
             let vc = Tables3DMapVC()
             vc.event = event
             mapVC = vc

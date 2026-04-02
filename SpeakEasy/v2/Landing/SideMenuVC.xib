@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24127" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SideMenuVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="userName" destination="Vst-ll-p4f" id="qDt-tC-jig"/>
+                <outlet property="userNameFirstLetter" destination="spo-kD-ygg" id="Jne-H0-z5S"/>
+                <outlet property="userProfilePic" destination="36n-8M-5gq" id="OXy-9a-C1b"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -87,16 +90,27 @@
                                             <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Yr-aB-hM3">
+                                            <rect key="frame" x="0.0" y="0.0" width="309" height="36"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <connections>
+                                                <action selector="onClickProfileBtn:" destination="-1" eventType="touchUpInside" id="Gn8-CO-PpE"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="Vst-ll-p4f" firstAttribute="leading" secondItem="dfe-6L-POK" secondAttribute="leading" id="0XD-h0-Vh9"/>
                                         <constraint firstAttribute="trailing" secondItem="Oao-gT-GlM" secondAttribute="trailing" id="2JT-F6-VWf"/>
                                         <constraint firstItem="Oao-gT-GlM" firstAttribute="leading" secondItem="dfe-6L-POK" secondAttribute="leading" id="73S-pd-Yza"/>
+                                        <constraint firstItem="3Yr-aB-hM3" firstAttribute="top" secondItem="Vst-ll-p4f" secondAttribute="top" id="B5e-dU-x2H"/>
                                         <constraint firstAttribute="bottom" secondItem="Oao-gT-GlM" secondAttribute="bottom" id="L5O-VP-AOG"/>
                                         <constraint firstItem="Oao-gT-GlM" firstAttribute="top" secondItem="Vst-ll-p4f" secondAttribute="bottom" id="Sjb-VP-QoV"/>
+                                        <constraint firstAttribute="trailing" secondItem="3Yr-aB-hM3" secondAttribute="trailing" id="WhV-G4-DVJ"/>
                                         <constraint firstAttribute="trailing" secondItem="Vst-ll-p4f" secondAttribute="trailing" id="iCB-xs-F0m"/>
                                         <constraint firstItem="Vst-ll-p4f" firstAttribute="top" secondItem="dfe-6L-POK" secondAttribute="top" id="mPB-i3-vcI"/>
+                                        <constraint firstItem="3Yr-aB-hM3" firstAttribute="leading" secondItem="Vst-ll-p4f" secondAttribute="leading" id="uAx-zQ-Dwi"/>
+                                        <constraint firstAttribute="bottom" secondItem="3Yr-aB-hM3" secondAttribute="bottom" id="xld-1J-Rh7"/>
                                     </constraints>
                                 </view>
                             </subviews>

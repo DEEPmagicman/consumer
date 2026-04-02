@@ -70,6 +70,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             self.tableView.layoutIfNeeded()
         }
         configureUI()
+        getEvents()
     }
     
     private func configureUI() {
@@ -257,18 +258,18 @@ extension VenueDetailsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if indexPath.row == events.count - 3 {
-            getEvents()
+//            getEvents()
         }
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let height = scrollView.frame.size.height
-        
-        if offsetY > contentHeight - height - 100 {
-            getEvents()
-        }
-    }
+//    
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        
+//        let offsetY = scrollView.contentOffset.y
+//        let contentHeight = scrollView.contentSize.height
+//        let height = scrollView.frame.size.height
+//        
+//        if offsetY > contentHeight - height - 100 {
+//            getEvents()
+//        }
+//    }
 }

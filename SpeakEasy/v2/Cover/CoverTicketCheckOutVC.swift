@@ -48,6 +48,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var upSellTicketsTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var coverTicketTotal: UILabel!
     @IBOutlet weak var bgImage: UIImageView!
+    @IBOutlet weak var mainContentView: UIStackView!
+    @IBOutlet weak var upSellStackView: UIStackView!
+    @IBOutlet weak var totalView: UIView!
     
     // MARK: - Data
     var selectedCoverTickets: [CoverTicket] = []
@@ -261,6 +264,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func showCheckoutShimmer() {
         shimmerView.isHidden = false
+        mainContentView.isHidden = true
+        upSellStackView.isHidden = true
+        totalView.isHidden = true
         shimmerView.subviews.forEach { $0.removeFromSuperview() }
         shimmerBlocks.removeAll()
 
@@ -361,16 +367,16 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private func hideCheckoutShimmerIfNeeded() {
 
-        // FREE flow → only booking needed
         if bookingType == .FREE {
             guard isBookingLoaded else { return }
         } else {
-            // PAID flow → need both APIs
             guard isBookingLoaded, isPaymentIntentLoaded else { return }
         }
 
         shimmerBlocks.forEach { $0.stopAnimating() }
+        mainContentView.isHidden = false
         shimmerView.isHidden = true
+        totalView.isHidden = false
     }
     
     @IBAction func onClickUpSellFeesAndTaxes(_ sender: Any) {

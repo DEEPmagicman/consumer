@@ -81,6 +81,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
+    @IBOutlet weak var vipTableSubTitleLbl: UILabel!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -603,8 +604,25 @@ class EventDetailsVC: UIViewController {
             continueToCheckOutView.isHidden = true
         }
 
-        vipTablesView.isHidden = !(event.isEnableOnlineTables)
+        let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
 
+        if isAnyFeatureEnabled {
+            UIView.transition(with: vipTablesView,
+                              duration: 0.25,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                self.vipTablesView.isHidden = !isAnyFeatureEnabled
+            })
+        } else {
+            vipTablesView.isHidden = true
+        }
+
+        if event.isEnable3DMap && event.isEnableOnlineTables {
+            vipTableSubTitleLbl.text = "Ideal for larger groups. 3D map available."
+        } else {
+            vipTableSubTitleLbl.text = "VIP Tables Ideal for larger groups."
+        }
+        
         if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
             webSiteTitleLbl.text = button.title
             webSiteView.isHidden = false

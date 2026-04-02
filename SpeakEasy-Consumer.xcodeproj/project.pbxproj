@@ -21,6 +21,8 @@
 		0426E1DA2F52F0BB005F474E /* VerifyNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0426E1D92F52F0BB005F474E /* VerifyNumberViewController.swift */; };
 		0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */; };
 		0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */; };
+		0434F9642F7E98D400164A2E /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0434F9622F7E98D400164A2E /* ProfileVC.swift */; };
+		0434F9652F7E98D400164A2E /* ProfileVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0434F9632F7E98D400164A2E /* ProfileVC.xib */; };
 		0436D085295966CF0087D3DB /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0436D084295966CF0087D3DB /* Settings.storyboard */; };
 		0436D087295966E30087D3DB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D086295966E30087D3DB /* SettingsViewController.swift */; };
 		0436D089295978060087D3DB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0436D088295978060087D3DB /* NotificationViewController.swift */; };
@@ -475,6 +477,8 @@
 		0426E1D92F52F0BB005F474E /* VerifyNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyNumberViewController.swift; sourceTree = "<group>"; };
 		0433FB8F2F3331EA008BC77B /* VenueDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueDetailsVC.swift; sourceTree = "<group>"; };
 		0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueDetailsVC.xib; sourceTree = "<group>"; };
+		0434F9622F7E98D400164A2E /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		0434F9632F7E98D400164A2E /* ProfileVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileVC.xib; sourceTree = "<group>"; };
 		0436D084295966CF0087D3DB /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		0436D086295966E30087D3DB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0436D088295978060087D3DB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
@@ -919,6 +923,15 @@
 			children = (
 			);
 			path = VenueDetails;
+			sourceTree = "<group>";
+		};
+		0434F9612F7E985F00164A2E /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				0434F9622F7E98D400164A2E /* ProfileVC.swift */,
+				0434F9632F7E98D400164A2E /* ProfileVC.xib */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		0436D083295966B40087D3DB /* Settings */ = {
@@ -2034,6 +2047,7 @@
 		CEF48B4E2EFA48F7006A6468 /* Landing */ = {
 			isa = PBXGroup;
 			children = (
+				0434F9612F7E985F00164A2E /* Profile */,
 				04FACD4D2F52B07A0022011C /* SignUp */,
 				CEC6D6D12EF92B1C00A05672 /* Landing.storyboard */,
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
@@ -2338,6 +2352,7 @@
 				BD3FB25529406EBC00BE7713 /* Poppins in Resources */,
 				CAC4141028A478050007BA86 /* MonthsCollectionViewCell.xib in Resources */,
 				CEE02DB02EFB97C600AC7756 /* DiscoverDateFilterVC.storyboard in Resources */,
+				0434F9652F7E98D400164A2E /* ProfileVC.xib in Resources */,
 				045D2BFC2F3A163700842613 /* TicketConfirmationVC.xib in Resources */,
 				04A202EC2F36059F00900A27 /* EventGuestListCVC.xib in Resources */,
 				046866552B0F284900E498CF /* FooterView.xib in Resources */,
@@ -2773,6 +2788,7 @@
 				0426E1D82F52F08B005F474E /* LogInPopUpViewController.swift in Sources */,
 				CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
+				0434F9642F7E98D400164A2E /* ProfileVC.swift in Sources */,
 				CE45A5B42C3BC9CF00E1FE3F /* DropDownCell.swift in Sources */,
 				0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */,
 				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,
@@ -2881,7 +2897,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 243;
+				CURRENT_PROJECT_VERSION = 244;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2919,7 +2935,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 243;
+				CURRENT_PROJECT_VERSION = 244;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3083,7 +3099,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 243;
+				CURRENT_PROJECT_VERSION = 244;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3178,7 +3194,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 243;
+				CURRENT_PROJECT_VERSION = 244;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

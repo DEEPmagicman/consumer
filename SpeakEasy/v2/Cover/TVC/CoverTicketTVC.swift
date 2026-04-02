@@ -15,7 +15,7 @@ final class CoverTicketTVC: UITableViewCell {
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var viewMoreBtn: UIButton!
 
-    private let collapsedLines = 1
+    private let collapsedLines = 3
     private var isExpanded = false
     private var currentTicketId: String?
     private var descriptionText: String = ""
@@ -58,24 +58,34 @@ final class CoverTicketTVC: UITableViewCell {
     func configure(description: String?, isExpanded: Bool, id: String?) {
         self.isExpanded = isExpanded
         self.currentTicketId = id
-        self.descriptionText = description?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
-        guard !descriptionText.isEmpty else {
-            descLbl.text = nil
+        let text = description?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !text.isEmpty else {
             descLbl.isHidden = true
             viewMoreBtnView.isHidden = true
             return
         }
 
         descLbl.isHidden = false
-        descLbl.text = descriptionText
+        descLbl.text = text
+        descLbl.numberOfLines = isExpanded ? 0 : collapsedLines
+        viewMoreBtn.setTitle(isExpanded ? "View Less" : "View More", for: .normal)
 
-        // Reset measurement so reused cells re-check properly
-        lastMeasuredWidth = 0
-        shouldShowViewMore = false
+        layoutIfNeeded()
 
-        applyDescriptionState()
-        setNeedsLayout()
+        let fullHeight = descLbl.sizeThatFits(
+            CGSize(width: descLbl.frame.width, height: .greatestFiniteMagnitude)
+        ).height
+
+        let collapsedHeight = descLbl.font.lineHeight * CGFloat(collapsedLines)
+
+        if fullHeight > collapsedHeight {
+            viewMoreBtnView.isHidden = false
+        } else {
+            viewMoreBtnView.isHidden = true
+            descLbl.numberOfLines = 0
+        }
     }
 
     private func updateViewMoreVisibilityIfNeeded() {
@@ -132,6 +142,9 @@ final class CoverTicketTVC: UITableViewCell {
     }
 
     @IBAction func onClickViewMoreBtn(_ sender: Any) {
+        isExpanded.toggle()
+        descLbl.numberOfLines = isExpanded ? 0 : collapsedLines
+        viewMoreBtn.setTitle(isExpanded ? "View Less" : "View More", for: .normal)
         onDescriptionToggle?(currentTicketId)
     }
 }

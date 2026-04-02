@@ -167,6 +167,7 @@ private extension CoverTicketListVC {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CoverTicketTVC.nib, forCellReuseIdentifier: CoverTicketTVC.identifier)
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
     func setupContinueTap() {
@@ -569,7 +570,7 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             
             cell.configure(
                 description: ticket.description,
-                isExpanded: expandedIndexSet.contains(ticket.id ?? ""),
+                isExpanded: expandedIndexSet.contains(ticket.id),
                 id: ticket.id
             )
             
@@ -617,19 +618,18 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             cell.ticketCountView.isHidden = !shouldShow
         }
         
-        cell.onDescriptionToggle = { [weak self, weak cell] _ in
+        cell.onDescriptionToggle = { [weak self] ticketId in
             guard let self = self,
-                  let cell = cell,
-                  let indexPath = self.tableView.indexPath(for: cell) else { return }
+                  let ticketId = ticketId else { return }
 
-            if self.expandedIndexSet.contains(indexPath.row.description) {
-                self.expandedIndexSet.remove(indexPath.row.description)
+            if self.expandedIndexSet.contains(ticketId) {
+                self.expandedIndexSet.remove(ticketId)
             } else {
-                self.expandedIndexSet.insert(indexPath.row.description)
+                self.expandedIndexSet.insert(ticketId)
             }
 
-            self.tableView.reloadData()
-            self.tableView.performBatchUpdates(nil, completion: nil)
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
         }
         
         cell.plusBtn.tag = indexPath.row

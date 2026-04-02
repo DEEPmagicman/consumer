@@ -262,53 +262,6 @@ struct Layout3DMap: Codable {
         case order, isDeleted, status, createdAt
     }
 }
-
-
-//struct Layout3DMap: Codable {
-//    let id: String?
-//    let layoutHistoryId: String?
-//    let name: String?
-//    let url3dMap: String?
-//    let metadata: String?
-//
-//    let xPosition: Double?
-//    let yPosition: Double?
-//    let zPosition: Double?
-//
-//    let fieldOfView: Double?
-//    let verticalRotationMin: Double?
-//    let verticalRotationMax: Double?
-//    let horizontalRotationMin: Double?
-//    let horizontalRotationMax: Double?
-//
-//    let zoomMin: Double?
-//    let zoomMax: Double?
-//    let ratio: Double?
-//
-//    let order: Int?
-//    let isDeleted: Bool?
-//    let status: String?
-//    let createdAt: String?
-//
-//    enum CodingKeys: String, CodingKey {
-//        case id
-//        case layoutHistoryId
-//        case name
-//        case url3dMap = "url3dMap"
-//        case metadata
-//        case xPosition, yPosition, zPosition
-//        case fieldOfView
-//        case verticalRotationMin, verticalRotationMax
-//        case horizontalRotationMin, horizontalRotationMax
-//        case zoomMin, zoomMax
-//        case ratio
-//        case order
-//        case isDeleted
-//        case status
-//        case createdAt
-//    }
-//}
-
 struct TableBookingConfirmResponse: Codable {
     let reservations: [Reservation]
     let tableBooking: ConfirmedTableBooking

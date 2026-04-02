@@ -185,16 +185,20 @@ final class TablePresenter {
     
     
     static func getConsumerLayout(
-        date: String, 
+        date: String,
+        venueId: String,
         completion: @escaping (_ success: Bool, _ message: String?, _ layout: ConsumerLayoutResponse?) -> Void
     ) {
 
         let url = APIBuilder.layoutURL(date: date)
+        
+        var headers = Header.header()
+        headers["venue"] = venueId
 
         AFWrapper.getRequest(
             url,
             params: nil,
-            headers: Header.header()
+            headers: headers
         ) { response in
 
             guard let dict = response as? [String: Any] else {
