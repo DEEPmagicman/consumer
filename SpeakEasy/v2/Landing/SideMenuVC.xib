@@ -151,12 +151,24 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5s-XT-GV9">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="50"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain"/>
+                                            <connections>
+                                                <action selector="onClickNotificationBtn:" destination="-1" eventType="touchUpInside" id="aYv-sR-P18"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="js5-xh-InZ" firstAttribute="centerY" secondItem="Ei7-qT-fTy" secondAttribute="centerY" id="5uc-JM-4Be"/>
                                         <constraint firstItem="08F-Qo-ZUx" firstAttribute="centerY" secondItem="js5-xh-InZ" secondAttribute="centerY" id="8WG-L2-a1V"/>
+                                        <constraint firstItem="h5s-XT-GV9" firstAttribute="top" secondItem="Ei7-qT-fTy" secondAttribute="top" id="XdJ-1O-08F"/>
                                         <constraint firstItem="js5-xh-InZ" firstAttribute="leading" secondItem="Ei7-qT-fTy" secondAttribute="leading" constant="16" id="dCa-Xn-fTl"/>
+                                        <constraint firstAttribute="bottom" secondItem="h5s-XT-GV9" secondAttribute="bottom" id="jDy-Dh-O3g"/>
+                                        <constraint firstItem="h5s-XT-GV9" firstAttribute="leading" secondItem="Ei7-qT-fTy" secondAttribute="leading" id="l7v-Cg-vvX"/>
+                                        <constraint firstAttribute="trailing" secondItem="h5s-XT-GV9" secondAttribute="trailing" id="qhM-ka-Y1L"/>
                                         <constraint firstItem="08F-Qo-ZUx" firstAttribute="leading" secondItem="js5-xh-InZ" secondAttribute="trailing" constant="10" id="sHP-Hy-8rc"/>
                                         <constraint firstAttribute="height" constant="50" id="uk9-hS-89B"/>
                                     </constraints>
@@ -181,13 +193,25 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wHz-O9-C5l">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="50"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain"/>
+                                            <connections>
+                                                <action selector="onClickSettingBtn:" destination="-1" eventType="touchUpInside" id="qog-ZI-ESY"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstItem="wHz-O9-C5l" firstAttribute="top" secondItem="fCi-ZT-D49" secondAttribute="top" id="HjQ-4n-faL"/>
+                                        <constraint firstAttribute="bottom" secondItem="wHz-O9-C5l" secondAttribute="bottom" id="OfT-59-oyi"/>
                                         <constraint firstItem="KMd-zG-lxy" firstAttribute="leading" secondItem="fCi-ZT-D49" secondAttribute="leading" constant="16" id="S9c-re-z9h"/>
                                         <constraint firstItem="s0C-qN-8Bt" firstAttribute="centerY" secondItem="KMd-zG-lxy" secondAttribute="centerY" id="Wyb-wQ-68N"/>
                                         <constraint firstItem="KMd-zG-lxy" firstAttribute="centerY" secondItem="fCi-ZT-D49" secondAttribute="centerY" id="c6S-Fw-Kap"/>
                                         <constraint firstAttribute="height" constant="50" id="gn3-rA-2rD"/>
+                                        <constraint firstItem="wHz-O9-C5l" firstAttribute="leading" secondItem="fCi-ZT-D49" secondAttribute="leading" id="m9M-JI-82n"/>
+                                        <constraint firstAttribute="trailing" secondItem="wHz-O9-C5l" secondAttribute="trailing" id="uNm-Xf-whv"/>
                                         <constraint firstItem="s0C-qN-8Bt" firstAttribute="leading" secondItem="KMd-zG-lxy" secondAttribute="trailing" constant="10" id="unq-vg-Ffb"/>
                                     </constraints>
                                 </view>

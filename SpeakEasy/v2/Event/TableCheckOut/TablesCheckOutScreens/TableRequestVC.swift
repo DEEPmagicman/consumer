@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MHLoadingButton
 
 struct RequestFormPayload {
     let date: String
@@ -26,7 +27,7 @@ class TableRequestVC: UIViewController {
     private var timeField: UITextField!
     private var partyField: UITextField!
     private var commentTextView: UITextView!
-    private var requestButton: UIButton!
+    private var requestButton: LoadingButton!
     private var marketingCheckbox: UIButton!
     
     // MARK: - Pickers
@@ -38,12 +39,14 @@ class TableRequestVC: UIViewController {
     private var selectedArrivalTime: Date?
     
     private let commentPlaceholder = "Questions and comments"
+    private var isRequestInProgress = false
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupRequestForm()
         setupPickers()
+        setDefaultEventDateTime()
     }
 }
 
@@ -163,6 +166,38 @@ extension TableRequestVC {
         
         return container
     }
+    
+    func validateUserProfile() -> Bool {
+        
+        guard let user = UserDefault.shared.user else { return false }
+        
+        if (user.firstName.isEmpty) ||
+            (user.email.isEmpty) ||
+            (user.dateOfBirth.isEmpty) {
+            
+            showProfileIncompleteAlert()
+            return false
+        }
+        
+        return true
+    }
+    
+    func showProfileIncompleteAlert() {
+        let alert = UIAlertController(
+            title: "Incomplete Profile",
+            message: "Please add your name, email and date of birth in profile.",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Go to Profile", style: .default, handler: { _ in
+            Navigate.to.profileVC(self)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(alert, animated: true)
+    }
+
 }
 
 // MARK: - Pickers
@@ -213,6 +248,42 @@ extension TableRequestVC {
     @objc func handleArrivalTimeChanged() {
         selectedArrivalTime = arrivalTimePicker.date
         timeField.text = formattedDisplayTime(arrivalTimePicker.date)
+        updateRequestButtonState()
+    }
+    
+    func getEventDate() -> Date? {
+        
+        guard let dateString = event?.startDateTime else { return nil }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        if let timezone = event?.venue?.useTimezone,
+           let tz = TimeZone(identifier: timezone) {
+            formatter.timeZone = tz
+        } else {
+            formatter.timeZone = TimeZone.current
+        }
+        
+        return formatter.date(from: dateString)
+    }
+    
+    func setDefaultEventDateTime() {
+        
+        guard let eventDate = getEventDate() else { return }
+        
+        // ✅ DATE (LOCKED)
+        selectedReservationDate = eventDate
+        reservationDatePicker.date = eventDate
+        dateField.text = formattedDisplayDate(eventDate)
+        dateField.isUserInteractionEnabled = false
+        
+        // ✅ TIME (EDITABLE)
+        selectedArrivalTime = eventDate
+        arrivalTimePicker.date = eventDate
+        timeField.text = formattedDisplayTime(eventDate)
+        
         updateRequestButtonState()
     }
     
@@ -320,22 +391,80 @@ extension TableRequestVC {
     @objc func toggleCheckbox() {
         marketingCheckbox.isSelected.toggle()
     }
+    
+    func showSuccessView() {
+        requestFormView.isHidden = true
+        requestButton.isHidden = true
+        
+        let successView = UIView()
+        successView.backgroundColor = .black
+        successView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let title = UILabel()
+        title.text = "Request Sent"
+        title.textColor = .white
+        title.font = UIFont.boldSystemFont(ofSize: 20)
+        title.textAlignment = .center
+        
+        let desc = UILabel()
+        desc.text = "Your request has been sent successfully. Our team will contact you."
+        desc.textColor = .lightGray
+        desc.font = UIFont.systemFont(ofSize: 14)
+        desc.numberOfLines = 0
+        desc.textAlignment = .center
+        
+        let stack = UIStackView(arrangedSubviews: [title, desc])
+        stack.axis = .vertical
+        stack.spacing = 12
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
+        successView.addSubview(stack)
+        view.addSubview(successView)
+        
+        NSLayoutConstraint.activate([
+            successView.topAnchor.constraint(equalTo: view.topAnchor),
+            successView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            successView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            successView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            stack.centerXAnchor.constraint(equalTo: successView.centerXAnchor),
+            stack.centerYAnchor.constraint(equalTo: successView.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: successView.leadingAnchor, constant: 20),
+            stack.trailingAnchor.constraint(equalTo: successView.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    func showError(_ message: String?) {
+        let alert = UIAlertController(
+            title: "Error",
+            message: message ?? "Something went wrong",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - Button State
 extension TableRequestVC {
     
-    func makeRequestButton() -> UIButton {
+    func makeRequestButton() -> LoadingButton {
         
-        let btn = UIButton(type: .system)
+        let btn = LoadingButton(type: .system)
+        
         btn.setTitle("REQUEST", for: .normal)
         btn.titleLabel?.font = AppFont.font(.inter, weight: .semibold, size: 12)
         btn.layer.cornerRadius = 20
         btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        btn.indicator = MaterialLoadingIndicator(color: .white)
+        btn.bgColor = .black
+        
         btn.addTarget(self, action: #selector(onRequestTapped), for: .touchUpInside)
         
         requestButton = btn
         updateRequestButtonState()
+        
         return btn
     }
     
@@ -370,36 +499,19 @@ extension TableRequestVC {
     
     @objc func onRequestTapped() {
         
-        guard UserDefault.shared.user != nil else {
-            
-            let loginVC = Navigate.to.loginPopUpVc(suitablePresenter())
-            
-            loginVC.onContinueToVerify = { [weak self] otp, otpRef, phone, countryCode, _, _ in
-                guard let self = self else { return }
-                
-                Navigate.to.enterVerificationCodeVc(
-                    self.suitablePresenter(),
-                    isFromLogin: true,
-                    otp: otp,
-                    otpRef: otpRef,
-                    phoneNum: phone,
-                    countryCode: countryCode
-                ) { [weak self] in
-                    self?.onRequestTapped()
-                }
-            }
-            
-            return
-        }
+        if isRequestInProgress { return }
+        
+        guard UserDefault.shared.user != nil else { return }
+        guard validateUserProfile() else { return }
         
         guard
             let reservationDate = selectedReservationDate,
             let arrivalTime = selectedArrivalTime,
             let combinedDateTime = combineDateAndTime(date: reservationDate, time: arrivalTime)
-        else {
-            print("❌ Invalid reservation date/time")
-            return
-        }
+        else { return }
+        
+        isRequestInProgress = true
+        requestButton.showLoader(userInteraction: false)
         
         let comments = commentTextView.text == commentPlaceholder ? "" : (commentTextView.text ?? "")
         let apiDateTime = formattedAPIDateTime(from: combinedDateTime)
@@ -446,10 +558,14 @@ extension TableRequestVC {
         ) { success, message, _ in
             
             DispatchQueue.main.async {
+                
+                self.isRequestInProgress = false
+                self.requestButton.hideLoader()
+                
                 if success {
-                    print("✅ Reservation success")
+                    self.showSuccessView()
                 } else {
-                    print("❌ Reservation failed:", message ?? "")
+                    self.showError(message)
                 }
             }
         }

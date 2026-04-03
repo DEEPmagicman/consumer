@@ -150,6 +150,7 @@
                                         <constraint firstItem="FUY-CC-sY4" firstAttribute="top" secondItem="DME-EC-huY" secondAttribute="top" constant="12" id="hkI-sB-o02"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Bsc-KD-xgJ" secondAttribute="bottom" constant="10" id="xza-Nz-eI3"/>
                                         <constraint firstAttribute="trailing" secondItem="Bsc-KD-xgJ" secondAttribute="trailing" constant="10" id="zRA-Pn-xVI"/>
+                                        <constraint firstAttribute="height" constant="51" id="zSL-bN-9wt"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

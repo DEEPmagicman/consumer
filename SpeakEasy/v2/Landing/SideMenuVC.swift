@@ -24,12 +24,31 @@ final class SideMenuVC: UIViewController {
         
         userProfilePic.layer.cornerRadius = userProfilePic.frame.height / 2
         userProfilePic.clipsToBounds = true
-        
         userNameFirstLetter.layer.cornerRadius = userNameFirstLetter.frame.height / 2
         userNameFirstLetter.clipsToBounds = true
     }
     
     @IBAction func onClickProfileBtn(_ sender: Any) {
+        sideMenuController?.hideLeftView(animated: true, completion: { [weak self] in
+            guard let self = self else { return }
+//            Navigate.to.profileVC(self)
+        })
+        
+    }
+    
+    @IBAction func onClickSettingBtn(_ sender: Any) {
+        
+        sideMenuController?.hideLeftView(animated: true, completion: { [weak self] in
+            guard let self = self else { return }
+            Navigate.to.settingsVc(self)
+        })
+    }
+    
+    @IBAction func onClickNotificationBtn(_ sender: Any) {
+        sideMenuController?.hideLeftView(animated: true, completion: { [weak self] in
+            guard let self = self else { return }
+            Navigate.to.notificationVc(self)
+        })
     }
     
     private func setupUserData() {

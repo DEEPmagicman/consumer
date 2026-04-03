@@ -235,7 +235,7 @@ final class TicketCheckoutVC: UIViewController {
 
             if isSuccess {
                 self.eventQuestions = questions?.filter({ $0.isDeleted == false }) ?? []
-//                self.customQuestionView.isHidden = self.eventQuestions.isEmpty
+                self.customQuestionView.isHidden = self.eventQuestions.isEmpty
                 DispatchQueue.main.async {
                     self.customQuestionTableView.reloadData()
                 }
@@ -521,6 +521,38 @@ final class TicketCheckoutVC: UIViewController {
         PaymentPresenter.cancelBooking(bookingId: bookingId ?? "") { _, _ in
         }
     }
+    
+    private func postQuestionAns(ans: [Any]) {
+        PaymentPresenter.postEventBookingQueAns(
+            eventUniqueId: event?.uniqueId ?? "",
+            answers: ans,
+            bookingId: bookingId ?? ""
+        ) { [weak self] isSuccess, errMsg in
+            guard let self = self else { return }
+
+            if isSuccess {
+                self.isEventQueAnsCollected = true
+                self.customQuestionTableView.reloadData()
+
+//                if self.isFreeTicket {
+//                    self.paymentMethodView.isHidden = true
+//                    self.buyNowBtn.setTitle("GET FREE TICKET", for: .normal)
+//                } else {
+//                    self.paymentMethodView.isHidden = false
+//                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
+//                }
+
+                self.onClickPurchaseTicket(UIButton())
+            } else {
+                self.isPaymentInitiated = false
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
+            }
+        }
+    }
 
     @IBAction func onClickSubmitPromoBtn(_ sender: Any) {
         let promo = (promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -576,14 +608,26 @@ final class TicketCheckoutVC: UIViewController {
             }
         }
     }
+    
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
+        guard !isPaymentInitiated else { return }
         
-//        Navigate.to.ticketConfirmationVC(self)
-        if isPaymentInitiated { return }
+        if event?.venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false,
+           checkBox.isSelected == false {
+
+            Alert.showAlertSheet(
+                style: .alert,
+                title: "You must accept the terms and conditions by clicking the checkbox.",
+                message: ""
+            )
+            return
+        }
+    
+        if !validateQuestionsAndProceed() { return }
+
         isPaymentInitiated = true
 
         if isFreeTicket {
-            isPaymentInitiated = false
             createFreeEventBookingAndNavigate()
             return
         }
@@ -598,7 +642,6 @@ final class TicketCheckoutVC: UIViewController {
 
             switch result {
             case .completed:
-                self.isPaymentInitiated = false
                 self.completePaymentSuccess()
 
             case .canceled:
@@ -608,6 +651,29 @@ final class TicketCheckoutVC: UIViewController {
                 self.isPaymentInitiated = false
             }
         }
+    }
+
+    private func validateQuestionsAndProceed() -> Bool {
+        let answers: [[String: Any]] = questionAnswers.map {
+            [
+                "eventQuestionId": $0.key,
+                "answer": $0.value
+            ]
+        }
+
+        if !eventQuestions.isEmpty,
+           !isEventQueAnsCollected {
+
+            guard setAnswerData else {
+                Alert.showAlertSheet(style: .alert, title: "Please fill required answers", message: "")
+                return false
+            }
+
+            postQuestionAns(ans: answers)
+            return false
+        }
+
+        return true
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {

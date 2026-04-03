@@ -6,7 +6,7 @@
 //
 
 protocol ScrollCallBackDelegate: AnyObject {
-  func onChangeScrollListener(lastContentOffset: CGFloat, offSet: CGFloat)
+    func onChangeScrollListener(lastContentOffset: CGFloat, offSet: CGFloat)
 }
 
 import UIKit
@@ -17,17 +17,29 @@ final class VenueHeaderVC: UIViewController {
     
     @IBOutlet weak var coverTicketView: UIView!
     
+    var headerHeight: CGFloat {
+        return hasAvailableTickets ? 110 : 50
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
     
     private func setupUI() {
-        let isEmpty = venueDetails?.coverTicket?.isEmpty ?? true
-        coverTicketView.isHidden = isEmpty
+        coverTicketView.isHidden = !hasAvailableTickets
     }
     
-    
+    private var hasAvailableTickets: Bool {
+        let tickets = venueDetails?.coverTicket ?? []
+        
+        let filtered = tickets.filter {
+            !($0.isDeleted ?? false) &&
+            $0.status == "ENABLED"
+        }
+        
+        return !filtered.isEmpty
+    }
     
     @IBAction func onClickBuyTicket(_ sender: Any) {
         Navigate.to.coverTicketListVC(self, venueDetails: venueDetails)

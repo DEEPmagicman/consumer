@@ -66,7 +66,7 @@ final class VenueVC: UIViewController {
         let header = VenueHeaderVC(nibName: "VenueHeaderVC", bundle: nil)
         header.venueDetails = self.venueDetails
         self.header = header
-        segmentedScrollView.headerViewHeight = 110
+        segmentedScrollView.headerViewHeight = header.headerHeight
         
         segmentedScrollView.delegate = self
         segmentedScrollView.segmentBounces = false

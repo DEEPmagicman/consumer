@@ -20,7 +20,6 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var premiumExerienceParentView: UIView!
     @IBOutlet weak var eventsInCityTitleLbl: UILabel!
     
-    
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
     var isVenueInitialLoading = true
