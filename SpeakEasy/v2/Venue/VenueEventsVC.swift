@@ -18,6 +18,7 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     private var isLoading = false
     private var page = 1
     private var isShimmerLoading = true
+    private var shimmerView: VenueEventsShimmerView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +30,16 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
           tap.cancelsTouchesInView = false
           tableView.addGestureRecognizer(tap)
 
+        showShimmer()
         getEvents()
         
+    }
+    
+    private func showShimmer() {
+        let shimmer = VenueEventsShimmerView(frame: tableView.bounds)
+        tableView.addSubview(shimmer)
+        shimmer.start()
+        shimmerView = shimmer
     }
     
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
@@ -53,7 +62,8 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                self.isLoading = false
+                self.shimmerView?.stop()
+                self.tableView.reloadData()
             }
             
             if isSuccess {
@@ -89,7 +99,7 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
 
 extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isShimmerLoading ? 6 : events.count
+        return events.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,7 +110,7 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         )
         
         if isShimmerLoading {
-            cell.startShimmer()
+//            cell.startShimmer()
         } else {
             let event = events[indexPath.row]
             cell.configure(with: event)
@@ -136,5 +146,63 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
             print("Tapped working ✅")
             Navigate.eventDetailsVC(self, event: event)
         }
+    }
+}
+
+
+import UIKit
+
+final class VenueEventsShimmerView: UIView {
+    
+    private var shimmerViews: [ShimmerView] = []
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    private func make(_ frame: CGRect, corner: CGFloat = 10) {
+        let v = ShimmerView(frame: frame)
+        v.layer.cornerRadius = corner
+        v.clipsToBounds = true
+        addSubview(v)
+        shimmerViews.append(v)
+    }
+    
+    private func setupUI() {
+        let width = UIScreen.main.bounds.width
+        
+        var y: CGFloat = 10
+        
+        for _ in 0..<6 {
+            
+            // image
+            make(CGRect(x: 16, y: y, width: 80, height: 80), corner: 12)
+            
+            // title
+            make(CGRect(x: 110, y: y + 10, width: width - 140, height: 16))
+            
+            // subtitle
+            make(CGRect(x: 110, y: y + 35, width: width - 180, height: 14))
+            
+            // location
+            make(CGRect(x: 110, y: y + 55, width: width - 200, height: 14))
+            
+            y += 100
+        }
+    }
+    
+    func start() {
+        shimmerViews.forEach { $0.startAnimating() }
+    }
+    
+    func stop() {
+        shimmerViews.forEach { $0.stopAnimating() }
+        removeFromSuperview()
     }
 }

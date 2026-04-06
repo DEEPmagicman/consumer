@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -17,14 +16,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="EventV2CVC" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="244" height="321"/>
+            <rect key="frame" x="0.0" y="0.0" width="206" height="331"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="244" height="321"/>
+                <rect key="frame" x="0.0" y="0.0" width="206" height="331"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uG-e4-sGy">
-                        <rect key="frame" x="2" y="2" width="158" height="317"/>
+                        <rect key="frame" x="2" y="2" width="158" height="327"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_img" translatesAutoresizingMaskIntoConstraints="NO" id="jVm-f0-TEl">
                                 <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
@@ -89,59 +88,8 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="amy-WB-kwR">
-                        <rect key="frame" x="2" y="2" width="158" height="317"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ye2-Mx-xA2" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="158" id="Iy0-45-J6Q"/>
-                                    <constraint firstAttribute="width" constant="158" id="RMA-GS-1Kz"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="0.0"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGK-M7-tZl" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="160" width="158" height="36"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="pvA-be-iJd"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yS7-1a-ggt" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="198" width="158" height="24"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="24" id="7XW-y0-Cg2"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
+                        <rect key="frame" x="2" y="2" width="204" height="327"/>
                         <color key="backgroundColor" red="0.07061767578" green="0.07061767578" blue="0.07061767578" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <constraints>
-                            <constraint firstItem="cGK-M7-tZl" firstAttribute="trailing" secondItem="ye2-Mx-xA2" secondAttribute="trailing" id="2RL-I8-KsH"/>
-                            <constraint firstItem="cGK-M7-tZl" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="69w-HU-bfu"/>
-                            <constraint firstItem="yS7-1a-ggt" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="89o-sz-6ae"/>
-                            <constraint firstAttribute="bottom" secondItem="yS7-1a-ggt" secondAttribute="bottom" id="HJC-eI-zgr"/>
-                            <constraint firstAttribute="width" constant="158" id="I6l-qq-6ix"/>
-                            <constraint firstItem="cGK-M7-tZl" firstAttribute="top" secondItem="ye2-Mx-xA2" secondAttribute="bottom" constant="2" id="R0Y-du-z9j"/>
-                            <constraint firstItem="ye2-Mx-xA2" firstAttribute="top" secondItem="amy-WB-kwR" secondAttribute="top" id="Xwx-s1-uIF"/>
-                            <constraint firstAttribute="trailing" secondItem="yS7-1a-ggt" secondAttribute="trailing" id="fJx-gC-1qO"/>
-                            <constraint firstItem="yS7-1a-ggt" firstAttribute="top" secondItem="cGK-M7-tZl" secondAttribute="bottom" constant="2" id="gYS-l3-Zih"/>
-                            <constraint firstItem="ye2-Mx-xA2" firstAttribute="leading" secondItem="amy-WB-kwR" secondAttribute="leading" id="y87-GA-GFV"/>
-                        </constraints>
                     </view>
                 </subviews>
             </view>
@@ -153,19 +101,17 @@
                 <constraint firstItem="amy-WB-kwR" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="S4y-Be-adf"/>
                 <constraint firstAttribute="bottom" secondItem="amy-WB-kwR" secondAttribute="bottom" constant="2" id="bTi-qI-M7r"/>
                 <constraint firstAttribute="trailing" secondItem="8uG-e4-sGy" secondAttribute="trailing" constant="2" id="qXp-J4-kfr"/>
+                <constraint firstAttribute="trailing" secondItem="amy-WB-kwR" secondAttribute="trailing" id="tqc-4R-txs"/>
                 <constraint firstItem="8uG-e4-sGy" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="tvk-SR-9nM"/>
             </constraints>
-            <size key="customSize" width="244" height="321"/>
+            <size key="customSize" width="206" height="331"/>
             <connections>
                 <outlet property="shimmerView" destination="amy-WB-kwR" id="dck-De-Vv4"/>
             </connections>
-            <point key="canvasLocation" x="134.35114503816794" y="213.02816901408451"/>
+            <point key="canvasLocation" x="105.34351145038167" y="216.5492957746479"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="bg_img" width="389" height="298"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

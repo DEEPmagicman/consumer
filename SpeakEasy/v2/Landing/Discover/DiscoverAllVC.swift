@@ -178,18 +178,7 @@ final class DiscoverAllVC: UIViewController {
     }
 
     @IBAction func onClickBookNow(_ sender: Any) {
-        isTonightEventInitialLoading = true
-        tonightEventCollectionView.reloadData()
-        
-        isVenueInitialLoading = true
-        venueListCollectionView.reloadData()
-        
-        isAllEventInitialLoading = false
-        allEventsCollectionView.reloadData()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.updateShimmerView()
-        }
+//        Navigate.to.premiumExperiencesVC(self)
     }
    
     @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {

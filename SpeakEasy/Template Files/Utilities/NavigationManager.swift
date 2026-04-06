@@ -537,4 +537,12 @@ final class Navigate {
         let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
         sender.pushVC(vc)
     }
+    
+    func premiumExperiencesVC(_ sender: UIViewController) {
+        let vc = PremiumExperiencesVC(nibName: "PremiumExperiencesVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
+    
+    
 }

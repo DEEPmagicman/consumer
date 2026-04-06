@@ -62,8 +62,8 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aH0-HF-F9s">
                                                 <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="T" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JvM-9R-ZQD">
-                                                        <rect key="frame" x="10" y="5.3333333333333428" width="10" height="19.333333333333332"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JvM-9R-ZQD">
+                                                        <rect key="frame" x="15" y="15" width="0.0" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                                         <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -389,6 +389,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="a77-aM-hBS"/>
                     <connections>
+                        <outlet property="firstNameLetter" destination="JvM-9R-ZQD" id="lvb-ie-Pim"/>
+                        <outlet property="imageView" destination="edH-T6-d0B" id="79C-BG-0Dh"/>
                         <outlet property="pageTitleLbl" destination="NS3-Cf-sF9" id="zE0-Wz-ano"/>
                         <outletCollection property="segmentViewContainer" destination="eFO-wj-hWS" collectionClass="NSMutableArray" id="rSz-sb-Qee"/>
                         <outletCollection property="segmentViewContainer" destination="7kq-1Y-uk4" collectionClass="NSMutableArray" id="dGr-5J-geb"/>

@@ -13,7 +13,6 @@ final class VenueEventTVC: UITableViewCell {
     @IBOutlet weak var bottomLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var eventTitleLbl: UILabel!
-    @IBOutlet weak var shimmerView: ShimmerView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,34 +22,7 @@ final class VenueEventTVC: UITableViewCell {
         eventImg.layer.cornerRadius = 10
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        stopShimmer()
-    }
-    
-    func startShimmer() {
-        shimmerView.isHidden = false
-        shimmerView.startAnimating()
-        
-        eventImg.isHidden = true
-        eventTitleLbl.isHidden = true
-        dateLbl.isHidden = true
-        bottomLbl.isHidden = true
-    }
-    
-    func stopShimmer() {
-        shimmerView.stopAnimating()
-        shimmerView.isHidden = true
-        
-        eventImg.isHidden = false
-        eventTitleLbl.isHidden = false
-        dateLbl.isHidden = false
-        bottomLbl.isHidden = false
-    }
-        
     func configure(with event: Event) {
-        stopShimmer()
-        
         eventTitleLbl.text = event.title
         
         dateLbl.text = formatDateRange(

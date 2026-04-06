@@ -37,6 +37,8 @@
 		044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
+		0450CF762F839AFD006C7A41 /* PremiumExperiencesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0450CF752F839AFD006C7A41 /* PremiumExperiencesVC.xib */; };
+		0450CF772F839AFD006C7A41 /* PremiumExperiencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0450CF742F839AFD006C7A41 /* PremiumExperiencesVC.swift */; };
 		045B4AA82F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045B4AA72F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift */; };
 		045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */; };
 		045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */; };
@@ -79,6 +81,7 @@
 		04A202F22F3605D400900A27 /* EventLineUpCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F12F3605D400900A27 /* EventLineUpCVC.xib */; };
 		04A202F52F36060D00900A27 /* FAQsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */; };
 		04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A202F62F36061000900A27 /* FAQsTableViewCell.xib */; };
+		04A2D7302F83C84800E58AC2 /* PremiumExperience.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */; };
 		04A4331B2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
 		04A4331C2F442D9100FB119A /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331A2F442D9100FB119A /* Table.swift */; };
 		04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331D2F442DFB00FB119A /* TablePresenter.swift */; };
@@ -493,6 +496,8 @@
 		044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInBottomSheet.swift; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
+		0450CF742F839AFD006C7A41 /* PremiumExperiencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumExperiencesVC.swift; sourceTree = "<group>"; };
+		0450CF752F839AFD006C7A41 /* PremiumExperiencesVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PremiumExperiencesVC.xib; sourceTree = "<group>"; };
 		045B4AA72F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramProfileFoundPopupVC.swift; sourceTree = "<group>"; };
 		045D04C62B1739E400B68D9E /* PurchaseDetailsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseDetailsTVC.swift; sourceTree = "<group>"; };
 		045D04C72B1739E400B68D9E /* PurchaseDetailsTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PurchaseDetailsTVC.xib; sourceTree = "<group>"; };
@@ -528,6 +533,7 @@
 		04A202F12F3605D400900A27 /* EventLineUpCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventLineUpCVC.xib; sourceTree = "<group>"; };
 		04A202F42F36060C00900A27 /* FAQsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQsTableViewCell.swift; sourceTree = "<group>"; };
 		04A202F62F36061000900A27 /* FAQsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FAQsTableViewCell.xib; sourceTree = "<group>"; };
+		04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = PremiumExperience.mp4; sourceTree = "<group>"; };
 		04A4331A2F442D9100FB119A /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		04A4331D2F442DFB00FB119A /* TablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePresenter.swift; sourceTree = "<group>"; };
 		04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSeatingViewController.swift; sourceTree = "<group>"; };
@@ -960,6 +966,15 @@
 			path = SkyFloatingLabelTextField;
 			sourceTree = "<group>";
 		};
+		0450CF732F839ADC006C7A41 /* PremiumExperiences */ = {
+			isa = PBXGroup;
+			children = (
+				0450CF742F839AFD006C7A41 /* PremiumExperiencesVC.swift */,
+				0450CF752F839AFD006C7A41 /* PremiumExperiencesVC.xib */,
+			);
+			path = PremiumExperiences;
+			sourceTree = "<group>";
+		};
 		045D04C52B1739B000B68D9E /* PurchasesTVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -1243,6 +1258,7 @@
 		6AF2B9CC2F09474400069A90 /* TableCheckOut */ = {
 			isa = PBXGroup;
 			children = (
+				0450CF732F839ADC006C7A41 /* PremiumExperiences */,
 				6AF2B9FC2F0BD16500069A90 /* Cells */,
 				6AF2B9F12F0BC57200069A90 /* Views */,
 				6AF2B9CB2F09473900069A90 /* TablesCheckOutScreens */,
@@ -1687,6 +1703,7 @@
 		CE486736286F2CE300FD277E /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				04A2D72F2F83C84800E58AC2 /* PremiumExperience.mp4 */,
 				CE48672A286F2CB100FD277E /* Assets.xcassets */,
 				CE48672C286F2CB100FD277E /* LaunchScreen.storyboard */,
 			);
@@ -2386,6 +2403,7 @@
 				CE0BA92B2F6BFDE500AB8996 /* VenueVC.xib in Resources */,
 				CE45A5B52C3BC9D400E1FE3F /* DropDownCell.xib in Resources */,
 				CAC4141128A478050007BA86 /* YearsCollectionViewCell.xib in Resources */,
+				0450CF762F839AFD006C7A41 /* PremiumExperiencesVC.xib in Resources */,
 				CEE02DAC2EFB959500AC7756 /* DiscoverAllVC.storyboard in Resources */,
 				CAC4140528A478050007BA86 /* DaysCollectionViewCell.xib in Resources */,
 				CE45801E2EF94FEB00A873C4 /* Search.storyboard in Resources */,
@@ -2443,6 +2461,7 @@
 				CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */,
 				0425E3C92F3460B8005E4130 /* EventDetailsVC.xib in Resources */,
 				6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */,
+				04A2D7302F83C84800E58AC2 /* PremiumExperience.mp4 in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
 				82847A8029824B2B00611DC4 /* VenueTableCell.xib in Resources */,
@@ -2699,6 +2718,7 @@
 				CEBCF5F92D48E2FD00B640C8 /* PhoneNumberFormatter.swift in Sources */,
 				CEBCF5FA2D48E2FD00B640C8 /* ParseManager.swift in Sources */,
 				CE0762E12EFA9C1F00670694 /* SelectLocationVC.swift in Sources */,
+				0450CF772F839AFD006C7A41 /* PremiumExperiencesVC.swift in Sources */,
 				CEBCF5FB2D48E2FD00B640C8 /* Bundle+Resources.swift in Sources */,
 				CEBCF5FC2D48E2FD00B640C8 /* MetadataParsing.swift in Sources */,
 				CEBCF5FD2D48E2FD00B640C8 /* PhoneNumberParser.swift in Sources */,
@@ -2897,7 +2917,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 245;
+				CURRENT_PROJECT_VERSION = 246;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2935,7 +2955,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 245;
+				CURRENT_PROJECT_VERSION = 246;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3099,7 +3119,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 245;
+				CURRENT_PROJECT_VERSION = 246;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3194,7 +3214,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 245;
+				CURRENT_PROJECT_VERSION = 246;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -17,6 +17,7 @@ final class VenueVC: UIViewController {
     var header: VenueHeaderVC?
     var segmentedScrollView = SJSegmentedViewController()
     var presenter = MVPPresenter()
+    private var shimmerView: VenueShimmerView?
     
     var venueDetails: ClipVenue?
     
@@ -37,7 +38,15 @@ final class VenueVC: UIViewController {
         }
         
 //        setUpSegmentVC()
+        showShimmer()
         getVenueDetails()
+    }
+    
+    private func showShimmer() {
+        let shimmer = VenueShimmerView(frame: view.bounds)
+        view.addSubview(shimmer)
+        shimmer.start()
+        self.shimmerView = shimmer
     }
     
     private func getVenueDetails() {
@@ -51,6 +60,7 @@ final class VenueVC: UIViewController {
             
             if isSuccess, let venue = venueDetail {
                 self.venueDetails = venue
+                self.shimmerView?.stop()
                 setUpSegmentVC()
             } else {
                 Alert.showAlertSheet(
@@ -121,5 +131,76 @@ extension VenueVC: SJSegmentedViewControllerDelegate, ScrollCallBackDelegate {
     
     func onChangeScrollListener(lastContentOffset: CGFloat, offSet: CGFloat) {
         
+    }
+}
+
+
+
+final class VenueShimmerView: UIView {
+    
+    private var shimmerViews: [ShimmerView] = []
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    private func makeShimmer(_ frame: CGRect, corner: CGFloat = 8) -> ShimmerView {
+        let view = ShimmerView(frame: frame)
+        view.layer.cornerRadius = corner
+        view.clipsToBounds = true
+        addSubview(view)
+        shimmerViews.append(view)
+        return view
+    }
+    
+    private func setupUI() {
+        backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        
+        let width = UIScreen.main.bounds.width
+        
+        // 🔹 Follow button
+        makeShimmer(CGRect(x: width/2 - 60, y: 240, width: 120, height: 36), corner: 18)
+        
+        // 🔹 Ticket card
+        makeShimmer(CGRect(x: 16, y: 300, width: width - 32, height: 60), corner: 12)
+        
+        // 🔹 Tabs (3)
+        for i in 0..<3 {
+            makeShimmer(CGRect(x: 20 + (i * 120), y: 380, width: 80, height: 20))
+        }
+        
+        // 🔹 Event list (5 rows)
+        var y: CGFloat = 420
+        for _ in 0..<5 {
+            
+            // image
+            makeShimmer(CGRect(x: 16, y: y, width: 80, height: 80), corner: 12)
+            
+            // title
+            makeShimmer(CGRect(x: 110, y: y + 10, width: width - 140, height: 16))
+            
+            // subtitle
+            makeShimmer(CGRect(x: 110, y: y + 35, width: width - 180, height: 14))
+            
+            // location
+            makeShimmer(CGRect(x: 110, y: y + 55, width: width - 200, height: 14))
+            
+            y += 100
+        }
+    }
+    
+    func start() {
+        shimmerViews.forEach { $0.startAnimating() }
+    }
+    
+    func stop() {
+        shimmerViews.forEach { $0.stopAnimating() }
+        removeFromSuperview()
     }
 }

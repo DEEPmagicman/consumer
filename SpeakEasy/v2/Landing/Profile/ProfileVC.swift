@@ -19,6 +19,8 @@ class ProfileVC: UIViewController {
     
     private var savedEvents: [Event] = []
     private var isLoading = true
+    private var followedVenues: [ClipVenue] = []
+    private var isVenueLoading = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,15 +37,21 @@ class ProfileVC: UIViewController {
         savedEventCollectionView.delegate = self
         savedEventCollectionView.dataSource = self
         
-        followedVenuesCollectionView.dataSource = nil
-        followedArtistsCollectionView.dataSource = nil
-        
+        followedVenuesCollectionView.delegate = self
+        followedVenuesCollectionView.dataSource = self
+
         savedEventCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
+        followedVenuesCollectionView.register(
+            VenueCVC.nib,
+            forCellWithReuseIdentifier: VenueCVC.identifier
+        )
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
              guard let self = self else { return }
              self.isLoading = false
              self.savedEventCollectionView.reloadData()
+            self.isVenueLoading = false
+                self.followedVenuesCollectionView.reloadData()
          }
     }
     
@@ -58,32 +66,61 @@ class ProfileVC: UIViewController {
     @IBAction func onClickFollowedArtistBtn(_ sender: Any) {
         
     }
+    
+    @IBAction func onClickBackBtn(_ sender: Any) {
+        Navigate.to.back(self)
+    }
 }
 
 extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return isLoading ? 5 : savedEvents.count
+        
+        if collectionView == savedEventCollectionView {
+            return isLoading ? 5 : 5
+        } else if collectionView == followedVenuesCollectionView {
+            return isVenueLoading ? 5 : 5
+        }
+        
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
-        if isLoading {
-            cell.shimmerView.isHidden = false
-            for view in cell.shimmerView.subviews where view is ShimmerView {
-                (view as? ShimmerView)?.startAnimating()
+        if collectionView == savedEventCollectionView {
+            let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
+            
+            if isLoading {
+                cell.shimmerView.isHidden = false
+                for view in cell.shimmerView.subviews where view is ShimmerView {
+                    (view as? ShimmerView)?.startAnimating()
+                }
+            } else {
+                cell.shimmerView.isHidden = true
+//                let event = savedEvents[indexPath.row]
+//                cell.configure(with: event)
             }
             return cell
-        } else {
-            cell.shimmerView.isHidden = true
         }
         
-        return cell
+        else if collectionView == followedVenuesCollectionView {
+            let cell: VenueCVC = collectionView.dequeue(withIdentifier: VenueCVC.identifier, for: indexPath)
+            if isVenueLoading {
+                cell.shimmerView.isHidden = false
+                for view in cell.shimmerView.subviews where view is ShimmerView {
+                    (view as? ShimmerView)?.startAnimating()
+                }
+            } else {
+                cell.shimmerView.isHidden = true
+//                let venue = followedVenues[indexPath.row]
+//                cell.configure(with: venue)
+            }
+            return cell
+        }
+        
+        return UICollectionViewCell()
     }
 }
-
-
 
 extension UIView {
     
@@ -95,7 +132,7 @@ extension UIView {
 
           gradient.colors = [
               UIColor(hex: "#DC69C3").cgColor,
-              UIColor(hex: "#000000").cgColor,
+              UIColor(hex: "#DC69C3").cgColor,
               UIColor(hex: "#121212").cgColor
           ]
 

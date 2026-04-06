@@ -6,7 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -79,26 +78,13 @@
                                     <constraint firstAttribute="width" constant="90" id="g0T-oU-hOu"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q8Z-xQ-O9N" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
-                                <rect key="frame" x="16" y="8" width="441" height="90"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="12"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="B0j-J4-3Kp" firstAttribute="centerY" secondItem="BFF-9S-i9Q" secondAttribute="centerY" id="3Ex-Ea-5WU"/>
                             <constraint firstItem="B0j-J4-3Kp" firstAttribute="leading" secondItem="BFF-9S-i9Q" secondAttribute="trailing" constant="6" id="440-Au-Nbu"/>
                             <constraint firstItem="BFF-9S-i9Q" firstAttribute="leading" secondItem="pXn-yd-nQP" secondAttribute="leading" constant="16" id="M4n-l2-JyZ"/>
-                            <constraint firstItem="q8Z-xQ-O9N" firstAttribute="bottom" secondItem="BFF-9S-i9Q" secondAttribute="bottom" id="MIs-dO-XW8"/>
                             <constraint firstAttribute="trailing" secondItem="B0j-J4-3Kp" secondAttribute="trailing" constant="16" id="aLR-rR-dKw"/>
-                            <constraint firstItem="q8Z-xQ-O9N" firstAttribute="leading" secondItem="pXn-yd-nQP" secondAttribute="leading" constant="16" id="d16-jF-T5F"/>
-                            <constraint firstItem="q8Z-xQ-O9N" firstAttribute="top" secondItem="pXn-yd-nQP" secondAttribute="top" constant="8" id="oOr-4S-dYm"/>
-                            <constraint firstAttribute="trailing" secondItem="q8Z-xQ-O9N" secondAttribute="trailing" constant="16" id="rhD-8z-r2C"/>
                             <constraint firstItem="BFF-9S-i9Q" firstAttribute="top" secondItem="pXn-yd-nQP" secondAttribute="top" constant="8" id="shH-Kb-RdC"/>
                             <constraint firstAttribute="bottom" secondItem="BFF-9S-i9Q" secondAttribute="bottom" id="xLz-Ha-102"/>
                         </constraints>
@@ -119,7 +105,6 @@
                 <outlet property="dateLbl" destination="hWn-YN-9xm" id="CXg-8g-wsh"/>
                 <outlet property="eventImg" destination="BFF-9S-i9Q" id="IkH-Oj-97U"/>
                 <outlet property="eventTitleLbl" destination="lrh-M4-cVM" id="1O3-G1-P0L"/>
-                <outlet property="shimmerView" destination="q8Z-xQ-O9N" id="bgp-fY-Jd5"/>
             </connections>
             <point key="canvasLocation" x="95.419847328244273" y="73.943661971830991"/>
         </tableViewCell>
@@ -129,8 +114,5 @@
         <namedColor name="errorRed">
             <color red="1" green="0.0" blue="0.0080000003799796104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

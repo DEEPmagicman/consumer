@@ -13,13 +13,28 @@ final class LandingVC: UIViewController {
     @IBOutlet private var tabBarImages: [UIImageView]!
     @IBOutlet private var tabBarTitles: [UILabel]!
     @IBOutlet weak var pageTitleLbl: UILabel!
-    
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var firstNameLetter: UILabel!
+
     private var viewControllers = [UIViewController]()
+    private var onBoardingPresenter = OnBoardingPresenter()
     var titles = ["Explore", "Your Orders", "Photos", "Search"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showSegmentView(0)
+        setupUserData()
+        whoAmIAPI()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        imageView.layer.cornerRadius = imageView.frame.height / 2
+        imageView.clipsToBounds = true
+        
+        firstNameLetter.layer.cornerRadius = firstNameLetter.frame.height / 2
+        firstNameLetter.clipsToBounds = true
     }
     
     @IBAction func onClickProfile(_ sender: UIButton) {
@@ -41,6 +56,40 @@ final class LandingVC: UIViewController {
             tabBarImages[enumeratedIndex].tintColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
             tabBarTitles[enumeratedIndex].textColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
             pageTitleLbl.text = titles[index]
+        }
+    }
+    
+    private func setupUserData() {
+        
+        guard let user = UserDefault.shared.user else { return }
+        
+        let imageUrl = user.image.key
+        let firstLetter = user.firstName.first ?? Character("")
+        
+        if !imageUrl.isEmpty {
+            imageView.isHidden = false
+            firstNameLetter.isHidden = true
+            
+            imageView.sd_setImage(
+                with: URL(string: imageUrl),
+                placeholderImage: UIImage(named: "placeholder")
+            )
+            
+        } else {
+            imageView.isHidden = true
+            firstNameLetter.isHidden = false
+            
+            firstNameLetter.text = String(firstLetter).uppercased()
+            firstNameLetter.textAlignment = .center
+        }
+    }
+    
+    private func whoAmIAPI() {
+        onBoardingPresenter.getCurrentUserDetail {[weak self] isSuccess in
+            guard let self = self else { return }
+            if isSuccess {
+                self.setupUserData()
+            }
         }
     }
     

@@ -31,7 +31,7 @@ final class SideMenuVC: UIViewController {
     @IBAction func onClickProfileBtn(_ sender: Any) {
         sideMenuController?.hideLeftView(animated: true, completion: { [weak self] in
             guard let self = self else { return }
-//            Navigate.to.profileVC(self)
+            Navigate.to.profileVC(self)
         })
         
     }
