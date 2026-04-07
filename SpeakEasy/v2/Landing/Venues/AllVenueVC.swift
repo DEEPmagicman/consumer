@@ -18,20 +18,20 @@ final class AllVenueVC: UIViewController {
     private var skip = 0
     private var hasMore = true
     private var isLoading = false
+    private var isInitialLoading = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupTableView()
-        fetchVenues()
         setupVenueTitle()
+        fetchVenues()
     }
     
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
     
-
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -55,20 +55,26 @@ final class AllVenueVC: UIViewController {
         guard !isLoading, hasMore else { return }
 
         isLoading = true
-        if showLoader { Loader.show() }
-
+        
+        if venueList.isEmpty {
+            isInitialLoading = true
+            tableView.reloadData()
+        }
         presenter.getVenueListForMVP(
             from: skip,
             status: VenueStatus.open.rawValue
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self = self else { return }
 
+            self.isInitialLoading = false
+            
             if isSuccess {
                 self.venueList.append(contentsOf: venues)
                 self.skip = self.venueList.count
                 self.hasMore = hasMore
                 self.tableView.reloadData()
             } else {
+                self.tableView.reloadData()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? Constant.String.somethingWrong,
@@ -77,7 +83,6 @@ final class AllVenueVC: UIViewController {
             }
 
             self.isLoading = false
-            Loader.hide()
         }
     }
 }
@@ -85,6 +90,9 @@ final class AllVenueVC: UIViewController {
 extension AllVenueVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isInitialLoading {
+            return 6
+        }
         return venueList.count
     }
 
@@ -98,10 +106,13 @@ extension AllVenueVC: UITableViewDelegate, UITableViewDataSource {
             for: indexPath
         )
 
+        if isInitialLoading {
+            cell.showSkeleton()
+            return cell
+        }
+
         let venue = venueList[indexPath.row]
         cell.configure(with: venue)
-        cell.selectionStyle = .none
-
         return cell
     }
 
@@ -110,12 +121,15 @@ extension AllVenueVC: UITableViewDelegate, UITableViewDataSource {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
+        guard !isInitialLoading else { return }
+        
         if indexPath.row == venueList.count - 2 {
             fetchVenues(showLoader: false)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !isInitialLoading else { return }
         
         let venue = venueList[indexPath.row]
         Navigate.to.venueVC(self, venueDetails: venue)

@@ -52,6 +52,8 @@
 		046866532B0F280F00E498CF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046866522B0F280F00E498CF /* FooterView.swift */; };
 		046866552B0F284900E498CF /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046866542B0F284900E498CF /* FooterView.xib */; };
 		046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */; };
+		046AA23B2F84E54300961C9B /* OrdersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046AA2392F84E54300961C9B /* OrdersTableViewCell.swift */; };
+		046AA23C2F84E54300961C9B /* OrdersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046AA23A2F84E54300961C9B /* OrdersTableViewCell.xib */; };
 		046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
 		04749CFD2F56AB6F0035898F /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 04749CFC2F56AB6F0035898F /* Hero */; };
 		0475E3252BECEAA200E4801C /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E586F2AA075C200FAA0F6 /* TimeSlot.swift */; };
@@ -511,6 +513,8 @@
 		046866522B0F280F00E498CF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 		046866542B0F284900E498CF /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastPurchasesVisitsViewController.swift; sourceTree = "<group>"; };
+		046AA2392F84E54300961C9B /* OrdersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersTableViewCell.swift; sourceTree = "<group>"; };
+		046AA23A2F84E54300961C9B /* OrdersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrdersTableViewCell.xib; sourceTree = "<group>"; };
 		046E586F2AA075C200FAA0F6 /* TimeSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 		047B3B1A2F714A270085B3FC /* CustomQuestionTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQuestionTextFieldCell.swift; sourceTree = "<group>"; };
 		047B3B1B2F714A270085B3FC /* CustomQuestionTextFieldCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQuestionTextFieldCell.xib; sourceTree = "<group>"; };
@@ -1018,6 +1022,17 @@
 				046866542B0F284900E498CF /* FooterView.xib */,
 			);
 			path = FooterView;
+			sourceTree = "<group>";
+		};
+		046AA2382F84E50500961C9B /* Orders */ = {
+			isa = PBXGroup;
+			children = (
+				CE4580152EF94F4700A873C4 /* Orders.storyboard */,
+				CE4580172EF94F5A00A873C4 /* OrdersVC.swift */,
+				046AA2392F84E54300961C9B /* OrdersTableViewCell.swift */,
+				046AA23A2F84E54300961C9B /* OrdersTableViewCell.xib */,
+			);
+			path = Orders;
 			sourceTree = "<group>";
 		};
 		047B3B152F71492A0085B3FC /* CustomQuestionsTVC */ = {
@@ -2068,14 +2083,13 @@
 				04FACD4D2F52B07A0022011C /* SignUp */,
 				CEC6D6D12EF92B1C00A05672 /* Landing.storyboard */,
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
-				CE4580152EF94F4700A873C4 /* Orders.storyboard */,
-				CE4580172EF94F5A00A873C4 /* OrdersVC.swift */,
 				CE45801B2EF94FB800A873C4 /* Photos.storyboard */,
 				CE4580192EF94F9D00A873C4 /* PhotosVC.swift */,
 				CE45801D2EF94FEB00A873C4 /* Search.storyboard */,
 				CE45801F2EF94FFB00A873C4 /* SearchVC.swift */,
 				CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */,
 				CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */,
+				046AA2382F84E50500961C9B /* Orders */,
 				CEE02DA62EFB939F00AC7756 /* Discover */,
 				CE0762DE2EFA9C0300670694 /* Location */,
 				CE0762E82EFAA97B00670694 /* Date Selection */,
@@ -2463,6 +2477,7 @@
 				6AF2B9CF2F09477300069A90 /* TableCheckOutVC.xib in Resources */,
 				04A2D7302F83C84800E58AC2 /* PremiumExperience.mp4 in Resources */,
 				E15D6B6228BC39AC0076286C /* Splash.xib in Resources */,
+				046AA23C2F84E54300961C9B /* OrdersTableViewCell.xib in Resources */,
 				CAC4141328A478050007BA86 /* ButtonCollectionViewCell.xib in Resources */,
 				82847A8029824B2B00611DC4 /* VenueTableCell.xib in Resources */,
 				04A202F22F3605D400900A27 /* EventLineUpCVC.xib in Resources */,
@@ -2692,6 +2707,7 @@
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CEE02DAA2EFB93F600AC7756 /* DiscoverAllVC.swift in Sources */,
+				046AA23B2F84E54300961C9B /* OrdersTableViewCell.swift in Sources */,
 				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
@@ -2917,7 +2933,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2955,7 +2971,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3119,7 +3135,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3214,7 +3230,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 246;
+				CURRENT_PROJECT_VERSION = 247;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

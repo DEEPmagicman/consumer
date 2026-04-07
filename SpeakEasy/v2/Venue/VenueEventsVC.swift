@@ -17,7 +17,6 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     private var hasMore = true
     private var isLoading = false
     private var page = 1
-    private var isShimmerLoading = true
     private var shimmerView: VenueEventsShimmerView?
     
     override func viewDidLoad() {
@@ -76,24 +75,10 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
                 self.skip = self.events.count
                 self.hasMore = hasMore
                 
-                DispatchQueue.main.async {
-                    self.stopShimmer()
-                }
-                
             } else {
                 print(errMsg ?? "Error")
             }
         }
-    }
-    
-    private func startShimmer() {
-        isShimmerLoading = true
-        tableView.reloadData()
-    }
-
-    private func stopShimmer() {
-        isShimmerLoading = false
-        tableView.reloadData()
     }
 }
 
@@ -108,21 +93,14 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
             withIdentifier: VenueEventTVC.identifier,
             for: indexPath
         )
-        
-        if isShimmerLoading {
-//            cell.startShimmer()
-        } else {
-            let event = events[indexPath.row]
-            cell.configure(with: event)
-        }
+        let event = events[indexPath.row]
+        cell.configure(with: event)
         
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard !isShimmerLoading else { return }
-        
         let event = events[indexPath.row]
         Navigate.eventDetailsVC(self, event: event)
     }
@@ -148,7 +126,6 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         }
     }
 }
-
 
 import UIKit
 

@@ -52,7 +52,6 @@ final class DiscoverAllVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
         premiumExperiencesView.setHorizontalGradientColor(
             colors: [
                 UIColor(hex: "#292929").withAlphaComponent(0.1).cgColor,
@@ -60,6 +59,7 @@ final class DiscoverAllVC: UIViewController {
             ]
         )
     }
+    
     private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
         presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
@@ -178,12 +178,14 @@ final class DiscoverAllVC: UIViewController {
     }
 
     @IBAction func onClickBookNow(_ sender: Any) {
-//        Navigate.to.premiumExperiencesVC(self)
+        Navigate.to.premiumExperiencesVC(self)
     }
    
     @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {
         Navigate.to.allVenueVC(self)
     }
+    
+    
 }
 
 extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {

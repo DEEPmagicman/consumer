@@ -27,7 +27,7 @@
                 <viewControllerPlaceholder storyboardName="Orders" id="wxY-LG-bRG" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uNu-3U-iZE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-214" y="553"/>
+            <point key="canvasLocation" x="505" y="592"/>
         </scene>
         <!--Search-->
         <scene sceneID="A7d-3o-Ji1">
@@ -35,7 +35,7 @@
                 <viewControllerPlaceholder storyboardName="Search" id="vpG-m6-tAe" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diH-Vl-5oZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="514" y="532"/>
+            <point key="canvasLocation" x="8" y="649"/>
         </scene>
         <!--Photos-->
         <scene sceneID="BlF-IN-iwi">
@@ -43,7 +43,7 @@
                 <viewControllerPlaceholder storyboardName="Photos" id="9ee-Fg-9sJ" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yOG-XN-gM6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="205" y="609"/>
+            <point key="canvasLocation" x="225" y="592"/>
         </scene>
         <!--LandingVC-->
         <scene sceneID="s0d-6b-0kx">
@@ -107,7 +107,7 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejg-KM-9iI">
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejg-KM-9iI">
                                         <rect key="frame" x="345" y="5" width="32" height="32"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJs-m9-wEs">
@@ -205,10 +205,10 @@
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="80"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHR-rP-bSQ">
-                                                <rect key="frame" x="0.0" y="0.0" width="98.333333333333329" height="80"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="80"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="42Z-O5-UmC">
-                                                        <rect key="frame" x="35" y="21.666666666666668" width="28" height="25.999999999999982"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="discoverIc" translatesAutoresizingMaskIntoConstraints="NO" id="42Z-O5-UmC">
+                                                        <rect key="frame" x="84.333333333333329" y="20" width="28" height="28"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
@@ -217,13 +217,13 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discover" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9X-kc-BuI">
-                                                        <rect key="frame" x="27.666666666666671" y="50" width="43" height="12"/>
+                                                        <rect key="frame" x="76.666666666666671" y="50" width="43" height="12"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MkE-fQ-xfB">
-                                                        <rect key="frame" x="0.0" y="0.0" width="98.333333333333329" height="80"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="80"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <connections>
                                                             <action selector="onClickTabBarItem:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="l8p-M4-AMX"/>
@@ -243,10 +243,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oYE-QR-WaJ">
-                                                <rect key="frame" x="98.333333333333343" y="0.0" width="98.333333333333343" height="80"/>
+                                                <rect key="frame" x="196.66666666666663" y="0.0" width="196.33333333333337" height="80"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Nmg-wC-II5">
-                                                        <rect key="frame" x="35.000000000000014" y="21.666666666666668" width="28" height="25.999999999999982"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="orderIc" translatesAutoresizingMaskIntoConstraints="NO" id="Nmg-wC-II5">
+                                                        <rect key="frame" x="84.000000000000028" y="20" width="28" height="28"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
@@ -255,13 +255,13 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Orders" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IoC-1f-Iwz">
-                                                        <rect key="frame" x="32.000000000000014" y="50" width="34" height="12"/>
+                                                        <rect key="frame" x="81.000000000000028" y="50" width="34" height="12"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
                                                         <color key="textColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CeT-ja-OCz">
-                                                        <rect key="frame" x="0.0" y="0.0" width="98.333333333333329" height="80"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="196.33333333333334" height="80"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <connections>
                                                             <action selector="onClickTabBarItem:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="odR-qY-2if"/>
@@ -280,11 +280,11 @@
                                                     <constraint firstItem="Nmg-wC-II5" firstAttribute="centerY" secondItem="oYE-QR-WaJ" secondAttribute="centerY" constant="-6" id="qMJ-CA-v6A"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dsa-Ya-f9u">
-                                                <rect key="frame" x="196.66666666666666" y="0.0" width="97.999999999999972" height="80"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dsa-Ya-f9u">
+                                                <rect key="frame" x="393" y="0.0" width="0.0" height="80"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Hgj-zZ-t8z">
-                                                        <rect key="frame" x="35" y="21.666666666666668" width="28" height="25.999999999999982"/>
+                                                        <rect key="frame" x="-14" y="21.666666666666668" width="28" height="25.999999999999982"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
@@ -293,13 +293,13 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sfn-za-xw2">
-                                                        <rect key="frame" x="31.666666666666682" y="50" width="34.666666666666643" height="12"/>
+                                                        <rect key="frame" x="-17.333333333333314" y="50" width="34.666666666666664" height="12"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
                                                         <color key="textColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bUY-6u-zJr">
-                                                        <rect key="frame" x="0.0" y="0.0" width="98" height="80"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="80"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <connections>
                                                             <action selector="onClickTabBarItem:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="9ut-lG-Uof"/>
@@ -318,11 +318,11 @@
                                                     <constraint firstItem="bUY-6u-zJr" firstAttribute="leading" secondItem="dsa-Ya-f9u" secondAttribute="leading" id="tXO-cH-5Ee"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uA1-KI-oh6">
-                                                <rect key="frame" x="294.66666666666669" y="0.0" width="98.333333333333314" height="80"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uA1-KI-oh6">
+                                                <rect key="frame" x="393" y="0.0" width="0.0" height="80"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cart.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="EFZ-xc-9Gz">
-                                                        <rect key="frame" x="35.333333333333314" y="21.666666666666668" width="28" height="25.999999999999982"/>
+                                                        <rect key="frame" x="-14" y="21.666666666666668" width="28" height="25.999999999999982"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <constraints>
@@ -331,13 +331,13 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPX-9m-JvM">
-                                                        <rect key="frame" x="32" y="50" width="34.333333333333343" height="12"/>
+                                                        <rect key="frame" x="-17" y="50" width="34.333333333333336" height="12"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="10"/>
                                                         <color key="textColor" red="0.36078431370000003" green="0.36078431370000003" blue="0.36078431370000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6cc-Qg-GzC">
-                                                        <rect key="frame" x="0.0" y="0.0" width="98.333333333333329" height="80"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="80"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <connections>
                                                             <action selector="onClickTabBarItem:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="5kS-qi-umt"/>
@@ -392,6 +392,7 @@
                         <outlet property="firstNameLetter" destination="JvM-9R-ZQD" id="lvb-ie-Pim"/>
                         <outlet property="imageView" destination="edH-T6-d0B" id="79C-BG-0Dh"/>
                         <outlet property="pageTitleLbl" destination="NS3-Cf-sF9" id="zE0-Wz-ano"/>
+                        <outlet property="searchBtnView" destination="ejg-KM-9iI" id="tJb-TB-CNg"/>
                         <outletCollection property="segmentViewContainer" destination="eFO-wj-hWS" collectionClass="NSMutableArray" id="rSz-sb-Qee"/>
                         <outletCollection property="segmentViewContainer" destination="7kq-1Y-uk4" collectionClass="NSMutableArray" id="dGr-5J-geb"/>
                         <outletCollection property="segmentViewContainer" destination="olU-BX-lyY" collectionClass="NSMutableArray" id="f9W-t4-JR3"/>
@@ -413,6 +414,8 @@
     </scenes>
     <resources>
         <image name="cart.fill" catalog="system" width="128" height="102"/>
+        <image name="discoverIc" width="20" height="20"/>
+        <image name="orderIc" width="20" height="20"/>
         <image name="search_ic" width="12.666666984558105" height="12.666666984558105"/>
     </resources>
 </document>

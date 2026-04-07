@@ -25,6 +25,7 @@
                 <outlet property="navTitleLbl" destination="GqU-mF-JLO" id="QCF-I8-6k0"/>
                 <outlet property="permuimExperiencesHiddenView" destination="0Wd-sZ-AJh" id="8cl-aR-Ma3"/>
                 <outlet property="premuimExperiencesView" destination="YTk-pH-SEE" id="Xfv-fM-8nh"/>
+                <outlet property="rightBtn" destination="9lG-zZ-Y1t" id="ISz-Wh-3cU"/>
                 <outlet property="scrollView" destination="Nrc-KT-Tj3" id="NWR-Ag-wav"/>
                 <outlet property="tableView" destination="kTj-WQ-meJ" id="b3y-L1-0dA"/>
                 <outlet property="tableViewHeightConstraint" destination="LQM-J1-E3P" id="Nag-Gg-mE7"/>
@@ -36,7 +37,7 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nrc-KT-Tj3">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nrc-KT-Tj3">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mle-0M-Z3m">
@@ -93,7 +94,7 @@
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lG-zZ-Y1t">
+                                                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9lG-zZ-Y1t">
                                                     <rect key="frame" x="325" y="4" width="24" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="24" id="TRW-oK-O9L"/>
@@ -195,13 +196,12 @@
                     </constraints>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EWF-ZP-Rh4">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="75"/>
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="110.66666666666667"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aeR-cQ-4xp">
-                            <rect key="frame" x="16" y="51" width="24" height="24"/>
+                            <rect key="frame" x="16" y="51" width="24" height="59.666666666666657"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="EPn-OJ-5bM"/>
-                                <constraint firstAttribute="height" constant="24" id="qfk-5b-2xo"/>
                             </constraints>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" image="ic-back"/>
@@ -209,8 +209,8 @@
                                 <action selector="onClickBackBtn:" destination="-1" eventType="touchUpInside" id="UTJ-rp-B3g"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium Experiences" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GqU-mF-JLO">
-                            <rect key="frame" x="56" y="51" width="337" height="24"/>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium Experiences" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GqU-mF-JLO">
+                            <rect key="frame" x="56" y="71" width="337" height="19.666666666666671"/>
                             <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
@@ -223,7 +223,7 @@
                         <constraint firstItem="aeR-cQ-4xp" firstAttribute="leading" secondItem="EWF-ZP-Rh4" secondAttribute="leading" constant="16" id="A9K-H1-UhS"/>
                         <constraint firstItem="GqU-mF-JLO" firstAttribute="centerY" secondItem="aeR-cQ-4xp" secondAttribute="centerY" id="DjY-a3-nJb"/>
                         <constraint firstAttribute="trailing" secondItem="GqU-mF-JLO" secondAttribute="trailing" id="GqU-2y-CD8"/>
-                        <constraint firstAttribute="bottom" secondItem="GqU-mF-JLO" secondAttribute="bottom" id="bfd-3b-W1H"/>
+                        <constraint firstAttribute="bottom" secondItem="GqU-mF-JLO" secondAttribute="bottom" constant="20" id="bfd-3b-W1H"/>
                         <constraint firstAttribute="bottom" secondItem="aeR-cQ-4xp" secondAttribute="bottom" id="nL0-7B-NBK"/>
                     </constraints>
                 </view>

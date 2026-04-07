@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--OrdersVC-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="OrdersVC" customModule="Speakeasy" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="AIP-nV-wwc">
+                                <rect key="frame" x="64.666666666666686" y="118" width="264" height="32"/>
+                                <segments>
+                                    <segment title="Upcoming" width="132"/>
+                                    <segment title="Past" width="132">
+                                        <size key="contentOffset" width="5" height="0.0"/>
+                                    </segment>
+                                </segments>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="selectedSegmentTintColor" red="0.42352941176470588" green="0.42352941176470588" blue="0.44313725490196076" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <connections>
+                                    <action selector="onChangeSegment:" destination="Y6W-OH-hqX" eventType="valueChanged" id="pip-Ar-bMl"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Av8-4N-Hud">
+                                <rect key="frame" x="0.0" y="165" width="393" height="603"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="sectionIndexBackgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="AIP-nV-wwc" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="2ry-xD-ng1"/>
+                            <constraint firstItem="Av8-4N-Hud" firstAttribute="top" secondItem="AIP-nV-wwc" secondAttribute="bottom" constant="16" id="JRU-uP-drP"/>
+                            <constraint firstItem="AIP-nV-wwc" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="R0r-96-ulR"/>
+                            <constraint firstItem="Av8-4N-Hud" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="a5e-sr-U2E"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Av8-4N-Hud" secondAttribute="bottom" constant="16" id="chy-ir-0Ti"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Av8-4N-Hud" secondAttribute="trailing" id="pd4-UE-Mm0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="segmentedControl" destination="AIP-nV-wwc" id="mV3-VJ-lCK"/>
+                        <outlet property="tableView" destination="Av8-4N-Hud" id="oB7-wF-qqg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139" y="131"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

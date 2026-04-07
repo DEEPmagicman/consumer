@@ -25,8 +25,6 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     @IBOutlet weak var mainScrollView: UIScrollView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var venueAboutLbl: UILabel!
-    @IBOutlet weak var viewMoreLbl: UILabel!
-    @IBOutlet weak var viewMoreLblHeight: NSLayoutConstraint!
     @IBOutlet weak var viewMoreBtn: UIButton!
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -45,6 +43,8 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     private var hasMore = true
     private var isLoading = false
     private var page = 1
+    private var isExpanded = false
+    private let collapsedLines = 3
     
     private var ticketListHeightObservation: NSKeyValueObservation?
     
@@ -75,7 +75,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     
     private func configureUI() {
         setupSocialIcons()
-        handleViewMore()
+        setupExpandableLabel()
         updateLocationOnMap(
             to: CLLocationCoordinate2D(
                 latitude: venueDetails?.latitude ?? 0,
@@ -191,28 +191,55 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
         UIApplication.shared.open(url)
     }
     
-    @IBAction func onClickViewMore(_ sender: UIButton) {
-        viewMoreBtn.isSelected = true
-        handleViewMore()
+    @IBAction func onClickViewMore(_ sender: Any) {
+        isExpanded.toggle()
+
+        venueAboutLbl.font = UIFont(name: "Inter-Regular", size: 16) ?? .systemFont(ofSize: 16)
+
+        if isExpanded {
+            venueAboutLbl.numberOfLines = 0
+            viewMoreBtn.setTitle("View Less", for: .normal)
+        } else {
+            venueAboutLbl.numberOfLines = collapsedLines
+            viewMoreBtn.setTitle("View More", for: .normal)
+        }
+
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
-    
-    private func handleViewMore() {
-        venueAboutLbl.text = venueDetails?.description ?? ""
+
+    private func setupExpandableLabel() {
+        
+        venueAboutLbl.text = venueDetails?.description
+        venueAboutLbl.font = UIFont(name: "Inter-Regular", size: 16) ?? .systemFont(ofSize: 16)
+        
+        venueAboutLbl.numberOfLines = collapsedLines
+        venueAboutLbl.lineBreakMode = .byTruncatingTail
+        
+        viewMoreBtn.setTitle("View More", for: .normal)
+
         view.layoutIfNeeded()
-        let lines = numberOfLines(for: venueAboutLbl)
-        venueAboutLbl.numberOfLines = viewMoreBtn.isSelected ? lines : min(lines, 3)
-        viewMoreBtnView.isHidden = viewMoreBtn.isSelected ? true : lines <= 3
-        viewMoreLblHeight.constant = CGFloat(venueAboutLbl.numberOfLines * 20)
+        checkIfTextNeedsExpansion()
     }
     
-    func numberOfLines(for label: UILabel) -> Int {
-        guard let text = label.text, let font = label.font else { return 0 }
-        let maxSize = CGSize(width: label.frame.width, height: .greatestFiniteMagnitude)
-        let textHeight = text.boundingRect(with: maxSize, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: font], context: nil).height
-        let lineHeight = font.lineHeight
-        return Int(ceil(textHeight / lineHeight))
+    private func checkIfTextNeedsExpansion() {
+        
+        let width = venueAboutLbl.frame.width
+        guard width > 0 else { return }
+        
+        let size = CGSize(width: width, height: .greatestFiniteMagnitude)
+        
+        venueAboutLbl.numberOfLines = 0
+        let fullHeight = venueAboutLbl.sizeThatFits(size).height
+        
+        venueAboutLbl.numberOfLines = collapsedLines
+        let collapsedHeight = venueAboutLbl.sizeThatFits(size).height
+        
+        viewMoreBtnView.isHidden = fullHeight <= collapsedHeight + 1
+        venueAboutLbl.numberOfLines = isExpanded ? 0 : collapsedLines
     }
-    
+
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
         mainScrollView
     }

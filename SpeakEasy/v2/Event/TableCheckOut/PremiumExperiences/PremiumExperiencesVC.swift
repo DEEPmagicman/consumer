@@ -12,27 +12,22 @@ class PremiumExperiencesVC: UIViewController {
     @IBOutlet weak var navTitleBgView: UIView!
     @IBOutlet weak var bgViewHeight: NSLayoutConstraint!
     @IBOutlet weak var premuimExperiencesView: UIView!
+    @IBOutlet weak var rightBtn: UIButton!
     
     var player: AVPlayer?
     var playerLayer: AVPlayerLayer?
     private var shimmerView: VenueEventsShimmerView?
 
     var isShimmerLoading: Bool = true
-    var events: [String] = Array(repeating: "Demo", count: 10)
-
-    private let navTitleText = "Premium Experiences"
-
-    // MARK: - Lifecycle
+    var events: [String] = []
+    private var isPremiumOpen = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupNavigationBar()
         setupBackgroundVideo()
         setupLoop()
-
-        scrollView.delegate = self  // ✅ Must have this
-
+        scrollView.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
@@ -44,7 +39,9 @@ class PremiumExperiencesVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.stopShimmer()
             self.isShimmerLoading = false
+            self.events = Array(repeating: "Demo", count: 10)
             self.tableView.reloadData()
+            
             self.updateTableHeight()
         }
     }
@@ -59,33 +56,20 @@ class PremiumExperiencesVC: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    private var isCollapsed = false
+    private let collapseThreshold: CGFloat = 120
 
-    // MARK: - Nav Bar
-
-    func setupNavigationBar() {
-        navigationItem.title = navTitleText
-        navigationController?.navigationBar.tintColor = .white
-        applyNavAppearance(scrolledDown: false) // start transparent
-    }
-
-    func applyNavAppearance(scrolledDown: Bool) {
-        let appearance = UINavigationBarAppearance()
-
-        if scrolledDown {
-            navTitleLbl.isHidden = false
-            premuimExperiencesView.isHidden = true
-            backGroundVideoView.isHidden = true
-            bgViewHeight.constant = 0
-            navTitleBgView.backgroundColor = UIColor(hex: "#282828")
+    func applyNavAppearance(collapsed: Bool) {
+        self.navTitleLbl.alpha = collapsed ? 1 : 0
+        self.navTitleLbl.isHidden = collapsed ? false : true
+            self.premuimExperiencesView.alpha = collapsed ? 0 : 1
+            self.backGroundVideoView.alpha = collapsed ? 0 : 1
             
-        } else {
-            navTitleLbl.isHidden = true
-            premuimExperiencesView.isHidden = false
-            backGroundVideoView.isHidden = false
-            bgViewHeight.constant = 298
-            navTitleBgView.backgroundColor = .clear
-          
-        }
+            self.bgViewHeight.constant = collapsed ? 0 : 298
+            self.navTitleBgView.backgroundColor = collapsed
+            ? UIColor(hex: "#282828")
+            : .clear
     }
 
     // MARK: - Video
@@ -117,18 +101,21 @@ class PremiumExperiencesVC: UIViewController {
         player?.play()
     }
 
-    // MARK: - Shimmer
-
-    func showShimmer() {
+    private func showShimmer() {
         let shimmer = VenueEventsShimmerView(frame: tableView.bounds)
         tableView.addSubview(shimmer)
         shimmer.start()
         shimmerView = shimmer
     }
-
+    
     func stopShimmer() {
         shimmerView?.stop()
+        shimmerView?.removeFromSuperview()
         shimmerView = nil
+    }
+    
+    func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
+        tableView
     }
 
     // MARK: - Table Height
@@ -145,7 +132,14 @@ class PremiumExperiencesVC: UIViewController {
     }
 
     @IBAction func onClickPremiumExperiences(_ sender: Any) {
-        permuimExperiencesHiddenView.isHidden.toggle()
+        isPremiumOpen.toggle()
+        permuimExperiencesHiddenView.isHidden = !isPremiumOpen
+
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseInOut]) {
+            self.rightBtn.transform = self.isPremiumOpen
+            ? CGAffineTransform(rotationAngle: .pi / 2)
+            : .identity
+        }
     }
 }
 
@@ -154,7 +148,13 @@ class PremiumExperiencesVC: UIViewController {
 extension PremiumExperiencesVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView == self.scrollView else { return }
-        applyNavAppearance(scrolledDown: scrollView.contentOffset.y > 0)
+        
+        let shouldCollapse = scrollView.contentOffset.y > collapseThreshold
+        
+        if shouldCollapse != isCollapsed {
+            isCollapsed = shouldCollapse
+            applyNavAppearance(collapsed: shouldCollapse)
+        }
     }
 }
 
@@ -166,11 +166,22 @@ extension PremiumExperiencesVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell: VenueEventTVC = tableView.dequeue(
             withIdentifier: VenueEventTVC.identifier,
             for: indexPath
         )
+        
         cell.selectionStyle = .none
+
+        if isShimmerLoading {
+            cell.contentView.alpha = 0
+            cell.backgroundColor = .clear
+        } else {
+            cell.contentView.alpha = 1
+//            cell.configure(with: events[indexPath.row]) // your actual method
+        }
+
         return cell
     }
 }

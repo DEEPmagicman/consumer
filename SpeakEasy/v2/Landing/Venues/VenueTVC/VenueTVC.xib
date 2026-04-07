@@ -79,11 +79,19 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P9h-4x-Gjy" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="10" width="492" height="180"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
+                    <constraint firstAttribute="trailing" secondItem="P9h-4x-Gjy" secondAttribute="trailing" id="2xH-aY-VNh"/>
+                    <constraint firstItem="P9h-4x-Gjy" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="5uQ-bs-V76"/>
+                    <constraint firstItem="P9h-4x-Gjy" firstAttribute="top" secondItem="6Rf-ep-cXO" secondAttribute="top" id="aGD-vJ-5ep"/>
                     <constraint firstItem="6Rf-ep-cXO" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="eZL-ju-01y"/>
                     <constraint firstAttribute="trailing" secondItem="6Rf-ep-cXO" secondAttribute="trailing" id="in7-Nc-q1s"/>
+                    <constraint firstItem="P9h-4x-Gjy" firstAttribute="bottom" secondItem="6Rf-ep-cXO" secondAttribute="bottom" id="lKx-rg-wsy"/>
                     <constraint firstAttribute="bottom" secondItem="6Rf-ep-cXO" secondAttribute="bottom" id="n2f-V1-t13"/>
                     <constraint firstItem="6Rf-ep-cXO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="wgo-dh-zGc"/>
                 </constraints>
@@ -96,6 +104,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="shimmerView" destination="P9h-4x-Gjy" id="PNx-OS-VE3"/>
                 <outlet property="venueImg" destination="J9y-Fx-t5D" id="Pm9-JA-FIg"/>
                 <outlet property="venueLogo" destination="feK-Lc-IRV" id="tMe-My-Rv2"/>
                 <outlet property="venueName" destination="MEm-hp-iPZ" id="AUl-g1-SeW"/>

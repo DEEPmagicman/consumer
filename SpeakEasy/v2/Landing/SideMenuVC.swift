@@ -51,6 +51,11 @@ final class SideMenuVC: UIViewController {
         })
     }
     
+    @IBAction func onClickSearchBtn(_ sender: Any) {
+     
+    }
+
+    
     private func setupUserData() {
         
         guard let user = UserDefault.shared.user else { return }

@@ -15,7 +15,8 @@ final class LandingVC: UIViewController {
     @IBOutlet weak var pageTitleLbl: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var firstNameLetter: UILabel!
-
+    @IBOutlet weak var searchBtnView: UIView!
+    
     private var viewControllers = [UIViewController]()
     private var onBoardingPresenter = OnBoardingPresenter()
     var titles = ["Explore", "Your Orders", "Photos", "Search"]
@@ -56,6 +57,11 @@ final class LandingVC: UIViewController {
             tabBarImages[enumeratedIndex].tintColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
             tabBarTitles[enumeratedIndex].textColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
             pageTitleLbl.text = titles[index]
+            if index == 0 {
+                self.searchBtnView.isHidden = false
+            } else {
+                self.searchBtnView.isHidden = true
+            }
         }
     }
     
