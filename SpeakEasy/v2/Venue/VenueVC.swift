@@ -20,23 +20,11 @@ final class VenueVC: UIViewController {
     private var shimmerView: VenueShimmerView?
     
     var venueDetails: ClipVenue?
+    var uniqueId: String? = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        venueName.text = venueDetails?.name ?? "Venue"
-        let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
-        self.venueLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
-        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
-        if let url = URL(string: imageUrlString) {
-            bgImage.sd_setImage(
-                with: url,
-                placeholderImage: UIImage(named: "newSpeakeasy")
-            )
-        } else {
-            bgImage.image = UIImage(named: "newSpeakeasy")
-        }
-        
+        setUpData()
 //        setUpSegmentVC()
         showShimmer()
         getVenueDetails()
@@ -51,7 +39,7 @@ final class VenueVC: UIViewController {
     
     private func getVenueDetails() {
         presenter.getVenuesDetailForaMVP(
-            venueId: venueDetails?.uniqueId ?? "",
+            venueId: (venueDetails?.uniqueId ?? uniqueId) ?? "",
             venueTimeZone: venueDetails?.useTimezone ?? "",
             doormanId: ""
         ) { [weak self] isSuccess, errMsg, venueDetail in
@@ -61,6 +49,7 @@ final class VenueVC: UIViewController {
             if isSuccess, let venue = venueDetail {
                 self.venueDetails = venue
                 self.shimmerView?.stop()
+                setUpData()
                 setUpSegmentVC()
             } else {
                 Alert.showAlertSheet(
@@ -69,6 +58,21 @@ final class VenueVC: UIViewController {
                     message: ""
                 )
             }
+        }
+    }
+    
+    private func setUpData() {
+        venueName.text = venueDetails?.name ?? "Venue"
+        let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
+        self.venueLogo.sd_setImage(with: URL( string: logoUrl), completed: nil)
+        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        if let url = URL(string: imageUrlString) {
+            bgImage.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "newSpeakeasy")
+            )
+        } else {
+            bgImage.image = UIImage(named: "newSpeakeasy")
         }
     }
     
@@ -122,6 +126,11 @@ final class VenueVC: UIViewController {
     @IBAction func onClickBack(_ sender: Any) {
         Navigate.to.back(self)
     }
+    
+    @IBAction func onClickShare(_ sender: Any) {
+        let msgText = "Check out \(venueDetails?.name ?? "Venue") on Speakeasy. \(String(format: APIBuilder.venueWebURL, venueDetails?.name.lowercased().replacingOccurrences(of: " ", with: "-") ?? "Venue",  venueDetails?.uniqueId ?? "" )) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
+         Utility.main.shareSocialWith(text: msgText)
+    }
 }
 
 extension VenueVC: SJSegmentedViewControllerDelegate, ScrollCallBackDelegate {
@@ -133,8 +142,6 @@ extension VenueVC: SJSegmentedViewControllerDelegate, ScrollCallBackDelegate {
         
     }
 }
-
-
 
 final class VenueShimmerView: UIView {
     

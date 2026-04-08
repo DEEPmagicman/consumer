@@ -47,7 +47,7 @@ final class LandingVC: UIViewController {
     }
     
     @IBAction func onClickSearchBtn(_ sender: Any) {
-        
+        Navigate.to.gotoSearchVc(self)
     }
     
     private func showSegmentView(_ index: Int) {

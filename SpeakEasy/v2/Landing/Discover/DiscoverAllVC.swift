@@ -185,6 +185,13 @@ final class DiscoverAllVC: UIViewController {
         Navigate.to.allVenueVC(self)
     }
     
+    @IBAction func onClickDiscoverSeeAllBtn(_ sender: Any) {
+        Navigate.to.eventsListVC(self, screenType: .discoverExperiences)
+    }
+
+    @IBAction func onClickEventsSeeAllBtn(_ sender: Any) {
+        Navigate.to.eventsListVC(self, screenType: .allEvents)
+    }
     
 }
 

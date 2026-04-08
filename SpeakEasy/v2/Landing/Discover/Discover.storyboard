@@ -245,7 +245,7 @@
                 <viewControllerPlaceholder storyboardName="DiscoverDateFilterVC" id="cE1-uU-aCi" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IAR-sT-tyl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="314" y="556"/>
+            <point key="canvasLocation" x="511" y="556"/>
         </scene>
     </scenes>
     <resources>

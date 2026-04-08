@@ -15,7 +15,6 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     private var events: [Event] = []
     private var skip = 0
     private var hasMore = true
-    private var isLoading = false
     private var page = 1
     private var shimmerView: VenueEventsShimmerView?
     
@@ -47,10 +46,7 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     
     func getEvents() {
         
-        guard !isLoading else { return }
         guard hasMore else { return }
-        
-        isLoading = true
         
         VenuePresenter.getEventVenues(
             venueId: venueId,
@@ -105,16 +101,23 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
         Navigate.eventDetailsVC(self, event: event)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let height = scrollView.frame.size.height
-        
-        if offsetY > contentHeight - height - 100 {
+        if indexPath.row == events.count - 2 {
             getEvents()
         }
     }
+    
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        
+//        let offsetY = scrollView.contentOffset.y
+//        let contentHeight = scrollView.contentSize.height
+//        let height = scrollView.frame.size.height
+//        
+//        if offsetY > contentHeight - height - 100 {
+//            getEvents()
+//        }
+//    }
     
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: tableView)

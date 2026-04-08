@@ -543,6 +543,14 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
+    func eventsListVC(_ sender: UIViewController, screenType: EventsScreenType) {
+        let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
+        vc.screenType = screenType
+        sender.pushVC(vc)
+    }
     
-    
+    func gotoSearchVc(_ sender: UIViewController) {
+        let vc = StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }

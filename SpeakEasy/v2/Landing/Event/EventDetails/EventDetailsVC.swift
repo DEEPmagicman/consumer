@@ -96,6 +96,7 @@ class EventDetailsVC: UIViewController {
 
     var venueDetails: ClipVenue?
     var event: Event?
+    var uniqueId: String? = ""
     var promoteId = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
@@ -130,6 +131,7 @@ class EventDetailsVC: UIViewController {
 
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
+        getEventDetail()
 //        mainImg.hero.id = "event.image.\(heroIndex)"
 //          titleLbl.hero.id = "event.title.\(heroIndex)"
 //        
@@ -145,8 +147,6 @@ class EventDetailsVC: UIViewController {
         startFAQsTableObserver()
 
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-
-        getEventDetail()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -289,7 +289,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func getEventDetail() {
-        guard let eventId = self.event?.uniqueId else {
+        guard let eventId = self.event?.uniqueId ?? self.uniqueId else {
             return
         }
 
@@ -1242,6 +1242,22 @@ class EventDetailsVC: UIViewController {
         if let event = self.event {
             Navigate.to.tableCheckOutVC(self, event: event)
         }
+    }
+    
+    @IBAction func onClickShare(_ sender: Any) {
+        let venue = venueDetails?.name
+              .lowercased()
+              .replacingOccurrences(of: " ", with: "-") ?? ""
+          
+          let eventName = event?.title
+              .lowercased()
+              .replacingOccurrences(of: " ", with: "-") ?? ""
+          
+          let eventId = event?.uniqueId ?? event?.id ?? ""
+          
+          let url = "https://dev-consumer.speakeasygo.com/\(venue)/\(eventName)?eid=\(eventId)"
+          
+          Utility.main.shareSocialWith(text: url)
     }
 
     @IBAction func onClickWebSiteLinkView(_ sender: Any) {

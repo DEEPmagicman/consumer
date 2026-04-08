@@ -35,6 +35,8 @@
 		043722102F7292EE00E4F985 /* InstagramUsernamePopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437220F2F7292EE00E4F985 /* InstagramUsernamePopupVC.swift */; };
 		043722122F7294AA00E4F985 /* GuestListPopupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043722112F7294AA00E4F985 /* GuestListPopupCell.swift */; };
 		044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */; };
+		0443A7442F866C1B00158D26 /* EventsListVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0443A7432F866C1B00158D26 /* EventsListVC.xib */; };
+		0443A7452F866C1B00158D26 /* EventsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A7422F866C1B00158D26 /* EventsListVC.swift */; };
 		04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */; };
 		04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04473070295AB8CE0001F568 /* CardDetailsViewController.swift */; };
 		0450CF762F839AFD006C7A41 /* PremiumExperiencesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0450CF752F839AFD006C7A41 /* PremiumExperiencesVC.xib */; };
@@ -89,6 +91,10 @@
 		04A4331E2F442DFB00FB119A /* TablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331D2F442DFB00FB119A /* TablePresenter.swift */; };
 		04A433212F444B3800FB119A /* TableSeatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */; };
 		04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A433202F444B3800FB119A /* TableSeatingViewController.xib */; };
+		04AB758B2F862478001D76D0 /* SearchVenueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04AB758A2F862478001D76D0 /* SearchVenueTableViewCell.xib */; };
+		04AB758C2F862478001D76D0 /* SearchVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AB75892F862478001D76D0 /* SearchVenueTableViewCell.swift */; };
+		04AB758F2F862498001D76D0 /* SearchArtistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04AB758E2F862498001D76D0 /* SearchArtistTableViewCell.xib */; };
+		04AB75902F862498001D76D0 /* SearchArtistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AB758D2F862498001D76D0 /* SearchArtistTableViewCell.swift */; };
 		04AC62AD2B5142CA0034A9D3 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836529756E8600CB827B /* Event.swift */; };
 		04AC62AE2B5143130034A9D3 /* Flyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2986836729756EA600CB827B /* Flyer.swift */; };
 		04AE50A72F73CCB20080878C /* ImagePagerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AE50A62F73CCB20080878C /* ImagePagerVC.swift */; };
@@ -496,6 +502,8 @@
 		0437220F2F7292EE00E4F985 /* InstagramUsernamePopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramUsernamePopupVC.swift; sourceTree = "<group>"; };
 		043722112F7294AA00E4F985 /* GuestListPopupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestListPopupCell.swift; sourceTree = "<group>"; };
 		044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInBottomSheet.swift; sourceTree = "<group>"; };
+		0443A7422F866C1B00158D26 /* EventsListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListVC.swift; sourceTree = "<group>"; };
+		0443A7432F866C1B00158D26 /* EventsListVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventsListVC.xib; sourceTree = "<group>"; };
 		04473065295AAA7F0001F568 /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
 		04473070295AB8CE0001F568 /* CardDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardDetailsViewController.swift; sourceTree = "<group>"; };
 		0450CF742F839AFD006C7A41 /* PremiumExperiencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumExperiencesVC.swift; sourceTree = "<group>"; };
@@ -542,6 +550,10 @@
 		04A4331D2F442DFB00FB119A /* TablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablePresenter.swift; sourceTree = "<group>"; };
 		04A4331F2F444B3800FB119A /* TableSeatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableSeatingViewController.swift; sourceTree = "<group>"; };
 		04A433202F444B3800FB119A /* TableSeatingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableSeatingViewController.xib; sourceTree = "<group>"; };
+		04AB75892F862478001D76D0 /* SearchVenueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVenueTableViewCell.swift; sourceTree = "<group>"; };
+		04AB758A2F862478001D76D0 /* SearchVenueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchVenueTableViewCell.xib; sourceTree = "<group>"; };
+		04AB758D2F862498001D76D0 /* SearchArtistTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistTableViewCell.swift; sourceTree = "<group>"; };
+		04AB758E2F862498001D76D0 /* SearchArtistTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchArtistTableViewCell.xib; sourceTree = "<group>"; };
 		04AE50A62F73CCB20080878C /* ImagePagerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePagerVC.swift; sourceTree = "<group>"; };
 		04C2E9442F331D1C00C5D4FC /* VenueTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueTVC.swift; sourceTree = "<group>"; };
 		04C2E9452F331D1C00C5D4FC /* VenueTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueTVC.xib; sourceTree = "<group>"; };
@@ -907,6 +919,7 @@
 				045D2BF82F3A15F400842613 /* TicketConfirmation */,
 				04A202C72F36041300900A27 /* Ticket Checkout */,
 				0425E3C62F346071005E4130 /* EventDetails */,
+				0443A7412F866BB400158D26 /* EventList */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -968,6 +981,15 @@
 				0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */,
 			);
 			path = SkyFloatingLabelTextField;
+			sourceTree = "<group>";
+		};
+		0443A7412F866BB400158D26 /* EventList */ = {
+			isa = PBXGroup;
+			children = (
+				0443A7422F866C1B00158D26 /* EventsListVC.swift */,
+				0443A7432F866C1B00158D26 /* EventsListVC.xib */,
+			);
+			path = EventList;
 			sourceTree = "<group>";
 		};
 		0450CF732F839ADC006C7A41 /* PremiumExperiences */ = {
@@ -1114,6 +1136,35 @@
 				04A4331A2F442D9100FB119A /* Table.swift */,
 			);
 			path = TableModel;
+			sourceTree = "<group>";
+		};
+		04AB75862F8623DA001D76D0 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				CE45801D2EF94FEB00A873C4 /* Search.storyboard */,
+				CE45801F2EF94FFB00A873C4 /* SearchVC.swift */,
+				04AB75882F862436001D76D0 /* SearchArtistTVC */,
+				04AB75872F86241C001D76D0 /* SearchVenueTVC */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		04AB75872F86241C001D76D0 /* SearchVenueTVC */ = {
+			isa = PBXGroup;
+			children = (
+				04AB75892F862478001D76D0 /* SearchVenueTableViewCell.swift */,
+				04AB758A2F862478001D76D0 /* SearchVenueTableViewCell.xib */,
+			);
+			path = SearchVenueTVC;
+			sourceTree = "<group>";
+		};
+		04AB75882F862436001D76D0 /* SearchArtistTVC */ = {
+			isa = PBXGroup;
+			children = (
+				04AB758D2F862498001D76D0 /* SearchArtistTableViewCell.swift */,
+				04AB758E2F862498001D76D0 /* SearchArtistTableViewCell.xib */,
+			);
+			path = SearchArtistTVC;
 			sourceTree = "<group>";
 		};
 		04C2E9432F331CA000C5D4FC /* VenueTVC */ = {
@@ -2085,10 +2136,9 @@
 				CE45800D2EF944A700A873C4 /* LandingVC.swift */,
 				CE45801B2EF94FB800A873C4 /* Photos.storyboard */,
 				CE4580192EF94F9D00A873C4 /* PhotosVC.swift */,
-				CE45801D2EF94FEB00A873C4 /* Search.storyboard */,
-				CE45801F2EF94FFB00A873C4 /* SearchVC.swift */,
 				CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */,
 				CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */,
+				04AB75862F8623DA001D76D0 /* Search */,
 				046AA2382F84E50500961C9B /* Orders */,
 				CEE02DA62EFB939F00AC7756 /* Discover */,
 				CE0762DE2EFA9C0300670694 /* Location */,
@@ -2446,6 +2496,7 @@
 				04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */,
 				6AF2B9EF2F0BC0CA00069A90 /* TablesListVC.xib in Resources */,
 				CE901FFF2F6D2544008727A4 /* VenueExperiencesVC.xib in Resources */,
+				04AB758B2F862478001D76D0 /* SearchVenueTableViewCell.xib in Resources */,
 				82847A792982485B00611DC4 /* Home.storyboard in Resources */,
 				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
 				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
@@ -2454,6 +2505,7 @@
 				CEC6D6D22EF92B1C00A05672 /* Landing.storyboard in Resources */,
 				047B3B212F714A4B0085B3FC /* CustomQuestionDropdownCell.xib in Resources */,
 				048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */,
+				0443A7442F866C1B00158D26 /* EventsListVC.xib in Resources */,
 				CE0BA9302F6C158800AB8996 /* VenueEventsVC.xib in Resources */,
 				CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */,
 				6AF2B9E72F0BA1EC00069A90 /* Inter-Bold.ttf in Resources */,
@@ -2470,6 +2522,7 @@
 				CE0762E22EFA9C1F00670694 /* SelectLocationVC.xib in Resources */,
 				04E254C92BFF490B00505774 /* PaymentTableViewCell.xib in Resources */,
 				CAC4140A28A478050007BA86 /* MonthCollectionViewCell.xib in Resources */,
+				04AB758F2F862498001D76D0 /* SearchArtistTableViewCell.xib in Resources */,
 				CE096D1129F6800300D6BA43 /* GoogleService-Info.plist in Resources */,
 				E16705AC28CA6B6E00644BF0 /* CitySelectionTableCell.xib in Resources */,
 				CE6813DC29DEEECE00B41418 /* TicketDetailTVC.xib in Resources */,
@@ -2668,6 +2721,7 @@
 				04A202F52F36060D00900A27 /* FAQsTableViewCell.swift in Sources */,
 				6AF2B9FB2F0BC9EF00069A90 /* TableRequestVC.swift in Sources */,
 				040F377A2F52EDAF00473EBC /* SignUpDetailsViewController.swift in Sources */,
+				04AB758C2F862478001D76D0 /* SearchVenueTableViewCell.swift in Sources */,
 				82847A8629828BA600611DC4 /* TicketTypeTableViewCell.swift in Sources */,
 				CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
@@ -2779,6 +2833,7 @@
 				BD1008DA2940C188003B4931 /* VerificationCodeViewController.swift in Sources */,
 				0436D0962959848A0087D3DB /* SkyFloatingLabelTextFieldWithIcon.swift in Sources */,
 				CE0762E62EFAA41200670694 /* SelectLocationTVC.swift in Sources */,
+				04AB75902F862498001D76D0 /* SearchArtistTableViewCell.swift in Sources */,
 				045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */,
 				043722102F7292EE00E4F985 /* InstagramUsernamePopupVC.swift in Sources */,
 				CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */,
@@ -2856,6 +2911,7 @@
 				6AF2BA002F0BE0CA00069A90 /* TableListTVC.swift in Sources */,
 				043722122F7294AA00E4F985 /* GuestListPopupCell.swift in Sources */,
 				04A202CB2F36041300900A27 /* TicketsTVC.swift in Sources */,
+				0443A7452F866C1B00158D26 /* EventsListVC.swift in Sources */,
 				04A202CC2F36041300900A27 /* TicketSelectionViewController.swift in Sources */,
 				04A202CD2F36041300900A27 /* TicketCheckoutVC.swift in Sources */,
 				CE0BA9332F6C183C00AB8996 /* VenueEventTVC.swift in Sources */,
@@ -2933,7 +2989,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 247;
+				CURRENT_PROJECT_VERSION = 248;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -2971,7 +3027,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 247;
+				CURRENT_PROJECT_VERSION = 248;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3135,7 +3191,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 247;
+				CURRENT_PROJECT_VERSION = 248;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3230,7 +3286,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 247;
+				CURRENT_PROJECT_VERSION = 248;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
