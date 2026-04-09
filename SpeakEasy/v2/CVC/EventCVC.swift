@@ -18,6 +18,7 @@ final class EventCVC: UICollectionViewCell {
     func setupData(event: Event) {
         bgImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         bgImage.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+        venueName.text = event.venue?.name
         eventTitleLbl.text = event.title.uppercased()
         
         if let customText = event.openTimeCustomText,

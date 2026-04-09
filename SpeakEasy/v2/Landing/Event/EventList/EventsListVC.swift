@@ -118,6 +118,11 @@ class EventsListVC: UIViewController {
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
+    
+    @IBAction func onClickDateBtn(_ sender: Any) {
+        
+    }
+    
 }
 
 extension EventsListVC: UICollectionViewDelegate, UICollectionViewDataSource {

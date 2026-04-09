@@ -206,7 +206,7 @@ private extension Tables3DMapVC {
 
     func fetchLayOut() {
         TablePresenter.getConsumerLayout(
-            date: "2026-03-31",
+            date: "2026-04-09",
             venueId: event?.venue?.id ?? ""
         ) { [weak self] ok, msg, layout in
             guard let self else { return }
@@ -351,100 +351,6 @@ private extension Tables3DMapVC {
 // FIX: GLTF meshes and nodes are independent arrays; we must walk the node tree
 // to find which node references which mesh, instead of using parallel indexing.
 
-private extension Tables3DMapVC {
-
-    func buildMeshSeatingMap(asset: GLTFAsset) {
-        seatingAreaByMeshName.removeAll()
-
-        // Build a map: meshIndex → extras from every node that uses that mesh.
-        // A single mesh can be instanced by multiple nodes, so we merge extras.
-        var extrasByMeshIndex: [Int: [String: Any]] = [:]
-
-        func visitNode(_ node: GLTFNode) {
-            if let meshIndex = asset.meshes.firstIndex(where: { $0 === node.mesh }) {
-                let nodeExtras = normalizeExtras(node.extras)
-                if extrasByMeshIndex[meshIndex] == nil {
-                    extrasByMeshIndex[meshIndex] = nodeExtras
-                } else {
-                    // Merge: node extras take priority
-                    extrasByMeshIndex[meshIndex]?.merge(nodeExtras) { _, new in new }
-                }
-            }
-//            node.children?.forEach { visitNode($0) }
-        }
-        asset.scenes.forEach { scene in
-            scene.nodes.forEach { visitNode($0) }
-        }
-
-        for (index, mesh) in asset.meshes.enumerated() {
-            guard let meshName = mesh.name else { continue }
-
-            let meshExtras = normalizeExtras(mesh.extras)
-            let nodeExtras = extrasByMeshIndex[index] ?? [:]
-            // Mesh-level extras take priority over node extras for tagging
-            let extras = nodeExtras.merging(meshExtras) { _, new in new }
-
-            parseMeshExtras(extras, meshName: meshName)
-        }
-    }
-
-    /// Centralised logic that maps a mesh's extras dict → SeatingAreaDTO entry.
-    private func parseMeshExtras(_ extras: [String: Any], meshName: String) {
-
-        func str(_ keys: [String]) -> String? {
-            for key in keys {
-                if let v = extras[key] as? String,
-                   !v.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return v }
-                if let v = extras[key] as? NSString {
-                    let s = v as String
-                    if !s.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return s }
-                }
-            }
-            return nil
-        }
-
-        func has(_ keys: [String]) -> Bool { keys.contains { extras[$0] != nil } }
-
-        // ── DJ booth ──────────────────────────────────────────────────────────
-        if has(["djtag", "djboottag", "dj", "djboot", "dj_booth"]) {
-            seatingAreaByMeshName[meshName] = SeatingAreaDTO(
-                id: nil, parentSeatingAreaId: nil,
-                name: "DJ", highlight: nil, maxGuest: nil, isDJBoot: true
-            )
-            return
-        }
-
-        // ── Parent seating tag (links mesh → parent seating area) ─────────────
-        if let parentId = str(["seatingareatag", "seating_area_tag", "seatingAreaTag",
-                                "parentseatingareaid", "parent_seating_area_id"]) {
-            let area = seatingAreaById[parentId]
-            seatingAreaByMeshName[meshName] = SeatingAreaDTO(
-                id:                   area?.id    ?? parentId,
-                parentSeatingAreaId:  area?.id    ?? parentId,
-                name:                 area?.name  ?? "Seating \(parentId)",
-                highlight:            area?.highlight,
-                maxGuest:             area?.maxGuest,
-                isDJBoot: false
-            )
-            return
-        }
-
-        // ── Child / seat tag ──────────────────────────────────────────────────
-        if let childId = str(["seatingareaid", "seating_area_id", "seatingAreaId",
-                               "seatId", "seat_id"]) {
-            let area = seatingAreaById[childId]
-            seatingAreaByMeshName[meshName] = SeatingAreaDTO(
-                id:                   area?.id   ?? childId,
-                parentSeatingAreaId:  nil,
-                name:                 area?.name ?? "Seating \(childId)",
-                highlight:            area?.highlight,
-                maxGuest:             area?.maxGuest,
-                isDJBoot: false
-            )
-        }
-    }
-}
-
 // MARK: - Gestures
 
 private extension Tables3DMapVC {
@@ -483,27 +389,21 @@ private extension Tables3DMapVC {
         SCNTransaction.commit()
     }
 
-    // ── Pan: orbit around pivot ───────────────────────────────────────────────
-    // FIX: sensitivity is now proportional to orthographic scale so it feels
-    // consistent regardless of zoom level.
-    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-        let delta       = gesture.translation(in: sceneView)
-        gesture.setTranslation(.zero, in: sceneView)
+        @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+            let delta = gesture.translation(in: sceneView)
+            gesture.setTranslation(.zero, in: sceneView)
 
-        let orthoScale  = Float(cameraNode.camera?.orthographicScale ?? 20)
-        let viewWidth   = Float(max(sceneView.bounds.width, 1))
-        // Pixels-to-radians: one full swipe across the screen rotates ~180°
-        let sensitivity = (2 * Float.pi * orthoScale) / (viewWidth * orthoScale)
+            let viewWidth = Float(max(sceneView.bounds.width, 1))
+            // ✅ Simple constant sensitivity: full screen swipe ≈ 180°
+            let sensitivity: Float = Float.pi / viewWidth
 
-        currentYaw   -= Float(delta.x) * sensitivity
-        currentPitch -= Float(delta.y) * sensitivity
+            currentYaw   -= Float(delta.x) * sensitivity
+            currentPitch -= Float(delta.y) * sensitivity
 
-        // Clamp pitch so model never flips
-        currentPitch = currentPitch.clamped(to: -Float.pi / 2 ... -Float.pi / 20)
-        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
-    }
+            currentPitch = currentPitch.clamped(to: -Float.pi / 2 ... -Float.pi / 20)
+            cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+        }
 
-    // ── Pinch: zoom (orthographic scale) ─────────────────────────────────────
     @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
         guard let cam = cameraNode.camera else { return }
         let newScale = cam.orthographicScale * Double(1 / gesture.scale)
@@ -511,335 +411,406 @@ private extension Tables3DMapVC {
         gesture.scale = 1
     }
 
-    // ── Single tap: select a pin ──────────────────────────────────────────────
-    // FIX: search both "pin" name AND SeatingMeta on any ancestor, not just
-    // nodes named "pin", so geometry-level hits still resolve correctly.
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-        let point = gesture.location(in: sceneView)
+            let point = gesture.location(in: sceneView)
 
-        let hits = sceneView.hitTest(point, options: [
-            SCNHitTestOption.searchMode:       SCNHitTestSearchMode.all.rawValue,
-            SCNHitTestOption.boundingBoxOnly:  false,
-            SCNHitTestOption.ignoreHiddenNodes: true
-        ])
+            let hits = sceneView.hitTest(point, options: [
+                SCNHitTestOption.searchMode:        SCNHitTestSearchMode.all.rawValue,
+                SCNHitTestOption.boundingBoxOnly:   false,
+                SCNHitTestOption.ignoreHiddenNodes: true
+            ])
 
-        // Walk up hierarchy to find the first node that carries SeatingMeta
-        guard let pin = hits.lazy
-            .compactMap({ result -> SCNNode? in
-                var n: SCNNode? = result.node
-                while let node = n {
-                    if node.seatingMeta != nil { return node }
-                    n = node.parent
+            guard let pin = hits.lazy
+                .compactMap({ result -> SCNNode? in
+                    var n: SCNNode? = result.node
+                    while let node = n {
+                        if node.seatingMeta != nil { return node }
+                        n = node.parent
+                    }
+                    return nil
+                })
+                .first,
+                  let meta = pin.seatingMeta
+            else { return }
+
+            // ✅ Deselect previous pin
+            if let prevId = selectedSeatingId {
+                updatePinColor(nodeNamed: prevId, color: PinStyle.normalColor, in: sceneView.scene)
+            }
+
+            selectedSeatingId = meta.seatingAreaId
+
+            // ✅ Highlight newly selected pin
+            updatePinColor(nodeNamed: meta.seatingAreaId, color: PinStyle.selectedColor, in: sceneView.scene)
+
+            print("✅ Tapped seating:", meta.name, "id:", meta.seatingAreaId)
+        }
+    
+    private func updatePinColor(nodeNamed id: String, color: UIColor, in scene: SCNScene?) {
+        scene?.rootNode.enumerateHierarchy { node, _ in
+            guard let meta = node.seatingMeta, meta.seatingAreaId == id else { return }
+            // Recolor the flat circle child
+            node.childNodes
+                .first(where: { $0.name == "circle" || $0.geometry is SCNPlane })?
+                .geometry?.materials.first?.diffuse.contents = color
+
+            // Also show/hide wave with new color
+            node.childNodes
+                .first(where: { $0.name == "wave" })?
+                .geometry?.materials.first?.diffuse.contents = color.withAlphaComponent(0.6)
+        }
+    }
+    
+    func buildMeshSeatingMap(asset: GLTFAsset) {
+
+            var meshIndexToNodeExtras: [Int: [String: Any]] = [:]
+            for node in asset.nodes {
+                if let meshIndex = asset.meshes.firstIndex(where: { $0 === node.mesh }) {
+                    meshIndexToNodeExtras[meshIndex] = normalizeExtras(node.extras)
                 }
-                return nil
-            })
-            .first,
-              let meta = pin.seatingMeta
-        else { return }
+            }
 
-        resetAllDots()
-        setPinSelected(pin, color: PinStyle.selectedColor)
-        selectedSeatingId = meta.seatingAreaId
-        setChildPinColor(meta.seatingAreaId, color: PinStyle.selectedColor)
-    }
+            for (index, mesh) in asset.meshes.enumerated() {
+                guard let meshName = mesh.name else { continue }
+
+                let meshExtras = normalizeExtras(mesh.extras)
+                let nodeExtras = meshIndexToNodeExtras[index] ?? [:]
+                let extras = nodeExtras.merging(meshExtras) { _, mesh in mesh }
+
+                var dto: SeatingAreaDTO?
+
+                if extras["djtag"] != nil || extras["djboottag"] != nil {
+                    dto = SeatingAreaDTO(
+                        id: nil, parentSeatingAreaId: nil,
+                        name: "DJ", highlight: nil, maxGuest: nil, isDJBoot: true
+                    )
+                } else if let tag = extras["seatingareatag"] as? String,
+                          let area = seatingAreaById[tag] {
+                    dto = SeatingAreaDTO(
+                        id: area.id,
+                        parentSeatingAreaId: area.parentSeatingAreaId,
+                        name: area.name,
+                        highlight: area.highlight,
+                        maxGuest: area.maxGuest,
+                        isDJBoot: false
+                    )
+                } else if let id = extras["seatingareaid"] as? String, !id.isEmpty {
+                    let area = seatingAreaById[id]
+                    dto = SeatingAreaDTO(
+                        id: area?.id ?? id,
+                        parentSeatingAreaId: area?.parentSeatingAreaId,
+                        name: area?.name ?? "Seating \(id)",
+                        highlight: area?.highlight,
+                        maxGuest: area?.maxGuest,
+                        isDJBoot: false
+                    )
+                }
+
+                if let dto {
+                    seatingAreaByMeshName[meshName] = dto
+                    print("🧩 Mesh mapped:", meshName, "→", dto.name ?? "?", "parentId:", dto.parentSeatingAreaId ?? "nil")
+                }
+            }
+        }
 }
 
-// MARK: - Dot Selection
-
 private extension Tables3DMapVC {
-
-    func resetAllDots() {
-        sceneView.scene?.rootNode.enumerateChildNodes { node, _ in
-            if node.name == "pin" {
-                self.updateCircle(node, color: PinStyle.normalColor)
-            }
-        }
-        if let id = selectedSeatingId {
-            setChildPinColor(id, color: .clear)
-            selectedSeatingId = nil
-        }
-    }
-
-    func setPinSelected(_ pin: SCNNode, color: UIColor) {
-        updateCircle(pin, color: color)
-    }
-
-    func setChildPinColor(_ seatingId: String, color: UIColor) {
-        sceneView.scene?.rootNode.enumerateChildNodes { node, _ in
-            if node.name == seatingId,
-               let plane = node.geometry as? SCNPlane {
-                plane.firstMaterial?.diffuse.contents = color
-                node.isHidden = (color == .clear)
-            }
-        }
-    }
-
-    func updateCircle(_ node: SCNNode, color: UIColor) {
-        guard let circle   = node.childNode(withName: "circle", recursively: true),
-              let plane    = circle.geometry as? SCNPlane else { return }
-        plane.firstMaterial?.diffuse.contents = color
-
-        if let wave      = circle.childNode(withName: "wave", recursively: true),
-           let wavePlane = wave.geometry as? SCNPlane {
-            wavePlane.firstMaterial?.diffuse.contents = color
-        }
-    }
-}
-
-// MARK: - Render Pins / Labels
-
-private extension Tables3DMapVC {
-
-    func renderParentDots(scene: SCNScene) {
-        var rendered = Set<String>()
-
-        // FIX: check BOTH node.name and geometry.name when looking up seating area,
-        // because GLTF importers don't always copy the mesh name onto the node.
-        scene.rootNode.enumerateHierarchy { node, _ in
-            let lookupName = node.geometry?.name
-                          ?? node.name
-                          ?? ""
-            guard let seating = self.seatingAreaByMeshName[lookupName] else { return }
-
-            let center = self.worldCenter(of: node)
-
-            if seating.isDJBoot {
-                scene.rootNode.addChildNode(self.makeDJDot(position: center))
-                return
-            }
-
-            if let parentId = seating.parentSeatingAreaId {
-                guard !rendered.contains(parentId) else { return }
-                rendered.insert(parentId)
-                scene.rootNode.addChildNode(
-                    self.makeParentDot(position: center, seatingArea: seating)
-                )
-            } else if let id = seating.id {
-                guard !rendered.contains(id) else { return }
-                rendered.insert(id)
-                scene.rootNode.addChildNode(
-                    self.makeChildDot(position: center, seatingArea: seating)
-                )
-            }
-        }
-    }
-
-    // ── DJ Booth pin ──────────────────────────────────────────────────────────
+    
     func makeDJDot(position: simd_float3) -> SCNNode {
-        let root    = SCNNode()
+        
+        let root = SCNNode()
         root.simdPosition = position + simd_float3(0, 1.0, 0)
-        root.name   = "dj-pin"
-
-        let uiNode  = makeBillboardNode()
-        let gold    = PinStyle.djGold
-
+        root.name = "dj-pin"
+        
+        let uiNode = makeBillboardNode()
+        
+        let gold = PinStyle.djGold
+        
+        // Outer wave
         let waveGeo = SCNPlane(width: 0.8, height: 0.8)
         waveGeo.cornerRadius = 0.4
-        waveGeo.materials    = [constantMaterial(color: gold.withAlphaComponent(0.7))]
+        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.7))]
+        
         let wave = SCNNode(geometry: waveGeo)
         wave.position.z = -0.001
         addWaveAnimation(to: wave)
         uiNode.addChildNode(wave)
-
-        let outerRing = SCNNode(geometry: SCNTorus(ringRadius: 0.60, pipeRadius: 0.030))
+        
+        // Outer ring
+        let outerRing = SCNNode(
+            geometry: SCNTorus(ringRadius: 0.60, pipeRadius: 0.030)
+        )
+        outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         outerRing.eulerAngles.x = -.pi / 2
-        outerRing.position.z    = 0.002
+        outerRing.position.z = 0.002
         uiNode.addChildNode(outerRing)
-
-        let innerRing = SCNNode(geometry: SCNTorus(ringRadius: 0.40, pipeRadius: 0.025))
+        
+        // Inner ring
+        let innerRing = SCNNode(
+            geometry: SCNTorus(ringRadius: 0.40, pipeRadius: 0.025)
+        )
+        innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         innerRing.eulerAngles.x = -.pi / 2
-        innerRing.position.z    = 0.004
+        innerRing.position.z = 0.004
         uiNode.addChildNode(innerRing)
-
-        let fill = SCNNode(geometry: SCNCylinder(radius: 0.34, height: 0.01))
+        
+        // Inner fill
+        let fill = SCNNode(
+            geometry: SCNCylinder(radius: 0.34, height: 0.01)
+        )
         fill.geometry?.materials = [constantMaterial(color: gold)]
         fill.eulerAngles.x = -.pi / 2
-        fill.position.z    = 0.006
+        fill.position.z = 0.006
         uiNode.addChildNode(fill)
-
+        
+        // DJ text
         let textGeo = SCNText(string: "DJ", extrusionDepth: 0)
-        textGeo.font     = .boldSystemFont(ofSize: 12)
+        textGeo.font = .boldSystemFont(ofSize: 12)
         textGeo.flatness = 0.2
         textGeo.materials = [constantMaterial(color: UIColor.white)]
-
+        
         let textNode = SCNNode(geometry: textGeo)
-        let (tMin, tMax) = textGeo.boundingBox
+        let (min, max) = textGeo.boundingBox
         textNode.pivot = SCNMatrix4MakeTranslation(
-            tMin.x + (tMax.x - tMin.x) / 2,
-            tMin.y + (tMax.y - tMin.y) / 2,
+            min.x + (max.x - min.x) / 2,
+            min.y + (max.y - min.y) / 2,
             0
         )
-        textNode.scale           = SCNVector3(0.035, 0.035, 0.035)
-        textNode.position.z      = 0.035
-        textNode.renderingOrder  = 1_000
+        textNode.scale = SCNVector3(0.035, 0.035, 0.035)
+        textNode.position.z = 0.035
+        textNode.renderingOrder = 1000
         uiNode.addChildNode(textNode)
-
+        
         root.addChildNode(uiNode)
         return root
     }
-
-    // ── Child (seat-level) pin ────────────────────────────────────────────────
+    
     func makeChildDot(position: simd_float3, seatingArea: SeatingAreaDTO) -> SCNNode {
+        
         let root = SCNNode()
         root.simdPosition = position + simd_float3(0, 0.2, 0)
-
-        let uiNode  = makeBillboardNode()
+        
+        let uiNode = makeBillboardNode()
         uiNode.name = "pin"
-
+        
         let circleGeo = SCNPlane(width: 0.20, height: 0.20)
         circleGeo.cornerRadius = 0.1
-        circleGeo.materials    = [constantMaterial(color: UIColor.clear)]
-
-        let circle      = SCNNode(geometry: circleGeo)
-        circle.name     = seatingArea.id ?? ""
+        circleGeo.materials = [constantMaterial(color: UIColor.clear)]
+        
+        let circle = SCNNode(geometry: circleGeo)
+        circle.name = seatingArea.id ?? ""
         uiNode.addChildNode(circle)
-
+        
         let waveGeo = SCNPlane(width: 0.2, height: 0.2)
         waveGeo.cornerRadius = 0.1
-        waveGeo.materials    = [constantMaterial(color: PinStyle.normalColor.withAlphaComponent(0.6))]
-
-        let wave        = SCNNode(geometry: waveGeo)
-        wave.name       = seatingArea.id ?? ""
+        waveGeo.materials = [
+            constantMaterial(color: PinStyle.normalColor.withAlphaComponent(0.6))
+        ]
+        
+        let wave = SCNNode(geometry: waveGeo)
         wave.position.z = -0.001
-        wave.isHidden   = true
+        wave.isHidden = true
+        wave.name = seatingArea.id ?? ""
         addWaveAnimation(to: wave)
         uiNode.addChildNode(wave)
-
-        // FIX: attach meta to uiNode (which is named "pin") not to the root wrapper
+        
         uiNode.seatingMeta = SeatingMeta(
             seatingAreaId: seatingArea.id ?? "",
-            name:          seatingArea.name ?? "",
-            parentId:      seatingArea.parentSeatingAreaId ?? "",
-            maxGuest:      seatingArea.maxGuest ?? 0
+            name: seatingArea.name ?? "",
+            parentId: seatingArea.parentSeatingAreaId ?? "",
+            maxGuest: seatingArea.maxGuest ?? 0
         )
-
+        
         root.addChildNode(uiNode)
         return root
     }
+    
+        func makeParentDot(position: simd_float3, seatingArea: SeatingAreaDTO) -> SCNNode {
 
-    // ── Parent (table/area) pin with label card ───────────────────────────────
-    func makeParentDot(position: simd_float3, seatingArea: SeatingAreaDTO) -> SCNNode {
-        let root = SCNNode()
-        root.simdPosition = position + simd_float3(0, 0.8, 0)
+            let root = SCNNode()
+            root.simdPosition = position + simd_float3(0, 0.8, 0)
 
-        let uiNode  = makeBillboardNode()
-        uiNode.name = "pin"
+            let uiNode = makeBillboardNode()
+            uiNode.name = "pin"
 
-        let circle = makeFlatCircle(color: PinStyle.normalColor)
-        circle.name = "circle"
-        uiNode.addChildNode(circle)
+            let circle = makeFlatCircle(color: PinStyle.normalColor)
+            circle.name = "circle"
+            uiNode.addChildNode(circle)
 
-        let line = makeStraightLine(height: 0.8)
-        line.position = SCNVector3(0, 0.7, 0)
-        uiNode.addChildNode(line)
+            let line = makeStraightLine(height: 0.8)
+            uiNode.addChildNode(line)
 
-        let label = makeLabelCard(title: seatingArea.name ?? "", guests: seatingArea.maxGuest ?? 0)
-        label.position = SCNVector3(0, 1.9, 0)
-        uiNode.addChildNode(label)
+            let label = makeLabelCard(
+                title: seatingArea.name ?? "",
+                guests: seatingArea.maxGuest ?? 0
+            )
+            label.position = SCNVector3(0, 1.9, 0)
+            uiNode.addChildNode(label)
 
-        // FIX: attach meta to uiNode, the node actually named "pin"
-        uiNode.seatingMeta = SeatingMeta(
-            seatingAreaId: seatingArea.parentSeatingAreaId ?? "",
-            name:          seatingArea.name ?? "",
-            parentId:      seatingArea.parentSeatingAreaId ?? "",
-            maxGuest:      seatingArea.maxGuest ?? 0
-        )
+            uiNode.seatingMeta = SeatingMeta(
+                seatingAreaId: seatingArea.id ?? seatingArea.parentSeatingAreaId ?? "",
+                name: seatingArea.name ?? "",
+                parentId: seatingArea.parentSeatingAreaId ?? "",
+                maxGuest: seatingArea.maxGuest ?? 0
+            )
 
-        root.addChildNode(uiNode)
-        return root
-    }
+            root.addChildNode(uiNode)
+            return root
+        }
+    
+    func renderParentDots(scene: SCNScene) {
+           var renderedParents = Set<String>()
 
+           scene.rootNode.enumerateHierarchy { node, _ in
+               guard
+                   let geoName = node.geometry?.name,
+                   let seating = self.seatingAreaByMeshName[geoName]
+               else { return }
+
+               let center = self.worldCenter(of: node)
+
+               if seating.isDJBoot {
+                   scene.rootNode.addChildNode(self.makeDJDot(position: center))
+                   return
+               }
+
+               if let parentId = seating.parentSeatingAreaId, !parentId.isEmpty {
+                   // This mesh belongs to a group — render one parent dot per group
+                   guard !renderedParents.contains(parentId) else { return }
+                   renderedParents.insert(parentId)
+                   scene.rootNode.addChildNode(
+                       self.makeParentDot(position: center, seatingArea: seating)
+                   )
+               } else if let id = seating.id, !id.isEmpty {
+                   // Top-level / standalone seating area
+                   guard !renderedParents.contains(id) else { return }
+                   renderedParents.insert(id)
+                   scene.rootNode.addChildNode(
+                       self.makeChildDot(position: center, seatingArea: seating)
+                   )
+               }
+           }
+       }
+    
     func makeFlatCircle(color: UIColor) -> SCNNode {
+        
         let geo = SCNPlane(width: 0.60, height: 0.60)
         geo.cornerRadius = 0.30
-        geo.materials    = [constantMaterial(color: color)]
-
+        geo.materials = [
+            constantMaterial(color: color)
+        ]
+        
         let node = SCNNode(geometry: geo)
-
+        
+        // Wave
         let waveGeo = SCNPlane(width: 0.60, height: 0.60)
         waveGeo.cornerRadius = 0.30
-        waveGeo.materials    = [constantMaterial(color: PinStyle.normalColor.withAlphaComponent(0.6))]
-
-        let wave      = SCNNode(geometry: waveGeo)
-        wave.name     = "wave"
+        waveGeo.materials = [
+            constantMaterial(
+                color: PinStyle.normalColor.withAlphaComponent(0.6)
+            )
+        ]
+        
+        let wave = SCNNode(geometry: waveGeo)
+        wave.name = "wave"
         wave.position.z = -0.001
         node.addChildNode(wave)
-
+        
         addWaveAnimation(to: wave)
-        node.constraints = [makeBillboardConstraint()]
+        
+        let billboard = SCNBillboardConstraint()
+        billboard.freeAxes = [.X, .Y, .Z]
+        node.constraints = [billboard]
+        
         return node
     }
+    
+    // MARK: - makeStraightLine: remove the double Y offset
 
-    func makeStraightLine(height: CGFloat) -> SCNNode {
-        let geo = SCNPlane(width: 0.035, height: height)
-        geo.materials = [constantMaterial(color: UIColor.white)]
+        func makeStraightLine(height: CGFloat) -> SCNNode {
+            let geo = SCNPlane(width: 0.035, height: height)
+            geo.materials = [constantMaterial(color: UIColor.white)]
 
-        let node = SCNNode(geometry: geo)
-        node.position    = SCNVector3(0, Float(height / 2), 0)
-        node.constraints = [makeBillboardConstraint()]
-        return node
-    }
+            let node = SCNNode(geometry: geo)
+            // ✅ SCNPlane is centered at origin — no position offset needed here
+            // The caller places the node at the right world position
 
-    // FIX: replaced arbitrary /80 divisor with a scale that is proportional to
-    // the scene's bounding-box size so labels look correct on any model.
+            let billboard = SCNBillboardConstraint()
+            billboard.freeAxes = [.X, .Y, .Z]
+            node.constraints = [billboard]
+
+            return node
+        }
+    
     func makeLabelCard(title: String, guests: Int) -> SCNNode {
+        
         let padding: CGFloat = 14
-
-        let titleLabel       = UILabel()
-        titleLabel.text      = title
-        titleLabel.font      = .boldSystemFont(ofSize: 42)
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .boldSystemFont(ofSize: 42)
         titleLabel.textColor = .white
         titleLabel.sizeToFit()
-
-        let guestsLabel       = UILabel()
-        guestsLabel.text      = "\(guests) Guests"
-        guestsLabel.font      = .systemFont(ofSize: 32, weight: .medium)
+        
+        let guestsLabel = UILabel()
+        guestsLabel.text = "\(guests) Guests"
+        guestsLabel.font = .systemFont(ofSize: 32, weight: .medium)
         guestsLabel.textColor = .white
         guestsLabel.sizeToFit()
-
+        
         let dot = UIView(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
-        dot.backgroundColor    = PinStyle.normalColor
+        dot.backgroundColor = PinStyle.normalColor
         dot.layer.cornerRadius = 9
-
+        
         let rowWidth = dot.frame.width + 8 + guestsLabel.bounds.width
-        let width    = max(titleLabel.bounds.width, rowWidth) + padding * 2
-        let height   = titleLabel.bounds.height + guestsLabel.bounds.height + padding * 2 + 8
-
+        let width = max(titleLabel.bounds.width, rowWidth) + padding * 2
+        let height = titleLabel.bounds.height + guestsLabel.bounds.height + padding * 2 + 8
+        
         let container = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-        container.backgroundColor    = UIColor.black.withAlphaComponent(0.8)
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         container.layer.cornerRadius = 16
-        container.layer.borderWidth  = 2
-        container.layer.borderColor  = UIColor.white.cgColor
-
-        titleLabel.frame.origin = CGPoint(x: (width - titleLabel.bounds.width) / 2, y: padding)
+        container.layer.borderWidth = 2
+        container.layer.borderColor = UIColor.white.cgColor
+        
+        titleLabel.frame.origin = CGPoint(
+            x: (width - titleLabel.bounds.width) / 2,
+            y: padding
+        )
         container.addSubview(titleLabel)
-
-        dot.frame.origin = CGPoint(x: (width - rowWidth) / 2, y: titleLabel.frame.maxY + 8)
+        
+        dot.frame.origin = CGPoint(
+            x: (width - rowWidth) / 2,
+            y: titleLabel.frame.maxY + 8
+        )
         container.addSubview(dot)
-
+        
         guestsLabel.frame.origin = CGPoint(
             x: dot.frame.maxX + 8,
             y: dot.frame.midY - guestsLabel.bounds.height / 2
         )
         container.addSubview(guestsLabel)
-
+        
         let renderer = UIGraphicsImageRenderer(size: container.bounds.size)
-        let image    = renderer.image { ctx in container.layer.render(in: ctx.cgContext) }
-
-        // Use scene scale to size the plane correctly (fallback: treat 1 unit ≈ real-world metre)
-        let sceneWidth  = sceneBounds.map { Float($0.max.x - $0.min.x) } ?? 10
-        let sceneScale  = CGFloat(max(sceneWidth, 1)) / 100   // heuristic: label ~1 % of scene width
-        let planeWidth  = (width  / 300) * sceneScale * 100
-        let planeHeight = (height / 300) * sceneScale * 100
-
-        let plane = SCNPlane(width: planeWidth, height: planeHeight)
-        plane.materials = [constantMaterial(color: image)]
-
-        let node        = SCNNode(geometry: plane)
-        node.constraints = [makeBillboardConstraint()]
+        let image = renderer.image { ctx in
+            container.layer.render(in: ctx.cgContext)
+        }
+        
+        let plane = SCNPlane(width: width / 80, height: height / 80)
+        plane.materials = [
+            constantMaterial(color: image)
+        ]
+        
+        let node = SCNNode(geometry: plane)
+        
+        let billboard = SCNBillboardConstraint()
+        billboard.freeAxes = [.X, .Y, .Z]
+        node.constraints = [billboard]
+        
         return node
     }
 }
+
+
 
 // MARK: - Camera / Lights / Bounds
 
@@ -1566,5 +1537,16 @@ private extension ZoneSelectorView {
                 self.updateSelection(animated: false)
             }
         }
+    }
+}
+
+
+private extension UIColor {
+    static func seatingDotColor(from hex: String?) -> UIColor {
+        guard let hex = hex?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !hex.isEmpty else {
+            return UIColor.systemGreen
+        }
+        return UIColor(hex: hex)
     }
 }

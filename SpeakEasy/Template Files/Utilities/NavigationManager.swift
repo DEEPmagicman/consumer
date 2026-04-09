@@ -549,6 +549,11 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
+    func gotoArtistDetailsVC(_ sender: UIViewController) {
+        let vc = ArtistDetailsVC(nibName: "ArtistDetailsVC", bundle: nil)
+        sender.pushVC(vc)
+    }
+    
     func gotoSearchVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)
         sender.navigationController?.pushViewController(vc, animated: true)

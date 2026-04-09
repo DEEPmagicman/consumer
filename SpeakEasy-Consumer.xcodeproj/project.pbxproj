@@ -12,6 +12,8 @@
 		040D1FD62B28790D0057EDC6 /* BlurEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040D1FD52B28790D0057EDC6 /* BlurEffect.swift */; };
 		040F377A2F52EDAF00473EBC /* SignUpDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */; };
 		041325B82BDB5FCA000A5B51 /* EncryptDecrypt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9257CAA02B988DD4009CE697 /* EncryptDecrypt.swift */; };
+		041D58D62F87727D001999F6 /* ArtistDetailsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 041D58D52F87727D001999F6 /* ArtistDetailsVC.xib */; };
+		041D58D72F87727D001999F6 /* ArtistDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D58D42F87727D001999F6 /* ArtistDetailsVC.swift */; };
 		04239BEF2B9766BC00453CA6 /* PagerViewTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */; };
 		04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */; };
 		042471522F51D18A00FC3F11 /* SkeletonOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042471512F51D18A00FC3F11 /* SkeletonOverlayView.swift */; };
@@ -34,6 +36,10 @@
 		0437220E2F72925C00E4F985 /* GuestListPopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437220D2F72925C00E4F985 /* GuestListPopupVC.swift */; };
 		043722102F7292EE00E4F985 /* InstagramUsernamePopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437220F2F7292EE00E4F985 /* InstagramUsernamePopupVC.swift */; };
 		043722122F7294AA00E4F985 /* GuestListPopupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043722112F7294AA00E4F985 /* GuestListPopupCell.swift */; };
+		0437CC622F87B4CA00D403B4 /* ArtistsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437CC602F87B4CA00D403B4 /* ArtistsVC.swift */; };
+		0437CC632F87B4CA00D403B4 /* ArtistsVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0437CC612F87B4CA00D403B4 /* ArtistsVC.xib */; };
+		0437CC672F87C5BD00D403B4 /* ArtistsCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0437CC652F87C5BD00D403B4 /* ArtistsCVC.swift */; };
+		0437CC682F87C5BD00D403B4 /* ArtistsCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0437CC662F87C5BD00D403B4 /* ArtistsCVC.xib */; };
 		044224222BBBCA1B0031257E /* CheckInBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */; };
 		0443A7442F866C1B00158D26 /* EventsListVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0443A7432F866C1B00158D26 /* EventsListVC.xib */; };
 		0443A7452F866C1B00158D26 /* EventsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0443A7422F866C1B00158D26 /* EventsListVC.swift */; };
@@ -479,6 +485,8 @@
 		0408FBF42F63ECB9003F5563 /* GroupTicketTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupTicketTVC.xib; sourceTree = "<group>"; };
 		040D1FD52B28790D0057EDC6 /* BlurEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurEffect.swift; sourceTree = "<group>"; };
 		040F37792F52EDAF00473EBC /* SignUpDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpDetailsViewController.swift; sourceTree = "<group>"; };
+		041D58D42F87727D001999F6 /* ArtistDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistDetailsVC.swift; sourceTree = "<group>"; };
+		041D58D52F87727D001999F6 /* ArtistDetailsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistDetailsVC.xib; sourceTree = "<group>"; };
 		04239BED2B9766BC00453CA6 /* PagerViewTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerViewTVC.swift; sourceTree = "<group>"; };
 		04239BEE2B9766BC00453CA6 /* PagerViewTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PagerViewTVC.xib; sourceTree = "<group>"; };
 		042471512F51D18A00FC3F11 /* SkeletonOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonOverlayView.swift; sourceTree = "<group>"; };
@@ -501,6 +509,10 @@
 		0437220D2F72925C00E4F985 /* GuestListPopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestListPopupVC.swift; sourceTree = "<group>"; };
 		0437220F2F7292EE00E4F985 /* InstagramUsernamePopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstagramUsernamePopupVC.swift; sourceTree = "<group>"; };
 		043722112F7294AA00E4F985 /* GuestListPopupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestListPopupCell.swift; sourceTree = "<group>"; };
+		0437CC602F87B4CA00D403B4 /* ArtistsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsVC.swift; sourceTree = "<group>"; };
+		0437CC612F87B4CA00D403B4 /* ArtistsVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistsVC.xib; sourceTree = "<group>"; };
+		0437CC652F87C5BD00D403B4 /* ArtistsCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsCVC.swift; sourceTree = "<group>"; };
+		0437CC662F87C5BD00D403B4 /* ArtistsCVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtistsCVC.xib; sourceTree = "<group>"; };
 		044224212BBBCA1B0031257E /* CheckInBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInBottomSheet.swift; sourceTree = "<group>"; };
 		0443A7422F866C1B00158D26 /* EventsListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListVC.swift; sourceTree = "<group>"; };
 		0443A7432F866C1B00158D26 /* EventsListVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventsListVC.xib; sourceTree = "<group>"; };
@@ -913,6 +925,18 @@
 			path = GroupTicketTVC;
 			sourceTree = "<group>";
 		};
+		041D58D32F8771F8001999F6 /* Artist */ = {
+			isa = PBXGroup;
+			children = (
+				0437CC642F87C30000D403B4 /* ArtistsCVC */,
+				041D58D42F87727D001999F6 /* ArtistDetailsVC.swift */,
+				041D58D52F87727D001999F6 /* ArtistDetailsVC.xib */,
+				0437CC602F87B4CA00D403B4 /* ArtistsVC.swift */,
+				0437CC612F87B4CA00D403B4 /* ArtistsVC.xib */,
+			);
+			path = Artist;
+			sourceTree = "<group>";
+		};
 		0425E3C52F34604F005E4130 /* Event */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,13 +963,6 @@
 				0425E3C82F3460B8005E4130 /* EventDetailsVC.xib */,
 			);
 			path = EventDetails;
-			sourceTree = "<group>";
-		};
-		0433FB8E2F333135008BC77B /* VenueDetails */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = VenueDetails;
 			sourceTree = "<group>";
 		};
 		0434F9612F7E985F00164A2E /* Profile */ = {
@@ -981,6 +998,15 @@
 				0436D094295984890087D3DB /* UITextField+fixCaretPosition.swift */,
 			);
 			path = SkyFloatingLabelTextField;
+			sourceTree = "<group>";
+		};
+		0437CC642F87C30000D403B4 /* ArtistsCVC */ = {
+			isa = PBXGroup;
+			children = (
+				0437CC652F87C5BD00D403B4 /* ArtistsCVC.swift */,
+				0437CC662F87C5BD00D403B4 /* ArtistsCVC.xib */,
+			);
+			path = ArtistsCVC;
 			sourceTree = "<group>";
 		};
 		0443A7412F866BB400158D26 /* EventList */ = {
@@ -1712,7 +1738,6 @@
 		CE36C4722EFE698C00F2C75B /* Venues */ = {
 			isa = PBXGroup;
 			children = (
-				0433FB8E2F333135008BC77B /* VenueDetails */,
 				04C2E9432F331CA000C5D4FC /* VenueTVC */,
 				CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */,
 				CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */,
@@ -2095,6 +2120,7 @@
 				6AF2B9C22F093ECC00069A90 /* Event */,
 				CE0906492EFBEB2E00936E9D /* TVC */,
 				CEF48B4F2EFA491E006A6468 /* CVC */,
+				041D58D32F8771F8001999F6 /* Artist */,
 				CEF48B4E2EFA48F7006A6468 /* Landing */,
 			);
 			path = v2;
@@ -2427,6 +2453,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0437CC632F87B4CA00D403B4 /* ArtistsVC.xib in Resources */,
 				04E8F67C2F72496A00F45536 /* CustomQuestionCheckboxCell.xib in Resources */,
 				920B4D072B90AF8300C07402 /* CustomPagerViewCell.xib in Resources */,
 				04A433222F444B3800FB119A /* TableSeatingViewController.xib in Resources */,
@@ -2487,6 +2514,7 @@
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				04A202C82F36041300900A27 /* TicketsTVC.xib in Resources */,
 				04A202C92F36041300900A27 /* TicketCheckoutVC.xib in Resources */,
+				0437CC682F87C5BD00D403B4 /* ArtistsCVC.xib in Resources */,
 				04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */,
 				04A202CA2F36041300900A27 /* TicketSelectionViewController.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
@@ -2510,6 +2538,7 @@
 				CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */,
 				6AF2B9E72F0BA1EC00069A90 /* Inter-Bold.ttf in Resources */,
 				6AF2B9E82F0BA1EC00069A90 /* Inter-Medium.ttf in Resources */,
+				041D58D62F87727D001999F6 /* ArtistDetailsVC.xib in Resources */,
 				CE0BA9342F6C183C00AB8996 /* VenueEventTVC.xib in Resources */,
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
 				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
@@ -2817,6 +2846,7 @@
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				CE45A5B72C3BC9DB00E1FE3F /* DPDUIView+Extension.swift in Sources */,
 				691574652A0CD0EF002F303A /* Stripe.swift in Sources */,
+				0437CC622F87B4CA00D403B4 /* ArtistsVC.swift in Sources */,
 				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				046866532B0F280F00E498CF /* FooterView.swift in Sources */,
@@ -2874,10 +2904,12 @@
 				046E58702AA075C200FAA0F6 /* TimeSlot.swift in Sources */,
 				4A1B24AA28D5044B00B2FF7A /* Date+Extension.swift in Sources */,
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
+				041D58D72F87727D001999F6 /* ArtistDetailsVC.swift in Sources */,
 				6AF2B9D02F09477300069A90 /* TableCheckOutVC.swift in Sources */,
 				CE48D8342EFA7CE100E7110B /* EventV2CVC.swift in Sources */,
 				0426E1D82F52F08B005F474E /* LogInPopUpViewController.swift in Sources */,
 				CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */,
+				0437CC672F87C5BD00D403B4 /* ArtistsCVC.swift in Sources */,
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
 				0434F9642F7E98D400164A2E /* ProfileVC.swift in Sources */,
 				CE45A5B42C3BC9CF00E1FE3F /* DropDownCell.swift in Sources */,
@@ -2989,7 +3021,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -3027,7 +3059,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasyClip/SpeakEasyClip.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				EXCLUDED_ARCHS = "";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3191,7 +3223,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3286,7 +3318,7 @@
 				CODE_SIGN_ENTITLEMENTS = SpeakEasy/SpeakEasy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 248;
+				CURRENT_PROJECT_VERSION = 249;
 				DEVELOPMENT_TEAM = 843432T6P5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

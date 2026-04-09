@@ -25,6 +25,7 @@ class ProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionViews()
+        setupUserData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -53,6 +54,33 @@ class ProfileVC: UIViewController {
             self.isVenueLoading = false
                 self.followedVenuesCollectionView.reloadData()
          }
+    }
+    
+    private func setupUserData() {
+        
+        guard let user = UserDefault.shared.user else { return }
+        
+        let fullName = "\(user.firstName) \(user.lastName)".trimmingCharacters(in: .whitespaces)
+        let imageUrl = user.image.key
+        name.text = fullName
+        
+        if !imageUrl.isEmpty {
+            userImage.isHidden = false
+            userFirstWord.isHidden = true
+            
+            userImage.sd_setImage(
+                with: URL(string: imageUrl),
+                placeholderImage: UIImage(named: "placeholder")
+            )
+            
+        } else {
+            
+            userImage.isHidden = true
+            userFirstWord.isHidden = false
+            let firstLetter = user.firstName.first ?? Character("")
+            userFirstWord.text = String(firstLetter).uppercased()
+            userFirstWord.textAlignment = .center
+        }
     }
     
     @IBAction func savedVenueSeeAllBtn(_ sender: Any) {

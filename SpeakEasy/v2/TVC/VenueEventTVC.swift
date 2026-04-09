@@ -7,12 +7,20 @@
 
 import UIKit
 
+enum ScreenType {
+    case `default`
+    case premiumExperience
+}
+
 final class VenueEventTVC: UITableViewCell {
     
     @IBOutlet weak var eventImg: UIImageView!
     @IBOutlet weak var bottomLbl: UILabel!
     @IBOutlet weak var dateLbl: UILabel!
     @IBOutlet weak var eventTitleLbl: UILabel!
+    @IBOutlet weak var tablePriceView: UIView!
+    
+    var screenType: ScreenType = .default
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,6 +28,7 @@ final class VenueEventTVC: UITableViewCell {
         eventImg.contentMode = .scaleAspectFill
         eventImg.clipsToBounds = true
         eventImg.layer.cornerRadius = 10
+        tablePriceView.isHidden = (screenType == .default)
     }
     
     func configure(with event: Event) {
@@ -36,6 +45,7 @@ final class VenueEventTVC: UITableViewCell {
             with: URL(string: (event.flyer?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage
         )
+      
         
         eventImg.hero.id = "event.image.\(event.id)"
         eventTitleLbl.hero.id = "event.title.\(event.id)"

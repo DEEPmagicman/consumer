@@ -27,7 +27,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="473" height="98"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="B0j-J4-3Kp">
-                                <rect key="frame" x="112" y="17" width="345" height="72"/>
+                                <rect key="frame" x="112" y="16" width="345" height="74"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tea-NW-5ah">
                                         <rect key="frame" x="0.0" y="0.0" width="345" height="40"/>
@@ -50,24 +50,67 @@
                                             <constraint firstAttribute="bottom" secondItem="lrh-M4-cVM" secondAttribute="bottom" id="uay-rh-9zP"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Jun 20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWn-YN-9xm">
-                                        <rect key="frame" x="0.0" y="40" width="345" height="16"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="16" id="ruW-Bb-SiG"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
-                                        <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E11EVEN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2wV-AX-jZI">
-                                        <rect key="frame" x="0.0" y="56" width="345" height="16"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="16" id="8LB-nz-a3p"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
-                                        <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KzI-CJ-yt8">
+                                        <rect key="frame" x="0.0" y="40" width="345" height="34"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Xhw-Pq-FMd">
+                                                <rect key="frame" x="0.0" y="0.0" width="276" height="34"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Jun 20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWn-YN-9xm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="276" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="ruW-Bb-SiG"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                                        <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E11EVEN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2wV-AX-jZI">
+                                                        <rect key="frame" x="0.0" y="18" width="276" height="16"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="8LB-nz-a3p"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                                        <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="2wV-AX-jZI" secondAttribute="trailing" id="0cd-Yf-km1"/>
+                                                    <constraint firstAttribute="trailing" secondItem="hWn-YN-9xm" secondAttribute="trailing" id="7Ih-pQ-y6K"/>
+                                                    <constraint firstItem="hWn-YN-9xm" firstAttribute="leading" secondItem="Xhw-Pq-FMd" secondAttribute="leading" id="IiN-R0-qAa"/>
+                                                    <constraint firstItem="2wV-AX-jZI" firstAttribute="leading" secondItem="Xhw-Pq-FMd" secondAttribute="leading" id="QCO-Ov-PVj"/>
+                                                    <constraint firstAttribute="bottom" secondItem="2wV-AX-jZI" secondAttribute="bottom" id="fv8-JM-WGi"/>
+                                                    <constraint firstItem="hWn-YN-9xm" firstAttribute="top" secondItem="Xhw-Pq-FMd" secondAttribute="top" id="lEV-pK-WIL"/>
+                                                </constraints>
+                                            </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P04-sY-W6k">
+                                                <rect key="frame" x="276" y="16" width="69" height="18"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From $2,000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Reb-42-xqW">
+                                                        <rect key="frame" x="4" y="2" width="61" height="14"/>
+                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
+                                                        <color key="textColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="9"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" red="0.8901960784313725" green="0.85882352941176465" blue="0.78823529411764703" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="Reb-42-xqW" firstAttribute="leading" secondItem="P04-sY-W6k" secondAttribute="leading" constant="4" id="4ph-WB-wOO"/>
+                                                    <constraint firstAttribute="width" constant="69" id="Zbz-fT-fK3"/>
+                                                    <constraint firstAttribute="height" constant="18" id="eKc-KC-kMp"/>
+                                                    <constraint firstItem="Reb-42-xqW" firstAttribute="top" secondItem="P04-sY-W6k" secondAttribute="top" constant="2" id="lF2-Kz-hmT"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Reb-42-xqW" secondAttribute="trailing" constant="4" id="s7e-sD-USn"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Reb-42-xqW" secondAttribute="bottom" constant="2" id="td4-BV-GPV"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="BFF-9S-i9Q">
@@ -105,6 +148,7 @@
                 <outlet property="dateLbl" destination="hWn-YN-9xm" id="CXg-8g-wsh"/>
                 <outlet property="eventImg" destination="BFF-9S-i9Q" id="IkH-Oj-97U"/>
                 <outlet property="eventTitleLbl" destination="lrh-M4-cVM" id="1O3-G1-P0L"/>
+                <outlet property="tablePriceView" destination="P04-sY-W6k" id="nxT-d6-0Ov"/>
             </connections>
             <point key="canvasLocation" x="95.419847328244273" y="73.943661971830991"/>
         </tableViewCell>

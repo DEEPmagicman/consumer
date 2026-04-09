@@ -120,4 +120,13 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        Navigate.to.gotoArtistDetailsVC(self)
+    }
+    
+    
+    
+    
+  
 }

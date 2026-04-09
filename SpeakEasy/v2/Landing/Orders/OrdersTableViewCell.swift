@@ -18,9 +18,9 @@ final class OrdersTableViewCell: UITableViewCell {
     @IBOutlet weak var dotLbl: UILabel!
     @IBOutlet weak var upComingView: UIView!
     @IBOutlet weak var upComingLbl: UILabel!
+    @IBOutlet weak var contentBgView: UIView!
     
     private let shimmerOverlay = ShimmerView()
-    private var gradientLayer: CAGradientLayer?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,7 +31,6 @@ final class OrdersTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         shimmerOverlay.frame = contentView.bounds
-        gradientLayer?.frame = backgroungImage.bounds
     }
     
     override func prepareForReuse() {
@@ -69,10 +68,9 @@ final class OrdersTableViewCell: UITableViewCell {
         shimmerOverlay.isHidden = true
         shimmerOverlay.layer.cornerRadius = 16
         shimmerOverlay.clipsToBounds = true
-        contentView.addSubview(shimmerOverlay)
+        contentBgView.addSubview(shimmerOverlay)
     }
     
-
     func showShimmer() {
         shimmerOverlay.isHidden = false
         shimmerOverlay.startAnimating()

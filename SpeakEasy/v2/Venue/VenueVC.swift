@@ -52,6 +52,7 @@ final class VenueVC: UIViewController {
                 setUpData()
                 setUpSegmentVC()
             } else {
+                self.shimmerView?.stop()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? "Something went wrong",
@@ -101,7 +102,11 @@ final class VenueVC: UIViewController {
         let vc3 = VenueDetailsVC(nibName: "VenueDetailsVC", bundle: nil)
         vc3.venueDetails = venueDetails
         vc3.title = "Details"
-        segmentedScrollView.segmentControllers = [vc1, vc2, vc3]
+        
+        let vc4 = ArtistsVC(nibName: "ArtistsVC", bundle: nil)
+        vc4.title = "Artists"
+        
+        segmentedScrollView.segmentControllers = [vc1, vc2, vc3 , vc4]
         segmentedScrollView.segmentShadow = SJShadow(offset: CGSize(width: 0, height: 0), color: .white, radius: 0, opacity: 0.4)
         
         segmentedScrollView.headerViewOffsetHeight = 0

@@ -115,10 +115,10 @@
                     </constraints>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uea-tb-0iD">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="110.66666666666667"/>
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="109.66666666666667"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z7p-LT-Rry">
-                            <rect key="frame" x="16" y="51" width="24" height="59.666666666666657"/>
+                            <rect key="frame" x="16" y="51" width="24" height="58.666666666666657"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="d1A-wF-GZz"/>
                             </constraints>
@@ -129,16 +129,23 @@
                             </connections>
                         </button>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events Tonight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7UD-pA-IGd">
-                            <rect key="frame" x="140.66666666666666" y="71" width="111.66666666666666" height="19.666666666666671"/>
+                            <rect key="frame" x="140.66666666666666" y="71" width="111.66666666666666" height="18.666666666666671"/>
                             <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N58-fk-apm">
-                            <rect key="frame" x="312.33333333333331" y="66" width="66.666666666666686" height="30"/>
+                            <rect key="frame" x="312.33333333333331" y="65.333333333333329" width="66.666666666666686" height="30"/>
                             <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BBx-wr-6dz">
+                                    <rect key="frame" x="0.0" y="0.0" width="66.666666666666671" height="30"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <connections>
+                                        <action selector="onClickDateBtn:" destination="-1" eventType="touchUpInside" id="x1Q-XS-lCC"/>
+                                    </connections>
+                                </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qml-zp-rJ6">
-                                    <rect key="frame" x="12.000000000000002" y="7.6666666666666705" width="26.666666666666671" height="14.666666666666661"/>
+                                    <rect key="frame" x="12.000000000000002" y="8" width="26.666666666666671" height="14"/>
                                     <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="12"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -154,16 +161,20 @@
                             <color key="backgroundColor" red="0.16078431372549018" green="0.16078431372549018" blue="0.16078431372549018" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="A3g-rL-CAe" firstAttribute="top" secondItem="N58-fk-apm" secondAttribute="top" constant="9" id="7Cu-Kc-BF0"/>
+                                <constraint firstItem="BBx-wr-6dz" firstAttribute="top" secondItem="N58-fk-apm" secondAttribute="top" id="ALn-ds-3id"/>
+                                <constraint firstAttribute="bottom" secondItem="BBx-wr-6dz" secondAttribute="bottom" id="OP8-eV-uDU"/>
                                 <constraint firstItem="Qml-zp-rJ6" firstAttribute="centerY" secondItem="N58-fk-apm" secondAttribute="centerY" id="P2f-GZ-gbK"/>
                                 <constraint firstItem="Qml-zp-rJ6" firstAttribute="leading" secondItem="N58-fk-apm" secondAttribute="leading" constant="12" id="SIp-my-xhf"/>
                                 <constraint firstItem="A3g-rL-CAe" firstAttribute="leading" secondItem="Qml-zp-rJ6" secondAttribute="trailing" constant="4" id="XYL-Pe-Fre"/>
+                                <constraint firstItem="BBx-wr-6dz" firstAttribute="leading" secondItem="N58-fk-apm" secondAttribute="leading" id="ZWO-9e-w1T"/>
                                 <constraint firstAttribute="height" constant="30" id="cTd-6x-plE"/>
                                 <constraint firstAttribute="trailing" secondItem="A3g-rL-CAe" secondAttribute="trailing" constant="12" id="hhi-Oz-tGO"/>
                                 <constraint firstAttribute="bottom" secondItem="A3g-rL-CAe" secondAttribute="bottom" constant="9" id="nYL-Hm-5Nn"/>
+                                <constraint firstAttribute="trailing" secondItem="BBx-wr-6dz" secondAttribute="trailing" id="wz1-eb-Iay"/>
                             </constraints>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="12"/>
+                                    <real key="value" value="15"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
