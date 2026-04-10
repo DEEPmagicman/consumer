@@ -171,7 +171,7 @@ extension PremiumExperiencesVC: UITableViewDelegate, UITableViewDataSource {
             withIdentifier: VenueEventTVC.identifier,
             for: indexPath
         )
-        cell.screenType = .premiumExperience
+        cell.setScreenType(screenType: .premiumExperience)
         
         cell.selectionStyle = .none
 

@@ -206,7 +206,7 @@
                                 </constraints>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.15294117647058825" green="0.15294117647058825" blue="0.15294117647058825" alpha="0.30061598227057656" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="5WG-Wm-pA7" secondAttribute="bottom" id="13L-uB-cyp"/>
                             <constraint firstItem="5WG-Wm-pA7" firstAttribute="top" secondItem="Qjd-ya-ohR" secondAttribute="top" id="8fI-s7-saW"/>
@@ -237,6 +237,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="bgView" destination="Qjd-ya-ohR" id="pyQ-5r-ozy"/>
                 <outlet property="descLbl" destination="sM5-K7-nrm" id="8aB-3Q-4vr"/>
                 <outlet property="extraFeesLbl" destination="zVa-fc-An1" id="czC-2U-FWc"/>
                 <outlet property="minusBtn" destination="SSH-Wp-Ykk" id="XjB-ki-JF6"/>

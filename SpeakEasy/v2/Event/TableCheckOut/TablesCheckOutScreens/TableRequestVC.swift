@@ -448,24 +448,38 @@ extension TableRequestVC {
 // MARK: - Button State
 extension TableRequestVC {
     
-    func makeRequestButton() -> LoadingButton {
-        
+    func makeRequestButton() -> UIView {
+
+        let container = UIView()
+        container.backgroundColor = .black
+        container.layer.cornerRadius = 20
+        container.clipsToBounds = true
+        container.heightAnchor.constraint(equalToConstant: 40).isActive = true
+
         let btn = LoadingButton(type: .system)
-        
         btn.setTitle("REQUEST", for: .normal)
         btn.titleLabel?.font = AppFont.font(.inter, weight: .semibold, size: 12)
-        btn.layer.cornerRadius = 20
-        btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
+        btn.setTitleColor(.white, for: .normal)
+
         btn.indicator = MaterialLoadingIndicator(color: .white)
-        btn.bgColor = .black
-        
+        btn.bgColor = .clear
+
         btn.addTarget(self, action: #selector(onRequestTapped), for: .touchUpInside)
-        
+
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(btn)
+
+        NSLayoutConstraint.activate([
+            btn.topAnchor.constraint(equalTo: container.topAnchor),
+            btn.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            btn.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            btn.trailingAnchor.constraint(equalTo: container.trailingAnchor)
+        ])
+
         requestButton = btn
         updateRequestButtonState()
-        
-        return btn
+
+        return container
     }
     
     @objc func textFieldChanged() {
@@ -511,6 +525,7 @@ extension TableRequestVC {
         else { return }
         
         isRequestInProgress = true
+        requestButton.setTitle("", for: .normal)
         requestButton.showLoader(userInteraction: false)
         
         let comments = commentTextView.text == commentPlaceholder ? "" : (commentTextView.text ?? "")
@@ -561,7 +576,7 @@ extension TableRequestVC {
                 
                 self.isRequestInProgress = false
                 self.requestButton.hideLoader()
-                
+                self.requestButton.setTitle("REQUEST", for: .normal)
                 if success {
                     self.showSuccessView()
                 } else {

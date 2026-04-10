@@ -153,13 +153,17 @@ class TableBookingListVC: UIViewController {
         }
 
         let min = Double(slot.minimum ?? 0)
+        
 
         let deposit: Double =
             (slot.depositType ?? "").uppercased() == "PERCENTAGE"
             ? (min * Double(slot.deposit ?? 0)) / 100
             : Double(slot.depositWithFees ?? slot.deposit ?? 0)
+        
+        let taxPercent = 16.76
+        let final = deposit + (deposit * taxPercent / 100)
 
-        return (min, deposit)
+        return (min, final)
     }
 
     private func getAvailableTimeRange(for area: SeatingArea) -> String {

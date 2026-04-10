@@ -28,6 +28,10 @@ final class VenueEventTVC: UITableViewCell {
         eventImg.contentMode = .scaleAspectFill
         eventImg.clipsToBounds = true
         eventImg.layer.cornerRadius = 10
+      
+    }
+    
+    func setScreenType(screenType: ScreenType = .default) {
         tablePriceView.isHidden = (screenType == .default)
     }
     

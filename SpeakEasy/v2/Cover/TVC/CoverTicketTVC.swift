@@ -14,6 +14,7 @@ final class CoverTicketTVC: UITableViewCell {
     @IBOutlet weak var extraFeesLbl: UILabel!
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var viewMoreBtn: UIButton!
+    @IBOutlet weak var bgView: UIView!
 
     private let collapsedLines = 3
     private var isExpanded = false
@@ -87,7 +88,16 @@ final class CoverTicketTVC: UITableViewCell {
             descLbl.numberOfLines = 0
         }
     }
+    
+    func updateSelectionUI(isSelected: Bool) {
+        let borderColor = isSelected
+            ? UIColor.white
+            : UIColor.white.withAlphaComponent(0.2)
 
+        bgView.layer.borderWidth = 1
+        bgView.layer.borderColor = borderColor.cgColor
+    }
+    
     private func updateViewMoreVisibilityIfNeeded() {
         guard !descriptionText.isEmpty else { return }
 
