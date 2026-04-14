@@ -115,6 +115,7 @@ final class Tables3DMapVC: UIViewController {
     private var pagedRoomItems:  [[Layout3DMap]] = []
     private var currentPageIndex    = 0
     private var selectedIndexInPage = 0
+    private var renderedDJPositions: Set<String> = []
 
     // MARK: - Lifecycle
 
@@ -462,56 +463,301 @@ private extension Tables3DMapVC {
     }
     
     func buildMeshSeatingMap(asset: GLTFAsset) {
-
-            var meshIndexToNodeExtras: [Int: [String: Any]] = [:]
-            for node in asset.nodes {
-                if let meshIndex = asset.meshes.firstIndex(where: { $0 === node.mesh }) {
-                    meshIndexToNodeExtras[meshIndex] = normalizeExtras(node.extras)
+        var meshIndexToNodeExtras: [Int: [String: Any]] = [:]
+        
+        // First, collect extras from all nodes
+        for node in asset.nodes {
+            let nodeExtras = normalizeExtras(node.extras)
+            if let meshIndex = asset.meshes.firstIndex(where: { $0 === node.mesh }) {
+                meshIndexToNodeExtras[meshIndex] = nodeExtras
+            }
+            
+            // ALSO check node directly (some GLB files store extras on nodes, not meshes)
+            let nodeName = node.name ?? ""
+            let nodeExtrasLower = normalizeExtras(node.extras)
+            
+            if nodeExtrasLower["djboottag"] as? String == "true" ||
+               nodeExtrasLower["djtag"] as? String == "true" {
+                // This is a DJ node
+                let dto = SeatingAreaDTO(
+                    id: nil,
+                    parentSeatingAreaId: nil,
+                    name: "DJ",
+                    highlight: nil,
+                    maxGuest: nil,
+                    isDJBoot: true
+                )
+                seatingAreaByMeshName[nodeName] = dto
+                print("✅ Node DJ mapping: \(nodeName)")
+            } else if let seatingId = extractSeatingId(from: nodeExtrasLower) {
+                // Map node to seating area
+                let apiArea = seatingAreaById[seatingId]
+                let dto = SeatingAreaDTO(
+                    id: apiArea?.id ?? seatingId,
+                    parentSeatingAreaId: apiArea?.parentSeatingAreaId,
+                    name: apiArea?.name ?? "Seating Area",
+                    highlight: apiArea?.highlight,
+                    maxGuest: apiArea?.maxGuest,
+                    isDJBoot: false
+                )
+                seatingAreaByMeshName[nodeName] = dto
+                print("✅ Node mapping: \(nodeName) → \(dto.name ?? "unknown") (ID: \(seatingId))")
+            }
+        }
+        
+        // Process each mesh
+        for (index, mesh) in asset.meshes.enumerated() {
+            guard let meshName = mesh.name else { continue }
+            
+            let meshExtras = normalizeExtras(mesh.extras)
+            let nodeExtras = meshIndexToNodeExtras[index] ?? [:]
+            
+            // Merge extras (node extras take precedence)
+            var extras = nodeExtras
+            for (key, value) in meshExtras {
+                if extras[key] == nil {
+                    extras[key] = value
                 }
             }
-
-            for (index, mesh) in asset.meshes.enumerated() {
-                guard let meshName = mesh.name else { continue }
-
-                let meshExtras = normalizeExtras(mesh.extras)
-                let nodeExtras = meshIndexToNodeExtras[index] ?? [:]
-                let extras = nodeExtras.merging(meshExtras) { _, mesh in mesh }
-
-                var dto: SeatingAreaDTO?
-
-                if extras["djtag"] != nil || extras["djboottag"] != nil {
-                    dto = SeatingAreaDTO(
-                        id: nil, parentSeatingAreaId: nil,
-                        name: "DJ", highlight: nil, maxGuest: nil, isDJBoot: true
-                    )
-                } else if let tag = extras["seatingareatag"] as? String,
-                          let area = seatingAreaById[tag] {
-                    dto = SeatingAreaDTO(
-                        id: area.id,
-                        parentSeatingAreaId: area.parentSeatingAreaId,
-                        name: area.name,
-                        highlight: area.highlight,
-                        maxGuest: area.maxGuest,
-                        isDJBoot: false
-                    )
-                } else if let id = extras["seatingareaid"] as? String, !id.isEmpty {
-                    let area = seatingAreaById[id]
-                    dto = SeatingAreaDTO(
-                        id: area?.id ?? id,
-                        parentSeatingAreaId: area?.parentSeatingAreaId,
-                        name: area?.name ?? "Seating \(id)",
-                        highlight: area?.highlight,
-                        maxGuest: area?.maxGuest,
-                        isDJBoot: false
-                    )
+            
+            print("🔍 Processing mesh: \(meshName)")
+            print("   Extras: \(extras)")
+            
+            var dto: SeatingAreaDTO?
+            
+            // Check for DJ boot - try multiple key formats
+            let isDJ = (extras["djtag"] as? String == "true") ||
+                       (extras["djboottag"] as? String == "true") ||
+                       (extras["djBootTag"] as? String == "true") ||
+                       (meshName.lowercased().contains("icosphere") &&
+                        (extras["djboottag"] as? String == "true" || extras["djtag"] as? String == "true"))
+            
+            if isDJ {
+                print("   ✅ Found DJ boot at mesh: \(meshName)")
+                dto = SeatingAreaDTO(
+                    id: nil,
+                    parentSeatingAreaId: nil,
+                    name: "DJ",
+                    highlight: nil,
+                    maxGuest: nil,
+                    isDJBoot: true
+                )
+            } else {
+                // Extract seating ID using helper function
+                if let seatingId = extractSeatingId(from: extras) {
+                    print("   Found seating ID: \(seatingId)")
+                    
+                    // Try to find matching seating area from API
+                    var area: SeatingArea?
+                    
+                    // Direct match
+                    area = seatingAreaById[seatingId]
+                    
+                    // If not found, try case-insensitive match
+                    if area == nil {
+                        for (_, apiArea) in seatingAreaById {
+                            if let apiId = apiArea.id,
+                               apiId.lowercased() == seatingId.lowercased() {
+                                area = apiArea
+                                print("   ✅ Case-insensitive match: \(seatingId) → \(apiArea.name ?? "unknown")")
+                                break
+                            }
+                        }
+                    }
+                    
+                    if let validArea = area {
+                        dto = SeatingAreaDTO(
+                            id: validArea.id,
+                            parentSeatingAreaId: validArea.parentSeatingAreaId,
+                            name: validArea.name,
+                            highlight: validArea.highlight,
+                            maxGuest: validArea.maxGuest,
+                            isDJBoot: false
+                        )
+                        print("   ✅ Created DTO for: \(validArea.name ?? "unknown")")
+                    } else {
+                        // Still create DTO with the ID from GLB
+                        print("   ⚠️ No API match for ID: \(seatingId)")
+                        dto = SeatingAreaDTO(
+                            id: seatingId,
+                            parentSeatingAreaId: nil,
+                            name: "Seating Area",
+                            highlight: nil,
+                            maxGuest: nil,
+                            isDJBoot: false
+                        )
+                    }
                 }
+            }
+            
+            if let validDto = dto {
+                // Also map by mesh name for renderParentDots
+                seatingAreaByMeshName[meshName] = validDto
+                print("✅ Mapped: \(meshName) → \(validDto.name ?? "?") (isDJ: \(validDto.isDJBoot))")
+            } else {
+                print("❌ No mapping for mesh: \(meshName)")
+            }
+        }
+    }
 
-                if let dto {
-                    seatingAreaByMeshName[meshName] = dto
-                    print("🧩 Mesh mapped:", meshName, "→", dto.name ?? "?", "parentId:", dto.parentSeatingAreaId ?? "nil")
+    // Helper function to extract seating ID from extras (handles all possible key formats)
+    func extractSeatingId(from extras: [String: Any]) -> String? {
+        // List of possible key names (web version might use different casing)
+        let possibleKeys = [
+            "seatingareaid",
+            "seatingAreaId",
+            "seatingAreaID",
+            "seating_area_id",
+            "seatingareatag",
+            "seatingAreaTag",
+            "seating_area_tag",
+            "areaId",
+            "areaID",
+            "area_id"
+        ]
+        
+        for key in possibleKeys {
+            if let stringValue = extras[key] as? String, !stringValue.isEmpty {
+                // Skip placeholder "1.0" if there's a better match elsewhere
+                if stringValue != "1.0" && stringValue != "1" {
+                    return stringValue
+                }
+            }
+            if let doubleValue = extras[key] as? Double {
+                let stringValue = String(Int(doubleValue))
+                if stringValue != "1" {
+                    return stringValue
                 }
             }
         }
+        
+        // If only "1.0" found, return it anyway
+        for key in possibleKeys {
+            if let stringValue = extras[key] as? String, (stringValue == "1.0" || stringValue == "1") {
+                return stringValue
+            }
+            if let doubleValue = extras[key] as? Double {
+                let stringValue = String(Int(doubleValue))
+                if stringValue == "1" {
+                    return stringValue
+                }
+            }
+        }
+        
+        return nil
+    }
+       
+    func renderParentDots(scene: SCNScene) {
+        var renderedParents = Set<String>()
+        renderedDJPositions.removeAll() // Reset for each model
+        
+        print("🎯 Starting renderParentDots")
+        print("   seatingAreaByMeshName count: \(seatingAreaByMeshName.count)")
+        
+        scene.rootNode.enumerateHierarchy { node, _ in
+            // Check multiple sources for the name
+            var possibleNames: [String] = []
+            
+            if let nodeName = node.name, !nodeName.isEmpty {
+                possibleNames.append(nodeName)
+            }
+            if let geoName = node.geometry?.name, !geoName.isEmpty {
+                possibleNames.append(geoName)
+            }
+            
+            // Also check parent names
+            if let parentName = node.parent?.name, !parentName.isEmpty {
+                possibleNames.append(parentName)
+            }
+            
+            var foundSeating: SeatingAreaDTO?
+            var matchedName: String?
+            
+            for name in possibleNames {
+                if let seating = seatingAreaByMeshName[name] {
+                    foundSeating = seating
+                    matchedName = name
+                    break
+                }
+                // Try partial match
+                for (key, seating) in seatingAreaByMeshName {
+                    if name.contains(key) || key.contains(name) {
+                        foundSeating = seating
+                        matchedName = key
+                        break
+                    }
+                }
+                if foundSeating != nil { break }
+            }
+            
+            guard let seating = foundSeating else { return }
+            
+            let center = self.worldCenter(of: node)
+            
+            if seating.isDJBoot {
+                // Create a unique key for this DJ position (rounded to avoid floating point issues)
+                let posKey = "\(Int(center.x))_\(Int(center.y))_\(Int(center.z))"
+                
+                // Check if we already rendered a DJ at this position
+                guard !self.renderedDJPositions.contains(posKey) else {
+                    print("   Skipping duplicate DJ at position: \(center)")
+                    return
+                }
+                
+                self.renderedDJPositions.insert(posKey)
+                print("📍 Adding DJ dot at position: \(center)")
+                self.sceneView.scene?.rootNode.addChildNode(self.makeDJDot(position: center))
+                return
+            }
+            
+            // Handle regular seating areas
+            if let parentId = seating.parentSeatingAreaId, !parentId.isEmpty {
+                guard !renderedParents.contains(parentId) else { return }
+                renderedParents.insert(parentId)
+                self.sceneView.scene?.rootNode.addChildNode(
+                    self.makeParentDot(position: center, seatingArea: seating)
+                )
+            } else if let id = seating.id, !id.isEmpty {
+                guard !renderedParents.contains(id) else { return }
+                renderedParents.insert(id)
+                self.sceneView.scene?.rootNode.addChildNode(
+                    self.makeChildDot(position: center, seatingArea: seating)
+                )
+            }
+        }
+    }
+       func renderSeatingNode(node: SCNNode, seating: SeatingAreaDTO, renderedParents: inout Set<String>) {
+           let center = self.worldCenter(of: node)
+           print("📍 Rendering at position: \(center) for: \(seating.name ?? "unknown")")
+           
+           if seating.isDJBoot {
+               print("   Adding DJ dot")
+               self.sceneView.scene?.rootNode.addChildNode(self.makeDJDot(position: center))
+               return
+           }
+           
+           if let parentId = seating.parentSeatingAreaId, !parentId.isEmpty {
+               guard !renderedParents.contains(parentId) else {
+                   print("   Skipping already rendered parent: \(parentId)")
+                   return
+               }
+               renderedParents.insert(parentId)
+               print("   Adding parent dot for: \(seating.name ?? "unknown")")
+               self.sceneView.scene?.rootNode.addChildNode(
+                   self.makeParentDot(position: center, seatingArea: seating)
+               )
+           } else if let id = seating.id, !id.isEmpty {
+               guard !renderedParents.contains(id) else {
+                   print("   Skipping already rendered child: \(id)")
+                   return
+               }
+               renderedParents.insert(id)
+               print("   Adding child dot for: \(seating.name ?? "unknown")")
+               self.sceneView.scene?.rootNode.addChildNode(
+                   self.makeChildDot(position: center, seatingArea: seating)
+               )
+           }
+       }
 }
 
 private extension Tables3DMapVC {
@@ -519,54 +765,55 @@ private extension Tables3DMapVC {
     func makeDJDot(position: simd_float3) -> SCNNode {
         
         let root = SCNNode()
-        root.simdPosition = position + simd_float3(0, 1.0, 0)
+        // Increased height offset to float above the model
+        root.simdPosition = position + simd_float3(0, 5.0, 0)  // Much higher
         root.name = "dj-pin"
         
         let uiNode = makeBillboardNode()
         
         let gold = PinStyle.djGold
         
-        // Outer wave
-        let waveGeo = SCNPlane(width: 0.8, height: 0.8)
-        waveGeo.cornerRadius = 0.4
-        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.7))]
+        // MASSIVE outer wave - 30x larger (from 2.5 to 8.0)
+        let waveGeo = SCNPlane(width: 8.0, height: 8.0)
+        waveGeo.cornerRadius = 4.0
+        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.8))]
         
         let wave = SCNNode(geometry: waveGeo)
-        wave.position.z = -0.001
-        addWaveAnimation(to: wave)
+        wave.position.z = -0.01
+        addWaveAnimationToDJ(to: wave)  // Custom animation for DJ
         uiNode.addChildNode(wave)
         
-        // Outer ring
+        // MASSIVE outer ring
         let outerRing = SCNNode(
-            geometry: SCNTorus(ringRadius: 0.60, pipeRadius: 0.030)
+            geometry: SCNTorus(ringRadius: 6.0, pipeRadius: 0.25)
         )
         outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         outerRing.eulerAngles.x = -.pi / 2
-        outerRing.position.z = 0.002
+        outerRing.position.z = 0.01
         uiNode.addChildNode(outerRing)
         
-        // Inner ring
+        // MASSIVE inner ring
         let innerRing = SCNNode(
-            geometry: SCNTorus(ringRadius: 0.40, pipeRadius: 0.025)
+            geometry: SCNTorus(ringRadius: 4.5, pipeRadius: 0.2)
         )
         innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         innerRing.eulerAngles.x = -.pi / 2
-        innerRing.position.z = 0.004
+        innerRing.position.z = 0.015
         uiNode.addChildNode(innerRing)
         
-        // Inner fill
+        // MASSIVE inner fill
         let fill = SCNNode(
-            geometry: SCNCylinder(radius: 0.34, height: 0.01)
+            geometry: SCNCylinder(radius: 4.0, height: 0.05)
         )
         fill.geometry?.materials = [constantMaterial(color: gold)]
         fill.eulerAngles.x = -.pi / 2
-        fill.position.z = 0.006
+        fill.position.z = 0.02
         uiNode.addChildNode(fill)
         
-        // DJ text
-        let textGeo = SCNText(string: "DJ", extrusionDepth: 0)
-        textGeo.font = .boldSystemFont(ofSize: 12)
-        textGeo.flatness = 0.2
+        // MASSIVE DJ text
+        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.05)
+        textGeo.font = .boldSystemFont(ofSize: 16)  // Enormous font
+        textGeo.flatness = 0.05
         textGeo.materials = [constantMaterial(color: UIColor.white)]
         
         let textNode = SCNNode(geometry: textGeo)
@@ -576,33 +823,69 @@ private extension Tables3DMapVC {
             min.y + (max.y - min.y) / 2,
             0
         )
-        textNode.scale = SCNVector3(0.035, 0.035, 0.035)
-        textNode.position.z = 0.035
+        textNode.scale = SCNVector3(0.25, 0.25, 0.25)  // Scaled up
+        textNode.position.z = 0.25
         textNode.renderingOrder = 1000
         uiNode.addChildNode(textNode)
         
+        // Massive glow effect
+        let glowGeo = SCNPlane(width: 9.0, height: 9.0)
+        glowGeo.cornerRadius = 4.5
+        glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.4))]
+        let glow = SCNNode(geometry: glowGeo)
+        glow.position.z = -0.02
+        uiNode.addChildNode(glow)
+        
+        // Glow animation
+        let glowScaleUp = SCNAction.scale(to: 1.5, duration: 0.8)
+        let glowScaleDown = SCNAction.scale(to: 0.8, duration: 0.8)
+        let glowSequence = SCNAction.sequence([glowScaleUp, glowScaleDown])
+        glow.runAction(.repeatForever(glowSequence))
+        
+        // Floating animation
+        let floatUp = SCNAction.moveBy(x: 0, y: 1.0, z: 0, duration: 1.5)
+        let floatDown = SCNAction.moveBy(x: 0, y: -1.0, z: 0, duration: 1.5)
+        let floatSequence = SCNAction.sequence([floatUp, floatDown])
+        root.runAction(.repeatForever(floatSequence))
+        
         root.addChildNode(uiNode)
         return root
+    }
+
+    // Special wave animation for DJ (much larger scale)
+    func addWaveAnimationToDJ(to node: SCNNode) {
+        node.removeAllActions()
+        let scaleUp = SCNAction.scale(to: 4.0, duration: 1.2)
+        let fadeOut = SCNAction.fadeOut(duration: 1.2)
+        let group = SCNAction.group([scaleUp, fadeOut])
+        let reset = SCNAction.run {
+            $0.opacity = 1
+            $0.scale = SCNVector3(1, 1, 1)
+        }
+        let delay = SCNAction.wait(duration: 0.5)
+        node.runAction(.repeatForever(.sequence([group, reset, delay])))
     }
     
     func makeChildDot(position: simd_float3, seatingArea: SeatingAreaDTO) -> SCNNode {
         
         let root = SCNNode()
-        root.simdPosition = position + simd_float3(0, 0.2, 0)
+        root.simdPosition = position + simd_float3(0, 0.5, 0)  // Increased height
         
         let uiNode = makeBillboardNode()
         uiNode.name = "pin"
         
-        let circleGeo = SCNPlane(width: 0.20, height: 0.20)
-        circleGeo.cornerRadius = 0.1
+        // Made larger - increased from 0.20 to 0.35
+        let circleGeo = SCNPlane(width: 0.35, height: 0.35)
+        circleGeo.cornerRadius = 0.175
         circleGeo.materials = [constantMaterial(color: UIColor.clear)]
         
         let circle = SCNNode(geometry: circleGeo)
         circle.name = seatingArea.id ?? ""
         uiNode.addChildNode(circle)
         
-        let waveGeo = SCNPlane(width: 0.2, height: 0.2)
-        waveGeo.cornerRadius = 0.1
+        // Made larger wave
+        let waveGeo = SCNPlane(width: 0.35, height: 0.35)
+        waveGeo.cornerRadius = 0.175
         waveGeo.materials = [
             constantMaterial(color: PinStyle.normalColor.withAlphaComponent(0.6))
         ]
@@ -613,6 +896,14 @@ private extension Tables3DMapVC {
         wave.name = seatingArea.id ?? ""
         addWaveAnimation(to: wave)
         uiNode.addChildNode(wave)
+        
+        // Add a visible circle for better visibility
+        let visibleCircleGeo = SCNPlane(width: 0.30, height: 0.30)
+        visibleCircleGeo.cornerRadius = 0.15
+        visibleCircleGeo.materials = [constantMaterial(color: PinStyle.normalColor)]
+        let visibleCircle = SCNNode(geometry: visibleCircleGeo)
+        visibleCircle.position.z = 0.001
+        uiNode.addChildNode(visibleCircle)
         
         uiNode.seatingMeta = SeatingMeta(
             seatingAreaId: seatingArea.id ?? "",
@@ -658,39 +949,39 @@ private extension Tables3DMapVC {
             return root
         }
     
-    func renderParentDots(scene: SCNScene) {
-           var renderedParents = Set<String>()
-
-           scene.rootNode.enumerateHierarchy { node, _ in
-               guard
-                   let geoName = node.geometry?.name,
-                   let seating = self.seatingAreaByMeshName[geoName]
-               else { return }
-
-               let center = self.worldCenter(of: node)
-
-               if seating.isDJBoot {
-                   scene.rootNode.addChildNode(self.makeDJDot(position: center))
-                   return
-               }
-
-               if let parentId = seating.parentSeatingAreaId, !parentId.isEmpty {
-                   // This mesh belongs to a group — render one parent dot per group
-                   guard !renderedParents.contains(parentId) else { return }
-                   renderedParents.insert(parentId)
-                   scene.rootNode.addChildNode(
-                       self.makeParentDot(position: center, seatingArea: seating)
-                   )
-               } else if let id = seating.id, !id.isEmpty {
-                   // Top-level / standalone seating area
-                   guard !renderedParents.contains(id) else { return }
-                   renderedParents.insert(id)
-                   scene.rootNode.addChildNode(
-                       self.makeChildDot(position: center, seatingArea: seating)
-                   )
-               }
-           }
-       }
+//    func renderParentDots(scene: SCNScene) {
+//           var renderedParents = Set<String>()
+//
+//           scene.rootNode.enumerateHierarchy { node, _ in
+//               guard
+//                   let geoName = node.geometry?.name,
+//                   let seating = self.seatingAreaByMeshName[geoName]
+//               else { return }
+//
+//               let center = self.worldCenter(of: node)
+//
+//               if seating.isDJBoot {
+//                   scene.rootNode.addChildNode(self.makeDJDot(position: center))
+//                   return
+//               }
+//
+//               if let parentId = seating.parentSeatingAreaId, !parentId.isEmpty {
+//                   // This mesh belongs to a group — render one parent dot per group
+//                   guard !renderedParents.contains(parentId) else { return }
+//                   renderedParents.insert(parentId)
+//                   scene.rootNode.addChildNode(
+//                       self.makeParentDot(position: center, seatingArea: seating)
+//                   )
+//               } else if let id = seating.id, !id.isEmpty {
+//                   // Top-level / standalone seating area
+//                   guard !renderedParents.contains(id) else { return }
+//                   renderedParents.insert(id)
+//                   scene.rootNode.addChildNode(
+//                       self.makeChildDot(position: center, seatingArea: seating)
+//                   )
+//               }
+//           }
+//       }
     
     func makeFlatCircle(color: UIColor) -> SCNNode {
         

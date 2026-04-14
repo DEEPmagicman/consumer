@@ -31,10 +31,19 @@ final class VenueVC: UIViewController {
     }
     
     private func showShimmer() {
-        let shimmer = VenueShimmerView(frame: view.bounds)
+        let shimmer = VenueShimmerView()
+        shimmer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(shimmer)
-        shimmer.start()
+
+        NSLayoutConstraint.activate([
+            shimmer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            shimmer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            shimmer.topAnchor.constraint(equalTo: view.topAnchor),
+            shimmer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
         self.shimmerView = shimmer
+        shimmer.start()
     }
     
     private func getVenueDetails() {
@@ -175,6 +184,7 @@ final class VenueShimmerView: UIView {
         backgroundColor = UIColor.black.withAlphaComponent(0.3)
         
         let width = UIScreen.main.bounds.width
+//        let width = self.bounds.width
         
         // 🔹 Follow button
         makeShimmer(CGRect(x: width/2 - 60, y: 240, width: 120, height: 36), corner: 18)

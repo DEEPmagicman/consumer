@@ -23,7 +23,9 @@
                 <outlet property="bgViewHeight" destination="f00-Bj-VrV" id="moC-7y-eeJ"/>
                 <outlet property="collectionView" destination="Qkd-S5-rjQ" id="Mp9-Yk-Fgz"/>
                 <outlet property="collectionViewHeight" destination="Tgg-fS-ClO" id="BEA-Rx-tGt"/>
+                <outlet property="dateBtn" destination="N58-fk-apm" id="Giz-Ve-Cma"/>
                 <outlet property="eventCollectionView" destination="Qkd-S5-rjQ" id="GeR-5J-EKk"/>
+                <outlet property="filterLbl" destination="Qml-zp-rJ6" id="88h-5M-hYF"/>
                 <outlet property="navTitleBgView" destination="uea-tb-0iD" id="S4B-hk-xBc"/>
                 <outlet property="navTitleLbl" destination="7UD-pA-IGd" id="Uch-en-TEQ"/>
                 <outlet property="screenTitleLabel" destination="mak-OX-VU9" id="RTa-Y9-yGI"/>

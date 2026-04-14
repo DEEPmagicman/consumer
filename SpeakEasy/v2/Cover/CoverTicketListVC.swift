@@ -617,6 +617,7 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             let shouldShow = count > 0
             cell.minusBtnView.isHidden = !shouldShow
             cell.ticketCountView.isHidden = !shouldShow
+            cell.updateSelectionUI(isSelected: shouldShow)
         }
         
         cell.onDescriptionToggle = { [weak self] ticketId in

@@ -33,6 +33,8 @@ class EventsListVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var screenTitleLabel: UILabel!
+    @IBOutlet weak var dateBtn: UIView!
+    @IBOutlet weak var filterLbl: UILabel!
     
     private var todaysEvents = [Event]()
     private var tonightEventSkip = 0
@@ -42,6 +44,9 @@ class EventsListVC: UIViewController {
     private var isCollapsed = false
     private let collapseThreshold: CGFloat = 120
     var screenType: EventsScreenType = .allEvents
+    private let dropDown = DropDown()
+    private var selectedFilter = "Date"
+    private let filterOptions = ["Date", "Nearest", "Newest"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +60,7 @@ class EventsListVC: UIViewController {
         scrollView.delegate = self
         screenTitleLabel.text = screenType.title
         navTitleLbl.text = screenType.title
+        setupDropDown()
     }
     
     override func viewDidLayoutSubviews() {
@@ -75,6 +81,12 @@ class EventsListVC: UIViewController {
             layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         }
     }
+    
+    func setupDropDown() {
+
+        dropDownLayout(dropDown: dropDown)
+    }
+    
     
     private func getEvents() {
         EventPresenter.getEvents(
@@ -102,6 +114,31 @@ class EventsListVC: UIViewController {
         }
     }
     
+    private func dropDownLayout(dropDown: DropDown) {
+
+        dropDown.cellHeight = 40
+        dropDown.backgroundColor = UIColor(hex: "#282828")
+        dropDown.textColor = .white
+        dropDown.textFont = UIFont.systemFont(ofSize: 14)
+        
+        DropDown.appearance().setupCornerRadius(10)
+        
+        dropDown.anchorView = nil   // 👉 set dynamically on click
+        dropDown.direction = .bottom
+        dropDown.bottomOffset = CGPoint(x: 0, y: 45)
+        
+        dropDown.dataSource = filterOptions
+        dropDown.selectionBackgroundColor = .clear
+        dropDown.selectionAction = { [weak self] index, item in
+            guard let self = self else { return }
+            
+            self.selectedFilter = item
+            print("Selected:", item)
+            
+            self.applyFilter(type: item)
+        }
+    }
+    
     private func updateCollectionViewHeight() {
         eventCollectionView.layoutIfNeeded()
         collectionViewHeight.constant = eventCollectionView.collectionViewLayout.collectionViewContentSize.height
@@ -120,9 +157,34 @@ class EventsListVC: UIViewController {
     }
     
     @IBAction func onClickDateBtn(_ sender: Any) {
+        dropDown.anchorView = dateBtn
+        dropDown.width = dateBtn.frame.width
         
+        dropDown.show()
     }
     
+    func applyFilter(type: String) {
+
+        switch type {
+            
+        case "Date":
+            filterLbl.text = type
+            print("Sort by Date")
+            
+        case "Nearest":
+            filterLbl.text = type
+            print("Sort by Nearest")
+            
+        case "Newest":
+            filterLbl.text = type
+            print("Sort by Newest")
+            
+        default:
+            break
+        }
+        dropDown.hide() 
+        eventCollectionView.reloadData()
+    }
 }
 
 extension EventsListVC: UICollectionViewDelegate, UICollectionViewDataSource {

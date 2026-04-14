@@ -22,6 +22,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VenueDetailsVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
                 <outlet property="addressLbl" destination="1CK-Lt-5vZ" id="6nA-Uv-wax"/>
+                <outlet property="addressTwoLbl" destination="1lO-eV-CXf" id="Wf6-qC-dmG"/>
+                <outlet property="distanceTime" destination="oqr-XT-E18" id="btb-me-hNb"/>
+                <outlet property="etaDistanceLbl" destination="BLT-Q4-CoK" id="l68-nF-vze"/>
                 <outlet property="fbIcon" destination="s9y-OG-m5O" id="RQd-AF-my0"/>
                 <outlet property="instaIcon" destination="siR-xj-Auy" id="bmc-XY-FDm"/>
                 <outlet property="mainScrollView" destination="c6c-M2-UZt" id="WjE-z3-Wi6"/>

@@ -50,9 +50,8 @@ final class VenueEventTVC: UITableViewCell {
             placeholderImage: Constant.Icon.uploadImage
         )
       
-        
-        eventImg.hero.id = "event.image.\(event.id)"
-        eventTitleLbl.hero.id = "event.title.\(event.id)"
+//        eventImg.hero.id = "event.image.\(event.id)"
+//        eventTitleLbl.hero.id = "event.title.\(event.id)"
     }
 }
 

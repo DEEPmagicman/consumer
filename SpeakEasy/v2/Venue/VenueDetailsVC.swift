@@ -7,6 +7,7 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
 struct SocialPlatform {
     let iconView: UIImageView
@@ -29,6 +30,9 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var distanceTime: UILabel!
+    @IBOutlet weak var etaDistanceLbl: UILabel!
+    @IBOutlet weak var addressTwoLbl: UILabel!
     
     var venueDetails: ClipVenue? {
         didSet {
@@ -45,6 +49,8 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     private var page = 1
     private var isExpanded = false
     private let collapsedLines = 3
+    private let locationManager = CLLocationManager()
+    private var userLocation: CLLocation?
     
     private var ticketListHeightObservation: NSKeyValueObservation?
     
@@ -69,6 +75,9 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             self.tableViewHeight.constant = self.tableView.contentSize.height
             self.tableView.layoutIfNeeded()
         }
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         configureUI()
         getEvents()
     }
@@ -91,6 +100,7 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
         ].compactMap { $0 }
 
         addressLbl.text = parts.joined(separator: ", ")
+        addressTwoLbl.text = parts.joined(separator: ", ")
     }
     
     func setupSocialIcons() {
@@ -110,6 +120,52 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             platform.iconView.addGestureRecognizer(tapGesture)
             
             platform.iconView.accessibilityHint = urlString
+        }
+    }
+    
+    private func updateDistanceAndETA() {
+        guard let userLocation = userLocation,
+              let lat = venueDetails?.latitude,
+              let lon = venueDetails?.longitude else { return }
+
+        let venueLocation = CLLocation(latitude: lat, longitude: lon)
+
+        let distanceMiles = userLocation.distance(from: venueLocation) / 1609.34
+
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: userLocation.coordinate))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: venueLocation.coordinate))
+        request.transportType = .automobile
+
+        MKDirections(request: request).calculate { response, _ in
+            guard let route = response?.routes.first else { return }
+
+            let etaMinutes = Int(route.expectedTravelTime / 60)
+
+            // ✅ TIME FORMAT (11:13 ETA)
+            let arrivalDate = Date().addingTimeInterval(route.expectedTravelTime)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            let arrivalTime = formatter.string(from: arrivalDate)
+
+            DispatchQueue.main.async {
+                
+                // ✅ distanceTime → "12 min"
+                self.distanceTime.text = "\(etaMinutes) min"
+                
+                // ✅ Color logic (like map)
+                switch etaMinutes {
+                case 0...10:
+                    self.distanceTime.textColor = .systemGreen
+                case 11...20:
+                    self.distanceTime.textColor = .systemOrange
+                default:
+                    self.distanceTime.textColor = .systemRed
+                }
+                
+                // ✅ etaDistanceLbl → "11:13 ETA - 2.0 miles away"
+                self.etaDistanceLbl.text = "\(arrivalTime) ETA - \(String(format: "%.1f", distanceMiles)) miles away"
+            }
         }
     }
     
@@ -299,4 +355,11 @@ extension VenueDetailsVC: UITableViewDelegate, UITableViewDataSource {
 //            getEvents()
 //        }
 //    }
+}
+
+extension VenueDetailsVC: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        userLocation = locations.last
+        updateDistanceAndETA()
+    }
 }

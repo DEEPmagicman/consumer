@@ -83,6 +83,8 @@ class TablesListVC: UIViewController {
 
         optionSwitchView.options = options
 
+        switchContainerView.isHidden = options.count <= 1
+
         optionSwitchView.onSelectionChange = { [weak self] index in
             self?.handleSelection(index)
         }

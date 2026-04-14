@@ -29,11 +29,8 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VNf-C0-xdM">
                         <rect key="frame" x="0.0" y="0.0" width="335" height="174"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="stD-Ue-Tkv" userLabel="TableName">
-                                <rect key="frame" x="18" y="22" width="214" height="17"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="17" id="apI-bB-Sdm"/>
-                                </constraints>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="stD-Ue-Tkv" userLabel="TableName">
+                                <rect key="frame" x="18" y="22" width="214" height="0.0"/>
                                 <fontDescription key="fontDescription" name="Inter-Medium" family="Inter" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -67,7 +64,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8M-Qg-GWE" userLabel="TableDetails">
-                                <rect key="frame" x="18" y="47" width="299" height="14.666666666666664"/>
+                                <rect key="frame" x="18" y="30.000000000000004" width="299" height="14.666666666666668"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="14.67" id="rP4-8J-4uY"/>
                                 </constraints>
@@ -76,13 +73,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="753" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ScU-3Y-7Jh" userLabel="TableSubTitle">
-                                <rect key="frame" x="18" y="67.666666666666671" width="299" height="0.0"/>
+                                <rect key="frame" x="18" y="50.666666666666664" width="299" height="0.0"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                 <color key="textColor" red="0.82352941176470584" green="0.83529411764705885" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gte-pa-yuV">
-                                <rect key="frame" x="136.66666666666666" y="79.666666666666671" width="62" height="32"/>
+                                <rect key="frame" x="136.66666666666666" y="62.666666666666657" width="62" height="32"/>
                                 <color key="backgroundColor" red="0.89411764705882346" green="0.89411764705882346" blue="0.90588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="62" id="EYW-R7-3mO"/>

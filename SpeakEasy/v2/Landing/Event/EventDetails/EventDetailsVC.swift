@@ -116,6 +116,7 @@ class EventDetailsVC: UIViewController {
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
     private var autoScrollTimer: Timer?
+    private var isEventDetailAPICalled = false
 
     private var totalSelectedTickets: Int {
         let normalTotal = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
@@ -289,7 +290,10 @@ class EventDetailsVC: UIViewController {
     }
 
     private func getEventDetail() {
+        guard !isEventDetailAPICalled else { return }
+
         guard let eventId = self.event?.uniqueId ?? self.uniqueId else {
+            isEventDetailAPICalled = false
             return
         }
 
@@ -300,22 +304,23 @@ class EventDetailsVC: UIViewController {
             venueTimeZone: venueDetails?.useTimezone,
             promotionLinkId: promoteId
         ) { [weak self] _, _, eventDetail, errCode in
-            self?.hideSkeleton()
 
             guard let self = self else { return }
+
+            self.hideSkeleton()
             self.view.alpha = 1
+            self.isEventDetailAPICalled = true
 
             if eventDetail == nil {
                 if errCode == 404 && self.promoteId != "" {
                     self.promoteId = ""
                     self.getEventDetail()
-                } else {
-                    // zero case
                 }
                 return
             }
 
             self.event = eventDetail
+
             if let venue = eventDetail?.venue {
                 self.venueDetails = venue
             }
@@ -325,22 +330,21 @@ class EventDetailsVC: UIViewController {
             ticket.forEach { tic in
                 self.eventTicketId.append(tic.id ?? "")
             }
+
             self.lineUpCollectionView.reloadData()
 
             if let show = self.event?.showEventAttendees {
+                self.attendeesView.isHidden = !show
                 if show {
                     self.getEventAttendees()
-                } else {
-                    self.attendeesView.isHidden = true
                 }
             } else {
                 self.attendeesView.isHidden = true
             }
-            
-            self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
-            
-            updateLineUpView()
 
+            self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
+
+            self.updateLineUpView()
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
         }
@@ -606,7 +610,7 @@ class EventDetailsVC: UIViewController {
 
         let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
 
-        if isAnyFeatureEnabled {
+        if isAnyFeatureEnabled  && isEventDetailAPICalled {
             UIView.transition(with: vipTablesView,
                               duration: 0.25,
                               options: .transitionCrossDissolve,

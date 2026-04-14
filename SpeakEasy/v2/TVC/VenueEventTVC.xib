@@ -85,44 +85,61 @@
                                                 </constraints>
                                             </stackView>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P04-sY-W6k">
-                                                <rect key="frame" x="345" y="0.0" width="69" height="34"/>
+                                                <rect key="frame" x="345" y="0.0" width="80" height="34"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8U3-Sq-fvv">
-                                                        <rect key="frame" x="0.0" y="14" width="69" height="20"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QZx-Za-hXJ">
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="34"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From $2,000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Reb-42-xqW">
-                                                                <rect key="frame" x="4" y="2" width="61" height="16"/>
-                                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
-                                                                <color key="textColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="flm-YA-7YV">
+                                                                <rect key="frame" x="0.0" y="0.0" width="80" height="14"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="14" id="Pna-ia-bqM"/>
+                                                                </constraints>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8U3-Sq-fvv">
+                                                                <rect key="frame" x="0.0" y="14" width="80" height="20"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="From $2,000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Reb-42-xqW">
+                                                                        <rect key="frame" x="4" y="4.0000000000000009" width="72" height="12.333333333333336"/>
+                                                                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="10"/>
+                                                                        <color key="textColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                <real key="value" value="9"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                    </label>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.8901960784313725" green="0.85882352941176465" blue="0.78823529411764703" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="Reb-42-xqW" secondAttribute="trailing" constant="4" id="47x-LG-5q7"/>
+                                                                    <constraint firstItem="Reb-42-xqW" firstAttribute="centerY" secondItem="8U3-Sq-fvv" secondAttribute="centerY" id="8Me-Y0-WS6"/>
+                                                                    <constraint firstItem="Reb-42-xqW" firstAttribute="leading" secondItem="8U3-Sq-fvv" secondAttribute="leading" constant="4" id="v7X-GS-jZh"/>
+                                                                    <constraint firstAttribute="height" constant="20" id="waO-Pj-ZCW"/>
+                                                                </constraints>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                         <real key="value" value="9"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
-                                                            </label>
+                                                            </view>
                                                         </subviews>
-                                                        <color key="backgroundColor" red="0.8901960784313725" green="0.85882352941176465" blue="0.78823529411764703" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstItem="Reb-42-xqW" firstAttribute="top" secondItem="8U3-Sq-fvv" secondAttribute="top" constant="2" id="1Pg-HW-ZmX"/>
-                                                            <constraint firstAttribute="trailing" secondItem="Reb-42-xqW" secondAttribute="trailing" constant="4" id="47x-LG-5q7"/>
-                                                            <constraint firstAttribute="bottom" secondItem="Reb-42-xqW" secondAttribute="bottom" constant="2" id="fJP-lB-Yyd"/>
-                                                            <constraint firstItem="Reb-42-xqW" firstAttribute="leading" secondItem="8U3-Sq-fvv" secondAttribute="leading" constant="4" id="v7X-GS-jZh"/>
-                                                            <constraint firstAttribute="height" constant="20" id="waO-Pj-ZCW"/>
-                                                        </constraints>
-                                                    </view>
+                                                    </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="8U3-Sq-fvv" secondAttribute="bottom" id="Mik-nT-GZq"/>
-                                                    <constraint firstAttribute="trailing" secondItem="8U3-Sq-fvv" secondAttribute="trailing" id="R8r-LE-zA8"/>
-                                                    <constraint firstAttribute="width" constant="69" id="Zbz-fT-fK3"/>
+                                                    <constraint firstAttribute="bottom" secondItem="QZx-Za-hXJ" secondAttribute="bottom" id="2ur-89-5Rq"/>
+                                                    <constraint firstItem="QZx-Za-hXJ" firstAttribute="top" secondItem="P04-sY-W6k" secondAttribute="top" id="KkV-jl-JDN"/>
+                                                    <constraint firstAttribute="width" constant="80" id="a2a-ev-uiU"/>
                                                     <constraint firstAttribute="height" constant="34" id="eKc-KC-kMp"/>
-                                                    <constraint firstItem="8U3-Sq-fvv" firstAttribute="leading" secondItem="P04-sY-W6k" secondAttribute="leading" id="fpi-U5-rkE"/>
+                                                    <constraint firstItem="QZx-Za-hXJ" firstAttribute="leading" secondItem="P04-sY-W6k" secondAttribute="leading" id="fZ5-8L-gfZ"/>
+                                                    <constraint firstAttribute="trailing" secondItem="QZx-Za-hXJ" secondAttribute="trailing" id="lc2-69-q5j"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="9"/>
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>

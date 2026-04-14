@@ -25,19 +25,26 @@ class EventLineUpCVC: UICollectionViewCell {
     func configure(with artistData: ArtistData) {
 
         let artist = artistData.artist
+
         imageShimmerView.isHidden = false
         textSimmerView.isHidden = false
 
         nameLbl.text = artist.name
         textSimmerView.isHidden = true
 
-        if let imageKey = artist.artistImage?.key,
-           let url = URL(string: imageKey),
-           !imageKey.isEmpty {
+        let imageKey = artist.artistImage?.key ?? ""
 
-            imageView.sd_setImage(with: url, placeholderImage: nil) { [weak self] _, _, _, _ in
-                guard let self = self else { return }
-                self.imageShimmerView.isHidden = true
+        var finalURLString = imageKey
+
+        // ✅ Handle relative URL
+        if !imageKey.isEmpty && !imageKey.lowercased().hasPrefix("http") {
+            finalURLString = "\(SharedURL.amazonStorage)\(imageKey)"
+        }
+
+        if let url = URL(string: finalURLString), !finalURLString.isEmpty {
+
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder")) { [weak self] _, _, _, _ in
+                self?.imageShimmerView.isHidden = true
             }
 
         } else {
