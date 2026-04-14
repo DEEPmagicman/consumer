@@ -11,10 +11,15 @@
         <array key="Inter-Regular.ttf">
             <string>Inter-Regular</string>
         </array>
+        <array key="Inter-SemiBold.ttf">
+            <string>Inter-SemiBold</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Tables3DMapVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="buyNowBtn" destination="ytP-NT-Y6d" id="hy3-a9-QL7"/>
+                <outlet property="buyNowBtnView" destination="F1o-Vw-JPr" id="ANe-Zf-Xtn"/>
                 <outlet property="mapView" destination="1Ca-TB-OPd" id="4bD-i5-ybu"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="F1R-8k-Y6F"/>
                 <outlet property="zoneSelector" destination="lQR-HP-PDY" id="Kvh-oO-YhV"/>
@@ -87,7 +92,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Ca-TB-OPd">
-                    <rect key="frame" x="0.0" y="166" width="393" height="618"/>
+                    <rect key="frame" x="0.0" y="166" width="393" height="686"/>
                     <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQR-HP-PDY" customClass="ZoneSelectorView" customModule="Speakeasy" customModuleProvider="target">
@@ -97,22 +102,57 @@
                         <constraint firstAttribute="height" constant="70" id="V6f-AG-LbC"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F1o-Vw-JPr">
+                    <rect key="frame" x="0.0" y="714" width="393" height="138"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ytP-NT-Y6d" customClass="LoadingButton" customModule="MHLoadingButton">
+                            <rect key="frame" x="16" y="30" width="361" height="40"/>
+                            <color key="backgroundColor" red="0.42745098040000001" green="0.36862745099999999" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="pzM-UX-SmZ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="BOOK NOW">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="onClickBuyNow:" destination="-1" eventType="touchUpInside" id="AZ4-kv-VEd"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="0.70440985451281912" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="ytP-NT-Y6d" firstAttribute="leading" secondItem="F1o-Vw-JPr" secondAttribute="leading" constant="16" id="AxR-9j-bt1"/>
+                        <constraint firstAttribute="trailing" secondItem="ytP-NT-Y6d" secondAttribute="trailing" constant="16" id="iVg-jR-sjR"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="F1o-Vw-JPr" firstAttribute="top" secondItem="lQR-HP-PDY" secondAttribute="top" id="5YL-RT-zU3"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="lQR-HP-PDY" secondAttribute="trailing" id="6t5-l5-KaH"/>
+                <constraint firstItem="F1o-Vw-JPr" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="94L-dG-X8s"/>
                 <constraint firstItem="lQR-HP-PDY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="AV9-FJ-wWn"/>
                 <constraint firstItem="7Df-xJ-1A1" firstAttribute="centerY" secondItem="gik-O4-ybj" secondAttribute="centerY" id="AbI-Yh-KCU"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="ytP-NT-Y6d" secondAttribute="bottom" id="Gfe-wZ-XfF"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="lQR-HP-PDY" secondAttribute="bottom" id="JNA-b8-eVX"/>
                 <constraint firstItem="1Ca-TB-OPd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="JQL-pS-hdI"/>
                 <constraint firstItem="7Df-xJ-1A1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gik-O4-ybj" secondAttribute="trailing" constant="10" id="KGU-NY-PPS"/>
                 <constraint firstItem="gik-O4-ybj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="14" id="LNy-qc-WR5"/>
                 <constraint firstItem="gik-O4-ybj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="NEh-Yy-bJa"/>
                 <constraint firstItem="1Ca-TB-OPd" firstAttribute="top" secondItem="gik-O4-ybj" secondAttribute="bottom" constant="10" id="bqJ-Sl-0na"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1Ca-TB-OPd" secondAttribute="bottom" id="d25-dX-EkD"/>
+                <constraint firstAttribute="bottom" secondItem="1Ca-TB-OPd" secondAttribute="bottom" id="d25-dX-EkD"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1Ca-TB-OPd" secondAttribute="trailing" id="fji-57-F9V"/>
+                <constraint firstAttribute="bottom" secondItem="F1o-Vw-JPr" secondAttribute="bottom" id="hkz-rd-8tU"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="7Df-xJ-1A1" secondAttribute="trailing" constant="14" id="j6j-hc-QKV"/>
+                <constraint firstAttribute="trailing" secondItem="F1o-Vw-JPr" secondAttribute="trailing" id="qjP-k8-W1P"/>
             </constraints>
             <point key="canvasLocation" x="58.778625954198468" y="119.71830985915494"/>
         </view>
