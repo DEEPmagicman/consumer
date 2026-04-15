@@ -27,6 +27,7 @@ class PagerViewTVC: FSPagerViewCell {
     var booking: Booking?
     var addOnsBooking: AddOnsBooking?
     var barTabBooking: BarTabBooking?
+    var qrBorderColorHex: String?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -53,11 +54,31 @@ class PagerViewTVC: FSPagerViewCell {
     }
     
     private func flipView() {
-        UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: {[weak self] in
+        let shouldShowBorder = ticketCodeView.isHidden == false
+        
+        UIView.transition(with: containerView, duration: 1, options: .transitionFlipFromRight, animations: { [weak self] in
             guard let self = self else { return }
-            self.ticketCodeView.isHidden = !self.ticketCodeView.isHidden
-            self.qrImage.isHidden = !self.qrImage.isHidden
-        })
+            
+            self.ticketCodeView.isHidden.toggle()
+            self.qrImage.isHidden.toggle()
+            
+            if !shouldShowBorder {
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                self.upsellQRBgView.layer.borderWidth = 0
+                CATransaction.commit()
+            }
+            
+        }) { [weak self] _ in
+            guard let self = self else { return }
+            
+            if self.ticketCodeView.isHidden {
+                self.upsellQRBgView.layer.borderWidth = 0
+                UIView.animate(withDuration: 0.01, delay: 0, options: .curveEaseOut) {
+                    self.upsellQRBgView.layer.borderWidth = 8
+                }
+            }
+        }
     }
     
 }
@@ -73,11 +94,15 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
         cell.contentView.backgroundColor = .clear
-        cell.checkInProgress.layer.cornerRadius = 5
+        cell.checkInProgress.layer.cornerRadius = 8
         if uniqueTickets.count != 0 {
             if let barBooking = barTabBooking {
-                upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
-                upsellQRBgView.layer.borderWidth = 0
+                if let color = qrBorderColorHex {
+                    upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
+                } else {
+                    upsellQRBgView.layer.borderColor = UIColor.white.cgColor
+                }
+                upsellQRBgView.layer.borderWidth = 8
                 cell.titleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.customName ?? "" == "" ? barBooking.uniqueTickets[indexPath.row].coverTicket?.displayName : barBooking.uniqueTickets[indexPath.row].coverTicket?.displayCustomName
                 cell.subTitleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.displayDescription
                 cell.quantityLbl.text = "\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
@@ -87,8 +112,14 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                 cell.checkInCount.text = "\(checkInCount)/\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
                 cell.checkInProgress.setProgress(Float(checkInCount) / Float(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0), animated: false)
             } else {
-                upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
-                upsellQRBgView.layer.borderWidth = 0
+               
+                if let color = qrBorderColorHex {
+                    upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
+                } else {
+                    upsellQRBgView.layer.borderColor = UIColor.white.cgColor
+                }
+                upsellQRBgView.layer.borderWidth = 8
+                
                 cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
                 cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
                 cell.quantityLbl.text = "\(uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"

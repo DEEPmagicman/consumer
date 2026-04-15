@@ -36,6 +36,7 @@ final class CustomQRScreen: UIViewController {
     var addOnsQR:UIImage? = nil
     var isOnlyAddOnsAvailable = false
     var guestInfo = String()
+    var qrBorderColorHex: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,6 +144,7 @@ extension CustomQRScreen: FSPagerViewDelegate, FSPagerViewDataSource {
         cell.backupCode.text = bookingCode
         cell.bookingDateTime.text = "Purchased on".localize() + " \(createdAT)"
         cell.guestName.text = guestInfo
+        cell.qrBorderColorHex = qrBorderColorHex
         
         if isOnlyAddOnsAvailable {
             if index == 0 {
