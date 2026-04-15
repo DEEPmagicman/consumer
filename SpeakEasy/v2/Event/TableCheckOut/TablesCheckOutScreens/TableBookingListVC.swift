@@ -9,15 +9,11 @@ class TableBookingListVC: UIViewController {
     var seatingAreas: [SeatingArea] = []
     var seatingAreasFilteredOut: [SeatingArea] = []
     var event: Event?
-    var skip: Int = 0
-    var hasMore: Bool = true
-    var isLoading: Bool = false
-    private var showShimmer = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        fetchSeatingAreas()
+        tableView.reloadData()
     }
 
     private func setupTableView() {
@@ -26,108 +22,7 @@ class TableBookingListVC: UIViewController {
         tableView.register(TableListTVC.nib, forCellReuseIdentifier: TableListTVC.identifier)
     }
 
-    private func fetchSeatingAreas() {
-        guard !isLoading, hasMore else { return }
-
-        isLoading = true
-
-        TablePresenter.getSeatingAreas(
-            eventId: event?.id ?? "",
-            skip: skip
-        ) { [weak self] isSuccess, errMsg, list, apiHasMore in
-
-            guard let self else { return }
-
-            self.isLoading = false
-            self.showShimmer = false
-
-            if isSuccess {
-                let filtered = self.filterSeatingAreas(list)
-
-                self.seatingAreas.append(contentsOf: filtered.visible)
-                self.seatingAreasFilteredOut.append(contentsOf: filtered.filteredOut)
-
-                self.hasMore = apiHasMore
-                self.skip += list.count
-
-            } else {
-                print(errMsg ?? "Error fetching seating areas")
-            }
-
-            self.tableView.reloadData()
-        }
-    }
-
-    // MARK: - FILTER
-
-    private func filterSeatingAreas(_ list: [SeatingArea]) -> (visible: [SeatingArea], filteredOut: [SeatingArea]) {
-
-        let timezone = event?.venue?.timezone
-            ?? event?.venue?.useTimezone
-            ?? TimeZone.current.identifier
-
-        var visible: [SeatingArea] = []
-        var filteredOut: [SeatingArea] = []
-
-        list.forEach { item in
-            let conditions = checkTicketConditions(item, timezone: timezone)
-
-            let isValid =
-                conditions.isEnabled &&
-                !conditions.isFutureTicket &&
-                !conditions.isSoldOut &&
-                !conditions.isPaused &&
-                !conditions.isSaleEnded
-            if isValid {
-                visible.append(item)
-            } else {
-                filteredOut.append(item)
-            }
-        }
-
-        return (visible, filteredOut)
-    }
-
-    // MARK: - CONDITIONS
-
-    private func checkTicketConditions(
-        _ area: SeatingArea,
-        timezone: String
-    ) -> (
-        isFutureTicket: Bool,
-        isSaleEnded: Bool,
-        isSoldOut: Bool,
-        isPaused: Bool,
-        isEnabled: Bool
-    ) {
-
-        let now = Date.venueNow(timezone: timezone)
-
-        let beginSale = area.beginSale?.toVenueDate(timezone: timezone)
-        let endSale = area.endSale?.toVenueDate(timezone: timezone)
-
-        let isFutureTicket = beginSale.map { $0 > now } ?? false
-        let isSaleEnded = endSale.map { $0 < now } ?? false
-
-        let baseSoldOut =
-            (area.issuedPublicInventory ?? 0) <= (area.soldPublicInventory ?? 0)
-
-        let isSoldOut: Bool = {
-            if area.bookingType == .timeWise {
-                let slots = area.timeSlots ?? []
-                return slots.isEmpty ? baseSoldOut : slots.allSatisfy {
-                    ($0.issuedPublicInventory ?? 0) <= ($0.soldPublicInventory ?? 0)
-                }
-            }
-            return baseSoldOut
-        }()
-
-        let status = area.status?.uppercased() ?? ""
-        let isPaused = status == "DISABLED"
-        let isEnabled = status == "ENABLED"
-
-        return (isFutureTicket, isSaleEnded, isSoldOut, isPaused, isEnabled)
-    }
+    // MARK: - HELPERS
 
     private func formatGuestCount(min: Int, max: Int) -> String {
         if min > 0 && max > 0 {
@@ -140,9 +35,9 @@ class TableBookingListVC: UIViewController {
 
     private func getLowestPricedAvailableSlot(for area: SeatingArea) -> (min: Double, deposit: Double)? {
 
-        guard area.bookingType == .timeWise else { return
-            
-            (Double(area.minimum ?? 0), Double(area.depositWithFees ?? 0)) }
+        guard area.bookingType == .timeWise else {
+            return (Double(area.minimum ?? 0), Double(area.depositWithFees ?? 0))
+        }
 
         let availableSlots = (area.timeSlots ?? []).filter {
             ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0)
@@ -153,13 +48,12 @@ class TableBookingListVC: UIViewController {
         }
 
         let min = Double(slot.minimum ?? 0)
-        
 
         let deposit: Double =
             (slot.depositType ?? "").uppercased() == "PERCENTAGE"
             ? (min * Double(slot.deposit ?? 0)) / 100
             : Double(slot.depositWithFees ?? slot.deposit ?? 0)
-        
+
         let taxPercent = 16.76
         let final = deposit + (deposit * taxPercent / 100)
 
@@ -177,7 +71,6 @@ class TableBookingListVC: UIViewController {
         let venueTZ = TimeZone(identifier: timezone)
 
         let slots = (area.timeSlots ?? [])
-//            .filter { ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0) }
             .sorted { ($0.startTime ?? "") < ($1.startTime ?? "") }
 
         guard let first = slots.first,
@@ -254,7 +147,7 @@ class TableBookingListVC: UIViewController {
 extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showShimmer ? 6 : seatingAreas.count
+        return seatingAreas.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -265,13 +158,6 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
         )
 
         cell.selectionStyle = .none
-
-        if showShimmer {
-            cell.startShimmer()
-            return cell
-        }
-
-        cell.stopShimmer()
 
         let item = seatingAreas[indexPath.row]
 
@@ -315,14 +201,7 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if !showShimmer && indexPath.row == seatingAreas.count - 1 {
-            fetchSeatingAreas()
-        }
-    }
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard !showShimmer else { return }
         openSeatingArea(seatingAreas[indexPath.row])
     }
 }

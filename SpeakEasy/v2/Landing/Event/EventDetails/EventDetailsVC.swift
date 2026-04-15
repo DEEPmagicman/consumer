@@ -4,6 +4,7 @@
 //
 //  Created by MAC on 05/02/26.
 //
+// swiftlint: disable all
 
 import UIKit
 import MapKit
@@ -125,6 +126,9 @@ class EventDetailsVC: UIViewController {
             .reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         return normalTotal + groupedTotal
     }
+    
+    private var seatingAreas: [SeatingArea] = []
+    private var seatingAreasFilteredOut: [SeatingArea] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,6 +136,7 @@ class EventDetailsVC: UIViewController {
 
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
+        fetchSeatingAreas()
         getEventDetail()
 //        mainImg.hero.id = "event.image.\(heroIndex)"
 //          titleLbl.hero.id = "event.title.\(heroIndex)"
@@ -349,6 +354,25 @@ class EventDetailsVC: UIViewController {
             self.getTicketLinksAndRefresh()
         }
     }
+    
+    private func fetchSeatingAreas() {
+
+        TablePresenter.getSeatingAreas(
+            eventId: event?.id ?? "",
+            skip: 0
+        ) { [weak self] isSuccess, errMsg, list, _ in
+            
+            guard let self else { return }
+
+            if isSuccess {
+                let filtered = self.filterSeatingAreas(list)
+                self.seatingAreas = list
+                self.seatingAreasFilteredOut = filtered.visible
+            } else {
+                print(errMsg ?? "")
+            }
+        }
+    }
 
     private func getEventAttendees() {
         guard let eventId = self.event?.uniqueId else {
@@ -561,6 +585,77 @@ class EventDetailsVC: UIViewController {
             return !state.isHidden
         }
     }
+    
+    private func filterSeatingAreas(_ list: [SeatingArea]) -> (visible: [SeatingArea], filteredOut: [SeatingArea]) {
+
+        let timezone = event?.venue?.timezone
+            ?? event?.venue?.useTimezone
+            ?? TimeZone.current.identifier
+
+        var visible: [SeatingArea] = []
+        var filteredOut: [SeatingArea] = []
+
+        list.forEach { item in
+            let conditions = checkTicketConditions(item, timezone: timezone)
+
+            let isValid =
+                conditions.isEnabled &&
+                !conditions.isFutureTicket &&
+                !conditions.isSoldOut &&
+                !conditions.isPaused &&
+                !conditions.isSaleEnded
+
+            if isValid {
+                visible.append(item)
+            } else {
+                filteredOut.append(item)
+            }
+        }
+
+        return (visible, filteredOut)
+    }
+    
+    
+    private func checkTicketConditions(
+        _ area: SeatingArea,
+        timezone: String
+    ) -> (
+        isFutureTicket: Bool,
+        isSaleEnded: Bool,
+        isSoldOut: Bool,
+        isPaused: Bool,
+        isEnabled: Bool
+    ) {
+
+        let now = Date.venueNow(timezone: timezone)
+
+        let beginSale = area.beginSale?.toVenueDate(timezone: timezone)
+        let endSale = area.endSale?.toVenueDate(timezone: timezone)
+
+        let isFutureTicket = beginSale.map { $0 > now } ?? false
+        let isSaleEnded = endSale.map { $0 < now } ?? false
+
+        let baseSoldOut =
+            (area.issuedPublicInventory ?? 0) <= (area.soldPublicInventory ?? 0)
+
+        let isSoldOut: Bool = {
+            if area.bookingType == .timeWise {
+                let slots = area.timeSlots ?? []
+                return slots.isEmpty ? baseSoldOut : slots.allSatisfy {
+                    ($0.issuedPublicInventory ?? 0) <= ($0.soldPublicInventory ?? 0)
+                }
+            }
+            return baseSoldOut
+        }()
+
+        let status = area.status?.uppercased() ?? ""
+        let isPaused = status == "DISABLED"
+        let isEnabled = status == "ENABLED"
+
+        return (isFutureTicket, isSaleEnded, isSoldOut, isPaused, isEnabled)
+    }
+
+
 
     private func isTicketDisabledByLink(_ ticket: EventTicket) -> Bool {
         guard let id = ticket.id else { return false }
@@ -621,8 +716,10 @@ class EventDetailsVC: UIViewController {
             vipTablesView.isHidden = true
         }
 
-        if event.isEnable3DMap && event.isEnableOnlineTables {
+        if event.isEnable3DMap && event.isEnableOnlineTables && !self.seatingAreasFilteredOut.isEmpty {
             vipTableSubTitleLbl.text = "Ideal for larger groups. 3D map available."
+        } else if event.isEnable3DMap && event.isEnableOnlineTables {
+            vipTableSubTitleLbl.text = "Ideal for larger groups."
         } else {
             vipTableSubTitleLbl.text = "VIP Tables Ideal for larger groups."
         }
@@ -1244,7 +1341,7 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickVIPtable(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.tableCheckOutVC(self, event: event)
+            Navigate.to.tableCheckOutVC(self, event: event, seatingAreas: self.seatingAreas, seatingAreasFilteredOut: seatingAreasFilteredOut)
         }
     }
     

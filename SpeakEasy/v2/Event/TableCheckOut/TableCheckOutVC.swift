@@ -18,6 +18,9 @@ class TableCheckOutVC: UIViewController {
     
     private var tablesListVC: TablesListVC?
     
+    var seatingAreas: [SeatingArea] = []
+    var seatingAreasFilteredOut: [SeatingArea] = []
+    
     var event: Event?
     var venueDetails: ClipVenue?
     
@@ -25,6 +28,8 @@ class TableCheckOutVC: UIViewController {
         super.viewDidLoad()
         let vc = TablesListVC()
         vc.event = event
+        vc.seatingAreas = seatingAreas
+        vc.seatingAreasFilteredOut = seatingAreasFilteredOut
         tablesListVC = vc
         setupChildVCs()
         setupUI()

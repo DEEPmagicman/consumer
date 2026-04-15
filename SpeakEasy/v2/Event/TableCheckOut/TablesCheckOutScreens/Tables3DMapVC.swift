@@ -103,6 +103,7 @@ final class Tables3DMapVC: UIViewController {
     private var seatingAreaByParentId: [String: SeatingArea] = [:]
     private var seatingAreaById: [String: SeatingArea] = [:]
     var seatingAreas: [SeatingArea] = []
+    var seatingAreasFilteredOut: [SeatingArea] = []
 
     private var seatingAreaFilteredOutByParentId: [String: SeatingArea] = [:]
     private var seatingAreaFilteredOutById: [String: SeatingArea] = [:]
@@ -213,54 +214,37 @@ private extension Tables3DMapVC {
 // MARK: - API / Data
 private extension Tables3DMapVC {
 
-    func fetchAllSeatingAreas(completion: @escaping () -> Void) {
-        guard let eventId = event?.id, !eventId.isEmpty else {
-            completion()
-            return
-        }
+    func setupSeatingAreas(completion: @escaping () -> Void) {
 
-        var allAreas: [SeatingArea] = []
-        var skip = 0
-        var hasMore = true
-
-        func fetchNext() {
-            guard hasMore else {
-                self.seatingAreaByParentId = Dictionary(
-                    uniqueKeysWithValues: allAreas.compactMap { area in
-                        guard let key = area.parentSeatingAreaId, !key.isEmpty else { return nil }
-                        return (key, area)
-                    }
-                )
-
-                self.seatingAreaById = Dictionary(
-                    uniqueKeysWithValues: allAreas.compactMap { area in
-                        guard let key = area.id, !key.isEmpty else { return nil }
-                        return (key, area)
-                    }
-                )
-                self.seatingAreaFilteredOutByParentId = [:]
-                self.seatingAreaFilteredOutById = [:]
-
-                completion()
-                return
+        let allAreas = seatingAreas
+        self.seatingAreaByParentId = Dictionary(
+            uniqueKeysWithValues: allAreas.compactMap { area in
+                guard let key = area.parentSeatingAreaId, !key.isEmpty else { return nil }
+                return (key, area)
             }
+        )
 
-            TablePresenter.getSeatingAreas(eventId: eventId, skip: skip) { [weak self] ok, _, list, apiHasMore in
-                guard self != nil else { return }
-
-                if ok {
-                    allAreas.append(contentsOf: list)
-                    self?.seatingAreas.append(contentsOf: list)
-                    hasMore = apiHasMore
-                    skip += list.count
-                    fetchNext()
-                } else {
-                    completion()
-                }
+        self.seatingAreaById = Dictionary(
+            uniqueKeysWithValues: allAreas.compactMap { area in
+                guard let key = area.id, !key.isEmpty else { return nil }
+                return (key, area)
             }
-        }
+        )
+        self.seatingAreaFilteredOutByParentId = Dictionary(
+            uniqueKeysWithValues: seatingAreasFilteredOut.compactMap { area in
+                guard let key = area.parentSeatingAreaId, !key.isEmpty else { return nil }
+                return (key, area)
+            }
+        )
 
-        fetchNext()
+        self.seatingAreaFilteredOutById = Dictionary(
+            uniqueKeysWithValues: seatingAreasFilteredOut.compactMap { area in
+                guard let key = area.id, !key.isEmpty else { return nil }
+                return (key, area)
+            }
+        )
+
+        completion()
     }
     
     func parseMetadata(_ metadata: String?) -> [String: [String: String]] {
@@ -553,7 +537,7 @@ private extension Tables3DMapVC {
             }
  
             DispatchQueue.main.async {
-                self.fetchAllSeatingAreas {
+                self.setupSeatingAreas {
                     let scene = SCNScene(gltfAsset: asset)
                     self.sceneView.scene = scene
                     self.buildMeshSeatingMap(asset: asset, layout: layout)
@@ -1409,9 +1393,8 @@ private extension Tables3DMapVC {
         titleLabel.textColor = .white
         titleLabel.sizeToFit()
     
-        let selectedArea = seatingAreas.first(where: { $0.parentSeatingAreaId == selectedSeatingId })
         let minAmountLabel = UILabel()
-        minAmountLabel.text = selectedArea?.minimum != nil ? "$ \(Int(selectedArea?.minimum ?? 0)) min." : ""
+        minAmountLabel.text = minAmount != nil ? "$ \(Int(minAmount ?? 0)) min." : ""
         minAmountLabel.font = .systemFont(ofSize: 30, weight: .medium)
         minAmountLabel.textColor = .white
         minAmountLabel.sizeToFit()
@@ -1948,7 +1931,6 @@ private extension ZoneSelectorView {
         }
     }
 }
-
 
 private extension UIColor {
     static func seatingDotColor(from hex: String?) -> UIColor {

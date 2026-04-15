@@ -20,7 +20,9 @@ class TablesListVC: UIViewController {
     private var mapVC: Tables3DMapVC?
     private var listVC: TableBookingListVC?
     private var requestVC: TableRequestVC?
-
+    
+    var seatingAreas: [SeatingArea] = []
+    var seatingAreasFilteredOut: [SeatingArea] = []
     var event: Event?
 
     override func viewDidLoad() {
@@ -34,15 +36,24 @@ class TablesListVC: UIViewController {
 
     private func fetchData() {
 
-        if event?.isEnable3DMap ?? false && event?.isEnableOnlineTables ?? false {
+        let hasFilteredOut = !seatingAreasFilteredOut.isEmpty
+
+        if event?.isEnable3DMap ?? false &&
+           event?.isEnableOnlineTables ?? false &&
+           hasFilteredOut {
+
             let vc = Tables3DMapVC()
             vc.event = event
+            vc.seatingAreas = seatingAreas
+            vc.seatingAreasFilteredOut = seatingAreasFilteredOut
             mapVC = vc
         }
 
-        if event?.isEnableOnlineTables == true {
+        if event?.isEnableOnlineTables == true && hasFilteredOut {
             let vc = TableBookingListVC()
             vc.event = event
+            vc.seatingAreas = seatingAreas
+            vc.seatingAreasFilteredOut = seatingAreasFilteredOut
             listVC = vc
         }
 
@@ -68,12 +79,15 @@ class TablesListVC: UIViewController {
         ])
 
         var options: [String] = []
+        let hasFilteredOut = !seatingAreasFilteredOut.isEmpty
 
-        if event?.isEnable3DMap == true {
+        if event?.isEnable3DMap ?? false &&
+           event?.isEnableOnlineTables ?? false &&
+           hasFilteredOut {
             options.append("3D Map")
         }
 
-        if event?.isEnableOnlineTables == true {
+        if event?.isEnableOnlineTables == true && hasFilteredOut {
             options.append("List")
         }
 
@@ -82,7 +96,6 @@ class TablesListVC: UIViewController {
         }
 
         optionSwitchView.options = options
-
         switchContainerView.isHidden = options.count <= 1
 
         optionSwitchView.onSelectionChange = { [weak self] index in

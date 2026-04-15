@@ -120,51 +120,53 @@ final class OrdersTableViewCell: UITableViewCell {
             if booking.isCompedTicket == true, let inviteLink = booking.inviteLink {
                 eventTitle.text = inviteLink.name
                 
-                let date = inviteLink.date?.convertDateFormat(
+//                let date = inviteLink.date?.convertDateFormat(
+//                    from: .yyyyMMddTHHmmssSSSz,
+//                    to: .MMMD
+//                ) ?? ""
+//                
+//                let timeValue = inviteLink.date?.convertDateFormat(
+//                    from: .yyyyMMddTHHmmssSSSz,
+//                    to: .hmma
+//                ) ?? ""
+                
+                let formatted = inviteLink.date?.convertDateFormat(
                     from: .yyyyMMddTHHmmssSSSz,
-                    to: .MMMD
+                    to: .EEEEMMMMDDAT
                 ) ?? ""
+
+                time.text = formatted
                 
-                let timeValue = inviteLink.date?.convertDateFormat(
-                    from: .yyyyMMddTHHmmssSSSz,
-                    to: .hmma
-                ) ?? ""
-                
-                time.text = "\(date) • \(timeValue)"
-                
+//                time.text = "\(date) • \(timeValue)"
+
             } else if booking.bookingType == "TABLE" {
                 eventTitle.text = Constant.String.tableReservation
                 
-                let bookingDate =
+                let formatted =
                     booking.floorPlanTimeSlotBooking?.first?.floorPlanTableTimeSlot.date.convertDateFormat(
                         from: .YYYYMMDD,
-                        to: .MMMD,
+                        to: .EEEEMMMMDDAT,
                         isUTC: true,
                         customTimeZone: booking.venueObject?.useTimezone ?? ""
                     ) ??
                     booking.createdAt.convertDateFormat(
                         from: .yyyyMMddTHHmmssSSSz,
-                        to: .MMMD,
+                        to: .EEEEMMMMDDAT,
                         isUTC: true,
                         customTimeZone: booking.venueObject?.useTimezone ?? ""
                     )
                 
-                time.text = bookingDate
+                time.text = formatted
                 
             } else {
                 eventTitle.text = Constant.String.liveCoverTicket
                 
-                let date = booking.createdAt.convertDateFormat(
+                let formatted = booking.createdAt.convertDateFormat(
                     from: .yyyyMMddTHHmmssSSSz,
-                    to: .MMMD
+                    to: .EEEEMMMMDDAT
                 )
                 
-                let timeValue = booking.createdAt.convertDateFormat(
-                    from: .yyyyMMddTHHmmssSSSz,
-                    to: .hmma
-                )
-                
-                time.text = "\(date) • \(timeValue)"
+                time.text = formatted
             }
             
             let venueImage = (booking.venueObject?.venueAttachment?.first?.key ?? "").imageURL
@@ -178,28 +180,21 @@ final class OrdersTableViewCell: UITableViewCell {
         } else {
             eventTitle.text = booking.event?.title ?? "Untitled Event"
             
-            let date = booking.event?.startDateTime.convertDateFormat(
+            let formatted = booking.event?.startDateTime.convertDateFormat(
                 from: .yyyyMMddHHmmss,
-                to: .MMMD,
+                to: .EEEEMMMMDDAT,
                 useDayLightSavingTime: true,
                 customTimeZone: booking.venueObject?.useTimezone ?? ""
             ) ?? ""
             
-            let timeValue = booking.event?.startDateTime.convertDateFormat(
-                from: .yyyyMMddHHmmss,
-                to: .hmma,
-                useDayLightSavingTime: true,
-                customTimeZone: booking.venueObject?.useTimezone ?? ""
-            ) ?? ""
-            
-            time.text = "\(date) • \(timeValue)"
+            time.text = formatted
             
             let flyer = (booking.event?.flyer?.key ?? "").imageURL
             backgroungImage.sd_setImage(
                 with: URL(string: flyer),
                 placeholderImage: Constant.Icon.uploadImage
             ) { [weak self] _, _, _, _ in
-             
+                
             }
         }
     }

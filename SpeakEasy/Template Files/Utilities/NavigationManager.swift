@@ -447,9 +447,11 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func tableCheckOutVC(_ sender: UIViewController, event: Event) {
+    func tableCheckOutVC(_ sender: UIViewController, event: Event, seatingAreas: [SeatingArea], seatingAreasFilteredOut: [SeatingArea] ) {
         let vc = TableCheckOutVC(nibName: "TableCheckOutVC", bundle: nil)
         vc.event = event
+        vc.seatingAreas = seatingAreas
+        vc.seatingAreasFilteredOut = seatingAreasFilteredOut
         sender.pushVC(vc)
     }
     
