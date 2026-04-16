@@ -100,7 +100,7 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                 if let color = qrBorderColorHex {
                     upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
                 } else {
-                    upsellQRBgView.layer.borderColor = UIColor.white.cgColor
+                    upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
                 }
                 upsellQRBgView.layer.borderWidth = 8
                 cell.titleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.customName ?? "" == "" ? barBooking.uniqueTickets[indexPath.row].coverTicket?.displayName : barBooking.uniqueTickets[indexPath.row].coverTicket?.displayCustomName
@@ -116,7 +116,7 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                 if let color = qrBorderColorHex {
                     upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
                 } else {
-                    upsellQRBgView.layer.borderColor = UIColor.white.cgColor
+                    upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
                 }
                 upsellQRBgView.layer.borderWidth = 8
                 
