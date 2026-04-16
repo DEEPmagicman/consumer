@@ -30,7 +30,7 @@ final class SettingPresenter {
         }
     }
     
-    func changeEmailPhoneVerifyApi(otp: Int, otpRef: String,isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func changeEmailPhoneVerifyApi(otp: String, otpRef: String,isForPhone: Bool = false, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         var url = ""
         if isForPhone  {

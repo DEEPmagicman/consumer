@@ -199,7 +199,7 @@ struct APIBuilder {
     }
     
     static var whoAmIURL: String {
-        baseURL + route + auth + whoAmI + "?include=image"
+        baseURL + route + auth + whoAmI + "?include=consumerUserImage"
     }
     
     static var changeEmailURL: String {
