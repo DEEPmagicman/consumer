@@ -27,6 +27,7 @@ final class QRClipVC: UIViewController {
     var isOnlyAddOnsAvailable = false
     var venueImageData = Data()
     var guestInfo = String()
+    var qrBorderColorHex: String?
     
     @IBOutlet weak var venueNameLbl: UILabel!
     @IBOutlet weak var swipeLbl: UILabel!
@@ -223,6 +224,7 @@ extension QRClipVC: FSPagerViewDelegate, FSPagerViewDataSource {
         let cell = pagerView.dequeueReusableCell(withReuseIdentifier: "cell", at: index) as! PagerViewTVC
 
         cell.backupCode.text = bookingCode
+        cell.qrBorderColorHex = qrBorderColorHex
         cell.bookingDateTime.text = "Purchased on".localize() + " \(createdAT)"
         
         if isOnlyAddOnsAvailable {

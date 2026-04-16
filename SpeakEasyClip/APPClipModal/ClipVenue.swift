@@ -330,6 +330,10 @@ struct VenueSettings: Codable {
     var coverTicketViewSettings: CoverTicketViewSettings?
     var isEnableCoverTicketViewSettings: Bool?
     var whiteLabelColor: String?
+    var paidCoverTicketQrCodeBorderColor: String?
+    var freeCoverTicketQrCodeBorderColor: String?
+    var paidEventTicketQrCodeBorderColor: String?
+    var freeEventTicketQrCodeBorderColor: String
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
     var barTabBookingPolicy: String?

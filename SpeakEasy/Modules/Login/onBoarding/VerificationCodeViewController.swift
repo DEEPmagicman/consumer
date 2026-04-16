@@ -207,7 +207,7 @@ final class VerificationCodeViewController: UIViewController {
         continueBtn.showLoader(userInteraction: false)
 //        self.view.isUserInteractionEnabled = false
         if isFromLogin {
-            self.onBoardingDelegate.loginOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
+            self.onBoardingDelegate.loginOtpVerifyApi(otp: otpText, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
                 guard let self = self else { return }
                 
                 continueBtn.hideLoader()
@@ -232,7 +232,7 @@ final class VerificationCodeViewController: UIViewController {
         } else {
             if isFromSettings {
                 if isForEmail {
-                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: otpText, otpRef: self.otpRef) { [weak self] isSuccess, errMsg in
                         guard let self = self else { return }
 //                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
@@ -256,7 +256,7 @@ final class VerificationCodeViewController: UIViewController {
 //                    if let pInfoVC = navigationController?.viewControllers.first(where: { ($0 as? PersonalInformationViewController) != nil}) {
 //                          self.navigationController?.popToViewController(pInfoVC, animated: false)
 //                        }
-                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
+                    self.settingDelegate.changeEmailPhoneVerifyApi(otp: otpText, otpRef: self.otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
                         guard let self = self else { return }
 //                        self.view.isUserInteractionEnabled = true
                         continueBtn.hideLoader()
@@ -278,7 +278,7 @@ final class VerificationCodeViewController: UIViewController {
                     print("*-*settingPhone")
                 }
             } else {
-                self.onBoardingDelegate.signUpOtpVerifyApi(otp: Int(otpText) ?? 0, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
+                self.onBoardingDelegate.signUpOtpVerifyApi(otp: otpText, otpRef: self.otpRef) { [weak self] isSuccess, errorMsg  in
                     guard let self = self else { return }
                     
                     continueBtn.hideLoader()

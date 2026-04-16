@@ -28,7 +28,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func loginOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func loginOtpVerifyApi(otp: String, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         let param = ["otp": otp, "otpRef": otpRef] as [String: Any]
         AFWrapper.postRequest(APIBuilder.loginOTPVerifyURL, params: param, headers: Header.header(), shouldForceLogout: false) { response in
             
@@ -97,7 +97,7 @@ final class OnBoardingPresenter {
         }
     }
     
-    func signUpOtpVerifyApi(otp: Int, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
+    func signUpOtpVerifyApi(otp: String, otpRef: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?) -> Void) {
         let param = ["otp": otp, "otpRef": otpRef] as [String : Any]
         AFWrapper.postRequest(APIBuilder.signUpOTPVerifyURL, params: param, headers: Header.header()) { response in
             
@@ -319,7 +319,7 @@ final class OnBoardingPresenter {
                 completion(false)
                 return
             }
-            let imageDic = userDic["image"] as? [String: Any]
+            let imageDic = userDic["consumerUserImage"] as? [String: Any]
             if let sessionDic = sessionDic {
                 UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
                 UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
