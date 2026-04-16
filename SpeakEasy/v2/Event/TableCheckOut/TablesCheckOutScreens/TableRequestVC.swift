@@ -258,13 +258,7 @@ extension TableRequestVC {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        
-        if let timezone = event?.venue?.useTimezone,
-           let tz = TimeZone(identifier: timezone) {
-            formatter.timeZone = tz
-        } else {
-            formatter.timeZone = TimeZone.current
-        }
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         return formatter.date(from: dateString)
     }
@@ -289,8 +283,14 @@ extension TableRequestVC {
     
     func formattedDisplayDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.dateFormat = "MM/dd/yyyy"
         formatter.locale = Locale(identifier: "en_US_POSIX")
+
+        if let timezone = event?.venue?.useTimezone,
+           let tz = TimeZone(identifier: timezone) {
+            formatter.timeZone = tz
+        }
+
         return formatter.string(from: date)
     }
     
@@ -298,6 +298,12 @@ extension TableRequestVC {
         let formatter = DateFormatter()
         formatter.dateFormat = "hh:mm a"
         formatter.locale = Locale(identifier: "en_US_POSIX")
+
+        if let timezone = event?.venue?.useTimezone,
+           let tz = TimeZone(identifier: timezone) {
+            formatter.timeZone = tz
+        }
+
         return formatter.string(from: date)
     }
     

@@ -132,7 +132,12 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
         }
         
         else if collectionView == followedVenuesCollectionView {
-            let cell: VenueCVC = collectionView.dequeue(withIdentifier: VenueCVC.identifier, for: indexPath)
+         
+            let cell: VenueCVC = collectionView.dequeue(
+                withIdentifier: VenueCVC.identifier,
+                for: indexPath
+            )
+
             if isVenueLoading {
                 cell.shimmerView.isHidden = false
                 for view in cell.shimmerView.subviews where view is ShimmerView {
@@ -140,9 +145,11 @@ extension ProfileVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 }
             } else {
                 cell.shimmerView.isHidden = true
-//                let venue = followedVenues[indexPath.row]
+
+//                let venue = openVenueList[indexPath.item]
 //                cell.configure(with: venue)
             }
+
             return cell
         }
         

@@ -60,7 +60,7 @@ final class DiscoverAllVC: UIViewController {
         )
     }
     
-    private func fetchAllOpenVenueForMVP(withLoader: Bool = true) {
+    private func fetchAllOpenVenueForMVP() {
         presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
             guard let self = self else {
                 return
@@ -79,19 +79,16 @@ final class DiscoverAllVC: UIViewController {
                 if !self.openHasMore {
                     self.fetchAllCloseVenueForMVP()
                 }
+                isVenueInitialLoading = false
                 self.venueListCollectionView.reloadData()
+              
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            #if DEBUG
-            if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
-                Alert.showToast("Venue detail updated")
-            }
-            #endif
         }
     }
     
-    private func fetchAllCloseVenueForMVP(withLoader: Bool = true) {
+    private func fetchAllCloseVenueForMVP() {
         presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
             guard let self = self else {
                 return
@@ -108,15 +105,11 @@ final class DiscoverAllVC: UIViewController {
                     self.closeFrom = self.closeVenueList.count
                 }
                 self.closeHasMore = hasMore
+                isVenueInitialLoading = false
                 self.venueListCollectionView.reloadData()
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
-            #if DEBUG
-            if withLoader == false && self.navigationController?.viewControllers.last is MVPVenueListVc {
-                Alert.showToast("Venue detail updated")
-            }
-            #endif
         }
     }
     
@@ -143,6 +136,21 @@ final class DiscoverAllVC: UIViewController {
         }
     }
     
+    private func refreshAllList() {
+        isTonightEventInitialLoading = true
+        isVenueInitialLoading = true
+//        isAllEventInitialLoading = true
+        closeVenueList.removeAll()
+        openVenueList.removeAll()
+        todaysEvents.removeAll()
+        self.tonightEventCollectionView.reloadData()
+        self.venueListCollectionView.reloadData()
+//        self.allEventsCollectionView.reloadData()
+        getTonightEvent()
+        fetchAllOpenVenueForMVP()
+        fetchAllCloseVenueForMVP()
+    }
+    
     private func updateShimmerView() {
         isTonightEventInitialLoading = false
         tonightEventCollectionView.reloadData()
@@ -159,8 +167,7 @@ final class DiscoverAllVC: UIViewController {
             .removeDuplicates()
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                self?.setVenueListForSelectedCity()
-                self?.getTonightEvent()
+                self?.refreshAllList()
             }
             .store(in: &cancellables)
     }

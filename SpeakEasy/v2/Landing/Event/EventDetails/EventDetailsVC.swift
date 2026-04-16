@@ -682,16 +682,37 @@ class EventDetailsVC: UIViewController {
         fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
-        venueNameLbl.text = venueDetails?.name ?? ""
-        venueName.text = venueDetails?.name ?? ""
+        venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
+            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
+            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+        
+        venueNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
+        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")"
+        : "\(venueDetails?.name ?? "")"
         eventAddressView.isHidden = !(event.showAddress ?? true)
 
-        let addressComponents = [
-            venueDetails?.address,
-            venueDetails?.city,
-            venueDetails?.pinCode
-        ].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
+        let addressComponents: [String]
+
+        if let custom = event.customVenue,
+           venueDetails?.venueSettings?.isOrganizer == true {
+            
+            addressComponents = [
+                custom.address,
+                custom.city,
+                custom.pinCode
+            ].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+             .filter { !$0.isEmpty }
+            
+        } else {
+            
+            addressComponents = [
+                venueDetails?.address,
+                venueDetails?.city,
+                venueDetails?.pinCode
+            ].compactMap { $0?.trimmingCharacters(in: .whitespacesAndNewlines) }
+             .filter { !$0.isEmpty }
+        }
+
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = venueDetails?.name ?? ""
 
@@ -783,11 +804,32 @@ class EventDetailsVC: UIViewController {
         } else {
             venueLogo.isHidden = true
         }
+        
+        
+        let coordinate: CLLocationCoordinate2D
+        let title: String
 
-        updateLocationOnMap(
-            to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0),
-            with: event.customVenue?.name ?? "Venue"
-        )
+        if let custom = event.customVenue,
+           venueDetails?.venueSettings?.isOrganizer == true {
+            
+            coordinate = CLLocationCoordinate2D(
+                latitude: Double(custom.lat ?? "") ?? 0,
+                longitude: Double(custom.lng ?? "") ?? 0
+            )
+            
+            title = custom.name ?? "Venue"
+            
+        } else {
+            
+            coordinate = CLLocationCoordinate2D(
+                latitude: venueDetails?.latitude ?? 0,
+                longitude: venueDetails?.longitude ?? 0
+            )
+            
+            title = venueDetails?.name ?? "Venue"
+        }
+
+        updateLocationOnMap(to: coordinate, with: title)
 
         if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -836,7 +878,7 @@ class EventDetailsVC: UIViewController {
             continueToCheckOutBtn.bgColor = color
             
         } else {
-            let color = UIColor(hex: "6D5EBD")
+            let color = UIColor(hex: "F581FE")
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
             continueToCheckOutBtn.backgroundColor = color

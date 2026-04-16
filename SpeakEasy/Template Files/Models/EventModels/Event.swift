@@ -194,6 +194,39 @@ struct Event: Codable {
         return ticketData
     }
     
+//    enum CodingKeys: String, CodingKey {
+//        case flyer
+//        case customVenue
+//        case id
+//        case uniqueId
+//        case title
+//        case startDateTime
+//        case endDateTime
+//        case openTimeCustomText
+//        case whiteLabelColor
+//        case youtubeVideoLink
+//        case description
+//        case disclaimer
+//        case upfront
+//        case eventTicket
+//        case venue
+//        case additionalButtons
+//        case eventHasArtist
+//        case showAddress
+//        case hideEventEnd
+//        case eventTicketGroupHasTicket
+//        case totalTickets
+//        case allowGuestCheckin
+//        case eventTicketSettings
+//        case showEventAttendees
+//        case protectedEventTicket
+//        case isEnableOnlineTables
+//        case isEnable3DMap
+//        case isEnableReservationRequest
+//        case eventGallery
+//        case eventAddOnTicket
+//    }
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(flyer, forKey: .flyer)
@@ -407,29 +440,79 @@ struct Artists: Codable {
 
 struct CustomVenue: Codable {
     
-    var name: String
-    var address: String
-//    var city: String?
-//    var pinCode: String?
+    var id: String?
+    var name: String?
+    var address: String?
+    var city: String?
+    var pinCode: String?
+    var region: String?
+    var country: String?
     var lat: String?
     var lng: String?
-    // MARK: App side parameter
-    var latitude: Double {
-        Double(lat ?? "0") ?? 0.0
-    }
-    var longitude: Double {
-        Double(lng ?? "0") ?? 0.0
-    }
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(address, forKey: .address)
-//        try container.encode(city, forKey: .city)
-//        try container.encode(pinCode, forKey: .pinCode)
-        try container.encode(lat, forKey: .lat)
-        try container.encode(lng, forKey: .lng)
+    var latitude: Double?
+    var longitude: Double?
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id       = try container.decodeIfPresent(String.self, forKey: .id)
+        name     = try container.decodeIfPresent(String.self, forKey: .name)
+        address  = try container.decodeIfPresent(String.self, forKey: .address)
+        city     = try container.decodeIfPresent(String.self, forKey: .city)
+        pinCode  = try container.decodeIfPresent(String.self, forKey: .pinCode)
+        region   = try container.decodeIfPresent(String.self, forKey: .region)
+        country  = try container.decodeIfPresent(String.self, forKey: .country)
+        lat      = try container.decodeIfPresent(String.self, forKey: .lat)
+        lng      = try container.decodeIfPresent(String.self, forKey: .lng)
+        
+        // Parse lat/lng strings into Double
+        if let latStr = lat { latitude = Double(latStr) }
+        if let lngStr = lng { longitude = Double(lngStr) }
+        
+        // Also try decoding latitude/longitude directly if present
+        if latitude == nil {
+            latitude = try container.decodeIfPresent(Double.self, forKey: .latitude)
+        }
+        if longitude == nil {
+            longitude = try container.decodeIfPresent(Double.self, forKey: .longitude)
+        }
     }
 }
+
+
+//
+//struct CustomVenue: Codable {
+//    
+//    var name: String
+//    var address: String
+////    var city: String?
+////    var pinCode: String?
+//    var lat: String?
+//    var lng: String?
+//    // MARK: App side parameter
+//    var latitude: Double {
+//        Double(lat ?? "0") ?? 0.0
+//    }
+//    var longitude: Double {
+//        Double(lng ?? "0") ?? 0.0
+//    }
+//    
+//    enum CodingKeys: String, CodingKey {
+//         case name
+//         case address
+//         case lat     // map API key
+//         case lng     // map API key
+//     }
+//    
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(name, forKey: .name)
+//        try container.encode(address, forKey: .address)
+////        try container.encode(city, forKey: .city)
+////        try container.encode(pinCode, forKey: .pinCode)
+//        try container.encode(lat, forKey: .lat)
+//        try container.encode(lng, forKey: .lng)
+//    }
+//}
 
 struct InstagramProfile: Codable {
     let instagramUserId: String?

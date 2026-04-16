@@ -697,7 +697,7 @@ private extension Tables3DMapVC {
                 guard !renderedDJKeys.contains(posKey) else { return }
                 renderedDJKeys.insert(posKey)
 
-                scene.rootNode.addChildNode(makeDJDot(position: topCenter))
+                scene.rootNode.addChildNode(makeDJDot(position: topCenter, sourceNode: node))
                 return
             }
 
@@ -705,14 +705,14 @@ private extension Tables3DMapVC {
             guard !renderedParentIds.contains(parentId) else { return }
             renderedParentIds.insert(parentId)
  
-            let pinNode = self.makeTableDot(position: topCenter, seating: seating)
+            let pinNode = self.makeTableDot(position: topCenter, seating: seating, sourceNode: node)
             self.sceneView.scene?.rootNode.addChildNode(pinNode)
         }
     }
 
-    func makeTableDot(position: simd_float3, seating: SeatingAreaDTO) -> SCNNode {
+   func makeTableDot(position: simd_float3, seating: SeatingAreaDTO, sourceNode: SCNNode) -> SCNNode {
         let root = SCNNode()
-        let scale = seatingUIScaleFactor()
+        let scale = min(djUIScaleFactor(for: sourceNode), 1.8)
         root.simdPosition = position + simd_float3(0, 0.05, 0)
 
         let uiNode = makeBillboardNode()
@@ -1074,65 +1074,83 @@ private extension Tables3DMapVC {
  
 private extension Tables3DMapVC {
  
-    func makeDJDot(position: simd_float3) -> SCNNode {
-        let root     = SCNNode()
-        root.simdPosition = position + simd_float3(0, 5.0, 0)
-        root.name    = "dj-pin"
- 
-        let uiNode   = makeBillboardNode()
-        let gold     = PinStyle.djGold
-        let scale = seatingUIScaleFactor()
- 
-        // Outer wave (kick-drum animation)
-        let waveGeo  = SCNPlane(width: 8.0, height: 8.0)
-        waveGeo.cornerRadius = 4.0
-        waveGeo.materials    = [constantMaterial(color: gold.withAlphaComponent(0.8))]
-        let wave     = SCNNode(geometry: waveGeo)
+    func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
+        let scale = djUIScaleFactor(for: sourceNode)
+
+        let root = SCNNode()
+        root.simdPosition = position + simd_float3(0, Float(5.0 * scale), 0)
+        root.name = "dj-pin"
+
+        let uiNode = makeBillboardNode()
+        let gold = PinStyle.djGold
+
+        // Outer wave
+        let waveGeo = SCNPlane(width: 8.0 * scale, height: 8.0 * scale)
+        waveGeo.cornerRadius = 4.0 * scale
+        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.8))]
+        let wave = SCNNode(geometry: waveGeo)
         wave.position.z = -0.01
         addDJWaveAnimation(to: wave)
         uiNode.addChildNode(wave)
- 
+
         // Outer ring
-        let outerRing = SCNNode(geometry: SCNTorus(ringRadius: 6.0, pipeRadius: 0.25))
+        let outerRing = SCNNode(
+            geometry: SCNTorus(
+                ringRadius: 6.0 * scale,
+                pipeRadius: 0.25 * scale
+            )
+        )
         outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         outerRing.eulerAngles.x = -.pi / 2
-        outerRing.position.z    = 0.01
+        outerRing.position.z = 0.01
         uiNode.addChildNode(outerRing)
- 
+
         // Inner ring
-        let innerRing = SCNNode(geometry: SCNTorus(ringRadius: 4.5, pipeRadius: 0.2))
+        let innerRing = SCNNode(
+            geometry: SCNTorus(
+                ringRadius: 4.5 * scale,
+                pipeRadius: 0.2 * scale
+            )
+        )
         innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         innerRing.eulerAngles.x = -.pi / 2
-        innerRing.position.z    = 0.015
+        innerRing.position.z = 0.015
         uiNode.addChildNode(innerRing)
- 
+
         // Fill
-        let fill = SCNNode(geometry: SCNCylinder(radius: 4.0, height: 0.05))
+        let fill = SCNNode(
+            geometry: SCNCylinder(
+                radius: 4.0 * scale,
+                height: 0.05 * scale
+            )
+        )
         fill.geometry?.materials = [constantMaterial(color: UIColor.white)]
         fill.eulerAngles.x = -.pi / 2
-        fill.position.z    = 0.02
+        fill.position.z = 0.02
         uiNode.addChildNode(fill)
- 
-        // "DJ" text
-        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.05)
-        textGeo.font      = .boldSystemFont(ofSize: 16)
-        textGeo.flatness  = 0.05
+
+        // Text
+        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.05 * scale)
+        textGeo.font = .boldSystemFont(ofSize: 16 * scale)
+        textGeo.flatness = 0.05
         textGeo.materials = [constantMaterial(color: UIColor.white)]
+
         let textNode = SCNNode(geometry: textGeo)
         let (tMin, tMax) = textGeo.boundingBox
-        textNode.pivot        = SCNMatrix4MakeTranslation(
+        textNode.pivot = SCNMatrix4MakeTranslation(
             tMin.x + (tMax.x - tMin.x) / 2,
-            tMin.y + (tMax.y - tMin.y) / 2, 0)
-        textNode.scale        = SCNVector3(0.25, 0.25, 0.25)
-        textNode.position.z   = 0.25
+            tMin.y + (tMax.y - tMin.y) / 2,
+            0
+        )
+        textNode.scale = SCNVector3(0.25 * scale, 0.25 * scale, 0.25 * scale)
+        textNode.position.z = Float(0.25 * scale)
         textNode.renderingOrder = 1000
         uiNode.addChildNode(textNode)
- 
+
         // Glow halo
-        let glowGeo = SCNPlane(width: 0.24 * scale, height: 0.24 * scale)
-        glowGeo.cornerRadius = 0.12 * scale
-        
-        glowGeo.materials     = [constantMaterial(color: gold.withAlphaComponent(0.4))]
+        let glowGeo = SCNPlane(width: 9.0 * scale, height: 9.0 * scale)
+        glowGeo.cornerRadius = 4.5 * scale
+        glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.4))]
         let glow = SCNNode(geometry: glowGeo)
         glow.position.z = -0.02
         glow.runAction(.repeatForever(.sequence([
@@ -1140,13 +1158,12 @@ private extension Tables3DMapVC {
             .scale(to: 0.8, duration: 0.8)
         ])))
         uiNode.addChildNode(glow)
- 
-        // Float animation (matches web "dj-pulse" vertical oscillation)
+
         root.runAction(.repeatForever(.sequence([
-            .moveBy(x: 0, y: 1.0, z: 0, duration: 1.5),
-            .moveBy(x: 0, y: -1.0, z: 0, duration: 1.5)
+            .moveBy(x: 0, y: 1.0 * scale, z: 0, duration: 1.5),
+            .moveBy(x: 0, y: -1.0 * scale, z: 0, duration: 1.5)
         ])))
- 
+
         root.addChildNode(uiNode)
         return root
     }
@@ -1292,25 +1309,75 @@ private extension Tables3DMapVC {
         return maxDim <= 200
     }
     
-    private func seatingUIScaleFactor() -> CGFloat {
-        guard let bounds = sceneBounds else { return 1.0 }
+    private func seatingUIScaleFactor(for node: SCNNode) -> CGFloat {
+        let anchorNode = bestVisualAnchorNode(for: node)
+        let (lo, hi) = anchorNode.boundingBox
 
-        let width = CGFloat(bounds.max.x - bounds.min.x)
-        let depth = CGFloat(bounds.max.z - bounds.min.z)
-        let maxDim = max(width, depth)
+        let width = CGFloat(abs(hi.x - lo.x))
+        let depth = CGFloat(abs(hi.z - lo.z))
+        let height = CGFloat(abs(hi.y - lo.y))
+        let maxDim = max(width, depth, height)
 
+        let localScale: CGFloat
         switch maxDim {
-        case ..<20:
-            return 1.8
-        case ..<40:
-            return 1.4
-        case ..<80:
-            return 1.0
-        case ..<140:
-            return 0.85
-        default:
-            return 0.7
+        case ..<0.5: localScale = 1.8
+        case ..<1.0: localScale = 1.5
+        case ..<2.0: localScale = 1.25
+        case ..<4.0: localScale = 1.0
+        case ..<8.0: localScale = 0.9
+        default: localScale = 0.8
         }
+
+        return max(0.85, min(localScale, 1.35))
+    }
+    
+    private func djUIScaleFactor(for node: SCNNode) -> CGFloat {
+        let anchorNode = bestVisualAnchorNode(for: node)
+        let (lo, hi) = anchorNode.boundingBox
+
+        let width = CGFloat(abs(hi.x - lo.x))
+        let depth = CGFloat(abs(hi.z - lo.z))
+        let height = CGFloat(abs(hi.y - lo.y))
+        let maxDim = max(width, depth, height)
+
+        let localScale: CGFloat
+        switch maxDim {
+        case ..<0.5: localScale = 1.6
+        case ..<1.0: localScale = 1.4
+        case ..<2.0: localScale = 1.2
+        case ..<4.0: localScale = 1.0
+        case ..<8.0: localScale = 0.9
+        default: localScale = 0.8
+        }
+
+        return max(0.85, min(localScale, 1.25))
+    }
+    
+    
+    private func bestVisualAnchorNode(for node: SCNNode) -> SCNNode {
+        var current: SCNNode? = node
+        var bestNode: SCNNode = node
+        var bestSize: Float = 0
+
+        while let n = current {
+            let (lo, hi) = n.boundingBox
+            let width = abs(hi.x - lo.x)
+            let depth = abs(hi.z - lo.z)
+            let height = abs(hi.y - lo.y)
+            let size = max(width, depth, height)
+
+            let hasGeometry = n.geometry != nil
+            let isVisible = !n.isHidden
+
+            if hasGeometry && isVisible && size > bestSize {
+                bestSize = size
+                bestNode = n
+            }
+
+            current = n.parent
+        }
+
+        return bestNode
     }
  
     func worldBoundingCorners(node: SCNNode, min lo: SCNVector3, max hi: SCNVector3) -> [SCNVector3] {

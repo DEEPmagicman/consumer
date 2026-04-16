@@ -124,8 +124,19 @@ final class EventPresenter {
                 completion(false, error, nil, code)
 
             } else if let event = Event.parse(responseDic) {
+                var newEvent = event
+                if let cvDict = responseDic["customVenue"] as? [String: Any] {
+                     print("✅ customVenue dict exists in response: \(cvDict)")
+                     do {
+                         let cvData = try JSONSerialization.data(withJSONObject: cvDict)
+                         let cv = try JSONDecoder().decode(CustomVenue.self, from: cvData)
+                         newEvent.customVenue = cv
+                     } catch {
+                     }
+                 } else {
+                 }
 
-                completion(true, nil, event, nil)
+                completion(true, nil, newEvent, nil)
 
             } else {
 

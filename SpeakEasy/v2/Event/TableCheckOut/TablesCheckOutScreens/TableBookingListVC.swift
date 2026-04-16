@@ -147,7 +147,7 @@ class TableBookingListVC: UIViewController {
 extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return seatingAreas.count
+        return seatingAreasFilteredOut.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -159,7 +159,7 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
 
         cell.selectionStyle = .none
 
-        let item = seatingAreas[indexPath.row]
+        let item = seatingAreasFilteredOut[indexPath.row]
 
         let isInquiry = item.inquiryEnabled == true && item.hideCheckout == true
         let hidePricing = isInquiry && item.hidePricing == true
@@ -202,6 +202,6 @@ extension TableBookingListVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        openSeatingArea(seatingAreas[indexPath.row])
+        openSeatingArea(seatingAreasFilteredOut[indexPath.row])
     }
 }
