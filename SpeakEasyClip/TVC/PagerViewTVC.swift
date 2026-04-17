@@ -140,7 +140,7 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         } else {
-            upsellQRBgView.layer.borderColor = UIColor(hex: "#F1CE72").cgColor
+            upsellQRBgView.layer.borderColor = UIColor(hex: "#016FD0").cgColor
             upsellQRBgView.layer.borderWidth = 8
             cell.subTitleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.description
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name

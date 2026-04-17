@@ -1602,9 +1602,9 @@ extension CheckOutClipVC {
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
                 vc.venueImageData = self.venueImageData
-                vc.qrBorderColorHex = (self.bookingType == .FREE)
-                             ? self.venue?.venueSettings?.freeCoverTicketQrCodeBorderColor
-                             : self.venue?.venueSettings?.paidCoverTicketQrCodeBorderColor
+                vc.qrBorderColorHex = (self.bookingType == .PAID)
+                             ? self.venue?.venueSettings?.paidCoverTicketQrCodeBorderColor
+                             :  self.venue?.venueSettings?.freeCoverTicketQrCodeBorderColor
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
                 let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(countryCode) \(self.phoneNumber?.nationalNumber ?? 0)"
                 vc.guestInfo = "\(userData) - \(self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? ""))"
@@ -1629,9 +1629,9 @@ extension CheckOutClipVC {
                 vc.selectedAddOns = self.selectedAddOnsItem
                 vc.bookingCode = self.venue?.bookingCode ?? ""
                 vc.isOnlyAddOnsAvailable = self.isOnlyAddOnsAvailable
-                vc.qrBorderColorHex = (self.bookingType == .FREE)
-                             ? self.venue?.venueSettings?.freeCoverTicketQrCodeBorderColor
-                             : self.venue?.venueSettings?.paidCoverTicketQrCodeBorderColor
+                vc.qrBorderColorHex = (self.bookingType == .PAID)
+                             ? self.venue?.venueSettings?.paidCoverTicketQrCodeBorderColor
+                             : self.venue?.venueSettings?.freeCoverTicketQrCodeBorderColor
                 vc.createdAT = self.createdAT.convertDateFormat(from: "yyyy-MM-dd'T'HH:mm:ss.SSSz", to: "h:mma MMMM dd", isUTC: true, customTimeZone: self.venue?.useTimezone ?? "")
                 
                 let userData = self.venue?.venueSettings?.collectNameDuringBooking ?? false == true ? "\(self.firstNameTF.text ?? "") \(self.lastNameTF.text ?? "")" : "\(countryCode) \(self.phoneNumber?.nationalNumber ?? 0)"
