@@ -333,7 +333,7 @@ struct VenueSettings: Codable {
     var paidCoverTicketQrCodeBorderColor: String?
     var freeCoverTicketQrCodeBorderColor: String?
     var paidEventTicketQrCodeBorderColor: String?
-    var freeEventTicketQrCodeBorderColor: String
+    var freeEventTicketQrCodeBorderColor: String?
     var showCoverDisclaimer: Bool?
     var coverDisclaimerText: String?
     var barTabBookingPolicy: String?
