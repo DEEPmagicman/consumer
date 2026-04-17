@@ -63,6 +63,28 @@ struct SeatingArea: Codable {
     let additionalFees: Double?
 }
 
+struct FeesSettings: Codable {
+    var speakeasyFeePerc: Double?
+    var speakeasyFeeFlat: Double?
+    
+    var isEnableSalesTax: Bool?
+    var salesTax: Double?
+    var salesTaxName: String?
+    
+    var isProcessingFeePassToCustomer: Bool?
+    var isProcessingFeeTaxable: Bool?
+    
+    var stripePerc: Double?
+    var stripeFlat: Double?
+    
+    var customFees: [CustomFee]?
+    
+    var isEnableGratuity: Bool?
+    var gratuityFee: Double?
+    var gratuityFeeType: String?
+    var isGratuityFeeTaxable: Bool?
+}
+
 struct TableTimeSlot: Codable {
     let id: String?
     let startTime: String?
@@ -405,24 +427,71 @@ struct TableBookingDetails: Codable {
 }
 
 struct TableBookingSettings: Codable {
-    let id: String?
-    let salesTax: Double?
-    let isUpFront: Bool?
-    let customFees: [BookingCustomFeeSetting]?
-    let stripeFlat: Double?
-    let stripePerc: Double?
-    let gratuityFee: Double?
-    let salesTaxName: String?
-    let gratuityFeeName: String?
-    let gratuityFeeType: String?
-    let isEnableGratuity: Bool?
-    let isEnableSalesTax: Bool?
-    let speakeasyFeeFlat: Double?
-    let speakeasyFeePerc: Double?
-    let isEnableCustomFee: Bool?
-    let isGratuityTaxable: Bool?
-    let isProcessingFeeTaxable: Bool?
-    let isProcessingFeePassToCustomer: Bool?
+    var id: String?
+    
+    var isUpFront: Bool?
+    var isProcessingFeePassToCustomer: Bool?
+    
+    var isEnableSalesTax: Bool?
+    var salesTaxName: String?
+    var salesTax: Double?
+    
+    var isEnableCustomFee: Bool?
+    var customFees: [TableSettingCustomFee]?
+    
+    var isEnableGratuity: Bool?
+    var gratuityFeeType: String?
+    var gratuityFeeName: String?
+    var gratuityFee: Double?
+    var isGratuityTaxable: Bool?
+    
+    var isProcessingFeeTaxable: Bool?
+    
+    var stripePerc: Double?
+    var stripeFlat: Double?
+    
+    var speakeasyFeeFlat: Double?
+    var speakeasyFeePerc: Double?
+    
+    var gratuityFeeRange: String?
+}
+
+struct SpendAgreementSettings: Codable {
+    var id: String?
+    
+    var isUpFront: Bool?
+    var isProcessingFeePassToCustomer: Bool?
+    
+    var isEnableSalesTax: Bool?
+    var salesTaxName: String?
+    var salesTax: Double?
+    
+    var isEnableCustomFee: Bool?
+    var customFees: [TableSettingCustomFee]?
+    
+    var isEnableGratuity: Bool?
+    var gratuityFeeType: String?
+    var gratuityFeeName: String?
+    var gratuityFee: Double?
+    var isGratuityTaxable: Bool?
+    
+    var isProcessingFeeTaxable: Bool?
+    
+    var stripePerc: Double?
+    var stripeFlat: Double?
+    
+    var speakeasyFeeFlat: Double?
+    var speakeasyFeePerc: Double?
+    
+    var gratuityFeeRange: String?
+}
+
+struct TableSettingCustomFee: Codable {
+    var customFee: Double?
+    var customFeeName: String?
+    var customFeeType: String?
+    var isEnableCustomFee: Bool?
+    var isCustomFeeTaxable: Bool?
 }
 
 struct BookingCustomFeeSetting: Codable {

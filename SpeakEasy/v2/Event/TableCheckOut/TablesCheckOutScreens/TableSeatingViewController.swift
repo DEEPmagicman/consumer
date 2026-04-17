@@ -88,45 +88,115 @@ class TableSeatingViewController: UIViewController {
     }
     
     func updatePricing(for index: Int) {
-        
+
         guard let item = seatingArea else { return }
+        let feesSettings = event?.venue?.venueSettings?.tableBookingSettings
 
         if item.hidePricing == true {
             miniMumAmountLbl.text = ""
             feesLbl.text = ""
             return
         }
-        
-        if item.bookingType == .timeWise {
-            
-            guard item.timeSlots?.indices.contains(index) == true else { return }
 
-              if let slot = item.timeSlots?[index] {
-                
-                if let minimum = slot.minimum {
-                    miniMumAmountLbl.text = "$\(minimum) min."
-                } else {
-                    miniMumAmountLbl.text = ""
-                }
+        var minValue: Double = 0
+        var baseDeposit: Double = 0
+        var depositType: String = "FLAT"
 
-                if let deposit = slot.deposit {
-                    feesLbl.text = "$\(String(format: "%.2f", deposit))"
-                } else {
-                    feesLbl.text = ""
-                }
-            }
+        // ✅ Handle slot + fallback properly
+        if item.bookingType == .timeWise,
+           let slots = item.timeSlots,
+           !slots.isEmpty,
+           slots.indices.contains(index) {
+
+            let slot = slots[index]
+
+            minValue = Double(slot.minimum ?? item.minimum ?? 0)
+            baseDeposit = Double(slot.deposit ?? item.deposit ?? 0)
+            depositType = slot.depositType ?? item.depositType ?? "FLAT"
 
         } else {
-            if let minimum = item.minimum {
-                miniMumAmountLbl.text = "$\(minimum) min."
+
+            minValue = Double(item.minimum ?? 0)
+            baseDeposit = Double(item.deposit ?? 0)
+            depositType = item.depositType ?? "FLAT"
+        }
+
+        // 🔥 Fix 0000 case (fallback if still zero)
+        if (minValue == 0 || baseDeposit == 0),
+           let firstSlot = item.timeSlots?.first {
+
+            minValue = Double(firstSlot.minimum ?? minValue)
+            baseDeposit = Double(firstSlot.deposit ?? baseDeposit)
+            depositType = firstSlot.depositType ?? depositType
+        }
+
+        // ✅ Step 1: Calculate deposit
+        let depositValue: Double
+        if depositType.uppercased() == "PERCENTAGE" {
+            depositValue = (minValue * baseDeposit) / 100
+        } else {
+            depositValue = baseDeposit
+        }
+
+        // ✅ Step 2: Apply fees
+        let finalDeposit = calculateFinalDeposit(
+            deposit: depositValue,
+            fees: feesSettings
+        )
+
+        // ✅ UI
+        miniMumAmountLbl.text = "$\(Int(minValue)) min."
+        feesLbl.text = "$\(String(format: "%.2f", finalDeposit))"
+    }
+    
+    func calculateFinalDeposit(
+        deposit: Double,
+        fees: TableBookingSettings?
+    ) -> Double {
+
+        guard let fees = fees else { return deposit }
+
+        var taxableFees = 0.0
+        var nonTaxableFees = 0.0
+
+        fees.customFees?.forEach { fee in
+
+            // ✅ FIX: match web exactly
+            guard fee.isEnableCustomFee == true else { return }
+
+            let value: Double
+
+            if fee.customFeeType?.uppercased() == "FLAT" {
+                value = fee.customFee ?? 0
+            } else {
+                value = deposit * (fee.customFee ?? 0) / 100
             }
 
-            if let deposit = item.depositWithFees {
-                feesLbl.text = "$\(String(format: "%.2f", deposit))"
-            } else if let deposit = item.deposit {
-                feesLbl.text = "$\(String(format: "%.2f", deposit))"
+            if fee.isCustomFeeTaxable == true {
+                taxableFees += value
+            } else {
+                nonTaxableFees += value
             }
         }
+
+        // ✅ TAX only on taxable parts
+        var tax = 0.0
+
+        if fees.isEnableSalesTax == true {
+            let taxRate = (fees.salesTax ?? 0) / 100
+            tax = (deposit + taxableFees) * taxRate
+        }
+
+        // ✅ WEB FINAL
+        let amountChargedToConsumer =
+            deposit +
+            taxableFees +
+            nonTaxableFees +
+            tax
+
+        let finalDeposit = amountChargedToConsumer - tax
+
+        return finalDeposit
     }
     
     private func observeCollectionHeight() {

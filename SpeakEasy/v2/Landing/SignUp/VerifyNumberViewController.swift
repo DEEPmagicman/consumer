@@ -43,7 +43,7 @@ final class VerifyNumberViewController: UIViewController {
 
         // Buttons setup
         continueBtn.bgColor = .white
-        continueBtn.indicator = MaterialLoadingIndicator(color: .white)
+        continueBtn.indicator = MaterialLoadingIndicator(color: .black)
 
         resendBtn.bgColor = .clear
         resendBtn.indicator = MaterialLoadingIndicator(color: .white)

@@ -39,7 +39,7 @@
             phoneNumTextField.delegate = self
             
             continueBtn.bgColor = .white
-            continueBtn.indicator = MaterialLoadingIndicator(color: .white)
+            continueBtn.indicator = MaterialLoadingIndicator(color: .black)
             setContinueEnabled(false)
             
             phoneNumTextField.withDefaultPickerUI = true

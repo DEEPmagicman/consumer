@@ -33,6 +33,8 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     @IBOutlet weak var distanceTime: UILabel!
     @IBOutlet weak var etaDistanceLbl: UILabel!
     @IBOutlet weak var addressTwoLbl: UILabel!
+    @IBOutlet weak var socialStackView: UIStackView!
+    @IBOutlet weak var distanceView: UIView!
     
     var venueDetails: ClipVenue? {
         didSet {
@@ -104,6 +106,8 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
     }
     
     func setupSocialIcons() {
+        var hasVisibleIcons = false
+        
         for platform in socialPlatforms {
             
             guard let urlString = platform.urlString,
@@ -113,6 +117,8 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
                 continue
             }
             
+            hasVisibleIcons = true
+            
             platform.iconView.isHidden = false
             platform.iconView.isUserInteractionEnabled = true
             
@@ -121,15 +127,19 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             
             platform.iconView.accessibilityHint = urlString
         }
+        socialStackView.isHidden = !hasVisibleIcons
     }
     
     private func updateDistanceAndETA() {
+        distanceView.isHidden = true
+        
         guard let userLocation = userLocation,
               let lat = venueDetails?.latitude,
-              let lon = venueDetails?.longitude else { return }
+              let lon = venueDetails?.longitude else {
+            return
+        }
 
         let venueLocation = CLLocation(latitude: lat, longitude: lon)
-
         let distanceMiles = userLocation.distance(from: venueLocation) / 1609.34
 
         let request = MKDirections.Request()
@@ -138,22 +148,25 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
         request.transportType = .automobile
 
         MKDirections(request: request).calculate { response, _ in
-            guard let route = response?.routes.first else { return }
+            guard let route = response?.routes.first else {
+                DispatchQueue.main.async {
+                    self.distanceView.isHidden = true
+                }
+                return
+            }
 
             let etaMinutes = Int(route.expectedTravelTime / 60)
-
-            // ✅ TIME FORMAT (11:13 ETA)
             let arrivalDate = Date().addingTimeInterval(route.expectedTravelTime)
+
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
             let arrivalTime = formatter.string(from: arrivalDate)
 
             DispatchQueue.main.async {
+                self.distanceView.isHidden = false
                 
-                // ✅ distanceTime → "12 min"
                 self.distanceTime.text = "\(etaMinutes) min"
                 
-                // ✅ Color logic (like map)
                 switch etaMinutes {
                 case 0...10:
                     self.distanceTime.textColor = .systemGreen
@@ -162,8 +175,6 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
                 default:
                     self.distanceTime.textColor = .systemRed
                 }
-                
-                // ✅ etaDistanceLbl → "11:13 ETA - 2.0 miles away"
                 self.etaDistanceLbl.text = "\(arrivalTime) ETA - \(String(format: "%.1f", distanceMiles)) miles away"
             }
         }

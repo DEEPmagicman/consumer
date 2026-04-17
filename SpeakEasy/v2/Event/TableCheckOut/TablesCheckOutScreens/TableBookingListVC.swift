@@ -35,27 +35,51 @@ class TableBookingListVC: UIViewController {
 
     private func getLowestPricedAvailableSlot(for area: SeatingArea) -> (min: Double, deposit: Double)? {
 
-        guard area.bookingType == .timeWise else {
-            return (Double(area.minimum ?? 0), Double(area.depositWithFees ?? 0))
+        let fees = event?.venue?.venueSettings?.tableBookingSettings
+
+        // ✅ NON-TIMEWISE (FIX 0000 + consistency)
+        if area.bookingType != .timeWise {
+
+            let min = Double(area.minimum ?? 0)
+
+            let baseDeposit: Double
+            if (area.depositType ?? "").uppercased() == "PERCENTAGE" {
+                baseDeposit = (min * Double(area.deposit ?? 0)) / 100
+            } else {
+                baseDeposit = Double(area.deposit ?? 0)
+            }
+
+            let final = calculateFinalDeposit(deposit: baseDeposit, fees: fees)
+
+            return (min, final)
         }
 
+        // ✅ TIMEWISE
         let availableSlots = (area.timeSlots ?? []).filter {
             ($0.issuedPublicInventory ?? 0) > ($0.soldPublicInventory ?? 0)
         }
 
-        guard let slot = availableSlots.sorted(by: { ($0.minimum ?? 0) < ($1.minimum ?? 0) }).first else {
-            return nil
+        guard let slot = availableSlots
+            .sorted(by: { ($0.minimum ?? 0) < ($1.minimum ?? 0) })
+            .first else {
+
+            // 🔥 fallback (fix 0000)
+            let min = Double(area.minimum ?? 0)
+            let baseDeposit = Double(area.deposit ?? 0)
+            let final = calculateFinalDeposit(deposit: baseDeposit, fees: fees)
+            return (min, final)
         }
 
-        let min = Double(slot.minimum ?? 0)
+        let min = Double(slot.minimum ?? area.minimum ?? 0)
 
-        let deposit: Double =
-            (slot.depositType ?? "").uppercased() == "PERCENTAGE"
-            ? (min * Double(slot.deposit ?? 0)) / 100
-            : Double(slot.depositWithFees ?? slot.deposit ?? 0)
+        let baseDeposit: Double
+        if (slot.depositType ?? "").uppercased() == "PERCENTAGE" {
+            baseDeposit = (min * Double(slot.deposit ?? 0)) / 100
+        } else {
+            baseDeposit = Double(slot.deposit ?? 0)
+        }
 
-        let taxPercent = 16.76
-        let final = deposit + (deposit * taxPercent / 100)
+        let final = calculateFinalDeposit(deposit: baseDeposit, fees: fees)
 
         return (min, final)
     }
@@ -94,6 +118,50 @@ class TableBookingListVC: UIViewController {
         }
 
         return startText
+    }
+    
+    func calculateFinalDeposit(
+        deposit: Double,
+        fees: TableBookingSettings?
+    ) -> Double {
+
+        guard let fees = fees else { return deposit }
+        var taxableFees = 0.0
+        var nonTaxableFees = 0.0
+
+        fees.customFees?.forEach { fee in
+            guard fee.isEnableCustomFee == true else { return }
+
+            let value: Double
+
+            if fee.customFeeType?.uppercased() == "FLAT" {
+                value = fee.customFee ?? 0
+            } else {
+                value = deposit * (fee.customFee ?? 0) / 100
+            }
+
+            if fee.isCustomFeeTaxable == true {
+                taxableFees += value
+            } else {
+                nonTaxableFees += value
+            }
+        }
+
+        var tax = 0.0
+
+        if fees.isEnableSalesTax == true {
+            let taxRate = (fees.salesTax ?? 0) / 100
+            tax = (deposit + taxableFees) * taxRate
+        }
+
+        let amountChargedToConsumer =
+            deposit +
+            taxableFees +
+            nonTaxableFees +
+            tax
+        let finalDeposit = amountChargedToConsumer - tax
+
+        return finalDeposit
     }
 
     private func openSeatingArea(_ item: SeatingArea) {
