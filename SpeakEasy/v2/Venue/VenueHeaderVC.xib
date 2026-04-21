@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,6 +22,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VenueHeaderVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
                 <outlet property="coverTicketView" destination="DME-EC-huY" id="AiV-jT-tvn"/>
+                <outlet property="followBtn" destination="CXt-TI-N59" id="Ska-9k-opJ"/>
+                <outlet property="followBtnLbl" destination="f3T-cC-gGv" id="2q5-eC-AxS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="Bd4-cz-BXS"/>
             </connections>
         </placeholder>
@@ -40,8 +42,15 @@
                                     <rect key="frame" x="0.0" y="0.0" width="537" height="30"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-Dc-hmv">
-                                            <rect key="frame" x="233.66666666666663" y="0.0" width="70" height="30"/>
+                                            <rect key="frame" x="233.66666666666666" y="0.0" width="69.666666666666657" height="30"/>
                                             <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CXt-TI-N59">
+                                                    <rect key="frame" x="0.0" y="0.0" width="69.666666666666671" height="30"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <connections>
+                                                        <action selector="onClickFollowBtn:" destination="-1" eventType="touchUpInside" id="416-Dy-HZk"/>
+                                                    </connections>
+                                                </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Follow" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f3T-cC-gGv">
                                                     <rect key="frame" x="16.000000000000025" y="7.666666666666667" width="37.666666666666657" height="14.666666666666661"/>
                                                     <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
@@ -52,8 +61,13 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="f3T-cC-gGv" firstAttribute="centerY" secondItem="hcG-Dc-hmv" secondAttribute="centerY" id="4nL-Ul-udh"/>
-                                                <constraint firstAttribute="width" constant="70" id="KWL-v2-YMR"/>
+                                                <constraint firstAttribute="bottom" secondItem="CXt-TI-N59" secondAttribute="bottom" id="5NG-bS-xgr"/>
+                                                <constraint firstAttribute="trailing" secondItem="f3T-cC-gGv" secondAttribute="trailing" constant="16" id="Ap6-z0-0Oa"/>
+                                                <constraint firstItem="CXt-TI-N59" firstAttribute="top" secondItem="hcG-Dc-hmv" secondAttribute="top" id="MPF-wl-oaK"/>
+                                                <constraint firstItem="f3T-cC-gGv" firstAttribute="leading" secondItem="hcG-Dc-hmv" secondAttribute="leading" constant="16" id="MaG-rd-zFI"/>
                                                 <constraint firstItem="f3T-cC-gGv" firstAttribute="centerX" secondItem="hcG-Dc-hmv" secondAttribute="centerX" id="W5t-FW-s6I"/>
+                                                <constraint firstAttribute="trailing" secondItem="CXt-TI-N59" secondAttribute="trailing" id="ekJ-JA-Ut9"/>
+                                                <constraint firstItem="CXt-TI-N59" firstAttribute="leading" secondItem="hcG-Dc-hmv" secondAttribute="leading" id="oh6-ru-NE0"/>
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

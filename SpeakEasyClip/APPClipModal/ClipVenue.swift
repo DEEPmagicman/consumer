@@ -43,6 +43,8 @@ struct ClipVenue: Codable {
     var speakEasyCharges: String?
     var event: [Event]?
     var isDiscoveryClickable: Bool?
+    var isFollowing: Bool?
+    var isSaved: Bool?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0

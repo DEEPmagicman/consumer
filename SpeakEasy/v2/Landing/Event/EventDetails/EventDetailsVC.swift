@@ -83,6 +83,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var vipTableSubTitleLbl: UILabel!
+    @IBOutlet weak var saveBtn: UIButton!
     
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
@@ -118,6 +119,8 @@ class EventDetailsVC: UIViewController {
     private var expandedFAQIndex: Int?
     private var autoScrollTimer: Timer?
     private var isEventDetailAPICalled = false
+    private var isSaved: Bool = false
+    private var isSaveLoading: Bool = false
 
     private var totalSelectedTickets: Int {
         let normalTotal = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
@@ -151,6 +154,7 @@ class EventDetailsVC: UIViewController {
         startTicketTableObserver()
         startGroupTableObserver()
         startFAQsTableObserver()
+        setupUI()
 
         mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
     }
@@ -213,6 +217,18 @@ class EventDetailsVC: UIViewController {
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
         ticketTableView.isScrollEnabled = false
+    }
+    
+    private func setupUI() {
+        isSaved = venueDetails?.isSaved ?? false
+        updateSaveUI()
+    }
+    
+    private func updateSaveUI() {
+        let imageName = isSaved ? "ic_bookmark_filled" : "ic-bookmark"
+        
+        saveBtn.setImage(UIImage(named: imageName), for: .normal)
+        saveBtn.tintColor =  .white
     }
 
     func showSkeleton() {
@@ -1479,7 +1495,50 @@ class EventDetailsVC: UIViewController {
 
         setupData()
     }
-
+    
+    
+    @IBAction func onClickSaveBtn(_ sender: Any) {
+        guard !isSaveLoading else { return }
+        guard let venueId = event?.id else { return }
+        
+//        isSaveLoading = true
+        
+        let previousState = isSaved
+        isSaved.toggle()
+        updateSaveUI()
+        
+        if isSaved {
+//            saveVenueAPI(venueId: venueId, previousState: previousState)
+        } else {
+//            unsaveVenueAPI(venueId: venueId, previousState: previousState)
+        }
+    }
+    
+    
+//    private func saveVenueAPI(venueId: String, previousState: Bool) {
+//        APIManager.shared.saveVenue(venueId: venueId) { [weak self] success in
+//            guard let self = self else { return }
+//            self.isSaveLoading = false
+//            
+//            if !success {
+//                self.isSaved = previousState
+//                self.updateSaveUI()
+//            }
+//        }
+//    }
+//
+//    private func unsaveVenueAPI(venueId: String, previousState: Bool) {
+//        APIManager.shared.unsaveVenue(venueId: venueId) { [weak self] success in
+//            guard let self = self else { return }
+//            self.isSaveLoading = false
+//            
+//            if !success {
+//                self.isSaved = previousState
+//                self.updateSaveUI()
+//            }
+//        }
+//    }
+    
     @objc private func toggleDescription() {
         isExpanded.toggle()
 

@@ -4,6 +4,9 @@ final class OrdersVC: UIViewController {
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UIView!
+    @IBOutlet weak var emptyTitleLbl: UILabel!
+    @IBOutlet weak var emptySubTitleLbl: UILabel! 
     
     enum OrderSegment: Int {
         case upcoming = 0
@@ -76,6 +79,25 @@ final class OrdersVC: UIViewController {
         )
     }
     
+    private func updateEmptyState() {
+        let isEmpty = currentBookings.isEmpty && !isInitialLoading
+        
+        emptyView.isHidden = !isEmpty
+        tableView.isHidden = isEmpty
+        
+        guard isEmpty else { return }
+        
+        switch selectedType {
+        case .upcoming:
+            emptyTitleLbl.text = "No upcoming events"
+            emptySubTitleLbl.text = "Keep an eye out for upcoming events!"
+            
+        case .past:
+            emptyTitleLbl.text = "No past events"
+            emptySubTitleLbl.text = "Your past bookings will appear here."
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -87,19 +109,21 @@ final class OrdersVC: UIViewController {
     @IBAction func onChangeSegment(_ sender: UISegmentedControl) {
         selectedType = OrderSegment(rawValue: sender.selectedSegmentIndex) ?? .upcoming
         
-        // If data already loaded for this segment, just reload
         switch selectedType {
         case .upcoming:
             if !upcomingBookings.isEmpty {
                 isInitialLoading = false
                 tableView.reloadData()
+                updateEmptyState()
             } else {
                 loadCurrentSegment(reset: true)
             }
+            
         case .past:
             if !pastBookings.isEmpty {
                 isInitialLoading = false
                 tableView.reloadData()
+                updateEmptyState()
             } else {
                 loadCurrentSegment(reset: true)
             }
@@ -119,16 +143,22 @@ final class OrdersVC: UIViewController {
                 upcomingSkip = 0
                 upcomingHasMany = false
                 upcomingBookings.removeAll()
+                
             case .past:
                 pastSkip = 0
                 pastHasMany = false
                 pastBookings.removeAll()
             }
             
+            updateEmptyState() // 👈 hide empty while loading
             tableView.reloadData()
         }
         
         switch selectedType {
+            
+        // =========================
+        // MARK: - Upcoming
+        // =========================
         case .upcoming:
             PaymentPresenter.getUpcomingTicket(skip: upcomingSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
                 guard let self = self else { return }
@@ -137,6 +167,7 @@ final class OrdersVC: UIViewController {
                 self.isInitialLoading = false
                 
                 if isSuccess {
+                    
                     if reset {
                         self.upcomingBookings = bookings
                     } else {
@@ -147,7 +178,10 @@ final class OrdersVC: UIViewController {
                     if hasMany {
                         self.upcomingSkip = self.upcomingBookings.count
                     }
+                    
                 } else {
+                    
+                    // ❗ important: only clear on reset
                     if reset {
                         self.upcomingBookings.removeAll()
                     }
@@ -159,11 +193,16 @@ final class OrdersVC: UIViewController {
                     )
                 }
                 
+                // ❗ update UI only if current tab
                 if self.selectedType == .upcoming {
                     self.tableView.reloadData()
+                    self.updateEmptyState()
                 }
             }
             
+        // =========================
+        // MARK: - Past
+        // =========================
         case .past:
             PaymentPresenter.getPastTicket(skip: pastSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
                 guard let self = self else { return }
@@ -172,6 +211,7 @@ final class OrdersVC: UIViewController {
                 self.isInitialLoading = false
                 
                 if isSuccess {
+                    
                     if reset {
                         self.pastBookings = bookings
                     } else {
@@ -182,7 +222,9 @@ final class OrdersVC: UIViewController {
                     if hasMany {
                         self.pastSkip = self.pastBookings.count
                     }
+                    
                 } else {
+                    
                     if reset {
                         self.pastBookings.removeAll()
                     }
@@ -196,16 +238,17 @@ final class OrdersVC: UIViewController {
                 
                 if self.selectedType == .past {
                     self.tableView.reloadData()
+                    self.updateEmptyState()
                 }
             }
         }
-    }
-}
+    }}
 
 extension OrdersVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isInitialLoading {
+            emptyView.isHidden = true
             return 5
         }
         return currentBookings.count

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-SemiBold.ttf">
+            <string>Inter-SemiBold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--OrdersVC-->
         <scene sceneID="s0d-6b-0kx">
@@ -18,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="AIP-nV-wwc">
-                                <rect key="frame" x="64.666666666666686" y="118" width="264" height="32"/>
+                                <rect key="frame" x="64" y="59" width="265" height="32"/>
                                 <segments>
                                     <segment title="Upcoming" width="132"/>
                                     <segment title="Past" width="132">
@@ -31,8 +36,42 @@
                                     <action selector="onChangeSegment:" destination="Y6W-OH-hqX" eventType="valueChanged" id="pip-Ar-bMl"/>
                                 </connections>
                             </segmentedControl>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wBi-P3-Mfd">
+                                <rect key="frame" x="0.0" y="106" width="393" height="696"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyImageIc" translatesAutoresizingMaskIntoConstraints="NO" id="Xe1-cb-8mP">
+                                        <rect key="frame" x="16" y="171" width="361" height="150"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="150" id="fB8-JD-L23"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No events listed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ft9-3n-J1h">
+                                        <rect key="frame" x="119" y="336" width="155" height="24.333333333333314"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keep an eye out for upcoming events!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQD-pN-Wj8">
+                                        <rect key="frame" x="86.999999999999986" y="365.33333333333331" width="219" height="14.666666666666686"/>
+                                        <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="Ft9-3n-J1h" firstAttribute="centerX" secondItem="wBi-P3-Mfd" secondAttribute="centerX" id="3ZJ-Hh-zQU"/>
+                                    <constraint firstAttribute="trailing" secondItem="Xe1-cb-8mP" secondAttribute="trailing" constant="16" id="Fxw-SQ-zKb"/>
+                                    <constraint firstItem="pQD-pN-Wj8" firstAttribute="top" secondItem="Ft9-3n-J1h" secondAttribute="bottom" constant="5" id="GTC-y2-aHQ"/>
+                                    <constraint firstItem="pQD-pN-Wj8" firstAttribute="centerX" secondItem="wBi-P3-Mfd" secondAttribute="centerX" id="Jjc-7A-2qF"/>
+                                    <constraint firstItem="Ft9-3n-J1h" firstAttribute="top" secondItem="Xe1-cb-8mP" secondAttribute="bottom" constant="15" id="YfI-2H-GzO"/>
+                                    <constraint firstItem="Xe1-cb-8mP" firstAttribute="centerX" secondItem="wBi-P3-Mfd" secondAttribute="centerX" id="ZjX-IV-8zz"/>
+                                    <constraint firstItem="Ft9-3n-J1h" firstAttribute="centerY" secondItem="wBi-P3-Mfd" secondAttribute="centerY" id="cqc-gB-Sb8"/>
+                                    <constraint firstItem="Xe1-cb-8mP" firstAttribute="leading" secondItem="wBi-P3-Mfd" secondAttribute="leading" constant="16" id="eSL-35-hsb"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Av8-4N-Hud">
-                                <rect key="frame" x="0.0" y="165" width="393" height="603"/>
+                                <rect key="frame" x="0.0" y="106" width="393" height="696"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="sectionIndexBackgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
                             </tableView>
@@ -40,8 +79,12 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="wBi-P3-Mfd" firstAttribute="bottom" secondItem="Av8-4N-Hud" secondAttribute="bottom" id="1Ul-M7-vFH"/>
                             <constraint firstItem="AIP-nV-wwc" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="2ry-xD-ng1"/>
+                            <constraint firstItem="wBi-P3-Mfd" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="F1v-z4-nmh"/>
                             <constraint firstItem="Av8-4N-Hud" firstAttribute="top" secondItem="AIP-nV-wwc" secondAttribute="bottom" constant="16" id="JRU-uP-drP"/>
+                            <constraint firstItem="wBi-P3-Mfd" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="Pgb-Pa-kUr"/>
+                            <constraint firstItem="wBi-P3-Mfd" firstAttribute="top" secondItem="Av8-4N-Hud" secondAttribute="top" id="Pu2-WG-QtB"/>
                             <constraint firstItem="AIP-nV-wwc" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="R0r-96-ulR"/>
                             <constraint firstItem="Av8-4N-Hud" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="a5e-sr-U2E"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Av8-4N-Hud" secondAttribute="bottom" constant="16" id="chy-ir-0Ti"/>
@@ -49,6 +92,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="emptySubTitleLbl" destination="pQD-pN-Wj8" id="QOO-Tt-8BO"/>
+                        <outlet property="emptyTitleLbl" destination="Ft9-3n-J1h" id="Yij-0G-9sb"/>
+                        <outlet property="emptyView" destination="wBi-P3-Mfd" id="qbY-lL-Ary"/>
                         <outlet property="segmentedControl" destination="AIP-nV-wwc" id="mV3-VJ-lCK"/>
                         <outlet property="tableView" destination="Av8-4N-Hud" id="oB7-wF-qqg"/>
                     </connections>
@@ -59,6 +105,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="emptyImageIc" width="42.666667938232422" height="42.666667938232422"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

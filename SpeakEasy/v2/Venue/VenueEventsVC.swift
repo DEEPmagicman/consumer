@@ -10,6 +10,7 @@ import UIKit
 final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyView: UIView!
     
     var venueId = ""
     private var events: [Event] = []
@@ -57,22 +58,29 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
             guard let self = self else { return }
             
             DispatchQueue.main.async {
+                
                 self.shimmerView?.stop()
-                self.tableView.reloadData()
-            }
-            
-            if isSuccess {
                 
-                let newItems = list.filter { newEvent in
-                    !self.events.contains(where: { $0.id == newEvent.id })
+                if isSuccess {
+                    
+                    let newItems = list.filter { newEvent in
+                        !self.events.contains(where: { $0.id == newEvent.id })
+                    }
+                    
+                    self.events.append(contentsOf: newItems)
+                    self.skip = self.events.count
+                    self.hasMore = hasMore
+                    self.emptyView.isHidden = !self.events.isEmpty
+                    self.tableView.isHidden = self.events.isEmpty
+                    
+                    self.tableView.reloadData()
+                    
+                } else {
+                    self.emptyView.isHidden = false
+                    self.tableView.isHidden = true
+                    
+                    print(errMsg ?? "Error")
                 }
-                
-                self.events.append(contentsOf: newItems)
-                self.skip = self.events.count
-                self.hasMore = hasMore
-                
-            } else {
-                print(errMsg ?? "Error")
             }
         }
     }
@@ -130,7 +138,6 @@ extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-import UIKit
 
 final class VenueEventsShimmerView: UIView {
     
