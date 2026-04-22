@@ -56,6 +56,7 @@ class EventsListVC: UIViewController {
         hero.isEnabled = true
         navigationController?.hero.isEnabled = true
         navigationController?.hero.navigationAnimationType = .auto
+        scrollView.contentInsetAdjustmentBehavior = .never
         
         scrollView.delegate = self
         screenTitleLabel.text = screenType.title
@@ -65,7 +66,7 @@ class EventsListVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateCollectionViewHeight()
+//        updateCollectionViewHeight()
     }
     
     private func setupCollectionView() {
@@ -86,8 +87,7 @@ class EventsListVC: UIViewController {
 
         dropDownLayout(dropDown: dropDown)
     }
-    
-    
+
     private func getEvents() {
         EventPresenter.getEvents(
             from: tonightEventSkip,
@@ -190,7 +190,7 @@ class EventsListVC: UIViewController {
 extension EventsListVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return isInitialLoading ? 6 : todaysEvents.count
+        return isInitialLoading ? 10 : todaysEvents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -209,7 +209,7 @@ extension EventsListVC: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.shimmerView.isHidden = true
 
             let event = todaysEvents[indexPath.item]
-//            cell.setupData(event: event)
+            cell.setupData(event: event)
         }
 
         return cell

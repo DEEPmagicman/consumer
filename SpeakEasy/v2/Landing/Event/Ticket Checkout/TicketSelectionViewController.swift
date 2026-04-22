@@ -909,6 +909,11 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func updateContinueBtnState(animated: Bool = true) {
+        if isLoading {
+            continueToCheckOutBtn.isHidden = true
+            return
+        }
+        
         let shouldShow: Bool
         switch mode {
         case .normal:

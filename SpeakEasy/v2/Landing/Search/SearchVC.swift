@@ -10,18 +10,39 @@ import UIKit
 final class SearchVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var shimmerView: UIView! // optional if you already have in storyboard
 
+    @IBOutlet weak var searchFeild: UITextField!
     private var rows: [SearchRow] = []
 
     private var events: [String] = []
     private var venues: [String] = []
     private var artists: [String] = []
 
+    // ✅ Shimmer
+    private var shimmerContainer: VenueEventsShimmerView?
+    private var isShimmerLoading: Bool = true
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        loadDummyData()
-        buildRows()
+
+        // ✅ Start shimmer
+        showShimmer()
+
+        // ✅ Simulate API
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.isShimmerLoading = false
+            self.stopShimmer()
+
+            self.loadDummyData()
+            self.buildRows()
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        shimmerContainer?.frame = tableView.bounds
     }
 
     private func setupTableView() {
@@ -40,6 +61,8 @@ final class SearchVC: UIViewController {
                            forCellReuseIdentifier: SearchArtistTableViewCell.identifier)
     }
 
+    // MARK: - Dummy Data
+
     private func loadDummyData() {
         events = ["Event 1", "Event 2", "Event 3"]
         venues = ["Venue 1", "Venue 2"]
@@ -55,11 +78,27 @@ final class SearchVC: UIViewController {
 
         tableView.reloadData()
     }
-    
+
+    // MARK: - Shimmer
+
+    private func showShimmer() {
+        let shimmer = VenueEventsShimmerView(frame: tableView.bounds)
+        tableView.addSubview(shimmer)
+        shimmer.start()
+        shimmerContainer = shimmer
+    }
+
+    private func stopShimmer() {
+        shimmerContainer?.stop()
+        shimmerContainer?.removeFromSuperview()
+        shimmerContainer = nil
+    }
+
+    // MARK: - Actions
+
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
 }
 
 // MARK: - Row Type
@@ -77,11 +116,26 @@ extension SearchVC {
 extension SearchVC: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rows.count
+        return isShimmerLoading ? 6 : rows.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+        // ✅ Shimmer state
+        if isShimmerLoading {
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: VenueEventTVC.identifier,
+                for: indexPath
+            ) as! VenueEventTVC
+
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+            cell.contentView.alpha = 0
+
+            return cell
+        }
+
+        // ✅ Real data
         switch rows[indexPath.row] {
 
         case .event(let event):
@@ -92,8 +146,9 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.selectionStyle = .none
             cell.backgroundColor = .clear
-
+            cell.contentView.alpha = 1
             // cell.configure(with: event)
+
             return cell
 
         case .venue(let venue):
@@ -104,9 +159,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.selectionStyle = .none
             cell.backgroundColor = .clear
-
+            cell.contentView.alpha = 1
             // cell.configure(with: venue)
+
             return cell
+
         case .artist(let artist):
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: SearchArtistTableViewCell.identifier,
@@ -115,18 +172,14 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
 
             cell.selectionStyle = .none
             cell.backgroundColor = .clear
-
+            cell.contentView.alpha = 1
             // cell.configure(with: artist)
+
             return cell
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Navigate.to.gotoArtistDetailsVC(self)
     }
-    
-    
-    
-    
-  
 }

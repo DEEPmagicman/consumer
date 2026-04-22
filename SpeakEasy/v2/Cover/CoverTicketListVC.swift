@@ -278,7 +278,7 @@ private extension CoverTicketListVC {
         }
         
         let symbol = venueDetails?.venueSettings?.currencySymbol ?? "$"
-        let total = ticket.price + (ticket.extraFees ?? 0)
+        let total = ticket.price 
         return "\(symbol)\(total.decimalFormat(true))"
     }
     

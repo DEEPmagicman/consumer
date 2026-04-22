@@ -33,6 +33,7 @@ class PremiumExperiencesVC: UIViewController {
         tableView.backgroundColor = .clear
         tableView.isScrollEnabled = false
         tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
+        scrollView.contentInsetAdjustmentBehavior = .never
 
         showShimmer()
 

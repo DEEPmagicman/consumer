@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -42,12 +42,12 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="77e-4u-kqj">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="928"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Hl-lm-79k">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="188"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cityImage" translatesAutoresizingMaskIntoConstraints="NO" id="zE8-ot-Jcb">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cityImage" translatesAutoresizingMaskIntoConstraints="NO" id="zE8-ot-Jcb">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="188"/>
                                         </imageView>
                                     </subviews>
@@ -77,10 +77,10 @@
                                     </constraints>
                                 </view>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Qkd-S5-rjQ">
-                                    <rect key="frame" x="0.0" y="196" width="393" height="700"/>
+                                    <rect key="frame" x="0.0" y="196" width="393" height="500"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="700" id="Tgg-fS-ClO"/>
+                                        <constraint firstAttribute="height" constant="500" id="Tgg-fS-ClO"/>
                                     </constraints>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qJR-NJ-kf3">
                                         <size key="itemSize" width="128" height="128"/>
@@ -99,7 +99,7 @@
                                 <constraint firstAttribute="trailing" secondItem="Qkd-S5-rjQ" secondAttribute="trailing" id="Qbn-qU-gVM"/>
                                 <constraint firstAttribute="trailing" secondItem="4Hl-lm-79k" secondAttribute="trailing" id="Rpu-ay-ttC"/>
                                 <constraint firstItem="4Hl-lm-79k" firstAttribute="top" secondItem="77e-4u-kqj" secondAttribute="top" id="Vg8-Nx-sHo"/>
-                                <constraint firstAttribute="bottom" secondItem="Qkd-S5-rjQ" secondAttribute="bottom" constant="32" id="fHn-oi-BQG"/>
+                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Qkd-S5-rjQ" secondAttribute="bottom" constant="32" id="fHn-oi-BQG"/>
                                 <constraint firstItem="es4-3U-pt8" firstAttribute="leading" secondItem="77e-4u-kqj" secondAttribute="leading" id="hOT-cM-SzC"/>
                                 <constraint firstItem="es4-3U-pt8" firstAttribute="bottom" secondItem="4Hl-lm-79k" secondAttribute="bottom" id="kGW-AG-1Eo"/>
                                 <constraint firstAttribute="trailing" secondItem="es4-3U-pt8" secondAttribute="trailing" id="yng-GZ-dZq"/>
@@ -108,7 +108,6 @@
                     </subviews>
                     <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstItem="77e-4u-kqj" firstAttribute="height" secondItem="FPh-oR-e0X" secondAttribute="height" priority="250" id="1Kl-af-qFy"/>
                         <constraint firstItem="77e-4u-kqj" firstAttribute="leading" secondItem="FPh-oR-e0X" secondAttribute="leading" id="6lW-5P-mRg"/>
                         <constraint firstItem="77e-4u-kqj" firstAttribute="top" secondItem="FPh-oR-e0X" secondAttribute="top" id="O9v-bY-4oK"/>
                         <constraint firstAttribute="trailing" secondItem="77e-4u-kqj" secondAttribute="trailing" id="TQA-nu-V9E"/>
@@ -203,6 +202,7 @@
                 <constraint firstItem="FPh-oR-e0X" firstAttribute="leading" secondItem="Bho-Qj-UAs" secondAttribute="leading" id="L1e-hf-GmK"/>
                 <constraint firstAttribute="trailing" secondItem="FPh-oR-e0X" secondAttribute="trailing" id="Lpz-jU-MTi"/>
                 <constraint firstItem="uea-tb-0iD" firstAttribute="leading" secondItem="FPh-oR-e0X" secondAttribute="leading" id="Uiy-6z-Gy6"/>
+                <constraint firstItem="77e-4u-kqj" firstAttribute="height" secondItem="Bho-Qj-UAs" secondAttribute="height" priority="250" id="cdX-8N-RuM"/>
                 <constraint firstItem="FPh-oR-e0X" firstAttribute="top" secondItem="Bho-Qj-UAs" secondAttribute="top" id="n8R-gd-QU0"/>
             </constraints>
             <point key="canvasLocation" x="927.48091603053433" y="133.80281690140845"/>

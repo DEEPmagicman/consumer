@@ -40,6 +40,7 @@ final class DiscoverAllVC: UIViewController {
         tonightEventCollectionView.register(EventCVC.nib, forCellWithReuseIdentifier: EventCVC.identifier)
         venueListCollectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
         allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
+        setVenueListForSelectedCity()
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.updateShimmerView()
         }
@@ -212,7 +213,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
         case tonightEventCollectionView:
             return isTonightEventInitialLoading ? 3 : todaysEvents.count
         case allEventsCollectionView:
-            return isAllEventInitialLoading ? 3 : 5
+            return isAllEventInitialLoading ? 3 : todaysEvents.count
         default:
             return 0
         }
@@ -258,15 +259,28 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
             return cell
         case allEventsCollectionView:
             let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
+            
             if isVenueInitialLoading {
                 cell.shimmerView.isHidden = false
+                
                 for view in cell.shimmerView.subviews where view is ShimmerView {
                     (view as? ShimmerView)?.startAnimating()
                 }
+                
                 return cell
-            } else {
-                cell.shimmerView.isHidden = true
             }
+            
+            for view in cell.shimmerView.subviews where view is ShimmerView {
+                (view as? ShimmerView)?.stopAnimating()
+            }
+            
+            cell.shimmerView.isHidden = true
+            
+            let event = todaysEvents[indexPath.row]
+            cell.image.hero.id = "event.image.\(event.id)"
+            cell.eventName.hero.id = "event.title.\(event.id)"
+            cell.setupData(event: event)
+            
             return cell
         default:
             return UICollectionViewCell()
@@ -290,6 +304,8 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
 
            case allEventsCollectionView:
                if isAllEventInitialLoading { return }
+               let selectedEvent = todaysEvents[indexPath.item]
+               Navigate.eventDetailsVC(self, event: selectedEvent)
 
 //               let selectedEvent = allEvents[indexPath.item]   // make sure this array exists
 //               Navigate.to.eventDetailsVC(self, event: selectedEvent)
