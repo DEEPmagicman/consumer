@@ -206,7 +206,7 @@
                                                                 <constraint firstAttribute="width" id="rgf-ZE-glu"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yQW-kt-HO3">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yQW-kt-HO3">
                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="LRr-RY-KeL"/>
@@ -1059,6 +1059,13 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="np8-bd-gL1">
+                                                            <rect key="frame" x="130.66666666666666" y="16" width="100" height="100"/>
+                                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                            <connections>
+                                                                <action selector="onClickVenueImage:" destination="-1" eventType="touchUpInside" id="gge-Qp-8lp"/>
+                                                            </connections>
+                                                        </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MsM-Vg-lFL">
                                                             <rect key="frame" x="180.66666666666666" y="120" width="0.0" height="20"/>
                                                             <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
@@ -1142,12 +1149,16 @@
                                                     <constraints>
                                                         <constraint firstItem="Qfe-Tt-4xP" firstAttribute="top" secondItem="MsM-Vg-lFL" secondAttribute="bottom" constant="10" id="F9D-gs-HoY"/>
                                                         <constraint firstItem="csT-9V-hNh" firstAttribute="leading" secondItem="wtr-eE-6Ef" secondAttribute="leading" id="HnN-D6-CjT"/>
+                                                        <constraint firstItem="np8-bd-gL1" firstAttribute="bottom" secondItem="AaO-H4-EUM" secondAttribute="bottom" id="S79-vz-Dox"/>
                                                         <constraint firstItem="AaO-H4-EUM" firstAttribute="centerX" secondItem="wtr-eE-6Ef" secondAttribute="centerX" id="V1W-ci-f0U"/>
                                                         <constraint firstItem="Qfe-Tt-4xP" firstAttribute="centerX" secondItem="AaO-H4-EUM" secondAttribute="centerX" id="X2I-qd-ej2"/>
                                                         <constraint firstItem="MsM-Vg-lFL" firstAttribute="centerX" secondItem="AaO-H4-EUM" secondAttribute="centerX" id="aUE-Es-6Ld"/>
                                                         <constraint firstItem="MsM-Vg-lFL" firstAttribute="top" secondItem="AaO-H4-EUM" secondAttribute="bottom" constant="4" id="c6J-Ns-XPN"/>
+                                                        <constraint firstItem="np8-bd-gL1" firstAttribute="trailing" secondItem="AaO-H4-EUM" secondAttribute="trailing" id="ffd-ES-czu"/>
                                                         <constraint firstAttribute="trailing" secondItem="csT-9V-hNh" secondAttribute="trailing" id="fxt-c5-eut"/>
                                                         <constraint firstItem="csT-9V-hNh" firstAttribute="top" secondItem="wtr-eE-6Ef" secondAttribute="top" id="hTs-Ye-IQv"/>
+                                                        <constraint firstItem="np8-bd-gL1" firstAttribute="top" secondItem="AaO-H4-EUM" secondAttribute="top" id="lxU-6H-Djr"/>
+                                                        <constraint firstItem="np8-bd-gL1" firstAttribute="leading" secondItem="AaO-H4-EUM" secondAttribute="leading" id="tIU-Rz-4n2"/>
                                                         <constraint firstItem="CcJ-8I-zHj" firstAttribute="bottom" secondItem="csT-9V-hNh" secondAttribute="bottom" constant="-16" id="v50-q8-bfu"/>
                                                         <constraint firstItem="AaO-H4-EUM" firstAttribute="top" secondItem="wtr-eE-6Ef" secondAttribute="top" constant="16" id="y3I-14-UXp"/>
                                                         <constraint firstAttribute="bottom" secondItem="Qfe-Tt-4xP" secondAttribute="bottom" constant="60" id="yzc-KF-XLS"/>
@@ -1486,7 +1497,7 @@
         <image name="lockIc" width="20" height="20"/>
         <image name="shareIconV2" width="20" height="20"/>
         <namedColor name="AccentColor">
-            <color red="0.52941176470588236" green="0.77254901960784317" blue="0.25098039215686274" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.79199999570846558" blue="0.15700000524520874" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="TouchBarBezel">
             <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

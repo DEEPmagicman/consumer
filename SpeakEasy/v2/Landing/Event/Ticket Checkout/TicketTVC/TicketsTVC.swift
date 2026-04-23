@@ -20,7 +20,7 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var ticketLeftLbl: UILabel!
     @IBOutlet weak var rsvpBtnView: UIView!
     @IBOutlet weak var inclFeesLbl: UILabel!
-    @IBOutlet weak var rsvpBtn: LoadingButton!
+//    @IBOutlet weak var rsvpBtn: LoadingButton!
     @IBOutlet weak var soldOutView: UIView!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var discriptionLbl: UILabel!
@@ -30,6 +30,8 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var comingSoonView: UIView!
     @IBOutlet weak var topSapraterView: UIView!
     @IBOutlet weak var shimmerView: ShimmerView!
+    @IBOutlet weak var rsvpBtn: UIButton!
+    
     
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
@@ -54,6 +56,14 @@ class TicketsTVC: UITableViewCell {
         shimmerView.stopAnimating()
         shimmerView.isHidden = true
         resetUI()
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(false, animated: false)
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(false, animated: false)
     }
 
     private func resetUI() {
@@ -199,7 +209,7 @@ class TicketsTVC: UITableViewCell {
             priceLbl.text = "FREE"
             rsvpBtnView.isHidden = false
             plusView.isHidden = true
-            rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
+//            rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
         } else {
             priceLbl.text = "\(currency)\(Double(price).decimalFormat(true))"
             rsvpBtnView.isHidden = true

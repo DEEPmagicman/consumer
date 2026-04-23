@@ -1,10 +1,3 @@
-//
-//  DiscoverAllVC.swift
-//  SpeakEasy-Consumer
-//
-//  Created by Square Infosoft on 24/12/25.
-//
-
 import UIKit
 import Combine
 import Hero
@@ -19,36 +12,48 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var premiumExperiencesView: UIView!
     @IBOutlet weak var premiumExerienceParentView: UIView!
     @IBOutlet weak var eventsInCityTitleLbl: UILabel!
+    @IBOutlet weak var eventsInCityView: UIView!
     
+    // MARK: - Loading States
     var isTonightEventInitialLoading = true
     var isAllEventInitialLoading = true
     var isVenueInitialLoading = true
+    
+    // MARK: - Venue
     private var openVenueList = [ClipVenue]()
     private var closeVenueList = [ClipVenue]()
     private var openFrom = 0
-    private var presenter = MVPPresenter()
-    private var openHasMore = false
     private var closeFrom = 0
+    private var openHasMore = false
     private var closeHasMore = false
+    
+    // MARK: - Tonight Events
     private var tonightEventSkip = 0
     private var todaysEvents = [Event]()
     
+    // MARK: - All Events
+    private var allEventSkip = 0
+    private var allEvents = [Event]()
+    private var allEventHasMore = false
+    
+    private var presenter = MVPPresenter()
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tonightEventCollectionView.register(EventCVC.nib, forCellWithReuseIdentifier: EventCVC.identifier)
-        venueListCollectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
-        allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
+        
+        registerCells()
+        bindSelectedCity()
+        setupHero()
         setVenueListForSelectedCity()
+        
+        getTonightEvent()
+        getAllEvents()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.updateShimmerView()
         }
-        bindSelectedCity()
-        getTonightEvent()
-        hero.isEnabled = true
-        navigationController?.hero.isEnabled = true
-        navigationController?.hero.navigationAnimationType = .auto
     }
     
     override func viewDidLayoutSubviews() {
@@ -61,118 +66,179 @@ final class DiscoverAllVC: UIViewController {
         )
     }
     
-    private func fetchAllOpenVenueForMVP() {
-        presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, openVenueList, hasMore in
-            guard let self = self else {
-                return
-            }
-            if isSuccess {
-                if self.openFrom == 0 {
-                    self.openVenueList.removeAll()
-                }
-                for venue in openVenueList {
-                    self.openVenueList.append(venue)
-                }
-                if hasMore {
-                    self.openFrom = self.openVenueList.count
-                }
-                self.openHasMore = hasMore
-                if !self.openHasMore {
-                    self.fetchAllCloseVenueForMVP()
-                }
-                isVenueInitialLoading = false
-                self.venueListCollectionView.reloadData()
-              
-            } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
-            }
-        }
+    // MARK: - Setup
+    private func registerCells() {
+        tonightEventCollectionView.register(EventCVC.nib, forCellWithReuseIdentifier: EventCVC.identifier)
+        venueListCollectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
+        allEventsCollectionView.register(EventV2CVC.nib, forCellWithReuseIdentifier: EventV2CVC.identifier)
     }
     
-    private func fetchAllCloseVenueForMVP() {
-        presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, closeVenueList, hasMore in
-            guard let self = self else {
-                return
-            }
-            if isSuccess {
-                if self.closeFrom == 0 {
-                    self.closeVenueList.removeAll()
-                }
-                for venue in closeVenueList {
-                    self.openVenueList.append(venue)
-                    self.closeVenueList.append(venue)
-                }
-                if hasMore {
-                    self.closeFrom = self.closeVenueList.count
-                }
-                self.closeHasMore = hasMore
-                isVenueInitialLoading = false
-                self.venueListCollectionView.reloadData()
-            } else {
-                Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
-            }
-        }
+    private func setupHero() {
+        hero.isEnabled = true
+        navigationController?.hero.isEnabled = true
+        navigationController?.hero.navigationAnimationType = .auto
     }
+    
+    // MARK: - API CALLS
     
     private func getTonightEvent() {
-        EventPresenter.getEvents(from: tonightEventSkip,venueId: "", time: "UPCOMING", city: UserDefault.shared.localCity) { [weak self] _, _, eventList, hasMore in
+        EventPresenter.getEvents(
+            from: tonightEventSkip,
+            venueId: "",
+            time: "UPCOMING",
+            city: UserDefault.shared.localCity
+        ) { [weak self] _, _, eventList, hasMore in
+            
             guard let self = self else { return }
             
             if self.tonightEventSkip == 0 {
                 self.todaysEvents.removeAll()
             }
-            for event in eventList {
-                self.todaysEvents.append(event)
-            }
+            
+            self.todaysEvents.append(contentsOf: eventList)
+            
             if hasMore {
                 self.tonightEventSkip = self.todaysEvents.count
             }
-            isTonightEventInitialLoading = false
-            if todaysEvents.isEmpty {
-                self.todaysEventsView.isHidden = true
-            } else {
-                self.todaysEventsView.isHidden = false
-            }
+            
+            self.isTonightEventInitialLoading = false
+            
+            self.todaysEventsView.isHidden = self.todaysEvents.isEmpty
+            
             self.tonightEventCollectionView.reloadData()
         }
     }
     
+    private func getAllEvents() {
+        EventPresenter.getEvents(
+            from: allEventSkip,
+            venueId: "",
+            time: "UPCOMING",
+            city: UserDefault.shared.localCity
+        ) { [weak self] _, _, eventList, hasMore in
+            
+            guard let self = self else { return }
+            
+            if self.allEventSkip == 0 {
+                self.allEvents.removeAll()
+            }
+            
+            self.allEvents.append(contentsOf: eventList)
+            
+            if hasMore {
+                self.allEventSkip = self.allEvents.count
+            }
+            
+            self.allEventHasMore = hasMore
+            self.isAllEventInitialLoading = false
+            self.eventsInCityView.isHidden = self.allEvents.isEmpty
+            
+            self.allEventsCollectionView.reloadData()
+        }
+    }
+    
+    private func fetchAllOpenVenueForMVP() {
+        presenter.getVenueListForMVP(from: openFrom, status: VenueStatus.open.rawValue) { [weak self] isSuccess, errMsg, venues, hasMore in
+            
+            guard let self = self else { return }
+            
+            if isSuccess {
+                if self.openFrom == 0 { self.openVenueList.removeAll() }
+                
+                self.openVenueList.append(contentsOf: venues)
+                
+                if hasMore {
+                    self.openFrom = self.openVenueList.count
+                }
+                
+                self.openHasMore = hasMore
+                
+                if !hasMore {
+                    self.fetchAllCloseVenueForMVP()
+                }
+                
+                self.isVenueInitialLoading = false
+                self.venueListCollectionView.reloadData()
+                
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? "Something went wrong", message: "")
+            }
+        }
+    }
+    
+    private func fetchAllCloseVenueForMVP() {
+        presenter.getVenueListForMVP(from: closeFrom, status: VenueStatus.close.rawValue) { [weak self] isSuccess, errMsg, venues, hasMore in
+            
+            guard let self = self else { return }
+            
+            if isSuccess {
+                if self.closeFrom == 0 { self.closeVenueList.removeAll() }
+                
+                self.closeVenueList.append(contentsOf: venues)
+                self.openVenueList.append(contentsOf: venues)
+                
+                if hasMore {
+                    self.closeFrom = self.closeVenueList.count
+                }
+                
+                self.closeHasMore = hasMore
+                self.isVenueInitialLoading = false
+                
+                self.venueListCollectionView.reloadData()
+                
+            } else {
+                Alert.showAlertSheet(style: .alert, title: errMsg ?? "Something went wrong", message: "")
+            }
+        }
+    }
+    
+    // MARK: - Refresh
+    
     private func refreshAllList() {
         isTonightEventInitialLoading = true
+        isAllEventInitialLoading = true
         isVenueInitialLoading = true
-//        isAllEventInitialLoading = true
-        closeVenueList.removeAll()
-        openVenueList.removeAll()
+        
         todaysEvents.removeAll()
-        self.tonightEventCollectionView.reloadData()
-        self.venueListCollectionView.reloadData()
-//        self.allEventsCollectionView.reloadData()
+        allEvents.removeAll()
+        openVenueList.removeAll()
+        closeVenueList.removeAll()
+        
+        tonightEventSkip = 0
+        allEventSkip = 0
+        
+        tonightEventCollectionView.reloadData()
+        allEventsCollectionView.reloadData()
+        venueListCollectionView.reloadData()
+        
         getTonightEvent()
+        getAllEvents()
         fetchAllOpenVenueForMVP()
-        fetchAllCloseVenueForMVP()
     }
     
     private func updateShimmerView() {
         isTonightEventInitialLoading = false
-        tonightEventCollectionView.reloadData()
-        
-        isVenueInitialLoading = false
-        venueListCollectionView.reloadData()
-        
         isAllEventInitialLoading = false
+        isVenueInitialLoading = false
+        
+        tonightEventCollectionView.reloadData()
         allEventsCollectionView.reloadData()
+        venueListCollectionView.reloadData()
     }
+    
+    // MARK: - City Binding
     
     private func bindSelectedCity() {
         UserDefault.shared.localCityPublisher
             .removeDuplicates()
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
+                self?.setVenueListForSelectedCity()
                 self?.refreshAllList()
             }
             .store(in: &cancellables)
     }
-
+    
     private func resolvedCity() -> String {
         let city = UserDefault.shared.localCity.trimmingCharacters(in: .whitespacesAndNewlines)
         return city.isEmpty ? "New York" : city
@@ -184,15 +250,17 @@ final class DiscoverAllVC: UIViewController {
         eventsInCityTitleLbl.text = "Events in \(city)"
         fetchAllOpenVenueForMVP()
     }
+    
+    // MARK: - Actions
 
     @IBAction func onClickBookNow(_ sender: Any) {
         Navigate.to.premiumExperiencesVC(self)
     }
-   
+
     @IBAction func onClickVenueSeeAllBtn(_ sender: Any) {
         Navigate.to.allVenueVC(self)
     }
-    
+
     @IBAction func onClickDiscoverSeeAllBtn(_ sender: Any) {
         Navigate.to.eventsListVC(self, screenType: .discoverExperiences)
     }
@@ -200,118 +268,94 @@ final class DiscoverAllVC: UIViewController {
     @IBAction func onClickEventsSeeAllBtn(_ sender: Any) {
         Navigate.to.eventsListVC(self, screenType: .allEvents)
     }
-    
 }
 
+// MARK: - CollectionView
+
 extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
         switch collectionView {
         case venueListCollectionView:
-            return isVenueInitialLoading
-                        ? 3
-                        : min(openVenueList.count, 5)
+            return isVenueInitialLoading ? 3 : min(openVenueList.count, 5)
+            
         case tonightEventCollectionView:
             return isTonightEventInitialLoading ? 3 : todaysEvents.count
+            
         case allEventsCollectionView:
-            return isAllEventInitialLoading ? 3 : todaysEvents.count
+            return isAllEventInitialLoading ? 3 : allEvents.count
+            
         default:
             return 0
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         switch collectionView {
+            
         case tonightEventCollectionView:
+            let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
+            
             if isTonightEventInitialLoading {
-                let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
-                cell.shimmerView.isHidden = !isTonightEventInitialLoading
-                cell.shimmerView?.startAnimating()
-                return cell
+                cell.shimmerView.isHidden = false
+                cell.shimmerView.startAnimating()
             } else {
-                let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
                 cell.shimmerView.isHidden = true
-
                 let event = todaysEvents[indexPath.item]
                 cell.setupData(event: event)
-                cell.bgImage.hero.id = "event.image.\(event.id)"
-                cell.eventTitleLbl.hero.id = "event.title.\(event.id)"
-                return cell
             }
-           
+            return cell
+            
         case venueListCollectionView:
-            let cell: VenueCVC = collectionView.dequeue(
-                withIdentifier: VenueCVC.identifier,
-                for: indexPath
-            )
-
+            let cell: VenueCVC = collectionView.dequeue(withIdentifier: VenueCVC.identifier, for: indexPath)
+            
             if isVenueInitialLoading {
                 cell.shimmerView.isHidden = false
-                for view in cell.shimmerView.subviews where view is ShimmerView {
-                    (view as? ShimmerView)?.startAnimating()
-                }
             } else {
                 cell.shimmerView.isHidden = true
-
                 let venue = openVenueList[indexPath.item]
-                cell.configure(with: venue) 
+                cell.configure(with: venue)
             }
-
             return cell
+            
         case allEventsCollectionView:
             let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
             
-            if isVenueInitialLoading {
+            if isAllEventInitialLoading {
                 cell.shimmerView.isHidden = false
-                
-                for view in cell.shimmerView.subviews where view is ShimmerView {
-                    (view as? ShimmerView)?.startAnimating()
-                }
-                
-                return cell
+            } else {
+                cell.shimmerView.isHidden = true
+                let event = allEvents[indexPath.item]
+                cell.setupData(event: event)
             }
-            
-            for view in cell.shimmerView.subviews where view is ShimmerView {
-                (view as? ShimmerView)?.stopAnimating()
-            }
-            
-            cell.shimmerView.isHidden = true
-            
-            let event = todaysEvents[indexPath.row]
-            cell.image.hero.id = "event.image.\(event.id)"
-            cell.eventName.hero.id = "event.title.\(event.id)"
-            cell.setupData(event: event)
-            
             return cell
+            
         default:
             return UICollectionViewCell()
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-           switch collectionView {
-
-           case tonightEventCollectionView:
-               if isTonightEventInitialLoading { return }
-               let selectedEvent = todaysEvents[indexPath.item]
-               Navigate.eventDetailsVC(self, event: selectedEvent)
-
-           case venueListCollectionView:
-               if isVenueInitialLoading { return }
-
-               let selectedVenue = openVenueList[indexPath.item]
-               Navigate.to.venueVC(self, venueDetails: selectedVenue)
-
-           case allEventsCollectionView:
-               if isAllEventInitialLoading { return }
-               let selectedEvent = todaysEvents[indexPath.item]
-               Navigate.eventDetailsVC(self, event: selectedEvent)
-
-//               let selectedEvent = allEvents[indexPath.item]   // make sure this array exists
-//               Navigate.to.eventDetailsVC(self, event: selectedEvent)
-
-           default:
-               break
-           }
-       }
+        
+        switch collectionView {
+            
+        case tonightEventCollectionView:
+            if isTonightEventInitialLoading { return }
+            Navigate.eventDetailsVC(self, event: todaysEvents[indexPath.item])
+            
+        case venueListCollectionView:
+            if isVenueInitialLoading { return }
+            Navigate.to.venueVC(self, venueDetails: openVenueList[indexPath.item])
+            
+        case allEventsCollectionView:
+            if isAllEventInitialLoading { return }
+            Navigate.eventDetailsVC(self, event: allEvents[indexPath.item])
+            
+        default:
+            break
+        }
+    }
 }

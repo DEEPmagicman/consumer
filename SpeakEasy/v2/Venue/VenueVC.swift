@@ -193,8 +193,27 @@ final class VenueShimmerView: UIView {
         makeShimmer(CGRect(x: 16, y: 300, width: width - 32, height: 60), corner: 12)
         
         // 🔹 Tabs (3)
-        for i in 0..<3 {
-            makeShimmer(CGRect(x: 20 + (i * 120), y: 380, width: 80, height: 20))
+        let tabCount = 4
+        let sidePadding: CGFloat = 20
+        let spacing: CGFloat = 8
+
+        let totalSpacing = spacing * CGFloat(tabCount - 1)
+        let availableWidth = UIScreen.main.bounds.width - (sidePadding * 2) - totalSpacing
+        let tabWidth = availableWidth / CGFloat(tabCount)
+
+        for i in 0..<tabCount {
+            
+            let x = sidePadding + CGFloat(i) * (tabWidth + spacing)
+            
+            makeShimmer(
+                CGRect(
+                    x: x,
+                    y: 380,
+                    width: tabWidth,
+                    height: 20
+                ),
+                corner: 10
+            )
         }
         
         // 🔹 Event list (5 rows)

@@ -237,8 +237,12 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
         purchaseTicketBtn.setTitle(bookingType == .FREE ? "REDEEM TICKETS" : "BUY TICKETS", for: .normal)
 
-        if let color = venue?.venueSettings?.whiteLabelColor {
-            purchaseTicketBtn.backgroundColor = UIColor(hex: color)
+        if let colorHex = venue?.venueSettings?.whiteLabelColor {
+            
+            let bgColor = UIColor(hex: colorHex)
+            
+            purchaseTicketBtn.backgroundColor = bgColor
+            purchaseTicketBtn.setTitleColor(bgColor.suitableTextColor(), for: .normal)
         }
     }
 

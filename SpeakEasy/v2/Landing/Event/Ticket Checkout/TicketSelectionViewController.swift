@@ -301,6 +301,8 @@ class TicketSelectionViewController: UIViewController {
             dateandtimeLbl.textColor = color
             continueToCheckOutBtn.backgroundColor = color
             continueToCheckOutBtn.bgColor = color
+            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
         }
     }
 
@@ -352,6 +354,8 @@ class TicketSelectionViewController: UIViewController {
             dateandtimeLbl.textColor = color
             continueToCheckOutBtn.backgroundColor = color
             continueToCheckOutBtn.bgColor = color
+            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
         }
 
         let filteredNormalTickets = filterAvailableTickets(event.eventTicket ?? [])
@@ -780,13 +784,13 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
-        cell.rsvpBtn.showLoader(userInteraction: false)
+//        cell.rsvpBtn.showLoader(userInteraction: false)
         guard !isTicketDisabledByLink(ticket) else {
-            cell.rsvpBtn.hideLoader()
+//            cell.rsvpBtn.hideLoader()
             return
         }
         guard let event = event else {
-            cell.rsvpBtn.hideLoader()
+//            cell.rsvpBtn.hideLoader()
             return
         }
 
@@ -796,19 +800,19 @@ class TicketSelectionViewController: UIViewController {
             selectedNormalTickets = [ticket]
 
             if addOnTickets.isEmpty {
-                cell.rsvpBtn.hideLoader()
+//                cell.rsvpBtn.hideLoader()
                 Navigate.to.ticketCheckoutVC(
                     self,
                     event: event,
                     selectedTickets: selectedNormalTickets, bookingId: nil
                 )
             } else {
-                cell.rsvpBtn.hideLoader()
+//                cell.rsvpBtn.hideLoader()
                 switchToAddOnMode()
             }
 
         case .addOn:
-            cell.rsvpBtn.hideLoader()
+//            cell.rsvpBtn.hideLoader()
             let finalTickets = selectedNormalTickets + [ticket]
 
             Navigate.to.ticketCheckoutVC(
@@ -909,10 +913,6 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func updateContinueBtnState(animated: Bool = true) {
-        if isLoading {
-            continueToCheckOutBtn.isHidden = true
-            return
-        }
         
         let shouldShow: Bool
         switch mode {
@@ -922,41 +922,22 @@ class TicketSelectionViewController: UIViewController {
             shouldShow = true
         }
 
-        let hiddenBottom: CGFloat = -continueToCheckOutBtn.bounds.height - 24
-        let shownBottom: CGFloat = 32
-
-        let applyState = {
-            self.continueToCheckOutBtn.isHidden = false
-            self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
-            self.continueToCheckOutBtn.alpha = shouldShow ? 1 : 0
-            self.view.layoutIfNeeded()
-        }
-
-        if !animated {
-            applyState()
-            self.continueToCheckOutBtn.isHidden = !shouldShow
+        // 🚫 STOP if already same state
+        if continueToCheckOutBtn.isHidden == !shouldShow {
             return
         }
 
-        if shouldShow && continueToCheckOutBtn.isHidden {
-            continueToCheckOutBtn.isHidden = false
-            continueToCheckOutBtn.alpha = 0
-            continueButtonBottomConstraint.constant = hiddenBottom
-            view.layoutIfNeeded()
-        }
+        let hiddenBottom: CGFloat = -continueToCheckOutBtn.bounds.height - 24
+        let shownBottom: CGFloat = 32
 
-        UIView.animate(
-            withDuration: 0.35,
-            delay: 0,
-            usingSpringWithDamping: 0.88,
-            initialSpringVelocity: 0.6,
-            options: [.curveEaseInOut, .allowUserInteraction]
-        ) {
-            applyState()
+        continueToCheckOutBtn.isHidden = false
+
+        UIView.animate(withDuration: 0.25) {
+            self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
+            self.continueToCheckOutBtn.alpha = shouldShow ? 1 : 0
+            self.view.layoutIfNeeded()
         } completion: { _ in
-            if !shouldShow {
-                self.continueToCheckOutBtn.isHidden = true
-            }
+            self.continueToCheckOutBtn.isHidden = !shouldShow
         }
     }
 }

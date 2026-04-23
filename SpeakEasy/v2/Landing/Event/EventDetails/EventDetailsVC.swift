@@ -889,17 +889,21 @@ class EventDetailsVC: UIViewController {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
             buyNowBtnView.backgroundColor = color
+            buyNowBtnLbl.textColor = color.suitableTextColor()
             webSiteView.borderColor = color
             continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
             continueToCheckOutBtn.bgColor = color
+            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
             
         } else {
             let color = UIColor(hex: "F581FE")
             buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
             continueToCheckOutBtn.backgroundColor = color
+            buyNowBtnLbl.textColor = color.suitableTextColor()
             continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
             continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
+            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
         }
 
         setupSocialLinks()
@@ -1515,6 +1519,10 @@ class EventDetailsVC: UIViewController {
     }
     
     
+    @IBAction func onClickVenueImage(_ sender: Any) {
+        Navigate.to.venueVC(self, venueDetails: self.venueDetails)
+    }
+    
 //    private func saveVenueAPI(venueId: String, previousState: Bool) {
 //        APIManager.shared.saveVenue(venueId: venueId) { [weak self] success in
 //            guard let self = self else { return }
@@ -2081,13 +2089,17 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
         guard tableView == ticketTableView else { return }
 
-        let ticket = tickets[indexPath.row]
-        guard !isTicketDisabledByLink(ticket) else { return }
+          let ticket = tickets[indexPath.row]
+          if ticket.price == 0 {
+              return
+          }
 
-        let currentCount = ticket.selectedTicketCount ?? 0
-        guard currentCount == 0 else { return }
+          guard !isTicketDisabledByLink(ticket) else { return }
 
-        handlePlus(ticket: ticket)
+          let currentCount = ticket.selectedTicketCount ?? 0
+          guard currentCount == 0 else { return }
+
+          handlePlus(ticket: ticket)
     }
 }
 

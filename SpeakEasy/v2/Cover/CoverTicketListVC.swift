@@ -17,6 +17,7 @@ final class CoverTicketListVC: UIViewController {
     @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var continueToChekoutBtn: UIView!
     @IBOutlet weak var ticketsTitleLbl: UILabel!
+    @IBOutlet weak var continueCheckOutLbl: UILabel!
     
     var venueDetails: ClipVenue?
     var doormanId = ""
@@ -197,6 +198,7 @@ private extension CoverTicketListVC {
             continueToChekoutBtn.layer.borderColor = color.cgColor
             continueToChekoutBtn.layer.borderWidth = 1
             timeLbl.textColor = color
+            continueCheckOutLbl.textColor = color.suitableTextColor()
         }
         
         continueToChekoutBtn.isHidden = true
