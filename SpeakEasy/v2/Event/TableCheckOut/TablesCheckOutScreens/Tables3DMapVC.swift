@@ -127,6 +127,16 @@ final class Tables3DMapVC: UIViewController {
     private var initialYaw: Float = -Float.pi / 10
     private var initialPitch: Float = -Float.pi / 6
  
+    var currentDistance: Float = 0
+    var minDistance: Float = 0
+    var maxDistance: Float = 0
+
+    var minYaw: Float = -.pi
+    var maxYaw: Float = .pi
+
+    var minPitch: Float = -Float.pi / 2
+    var maxPitch: Float = Float.pi / 2
+    
     // MARK: - Lifecycle
  
     override func viewDidLoad() {
@@ -199,15 +209,34 @@ private extension Tables3DMapVC {
         zoneSelector.onPrevPage = { [weak self] in self?.goPrev() }
     }
     
-    private func adaptFovForAspect(
-        baseFov: Double,
-        baseAspect: Double,
-        targetAspect: Double
-    ) -> Double {
-        let vFovRad = baseFov * .pi / 180.0
-        let hFovRad = 2.0 * atan(tan(vFovRad / 2.0) * baseAspect)
-        let newVFovRad = 2.0 * atan(tan(hFovRad / 2.0) / targetAspect)
-        return newVFovRad * 180.0 / .pi
+//    private func adaptFovForAspect(
+//        baseFov: Double,
+//        baseAspect: Double,
+//        targetAspect: Double
+//    ) -> Double {
+//        let vFovRad = baseFov * .pi / 180.0
+//        let hFovRad = 2.0 * atan(tan(vFovRad / 2.0) * baseAspect)
+//        let newVFovRad = 2.0 * atan(tan(hFovRad / 2.0) / targetAspect)
+//        return newVFovRad * 180.0 / .pi
+//    }
+    
+    fileprivate func adaptFovForAspect(
+        baseFov: Float,
+        baseAspect: Float,
+        targetAspect: Float
+    ) -> Float {
+
+        // Convert to radians
+        let vFovRad = baseFov * .pi / 180
+
+        // Step 1: horizontal FOV (desktop)
+        let hFovRad = 2 * atan(tan(vFovRad / 2) * baseAspect)
+
+        // Step 2: new vertical FOV (iOS screen)
+        let newVFovRad = 2 * atan(tan(hFovRad / 2) / targetAspect)
+
+        // Back to degrees
+        return newVFovRad * 180 / .pi
     }
 }
  
@@ -903,13 +932,97 @@ private extension Tables3DMapVC {
 
         cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
     }
- 
-    @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
-        guard let cam = cameraNode.camera else { return }
+// 
+//    @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+//        guard let cam = cameraNode.camera else { return }
+//
+//        let newScale = cam.orthographicScale * Double(1 / gesture.scale)
+//        cam.orthographicScale = newScale.clamped(to: activeZoomLimits)
+//        gesture.scale = 1
+//    }
+    
+//    @objc func handlePan(_ g: UIPanGestureRecognizer) {
+//
+//        let translation = g.translation(in: sceneView)
+//        g.setTranslation(.zero, in: sceneView)
+//
+//        let pitchSensitivity: Float = 0.004
+//        let yawSensitivity: Float = 0.006
+//
+//        currentYaw -= Float(translation.x) * yawSensitivity
+//        currentPitch -= Float(translation.y) * pitchSensitivity
+//
+//        if minPitch > maxPitch {
+//            swap(&minPitch, &maxPitch)
+//        }
+//        currentPitch = Swift.min(Swift.max(currentPitch, minPitch), maxPitch)
+//        currentYaw = clampAngle(currentYaw, min: minYaw, max: maxYaw)
+//
+//        currentYaw = normalizeAngle(currentYaw)
+//        cameraOrbit.eulerAngles = SCNVector3(
+//            currentPitch,
+//            currentYaw,
+//            0
+//        )
+//    }
 
-        let newScale = cam.orthographicScale * Double(1 / gesture.scale)
-        cam.orthographicScale = newScale.clamped(to: activeZoomLimits)
-        gesture.scale = 1
+    func normalizeAngle(_ angle: Float) -> Float {
+        var a = angle
+        while a > .pi { a -= 2 * .pi }
+        while a < -.pi { a += 2 * .pi }
+        return a
+    }
+
+    func clampAngle(_ angle: Float, min: Float, max: Float) -> Float
+    {
+
+        let a = normalizeAngle(angle)
+        let minA = normalizeAngle(min)
+        let maxA = normalizeAngle(max)
+
+        // normal case
+        if minA <= maxA {
+            return Swift.min(Swift.max(a, minA), maxA)
+        }
+
+        // wrap-around case
+        if a >= minA || a <= maxA {
+            return a
+        }
+
+        // snap to nearest edge
+        let distToMin = abs(a - minA)
+        let distToMax = abs(a - maxA)
+
+        return distToMin < distToMax ? minA : maxA
+    }
+
+    @objc func handlePinch(_ g: UIPinchGestureRecognizer) {
+
+        let zoomSpeed: Float = 0.25  // thoda responsive
+
+        let delta = Float(1 - g.scale)
+        g.scale = 1
+
+        currentDistance += delta * zoomSpeed * currentDistance
+
+//        currentDistance = Swift.min(
+//            Swift.max(currentDistance, minDistance),
+//            maxDistance
+//        )
+
+        updateCameraDistance()
+    }
+
+    func updateCameraDistance() {
+
+        let dir = cameraNode.position.normalized()
+
+        cameraNode.position = SCNVector3(
+            dir.x * currentDistance,
+            dir.y * currentDistance,
+            dir.z * currentDistance
+        )
     }
  
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -1184,92 +1297,256 @@ private extension Tables3DMapVC {
 private extension Tables3DMapVC {
  
     func setupCamera(_ scene: SCNScene, layout: Layout3DMap) {
-        cameraNode.removeFromParentNode()
         cameraOrbit.removeFromParentNode()
+        cameraNode.removeFromParentNode()
+        
+        let config = layout
+        
+        // MARK: WORLD BOUNDS
+        var minVec = SCNVector3(
+            Float.greatestFiniteMagnitude,
+            Float.greatestFiniteMagnitude,
+            Float.greatestFiniteMagnitude
+        )
+        
+        var maxVec = SCNVector3(
+            -Float.greatestFiniteMagnitude,
+             -Float.greatestFiniteMagnitude,
+             -Float.greatestFiniteMagnitude
+        )
 
-        guard let bounds = cameraFitBounds(in: scene) else { return }
+        scene.rootNode.enumerateChildNodes { node, _ in
+            let (bmin, bmax) = node.boundingBox
 
-        let minX = bounds.min.x, maxX = bounds.max.x
-        let minY = bounds.min.y, maxY = bounds.max.y
-        let minZ = bounds.min.z, maxZ = bounds.max.z
+            let worldMin = node.convertPosition(bmin, to: nil)
+            let worldMax = node.convertPosition(bmax, to: nil)
 
-        let sceneWidth  = max(maxX - minX, 1)
-        let sceneDepth  = max(maxZ - minZ, 1)
-        let sceneHeight = max(maxY - minY, 1)
+            minVec.x = Swift.min(minVec.x, worldMin.x)
+            minVec.y = Swift.min(minVec.y, worldMin.y)
+            minVec.z = Swift.min(minVec.z, worldMin.z)
 
-        let viewSize = mapView.bounds.size == .zero ? UIScreen.main.bounds.size : mapView.bounds.size
-        let aspect = Double(max(viewSize.width / max(viewSize.height, 1), 0.1))
-
-        let autoOrtho: Double = {
-            let halfD = Double(sceneDepth * 1.15) / 2.0
-            let halfW = Double(sceneWidth * 1.15) / (2.0 * aspect)
-            return max(halfD, halfW)
-        }()
-
-        // MARK: Safe zoom limits
-        let rawZoomMin = layout.zoomMin ?? CameraConfig.minOrtho
-        let rawZoomMax = layout.zoomMax ?? CameraConfig.maxOrtho
-        let zoomLower = min(rawZoomMin, rawZoomMax)
-        let zoomUpper = max(rawZoomMin, rawZoomMax)
-        activeZoomLimits = zoomLower...zoomUpper
-
-        // MARK: Safe pitch limits
-        let rawPitchMin = Float(layout.verticalRotationMin ?? -80) * .pi / 180
-        let rawPitchMax = Float(layout.verticalRotationMax ?? -10) * .pi / 180
-
-        var pitchLower = min(rawPitchMin, rawPitchMax)
-        var pitchUpper = max(rawPitchMin, rawPitchMax)
-
-        // Prevent camera from going under / too flat
-        pitchUpper = min(pitchUpper, -0.15)
-
-        // Final safety
-        if pitchLower > pitchUpper {
-            pitchLower = -Float.pi / 2
-            pitchUpper = -0.15
+            maxVec.x = Swift.max(maxVec.x, worldMax.x)
+            maxVec.y = Swift.max(maxVec.y, worldMax.y)
+            maxVec.z = Swift.max(maxVec.z, worldMax.z)
         }
 
-        activePitchLimits = pitchLower...pitchUpper
+        // MARK: CENTER
 
-        // MARK: Safe yaw limits
-        let rawYawMin = Float(layout.horizontalRotationMin ?? -180) * .pi / 180
-        let rawYawMax = Float(layout.horizontalRotationMax ?? 180) * .pi / 180
-        let yawLower = min(rawYawMin, rawYawMax)
-        let yawUpper = max(rawYawMin, rawYawMax)
-        activeYawLimits = yawLower...yawUpper
+        let center = SCNVector3(
+            (minVec.x + maxVec.x) / 2,
+            (minVec.y + maxVec.y) / 2,
+            (minVec.z + maxVec.z) / 2
+        )
 
-        let initialOrtho = autoOrtho.clamped(to: activeZoomLimits)
+        scene.rootNode.pivot = SCNMatrix4MakeTranslation(
+            center.x,
+            center.y,
+            center.z
+        )
+
+        // MARK: SIZE
+
+        let size = SCNVector3(
+            maxVec.x - minVec.x,
+            maxVec.y - minVec.y,
+            maxVec.z - minVec.z
+        )
+
+        // WIDTH + HEIGHT BOTH (IMPORTANT)
+        let width = size.x
+        let height = size.y
+        let depth = size.z
+
+        // MARK: CAMERA
 
         let camera = SCNCamera()
-        camera.usesOrthographicProjection = true
-        camera.orthographicScale = initialOrtho
+        camera.usesOrthographicProjection = false
+
+        let screenAspect = Float(
+            sceneView.bounds.width / sceneView.bounds.height
+        )
+
+        let adaptedFov = adaptFovForAspect(
+            baseFov: Float(config.fieldOfView ?? 45),
+            baseAspect: Float(config.ratio ?? 1.6),
+            targetAspect: screenAspect
+        )
+
+        camera.fieldOfView = CGFloat(adaptedFov)
         camera.zNear = 0.1
-        camera.zFar = 10_000
+        camera.zFar = 5000
+
         cameraNode.camera = camera
 
-        let pivotX = layout.xPosition.map { Float($0) } ?? ((minX + maxX) / 2)
-        let pivotY = layout.yPosition.map { Float($0) } ?? (minY + (maxY - minY) * 0.45)
-        let pivotZ = layout.zPosition.map { Float($0) } ?? ((minZ + maxZ) / 2)
+        // MARK: DISTANCE CALC
 
-        cameraArmLength = max(sceneWidth, sceneDepth, sceneHeight) * 1.35
+        let fovRad = adaptedFov * .pi / 180
 
-        currentYaw = (-Float.pi / 10).clamped(to: activeYawLimits)
-        currentPitch = (-Float.pi / 4.5).clamped(to: activePitchLimits)
+        // vertical fit
+        let distanceV = height / (2 * tan(fovRad / 2))
 
-        cameraOrbit.position = SCNVector3(pivotX, pivotY, pivotZ)
-        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
-        cameraNode.position = SCNVector3(0, 0, cameraArmLength)
+        // horizontal fit
+        let distanceH = width / (2 * tan(fovRad / 2)) / screenAspect
+
+        // pick bigger (like Three.js Bounds)
+        let fitDistance = max(distanceV, distanceH)
+
+        let finalDistance = fitDistance
+
+        // MARK: DIRECTION (API)
+
+        let apiDir = SCNVector3(
+            config.xPosition ?? 0,
+            config.yPosition ?? 0,
+            config.zPosition ?? 0
+        ).normalized()
+
+        cameraNode.position = SCNVector3(
+            apiDir.x * finalDistance,
+            apiDir.y * finalDistance,
+            apiDir.z * finalDistance
+        )
+
+        // MARK: LOOK AT CENTER
+
+        let lookAt = SCNLookAtConstraint(target: cameraOrbit)
+        lookAt.isGimbalLockEnabled = true
+        cameraNode.constraints = [lookAt]
+
+        // MARK: ADD TO SCENE
 
         cameraOrbit.addChildNode(cameraNode)
         scene.rootNode.addChildNode(cameraOrbit)
         sceneView.pointOfView = cameraNode
 
-        initialCameraOrbitPosition = cameraOrbit.position
-        initialCameraNodePosition = cameraNode.position
-        initialCameraOrthoScale = initialOrtho
-        initialYaw = currentYaw
-        initialPitch = currentPitch
+        // MARK: ZOOM (distance based)
+
+        currentDistance = cameraNode.position.length()
+
+        let zoomMin = config.zoomMin ?? 1
+        let zoomMax = config.zoomMax ?? 100
+
+        // convert zoom range → distance range
+        let ratio = currentDistance / Float(zoomMax)
+
+        minDistance = Float(zoomMin) * ratio
+        maxDistance = Float(zoomMax) * ratio
+        currentDistance = min(max(currentDistance, minDistance), maxDistance)
+
+        // MARK: ROTATION LIMITS
+
+        let apiMin = Float(config.verticalRotationMin ?? 0)
+        let apiMax = Float(config.verticalRotationMax ?? 90)
+
+        minPitch = deg2rad(90 - apiMin)
+        maxPitch = deg2rad(90 - apiMax)
+
+        minYaw = deg2rad(Float(config.horizontalRotationMin ?? 0))
+        maxYaw = deg2rad(Float(config.horizontalRotationMax ?? 180))
+
+        // initial angle
+        let rot = cameraNode.eulerAngles
+
+        currentPitch = rot.x
+        currentYaw = rot.y
+        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+        print("minPitch: \(minPitch) maxPitch: \(maxPitch)")
+        print("minYaw \(minYaw) maxYaw : \(maxYaw)")
+        print("currentPitch \(currentPitch)")
+        print("currentYaw \(currentYaw)")
     }
+    
+    func deg2rad(_ value: Float) -> Float {
+        return value * .pi / 180
+    }
+    
+//    func setupCamera(_ scene: SCNScene, layout: Layout3DMap) {
+//        cameraNode.removeFromParentNode()
+//        cameraOrbit.removeFromParentNode()
+//
+//        guard let bounds = cameraFitBounds(in: scene) else { return }
+//
+//        let minX = bounds.min.x, maxX = bounds.max.x
+//        let minY = bounds.min.y, maxY = bounds.max.y
+//        let minZ = bounds.min.z, maxZ = bounds.max.z
+//
+//        let sceneWidth  = max(maxX - minX, 1)
+//        let sceneDepth  = max(maxZ - minZ, 1)
+//        let sceneHeight = max(maxY - minY, 1)
+//
+//        let viewSize = mapView.bounds.size == .zero ? UIScreen.main.bounds.size : mapView.bounds.size
+//        let aspect = Double(max(viewSize.width / max(viewSize.height, 1), 0.1))
+//
+//        let autoOrtho: Double = {
+//            let halfD = Double(sceneDepth * 1.15) / 2.0
+//            let halfW = Double(sceneWidth * 1.15) / (2.0 * aspect)
+//            return max(halfD, halfW)
+//        }()
+//
+//        // MARK: Safe zoom limits
+//        let rawZoomMin = layout.zoomMin ?? CameraConfig.minOrtho
+//        let rawZoomMax = layout.zoomMax ?? CameraConfig.maxOrtho
+//        let zoomLower = min(rawZoomMin, rawZoomMax)
+//        let zoomUpper = max(rawZoomMin, rawZoomMax)
+//        activeZoomLimits = zoomLower...zoomUpper
+//
+//        // MARK: Safe pitch limits
+//        let rawPitchMin = Float(layout.verticalRotationMin ?? -80) * .pi / 180
+//        let rawPitchMax = Float(layout.verticalRotationMax ?? -10) * .pi / 180
+//
+//        var pitchLower = min(rawPitchMin, rawPitchMax)
+//        var pitchUpper = max(rawPitchMin, rawPitchMax)
+//
+//        // Prevent camera from going under / too flat
+//        pitchUpper = min(pitchUpper, -0.15)
+//
+//        // Final safety
+//        if pitchLower > pitchUpper {
+//            pitchLower = -Float.pi / 2
+//            pitchUpper = -0.15
+//        }
+//
+//        activePitchLimits = pitchLower...pitchUpper
+//
+//        // MARK: Safe yaw limits
+//        let rawYawMin = Float(layout.horizontalRotationMin ?? -180) * .pi / 180
+//        let rawYawMax = Float(layout.horizontalRotationMax ?? 180) * .pi / 180
+//        let yawLower = min(rawYawMin, rawYawMax)
+//        let yawUpper = max(rawYawMin, rawYawMax)
+//        activeYawLimits = yawLower...yawUpper
+//
+//        let initialOrtho = autoOrtho.clamped(to: activeZoomLimits)
+//
+//        let camera = SCNCamera()
+//        camera.usesOrthographicProjection = true
+//        camera.orthographicScale = initialOrtho
+//        camera.zNear = 0.1
+//        camera.zFar = 10_000
+//        cameraNode.camera = camera
+//
+//        let pivotX = layout.xPosition.map { Float($0) } ?? ((minX + maxX) / 2)
+//        let pivotY = layout.yPosition.map { Float($0) } ?? (minY + (maxY - minY) * 0.45)
+//        let pivotZ = layout.zPosition.map { Float($0) } ?? ((minZ + maxZ) / 2)
+//
+//        cameraArmLength = max(sceneWidth, sceneDepth, sceneHeight) * 1.35
+//
+//        currentYaw = (-Float.pi / 10).clamped(to: activeYawLimits)
+//        currentPitch = (-Float.pi / 4.5).clamped(to: activePitchLimits)
+//
+//        cameraOrbit.position = SCNVector3(pivotX, pivotY, pivotZ)
+//        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+//        cameraNode.position = SCNVector3(0, 0, cameraArmLength)
+//
+//        cameraOrbit.addChildNode(cameraNode)
+//        scene.rootNode.addChildNode(cameraOrbit)
+//        sceneView.pointOfView = cameraNode
+//
+//        initialCameraOrbitPosition = cameraOrbit.position
+//        initialCameraNodePosition = cameraNode.position
+//        initialCameraOrthoScale = initialOrtho
+//        initialYaw = currentYaw
+//        initialPitch = currentPitch
+//    }
  
     func cameraFitBounds(in scene: SCNScene) -> (min: SCNVector3, max: SCNVector3)? {
         var relevantNodes: [SCNNode] = []
@@ -2006,5 +2283,16 @@ private extension UIColor {
             return UIColor.systemGreen
         }
         return UIColor(hex: hex)
+    }
+}
+
+extension SCNVector3 {
+    func length() -> Float {
+        return sqrt(x*x + y*y + z*z)
+    }
+
+    func normalized() -> SCNVector3 {
+        let l = length()
+        return l == 0 ? self : SCNVector3(x/l, y/l, z/l)
     }
 }
