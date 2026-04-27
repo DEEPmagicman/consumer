@@ -344,7 +344,7 @@ private extension CoverTicketListVC {
             let shouldShow = hasAnyCoverSelection
             
             if shouldShow {
-                continueToChekoutBtn.isHidden = false
+//                continueToChekoutBtn.isHidden = false
 //                setContinueButtonTitle("CHECKOUT")
             }
             
@@ -354,7 +354,7 @@ private extension CoverTicketListVC {
             let shouldShow = hasAnyCoverSelection
             
             if shouldShow {
-                continueToChekoutBtn.isHidden = false
+//                continueToChekoutBtn.isHidden = false
 //                let title = selectedAddOns.isEmpty ? "SKIP THIS AND CHECKOUT" : "CONTINUE TO CHECKOUT"
 //                setContinueButtonTitle(title)
             }
@@ -367,6 +367,10 @@ private extension CoverTicketListVC {
     
     func updateCheckoutButton(shouldShow: Bool) {
         
+        if shouldShow == !continueToChekoutBtn.isHidden {
+            return
+        }
+
         if shouldShow {
             continueToChekoutBtn.isHidden = false
             continueToChekoutBtn.alpha = 0

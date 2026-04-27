@@ -54,6 +54,13 @@ final class DiscoverAllVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.updateShimmerView()
         }
+        
+        premiumExperiencesView.setHorizontalGradientColor(
+            colors: [
+                UIColor(hex: "#292929").withAlphaComponent(0.1).cgColor,
+                UIColor(hex: "#FFCE51").withAlphaComponent(0.1).cgColor
+            ]
+        )
     }
     
     override func viewDidLayoutSubviews() {
