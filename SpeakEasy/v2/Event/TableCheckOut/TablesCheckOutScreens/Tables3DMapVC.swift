@@ -575,8 +575,6 @@ private extension Tables3DMapVC {
                     self.setupLights()
                     self.renderDots(scene: scene)
                     self.setupCamera(scene, layout: layout)
-                    self.renderDots(scene: scene)
-                    self.setupLights()
                     self.setupTapGesture()
                 }
             }
