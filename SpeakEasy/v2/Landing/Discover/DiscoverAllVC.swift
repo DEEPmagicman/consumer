@@ -306,6 +306,9 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
         case tonightEventCollectionView:
             let cell: EventCVC = collectionView.dequeue(withIdentifier: EventCVC.identifier, for: indexPath)
             
+            cell.bgImg.hero.id = nil
+            cell.eventTitleLbl.hero.id = nil
+            
             if isTonightEventInitialLoading {
                 cell.shimmerView.isHidden = false
                 cell.shimmerView.startAnimating()
@@ -315,6 +318,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.setupData(event: event)
             }
             return cell
+
             
         case venueListCollectionView:
             let cell: VenueCVC = collectionView.dequeue(withIdentifier: VenueCVC.identifier, for: indexPath)
@@ -331,6 +335,9 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
         case allEventsCollectionView:
             let cell: EventV2CVC = collectionView.dequeue(withIdentifier: EventV2CVC.identifier, for: indexPath)
             
+            cell.image.hero.id = nil
+            cell.eventName.hero.id = nil
+            
             if isAllEventInitialLoading {
                 cell.shimmerView.isHidden = false
             } else {
@@ -346,23 +353,43 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         switch collectionView {
             
         case tonightEventCollectionView:
             if isTonightEventInitialLoading { return }
-            Navigate.eventDetailsVC(self, event: todaysEvents[indexPath.item])
+            openEventDetails(collectionView, event: todaysEvents[indexPath.item], indexPath: indexPath)
+            
+        case allEventsCollectionView:
+            if isAllEventInitialLoading { return }
+            openEventDetails(collectionView, event: allEvents[indexPath.item], indexPath: indexPath)
             
         case venueListCollectionView:
             if isVenueInitialLoading { return }
             Navigate.to.venueVC(self, venueDetails: openVenueList[indexPath.item])
             
-        case allEventsCollectionView:
-            if isAllEventInitialLoading { return }
-            Navigate.eventDetailsVC(self, event: allEvents[indexPath.item])
-            
         default:
             break
         }
+    }
+    
+    private func openEventDetails(_ collectionView: UICollectionView, event: Event, indexPath: IndexPath) {
+        let suffix = collectionView.accessibilityIdentifier ?? ""
+        
+        collectionView.visibleCells.forEach {
+            ($0 as? EventCVC)?.bgImg.hero.id = nil
+            ($0 as? EventCVC)?.eventTitleLbl.hero.id = nil
+            ($0 as? EventV2CVC)?.image.hero.id = nil
+            ($0 as? EventV2CVC)?.eventName.hero.id = nil
+        }
+        
+        if let cell = collectionView.cellForItem(at: indexPath) as? EventCVC {
+            cell.bgImg.hero.id = "event.image.\(event.id ?? "").\(suffix)"
+            cell.eventTitleLbl.hero.id = "event.title.\(event.id ?? "").\(suffix)"
+        } else if let cell = collectionView.cellForItem(at: indexPath) as? EventV2CVC {
+            cell.image.hero.id = "event.image.\(event.id ?? "").\(suffix)"
+            cell.eventName.hero.id = "event.title.\(event.id ?? "").\(suffix)"
+        }
+        
+        Navigate.eventDetailsVC(self, event: event, heroSuffix: suffix)
     }
 }

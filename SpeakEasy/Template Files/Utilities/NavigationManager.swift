@@ -406,10 +406,35 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+//    func loginPopUpVc(_ sender: UIViewController) -> LogInPopUpViewController {
+//        let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(LogInPopUpViewController.self)
+//
+//        vc.modalPresentationStyle = .overFullScreen
+//        vc.modalTransitionStyle = .crossDissolve
+//
+//        sender.present(vc, animated: true)
+//        return vc
+//    }
+    
     func loginPopUpVc(_ sender: UIViewController) -> LogInPopUpViewController {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(LogInPopUpViewController.self)
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.modalTransitionStyle = .crossDissolve
+        
+        vc.modalPresentationStyle = .pageSheet
+
+        let smallId = UISheetPresentationController.Detent.Identifier("small")
+
+        if let sheet = vc.sheetPresentationController {
+            
+            let smallDetent = UISheetPresentationController.Detent.custom(identifier: smallId) { _ in
+                return 330
+            }
+            
+            sheet.detents = [smallDetent]
+            sheet.largestUndimmedDetentIdentifier = nil
+            sheet.selectedDetentIdentifier = smallId
+            sheet.prefersGrabberVisible = false
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
 
         sender.present(vc, animated: true)
         return vc
@@ -417,8 +442,24 @@ final class Navigate {
     
     func verifyNumberPopUpVc(_ sender: UIViewController) {
         let vc = StoryboardAndXibManager.StoryBoard.signUp.instantiateVC(VerifyNumberViewController.self)
-        vc.modalPresentationStyle = .overCurrentContext
-        sender.navigationController?.present(vc, animated: true)
+
+        vc.modalPresentationStyle = .pageSheet
+
+        if let sheet = vc.sheetPresentationController {
+            let smallId = UISheetPresentationController.Detent.Identifier("small")
+
+            let smallDetent = UISheetPresentationController.Detent.custom(identifier: smallId) { context in
+                return min(320, context.maximumDetentValue) // adjust height if needed
+            }
+
+            sheet.detents = [smallDetent]
+            sheet.selectedDetentIdentifier = smallId
+            sheet.prefersGrabberVisible = false   // 👈 hidden like login
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.preferredCornerRadius = 24
+        }
+
+        sender.present(vc, animated: true)
     }
     
     func signUpViewControllerVc(_ sender: UIViewController) {
@@ -455,10 +496,13 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    static func eventDetailsVC(_ sender: UIViewController, event: Event?) {
+    static func eventDetailsVC(_ sender: UIViewController, event: Event?, heroSuffix: String? = "") {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event = event
         vc.venueDetails = event?.venue
+        vc.heroSuffix = heroSuffix ?? ""
+        vc.hero.isEnabled = true
+        sender.navigationController?.hero.isEnabled = true
         sender.pushVC(vc)
     }
     

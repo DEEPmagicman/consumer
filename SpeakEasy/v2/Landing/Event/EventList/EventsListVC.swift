@@ -190,7 +190,7 @@ class EventsListVC: UIViewController {
 extension EventsListVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return isInitialLoading ? 10 : todaysEvents.count
+        return isInitialLoading ? 20 : todaysEvents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -100,6 +100,7 @@ class EventDetailsVC: UIViewController {
     var event: Event?
     var uniqueId: String? = ""
     var promoteId = ""
+    var heroSuffix: String = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
 
@@ -138,14 +139,8 @@ class EventDetailsVC: UIViewController {
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
 
         hero.isEnabled = true
-        navigationController?.hero.isEnabled = true
         fetchSeatingAreas()
         getEventDetail()
-//        mainImg.hero.id = "event.image.\(heroIndex)"
-//          titleLbl.hero.id = "event.title.\(heroIndex)"
-//        
-        mainImg.hero.id = "event.image.\(event?.id ?? "")"
-        titleLbl.hero.id = "event.title.\(event?.id ?? "")"
         
         setupData()
         setupCollectionViews()
@@ -171,8 +166,11 @@ class EventDetailsVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        view.layoutIfNeeded() 
+        view.layoutIfNeeded()
+        hero.isEnabled = true
+        navigationController?.hero.isEnabled = true
+        mainImg.hero.id = "event.image.\(event?.id ?? "").\(heroSuffix)"
+        titleLbl.hero.id = "event.title.\(event?.id ?? "").\(heroSuffix)"
     }
 
     deinit {
