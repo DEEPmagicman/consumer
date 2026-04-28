@@ -1,8 +1,6 @@
 workflows:
   ios-firebase-distribution:
     name: iOS Firebase Distribution Build
-    max_build_duration: 120
-    instance_type: mac_mini_m2
 
     triggering:
       events:
@@ -11,6 +9,9 @@ workflows:
         - pattern: consumer_v2_implementation
           include: true
       cancel_previous_builds: true
+
+    max_build_duration: 120
+    instance_type: mac_mini_m2
 
     environment:
       ios_signing:
@@ -52,10 +53,18 @@ workflows:
         script: |
           firebase appdistribution:distribute build/ios/ipa/*.ipa \
             --app "$FIREBASE_APP_ID" \
-            --release-notes "Automated QA build from Codemagic" \
+            --release-notes "$(git log -1 --pretty=%B)" \
             --groups "tester"
 
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      slack:
+        channel: "#dev-app"
+        notify_on_build_start: false
+        notify:
+          success: true
+          failure: true
