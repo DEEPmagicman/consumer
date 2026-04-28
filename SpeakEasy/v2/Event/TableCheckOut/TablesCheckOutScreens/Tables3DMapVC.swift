@@ -187,6 +187,8 @@ private extension Tables3DMapVC {
         sceneView.autoenablesDefaultLighting = false
         sceneView.antialiasingMode     = .multisampling4X
         sceneView.isPlaying            = true
+        sceneView.isJitteringEnabled   = true
+        sceneView.rendersContinuously  = true
         sceneView.scene                = SCNScene()
         mapView.addSubview(sceneView)
     }
@@ -220,7 +222,7 @@ private extension Tables3DMapVC {
 //        return newVFovRad * 180.0 / .pi
 //    }
     
-    fileprivate func adaptFovForAspect(
+    func adaptFovForAspect(
         baseFov: Float,
         baseAspect: Float,
         targetAspect: Float
@@ -573,6 +575,8 @@ private extension Tables3DMapVC {
                     self.setupLights()
                     self.renderDots(scene: scene)
                     self.setupCamera(scene, layout: layout)
+                    self.renderDots(scene: scene)
+                    self.setupLights()
                     self.setupTapGesture()
                 }
             }
@@ -1005,7 +1009,7 @@ private extension Tables3DMapVC {
         g.scale = 1
 
         currentDistance += delta * zoomSpeed * currentDistance
-
+        currentDistance = Swift.min(currentDistance, maxDistance)
 //        currentDistance = Swift.min(
 //            Swift.max(currentDistance, minDistance),
 //            maxDistance
