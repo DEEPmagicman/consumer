@@ -122,6 +122,8 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
+    
+//    private let skeletonView = EventDetailsSkeletonView()
 
     private var totalSelectedTickets: Int {
         let normalTotal = normalTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
@@ -2219,5 +2221,125 @@ extension EventDetailsVC: MKMapViewDelegate {
         }
 
         return view
+    }
+}
+
+
+final class EventDetailsSkeletonView: UIView {
+
+    private var allShimmerViews: [ShimmerView2] = []
+    private var didSetup = false
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard !didSetup, bounds.width > 0 else { return }
+        didSetup = true
+        setupUI()
+    }
+
+    private func setupUI() {
+        backgroundColor = UIColor(hex: "#111111")
+
+        let W = bounds.width
+        let pad: CGFloat = 16
+        var y: CGFloat = 16
+
+        // ─────────────────────────────
+        // 1. VIP Banner
+        // ─────────────────────────────
+        make(CGRect(x: pad, y: y, width: W - pad*2, height: 60), corner: 10)
+
+        makeLighter(CGRect(x: pad + 12, y: y + 12, width: 90, height: 10), corner: 5)
+        makeLighter(CGRect(x: pad + 12, y: y + 30, width: 130, height: 9), corner: 5)
+
+        makeLighter(CGRect(x: W - pad - 70, y: y + 18, width: 60, height: 24), corner: 12)
+
+        y += 60 + 24
+
+        // ─────────────────────────────
+        // 2. DETAILS SECTION
+        // ─────────────────────────────
+        make(CGRect(x: pad, y: y, width: 80, height: 14), corner: 6)
+        y += 24
+
+        make(CGRect(x: pad, y: y, width: W * 0.7, height: 10), corner: 5)
+        y += 16
+        make(CGRect(x: pad, y: y, width: W * 0.5, height: 10), corner: 5)
+
+        y += 28
+
+        make(CGRect(x: pad, y: y, width: 60, height: 12), corner: 6)
+        y += 20
+
+        make(CGRect(x: pad, y: y, width: W * 0.4, height: 10), corner: 5)
+
+        y += 32
+
+        // ─────────────────────────────
+        // 3. GUEST LIST
+        // ─────────────────────────────
+        let avatarSize: CGFloat = 26
+
+        for i in 0..<3 {
+            make(CGRect(
+                x: pad + CGFloat(i) * (avatarSize - 4),
+                y: y,
+                width: avatarSize,
+                height: avatarSize
+            ), corner: avatarSize/2)
+        }
+
+        make(CGRect(x: W - pad - 80, y: y + 8, width: 80, height: 10), corner: 5)
+
+        y += avatarSize + 24
+
+        // ─────────────────────────────
+        // 4. DESCRIPTION
+        // ─────────────────────────────
+        make(CGRect(x: pad, y: y, width: W * 0.9, height: 10), corner: 5)
+        y += 16
+        make(CGRect(x: pad, y: y, width: W * 0.8, height: 10), corner: 5)
+        y += 16
+        make(CGRect(x: pad, y: y, width: W * 0.6, height: 10), corner: 5)
+
+        y += 30
+
+        // ─────────────────────────────
+        // 5. BOTTOM BAR (PRICE + BUTTON)
+        // ─────────────────────────────
+        make(CGRect(x: pad, y: y, width: 100, height: 10), corner: 5)
+        make(CGRect(x: pad, y: y + 14, width: 70, height: 8), corner: 5)
+
+        make(CGRect(x: W - pad - 80, y: y, width: 80, height: 30), corner: 15)
+    }
+
+    // MARK: - Helpers (same as Home)
+
+    private func make(_ frame: CGRect, corner: CGFloat = 8) {
+        let sv = ShimmerView2(frame: frame)
+        sv.layer.cornerRadius = corner
+        sv.clipsToBounds = true
+        addSubview(sv)
+        allShimmerViews.append(sv)
+    }
+
+    private func makeLighter(_ frame: CGRect, corner: CGFloat = 6) {
+        let sv = ShimmerView2(frame: frame, lighter: true)
+        sv.layer.cornerRadius = corner
+        sv.clipsToBounds = true
+        addSubview(sv)
+        allShimmerViews.append(sv)
+    }
+
+    // MARK: - Control
+
+    func startShimmer() {
+        isHidden = false
+        allShimmerViews.forEach { $0.startAnimating() }
+    }
+
+    func stopShimmer() {
+        allShimmerViews.forEach { $0.stopAnimating() }
+        isHidden = true
     }
 }

@@ -922,7 +922,6 @@ class TicketSelectionViewController: UIViewController {
             shouldShow = true
         }
 
-        // 🚫 STOP if already same state
         if continueToCheckOutBtn.isHidden == !shouldShow {
             return
         }

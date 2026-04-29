@@ -10,14 +10,36 @@ import UIKit
 final class ArtistDetailsVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var segmentView: UIView!
 
     private var upcomingEvents: [String] = []
     private var pastEvents: [String] = []
 
+    private let segmentControl = SSSegmentedControl()
+
+    enum SegmentType: Int {
+        case upcoming = 0
+        case past = 1
+    }
+
+    private var selectedSegment: SegmentType = .upcoming
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setupTableView()
+        setupSegmentControl()
         loadDummyData()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        segmentView.layer.cornerRadius = segmentView.bounds.height / 2
+        segmentView.clipsToBounds = true
+
+        segmentControl.layer.cornerRadius = segmentView.bounds.height / 2
+        segmentControl.clipsToBounds = true
     }
 
     private func setupTableView() {
@@ -25,7 +47,41 @@ final class ArtistDetailsVC: UIViewController {
         tableView.dataSource = self
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
+        tableView.showsVerticalScrollIndicator = false
+
+        tableView.register(
+            VenueEventTVC.nib,
+            forCellReuseIdentifier: VenueEventTVC.identifier
+        )
+    }
+
+    private func setupSegmentControl() {
+        segmentControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentView.addSubview(segmentControl)
+
+        NSLayoutConstraint.activate([
+            segmentControl.topAnchor.constraint(equalTo: segmentView.topAnchor),
+            segmentControl.leadingAnchor.constraint(equalTo: segmentView.leadingAnchor),
+            segmentControl.trailingAnchor.constraint(equalTo: segmentView.trailingAnchor),
+            segmentControl.bottomAnchor.constraint(equalTo: segmentView.bottomAnchor)
+        ])
+
+        segmentControl.numberOfSegments = 2
+        segmentControl.segmentsTitle = "Upcoming,Past"
+        segmentControl.currentIndex = 0
+        segmentControl.buttonPadding = 4
+
+        segmentControl.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+        segmentControl.currentIndexBackgroundColor = UIColor.white.withAlphaComponent(0.2)
+        segmentControl.currentIndexTitleColor = .white
+        segmentControl.otherIndexTitleColor = .lightGray
+
+        segmentControl.didTapSegment = { [weak self] index in
+            guard let self = self else { return }
+
+            self.selectedSegment = SegmentType(rawValue: index) ?? .upcoming
+            self.tableView.reloadData()
+        }
     }
 
     private func loadDummyData() {
@@ -44,42 +100,38 @@ final class ArtistDetailsVC: UIViewController {
         tableView.reloadData()
     }
 
-    private func eventFor(_ indexPath: IndexPath) -> String {
-        if indexPath.section == 0 {
-            return upcomingEvents[indexPath.row]
-        } else {
-            return pastEvents[indexPath.row]
+    private func currentEvents() -> [String] {
+        switch selectedSegment {
+        case .upcoming:
+            return upcomingEvents
+        case .past:
+            return pastEvents
         }
     }
-    
+
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
+
     @IBAction func onClickShareBtn(_ sender: Any) {
+        // Share action
     }
-    
-    
 }
 
 extension ArtistDetailsVC: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return upcomingEvents.count
-        case 1:
-            return pastEvents.count
-        default:
-            return 0
-        }
+        return currentEvents().count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(
             withIdentifier: VenueEventTVC.identifier,
@@ -89,41 +141,21 @@ extension ArtistDetailsVC: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
 
-        let event = eventFor(indexPath)
+        let event = currentEvents()[indexPath.row]
+        print("Event:", event)
 
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let event = eventFor(indexPath)
-        print("Selected event: \(event)")
+        let event = currentEvents()[indexPath.row]
+        print("Selected event:", event)
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return upcomingEvents.isEmpty ? nil : "Upcoming Events"
-        case 1:
-            return pastEvents.isEmpty ? nil : "Past Events"
-        default:
-            return nil
-        }
-    }
-
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = .white
-        header.textLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        header.contentView.backgroundColor = .clear
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 && upcomingEvents.isEmpty { return 0.01 }
-        if section == 1 && pastEvents.isEmpty { return 0.01 }
-        return 36
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 8
+    func tableView(
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath
+    ) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }

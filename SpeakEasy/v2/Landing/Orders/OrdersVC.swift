@@ -46,7 +46,7 @@ final class OrdersVC: UIViewController {
         super.viewDidLoad()
         setupSegmentControl()
         setupTableView()
-        loadCurrentSegment(reset: true)
+        loadCurrentSegment(reset: false)
     }
     
     // MARK: - Setup

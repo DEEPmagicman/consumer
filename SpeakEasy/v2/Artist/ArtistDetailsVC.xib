@@ -19,6 +19,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ArtistDetailsVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="segmentView" destination="G2K-WI-adH" id="CA2-0p-dSI"/>
                 <outlet property="tableView" destination="gYE-XV-dPS" id="6tE-NA-qLU"/>
                 <outlet property="view" destination="QBM-iy-3dT" id="HQe-Hl-gv3"/>
             </connections>
@@ -119,11 +120,18 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G2K-WI-adH">
+                    <rect key="frame" x="40" y="280" width="313" height="40"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="fXR-pp-eDg"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gev-4S-RTQ">
-                    <rect key="frame" x="0.0" y="280" width="393" height="572"/>
+                    <rect key="frame" x="0.0" y="330" width="393" height="522"/>
                     <subviews>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gYE-XV-dPS">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="572"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="522"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </tableView>
                     </subviews>
@@ -140,10 +148,13 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="gev-4S-RTQ" secondAttribute="bottom" id="0Nr-iZ-nr6"/>
+                <constraint firstItem="wmt-qh-0Qt" firstAttribute="trailing" secondItem="G2K-WI-adH" secondAttribute="trailing" constant="40" id="1Vt-VT-1nP"/>
                 <constraint firstItem="wmt-qh-0Qt" firstAttribute="trailing" secondItem="OWI-Ir-MTf" secondAttribute="trailing" constant="16" id="2S1-sI-UcI"/>
                 <constraint firstItem="bgU-Wp-cum" firstAttribute="top" secondItem="OWI-Ir-MTf" secondAttribute="bottom" constant="10" id="4DP-a8-bOa"/>
                 <constraint firstItem="QeY-AR-AaG" firstAttribute="top" secondItem="QBM-iy-3dT" secondAttribute="top" id="4nD-TD-jLw"/>
+                <constraint firstItem="G2K-WI-adH" firstAttribute="top" secondItem="bgU-Wp-cum" secondAttribute="bottom" constant="10" id="6Sa-m5-dhe"/>
                 <constraint firstItem="QeY-AR-AaG" firstAttribute="leading" secondItem="wmt-qh-0Qt" secondAttribute="leading" id="Fsp-fM-GcQ"/>
+                <constraint firstItem="gev-4S-RTQ" firstAttribute="top" secondItem="G2K-WI-adH" secondAttribute="bottom" constant="10" id="IVV-Ws-kw0"/>
                 <constraint firstItem="gev-4S-RTQ" firstAttribute="leading" secondItem="QBM-iy-3dT" secondAttribute="leading" id="Mhs-Vv-Mfp"/>
                 <constraint firstItem="r4t-GT-Bft" firstAttribute="trailing" secondItem="wmt-qh-0Qt" secondAttribute="trailing" id="NFy-pF-YUx"/>
                 <constraint firstItem="bgU-Wp-cum" firstAttribute="centerX" secondItem="QBM-iy-3dT" secondAttribute="centerX" id="NqG-qP-Ona"/>
@@ -153,12 +164,12 @@
                 <constraint firstItem="p46-js-HsG" firstAttribute="top" secondItem="r4t-GT-Bft" secondAttribute="bottom" id="daG-WG-5zD"/>
                 <constraint firstItem="IGp-Y6-MxD" firstAttribute="top" secondItem="QBM-iy-3dT" secondAttribute="top" id="edm-mJ-dSh"/>
                 <constraint firstAttribute="bottom" secondItem="QeY-AR-AaG" secondAttribute="bottom" id="ee1-Aj-e2z"/>
-                <constraint firstItem="gev-4S-RTQ" firstAttribute="top" secondItem="bgU-Wp-cum" secondAttribute="bottom" constant="10" id="iwq-lr-ZUO"/>
                 <constraint firstAttribute="trailing" secondItem="gev-4S-RTQ" secondAttribute="trailing" id="pCv-9n-LqD"/>
                 <constraint firstItem="IGp-Y6-MxD" firstAttribute="trailing" secondItem="wmt-qh-0Qt" secondAttribute="trailing" id="pxf-lg-ML7"/>
                 <constraint firstItem="OWI-Ir-MTf" firstAttribute="leading" secondItem="wmt-qh-0Qt" secondAttribute="leading" constant="16" id="rkZ-Dh-Ffn"/>
                 <constraint firstAttribute="bottom" secondItem="IGp-Y6-MxD" secondAttribute="bottom" id="t3V-I2-O1w"/>
                 <constraint firstItem="IGp-Y6-MxD" firstAttribute="leading" secondItem="wmt-qh-0Qt" secondAttribute="leading" id="vNl-9k-QXH"/>
+                <constraint firstItem="G2K-WI-adH" firstAttribute="leading" secondItem="wmt-qh-0Qt" secondAttribute="leading" constant="40" id="vj0-Sz-ITI"/>
                 <constraint firstItem="p46-js-HsG" firstAttribute="centerX" secondItem="QBM-iy-3dT" secondAttribute="centerX" id="w4r-4l-RGB"/>
                 <constraint firstItem="r4t-GT-Bft" firstAttribute="top" secondItem="QBM-iy-3dT" secondAttribute="top" id="yyA-eR-zdD"/>
             </constraints>

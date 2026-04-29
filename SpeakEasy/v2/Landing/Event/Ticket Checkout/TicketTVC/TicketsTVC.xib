@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -365,7 +365,7 @@
                 <outlet property="quantityLbl" destination="3Ka-YX-grf" id="8xG-Xl-YUh"/>
                 <outlet property="rsvpBtn" destination="C8p-T5-xKp" id="T9y-nC-uqE"/>
                 <outlet property="rsvpBtnView" destination="eFH-Qy-HBi" id="QAY-Hu-Rfb"/>
-                <outlet property="shimmerView" destination="akt-eO-uWh" id="zz1-kE-BNe"/>
+                <outlet property="shimmerView" destination="akt-eO-uWh" id="15D-kQ-xai"/>
                 <outlet property="soldOutView" destination="PLv-SK-N5k" id="3jN-YA-U7U"/>
                 <outlet property="ticketLeftLbl" destination="EYV-9A-N1h" id="fh3-kB-5qF"/>
                 <outlet property="titleLbl" destination="i8T-Xq-ve2" id="iLR-Tl-wHb"/>

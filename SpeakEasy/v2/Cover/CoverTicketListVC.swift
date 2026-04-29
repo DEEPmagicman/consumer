@@ -590,14 +590,21 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             }
             
             let count = coverTicketCount[indexPath.row] ?? 0
+            let themeColor = venueDetails?.venueSettings?.whiteLabelColor != nil
+                ? UIColor(hex: venueDetails?.venueSettings?.whiteLabelColor ?? "")
+                : UIColor.white
             cell.ticketCount.text = "\(count)"
             
             let shouldShow = count > 0
             cell.minusBtnView.isHidden = !shouldShow
             cell.ticketCountView.isHidden = !shouldShow
-            cell.updateSelectionUI(isSelected: shouldShow)
-            
-            
+            cell.updateSelectionUI(
+                isSelected: shouldShow,
+                themeColor: themeColor,
+                isFromGroupTicket: false,
+                isLinkDisabled: false
+            )
+        
         case .addOns:
             let ticket = upSellTickets[indexPath.row]
             
@@ -623,7 +630,15 @@ extension CoverTicketListVC: UITableViewDataSource, UITableViewDelegate {
             let shouldShow = count > 0
             cell.minusBtnView.isHidden = !shouldShow
             cell.ticketCountView.isHidden = !shouldShow
-            cell.updateSelectionUI(isSelected: shouldShow)
+            let themeColor = venueDetails?.venueSettings?.whiteLabelColor != nil
+                ? UIColor(hex: venueDetails?.venueSettings?.whiteLabelColor ?? "")
+                : UIColor.white
+            cell.updateSelectionUI(
+                isSelected: shouldShow,
+                themeColor: themeColor,
+                isFromGroupTicket: false,
+                isLinkDisabled: false
+            )
         }
         
         cell.onDescriptionToggle = { [weak self] ticketId in

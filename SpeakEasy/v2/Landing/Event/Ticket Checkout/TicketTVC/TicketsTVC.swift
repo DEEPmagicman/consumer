@@ -32,7 +32,6 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var shimmerView: ShimmerView!
     @IBOutlet weak var rsvpBtn: UIButton!
     
-    
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
@@ -260,8 +259,12 @@ class TicketsTVC: UITableViewCell {
 
         let isSelected = (ticket.selectedTicketCount ?? 0) > 0
         bgView.layer.borderWidth = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
-        bgView.layer.borderColor = UIColor.white.cgColor
-
+        if let hex = whiteLabelColor {
+            bgView.layer.borderColor = UIColor(hex: hex).cgColor
+        } else {
+            bgView.layer.borderColor = UIColor.white.cgColor
+        }
+        
         if isSoldOut(ticket) {
             applySoldOutUI(ticket: ticket)
             setupDescription(ticket.tierDescription)
@@ -313,3 +316,87 @@ class TicketsTVC: UITableViewCell {
         onDescriptionToggle?()
     }
 }
+
+//import UIKit
+//
+//final class TicketShimmerView: UIView {
+//
+//    private let titleLine    = ShimmerView2()
+//    private let priceLine    = ShimmerView2()
+//    private let feesLine     = ShimmerView2()
+//    private let bottomLabel  = ShimmerView2()
+//
+//    private var didSetup = false
+//
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        guard !didSetup, bounds.width > 0 else { return }
+//        didSetup = true
+//        setupUI()
+//    }
+//
+//    private func setupUI() {
+//        backgroundColor = UIColor(white: 0.13, alpha: 1)
+//        layer.cornerRadius = 10
+//        clipsToBounds = true
+//
+//        let W    = bounds.width
+//        let H    = bounds.height
+//        let pad: CGFloat = 14
+//
+//        let titleW: CGFloat = W * 0.45
+//        let titleH: CGFloat = 15
+//        titleLine.frame = CGRect(x: pad, y: pad, width: titleW, height: titleH)
+//        titleLine.layer.cornerRadius = 6
+//        titleLine.clipsToBounds = true
+//
+//        let priceW: CGFloat = 70
+//        let priceH: CGFloat = 15
+//        priceLine.frame = CGRect(
+//            x: W - pad - priceW,
+//            y: pad,
+//            width: priceW,
+//            height: priceH
+//        )
+//        priceLine.layer.cornerRadius = 6
+//        priceLine.clipsToBounds = true
+//
+//        // ── RIGHT BELOW PRICE: "(Incl. $5.02 in fees)" ──
+//        let feesW: CGFloat = 110
+//        let feesH: CGFloat = 11
+//        feesLine.frame = CGRect(
+//            x: W - pad - feesW,
+//            y: pad + priceH + 6,
+//            width: feesW,
+//            height: feesH
+//        )
+//        feesLine.layer.cornerRadius = 5
+//        feesLine.clipsToBounds = true
+//
+//        // ── BOTTOM RIGHT: "Only X left" label ──
+//        let botW: CGFloat = 90
+//        let botH: CGFloat = 11
+//        bottomLabel.frame = CGRect(
+//            x: W - pad - botW,
+//            y: H - pad - botH,
+//            width: botW,
+//            height: botH
+//        )
+//        bottomLabel.layer.cornerRadius = 5
+//        bottomLabel.clipsToBounds = true
+//
+//        [titleLine, priceLine, feesLine, bottomLabel].forEach { addSubview($0) }
+//    }
+//
+//    // MARK: - Control
+//
+//    func startAnimating() {
+//        isHidden = false
+//        [titleLine, priceLine, feesLine, bottomLabel].forEach { $0.startAnimating() }
+//    }
+//
+//    func stopAnimating() {
+//        [titleLine, priceLine, feesLine, bottomLabel].forEach { $0.stopAnimating() }
+//        isHidden = true
+//    }
+//}

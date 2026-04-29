@@ -89,12 +89,22 @@ final class CoverTicketTVC: UITableViewCell {
         }
     }
     
-    func updateSelectionUI(isSelected: Bool) {
-        let borderColor = isSelected
-            ? UIColor.white
-            : UIColor.white.withAlphaComponent(0.2)
-
-        bgView.layer.borderWidth = 1
+    func updateSelectionUI(
+        isSelected: Bool,
+        themeColor: UIColor? = nil,
+        isFromGroupTicket: Bool = false,
+        isLinkDisabled: Bool = false
+    ) {
+        
+        let borderWidth: CGFloat = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
+        bgView.layer.borderWidth = borderWidth
+        
+        let baseColor = themeColor ?? UIColor.white
+        
+        let borderColor: UIColor = isSelected
+            ? baseColor
+            : baseColor.withAlphaComponent(0.2)
+        
         bgView.layer.borderColor = borderColor.cgColor
     }
     

@@ -275,7 +275,11 @@ final class VenueDetailsVC: UIViewController, SJSegmentedViewControllerViewSourc
             self.view.layoutIfNeeded()
         }
     }
-
+    
+    @IBAction func onClickSeeAllBtn(_ sender: Any) {
+        Navigate.to.eventsListVC(self, screenType: .allEvents)
+    }
+    
     private func setupExpandableLabel() {
         
         venueAboutLbl.text = venueDetails?.description

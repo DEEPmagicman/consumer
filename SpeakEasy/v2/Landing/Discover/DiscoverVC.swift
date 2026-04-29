@@ -20,32 +20,71 @@ final class DiscoverVC: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     var startDate: String?
     var endDate: String?
+    private var shimmerDidFinish = false
+
+    // MARK: - Skeleton
+    // Lives here in the PARENT so it covers the full screen (including
+    // nav-bar area) while child DiscoverAllVC loads its APIs.
+    private let shimmerView = HomeSkeletonView()
+
     private var isDateSelected: Bool = false {
         didSet {
             DispatchQueue.main.async {
                 let startDate = self.startDate?.convertDateFormat(from: .YYYYMMDD, to: .MMMD)
-                let endDate = self.endDate?.convertDateFormat(from: .YYYYMMDD, to: .MMMD)
-                let date = self.endDate ?? "" == "" ? "\(startDate ?? "")" : "\(startDate ?? "") - \(endDate ?? "")"
-                self.dateLbl.text = self.isDateSelected ? date : "All Dates"
+                let endDate   = self.endDate?.convertDateFormat(from: .YYYYMMDD, to: .MMMD)
+                let date      = (self.endDate ?? "").isEmpty
+                    ? "\(startDate ?? "")"
+                    : "\(startDate ?? "") - \(endDate ?? "")"
+                self.dateLbl.text         = self.isDateSelected ? date : "All Dates"
                 self.dateView.borderWidth = self.isDateSelected ? 2 : 0
                 self.dateView.borderColor = UIColor(hex: "#69DC82")
                 self.dateCrossView.isHidden = !self.isDateSelected
-                if self.isDateSelected {
-                    self.showSegmentView(1)
-                } else {
-                    self.showSegmentView(0)
-                }
+                self.showSegmentView(self.isDateSelected ? 1 : 0)
             }
         }
     }
     
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         isDateSelected = false
+
+        // Pin shimmer full-screen on top of everything
+        view.addSubview(shimmerView)
+        shimmerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
+            shimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            shimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            shimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
         showSegmentView(0)
         bindSelectedCity()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !shimmerDidFinish {
+            shimmerView.startShimmer()
+        }
+    }
+
+    func hideSkeletonScreen() {
+        shimmerDidFinish = true
+        shimmerView.stopShimmer()
+        shimmerView.isHidden = true
+    }
+
+    func showSkeletonScreen() {
+        shimmerDidFinish = false
+        shimmerView.isHidden = false
+        shimmerView.startShimmer()
+    }
+
+    // MARK: - Actions
+
     @IBAction func onClickCity(_ sender: Any) {
         Navigate.to.selectLocationVC(self)
     }
@@ -58,18 +97,19 @@ final class DiscoverVC: UIViewController {
         showSegmentView(0)
         isDateSelected.toggle()
     }
+
+    // MARK: - Helpers
     
     private func showSegmentView(_ index: Int) {
-        segmentViewContainer.enumerated().forEach { enumeratedIndex, _ in
-            segmentViewContainer[enumeratedIndex].isHidden = enumeratedIndex != index
-            segmentViewContainer[enumeratedIndex].endEditing(enumeratedIndex != index)
+        segmentViewContainer.enumerated().forEach { i, _ in
+            segmentViewContainer[i].isHidden   = i != index
+            segmentViewContainer[i].endEditing(i != index)
         }
     }
     
     private func resolvedCity() -> String {
         let city = UserDefault.shared.localCity
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
         return city.isEmpty ? "New York" : city
     }
 
@@ -79,65 +119,65 @@ final class DiscoverVC: UIViewController {
             .map { _ in self.resolvedCity() }
             .receive(on: RunLoop.main)
             .sink { [weak self] city in
-                self?.selectedLocationName.text = "\(city)"
+                self?.selectedLocationName.text = city
             }
             .store(in: &cancellables)
     }
+
+    // MARK: - Segue
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         viewControllers.append(segue.destination)
         switch segue.destination {
         case is DiscoverAllVC:
-            if segue.destination is DiscoverAllVC {
-                print("BoxOfficeOverviewVC")
-            }
+            print("DiscoverAllVC prepared")
         case is DiscoverDateFilterVC:
-            if segue.destination is DiscoverDateFilterVC {
-                print("BoxOfficeOverviewVC")
-            }
+            print("DiscoverDateFilterVC prepared")
         default:
             break
         }
     }
 }
 
+// MARK: - SelectedDateDelegate
+
 extension DiscoverVC: SelectedDateDelegate {
+
     func selectedDateRange(startDate: String?, endDate: String?) {
         self.startDate = startDate
-        if startDate != endDate {
-            self.endDate = endDate
-        }
+        if startDate != endDate { self.endDate = endDate }
         isDateSelected = true
-        if let vc = self.children.first(where: { $0.isKind(of: DiscoverDateFilterVC.self)}) as? DiscoverDateFilterVC {
-            vc.selectedDates = datesBetween(startDate: self.startDate ?? "", endDate: self.endDate ?? "")
+        if let vc = children.first(where: { $0 is DiscoverDateFilterVC }) as? DiscoverDateFilterVC {
+            vc.selectedDates = datesBetween(
+                startDate: self.startDate ?? "",
+                endDate:   self.endDate   ?? ""
+            )
             vc.dateCollectionView.reloadData()
             vc.collectionView.reloadData()
         }
     }
     
     func datesBetween(startDate: String, endDate: String) -> [String] {
-        let inputFormatter = DateFormatter()
+        let inputFormatter        = DateFormatter()
         inputFormatter.dateFormat = "yyyy-MM-dd"
-        inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+        inputFormatter.locale     = Locale(identifier: "en_US_POSIX")
 
-        let outputFormatter = DateFormatter()
+        let outputFormatter        = DateFormatter()
         outputFormatter.dateFormat = "MMM dd"
-        outputFormatter.locale = Locale(identifier: "en_US_POSIX")
+        outputFormatter.locale     = Locale(identifier: "en_US_POSIX")
 
         guard
             let start = inputFormatter.date(from: startDate),
-            let end = inputFormatter.date(from: endDate)
-        else {
-            return []
-        }
+            let end   = inputFormatter.date(from: endDate)
+        else { return [] }
 
         var dates: [String] = []
-        var currentDate = start
-        let calendar = Calendar.current
+        var current          = start
+        let calendar         = Calendar.current
 
-        while currentDate <= end {
-            dates.append(outputFormatter.string(from: currentDate))
-            currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+        while current <= end {
+            dates.append(outputFormatter.string(from: current))
+            current = calendar.date(byAdding: .day, value: 1, to: current)!
         }
         return dates
     }
