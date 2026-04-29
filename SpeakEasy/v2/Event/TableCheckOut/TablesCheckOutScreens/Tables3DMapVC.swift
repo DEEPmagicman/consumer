@@ -34,6 +34,8 @@ struct SeatingMeta {
     let parentId:      String
     let maxGuest:      Int
     let allowActions:  Bool
+    weak var sourceNode: SCNNode?
+    let uniqueId: String
 }
  
 private var seatingMetaKey: UInt8 = 0
@@ -91,8 +93,8 @@ final class Tables3DMapVC: UIViewController {
     private var sceneBounds: (min: SCNVector3, max: SCNVector3)?
  
     // MARK: Camera orbit rig
-    private let cameraOrbit = SCNNode()
-    private let cameraNode  = SCNNode()
+    private var cameraOrbit = SCNNode()
+    private var cameraNode  = SCNNode()
     private var currentYaw:   Float = -Float.pi / 10
     private var currentPitch: Float = -Float.pi / 6
     private var cameraArmLength: Float = 50
@@ -110,6 +112,9 @@ final class Tables3DMapVC: UIViewController {
 
     private var seatingAreaByMeshName: [String: SeatingAreaDTO] = [:]
     private var renderedDJKeys = Set<String>()
+    
+    var meshNodesBySeatingId: [String: [SCNNode]] = [:]
+    var originalMaterials: [SCNNode: [SCNMaterial]] = [:]
 
     private var roomItems:       [Layout3DMap]   = []
     private var pagedRoomItems:  [[Layout3DMap]] = []
@@ -187,6 +192,8 @@ private extension Tables3DMapVC {
         sceneView.autoenablesDefaultLighting = false
         sceneView.antialiasingMode     = .multisampling4X
         sceneView.isPlaying            = true
+        sceneView.isJitteringEnabled   = true
+        sceneView.rendersContinuously  = true
         sceneView.scene                = SCNScene()
         mapView.addSubview(sceneView)
     }
@@ -220,7 +227,7 @@ private extension Tables3DMapVC {
 //        return newVFovRad * 180.0 / .pi
 //    }
     
-    fileprivate func adaptFovForAspect(
+    func adaptFovForAspect(
         baseFov: Float,
         baseAspect: Float,
         targetAspect: Float
@@ -323,7 +330,7 @@ private extension Tables3DMapVC {
  
     func fetchLayOut() {
         TablePresenter.getConsumerLayout(
-            date: "2026-04-09",
+            date: "2026-04-29",
             venueId: event?.venue?.id ?? ""
         ) { [weak self] ok, msg, layout in
             guard let self else { return }
@@ -584,13 +591,25 @@ private extension Tables3DMapVC {
         sceneBounds       = nil
         seatingAreaByMeshName.removeAll()
         renderedDJPositions.removeAll()
+        meshNodesBySeatingId.removeAll()
+        originalMaterials.removeAll()
+        renderedDJKeys.removeAll()
+        currentDistance = 0
+        minDistance = 0
+        maxDistance = 0
+
+        minYaw = -.pi
+        maxYaw = .pi
+
+        minPitch = -Float.pi / 2
+        maxPitch = Float.pi / 2
  
         sceneView.gestureRecognizers?
             .filter { $0 is UITapGestureRecognizer }
             .forEach { sceneView.removeGestureRecognizer($0) }
  
-        cameraNode.removeFromParentNode()
-        cameraOrbit.removeFromParentNode()
+        cameraOrbit = SCNNode()
+        cameraNode  = SCNNode()
         sceneView.scene = SCNScene()
     }
 }
@@ -598,8 +617,7 @@ private extension Tables3DMapVC {
 private extension Tables3DMapVC {
     
     func buildMeshSeatingMap(asset: GLTFAsset, layout: Layout3DMap) {
-        seatingAreaByMeshName.removeAll()
-
+        
         let metaProps = parseMetadata(layout.metadata)
 
         for node in asset.nodes {
@@ -662,8 +680,36 @@ private extension Tables3DMapVC {
             if !nodeName.isEmpty { seatingAreaByMeshName[nodeName] = dto }
             if !meshName.isEmpty { seatingAreaByMeshName[meshName] = dto }
         }
+        
+        sceneView.scene?.rootNode.enumerateChildNodes { node, _ in
+            
+            let nodeName = (node.name ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            let normalized = nodeName
+                .replacingOccurrences(of: "_", with: "")
+                .replacingOccurrences(of: ".", with: "")
+                .lowercased()
 
-        print("📦 seatingAreaByMeshName built: \(seatingAreaByMeshName.count) entries")
+            if let dto = seatingAreaByMeshName[nodeName] ??
+                         seatingAreaByMeshName[normalized] {
+                
+                let seatingId = dto.parentSeatingAreaId ?? ""
+                guard !seatingId.isEmpty else { return }
+                meshNodesBySeatingId[seatingId, default: []].append(node)
+            }
+        }
+        
+        cacheOriginalMaterials()
+    }
+    
+    func cacheOriginalMaterials() {
+        for (_, nodes) in meshNodesBySeatingId {
+            for node in nodes {
+                if let geo = node.geometry {
+                    originalMaterials[node] = geo.materials.map { $0.copy() as! SCNMaterial }
+                }
+            }
+        }
     }
     
     func worldTopCenter(of node: SCNNode) -> simd_float3 {
@@ -719,7 +765,8 @@ private extension Tables3DMapVC {
             }
             guard let seating = dto else { return }
  
-            let topCenter = self.worldTopCenter(of: node)
+            let anchorNode = bestVisualAnchorNode(for: node)
+            let topCenter = self.worldTopCenter(of: anchorNode)
  
             if seating.isDJBoot {
                 let posKey = String(format: "%.1f_%.1f_%.1f", topCenter.x, topCenter.y, topCenter.z)
@@ -729,10 +776,6 @@ private extension Tables3DMapVC {
                 scene.rootNode.addChildNode(makeDJDot(position: topCenter, sourceNode: node))
                 return
             }
-
-            guard let parentId = seating.parentSeatingAreaId, !parentId.isEmpty else { return }
-            guard !renderedParentIds.contains(parentId) else { return }
-            renderedParentIds.insert(parentId)
  
             let pinNode = self.makeTableDot(position: topCenter, seating: seating, sourceNode: node)
             self.sceneView.scene?.rootNode.addChildNode(pinNode)
@@ -741,7 +784,8 @@ private extension Tables3DMapVC {
 
    func makeTableDot(position: simd_float3, seating: SeatingAreaDTO, sourceNode: SCNNode) -> SCNNode {
         let root = SCNNode()
-        let scale = min(djUIScaleFactor(for: sourceNode), 1.8)
+//        let scale = min(djUIScaleFactor(for: sourceNode), 1.8)
+       let scale = uiScale(for: position)
         root.simdPosition = position + simd_float3(0, 0.05, 0)
 
         let uiNode = makeBillboardNode()
@@ -761,8 +805,8 @@ private extension Tables3DMapVC {
 
         // Soft pulse like web
         if seating.allowActions {
-            let pulseGeo = SCNPlane(width: 0.55, height: 0.55)
-            pulseGeo.cornerRadius = 0.275
+            let pulseGeo = SCNPlane(width: 0.55 * scale, height: 0.55 * scale)
+            pulseGeo.cornerRadius = 0.275 * scale
             pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.22))]
             let pulse = SCNNode(geometry: pulseGeo)
             pulse.name = "wave"
@@ -772,8 +816,8 @@ private extension Tables3DMapVC {
         }
 
         // Outer glow ring
-        let glowGeo = SCNPlane(width: 0.24, height: 0.24)
-        glowGeo.cornerRadius = 0.12
+       let glowGeo = SCNPlane(width: 0.24 * scale, height: 0.24 * scale)
+       glowGeo.cornerRadius = 0.12 * scale
         glowGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.45))]
         let glow = SCNNode(geometry: glowGeo)
         glow.name = "glow"
@@ -816,8 +860,6 @@ private extension Tables3DMapVC {
         label.position = SCNVector3(0, Float(1.25 * scale), 0)
         label.opacity = 0
         label.isHidden = true
-        line.opacity = 0
-        label.isHidden = true
         uiNode.addChildNode(label)
 
         uiNode.seatingMeta = SeatingMeta(
@@ -825,11 +867,42 @@ private extension Tables3DMapVC {
             name: seating.name ?? "",
             parentId: seating.parentSeatingAreaId ?? "",
             maxGuest: seating.maxGuest ?? 0,
-            allowActions: seating.allowActions
+            allowActions: seating.allowActions,
+            sourceNode: sourceNode,
+            uniqueId: UUID().uuidString
         )
 
         root.addChildNode(uiNode)
         return root
+    }
+    
+    func highlightMeshOnlySelected(meta: SeatingMeta) {
+
+        resetAllMeshes()
+
+        guard let nodes = meshNodesBySeatingId[meta.seatingAreaId] else { return }
+
+        for node in nodes {
+
+            applyUniqueMaterial(to: node)
+
+            node.geometry?.materials.forEach { mat in
+                mat.emission.contents = UIColor.systemPink.withAlphaComponent(0.05)
+                mat.emission.intensity = 0.05
+            }
+        }
+    }
+    
+    func applyUniqueMaterial(to node: SCNNode) {
+        guard let geo = node.geometry else { return }
+        
+        geo.materials = geo.materials.map { $0.copy() as! SCNMaterial }
+    }
+    
+    func resetAllMeshes() {
+        for (node, mats) in originalMaterials {
+            node.geometry?.materials = mats.map { $0.copy() as! SCNMaterial }
+        }
     }
     
     func addSoftPulseAnimation(to node: SCNNode) {
@@ -851,60 +924,35 @@ private extension Tables3DMapVC {
             .wait(duration: 0.15)
         ])))
     }
-    
-    private func setPopupVisible(for seatingAreaId: String, visible: Bool, in scene: SCNScene?) {
-        scene?.rootNode.enumerateHierarchy { node, _ in
-            guard let meta = node.seatingMeta, meta.seatingAreaId == seatingAreaId else { return }
-
-            if let label = node.childNodes.first(where: { $0.name == "label" }) {
-                if visible {
-                    label.isHidden = false
-                    label.removeAllActions()
-                    label.runAction(.fadeIn(duration: 0.18))
-                } else {
-                    label.removeAllActions()
-                    label.runAction(.sequence([
-                        .fadeOut(duration: 0.15),
-                        .run { $0.isHidden = true }
-                    ]))
-                }
-            }
-
-            if let line = node.childNodes.first(where: { $0.name == "line" }) {
-                line.removeAllActions()
-                line.runAction(visible ? .fadeIn(duration: 0.18) : .fadeOut(duration: 0.15))
-            }
-        }
-    }
 }
  
 // MARK: - Gestures
  
 private extension Tables3DMapVC {
- 
+    
     func setupTapGesture() {
         sceneView.gestureRecognizers?
             .filter { $0 is UITapGestureRecognizer }
             .forEach { sceneView.removeGestureRecognizer($0) }
- 
+        
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTap.numberOfTapsRequired = 2
- 
+        
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         singleTap.numberOfTapsRequired = 1
         singleTap.require(toFail: doubleTap)
- 
+        
         sceneView.addGestureRecognizer(singleTap)
         sceneView.addGestureRecognizer(doubleTap)
     }
- 
+    
     func setupCameraGestures() {
         let pan   = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
         sceneView.addGestureRecognizer(pan)
         sceneView.addGestureRecognizer(pinch)
     }
- 
+    
     @objc func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
         guard let cam = cameraNode.camera else { return }
         let target = max(CameraConfig.minOrtho, cam.orthographicScale * 0.75)
@@ -932,164 +980,198 @@ private extension Tables3DMapVC {
 
         cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
     }
-// 
-//    @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
-//        guard let cam = cameraNode.camera else { return }
-//
-//        let newScale = cam.orthographicScale * Double(1 / gesture.scale)
-//        cam.orthographicScale = newScale.clamped(to: activeZoomLimits)
-//        gesture.scale = 1
-//    }
+    //
+    //    @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+    //        guard let cam = cameraNode.camera else { return }
+    //
+    //        let newScale = cam.orthographicScale * Double(1 / gesture.scale)
+    //        cam.orthographicScale = newScale.clamped(to: activeZoomLimits)
+    //        gesture.scale = 1
+    //    }
     
-//    @objc func handlePan(_ g: UIPanGestureRecognizer) {
-//
-//        let translation = g.translation(in: sceneView)
-//        g.setTranslation(.zero, in: sceneView)
-//
-//        let pitchSensitivity: Float = 0.004
-//        let yawSensitivity: Float = 0.006
-//
-//        currentYaw -= Float(translation.x) * yawSensitivity
-//        currentPitch -= Float(translation.y) * pitchSensitivity
-//
-//        if minPitch > maxPitch {
-//            swap(&minPitch, &maxPitch)
-//        }
-//        currentPitch = Swift.min(Swift.max(currentPitch, minPitch), maxPitch)
-//        currentYaw = clampAngle(currentYaw, min: minYaw, max: maxYaw)
-//
-//        currentYaw = normalizeAngle(currentYaw)
-//        cameraOrbit.eulerAngles = SCNVector3(
-//            currentPitch,
-//            currentYaw,
-//            0
-//        )
-//    }
-
+    //    @objc func handlePan(_ g: UIPanGestureRecognizer) {
+    //
+    //        let translation = g.translation(in: sceneView)
+    //        g.setTranslation(.zero, in: sceneView)
+    //
+    //        let pitchSensitivity: Float = 0.004
+    //        let yawSensitivity: Float = 0.006
+    //
+    //        currentYaw -= Float(translation.x) * yawSensitivity
+    //        currentPitch -= Float(translation.y) * pitchSensitivity
+    //
+    //        if minPitch > maxPitch {
+    //            swap(&minPitch, &maxPitch)
+    //        }
+    //        currentPitch = Swift.min(Swift.max(currentPitch, minPitch), maxPitch)
+    //        currentYaw = clampAngle(currentYaw, min: minYaw, max: maxYaw)
+    //
+    //        currentYaw = normalizeAngle(currentYaw)
+    //        cameraOrbit.eulerAngles = SCNVector3(
+    //            currentPitch,
+    //            currentYaw,
+    //            0
+    //        )
+    //    }
+    
     func normalizeAngle(_ angle: Float) -> Float {
         var a = angle
         while a > .pi { a -= 2 * .pi }
         while a < -.pi { a += 2 * .pi }
         return a
     }
-
+    
     func clampAngle(_ angle: Float, min: Float, max: Float) -> Float
     {
-
+        
         let a = normalizeAngle(angle)
         let minA = normalizeAngle(min)
         let maxA = normalizeAngle(max)
-
+        
         // normal case
         if minA <= maxA {
             return Swift.min(Swift.max(a, minA), maxA)
         }
-
+        
         // wrap-around case
         if a >= minA || a <= maxA {
             return a
         }
-
+        
         // snap to nearest edge
         let distToMin = abs(a - minA)
         let distToMax = abs(a - maxA)
-
+        
         return distToMin < distToMax ? minA : maxA
     }
-
+    
     @objc func handlePinch(_ g: UIPinchGestureRecognizer) {
-
+        
         let zoomSpeed: Float = 0.25  // thoda responsive
-
+        
         let delta = Float(1 - g.scale)
         g.scale = 1
-
+        
         currentDistance += delta * zoomSpeed * currentDistance
-
-//        currentDistance = Swift.min(
-//            Swift.max(currentDistance, minDistance),
-//            maxDistance
-//        )
-
+        currentDistance = Swift.min(currentDistance, maxDistance)
+        //        currentDistance = Swift.min(
+        //            Swift.max(currentDistance, minDistance),
+        //            maxDistance
+        //        )
+        
         updateCameraDistance()
     }
-
+    
     func updateCameraDistance() {
-
+        
         let dir = cameraNode.position.normalized()
-
+        
         cameraNode.position = SCNVector3(
             dir.x * currentDistance,
             dir.y * currentDistance,
             dir.z * currentDistance
         )
     }
- 
+    
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: sceneView)
-
+        
         let hits = sceneView.hitTest(point, options: [
-            SCNHitTestOption.searchMode: SCNHitTestSearchMode.all.rawValue,
-            SCNHitTestOption.boundingBoxOnly: false,
-            SCNHitTestOption.ignoreHiddenNodes: true
+            .searchMode: SCNHitTestSearchMode.all.rawValue,
+            .boundingBoxOnly: false,
+            .ignoreHiddenNodes: true
         ])
-
-        guard let pin = hits.lazy.compactMap({ result -> SCNNode? in
+        
+        guard let pin = findPinNode(from: hits),
+              let meta = pin.seatingMeta else {
+            
+            handleOutsideTap()
+            return
+        }
+        
+        guard meta.allowActions else {
+            print("Tapped unavailable area:", meta.name)
+            return
+        }
+        
+        applySelection(meta: meta)
+    }
+    
+    private func findPinNode(from hits: [SCNHitTestResult]) -> SCNNode? {
+        return hits.lazy.compactMap { result -> SCNNode? in
             var current: SCNNode? = result.node
             while let node = current {
                 if node.seatingMeta != nil { return node }
                 current = node.parent
             }
             return nil
-        }).first,
-        let meta = pin.seatingMeta else {
-            
-            // outside tap
-            if let prev = selectedSeatingId {
-                resetPinColor(seatingAreaId: prev, in: sceneView.scene)
-                setPopupVisible(for: prev, visible: false, in: sceneView.scene)
-            }
-            
-            selectedSeatingId = nil
-            buyNowBtnView.isHidden = true
-            zoneSelector.isHidden = false
-            return
-        }
-
-        guard meta.allowActions else {
-            print("🚫 Tapped unavailable area:", meta.name)
-            return
-        }
-
-        if let prev = selectedSeatingId, prev != meta.seatingAreaId {
-            resetPinColor(seatingAreaId: prev, in: sceneView.scene)
-            setPopupVisible(for: prev, visible: false, in: sceneView.scene)
-        }
-
+        }.first
+    }
+    
+    private func handleOutsideTap() {
+        guard selectedSeatingId != nil else { return }
+        
+        resetSelection()
+        selectedSeatingId = nil
+        
+        buyNowBtnView.isHidden = true
+        zoneSelector.isHidden = false
+    }
+    
+    private func applySelection(meta: SeatingMeta) {
         selectedSeatingId = meta.seatingAreaId
-        updatePinColor(seatingAreaId: meta.seatingAreaId, color: PinStyle.selectedColor, in: sceneView.scene)
-        setPopupVisible(for: meta.seatingAreaId, visible: true, in: sceneView.scene)
-
-        // added only this UI part
+        
+        highlightOnlySelectedDot(meta: meta)
+        highlightMeshOnlySelected(meta: meta)
+        
         buyNowBtnView.isHidden = false
         zoneSelector.isHidden = true
-
-        focusCamera(on: pin)
-
-        print("✅ Tapped seating:", meta.name, "id:", meta.seatingAreaId)
     }
-//    func resetAllDots() {
-//        sceneView.scene?.rootNode.enumerateChildNodes { node, _ in
-//            if node.name == "pin" {
-//                self.updateCircle(node, color: PinStyle.normalColor)
-//            }
-//        }
-//
-//        if let id = selectedSeatingId {
-//            setChildPinColor(id, color: .clear)
-//        }
-//    }
     
+    func resetSelection() {
+        
+        resetAllMeshes()
+        
+        sceneView.scene?.rootNode.enumerateHierarchy { node, _ in
+            guard let m = node.seatingMeta else { return }
+            
+            if let wave = node.childNodes.first(where: { $0.name == "wave" }) {
+                wave.geometry?.materials.first?.diffuse.contents =
+                (m.allowActions ? PinStyle.activeColor : PinStyle.inactiveColor)
+                    .withAlphaComponent(0.4)
+            }
+            
+            if let label = node.childNodes.first(where: { $0.name == "label" }) {
+                label.removeAllActions()
+                label.isHidden = true
+                label.opacity = 0
+            }
+            
+            if let line = node.childNodes.first(where: { $0.name == "line" }) {
+                line.removeAllActions()
+                line.isHidden = true
+                line.opacity = 0
+            }
+        }
+    }
+    
+    func highlightOnlySelectedDot(meta: SeatingMeta) {
+        sceneView.scene?.rootNode.enumerateHierarchy { node, _ in
+            guard let m = node.seatingMeta else { return }
+            let isSelected = (m.uniqueId == meta.uniqueId)
+            
+            // LABEL + LINE
+            if let label = node.childNodes.first(where: { $0.name == "label" }) {
+                label.isHidden = !isSelected
+                label.opacity = isSelected ? 1 : 0
+            }
+            
+            if let line = node.childNodes.first(where: { $0.name == "line" }) {
+                line.opacity = isSelected ? 1 : 0
+            }
+        }
+    }
+        
     private func showCheckoutMode() {
         buyNowBtnView.isHidden = false
         UIView.animate(withDuration: 0.25) {
@@ -1152,7 +1234,7 @@ private extension Tables3DMapVC {
     private func clearCurrentSelectionUI() {
         guard let selectedId = selectedSeatingId else { return }
         resetPinColor(seatingAreaId: selectedId, in: sceneView.scene)
-        setPopupVisible(for: selectedId, visible: false, in: sceneView.scene)
+        resetSelection()
         selectedSeatingId = nil
     }
  
@@ -1186,20 +1268,33 @@ private extension Tables3DMapVC {
 // MARK: - DJ Dot
  
 private extension Tables3DMapVC {
- 
+    func uiScale(for position: simd_float3) -> CGFloat {
+        guard let cam = sceneView.pointOfView else { return 1.0 }
+        
+        let camPos = cam.simdWorldPosition
+        let dist = simd_distance(camPos, position)
+        
+        // adjust these values if needed
+        let scale = max(0.6, min(1.4, dist / 40))
+        
+        return CGFloat(scale)
+    }
+    
     func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
-        let scale = djUIScaleFactor(for: sourceNode)
-
+//        let scale = djUIScaleFactor(for: sourceNode)
+        let scale: CGFloat = uiScale(for: position)
         let root = SCNNode()
-        root.simdPosition = position + simd_float3(0, Float(5.0 * scale), 0)
+        root.simdPosition = position + simd_float3(0, Float(0.6 * scale), 0)
         root.name = "dj-pin"
 
         let uiNode = makeBillboardNode()
         let gold = PinStyle.djGold
 
+        let base: CGFloat = 0.5
+        
         // Outer wave
-        let waveGeo = SCNPlane(width: 8.0 * scale, height: 8.0 * scale)
-        waveGeo.cornerRadius = 4.0 * scale
+        let waveGeo = SCNPlane(width: base * 2.0 * scale, height: base * 2.0 * scale)
+        waveGeo.cornerRadius = (base * 2.0 * scale) / 2
         waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.8))]
         let wave = SCNNode(geometry: waveGeo)
         wave.position.z = -0.01
@@ -1208,10 +1303,7 @@ private extension Tables3DMapVC {
 
         // Outer ring
         let outerRing = SCNNode(
-            geometry: SCNTorus(
-                ringRadius: 6.0 * scale,
-                pipeRadius: 0.25 * scale
-            )
+            geometry: SCNTorus(ringRadius: base * 1.5 * scale, pipeRadius: 0.06 * scale)
         )
         outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         outerRing.eulerAngles.x = -.pi / 2
@@ -1220,10 +1312,7 @@ private extension Tables3DMapVC {
 
         // Inner ring
         let innerRing = SCNNode(
-            geometry: SCNTorus(
-                ringRadius: 4.5 * scale,
-                pipeRadius: 0.2 * scale
-            )
+            geometry: SCNTorus(ringRadius: base * 1.2 * scale, pipeRadius: 0.05 * scale)
         )
         innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         innerRing.eulerAngles.x = -.pi / 2
@@ -1232,10 +1321,7 @@ private extension Tables3DMapVC {
 
         // Fill
         let fill = SCNNode(
-            geometry: SCNCylinder(
-                radius: 4.0 * scale,
-                height: 0.05 * scale
-            )
+            geometry: SCNCylinder(radius: base * 1.0 * scale, height: 0.02 * scale)
         )
         fill.geometry?.materials = [constantMaterial(color: UIColor.white)]
         fill.eulerAngles.x = -.pi / 2
@@ -1243,8 +1329,8 @@ private extension Tables3DMapVC {
         uiNode.addChildNode(fill)
 
         // Text
-        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.05 * scale)
-        textGeo.font = .boldSystemFont(ofSize: 16 * scale)
+        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.01 * scale)
+        textGeo.font = .boldSystemFont(ofSize: 6 * scale)
         textGeo.flatness = 0.05
         textGeo.materials = [constantMaterial(color: UIColor.white)]
 
@@ -1255,14 +1341,15 @@ private extension Tables3DMapVC {
             tMin.y + (tMax.y - tMin.y) / 2,
             0
         )
-        textNode.scale = SCNVector3(0.25 * scale, 0.25 * scale, 0.25 * scale)
+
+        textNode.scale = SCNVector3(0.1 * scale, 0.1 * scale, 0.1 * scale)
         textNode.position.z = Float(0.25 * scale)
         textNode.renderingOrder = 1000
         uiNode.addChildNode(textNode)
 
         // Glow halo
-        let glowGeo = SCNPlane(width: 9.0 * scale, height: 9.0 * scale)
-        glowGeo.cornerRadius = 4.5 * scale
+        let glowGeo = SCNPlane(width: base * 2.5 * scale, height: base * 2.5 * scale)
+        glowGeo.cornerRadius = (base * 2.5 * scale) / 2
         glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.4))]
         let glow = SCNNode(geometry: glowGeo)
         glow.position.z = -0.02
