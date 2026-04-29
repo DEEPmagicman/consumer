@@ -56,6 +56,13 @@ workflows:
             --release-notes "$(git log -1 --pretty=%B)" \
             --groups "tester"
 
+      - name: Upload dSYM to Firebase Crashlytics
+        script: |
+          find build/ios/archive -name "*.dSYM" \
+          | xargs -I {} firebase crashlytics:symbols:upload \
+          --app "$FIREBASE_APP_ID" {} \
+          --token "$FIREBASE_TOKEN"
+
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
