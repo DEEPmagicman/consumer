@@ -70,7 +70,7 @@ workflows:
 
     publishing:
       slack:
-        channel: "#dev-app"
+        channel: "#dev-build"
         notify_on_build_start: false
         notify:
           success: true
