@@ -32,6 +32,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var leftSwipeBtn: UIButton!
     @IBOutlet weak var rightSwipeBtn: UIButton!
     @IBOutlet weak var mainImg: UIImageView!
+    @IBOutlet weak var imageShadowView: UIView!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var venueTitleLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
@@ -84,7 +85,11 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var vipTableSubTitleLbl: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var viewSkeleton: UIView!
+    @IBOutlet weak var imageBackGroundView: UIView!
+    @IBOutlet weak var navBarView: UIView!
     
+    private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
     private let faqCount = 5
     private var playerView: YTPlayerView!
@@ -122,6 +127,10 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
+    private let posterHeaderView = EventPosterHeaderView()
+    private let collapseThreshold: CGFloat = 20
+    private var isCollapsed = false
+    
     
 //    private let skeletonView = EventDetailsSkeletonView()
 
@@ -139,8 +148,20 @@ class EventDetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
+        setupPosterHeaderView()
+        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        mainImg.sd_setImage(
+            with: URL(string: imageURLString),
+            placeholderImage: Constant.Icon.uploadImage
+        )
+
+        posterHeaderView.loadImage(from: imageURLString)
+        setupMainImageStyle()
+        scrollView.contentInsetAdjustmentBehavior = .never
+
 
         hero.isEnabled = true
+        scrollView.delegate = self
         fetchSeatingAreas()
         getEventDetail()
         
@@ -152,8 +173,9 @@ class EventDetailsVC: UIViewController {
         startGroupTableObserver()
         startFAQsTableObserver()
         setupUI()
+        setupSkeletonView()
+        showSkeleton()
 
-        mainImg.sd_setImage(with: URL(string: (event?.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -191,6 +213,18 @@ class EventDetailsVC: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
+    
+    private func setupPosterHeaderView() {
+        imageBackGroundView.addSubview(posterHeaderView)
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: imageBackGroundView.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: imageBackGroundView.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: imageBackGroundView.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: imageBackGroundView.bottomAnchor)
+        ])
+    }
 
     private func startTicketTableObserver() {
         ticketTableObserver?.invalidate()
@@ -210,6 +244,51 @@ class EventDetailsVC: UIViewController {
             self.groupTableViewHeight.constant = tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
+    }
+    
+    private func setupSkeletonView() {
+        viewSkeleton.isHidden = true
+        viewSkeleton.backgroundColor = UIColor(hex: "#111111")
+
+        eventDetailsSkeletonView.translatesAutoresizingMaskIntoConstraints = false
+        viewSkeleton.addSubview(eventDetailsSkeletonView)
+
+        NSLayoutConstraint.activate([
+            eventDetailsSkeletonView.topAnchor.constraint(equalTo: viewSkeleton.topAnchor),
+            eventDetailsSkeletonView.leadingAnchor.constraint(equalTo: viewSkeleton.leadingAnchor),
+            eventDetailsSkeletonView.trailingAnchor.constraint(equalTo: viewSkeleton.trailingAnchor),
+            eventDetailsSkeletonView.bottomAnchor.constraint(equalTo: viewSkeleton.bottomAnchor)
+        ])
+    }
+    
+    private func showSkeleton() {
+        view.layoutIfNeeded()
+        viewSkeleton.isHidden = false
+        eventDetailsSkeletonView.startShimmer()
+        ticketShimmerView.isHidden = false
+        ticketTitleShimmerView.isHidden = false
+        buyNowBtnShimmerView.isHidden = false
+        //        buyNowBtnShimmerView.cornerRadius = 30
+        ticketTitleStackShimmerView.isHidden = false
+        ticketTitleStackView.isHidden = true
+        
+        ticketShimmerView.startAnimating()
+        ticketTitleShimmerView.startAnimating()
+        buyNowBtnShimmerView.startAnimating()
+    }
+    
+    private func hideSkeleton() {
+        eventDetailsSkeletonView.stopShimmer()
+        viewSkeleton.isHidden = true
+        ticketShimmerView.stopAnimating()
+        ticketTitleShimmerView.stopAnimating()
+        buyNowBtnShimmerView.stopAnimating()
+        
+        ticketShimmerView.isHidden = true
+        ticketTitleShimmerView.isHidden = true
+        buyNowBtnShimmerView.isHidden = true
+        ticketTitleStackShimmerView.isHidden = true
+        ticketTitleStackView.isHidden = false
     }
 
     private func setupTicketTable() {
@@ -231,32 +310,50 @@ class EventDetailsVC: UIViewController {
         saveBtn.tintColor =  .white
     }
 
-    func showSkeleton() {
-        view.layoutIfNeeded()
+//    func showSkeleton() {
+//        view.layoutIfNeeded()
+//
+//        ticketShimmerView.isHidden = false
+//        ticketTitleShimmerView.isHidden = false
+//        buyNowBtnShimmerView.isHidden = false
+////        buyNowBtnShimmerView.cornerRadius = 30
+//        ticketTitleStackShimmerView.isHidden = false
+//        ticketTitleStackView.isHidden = true
+//
+//        ticketShimmerView.startAnimating()
+//        ticketTitleShimmerView.startAnimating()
+//        buyNowBtnShimmerView.startAnimating()
+//    }
+//
+//    func hideSkeleton() {
+//        ticketShimmerView.stopAnimating()
+//        ticketTitleShimmerView.stopAnimating()
+//        buyNowBtnShimmerView.stopAnimating()
+//
+//        ticketShimmerView.isHidden = true
+//        ticketTitleShimmerView.isHidden = true
+//        buyNowBtnShimmerView.isHidden = true
+//        ticketTitleStackShimmerView.isHidden = true
+//        ticketTitleStackView.isHidden = false
+//    }
+    
+    
+    private func setupMainImageStyle() {
+        imageShadowView.clipsToBounds = false
+        imageShadowView.layer.masksToBounds = false
+        imageShadowView.layer.cornerRadius = 8
 
-        ticketShimmerView.isHidden = false
-        ticketTitleShimmerView.isHidden = false
-        buyNowBtnShimmerView.isHidden = false
-//        buyNowBtnShimmerView.cornerRadius = 30
-        ticketTitleStackShimmerView.isHidden = false
-        ticketTitleStackView.isHidden = true
+        imageShadowView.layer.shadowColor = UIColor.white.cgColor
+        imageShadowView.layer.shadowOpacity = 0.35
+        imageShadowView.layer.shadowRadius = 18
+        imageShadowView.layer.shadowOffset = CGSize(width: 0, height: 12)
 
-        ticketShimmerView.startAnimating()
-        ticketTitleShimmerView.startAnimating()
-        buyNowBtnShimmerView.startAnimating()
+        mainImg.clipsToBounds = true
+        mainImg.layer.masksToBounds = true
+        mainImg.layer.cornerRadius = 8
+        mainImg.contentMode = .scaleAspectFill
     }
-
-    func hideSkeleton() {
-        ticketShimmerView.stopAnimating()
-        ticketTitleShimmerView.stopAnimating()
-        buyNowBtnShimmerView.stopAnimating()
-
-        ticketShimmerView.isHidden = true
-        ticketTitleShimmerView.isHidden = true
-        buyNowBtnShimmerView.isHidden = true
-        ticketTitleStackShimmerView.isHidden = true
-        ticketTitleStackView.isHidden = false
-    }
+    
     
     func updateLineUpView() {
         let shouldHide = artists.isEmpty
@@ -328,7 +425,7 @@ class EventDetailsVC: UIViewController {
 
             guard let self = self else { return }
 
-            self.hideSkeleton()
+          
             self.view.alpha = 1
             self.isEventDetailAPICalled = true
 
@@ -368,6 +465,9 @@ class EventDetailsVC: UIViewController {
             self.updateLineUpView()
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.hideSkeleton()
+            }
         }
     }
     
@@ -743,12 +843,12 @@ class EventDetailsVC: UIViewController {
         let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
 
         if isAnyFeatureEnabled  && isEventDetailAPICalled {
-            UIView.transition(with: vipTablesView,
-                              duration: 0.25,
-                              options: .transitionCrossDissolve,
-                              animations: {
+//            UIView.transition(with: vipTablesView,
+//                              duration: 0.25,
+//                              options: .transitionCrossDissolve,
+//                              animations: {
                 self.vipTablesView.isHidden = !isAnyFeatureEnabled
-            })
+//            })
         } else {
             vipTablesView.isHidden = true
         }
@@ -937,6 +1037,14 @@ class EventDetailsVC: UIViewController {
                 buyNowBtnView.clipsToBounds = true
                 noHiddenFeesLbl.isHidden = false
             }
+        }
+    }
+    
+    func applyNavAppearance(collapsed: Bool) {
+        if collapsed {
+            navBarView.backgroundColor = UIColor(hex: "#121212")
+        } else {
+            navBarView.backgroundColor = .clear
         }
     }
 
@@ -2247,15 +2355,39 @@ final class EventDetailsSkeletonView: UIView {
         // ─────────────────────────────
         // 1. VIP Banner
         // ─────────────────────────────
-        make(CGRect(x: pad, y: y, width: W - pad*2, height: 60), corner: 10)
 
-        makeLighter(CGRect(x: pad + 12, y: y + 12, width: 90, height: 10), corner: 5)
-        makeLighter(CGRect(x: pad + 12, y: y + 30, width: 130, height: 9), corner: 5)
+        let bannerWidth = W - pad * 2
+        let bannerHeight: CGFloat = 60
 
-        makeLighter(CGRect(x: W - pad - 70, y: y + 18, width: 60, height: 24), corner: 12)
+        make(
+            CGRect(x: pad, y: y, width: bannerWidth, height: bannerHeight),
+            corner: 10
+        )
 
-        y += 60 + 24
+        makeLighter(
+            CGRect(x: pad + 12, y: y + 12, width: 81, height: 19),
+            corner: 9
+        )
 
+        makeLighter(
+            CGRect(x: pad + 12, y: y + 34, width: 130, height: 12),
+            corner: 6
+        )
+
+        let buttonWidth: CGFloat = 91
+        let buttonHeight: CGFloat = 31
+
+        makeLighter(
+            CGRect(
+                x: pad + bannerWidth - 12 - buttonWidth,
+                y: y + (bannerHeight - buttonHeight) / 2,
+                width: buttonWidth,
+                height: buttonHeight
+            ),
+            corner: 15
+        )
+
+        y += bannerHeight + 24
         // ─────────────────────────────
         // 2. DETAILS SECTION
         // ─────────────────────────────
@@ -2267,13 +2399,13 @@ final class EventDetailsSkeletonView: UIView {
         make(CGRect(x: pad, y: y, width: W * 0.5, height: 10), corner: 5)
 
         y += 28
-
-        make(CGRect(x: pad, y: y, width: 60, height: 12), corner: 6)
-        y += 20
-
-        make(CGRect(x: pad, y: y, width: W * 0.4, height: 10), corner: 5)
-
-        y += 32
+//
+//        make(CGRect(x: pad, y: y, width: 60, height: 12), corner: 6)
+//        y += 20
+//
+//        make(CGRect(x: pad, y: y, width: W * 0.4, height: 10), corner: 5)
+//
+//        y += 32
 
         // ─────────────────────────────
         // 3. GUEST LIST
@@ -2282,7 +2414,7 @@ final class EventDetailsSkeletonView: UIView {
 
         for i in 0..<3 {
             make(CGRect(
-                x: pad + CGFloat(i) * (avatarSize - 4),
+                x: pad + CGFloat(i) * (avatarSize + 8),
                 y: y,
                 width: avatarSize,
                 height: avatarSize
@@ -2304,13 +2436,13 @@ final class EventDetailsSkeletonView: UIView {
 
         y += 30
 
-        // ─────────────────────────────
-        // 5. BOTTOM BAR (PRICE + BUTTON)
-        // ─────────────────────────────
-        make(CGRect(x: pad, y: y, width: 100, height: 10), corner: 5)
-        make(CGRect(x: pad, y: y + 14, width: 70, height: 8), corner: 5)
-
-        make(CGRect(x: W - pad - 80, y: y, width: 80, height: 30), corner: 15)
+//        // ─────────────────────────────
+//        // 5. BOTTOM BAR (PRICE + BUTTON)
+//        // ─────────────────────────────
+//        make(CGRect(x: pad, y: y, width: 100, height: 10), corner: 5)
+//        make(CGRect(x: pad, y: y + 14, width: 70, height: 8), corner: 5)
+//
+//        make(CGRect(x: W - pad - 80, y: y, width: 80, height: 30), corner: 15)
     }
 
     // MARK: - Helpers (same as Home)
@@ -2343,3 +2475,136 @@ final class EventDetailsSkeletonView: UIView {
         isHidden = true
     }
 }
+
+
+final class EventPosterHeaderView: UIView {
+
+    private let screenBackgroundColor = UIColor(hex: "#121212")
+
+    private let backgroundImageView = UIImageView()
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let darkOverlayView = UIView()
+
+    private let bottomGradientView = UIView()
+    private let bottomGradientLayer = CAGradientLayer()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        backgroundColor = screenBackgroundColor
+        clipsToBounds = true
+
+        setupBlurredBackground()
+        setupBottomGradient()
+    }
+
+    private func setupBlurredBackground() {
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.alpha = 0.75
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(backgroundImageView)
+
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: -30),
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -30),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
+            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 20)
+        ])
+
+        blurView.alpha = 0.90
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(blurView)
+
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+
+        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
+        darkOverlayView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(darkOverlayView)
+
+        NSLayoutConstraint.activate([
+            darkOverlayView.topAnchor.constraint(equalTo: topAnchor),
+            darkOverlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            darkOverlayView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            darkOverlayView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+
+    private func setupBottomGradient() {
+        bottomGradientView.isUserInteractionEnabled = false
+        bottomGradientView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(bottomGradientView)
+
+        NSLayoutConstraint.activate([
+            bottomGradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottomGradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            bottomGradientView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+
+        bottomGradientView.layer.addSublayer(bottomGradientLayer)
+
+        bottomGradientLayer.colors = [
+            UIColor.clear.cgColor,
+            screenBackgroundColor.withAlphaComponent(0.65).cgColor,
+            screenBackgroundColor.cgColor
+        ]
+
+        bottomGradientLayer.locations = [0.0, 0.55, 1.0]
+        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        bottomGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        bottomGradientLayer.frame = bottomGradientView.bounds
+    }
+
+    func setBackgroundImage(_ image: UIImage?) {
+        backgroundImageView.image = image
+    }
+
+    func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard
+                error == nil,
+                let self,
+                let data,
+                let image = UIImage(data: data)
+            else { return }
+
+            DispatchQueue.main.async {
+                self.setBackgroundImage(image)
+            }
+        }.resume()
+    }
+}
+
+extension EventDetailsVC: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView == self.scrollView else { return }
+        
+        let shouldCollapse = scrollView.contentOffset.y > collapseThreshold
+        
+        if shouldCollapse != isCollapsed {
+            isCollapsed = shouldCollapse
+            applyNavAppearance(collapsed: shouldCollapse)
+        }
+    }
+}
+
