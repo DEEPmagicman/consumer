@@ -58,7 +58,9 @@ workflows:
 
       - name: Upload dSYM to Firebase Crashlytics
         script: |
-          find build/ios/archive -name "*.dSYM" \
+          unzip -o build/ios/ipa/*.dSYM.zip -d dSYMs || true
+          
+          find . -name "*.dSYM" \
           | xargs -I {} firebase crashlytics:symbols:upload \
           --app "$FIREBASE_APP_ID" {} \
           --token "$FIREBASE_TOKEN"
@@ -70,7 +72,7 @@ workflows:
 
     publishing:
       slack:
-        channel: "#dev-build"
+        channel: "#cicd-ios"
         notify_on_build_start: false
         notify:
           success: true
