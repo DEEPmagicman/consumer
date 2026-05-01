@@ -56,14 +56,41 @@ workflows:
             --release-notes "$(git log -1 --pretty=%B)" \
             --groups "tester"
 
-      - name: Upload dSYM to Firebase Crashlytics
+      - name: Upload app dSYM to Firebase Crashlytics
         script: |
-          unzip -o build/ios/ipa/*.dSYM.zip -d dSYMs || true
-          
-          find . -name "*.dSYM" \
-          | xargs -I {} firebase crashlytics:symbols:upload \
-          --app "$FIREBASE_APP_ID" {} \
-          --token "$FIREBASE_TOKEN"
+          echo "Searching for app dSYM inside xcarchive..."
+
+          APP_DSYM=$(find build/ios/xcarchive -name "*.app.dSYM" | head -1)
+
+          if [ -n "$APP_DSYM" ]; then
+            echo "Found app dSYM inside xcarchive:"
+            echo "$APP_DSYM"
+
+          else
+            echo "Not found in xcarchive. Searching for zipped app dSYM..."
+
+            APP_DSYM_ZIP=$(find . -name "*.app.dSYM.zip" | head -1)
+
+            if [ -z "$APP_DSYM_ZIP" ]; then
+              echo "No app dSYM zip found anywhere"
+              find . -name "*.dSYM"
+              exit 1
+            fi
+
+            echo "Found zipped app dSYM:"
+            echo "$APP_DSYM_ZIP"
+
+            unzip -o "$APP_DSYM_ZIP" -d extracted_dsyms
+
+            APP_DSYM=$(find extracted_dsyms -name "*.app.dSYM" | head -1)
+          fi
+
+          firebase crashlytics:symbols:upload \
+            --app "$FIREBASE_APP_ID" \
+            "$APP_DSYM" \
+            --token "$FIREBASE_TOKEN"
+
+          echo "dSYM upload completed"
 
     artifacts:
       - build/ios/ipa/*.ipa
