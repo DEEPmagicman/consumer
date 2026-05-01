@@ -142,6 +142,9 @@ final class Tables3DMapVC: UIViewController {
     var minPitch: Float = -Float.pi / 2
     var maxPitch: Float = Float.pi / 2
     
+    private var currentLoadId = UUID()
+    private var sceneScaleFactor: Float = 1
+    
     // MARK: - Lifecycle
  
     override func viewDidLoad() {
@@ -330,7 +333,7 @@ private extension Tables3DMapVC {
  
     func fetchLayOut() {
         TablePresenter.getConsumerLayout(
-            date: "2026-04-29",
+            date: "2026-05-01",
             venueId: event?.venue?.id ?? ""
         ) { [weak self] ok, msg, layout in
             guard let self else { return }
@@ -564,18 +567,31 @@ private extension Tables3DMapVC {
     }
  
     func loadGLB(from url: URL, layout: Layout3DMap) {
+        let loadId = UUID()
+        currentLoadId = loadId
+        
         resetSceneState()
- 
+        
         GLTFAsset.load(with: url, options: [:]) { [weak self] _, status, asset, error, _ in
-            guard let self, status == .complete, let asset, error == nil else {
-                print("GLB load error:", error?.localizedDescription ?? "unknown")
+            guard let self else { return }
+            
+            // ignore old responses
+            guard self.currentLoadId == loadId else {
+                print("Old GLB ignored")
                 return
             }
+            
+            guard status == .complete, let asset, error == nil else {
+                print("GLB load error:", error?.localizedDescription ?? "unknown")
+                return
+                   }
  
             DispatchQueue.main.async {
+                guard self.currentLoadId == loadId else { return }
                 self.setupSeatingAreas {
                     let scene = SCNScene(gltfAsset: asset)
                     self.sceneView.scene = scene
+                    self.setSceneScaleFactor(scene: scene)
                     self.buildMeshSeatingMap(asset: asset, layout: layout)
                     self.setupLights()
                     self.renderDots(scene: scene)
@@ -586,6 +602,48 @@ private extension Tables3DMapVC {
         }
     }
  
+    func setSceneScaleFactor(scene: SCNScene) {
+        
+        // MARK: WORLD BOUNDS
+        var minVec = SCNVector3(
+            Float.greatestFiniteMagnitude,
+            Float.greatestFiniteMagnitude,
+            Float.greatestFiniteMagnitude
+        )
+        
+        var maxVec = SCNVector3(
+            -Float.greatestFiniteMagnitude,
+             -Float.greatestFiniteMagnitude,
+             -Float.greatestFiniteMagnitude
+        )
+
+        scene.rootNode.enumerateChildNodes { node, _ in
+            let (bmin, bmax) = node.boundingBox
+
+            let worldMin = node.convertPosition(bmin, to: nil)
+            let worldMax = node.convertPosition(bmax, to: nil)
+
+            minVec.x = Swift.min(minVec.x, worldMin.x)
+            minVec.y = Swift.min(minVec.y, worldMin.y)
+            minVec.z = Swift.min(minVec.z, worldMin.z)
+
+            maxVec.x = Swift.max(maxVec.x, worldMax.x)
+            maxVec.y = Swift.max(maxVec.y, worldMax.y)
+            maxVec.z = Swift.max(maxVec.z, worldMax.z)
+        }
+
+        // MARK: SIZE
+        let size = SCNVector3(
+            maxVec.x - minVec.x,
+            maxVec.y - minVec.y,
+            maxVec.z - minVec.z
+        )
+
+        // MARK: CAMERA
+        let sceneSize = max(size.x, size.y, size.z)
+        self.sceneScaleFactor = sceneSize
+    }
+    
     func resetSceneState() {
         selectedSeatingId = nil
         sceneBounds       = nil
@@ -654,10 +712,10 @@ private extension Tables3DMapVC {
             let djTagValue  = (normalizedString(extras["djtag"]) ?? "").lowercased()
 
             let isDJ =
-                djBootValue == "true" ||
-                djTagValue == "true" ||
-                nodeName.lowercased() == "icosphere" ||
-                meshName.lowercased() == "icosphere"
+                djBootValue == "true" //||
+//                djTagValue == "true" ||
+//                nodeName.lowercased() == "icosphere" ||
+//                meshName.lowercased() == "icosphere"
 
             if isDJ {
                 let dto = SeatingAreaDTO(
@@ -785,12 +843,16 @@ private extension Tables3DMapVC {
    func makeTableDot(position: simd_float3, seating: SeatingAreaDTO, sourceNode: SCNNode) -> SCNNode {
         let root = SCNNode()
 //        let scale = min(djUIScaleFactor(for: sourceNode), 1.8)
-       let scale = uiScale(for: position)
+       var scale = uiScale(for: position)
         root.simdPosition = position + simd_float3(0, 0.05, 0)
 
-        let uiNode = makeBillboardNode()
-        uiNode.name = "pin"
+//       let base: CGFloat = CGFloat(sceneScaleFactor) * 0.004
+//       root.simdPosition = position + simd_float3(0, Float(base * 3), 0)
 
+       let uiNode = makeBillboardNode()
+        uiNode.name = "pin"
+       scale = scale * 1.0
+       
         let dotColor: UIColor = seating.allowActions
             ? PinStyle.activeColor
             : PinStyle.inactiveColor
@@ -805,8 +867,8 @@ private extension Tables3DMapVC {
 
         // Soft pulse like web
         if seating.allowActions {
-            let pulseGeo = SCNPlane(width: 0.55 * scale, height: 0.55 * scale)
-            pulseGeo.cornerRadius = 0.275 * scale
+            let pulseGeo = SCNPlane(width:  0.55 * scale, height: 0.55 * scale)
+            pulseGeo.cornerRadius = (0.55 * scale) / 2
             pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.22))]
             let pulse = SCNNode(geometry: pulseGeo)
             pulse.name = "wave"
@@ -817,17 +879,15 @@ private extension Tables3DMapVC {
 
         // Outer glow ring
        let glowGeo = SCNPlane(width: 0.24 * scale, height: 0.24 * scale)
-       glowGeo.cornerRadius = 0.12 * scale
+       glowGeo.cornerRadius =  (0.24 * scale) / 2
         glowGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.45))]
         let glow = SCNNode(geometry: glowGeo)
         glow.name = "glow"
         glow.position.z = -0.001
         uiNode.addChildNode(glow)
 
-        // Main small dot
-  
-        let dotGeo = SCNPlane(width: 0.16 * scale, height: 0.16 * scale)
-        dotGeo.cornerRadius = 0.08 * scale
+       let dotGeo = SCNPlane(width: 0.16 * scale, height: 0.16 * scale)
+        dotGeo.cornerRadius = (0.16 * scale) / 2
         dotGeo.materials = [constantMaterial(color: dotColor)]
         let dot = SCNNode(geometry: dotGeo)
         dot.name = "circle"
@@ -1268,97 +1328,127 @@ private extension Tables3DMapVC {
 // MARK: - DJ Dot
  
 private extension Tables3DMapVC {
+    
     func uiScale(for position: simd_float3) -> CGFloat {
+        return 1.0
         guard let cam = sceneView.pointOfView else { return 1.0 }
-        
+
         let camPos = cam.simdWorldPosition
         let dist = simd_distance(camPos, position)
-        
-        // adjust these values if needed
-        let scale = max(0.6, min(1.4, dist / 40))
-        
+
+        // normalize based on scene size
+        let normalized = dist / sceneScaleFactor
+
+        // clamp for stability
+        let scale = max(0.6, min(1.4, normalized * 8))
+
         return CGFloat(scale)
     }
-    
+         
     func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
-//        let scale = djUIScaleFactor(for: sourceNode)
-        let scale: CGFloat = uiScale(for: position)
+
+        let scale = uiScale(for: position)
+        
+        let base: CGFloat = CGFloat(sceneScaleFactor) * 0.01
+
         let root = SCNNode()
-        root.simdPosition = position + simd_float3(0, Float(0.6 * scale), 0)
+        root.simdPosition = position + simd_float3(0, Float(base * 0.6 * scale), 0)
         root.name = "dj-pin"
 
         let uiNode = makeBillboardNode()
         let gold = PinStyle.djGold
 
-        let base: CGFloat = 0.5
-        
-        // Outer wave
-        let waveGeo = SCNPlane(width: base * 2.0 * scale, height: base * 2.0 * scale)
-        waveGeo.cornerRadius = (base * 2.0 * scale) / 2
-        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.8))]
+        var z: Float = 0
+
+        // GLOW
+        let glowSize = base * 2.1 * scale
+        let glowGeo = SCNPlane(width: glowSize, height: glowSize)
+        glowGeo.cornerRadius = glowSize / 2
+        glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.25))] // less alpha
+
+        let glow = SCNNode(geometry: glowGeo)
+        glow.position.z = z
+        z += 0.002
+
+        uiNode.addChildNode(glow)
+
+
+        // WAVE
+        let waveSize = base * 1.9 * scale
+        let waveGeo = SCNPlane(width: waveSize, height: waveSize)
+        waveGeo.cornerRadius = waveSize / 2
+        waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.6))]
+
         let wave = SCNNode(geometry: waveGeo)
-        wave.position.z = -0.01
+        wave.position.z = z
+        z += 0.002
         addDJWaveAnimation(to: wave)
         uiNode.addChildNode(wave)
 
-        // Outer ring
+
+        // OUTER RING
         let outerRing = SCNNode(
-            geometry: SCNTorus(ringRadius: base * 1.5 * scale, pipeRadius: 0.06 * scale)
+            geometry: SCNTorus(
+                ringRadius: base * 1.1 * scale,
+                pipeRadius: base * 0.08 * scale
+            )
         )
         outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         outerRing.eulerAngles.x = -.pi / 2
-        outerRing.position.z = 0.01
+        outerRing.position.z = z
+        z += 0.002
         uiNode.addChildNode(outerRing)
 
-        // Inner ring
+
+        // INNER RING
         let innerRing = SCNNode(
-            geometry: SCNTorus(ringRadius: base * 1.2 * scale, pipeRadius: 0.05 * scale)
+            geometry: SCNTorus(
+                ringRadius: base * 0.85 * scale,
+                pipeRadius: base * 0.07 * scale  
+            )
         )
         innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]
         innerRing.eulerAngles.x = -.pi / 2
-        innerRing.position.z = 0.015
+        innerRing.position.z = z
+        z += 0.002
         uiNode.addChildNode(innerRing)
 
-        // Fill
+
+        // FILL
         let fill = SCNNode(
-            geometry: SCNCylinder(radius: base * 1.0 * scale, height: 0.02 * scale)
+            geometry: SCNCylinder(
+                radius: base * 0.75 * scale,
+                height: base * 0.10 * scale
+            )
         )
         fill.geometry?.materials = [constantMaterial(color: UIColor.white)]
         fill.eulerAngles.x = -.pi / 2
-        fill.position.z = 0.02
+        fill.position.z = z
+        z += 0.002
         uiNode.addChildNode(fill)
 
-        // Text
-        let textGeo = SCNText(string: "DJ", extrusionDepth: 0.01 * scale)
-        textGeo.font = .boldSystemFont(ofSize: 6 * scale)
+        // TEXT
+        let textGeo = SCNText(string: "DJ", extrusionDepth: base * 0.04 * scale)
+        textGeo.font = .boldSystemFont(ofSize: base * 8 * scale) // ⬆ bigger
         textGeo.flatness = 0.05
-        textGeo.materials = [constantMaterial(color: UIColor.white)]
+        textGeo.materials = [constantMaterial(color: UIColor.black)]
 
         let textNode = SCNNode(geometry: textGeo)
-        let (tMin, tMax) = textGeo.boundingBox
-        textNode.pivot = SCNMatrix4MakeTranslation(
-            tMin.x + (tMax.x - tMin.x) / 2,
-            tMin.y + (tMax.y - tMin.y) / 2,
-            0
-        )
 
-        textNode.scale = SCNVector3(0.1 * scale, 0.1 * scale, 0.1 * scale)
-        textNode.position.z = Float(0.25 * scale)
+        let (min, max) = textGeo.boundingBox
+        let centerX = (min.x + max.x) / 2
+        let centerY = (min.y + max.y) / 2
+
+        textNode.pivot = SCNMatrix4MakeTranslation(centerX, centerY * 0.9, 0)
+
+        // slightly bigger scale
+        textNode.scale = SCNVector3(0.12, 0.12, 0.12)
+
+        textNode.position = SCNVector3(0, 0, z)
         textNode.renderingOrder = 1000
+
         uiNode.addChildNode(textNode)
-
-        // Glow halo
-        let glowGeo = SCNPlane(width: base * 2.5 * scale, height: base * 2.5 * scale)
-        glowGeo.cornerRadius = (base * 2.5 * scale) / 2
-        glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.4))]
-        let glow = SCNNode(geometry: glowGeo)
-        glow.position.z = -0.02
-        glow.runAction(.repeatForever(.sequence([
-            .scale(to: 1.5, duration: 0.8),
-            .scale(to: 0.8, duration: 0.8)
-        ])))
-        uiNode.addChildNode(glow)
-
+        
         root.runAction(.repeatForever(.sequence([
             .moveBy(x: 0, y: 1.0 * scale, z: 0, duration: 1.5),
             .moveBy(x: 0, y: -1.0 * scale, z: 0, duration: 1.5)
@@ -1367,7 +1457,6 @@ private extension Tables3DMapVC {
         root.addChildNode(uiNode)
         return root
     }
- 
     func addDJWaveAnimation(to node: SCNNode) {
         node.removeAllActions()
         node.runAction(.repeatForever(.sequence([
@@ -1445,7 +1534,6 @@ private extension Tables3DMapVC {
         let depth = size.z
 
         // MARK: CAMERA
-
         let camera = SCNCamera()
         camera.usesOrthographicProjection = false
 
@@ -1743,7 +1831,7 @@ private extension Tables3DMapVC {
 
         return bestNode
     }
- 
+     
     func worldBoundingCorners(node: SCNNode, min lo: SCNVector3, max hi: SCNVector3) -> [SCNVector3] {
         [
             SCNVector3(lo.x, lo.y, lo.z), SCNVector3(lo.x, lo.y, hi.z),
