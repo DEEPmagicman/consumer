@@ -1295,7 +1295,7 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uE5-AA-x5g">
                                     <rect key="frame" x="16" y="17" width="193.33333333333334" height="39"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ken-Wk-Vwe" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ken-Wk-Vwe" customClass="ShimmerView2" customModule="Speakeasy" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="193.33333333333334" height="22"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
@@ -1310,7 +1310,7 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Psw-1m-NVw">
                                             <rect key="frame" x="0.0" y="26" width="193.33333333333334" height="13"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rg-2d-2Cb" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rg-2d-2Cb" customClass="ShimmerView2" customModule="Speakeasy" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="120" height="13"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
@@ -1384,7 +1384,7 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                 </view>
-                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zNt-vj-EYP" customClass="ShimmerView" customModule="Speakeasy" customModuleProvider="target">
+                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zNt-vj-EYP" customClass="ShimmerView2" customModule="Speakeasy" customModuleProvider="target">
                                     <rect key="frame" x="284" y="19.666666666666629" width="94" height="42"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <userDefinedRuntimeAttributes>

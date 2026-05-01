@@ -52,7 +52,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jul 15, 2024" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWz-Xu-GuF">
-                                        <rect key="frame" x="0.0" y="244" width="76.666666666666671" height="17"/>
+                                        <rect key="frame" x="0.0" y="244" width="80" height="17"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                         <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -64,19 +64,19 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 tickets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mUz-E7-jfy">
-                                        <rect key="frame" x="0.0" y="298" width="53" height="17"/>
+                                        <rect key="frame" x="0.0" y="298" width="56" height="17"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jio-N3-uWu">
-                                        <rect key="frame" x="61" y="297.33333333333331" width="5.6666666666666714" height="18.666666666666686"/>
+                                        <rect key="frame" x="64" y="297.33333333333331" width="9" height="18.666666666666686"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="16"/>
                                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium Experience" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yS6-Uf-Adk">
-                                        <rect key="frame" x="74.666666666666671" y="298" width="129.66666666666663" height="17"/>
+                                        <rect key="frame" x="80.999999999999986" y="298" width="136.66666666666663" height="17"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -103,7 +103,7 @@
                                     <constraint firstItem="Jie-q0-fi2" firstAttribute="top" secondItem="pWz-Xu-GuF" secondAttribute="bottom" constant="10" id="zmj-Op-0ra"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uVm-vS-JWI">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uVm-vS-JWI">
                                 <rect key="frame" x="374" y="15" width="80" height="21"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="749" text="Upcoming" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vPr-Ei-VN0">

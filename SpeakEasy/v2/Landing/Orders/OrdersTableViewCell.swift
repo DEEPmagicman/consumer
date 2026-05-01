@@ -43,9 +43,8 @@ final class OrdersTableViewCell: UITableViewCell {
         time.text = nil
         locationName.text = nil
         ticketLbl.text = nil
+        upComingView.isHidden = true
         premiumExperienceLbl.text = nil
-        
-        upComingView.isHidden = false
         upComingLbl.text = nil
         
         hideShimmer()

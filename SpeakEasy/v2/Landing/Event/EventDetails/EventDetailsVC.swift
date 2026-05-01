@@ -69,9 +69,9 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var ticketShimmerView: ShimmerView!
-    @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
-    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
+    @IBOutlet weak var ticketShimmerView: ShimmerView2!
+    @IBOutlet weak var ticketTitleShimmerView: ShimmerView2!
+    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView2!
     @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
     @IBOutlet weak var ticketTitleStackView: UIStackView!
     @IBOutlet weak var eventAddressView: UIView!
@@ -1022,6 +1022,7 @@ class EventDetailsVC: UIViewController {
             } else if event.eventTicket?.count ?? 0 == 0 {
                 ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
                 buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+                buyNowBtnView.isUserInteractionEnabled = false
             } else {
                 let lowestPrice = event.lowestPriceTicket?.price ?? 0
                 let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
