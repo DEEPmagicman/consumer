@@ -152,8 +152,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         discountView.isHidden = true
 
         checkBox.setImage(UIImage(named: "ic_checkbox_unchecked"), for: .normal)
-        checkBox.setImage(UIImage(named: "checkBox"), for: .selected)
         checkBox.isSelected = true
+        purchaseTicketBtn.isUserInteractionEnabled = false
         
         let imageUrlString = "\(SharedURL.amazonStorage)\(venue?.venueAttachment?.first?.key ?? "")"
         if let url = URL(string: imageUrlString) {
@@ -408,6 +408,21 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
                 : .identity
         }
     }
+    
+    @IBAction func onClickCheckBox(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        
+        let image = sender.isSelected
+            ? UIImage(named: "checkBox")
+            : UIImage(named: "ic_checkbox_unchecked")
+        
+        sender.setImage(image, for: .normal)
+
+        // enable / disable purchase button
+        purchaseTicketBtn.isEnabled = sender.isSelected
+        purchaseTicketBtn.alpha = sender.isSelected ? 1.0 : 0.5
+    }
+    
 }
 
 extension CoverTicketCheckOutVC {
@@ -691,6 +706,8 @@ extension CoverTicketCheckOutVC {
         upSellTicketsTableView.reloadData()
         upSellFeesAndTaxTableView.reloadData()
     }
+    
+    
 }
 
 extension CoverTicketCheckOutVC {
@@ -750,6 +767,8 @@ extension CoverTicketCheckOutVC {
         fetchPaymentIntentAndSetup(promoCode: promo)
         addPromoCodeBtn.hideLoader()
     }
+    
+    
 }
 
 extension CoverTicketCheckOutVC {

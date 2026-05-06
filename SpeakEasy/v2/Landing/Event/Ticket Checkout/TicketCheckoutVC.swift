@@ -157,6 +157,8 @@ final class TicketCheckoutVC: UIViewController {
         addPromoCodeBtn.indicator = MaterialLoadingIndicator(color: .white)
         addPromoCodeBtn.bgColor = .clear
         updatePromoButtonIcon()
+        purchaseTicketBtn.isEnabled = false
+        purchaseTicketBtn.alpha = 0.5
 
         calculateTotal()
         setupHeaderData()
@@ -412,8 +414,10 @@ final class TicketCheckoutVC: UIViewController {
             self.updateUIWithPaymentDetail(paymentDetail)
             self.setupStripePaymentSheet(clientSecret: clientSecret, ephemeralKey: self.ephemeralKey)
 
-            self.purchaseTicketBtn.isUserInteractionEnabled = true
-            self.purchaseTicketBtn.alpha = 1
+            let isChecked = self.checkBox.isSelected
+
+            self.purchaseTicketBtn.isEnabled = isChecked
+            self.purchaseTicketBtn.alpha = isChecked ? 1.0 : 0.5
         }
     }
 
@@ -596,10 +600,14 @@ final class TicketCheckoutVC: UIViewController {
     
     @IBAction func onClickCheckBox(_ sender: UIButton) {
         sender.isSelected.toggle()
-        let image = sender.isSelected ? UIImage(named: "checkBox") : UIImage(named: "ic_checkbox_unchecked")
+        
+        let image = sender.isSelected
+            ? UIImage(named: "checkBox")
+            : UIImage(named: "ic_checkbox_unchecked")
+        
         sender.setImage(image, for: .normal)
-        sender.titleLabel?.textColor = .white
-
+        purchaseTicketBtn.isEnabled = sender.isSelected
+        purchaseTicketBtn.alpha = sender.isSelected ? 1.0 : 0.5
         UIView.animate(withDuration: 0.15, animations: {
             sender.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
         }) { _ in

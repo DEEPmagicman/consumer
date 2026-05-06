@@ -945,7 +945,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == ticketTableView {
-            return isLoading ? 5 : tickets.count
+            return isLoading ? 4 : tickets.count
         } else if tableView == groupTableView {
             return groupedNormalTickets.count
         }
