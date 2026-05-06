@@ -69,9 +69,9 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var ticketShimmerView: ShimmerView2!
-    @IBOutlet weak var ticketTitleShimmerView: ShimmerView2!
-    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView2!
+    @IBOutlet weak var ticketShimmerView: ShimmerView!
+    @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
+    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
     @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
     @IBOutlet weak var ticketTitleStackView: UIStackView!
     @IBOutlet weak var eventAddressView: UIView!
@@ -186,6 +186,10 @@ class EventDetailsVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startAutoScrollIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+               self.mainImg.hero.id  = nil
+               self.titleLbl.hero.id   = nil
+           }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -310,32 +314,6 @@ class EventDetailsVC: UIViewController {
         saveBtn.tintColor =  .white
     }
 
-//    func showSkeleton() {
-//        view.layoutIfNeeded()
-//
-//        ticketShimmerView.isHidden = false
-//        ticketTitleShimmerView.isHidden = false
-//        buyNowBtnShimmerView.isHidden = false
-////        buyNowBtnShimmerView.cornerRadius = 30
-//        ticketTitleStackShimmerView.isHidden = false
-//        ticketTitleStackView.isHidden = true
-//
-//        ticketShimmerView.startAnimating()
-//        ticketTitleShimmerView.startAnimating()
-//        buyNowBtnShimmerView.startAnimating()
-//    }
-//
-//    func hideSkeleton() {
-//        ticketShimmerView.stopAnimating()
-//        ticketTitleShimmerView.stopAnimating()
-//        buyNowBtnShimmerView.stopAnimating()
-//
-//        ticketShimmerView.isHidden = true
-//        ticketTitleShimmerView.isHidden = true
-//        buyNowBtnShimmerView.isHidden = true
-//        ticketTitleStackShimmerView.isHidden = true
-//        ticketTitleStackView.isHidden = false
-//    }
     
     
     private func setupMainImageStyle() {
@@ -465,9 +443,6 @@ class EventDetailsVC: UIViewController {
             self.updateLineUpView()
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.hideSkeleton()
-            }
         }
     }
     
@@ -544,6 +519,7 @@ class EventDetailsVC: UIViewController {
     private func getTicketLinksAndRefresh() {
         guard let eventId = event?.uniqueId else {
             setupData()
+            hideSkeleton()
             return
         }
 
@@ -557,6 +533,7 @@ class EventDetailsVC: UIViewController {
             }
 
             self.setupData()
+            hideSkeleton()
         }
     }
 
@@ -1010,19 +987,43 @@ class EventDetailsVC: UIViewController {
 
         if event.eventTicket == nil {
         } else {
+            let eventTicketSettings = event.eventTicketSettings
+
             if event.isPausedSellingAllTickets == true {
                 ticketsTitleLbl.text = "Tickets from Free"
                 buyNowBtnView.isUserInteractionEnabled = true
-            } else if event.isSoldOutAllTickets == true {
-                ticketsTitleLbl.text = "It was a great time!"
-                buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+
+            } else if event.isSaleEndedAllTickets == true {
+                ticketsTitleLbl.text = eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!"
+
+                if eventTicketSettings?.isSaleEndedTextEnabled == true {
+                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                } else {
+                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                }
+
                 buyNowBtnLbl.textColor = .black
                 buyNowBtnView.isUserInteractionEnabled = false
                 buyNowBtnView.backgroundColor = UIColor.lightGray
+
+            } else if event.isSoldOutAllTickets == true {
+                if eventTicketSettings?.isSoldOutTextEnabled == true {
+                    ticketsTitleLbl.text = eventTicketSettings?.soldOutText ?? "It was a great time!"
+                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                } else {
+                    ticketsTitleLbl.text = "It was a great time!"
+                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                }
+
+                buyNowBtnLbl.textColor = .black
+                buyNowBtnView.isUserInteractionEnabled = false
+                buyNowBtnView.backgroundColor = UIColor.lightGray
+
             } else if event.eventTicket?.count ?? 0 == 0 {
                 ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
                 buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
                 buyNowBtnView.isUserInteractionEnabled = false
+
             } else {
                 let lowestPrice = event.lowestPriceTicket?.price ?? 0
                 let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -2336,7 +2337,7 @@ extension EventDetailsVC: MKMapViewDelegate {
 
 final class EventDetailsSkeletonView: UIView {
 
-    private var allShimmerViews: [ShimmerView2] = []
+    private var allShimmerViews: [ShimmerView] = []
     private var didSetup = false
 
     override func layoutSubviews() {
@@ -2449,7 +2450,7 @@ final class EventDetailsSkeletonView: UIView {
     // MARK: - Helpers (same as Home)
 
     private func make(_ frame: CGRect, corner: CGFloat = 8) {
-        let sv = ShimmerView2(frame: frame)
+        let sv = ShimmerView(frame: frame)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)
@@ -2457,7 +2458,7 @@ final class EventDetailsSkeletonView: UIView {
     }
 
     private func makeLighter(_ frame: CGRect, corner: CGFloat = 6) {
-        let sv = ShimmerView2(frame: frame, lighter: true)
+        let sv = ShimmerView(frame: frame, lighter: true)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)

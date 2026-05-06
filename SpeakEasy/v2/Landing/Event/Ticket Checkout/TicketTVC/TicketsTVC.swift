@@ -29,7 +29,7 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     @IBOutlet weak var comingSoonView: UIView!
     @IBOutlet weak var topSapraterView: UIView!
-    @IBOutlet weak var shimmerView: ShimmerView2!
+    @IBOutlet weak var shimmerView: ShimmerView!
     @IBOutlet weak var rsvpBtn: UIButton!
     
     var onPlusTap: ((EventTicket) -> Void)?

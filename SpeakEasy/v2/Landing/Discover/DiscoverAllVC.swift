@@ -197,6 +197,43 @@ final class DiscoverAllVC: UIViewController {
         }
     }
     
+    // MARK: - DiscoverAllVC — fix openEventDetails completely
+
+    private func openEventDetails(_ collectionView: UICollectionView,
+                                   event: Event,
+                                   indexPath: IndexPath) {
+        let suffix = collectionView.accessibilityIdentifier ?? ""
+
+        // ✅ Step 1 — clear ALL hero IDs across ALL collection views first
+        clearAllHeroIDs()
+
+        // ✅ Step 2 — set ONLY the tapped cell
+        if let cell = collectionView.cellForItem(at: indexPath) as? EventCVC {
+            cell.applyHeroIDs(event: event, suffix: suffix)
+        } else if let cell = collectionView.cellForItem(at: indexPath) as? EventV2CVC {
+            cell.image.hero.id     = "event.image.\(event.id ?? "").\(suffix)"
+            cell.eventName.hero.id = "event.title.\(event.id ?? "").\(suffix)"
+        }
+
+        Navigate.eventDetailsVC(self, event: event, heroSuffix: suffix)
+
+        // ✅ Step 3 — clear immediately after push so back-transition is clean
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.clearAllHeroIDs()
+        }
+    }
+
+    // ✅ Clears ALL cells across ALL three collection views
+    private func clearAllHeroIDs() {
+        tonightEventCollectionView.visibleCells.forEach {
+            ($0 as? EventCVC)?.clearHeroIDs()
+        }
+        allEventsCollectionView.visibleCells.forEach {
+            ($0 as? EventCVC)?.clearHeroIDs()
+            ($0 as? EventV2CVC)?.clearHeroIDs()
+        }
+    }
+    
     // MARK: - Refresh
     // Called on city change — re-show parent shimmer then reload everything
 
@@ -297,7 +334,7 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
             // No cell shimmer — full-screen skeleton covers this
             cell.setupData(event: todaysEvents[indexPath.item])
             return cell
-
+            
         case venueListCollectionView:
             let cell: VenueCVC = collectionView.dequeue(
                 withIdentifier: VenueCVC.identifier, for: indexPath)
@@ -335,28 +372,6 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
         }
     }
     
-    private func openEventDetails(_ collectionView: UICollectionView,
-                                  event: Event,
-                                  indexPath: IndexPath) {
-        let suffix = collectionView.accessibilityIdentifier ?? ""
-        
-        collectionView.visibleCells.forEach {
-            ($0 as? EventCVC)?.bgImg.hero.id         = nil
-            ($0 as? EventCVC)?.eventTitleLbl.hero.id  = nil
-            ($0 as? EventV2CVC)?.image.hero.id        = nil
-            ($0 as? EventV2CVC)?.eventName.hero.id    = nil
-        }
-        
-        if let cell = collectionView.cellForItem(at: indexPath) as? EventCVC {
-            cell.bgImg.hero.id         = "event.image.\(event.id ?? "").\(suffix)"
-            cell.eventTitleLbl.hero.id  = "event.title.\(event.id ?? "").\(suffix)"
-        } else if let cell = collectionView.cellForItem(at: indexPath) as? EventV2CVC {
-            cell.image.hero.id     = "event.image.\(event.id ?? "").\(suffix)"
-            cell.eventName.hero.id = "event.title.\(event.id ?? "").\(suffix)"
-        }
-        
-        Navigate.eventDetailsVC(self, event: event, heroSuffix: suffix)
-    }
 }
 
 import UIKit
@@ -364,53 +379,6 @@ import UIKit
 // MARK: - ShimmerView
 // Single reusable shimmer tile. Add as subview, call startAnimating().
 
-final class ShimmerView2: UIView {
-
-    private let gradientLayer = CAGradientLayer()
-
-    /// - Parameter lighter: When true, uses a brighter base so the tile is
-    ///   visible when overlaid on top of a same-colour shimmer card.
-    init(frame: CGRect = .zero, lighter: Bool = false) {
-        super.init(frame: frame)
-        setup(lighter: lighter)
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup(lighter: false)
-    }
-
-    private func setup(lighter: Bool) {
-        let base      = UIColor(white: lighter ? 0.14 : 0.17, alpha: 1).cgColor
-        let highlight = UIColor(white: lighter ? 0.14 : 0.26, alpha: 1).cgColor
-
-        gradientLayer.colors     = [base, highlight, base]
-        gradientLayer.locations  = [0.0, 0.5, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        gradientLayer.endPoint   = CGPoint(x: 1, y: 0.5)
-        layer.addSublayer(gradientLayer)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = bounds
-    }
-
-    func startAnimating() {
-        guard gradientLayer.animation(forKey: "shimmer") == nil else { return }
-        let anim            = CABasicAnimation(keyPath: "locations")
-        anim.fromValue      = [-0.8, -0.4, 0.0]
-        anim.toValue        = [1.0,  1.4,  1.8]
-        anim.duration       = 1.5
-        anim.repeatCount    = .infinity
-        anim.timingFunction = CAMediaTimingFunction(name: .linear)
-        gradientLayer.add(anim, forKey: "shimmer")
-    }
-
-    func stopAnimating() {
-        gradientLayer.removeAnimation(forKey: "shimmer")
-    }
-}
 
 // MARK: - HomeSkeletonView
 // Place this as a full-screen overlay on top of DiscoverAllVC's root view.
@@ -418,7 +386,7 @@ final class ShimmerView2: UIView {
 
 final class HomeSkeletonView: UIView {
 
-    private var allShimmerViews: [ShimmerView2] = []
+    private var allShimmerViews: [ShimmerView] = []
     private var didSetup = false
 
     // MARK: - Layout trigger
@@ -540,7 +508,7 @@ final class HomeSkeletonView: UIView {
 
     /// Standard shimmer tile — same base colour as card backgrounds.
     private func make(_ frame: CGRect, corner: CGFloat = 8) {
-        let sv = ShimmerView2(frame: frame)
+        let sv = ShimmerView(frame: frame)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)
@@ -550,7 +518,7 @@ final class HomeSkeletonView: UIView {
     /// Slightly lighter shimmer tile — used for text skeleton lines that sit
     /// INSIDE a card so they remain visible against the card background.
     private func makeLighter(_ frame: CGRect, corner: CGFloat = 6) {
-        let sv = ShimmerView2(frame: frame, lighter: true)
+        let sv = ShimmerView(frame: frame, lighter: true)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)

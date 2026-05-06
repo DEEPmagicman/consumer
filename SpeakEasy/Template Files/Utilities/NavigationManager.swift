@@ -498,11 +498,18 @@ final class Navigate {
     
     static func eventDetailsVC(_ sender: UIViewController, event: Event?, heroSuffix: String? = "") {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
-        vc.event = event
+        vc.event        = event
         vc.venueDetails = event?.venue
-        vc.heroSuffix = heroSuffix ?? ""
+        vc.heroSuffix   = heroSuffix ?? ""
         vc.hero.isEnabled = true
+
+        // ✅ selectBy lets hero handle matched views, fade everything else
         sender.navigationController?.hero.isEnabled = true
+        sender.navigationController?.hero.navigationAnimationType = .selectBy(
+            presenting: .fade,
+            dismissing: .fade
+        )
+
         sender.pushVC(vc)
     }
     

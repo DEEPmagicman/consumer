@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,10 +32,10 @@
                                 <rect key="frame" x="0.0" y="118" width="393" height="734"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blO-r7-04o">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1060.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="1067.3333333333333"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="YZp-Ho-6vy">
-                                                <rect key="frame" x="0.0" y="12" width="393" height="1038.3333333333333"/>
+                                                <rect key="frame" x="0.0" y="12" width="393" height="1045.3333333333333"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JRo-yq-Ry4">
                                                         <rect key="frame" x="0.0" y="-106" width="393" height="106"/>
@@ -122,7 +122,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXE-cQ-2Xm">
-                                                        <rect key="frame" x="0.0" y="0.0" width="393" height="340"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="393" height="347"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Discover Experiences" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IEx-au-3Yd">
                                                                 <rect key="frame" x="16" y="10" width="187" height="22"/>
@@ -167,10 +167,10 @@
                                                                 </constraints>
                                                             </view>
                                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="83y-Sd-L9H">
-                                                                <rect key="frame" x="16" y="42" width="361" height="298"/>
+                                                                <rect key="frame" x="16" y="42" width="361" height="305"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="298" id="htx-Va-Yj9"/>
+                                                                    <constraint firstAttribute="height" constant="305" id="htx-Va-Yj9"/>
                                                                 </constraints>
                                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="xqz-Mi-cd2">
                                                                     <size key="itemSize" width="128" height="128"/>
@@ -207,7 +207,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y8Q-AN-sGo">
-                                                        <rect key="frame" x="0.0" y="348" width="393" height="212"/>
+                                                        <rect key="frame" x="0.0" y="355" width="393" height="212"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium experiences for you" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHq-ZY-4DM">
                                                                 <rect key="frame" x="16" y="10" width="361" height="22"/>
@@ -314,7 +314,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k4U-Ul-kyS">
-                                                        <rect key="frame" x="0.0" y="356" width="393" height="146.33333333333337"/>
+                                                        <rect key="frame" x="0.0" y="363" width="393" height="146.33333333333337"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wU7-2d-jDN">
                                                                 <rect key="frame" x="16" y="15.999999999999993" width="361" height="114.33333333333331"/>
@@ -407,7 +407,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hYZ-Jv-bge">
-                                                        <rect key="frame" x="0.0" y="518.33333333333337" width="393" height="260"/>
+                                                        <rect key="frame" x="0.0" y="525.33333333333337" width="393" height="260"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events in New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ot-ZB-Ecr">
                                                                 <rect key="frame" x="16" y="0.0" width="361" height="22"/>
@@ -492,7 +492,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-H7-BbT">
-                                                        <rect key="frame" x="0.0" y="794.33333333333337" width="393" height="244.00000000000011"/>
+                                                        <rect key="frame" x="0.0" y="801.33333333333337" width="393" height="244.00000000000011"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Venues in New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9TC-x7-joR">
                                                                 <rect key="frame" x="16" y="0.0" width="361" height="22"/>

@@ -67,6 +67,21 @@ struct Event: Codable {
         return filterTicket?.count == allTickets?.count
     }
     
+    var isSaleEndedAllTickets: Bool {
+        if eventTicket?.count == 0 { return false }
+
+        let allTickets = eventTicket?.filter {
+            ($0.isDeleted == false) &&
+            ($0.sellingPaused == false)
+        }
+
+        let filterTicket = allTickets?.filter {
+            (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) < Date())
+        }
+
+        return filterTicket?.count == allTickets?.count
+    }
+    
     var isSoldOutAllTickets: Bool {
         if eventTicket?.count == 0 { return false }
         let allTickets = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) }
@@ -403,19 +418,26 @@ struct ArtistData: Codable {
 }
 
 struct EventTicketSettings: Codable {
-    
     var isUpFront: Bool
     var isProcessingFeePassToCustomer: Bool
     var isEnableSalesTax: Bool
     var hideSoldOut: Bool
     var hideLowInventory: Bool
-//    var salesTaxName: String
     var salesTax: Double
     var isCustomFeeTaxable: Bool
     var isProcessingFeeTaxable: Bool
     var showTicketListingOnMainScreen: Bool
-}
 
+    var isSoldOutTextEnabled: Bool?
+    var soldOutText: String?
+    var isSaleEndedTextEnabled: Bool?
+    var saleEndedText: String?
+    var collectShippingAddress: Bool?
+    var shippingNote: String?
+    var endSalesOnEventEnd: Bool?
+    var stripePerc: Double?
+    var stripeFlat: Double?
+}
 struct Artists: Codable {
 
 //    var id: String

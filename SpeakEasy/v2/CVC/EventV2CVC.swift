@@ -14,6 +14,8 @@ final class EventV2CVC: UICollectionViewCell {
     @IBOutlet weak var eventName: UILabel!
     @IBOutlet weak var eventDate: UILabel!
     @IBOutlet weak var venueName: UILabel!
+    @IBOutlet weak var bgView: UIView!
+    
     
     private var shimmerLayers: [ShimmerView] = []
     
@@ -27,6 +29,12 @@ final class EventV2CVC: UICollectionViewCell {
         shimmerView.frame = contentView.bounds
     }
     
+    // EventV2CVC
+    func clearHeroIDs() {
+        image.hero.id     = nil
+        eventName.hero.id = nil
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -38,6 +46,7 @@ final class EventV2CVC: UICollectionViewCell {
         
         // Show shimmer again
         shimmerView.isHidden = false
+        bgView.isHidden = true
         shimmerLayers.forEach { $0.isHidden = false }
     }
     
@@ -70,6 +79,9 @@ final class EventV2CVC: UICollectionViewCell {
         shimmerView.isHidden = true
         shimmerLayers.forEach { $0.isHidden = true }
         
+        // Show actual content
+        bgView.isHidden = false
+        
         // Image
         image.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),
@@ -95,11 +107,7 @@ final class EventV2CVC: UICollectionViewCell {
                 customTimeZone: timezone
             )
             
-            if !dateText.isEmpty {
-                eventDate.text = "\(dateText)"
-            } else {
-                eventDate.text = ""
-            }
+            eventDate.text = dateText.isEmpty ? "" : dateText
         }
     }
 }
