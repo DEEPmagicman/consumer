@@ -27,6 +27,9 @@ class TableCheckOutVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let vc = TablesListVC()
+        if self.event?.whiteLabelColor == nil {
+            self.event?.whiteLabelColor = "#9D4995"
+        }
         vc.event = event
         vc.seatingAreas = seatingAreas
         vc.seatingAreasFilteredOut = seatingAreasFilteredOut
