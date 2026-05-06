@@ -492,19 +492,51 @@ private extension Tables3DMapVC {
             }
         }
     }
- 
+
+        
     func setSceneScaleFactor(scene: SCNScene) {
-        var minVec = SCNVector3(Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude)
+        var minVec = SCNVector3( Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude)
         var maxVec = SCNVector3(-Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude)
+
         scene.rootNode.enumerateChildNodes { node, _ in
+            guard node.geometry != nil, !node.isHidden else { return }
+
+            // Skip background/environment/sky meshes that inflate bounds
+            let name = (node.name ?? node.geometry?.name ?? "").lowercased()
+            let skipKeywords = ["sky", "dome", "sphere", "environment", "background",
+                                "backdrop", "city", "world", "ceiling", "floor", "ground",
+                                "wall", "room", "exterior", "terrain", "landscape"]
+            if skipKeywords.contains(where: { name.contains($0) }) { return }
+
             let (bmin, bmax) = node.boundingBox
+            
+            // Skip nodes with extremely large individual dimensions (likely background geo)
+            let nodeSize = max(abs(bmax.x - bmin.x), abs(bmax.y - bmin.y), abs(bmax.z - bmin.z))
+            if nodeSize > 500 { return }  // skip anything bigger than 500 units
+
             let worldMin = node.convertPosition(bmin, to: nil)
             let worldMax = node.convertPosition(bmax, to: nil)
-            minVec.x = Swift.min(minVec.x, worldMin.x); minVec.y = Swift.min(minVec.y, worldMin.y); minVec.z = Swift.min(minVec.z, worldMin.z)
-            maxVec.x = Swift.max(maxVec.x, worldMax.x); maxVec.y = Swift.max(maxVec.y, worldMax.y); maxVec.z = Swift.max(maxVec.z, worldMax.z)
+            minVec.x = Swift.min(minVec.x, worldMin.x)
+            minVec.y = Swift.min(minVec.y, worldMin.y)
+            minVec.z = Swift.min(minVec.z, worldMin.z)
+            maxVec.x = Swift.max(maxVec.x, worldMax.x)
+            maxVec.y = Swift.max(maxVec.y, worldMax.y)
+            maxVec.z = Swift.max(maxVec.z, worldMax.z)
         }
+
+        guard minVec.x.isFinite, maxVec.x.isFinite else {
+            print("⚠️ setSceneScaleFactor: no valid nodes found, defaulting to 10")
+            self.sceneScaleFactor = 10
+            return
+        }
+
         let size = SCNVector3(maxVec.x - minVec.x, maxVec.y - minVec.y, maxVec.z - minVec.z)
-        self.sceneScaleFactor = max(size.x, size.y, size.z)
+        let raw  = max(size.x, size.y, size.z)
+
+        // Hard clamp: never let sceneScaleFactor go above 50
+        self.sceneScaleFactor = raw
+
+        print("📐 sceneScaleFactor: \(self.sceneScaleFactor) (raw: \(raw))")
     }
     
     func resetSceneState() {
@@ -633,45 +665,64 @@ private extension Tables3DMapVC {
     func makeTableDot(position: simd_float3, seating: SeatingAreaDTO, sourceNode: SCNNode) -> SCNNode {
         let root = SCNNode()
         let scale = uiScale(for: position)
-        root.simdPosition = position + simd_float3(0, 0.05, 0)
+        let yOffset = Float(0.15 * scale)
+        root.simdPosition = position + simd_float3(0, yOffset, 0)
+        
         let uiNode = makeBillboardNode()
+        uiNode.renderingOrder = 100
         uiNode.name = "pin"
+        
         let dotColor: UIColor = seating.allowActions ? PinStyle.activeColor : PinStyle.inactiveColor
+        
         let hitGeo = SCNPlane(width: 0.75 * scale, height: 0.75 * scale)
         hitGeo.cornerRadius = 0.375 * scale
         hitGeo.materials = [constantMaterial(color: UIColor.clear)]
+        
         let hitNode = SCNNode(geometry: hitGeo); hitNode.name = "hit"
         uiNode.addChildNode(hitNode)
+        
         if seating.allowActions {
-            let pulseGeo = SCNPlane(width: 0.55 * scale, height: 0.55 * scale)
-            pulseGeo.cornerRadius = (0.55 * scale) / 2
+            let pulseGeo = SCNPlane(width: 0.45 * scale, height: 0.45 * scale)
+            pulseGeo.cornerRadius = (0.45 * scale) / 2
             pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.22))]
             let pulse = SCNNode(geometry: pulseGeo); pulse.name = "wave"; pulse.position.z = -0.002
             addSoftPulseAnimation(to: pulse)
             uiNode.addChildNode(pulse)
         }
-        let glowGeo = SCNPlane(width: 0.24 * scale, height: 0.24 * scale)
-        glowGeo.cornerRadius = (0.24 * scale) / 2
+        
+        let glowGeo = SCNPlane(width: 0.12 * scale, height: 0.12 * scale)
+        glowGeo.cornerRadius = (0.12 * scale) / 2
         glowGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.45))]
+        
         let glow = SCNNode(geometry: glowGeo); glow.name = "glow"; glow.position.z = -0.001
         uiNode.addChildNode(glow)
-        let dotGeo = SCNPlane(width: 0.16 * scale, height: 0.16 * scale)
-        dotGeo.cornerRadius = (0.16 * scale) / 2
+        
+        let dotGeo = SCNPlane(width: 0.15 * scale, height: 0.15 * scale)
+        dotGeo.cornerRadius = (0.15 * scale) / 2
         dotGeo.materials = [constantMaterial(color: dotColor)]
+        
         let dot = SCNNode(geometry: dotGeo); dot.name = "circle"; dot.position.z = 0.001
         uiNode.addChildNode(dot)
-        let ring = SCNNode(geometry: SCNTorus(ringRadius: 0.095 * scale, pipeRadius: 0.008 * scale))
+        
+        let ring = SCNNode(geometry: SCNTorus(ringRadius: 0.090 * scale, pipeRadius: 0.003 * scale))
         ring.name = "ring"
         ring.geometry?.materials = [constantMaterial(color: UIColor.white.withAlphaComponent(0.9))]
         ring.eulerAngles.x = -.pi / 2; ring.position.z = 0.003
         uiNode.addChildNode(ring)
-        let line = makeStraightLine(height: 0.72 * scale); line.name = "line"; line.opacity = 0
+        
+        let line = makeStraightLine(height: 0.25 * scale, scale: scale);
+        line.name = "line";
+        line.position = SCNVector3(0, Float(0.21 * scale), 0)
+        line.opacity = 0; line.isHidden = true
         uiNode.addChildNode(line)
+        
         let label = makeLabelCard(title: seating.name ?? "", guests: seating.maxGuest ?? 0,
                                   minAmount: seating.minimum, dotColor: dotColor, scale: scale)
-        label.name = "label"; label.position = SCNVector3(0, Float(1.25 * scale), 0)
+        label.name = "label";
+        label.position = SCNVector3(0, Float(0.9 * scale), 0)
         label.opacity = 0; label.isHidden = true
         uiNode.addChildNode(label)
+        
         uiNode.seatingMeta = SeatingMeta(
             seatingAreaId: seating.parentSeatingAreaId ?? seating.id ?? "",
             name: seating.name ?? "", parentId: seating.parentSeatingAreaId ?? "",
@@ -680,14 +731,19 @@ private extension Tables3DMapVC {
         root.addChildNode(uiNode)
         return root
     }
-    
+        
     func highlightMeshOnlySelected(meta: SeatingMeta) {
         resetAllMeshes()
         guard let nodes = meshNodesBySeatingId[meta.seatingAreaId] else { return }
         for node in nodes {
             applyUniqueMaterial(to: node)
             node.geometry?.materials.forEach { mat in
-                mat.emission.contents = UIColor.systemPink.withAlphaComponent(0.05)
+                if let hex = self.event?.whiteLabelColor {
+                    let color = UIColor(hex: hex)
+                    mat.emission.contents = color
+                } else {
+                    mat.emission.contents = UIColor.systemPink.withAlphaComponent(0.05)
+                }
                 mat.emission.intensity = 0.05
             }
         }
@@ -705,10 +761,30 @@ private extension Tables3DMapVC {
     }
     
     func addSoftPulseAnimation(to node: SCNNode) {
+        
         node.removeAllActions()
-        let expand = SCNAction.group([.scale(to: 1.9, duration: 1.35), .fadeOpacity(to: 0.0, duration: 1.35)])
-        let reset  = SCNAction.run { n in n.scale = SCNVector3(1, 1, 1); n.opacity = 1 }
-        node.runAction(.repeatForever(.sequence([expand, reset, .wait(duration: 0.15)])))
+        
+        node.scale = SCNVector3(0.6, 0.6, 0.6)
+        node.opacity = 0.6
+        
+        let expand = SCNAction.group([
+            SCNAction.scale(to: 2.2, duration: 1.6),
+            SCNAction.fadeOpacity(to: 0.0, duration: 1.6)
+        ])
+        
+        expand.timingMode = .easeOut
+        
+        let reset = SCNAction.group([
+            SCNAction.scale(to: 0.6, duration: 0.0),
+            SCNAction.fadeOpacity(to: 0.6, duration: 0.0)
+        ])
+        
+        let sequence = SCNAction.sequence([
+            expand,
+            reset
+        ])
+        
+        node.runAction(.repeatForever(sequence))
     }
 }
  
@@ -848,7 +924,7 @@ private extension Tables3DMapVC {
                 label.isHidden = !isSelected; label.opacity = isSelected ? 1 : 0
             }
             if let line = node.childNodes.first(where: { $0.name == "line" }) {
-                line.opacity = isSelected ? 1 : 0
+                line.isHidden = !isSelected; line.opacity = isSelected ? 1 : 0
             }
         }
     }
@@ -888,33 +964,109 @@ private extension Tables3DMapVC {
 // MARK: - DJ Dot
 private extension Tables3DMapVC {
     
-    func uiScale(for position: simd_float3) -> CGFloat { return 1.0 }
-         
+    func uiScale(for position: simd_float3) -> CGFloat {
+        let raw = CGFloat(sceneScaleFactor) * 0.07
+        return raw
+    }
+            
     func makeDJDot(position: simd_float3, sourceNode: SCNNode) -> SCNNode {
-        let scale = uiScale(for: position)
-        let base: CGFloat = CGFloat(sceneScaleFactor) * 0.01
-        let root = SCNNode(); root.simdPosition = position + simd_float3(0, Float(base * 0.6 * scale), 0); root.name = "dj-pin"
-        let uiNode = makeBillboardNode(); let gold = PinStyle.djGold; var z: Float = 0
-        let glowSize = base * 2.1 * scale; let glowGeo = SCNPlane(width: glowSize, height: glowSize)
-        glowGeo.cornerRadius = glowSize / 2; glowGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.25))]
-        let glow = SCNNode(geometry: glowGeo); glow.position.z = z; z += 0.002; uiNode.addChildNode(glow)
-        let waveSize = base * 1.9 * scale; let waveGeo = SCNPlane(width: waveSize, height: waveSize)
-        waveGeo.cornerRadius = waveSize / 2; waveGeo.materials = [constantMaterial(color: gold.withAlphaComponent(0.6))]
-        let wave = SCNNode(geometry: waveGeo); wave.position.z = z; z += 0.002; addDJWaveAnimation(to: wave); uiNode.addChildNode(wave)
-        let outerRing = SCNNode(geometry: SCNTorus(ringRadius: base * 1.1 * scale, pipeRadius: base * 0.08 * scale))
-        outerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]; outerRing.eulerAngles.x = -.pi / 2; outerRing.position.z = z; z += 0.002; uiNode.addChildNode(outerRing)
-        let innerRing = SCNNode(geometry: SCNTorus(ringRadius: base * 0.85 * scale, pipeRadius: base * 0.07 * scale))
-        innerRing.geometry?.materials = [constantMaterial(color: UIColor.white)]; innerRing.eulerAngles.x = -.pi / 2; innerRing.position.z = z; z += 0.002; uiNode.addChildNode(innerRing)
-        let fill = SCNNode(geometry: SCNCylinder(radius: base * 0.75 * scale, height: base * 0.10 * scale))
-        fill.geometry?.materials = [constantMaterial(color: UIColor.white)]; fill.eulerAngles.x = -.pi / 2; fill.position.z = z; z += 0.002; uiNode.addChildNode(fill)
-        let textGeo = SCNText(string: "DJ", extrusionDepth: base * 0.04 * scale)
-        textGeo.font = .boldSystemFont(ofSize: base * 8 * scale); textGeo.flatness = 0.05; textGeo.materials = [constantMaterial(color: UIColor.black)]
-        let textNode = SCNNode(geometry: textGeo)
-        let (tmin, tmax) = textGeo.boundingBox; let centerX = (tmin.x + tmax.x) / 2; let centerY = (tmin.y + tmax.y) / 2
-        textNode.pivot = SCNMatrix4MakeTranslation(centerX, centerY * 0.9, 0); textNode.scale = SCNVector3(0.12, 0.12, 0.12); textNode.position = SCNVector3(0, 0, z); textNode.renderingOrder = 1000
-        uiNode.addChildNode(textNode)
-//        root.runAction(.repeatForever(.sequence([.moveBy(x: 0, y: 1.0 * scale, z: 0, duration: 1.5), .moveBy(x: 0, y: -1.0 * scale, z: 0, duration: 1.5)])))
-        root.addChildNode(uiNode); return root
+        let oldScale = uiScale(for: position)
+        let scale    = CGFloat(min(oldScale, 12.0))
+        let rawBase  = CGFloat(sceneScaleFactor) * 0.018
+        let base     = CGFloat(min(rawBase, 1.8))
+        
+        let root    = SCNNode()
+        root.simdPosition = position + simd_float3(0, Float(0.5 * scale), 0)
+        root.name   = "dj-pin"
+
+        let uiNode  = makeBillboardNode()
+        uiNode.renderingOrder = 900
+
+        let gold    = PinStyle.djGold
+        var z: Float = 0
+
+        let glowSize = base * 2.2 * scale
+        let glowGeo  = SCNPlane(width: glowSize, height: glowSize)
+        glowGeo.cornerRadius = glowSize / 2
+        glowGeo.materials    = [djMaterial(color: gold.withAlphaComponent(0.20))]
+        let glow = SCNNode(geometry: glowGeo)
+        glow.position.z = z; z += 0.001
+        glow.renderingOrder = 900
+        addDJWaveAnimation(to: glow)
+        uiNode.addChildNode(glow)
+
+        let outerCircleSize = base * 1.85 * scale
+        let outerCircleGeo  = SCNPlane(width: outerCircleSize, height: outerCircleSize)
+        outerCircleGeo.cornerRadius = outerCircleSize / 2
+        outerCircleGeo.materials    = [djMaterial(color: UIColor.white.withAlphaComponent(0.9))]
+        let outerCircle = SCNNode(geometry: outerCircleGeo)
+        outerCircle.position.z = z; z += 0.001
+        outerCircle.renderingOrder = 901
+        uiNode.addChildNode(outerCircle)
+
+        let innerFillSize = base * 1.70 * scale
+        let innerFillGeo  = SCNPlane(width: innerFillSize, height: innerFillSize)
+        innerFillGeo.cornerRadius = innerFillSize / 2
+        innerFillGeo.materials    = [djMaterial(color: gold.withAlphaComponent(0.9))]
+        let innerFill = SCNNode(geometry: innerFillGeo)
+        innerFill.position.z = z; z += 0.001
+        innerFill.renderingOrder = 902
+        uiNode.addChildNode(innerFill)
+
+        let innerRingSize = base * 1.35 * scale
+        let innerRingGeo  = SCNPlane(width: innerRingSize, height: innerRingSize)
+        innerRingGeo.cornerRadius = innerRingSize / 2
+        innerRingGeo.materials    = [djMaterial(color: UIColor.white)]
+        let innerRing = SCNNode(geometry: innerRingGeo)
+        innerRing.position.z = z; z += 0.001
+        innerRing.renderingOrder = 903
+        uiNode.addChildNode(innerRing)
+
+        let centerFillSize = base * 1.22 * scale
+        let centerFillGeo  = SCNPlane(width: centerFillSize, height: centerFillSize)
+        centerFillGeo.cornerRadius = centerFillSize / 2
+        centerFillGeo.materials    = [djMaterial(color: gold)]
+        let centerFill = SCNNode(geometry: centerFillGeo)
+        centerFill.position.z = z; z += 0.001
+        centerFill.renderingOrder = 904
+        uiNode.addChildNode(centerFill)
+
+        let djImage     = makeDJTextImage(size: centerFillSize * 0.75)
+        let labelSize   = centerFillSize * 0.72
+        let labelGeo    = SCNPlane(width: labelSize, height: labelSize * 0.55)
+        labelGeo.materials = [djMaterial(color: djImage)]
+        let labelNode   = SCNNode(geometry: labelGeo)
+        labelNode.position.z = z
+        labelNode.renderingOrder = 1000
+        uiNode.addChildNode(labelNode)
+
+        root.addChildNode(uiNode)
+        return root
+    }
+
+    private func makeDJTextImage(size: CGFloat) -> UIImage {
+        let w: CGFloat  = 200
+        let h: CGFloat  = 130
+        let renderer    = UIGraphicsImageRenderer(size: CGSize(width: w, height: h))
+        return renderer.image { ctx in
+            // transparent background
+            UIColor.clear.setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: w, height: h))
+
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font:            UIFont.boldSystemFont(ofSize: 130),
+                .foregroundColor: UIColor.white
+            ]
+            let str  = "DJ" as NSString
+            let size = str.size(withAttributes: attrs)
+            let rect = CGRect(
+                x: (w - size.width)  / 2,
+                y: (h - size.height) / 2,
+                width:  size.width,
+                height: size.height
+            )
+            str.draw(in: rect, withAttributes: attrs)
+        }
     }
 
     func addDJWaveAnimation(to node: SCNNode) {
@@ -931,168 +1083,164 @@ private extension Tables3DMapVC {
 private extension Tables3DMapVC {
  
     func setupCamera(_ scene: SCNScene, layout: Layout3DMap) {
-        cameraOrbit.removeFromParentNode()
-        cameraNode.removeFromParentNode()
+            cameraOrbit.removeFromParentNode()
+            cameraNode.removeFromParentNode()
+            
+            let config = layout
+            
+            // World bounds ─────────────────────────────────────────────
+            var minVec = SCNVector3( Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude)
+            var maxVec = SCNVector3(-Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude)
+            scene.rootNode.enumerateChildNodes { node, _ in
+                let (bmin, bmax) = node.boundingBox
+                let worldMin = node.convertPosition(bmin, to: nil)
+                let worldMax = node.convertPosition(bmax, to: nil)
+                minVec.x = Swift.min(minVec.x, worldMin.x); minVec.y = Swift.min(minVec.y, worldMin.y); minVec.z = Swift.min(minVec.z, worldMin.z)
+                maxVec.x = Swift.max(maxVec.x, worldMax.x); maxVec.y = Swift.max(maxVec.y, worldMax.y); maxVec.z = Swift.max(maxVec.z, worldMax.z)
+            }
+            
+            // Center & size ────────────────────────────────────────────
+            let center = SCNVector3(
+                (minVec.x + maxVec.x) / 2,
+                (minVec.y + maxVec.y) / 2,
+                (minVec.z + maxVec.z) / 2
+            )
+            cameraOrbit.position = center
+            
+            let size   = SCNVector3(maxVec.x - minVec.x, maxVec.y - minVec.y, maxVec.z - minVec.z)
+            let width  = size.x
+            let height = size.y
+            let depth  = size.z
+     
+            // Guard against zero bounds (happens if layout hasn't appeared yet).
+            let viewSize    = sceneView.bounds.size
+            let safeWidth   = viewSize.width  > 0 ? viewSize.width  : UIScreen.main.bounds.width
+            let safeHeight  = viewSize.height > 0 ? viewSize.height : UIScreen.main.bounds.height
+            let screenAspect = Float(safeWidth / safeHeight)
+            
+            // then produce a correct vertical FOV for the actual iOS screen aspect.
+            let apiBaseFov    = Float(config.fieldOfView ?? 45)
+            let apiBaseAspect = Float(config.ratio ?? 1.6)   // web aspect the FOV was designed for
+            
+            let adaptedFov = adaptFovForAspect(
+                baseFov:      apiBaseFov,
+                baseAspect:   apiBaseAspect,
+                targetAspect: screenAspect
+            )
+            
+            let camera = SCNCamera()
+            camera.usesOrthographicProjection = false
+            camera.fieldOfView = CGFloat(adaptedFov)
+            camera.zNear = 0.1
+            camera.zFar  = 5000
+            cameraNode.camera = camera
+            
+            // Camera direction from API ────────────────────────────────
+            let apiDir = SCNVector3(
+                config.xPosition ?? 0,
+                config.yPosition ?? 0,
+                config.zPosition ?? 0
+            ).normalized()
+            
+            let fovRad = adaptedFov * .pi / 180
+            
+            // Vertical fit: how far to see the full height
+            let distanceV = height / (2 * tan(fovRad / 2))
+            // Horizontal fit: how far to see the full width given screen aspect
+            let distanceH = (depth > width ? depth : width) / (2 * tan(fovRad / 2)) / screenAspect
+            let fitDistance = max(distanceV, distanceH)
+            
+            // adding ──────────────────────────────────────────────────
+            let yFactor      = abs(apiDir.y)
+            let ratio1       = Float(config.ratio ?? 1.8)
+            let ratioFactor  = max(0.85, min(1.1,  1.8 / ratio1))
+            let angleFactor  = 1.05 + (1.25 - 1.05) * (1 - yFactor)
+            let paddingFactor = max(1.05, min(1.35, angleFactor * ratioFactor))
+            let finalDistance = fitDistance * paddingFactor
+            
+            // Place camera in the API direction ────────────────────────
+            cameraNode.position = SCNVector3(
+                apiDir.x * finalDistance,
+                apiDir.y * finalDistance,
+                apiDir.z * finalDistance
+            )
+            
+            // Look-at constraint ───────────────────────────────────────
+            let lookAt = SCNLookAtConstraint(target: cameraOrbit)
+            lookAt.isGimbalLockEnabled = true
+            cameraNode.constraints = [lookAt]
+            
+            // Add to scene ─────────────────────────────────────────────
+            cameraOrbit.addChildNode(cameraNode)
+            scene.rootNode.addChildNode(cameraOrbit)
+            sceneView.pointOfView = cameraNode
+
+            // Yaw   = rotation around Y axis.
+            let dirLen = sqrt(apiDir.x * apiDir.x + apiDir.z * apiDir.z)
+            let derivedPitch: Float = -atan2(apiDir.y, max(dirLen, 0.001))
+            let derivedYaw:   Float =  atan2(apiDir.x, apiDir.z)
+     
+            // Rotation limits ─────────────────────────────────────────
+            var apiPitchMin = Float(config.verticalRotationMin ?? 0)
+            var apiPitchMax = Float(config.verticalRotationMax ?? 90)
+            apiPitchMin = max(apiPitchMin - 25, 0)
         
-        let config = layout
+            minPitch = -deg2rad(apiPitchMax)
+            maxPitch = -deg2rad(apiPitchMin)
         
-        // ── STEP 1: World bounds ─────────────────────────────────────────────
-        var minVec = SCNVector3( Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude,  Float.greatestFiniteMagnitude)
-        var maxVec = SCNVector3(-Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude)
-        scene.rootNode.enumerateChildNodes { node, _ in
-            let (bmin, bmax) = node.boundingBox
-            let worldMin = node.convertPosition(bmin, to: nil)
-            let worldMax = node.convertPosition(bmax, to: nil)
-            minVec.x = Swift.min(minVec.x, worldMin.x); minVec.y = Swift.min(minVec.y, worldMin.y); minVec.z = Swift.min(minVec.z, worldMin.z)
-            maxVec.x = Swift.max(maxVec.x, worldMax.x); maxVec.y = Swift.max(maxVec.y, worldMax.y); maxVec.z = Swift.max(maxVec.z, worldMax.z)
+            minPitch = Swift.max(minPitch, -Float.pi / 2)
+            maxPitch = Swift.min(maxPitch,  -0.05)
+        
+            if minPitch > maxPitch { Swift.swap(&minPitch, &maxPitch) }
+            activePitchLimits = minPitch...maxPitch
+     
+            let yawMinDeg = Float(config.horizontalRotationMin ?? -180)
+            let yawMaxDeg = Float(config.horizontalRotationMax ??  180)
+            minYaw = deg2rad(yawMinDeg)
+            maxYaw = deg2rad(yawMaxDeg)
+            if minYaw > maxYaw { Swift.swap(&minYaw, &maxYaw) }
+            activeYawLimits = minYaw...maxYaw
+          
+            let camPos  = cameraNode.position
+            let xzLen   = sqrt(camPos.x * camPos.x + camPos.z * camPos.z)
+            let initPitch: Float = atan2(-camPos.y, max(xzLen, 0.001))   // negative = looking down
+            let initYaw:   Float = atan2(camPos.x,  camPos.z)
+     
+            // Clamp to API limits before applying
+            currentPitch = initPitch.clamped(to: activePitchLimits)
+            currentYaw   = initYaw.clamped(to: activeYawLimits)
+     
+            let distance = camPos.length()
+            cameraNode.position     = SCNVector3(0, 0, distance)
+            cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+     
+            // Save initial state for reset
+            initialCameraOrbitPosition = cameraOrbit.position
+            initialCameraNodePosition  = cameraNode.position
+            initialPitch = currentPitch
+            initialYaw   = currentYaw
+     
+            // Zoom limits (distance-based) ────────────────────────────
+            currentDistance = cameraNode.position.length()
+            let zoomMin = config.zoomMin ?? 1
+            let zoomMax = config.zoomMax ?? 100
+
+            let zoomRatio = currentDistance / Float(zoomMax)
+            minDistance = Float(zoomMin) * zoomRatio
+            maxDistance = Float(zoomMax) * zoomRatio
+            // Also allow a sensible minimum so the user cannot zoom into the geometry.
+            minDistance = Swift.max(minDistance, currentDistance * 0.2)
+            maxDistance = Swift.max(maxDistance, currentDistance * 3.0)
+            currentDistance = currentDistance.clamped(to: minDistance...maxDistance)
+     
+            print("📷 setupCamera complete")
+            print("   adaptedFov: \(adaptedFov)° (base \(apiBaseFov)° @ \(apiBaseAspect) → screen \(screenAspect))")
+            print("   fitDistance: \(fitDistance)  padding: \(paddingFactor)  final: \(finalDistance)")
+            print("   currentPitch: \(currentPitch)  currentYaw: \(currentYaw)")
+            print("   pitchLimits: \(minPitch)…\(maxPitch)  yawLimits: \(minYaw)…\(maxYaw)")
+            print("   distanceLimits: \(minDistance)…\(maxDistance)")
         }
         
-        // ── STEP 2: Center & size ────────────────────────────────────────────
-        let center = SCNVector3(
-            (minVec.x + maxVec.x) / 2,
-            (minVec.y + maxVec.y) / 2,
-            (minVec.z + maxVec.z) / 2
-        )
-        cameraOrbit.position = center
-        
-        let size   = SCNVector3(maxVec.x - minVec.x, maxVec.y - minVec.y, maxVec.z - minVec.z)
-        let width  = size.x
-        let height = size.y
-        let depth  = size.z
-
-        // ── STEP 3: Screen aspect & adapted FOV ──────────────────────────────
-        // Guard against zero bounds (happens if layout hasn't appeared yet).
-        let viewSize    = sceneView.bounds.size
-        let safeWidth   = viewSize.width  > 0 ? viewSize.width  : UIScreen.main.bounds.width
-        let safeHeight  = viewSize.height > 0 ? viewSize.height : UIScreen.main.bounds.height
-        let screenAspect = Float(safeWidth / safeHeight)
-        
-        // FIX 3: Use the API's authored aspect (web ratio) to recover horizontal FOV,
-        // then produce a correct vertical FOV for the actual iOS screen aspect.
-        let apiBaseFov    = Float(config.fieldOfView ?? 45)
-        let apiBaseAspect = Float(config.ratio ?? 1.6)   // web aspect the FOV was designed for
-        
-        let adaptedFov = adaptFovForAspect(
-            baseFov:      apiBaseFov,
-            baseAspect:   apiBaseAspect,
-            targetAspect: screenAspect
-        )
-        
-        let camera = SCNCamera()
-        camera.usesOrthographicProjection = false
-        camera.fieldOfView = CGFloat(adaptedFov)
-        camera.zNear = 0.1
-        camera.zFar  = 5000
-        cameraNode.camera = camera
-        
-        // ── STEP 4: Camera direction from API ────────────────────────────────
-        let apiDir = SCNVector3(
-            config.xPosition ?? 0,
-            config.yPosition ?? 0,
-            config.zPosition ?? 0
-        ).normalized()
-        
-        // ── STEP 5: Fit distance (mirrors Three.js Bounds helper) ────────────
-        let fovRad = adaptedFov * .pi / 180
-        
-        // Vertical fit: how far to see the full height
-        let distanceV = height / (2 * tan(fovRad / 2))
-        // Horizontal fit: how far to see the full width given screen aspect
-        let distanceH = (depth > width ? depth : width) / (2 * tan(fovRad / 2)) / screenAspect
-        let fitDistance = max(distanceV, distanceH)
-        
-        // ── STEP 6: Padding ──────────────────────────────────────────────────
-        // FIX 4: Reduced padding so the scene fills the view like the web does.
-        // Web uses a padding of ~1.0–1.1; we were using 1.2–1.5 which caused
-        // the "zoomed in / camera too close" appearance on iOS.
-        let yFactor      = abs(apiDir.y)
-        let ratio1       = Float(config.ratio ?? 1.8)
-        let ratioFactor  = max(0.85, min(1.1,  1.8 / ratio1))           // tighter than before
-        let angleFactor  = 1.05 + (1.25 - 1.05) * (1 - yFactor)        // 1.05–1.25 (was 1.2–1.5)
-        let paddingFactor = max(1.05, min(1.35, angleFactor * ratioFactor))
-        let finalDistance = fitDistance * paddingFactor
-        
-        // ── STEP 7: Place camera in the API direction ────────────────────────
-        cameraNode.position = SCNVector3(
-            apiDir.x * finalDistance,
-            apiDir.y * finalDistance,
-            apiDir.z * finalDistance
-        )
-        
-        // ── STEP 8: Look-at constraint ───────────────────────────────────────
-        let lookAt = SCNLookAtConstraint(target: cameraOrbit)
-        lookAt.isGimbalLockEnabled = true
-        cameraNode.constraints = [lookAt]
-        
-        // ── STEP 9: Add to scene ─────────────────────────────────────────────
-        cameraOrbit.addChildNode(cameraNode)
-        scene.rootNode.addChildNode(cameraOrbit)
-        sceneView.pointOfView = cameraNode
-        
-        // ── STEP 10: Derive initial pitch/yaw from the camera's world position
-        // FIX 5: Previously we read cameraNode.eulerAngles AFTER applying the
-        // lookAt constraint. SceneKit computes eulerAngles lazily and they read
-        // as 0,0,0 at this point, so cameraOrbit was never rotated.
-        // Instead we derive pitch/yaw directly from the API direction vector.
-        let dirLen = sqrt(apiDir.x * apiDir.x + apiDir.z * apiDir.z)
-        let derivedPitch: Float = -atan2(apiDir.y, dirLen)          // elevation angle (negative = looking down)
-        let derivedYaw:   Float =  atan2(apiDir.x, apiDir.z)        // horizontal angle
-
-        // ── STEP 11: Rotation limits ─────────────────────────────────────────
-        let apiPitchMin = Float(config.verticalRotationMin ?? 0)
-        let apiPitchMax = Float(config.verticalRotationMax ?? 90)
-        // The API encodes pitch as degrees-from-top (0=top,90=horizon).
-        // Convert: pitchDeg 0→top → sceneKit angle -π/2, pitchDeg 90→horizon → 0
-        minPitch = -deg2rad(apiPitchMax)   // more negative = more top-down
-        maxPitch = -deg2rad(apiPitchMin)
-
-        // Clamp so camera never goes below the floor
-        minPitch = Swift.max(minPitch, -Float.pi / 2)
-        maxPitch = Swift.min(maxPitch, -0.05)
-        if minPitch > maxPitch { Swift.swap(&minPitch, &maxPitch) }
-
-        activePitchLimits = minPitch...maxPitch
-
-        let yawMinDeg = Float(config.horizontalRotationMin ?? -180)
-        let yawMaxDeg = Float(config.horizontalRotationMax ??  180)
-        minYaw = deg2rad(yawMinDeg); maxYaw = deg2rad(yawMaxDeg)
-        if minYaw > maxYaw { Swift.swap(&minYaw, &maxYaw) }
-        activeYawLimits = minYaw...maxYaw
-
-        // ── STEP 12: Apply initial rotation, clamped to limits ───────────────
-        currentPitch = derivedPitch.clamped(to: activePitchLimits)
-        currentYaw   = derivedYaw.clamped(to: activeYawLimits)
-        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
-        
-        // Save initial state for reset
-        initialCameraOrbitPosition = cameraOrbit.position
-        initialCameraNodePosition  = cameraNode.position
-        initialYaw   = currentYaw
-        initialPitch = currentPitch
-
-        // ── STEP 13: Zoom limits (distance-based) ────────────────────────────
-        currentDistance = cameraNode.position.length()
-        let zoomMin = config.zoomMin ?? 1
-        let zoomMax = config.zoomMax ?? 100
-        // Previously the ratio calculation could produce tiny minDistance
-        // because zoomMax was used raw (100) vs currentDistance (e.g. 50), giving
-        // ratio=0.5 and minDistance=0.5. Instead we scale linearly from currentDistance.
-        let zoomRatio = currentDistance / Float(zoomMax)
-        minDistance = Float(zoomMin) * zoomRatio
-        maxDistance = Float(zoomMax) * zoomRatio
-        // Also allow a sensible minimum so the user cannot zoom into the geometry.
-        minDistance = Swift.max(minDistance, currentDistance * 0.2)
-        maxDistance = Swift.max(maxDistance, currentDistance * 3.0)
-        currentDistance = currentDistance.clamped(to: minDistance...maxDistance)
-
-        print("📷 setupCamera complete")
-        print("   adaptedFov: \(adaptedFov)° (base \(apiBaseFov)° @ \(apiBaseAspect) → screen \(screenAspect))")
-        print("   fitDistance: \(fitDistance)  padding: \(paddingFactor)  final: \(finalDistance)")
-        print("   currentPitch: \(currentPitch)  currentYaw: \(currentYaw)")
-        print("   pitchLimits: \(minPitch)…\(maxPitch)  yawLimits: \(minYaw)…\(maxYaw)")
-        print("   distanceLimits: \(minDistance)…\(maxDistance)")
-    }
-    
     func deg2rad(_ value: Float) -> Float { value * .pi / 180 }
  
     func cameraFitBounds(in scene: SCNScene) -> (min: SCNVector3, max: SCNVector3)? {
@@ -1190,11 +1338,21 @@ private extension Tables3DMapVC {
         mat.diffuse.contents      = color
         mat.lightingModel         = .constant
         mat.isDoubleSided         = doubleSided
-        mat.writesToDepthBuffer   = false
+        mat.writesToDepthBuffer   = true
         mat.readsFromDepthBuffer  = false
         return mat
     }
  
+    private func djMaterial(color: Any) -> SCNMaterial {
+        let mat = SCNMaterial()
+        mat.diffuse.contents     = color
+        mat.lightingModel        = .constant
+        mat.isDoubleSided        = true
+        mat.writesToDepthBuffer  = false
+        mat.readsFromDepthBuffer = false
+        return mat
+    }
+    
     func addWaveAnimation(to node: SCNNode) {
         node.removeAllActions()
         node.runAction(.repeatForever(.sequence([
@@ -1207,49 +1365,87 @@ private extension Tables3DMapVC {
     func makeBillboardNode() -> SCNNode {
         let n = SCNNode()
         let c = SCNBillboardConstraint(); c.freeAxes = [.X, .Y, .Z]
-        n.constraints = [c]; return n
+        n.constraints = [c];
+        n.renderingOrder = 900
+        return n
     }
  
-    func makeStraightLine(height: CGFloat) -> SCNNode {
-        let geo = SCNPlane(width: 0.035, height: height)
+    func makeStraightLine(height: CGFloat, scale: CGFloat) -> SCNNode {
+        let geo = SCNPlane(width: 0.01 * scale, height: height)
         geo.materials = [constantMaterial(color: UIColor.white)]
         let node = SCNNode(geometry: geo)
         let c = SCNBillboardConstraint(); c.freeAxes = [.X, .Y, .Z]
         node.constraints = [c]; return node
     }
- 
+     
     func makeLabelCard(title: String, guests: Int, minAmount: Double?,
-                       dotColor: UIColor, scale: CGFloat = 1.0) -> SCNNode {
-        let uiScale = scale; let padding: CGFloat = 14 * uiScale
-        let titleLabel = UILabel(); titleLabel.text = title
-        titleLabel.font = .boldSystemFont(ofSize: 42 * uiScale); titleLabel.textColor = .white; titleLabel.sizeToFit()
-        let minAmountLabel = UILabel()
-        minAmountLabel.text = minAmount != nil ? "$ \(Int(minAmount ?? 0)) min." : ""
-        minAmountLabel.font = .systemFont(ofSize: 30 * uiScale, weight: .medium); minAmountLabel.textColor = .white; minAmountLabel.sizeToFit()
-        let guestsLabel = UILabel(); guestsLabel.text = "\(guests) Guests"
-        guestsLabel.font = .systemFont(ofSize: 32 * uiScale, weight: .medium); guestsLabel.textColor = .white; guestsLabel.sizeToFit()
-        let dotSize: CGFloat = 18 * uiScale
-        let dot = UIView(frame: CGRect(x: 0, y: 0, width: dotSize, height: dotSize))
-        dot.layer.cornerRadius = dotSize / 2; dot.backgroundColor = dotColor
-        let rowWidth = dot.frame.width + 8 + guestsLabel.bounds.width
-        let width  = max(titleLabel.bounds.width, minAmountLabel.bounds.width, rowWidth) + padding * 2
-        let height = titleLabel.bounds.height + minAmountLabel.bounds.height + guestsLabel.bounds.height + padding * 2 + (12 * uiScale)
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
-        container.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        container.layer.cornerRadius = 16; container.layer.borderWidth = 2; container.layer.borderColor = UIColor.white.cgColor
-        titleLabel.frame.origin = CGPoint(x: (width - titleLabel.bounds.width) / 2, y: padding); container.addSubview(titleLabel)
-        minAmountLabel.frame.origin = CGPoint(x: (width - minAmountLabel.bounds.width) / 2, y: titleLabel.frame.maxY + (6 * uiScale)); container.addSubview(minAmountLabel)
-        dot.frame.origin = CGPoint(x: (width - rowWidth) / 2, y: minAmountLabel.frame.maxY + (6 * uiScale)); container.addSubview(dot)
-        guestsLabel.frame.origin = CGPoint(x: dot.frame.maxX + (8 * uiScale), y: dot.frame.midY - guestsLabel.bounds.height / 2); container.addSubview(guestsLabel)
-        let renderer = UIGraphicsImageRenderer(size: container.bounds.size)
-        let image = renderer.image { ctx in container.layer.render(in: ctx.cgContext) }
-        let plane = SCNPlane(width: width / 80, height: height / 80)
-        plane.materials = [constantMaterial(color: image)]
-        let node = SCNNode(geometry: plane)
-        node.scale = SCNVector3(Float(scale), Float(scale), Float(scale))
-        let c = SCNBillboardConstraint(); c.freeAxes = [.X, .Y, .Z]; node.constraints = [c]
-        return node
-    }
+                           dotColor: UIColor, scale: CGFloat = 1.0) -> SCNNode {
+     
+            let padding:    CGFloat = 14
+            let titleFont:  CGFloat = 22
+            let subFont:    CGFloat = 19
+            let guestFont:  CGFloat = 19
+     
+            let titleLabel = UILabel()
+            titleLabel.text = title
+            titleLabel.font = .boldSystemFont(ofSize: titleFont)
+            titleLabel.textColor = .white; titleLabel.sizeToFit()
+     
+            let minAmountLabel = UILabel()
+            minAmountLabel.text = minAmount != nil ? "$ \(Int(minAmount ?? 0)) min." : ""
+            minAmountLabel.font = .systemFont(ofSize: subFont, weight: .medium)
+            minAmountLabel.textColor = UIColor(white: 0.95, alpha: 1);
+            minAmountLabel.sizeToFit()
+     
+            let guestsLabel = UILabel()
+            guestsLabel.text = "\(guests) Guests"
+            guestsLabel.font = .systemFont(ofSize: guestFont, weight: .medium)
+            guestsLabel.textColor = UIColor(white: 0.95, alpha: 1);
+            guestsLabel.sizeToFit()
+     
+            let rowWidth   = guestsLabel.bounds.width
+            let canvasW    = max(titleLabel.bounds.width, minAmountLabel.bounds.width, rowWidth) + padding * 2
+            let gap:CGFloat = 6
+            let canvasH    = padding
+                           + titleLabel.bounds.height + gap
+                           + (minAmountLabel.text?.isEmpty == false ? minAmountLabel.bounds.height + gap : 0)
+                           + guestsLabel.bounds.height
+                           + padding
+     
+            let container = UIView(frame: CGRect(x: 0, y: 0, width: canvasW, height: canvasH))
+            container.backgroundColor = UIColor.black.withAlphaComponent(0.82)
+            container.layer.cornerRadius = 12
+            container.layer.borderWidth  = 1.5
+            container.layer.borderColor  = UIColor.white.withAlphaComponent(0.6).cgColor
+     
+            var y: CGFloat = padding
+     
+            titleLabel.frame.origin = CGPoint(x: (canvasW - titleLabel.bounds.width) / 2, y: y)
+            container.addSubview(titleLabel); y = titleLabel.frame.maxY + gap
+     
+            if minAmountLabel.text?.isEmpty == false {
+                minAmountLabel.frame.origin = CGPoint(x: (canvasW - minAmountLabel.bounds.width) / 2, y: y)
+                container.addSubview(minAmountLabel); y = minAmountLabel.frame.maxY + gap
+            }
+     
+            let rowX = (canvasW - rowWidth) / 2
+            guestsLabel.frame.origin = CGPoint(x: rowX, y: y)
+            container.addSubview(guestsLabel)
+     
+            let renderer = UIGraphicsImageRenderer(size: container.bounds.size)
+            let image = renderer.image { ctx in container.layer.render(in: ctx.cgContext) }
+     
+            let pxPerUnit: CGFloat = 100
+            let planeW = (canvasW / pxPerUnit) * scale
+            let planeH = (canvasH / pxPerUnit) * scale
+     
+            let plane = SCNPlane(width: planeW, height: planeH)
+            plane.materials = [constantMaterial(color: image)]
+     
+            let node = SCNNode(geometry: plane)
+            let c = SCNBillboardConstraint(); c.freeAxes = [.X, .Y, .Z]; node.constraints = [c]
+            return node
+        }
 }
 
 // MARK: - ZoneSelectorView (unchanged)
