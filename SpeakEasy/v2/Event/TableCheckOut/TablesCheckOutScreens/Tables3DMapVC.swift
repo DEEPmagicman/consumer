@@ -350,26 +350,58 @@ private extension Tables3DMapVC {
         ])
         guard let raw else { return nil }
 
-        if let area = seatingAreaByParentId[raw] {
-            return SeatingAreaDTO(id: area.id, parentSeatingAreaId: area.parentSeatingAreaId,
-                                  name: area.name, highlight: area.highlight, maxGuest: area.maxGuest,
-                                  isDJBoot: false, minimum: area.minimum, allowActions: true)
-        }
-        if let area = seatingAreaById[raw] {
-            return SeatingAreaDTO(id: area.id, parentSeatingAreaId: area.parentSeatingAreaId ?? area.id,
-                                  name: area.name, highlight: area.highlight, maxGuest: area.maxGuest,
-                                  isDJBoot: false, minimum: area.minimum, allowActions: true)
-        }
         if let area = seatingAreaFilteredOutByParentId[raw] {
-            return SeatingAreaDTO(id: area.id, parentSeatingAreaId: area.parentSeatingAreaId,
-                                  name: area.name, highlight: area.highlight, maxGuest: area.maxGuest,
-                                  isDJBoot: false, minimum: area.minimum, allowActions: false)
+            return SeatingAreaDTO(
+                id: area.id,
+                parentSeatingAreaId: area.parentSeatingAreaId,
+                name: area.name,
+                highlight: area.highlight,
+                maxGuest: area.maxGuest,
+                isDJBoot: false,
+                minimum: area.minimum,
+                allowActions: true
+            )
         }
+
         if let area = seatingAreaFilteredOutById[raw] {
-            return SeatingAreaDTO(id: area.id, parentSeatingAreaId: area.parentSeatingAreaId ?? area.id,
-                                  name: area.name, highlight: area.highlight, maxGuest: area.maxGuest,
-                                  isDJBoot: false, minimum: area.minimum, allowActions: false)
+            return SeatingAreaDTO(
+                id: area.id,
+                parentSeatingAreaId: area.parentSeatingAreaId ?? area.id,
+                name: area.name,
+                highlight: area.highlight,
+                maxGuest: area.maxGuest,
+                isDJBoot: false,
+                minimum: area.minimum,
+                allowActions: true
+            )
         }
+
+        if let area = seatingAreaByParentId[raw] {
+            return SeatingAreaDTO(
+                id: area.id,
+                parentSeatingAreaId: area.parentSeatingAreaId,
+                name: area.name,
+                highlight: area.highlight,
+                maxGuest: area.maxGuest,
+                isDJBoot: false,
+                minimum: area.minimum,
+                allowActions: false
+            )
+        }
+
+        if let area = seatingAreaById[raw] {
+            return SeatingAreaDTO(
+                id: area.id,
+                parentSeatingAreaId: area.parentSeatingAreaId ?? area.id,
+                name: area.name,
+                highlight: area.highlight,
+                maxGuest: area.maxGuest,
+                isDJBoot: false,
+                minimum: area.minimum,
+                allowActions: false
+            )
+        }
+
         print("⚠️ seating raw id \(raw) not found in any seating map")
         return nil
     }
@@ -681,14 +713,12 @@ private extension Tables3DMapVC {
         let hitNode = SCNNode(geometry: hitGeo); hitNode.name = "hit"
         uiNode.addChildNode(hitNode)
         
-        if seating.allowActions {
-            let pulseGeo = SCNPlane(width: 0.45 * scale, height: 0.45 * scale)
-            pulseGeo.cornerRadius = (0.45 * scale) / 2
-            pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.22))]
-            let pulse = SCNNode(geometry: pulseGeo); pulse.name = "wave"; pulse.position.z = -0.002
-            addSoftPulseAnimation(to: pulse)
-            uiNode.addChildNode(pulse)
-        }
+        let pulseGeo = SCNPlane(width: 0.45 * scale, height: 0.45 * scale)
+        pulseGeo.cornerRadius = (0.45 * scale) / 2
+        pulseGeo.materials = [constantMaterial(color: dotColor.withAlphaComponent(0.40))]
+        let pulse = SCNNode(geometry: pulseGeo); pulse.name = "wave"; pulse.position.z = -0.002
+        addSoftPulseAnimation(to: pulse)
+        uiNode.addChildNode(pulse)
         
         let glowGeo = SCNPlane(width: 0.12 * scale, height: 0.12 * scale)
         glowGeo.cornerRadius = (0.12 * scale) / 2
