@@ -137,6 +137,7 @@ struct PaymentDetail: Codable {
     var processingFee: Double
     var customFee: Double
     var salesTax: Double?
+    var salesTaxes: [SalesTax]?
     var total: Double
     var customFeeName: String?
     var discount: Double?
@@ -156,6 +157,16 @@ struct PaymentDetail: Codable {
         try container.encodeIfPresent(salesTaxName, forKey: .salesTaxName)
         try container.encodeIfPresent(customFees, forKey: .customFees)
         try container.encodeIfPresent(additionalFees, forKey: .additionalFees)
+    }
+}
+
+struct SalesTax: Codable {
+    var id: String
+    var salesTax: Double?
+    var salesTaxName: String?
+    
+    var formattedAmount: String {
+        String(format: "$%.2f", salesTax ?? 0)
     }
 }
 

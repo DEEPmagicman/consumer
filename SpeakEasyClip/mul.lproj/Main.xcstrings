@@ -889,6 +889,18 @@
         }
       }
     },
+    "pWC-ss-pUe.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Sales Tax\"; ObjectID = \"pWC-ss-pUe\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Sales Tax"
+          }
+        }
+      }
+    },
     "Q0F-pX-xcZ.text" : {
       "comment" : "Class = \"UILabel\"; text = \"Total\"; ObjectID = \"Q0F-pX-xcZ\";",
       "extractionState" : "extracted_with_value",
@@ -1101,6 +1113,30 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Email"
+          }
+        }
+      }
+    },
+    "tdo-eZ-RvI.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"(7.0%)\"; ObjectID = \"tdo-eZ-RvI\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "(7.0%)"
+          }
+        }
+      }
+    },
+    "tM2-4Y-AxR.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"$0.00\"; ObjectID = \"tM2-4Y-AxR\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "$0.00"
           }
         }
       }
