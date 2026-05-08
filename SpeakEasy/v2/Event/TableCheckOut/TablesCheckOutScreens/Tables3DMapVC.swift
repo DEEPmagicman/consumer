@@ -135,11 +135,18 @@ final class Tables3DMapVC: UIViewController {
 
     private var currentLoadId = UUID()
     private var sceneScaleFactor: Float = 1
+    
+    private var loadingView: UIView?
+    private var loadingTextLayer: CATextLayer?
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        setupAdvancedLoader()
+        showAdvancedLoader()
+        setupResetViewButton()
         setupSceneView()
         setupCameraGestures()
         setupZoneSelector()
@@ -153,6 +160,10 @@ final class Tables3DMapVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         sceneView.frame = mapView.bounds
+        mapView.bringSubviewToFront(resetViewBtn)
+        if let loadingView = loadingView {
+            mapView.bringSubviewToFront(loadingView)
+        }
     }
 
     private func deselectCurrentSeat() {
@@ -165,6 +176,18 @@ final class Tables3DMapVC: UIViewController {
         guard let selectedArea = seatingAreas.first(where: { $0.parentSeatingAreaId == selectedId }) else { return }
         openSeatingArea(selectedArea)
     }
+    
+    let resetViewBtn: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Reset View", for: .normal)
+        btn.setTitleColor(.black, for: .normal)
+        btn.titleLabel?.font = AppFont.font(.inter, weight: .medium, size: 11)
+        btn.backgroundColor = .white
+        btn.layer.cornerRadius = 10
+        btn.contentEdgeInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
+        btn.alpha = 0 // hidden initially
+        return btn
+    }()
 }
 
 // MARK: - UI Setup
@@ -492,11 +515,15 @@ private extension Tables3DMapVC {
         let loadId = UUID()
         currentLoadId = loadId
         resetSceneState()
-
+        showAdvancedLoader()
+        
         GLTFAsset.load(with: url, options: [:]) { [weak self] _, status, asset, error, _ in
             guard let self else { return }
             guard self.currentLoadId == loadId else { print("Old GLB ignored"); return }
             guard status == .complete, let asset, error == nil else {
+                DispatchQueue.main.async {
+                    self.hideAdvancedLoader()
+                }
                 print("GLB load error:", error?.localizedDescription ?? "unknown")
                 return
             }
@@ -514,6 +541,7 @@ private extension Tables3DMapVC {
                     DispatchQueue.main.async {
                         self.setupCamera(scene, layout: layout)
                         self.setupTapGesture()
+                        self.hideAdvancedLoader()
                     }
                 }
             }
@@ -891,6 +919,7 @@ private extension Tables3DMapVC {
         SCNTransaction.animationDuration = 0.25
         updateCameraDistance()
         SCNTransaction.commit()
+        showResetViewButton()
     }
 
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -905,6 +934,7 @@ private extension Tables3DMapVC {
         currentYaw   = currentYaw.clamped(to: activeYawLimits)
         currentPitch = currentPitch.clamped(to: activePitchLimits)
         cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+        showResetViewButton()
     }
 
     private func normalizeAngle(_ angle: Float) -> Float {
@@ -930,6 +960,7 @@ private extension Tables3DMapVC {
         currentDistance += delta * zoomSpeed * currentDistance
         currentDistance  = Swift.min(Swift.max(currentDistance, minDistance), maxDistance)
         updateCameraDistance()
+        showResetViewButton()
     }
 
     private func updateCameraDistance() {
@@ -1660,6 +1691,126 @@ private extension ZoneSelectorView {
                 self.segmentsStack.transform = .identity; self.segmentsStack.alpha = 1; self.selectionView.alpha = 1
             } completion: { _ in self.updateSelection(animated: false) }
         }
+    }
+}
+
+private extension Tables3DMapVC {
+    func setupAdvancedLoader() {
+        let container = UIView()
+        container.backgroundColor = UIColor.black
+        container.translatesAutoresizingMaskIntoConstraints = false
+        mapView.addSubview(container)
+
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: mapView.topAnchor),
+            container.bottomAnchor.constraint(equalTo: mapView.bottomAnchor),
+            container.leadingAnchor.constraint(equalTo: mapView.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: mapView.trailingAnchor)
+        ])
+
+        loadingView = container
+
+        create3DLoadingText(in: container)
+    }
+    
+    func create3DLoadingText(in view: UIView) {
+        DispatchQueue.main.async {
+            
+            let textLayer = CATextLayer()
+            textLayer.string = "Loading 3D Map..."
+            textLayer.font = AppFont.font(.inter, weight: .medium, size: 14)
+            textLayer.fontSize = 14
+            textLayer.alignmentMode = .center
+            textLayer.foregroundColor = UIColor.white.cgColor//UIColor(hex: (self.event?.whiteLabelColor ?? "#FFFFFF")).cgColor
+            textLayer.contentsScale = UIScreen.main.scale
+
+            textLayer.frame = CGRect(
+                x: 0,
+                y: view.bounds.midY - 60,
+                width: view.bounds.width,
+                height: 40
+            )
+
+            view.layer.addSublayer(textLayer)
+            self.loadingTextLayer = textLayer
+
+            self.addFloatingAnimation(to: textLayer)
+        }
+    }
+    
+    func addFloatingAnimation(to layer: CALayer) {
+        let anim = CABasicAnimation(keyPath: "transform.translation.y")
+        anim.fromValue = -5
+        anim.toValue = 5
+        anim.duration = 1.2
+        anim.autoreverses = true
+        anim.repeatCount = .infinity
+
+        layer.add(anim, forKey: "float")
+    }
+    
+    func showAdvancedLoader() {
+        let loadingViewHidden = loadingView?.isHidden == true
+        loadingView?.isHidden = false
+        if let textLayer = self.loadingTextLayer, loadingViewHidden {
+            self.addFloatingAnimation(to: textLayer)
+        }
+    }
+
+    func hideAdvancedLoader() {
+        loadingView?.isHidden = true
+        loadingTextLayer?.removeAllAnimations()
+    }
+}
+
+// MARK: - Reset View UI
+
+private extension Tables3DMapVC {
+    
+    func setupResetViewButton() {
+        mapView.addSubview(resetViewBtn)
+        resetViewBtn.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            resetViewBtn.topAnchor.constraint(equalTo: mapView.safeAreaLayoutGuide.topAnchor, constant: 10),
+            resetViewBtn.trailingAnchor.constraint(equalTo: mapView.trailingAnchor, constant: -12)
+        ])
+
+        resetViewBtn.addTarget(self, action: #selector(onTapResetView), for: .touchUpInside)
+    }
+    
+    func showResetViewButton() {
+        guard resetViewBtn.alpha == 0 else { return }
+
+        UIView.animate(withDuration: 0.2) {
+            self.resetViewBtn.alpha = 1
+        }
+    }
+
+    func hideResetViewButton() {
+        UIView.animate(withDuration: 0.2) {
+            self.resetViewBtn.alpha = 0
+        }
+    }
+    
+    @objc func onTapResetView() {
+
+        guard let orbitPos = initialCameraOrbitPosition,
+              let camPos = initialCameraNodePosition else { return }
+
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 0.4
+
+        cameraOrbit.position = orbitPos
+        cameraNode.position = camPos
+        cameraOrbit.eulerAngles = SCNVector3(initialPitch, initialYaw, 0)
+
+        currentPitch = initialPitch
+        currentYaw = initialYaw
+
+        SCNTransaction.commit()
+
+        hideResetViewButton()
     }
 }
 

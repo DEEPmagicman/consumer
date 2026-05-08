@@ -106,7 +106,7 @@
                     <rect key="frame" x="0.0" y="714" width="393" height="138"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ytP-NT-Y6d" customClass="LoadingButton" customModule="MHLoadingButton">
-                            <rect key="frame" x="16" y="30" width="361" height="40"/>
+                            <rect key="frame" x="34" y="30" width="325" height="40"/>
                             <color key="backgroundColor" red="0.42745098040000001" green="0.36862745099999999" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="pzM-UX-SmZ"/>
@@ -120,16 +120,28 @@
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                     <real key="value" value="20"/>
                                 </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                    <color key="value" white="0.048587328767123288" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                    <real key="value" value="0.5"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                    <real key="value" value="12"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                    <size key="value" width="0.0" height="4"/>
+                                </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="onClickBuyNow:" destination="-1" eventType="touchUpInside" id="AZ4-kv-VEd"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="0.70440985451281912" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="ytP-NT-Y6d" firstAttribute="leading" secondItem="F1o-Vw-JPr" secondAttribute="leading" constant="16" id="AxR-9j-bt1"/>
-                        <constraint firstAttribute="trailing" secondItem="ytP-NT-Y6d" secondAttribute="trailing" constant="16" id="iVg-jR-sjR"/>
+                        <constraint firstItem="ytP-NT-Y6d" firstAttribute="leading" secondItem="F1o-Vw-JPr" secondAttribute="leading" constant="34" id="AxR-9j-bt1"/>
+                        <constraint firstAttribute="trailing" secondItem="ytP-NT-Y6d" secondAttribute="trailing" constant="34" id="iVg-jR-sjR"/>
                     </constraints>
                 </view>
             </subviews>
