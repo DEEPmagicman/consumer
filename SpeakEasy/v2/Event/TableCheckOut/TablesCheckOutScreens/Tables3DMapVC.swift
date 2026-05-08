@@ -111,9 +111,7 @@ final class Tables3DMapVC: UIViewController {
     var originalMaterials: [SCNNode: [SCNMaterial]] = [:]
 
     private var roomItems:       [Layout3DMap]   = []
-    private var pagedRoomItems:  [[Layout3DMap]] = []
-    private var currentPageIndex    = 0
-    private var selectedIndexInPage = 0
+    private var selectedGlobalRoomIndex: Int = 0
 
     private var activePitchLimits: ClosedRange<Float> = (-Float.pi / 2)...(-Float.pi / 20)
     private var activeYawLimits: ClosedRange<Float> = (-Float.pi)...(Float.pi)
@@ -138,12 +136,16 @@ final class Tables3DMapVC: UIViewController {
     
     private var loadingView: UIView?
     private var loadingTextLayer: CATextLayer?
+    private var panVelocity: CGPoint = .zero
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        buyNowBtnView.isHidden = true
+        zoneSelector.isHidden = true
+        
         setupAdvancedLoader()
         showAdvancedLoader()
         setupResetViewButton()
@@ -152,9 +154,6 @@ final class Tables3DMapVC: UIViewController {
         setupZoneSelector()
         setupBuyNowButton()
         fetchLayOut()
-        applyPage(animated: false, direction: .none)
-        buyNowBtnView.isHidden = true
-        zoneSelector.isHidden = false
     }
 
     override func viewDidLayoutSubviews() {
@@ -190,6 +189,12 @@ final class Tables3DMapVC: UIViewController {
     }()
 }
 
+extension Tables3DMapVC: SCNSceneRendererDelegate {
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async { self.applyInertia() }
+    }
+}
+
 // MARK: - UI Setup
 
 private extension Tables3DMapVC {
@@ -205,6 +210,7 @@ private extension Tables3DMapVC {
         sceneView.isJitteringEnabled   = true
         sceneView.rendersContinuously  = true
         sceneView.scene                = SCNScene()
+        sceneView.delegate = self
         mapView.addSubview(sceneView)
     }
 
@@ -217,13 +223,13 @@ private extension Tables3DMapVC {
     }
 
     func setupZoneSelector() {
-        zoneSelector.onSelectItem = { [weak self] _, idx in
+        zoneSelector.onSelectItem = { [weak self] _, globalIdx in
             guard let self else { return }
-            self.selectedIndexInPage = idx
+            self.selectedGlobalRoomIndex = globalIdx
             self.loadSelectedRoomModel()
         }
-        zoneSelector.onNextPage = { [weak self] in self?.goNext() }
-        zoneSelector.onPrevPage = { [weak self] in self?.goPrev() }
+        zoneSelector.onNextPage = nil
+        zoneSelector.onPrevPage = nil
     }
 
     func adaptFovForAspect(
@@ -313,11 +319,15 @@ private extension Tables3DMapVC {
             guard let self else { return }
             DispatchQueue.main.async {
                 if ok, let layout {
-                    self.roomItems      = layout.layoutHistories?.first?.layoutHistoryHas3DMaps ?? []
-                    self.pagedRoomItems = self.roomItems.chunked(into: 3)
-                    self.currentPageIndex    = 0
-                    self.selectedIndexInPage = 0
-                    self.applyPage(animated: false, direction: .none)
+                    let items = layout.layoutHistories?.first?.layoutHistoryHas3DMaps ?? []
+                    self.roomItems = items.sorted {
+                        ($0.order ?? Int.max) < ($1.order ?? Int.max)
+                    }
+                    if self.roomItems.count > 1 {
+                        self.zoneSelector.isHidden = false
+                    }
+                    self.selectedGlobalRoomIndex = 0
+                    self.applyRoomItems(animated: false)
                     self.loadSelectedRoomModel()
                 } else {
                     print("Layout error:", msg ?? "unknown")
@@ -422,31 +432,17 @@ private extension Tables3DMapVC {
         print("⚠️ seating raw id \(raw) not found in any seating map")
         return nil
     }
-
-    func applyPage(animated: Bool, direction: ZoneSelectorView.PageDirection) {
-        guard !pagedRoomItems.isEmpty else {
-            zoneSelector.setItems([], hasMoreLeft: false, hasMoreRight: false,
-                                  selectedIndex: 0, animated: false,
-                                  borderColors: event?.whiteLabelColor,
-                                  direction: .none, notifySelection: false)
-            return
-        }
-        let page  = pagedRoomItems[currentPageIndex]
-        let names = page
+    
+    func applyRoomItems(animated: Bool) {
+        let names = roomItems
             .compactMap { $0.name?.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
-        let hasLeft  = currentPageIndex > 0
-        let hasRight = currentPageIndex < pagedRoomItems.count - 1
-        let arrows   = pagedRoomItems.count > 1
-        selectedIndexInPage = 0
-        zoneSelector.setItems(names,
-                              hasMoreLeft:  arrows && hasLeft,
-                              hasMoreRight: arrows && hasRight,
-                              selectedIndex: selectedIndexInPage,
-                              animated:      animated,
-                              borderColors:  event?.whiteLabelColor,
-                              direction:     direction,
-                              notifySelection: false)
+
+        zoneSelector.setItems(
+            names,
+            selectedIndex: selectedGlobalRoomIndex,
+            borderColor: event?.whiteLabelColor
+        )
     }
 
     private func openSeatingArea(_ item: SeatingArea) {
@@ -475,27 +471,10 @@ private extension Tables3DMapVC {
         }
     }
 
-    func goNext() {
-        guard currentPageIndex < pagedRoomItems.count - 1 else { return }
-        currentPageIndex    += 1
-        selectedIndexInPage  = 0
-        applyPage(animated: true, direction: .next)
-        loadSelectedRoomModel()
-    }
-
-    func goPrev() {
-        guard currentPageIndex > 0 else { return }
-        currentPageIndex    -= 1
-        selectedIndexInPage  = 0
-        applyPage(animated: true, direction: .prev)
-        loadSelectedRoomModel()
-    }
-
     func loadSelectedRoomModel() {
-        guard !pagedRoomItems.isEmpty else { return }
-        let page = pagedRoomItems[currentPageIndex]
-        guard selectedIndexInPage >= 0, selectedIndexInPage < page.count else { return }
-        let item = page[selectedIndexInPage]
+        guard selectedGlobalRoomIndex >= 0, roomItems.count > selectedGlobalRoomIndex else { return }
+        let item = roomItems[selectedGlobalRoomIndex]
+        hideResetViewButton()
         guard let glb = item.url3dMap, !glb.isEmpty else { return }
         loadGLBFromServerPath(from: glb, layout: item)
     }
@@ -599,7 +578,9 @@ private extension Tables3DMapVC {
         meshNodesBySeatingId.removeAll()
         originalMaterials.removeAll()
         renderedDJKeys.removeAll()
-        currentDistance = 0; minDistance = 0; maxDistance = 0
+        currentDistance = 0;
+        minDistance = 0;
+        maxDistance = 0
         minYaw = -.pi; maxYaw = .pi
         minPitch = -Float.pi / 2; maxPitch = Float.pi / 2
         sceneView.gestureRecognizers?.filter { $0 is UITapGestureRecognizer }.forEach { sceneView.removeGestureRecognizer($0) }
@@ -925,16 +906,43 @@ private extension Tables3DMapVC {
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let delta = gesture.translation(in: sceneView)
         gesture.setTranslation(.zero, in: sceneView)
+
         let viewWidth  = Float(max(sceneView.bounds.width, 1))
         let viewHeight = Float(max(sceneView.bounds.height, 1))
-        let yawSensitivity:   Float = Float.pi / viewWidth
-        let pitchSensitivity: Float = Float.pi / viewHeight
-        currentYaw   -= Float(delta.x) * yawSensitivity
-        currentPitch -= Float(delta.y) * pitchSensitivity
-        currentYaw   = currentYaw.clamped(to: activeYawLimits)
-        currentPitch = currentPitch.clamped(to: activePitchLimits)
-        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
+
+        let dyaw   = -Float(delta.x) * (Float.pi / viewWidth)
+        let dpitch = -Float(delta.y) * (Float.pi / viewHeight)
+
+        applyRotation(dyaw: dyaw, dpitch: dpitch)
+
+        if gesture.state == .ended {
+            let vel = gesture.velocity(in: sceneView)
+            panVelocity = CGPoint(
+                x: vel.x * CGFloat(Float.pi / viewWidth)  * 0.001,
+                y: vel.y * CGFloat(Float.pi / viewHeight) * 0.001
+            )
+        } else {
+            panVelocity = .zero
+        }
+
         showResetViewButton()
+    }
+
+    // Call this from sceneView renderer or a CADisplayLink
+    private func applyInertia() {
+        guard abs(panVelocity.x) > 0.0001 || abs(panVelocity.y) > 0.0001 else {
+            panVelocity = .zero
+            return
+        }
+        applyRotation(dyaw: -Float(panVelocity.x), dpitch: -Float(panVelocity.y))
+        panVelocity.x *= 0.98  // friction — lower = stops faster
+        panVelocity.y *= 0.98
+    }
+
+    private func applyRotation(dyaw: Float, dpitch: Float) {
+        currentYaw   = (currentYaw   + dyaw).clamped(to: activeYawLimits)
+        currentPitch = (currentPitch + dpitch).clamped(to: activePitchLimits)
+        cameraOrbit.eulerAngles = SCNVector3(currentPitch, currentYaw, 0)
     }
 
     private func normalizeAngle(_ angle: Float) -> Float {
@@ -1222,11 +1230,6 @@ private extension Tables3DMapVC {
         scene.rootNode.addChildNode(cameraOrbit)
         sceneView.pointOfView = cameraNode
 
-        // Yaw   = rotation around Y axis.
-        let dirLen = sqrt(apiDir.x * apiDir.x + apiDir.z * apiDir.z)
-        let derivedPitch: Float = -atan2(apiDir.y, max(dirLen, 0.001))
-        let derivedYaw:   Float =  atan2(apiDir.x, apiDir.z)
-
         // Rotation limits ─────────────────────────────────────────
         var apiPitchMin = Float(config.verticalRotationMin ?? 0)
         var apiPitchMax = Float(config.verticalRotationMax ?? 90)
@@ -1500,196 +1503,379 @@ private extension Tables3DMapVC {
 
 final class ZoneSelectorView: UIView {
 
+    // MARK: - Types
     enum PageDirection { case none, next, prev }
 
-    struct ViewModel: Equatable {
-        let items: [String]; let hasMoreLeft: Bool; let hasMoreRight: Bool
-        let selectedIndex: Int; let animated: Bool; let borderHexColor: String?
-        let direction: PageDirection; let notifySelection: Bool
-        init(items: [String], hasMoreLeft: Bool, hasMoreRight: Bool, selectedIndex: Int = 0,
-             animated: Bool = true, borderHexColor: String? = nil,
-             direction: PageDirection = .none, notifySelection: Bool = false) {
-            self.items = items; self.hasMoreLeft = hasMoreLeft; self.hasMoreRight = hasMoreRight
-            self.selectedIndex = selectedIndex; self.animated = animated
-            self.borderHexColor = borderHexColor; self.direction = direction; self.notifySelection = notifySelection
-        }
-    }
-
+    // MARK: - Callbacks
     var onSelectItem: ((String, Int) -> Void)?
     var onNextPage: (() -> Void)?
     var onPrevPage: (() -> Void)?
-    var titleText: String = "SELECT ZONE" { didSet { titleLabel.text = titleText } }
 
-    func setItems(_ items: [String], hasMoreLeft: Bool, hasMoreRight: Bool,
-                  selectedIndex: Int = 0, animated: Bool = true, borderColors: String?,
-                  direction: PageDirection = .none, notifySelection: Bool = false) {
-        let sanitizedItems = items.map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.filter { !$0.isEmpty }
-        let model = ViewModel(items: sanitizedItems, hasMoreLeft: hasMoreLeft, hasMoreRight: hasMoreRight,
-                              selectedIndex: selectedIndex, animated: animated, borderHexColor: borderColors,
-                              direction: direction, notifySelection: notifySelection)
-        apply(model)
+    var titleText: String = "SELECT ZONE" {
+        didSet { titleLabel.text = titleText }
     }
 
-    private var currentItems: [String] = []; private var selectedIndex: Int = 0
-    private var hasMoreLeft: Bool = false; private var hasMoreRight: Bool = false; private var borderHexColor: String?
-    private var segmentButtons: [UIButton] = []; private var needsSelectionLayoutUpdate = false
-    private let titleLabel = UILabel(); private let pillContainer = UIView()
-    private let innerStack = UIStackView(); private let segmentsStack = UIStackView()
-    private let leftButton = UIButton(type: .system); private let rightButton = UIButton(type: .system)
-    private let selectionView = UIView()
-    private let bgColor = UIColor.clear; private let pillFill = UIColor(white: 0.10, alpha: 1.0)
-    private let selectedFill = UIColor(white: 0.20, alpha: 0.5)
+    // MARK: - Public API
+    func setItems(_ items: [String], selectedIndex: Int = 0, borderColor: String? = nil) {
+        allItems = items
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        selectedGlobalIndex = allItems.isEmpty ? 0 : min(max(0, selectedIndex), allItems.count - 1)
+        windowStart = clampedWindowStart(for: selectedGlobalIndex)
+        applyBorderColor(borderColor)
+        renderVisible(slideDir: .none)
+    }
 
+    // MARK: - Private State
+    private var allItems: [String] = []
+    private var windowStart: Int = 0
+    private var selectedGlobalIndex: Int = 0
+    private let maxVisible = 3
+    private var needsSelectionLayoutUpdate = false
+
+    // MARK: - UI
+    private let titleLabel      = UILabel()
+    private let pillContainer   = UIView()
+    private let innerStack      = UIStackView()
+    private let segmentsStack   = UIStackView()
+    private let leftButton      = UIButton(type: .system)
+    private let rightButton     = UIButton(type: .system)
+    private let selectionView   = UIView()
+
+    // MARK: - Init
     override init(frame: CGRect) { super.init(frame: frame); setup() }
     required init?(coder: NSCoder) { super.init(coder: coder); setup() }
 
+    // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
         pillContainer.layer.cornerRadius = pillContainer.bounds.height / 2
         selectionView.layer.cornerRadius = selectionView.bounds.height / 2
-        if needsSelectionLayoutUpdate { needsSelectionLayoutUpdate = false; updateSelection(animated: false) }
+        if needsSelectionLayoutUpdate {
+            needsSelectionLayoutUpdate = false
+            updateSelection(animated: false)
+        }
     }
 }
 
+// MARK: - Setup
 private extension ZoneSelectorView {
+
     func setup() {
-        backgroundColor = bgColor
-        titleLabel.text = titleText; titleLabel.textColor = .white.withAlphaComponent(0.92)
-        titleLabel.font = .systemFont(ofSize: 12, weight: .semibold); titleLabel.textAlignment = .center
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false; addSubview(titleLabel)
-        pillContainer.backgroundColor = pillFill; pillContainer.layer.borderWidth = 1.5
-        pillContainer.layer.borderColor = UIColor.white.cgColor; pillContainer.clipsToBounds = true
-        pillContainer.translatesAutoresizingMaskIntoConstraints = false; addSubview(pillContainer)
-        selectionView.backgroundColor = selectedFill; selectionView.isUserInteractionEnabled = false; pillContainer.addSubview(selectionView)
-        configureArrowButton(leftButton, systemName: "chevron.left"); configureArrowButton(rightButton, systemName: "chevron.right")
+        backgroundColor = .clear
+
+        // Title
+        titleLabel.text = titleText
+        titleLabel.textColor = UIColor.white.withAlphaComponent(0.92)
+        titleLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(titleLabel)
+
+        // Pill container
+        pillContainer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        pillContainer.layer.borderWidth = 1.5
+        pillContainer.layer.borderColor = UIColor.white.cgColor
+        pillContainer.clipsToBounds = true
+        pillContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(pillContainer)
+
+        // Selection highlight
+        selectionView.backgroundColor = UIColor(white: 0.20, alpha: 0.7)
+        selectionView.isUserInteractionEnabled = false
+        pillContainer.addSubview(selectionView)
+
+        // Arrow buttons
+        configureArrowButton(leftButton, systemName: "chevron.left")
+        configureArrowButton(rightButton, systemName: "chevron.right")
         leftButton.addTarget(self, action: #selector(didTapLeft), for: .touchUpInside)
         rightButton.addTarget(self, action: #selector(didTapRight), for: .touchUpInside)
-        segmentsStack.axis = .horizontal; segmentsStack.alignment = .fill; segmentsStack.distribution = .fillEqually
-        segmentsStack.spacing = 0; segmentsStack.translatesAutoresizingMaskIntoConstraints = false
-        innerStack.axis = .horizontal; innerStack.alignment = .center; innerStack.spacing = 10
+
+        // Segments stack
+        segmentsStack.axis = .horizontal
+        segmentsStack.alignment = .fill
+        segmentsStack.distribution = .fillEqually
+        segmentsStack.spacing = 0
+        segmentsStack.translatesAutoresizingMaskIntoConstraints = false
+
+        // Inner stack (arrows + segments)
+        innerStack.axis = .horizontal
+        innerStack.alignment = .center
+        innerStack.spacing = 10
         innerStack.translatesAutoresizingMaskIntoConstraints = false
-        innerStack.addArrangedSubview(leftButton); innerStack.addArrangedSubview(segmentsStack); innerStack.addArrangedSubview(rightButton)
+        innerStack.addArrangedSubview(leftButton)
+        innerStack.addArrangedSubview(segmentsStack)
+        innerStack.addArrangedSubview(rightButton)
         pillContainer.addSubview(innerStack)
+
+        // Constraints
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+
             pillContainer.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 1),
             pillContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             pillContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            pillContainer.heightAnchor.constraint(equalToConstant: 42),
+            pillContainer.heightAnchor.constraint(equalToConstant: 38),
             pillContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             innerStack.leadingAnchor.constraint(equalTo: pillContainer.leadingAnchor, constant: 10),
             innerStack.trailingAnchor.constraint(equalTo: pillContainer.trailingAnchor, constant: -10),
             innerStack.topAnchor.constraint(equalTo: pillContainer.topAnchor, constant: 1),
             innerStack.bottomAnchor.constraint(equalTo: pillContainer.bottomAnchor, constant: -1),
-            leftButton.widthAnchor.constraint(equalToConstant: 30), leftButton.heightAnchor.constraint(equalToConstant: 30),
-            rightButton.widthAnchor.constraint(equalToConstant: 30), rightButton.heightAnchor.constraint(equalToConstant: 30)
+
+            leftButton.widthAnchor.constraint(equalToConstant: 26),
+            leftButton.heightAnchor.constraint(equalToConstant: 26),
+            rightButton.widthAnchor.constraint(equalToConstant: 26),
+            rightButton.heightAnchor.constraint(equalToConstant: 26)
         ])
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:))); swipeLeft.direction = .left; pillContainer.addGestureRecognizer(swipeLeft)
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:))); swipeRight.direction = .right; pillContainer.addGestureRecognizer(swipeRight)
-        renderCurrentState(animatedSelection: false, notifySelection: false, pageDirection: .none)
-    }
-    func configureArrowButton(_ button: UIButton, systemName: String) {
-        button.setImage(UIImage(systemName: systemName), for: .normal)
-        button.tintColor = UIColor.white.withAlphaComponent(0.9); button.backgroundColor = UIColor.black.withAlphaComponent(0.25)
-        button.layer.cornerRadius = 15; button.clipsToBounds = true
-    }
-}
 
-private extension ZoneSelectorView {
-    func apply(_ model: ViewModel) {
-        currentItems = model.items; hasMoreLeft = model.hasMoreLeft; hasMoreRight = model.hasMoreRight; borderHexColor = model.borderHexColor
-        if let hex = borderHexColor, !hex.isEmpty { pillContainer.layer.borderColor = UIColor(hex: hex).cgColor }
-        else { pillContainer.layer.borderColor = UIColor.white.cgColor }
-        selectedIndex = clampedIndex(model.selectedIndex, for: currentItems)
-        renderCurrentState(animatedSelection: false, notifySelection: model.notifySelection,
-                           pageDirection: model.animated ? model.direction : .none)
-    }
-    func renderCurrentState(animatedSelection: Bool, notifySelection: Bool, pageDirection: PageDirection) {
+        // Swipe gestures
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeLeft.direction = .left
+        pillContainer.addGestureRecognizer(swipeLeft)
+
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeRight.direction = .right
+        pillContainer.addGestureRecognizer(swipeRight)
+
+        // Initial render (empty state)
         updateArrowState()
-        let contentUpdate = { [weak self] in
-            guard let self = self else { return }
-            self.rebuildButtons(); self.setNeedsLayout(); self.layoutIfNeeded()
-            self.needsSelectionLayoutUpdate = true; self.updateSelection(animated: animatedSelection)
-            if notifySelection { self.emitSelectionIfPossible() }
-        }
-        guard pageDirection != .none else { contentUpdate(); return }
-        animatePageChange(direction: pageDirection, update: contentUpdate)
     }
-    func clampedIndex(_ index: Int, for items: [String]) -> Int {
-        guard !items.isEmpty else { return 0 }; return min(max(0, index), items.count - 1)
+
+    func configureArrowButton(_ button: UIButton, systemName: String) {
+        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+            let image = UIImage(systemName: systemName, withConfiguration: config)
+            button.setImage(image, for: .normal)
+            button.tintColor = UIColor.white.withAlphaComponent(0.9)
+            button.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+            button.layer.cornerRadius = 13
+            button.clipsToBounds = true
     }
 }
 
+// MARK: - Window Logic
 private extension ZoneSelectorView {
-    func rebuildButtons() {
-        segmentButtons.forEach { $0.removeTarget(nil, action: nil, for: .allEvents) }
-        for view in segmentsStack.arrangedSubviews { segmentsStack.removeArrangedSubview(view); view.removeFromSuperview() }
-        segmentButtons.removeAll()
-        guard !currentItems.isEmpty else { selectionView.isHidden = true; return }
-        for (index, title) in currentItems.enumerated() {
-            let button = UIButton(type: .system); button.setTitle(title, for: .normal)
-            button.setTitleColor(.white, for: .normal); button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-            button.backgroundColor = .clear; button.clipsToBounds = true; button.tag = index
+
+    /// Visible slice of allItems based on current windowStart
+    var visibleItems: [String] {
+        let end = min(windowStart + maxVisible, allItems.count)
+        guard end > windowStart else { return [] }
+        return Array(allItems[windowStart..<end])
+    }
+
+    /// Local index (0–2) of selected item within visible window; -1 if not visible
+    var selectedLocalIndex: Int {
+        let local = selectedGlobalIndex - windowStart
+        return (local >= 0 && local < visibleItems.count) ? local : -1
+    }
+
+    /// Best windowStart so the selected item is visible, clamped to valid range
+    func clampedWindowStart(for globalIndex: Int) -> Int {
+        guard !allItems.isEmpty else { return 0 }
+        let maxStart = max(0, allItems.count - maxVisible)
+        let ideal = globalIndex - (maxVisible / 2)
+        return min(max(0, ideal), maxStart)
+    }
+
+    func applyBorderColor(_ hex: String?) {
+        if let hex = hex, !hex.isEmpty {
+            pillContainer.layer.borderColor = UIColor(hex: hex).cgColor
+        } else {
+            pillContainer.layer.borderColor = UIColor.white.cgColor
+        }
+    }
+}
+
+// MARK: - Render
+private extension ZoneSelectorView {
+
+    func renderVisible(slideDir: PageDirection) {
+        updateArrowState()
+
+        let update = { [weak self] in
+            guard let self else { return }
+            self.rebuildSegmentButtons()
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+            self.needsSelectionLayoutUpdate = true
+            self.updateSelection(animated: false)
+        }
+
+        if slideDir != .none {
+            animatePageChange(direction: slideDir, update: update)
+        } else {
+            update()
+        }
+    }
+
+    func rebuildSegmentButtons() {
+        // Remove old buttons
+        for btn in segmentsStack.arrangedSubviews {
+            segmentsStack.removeArrangedSubview(btn)
+            btn.removeFromSuperview()
+        }
+
+        let visible = visibleItems
+        guard !visible.isEmpty else {
+            selectionView.isHidden = true
+            return
+        }
+
+        let totalWidth = pillContainer.bounds.width - 80   // 80 = space for both arrows + spacing
+        let itemWidth  = totalWidth / CGFloat(maxVisible)
+
+        for (localIndex, title) in visible.enumerated() {
+            let button = UIButton(type: .system)
+            button.setTitle(title, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+            button.backgroundColor = .clear
+            button.clipsToBounds = true
+            button.tag = localIndex                         // tag = local index (0, 1, 2)
+            button.widthAnchor.constraint(equalToConstant: itemWidth).isActive = true
             button.addTarget(self, action: #selector(didTapSegment(_:)), for: .touchUpInside)
-            segmentButtons.append(button); segmentsStack.addArrangedSubview(button)
+            segmentsStack.addArrangedSubview(button)
         }
+
         selectionView.isHidden = false
     }
-}
-
-private extension ZoneSelectorView {
-    @objc func didTapSegment(_ sender: UIButton) {
-        let newIndex = clampedIndex(sender.tag, for: currentItems)
-        guard newIndex != selectedIndex || currentItems.indices.contains(newIndex) else { emitSelectionIfPossible(); return }
-        selectedIndex = newIndex; updateSelection(animated: true); emitSelectionIfPossible()
+    
+    func updateArrowState() {
+        leftButton.isHidden = false
+        rightButton.isHidden = false
+        setArrow(leftButton,  enabled: windowStart > 0)
+        setArrow(rightButton, enabled: windowStart + maxVisible < allItems.count)
     }
-    @objc func didTapLeft()  { guard hasMoreLeft  else { return }; onPrevPage?() }
-    @objc func didTapRight() { guard hasMoreRight else { return }; onNextPage?() }
-    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
-        switch gesture.direction { case .left: didTapRight(); case .right: didTapLeft(); default: break }
-    }
-    func emitSelectionIfPossible() {
-        guard currentItems.indices.contains(selectedIndex) else { return }
-        onSelectItem?(currentItems[selectedIndex], selectedIndex)
-    }
-}
-
-private extension ZoneSelectorView {
-    func updateArrowState() { setArrow(leftButton, enabled: hasMoreLeft); setArrow(rightButton, enabled: hasMoreRight) }
+    
     func setArrow(_ button: UIButton, enabled: Bool) {
-        button.isEnabled = enabled; button.isHidden = !enabled
-        UIView.animate(withDuration: 0.15) { button.alpha = enabled ? 1.0 : 0.0 }
+        button.isEnabled = enabled
+        UIView.animate(withDuration: 0.15) {
+            button.alpha = enabled ? 1.0 : 0.35
+        }
     }
+    
     func updateSelection(animated: Bool) {
-        guard !currentItems.isEmpty, selectedIndex >= 0, selectedIndex < segmentButtons.count else { selectionView.isHidden = true; return }
-        guard segmentButtons[selectedIndex].bounds.width > 0 else { needsSelectionLayoutUpdate = true; return }
+        let buttons = segmentsStack.arrangedSubviews.compactMap { $0 as? UIButton }
+        let local   = selectedLocalIndex
+
+        guard !buttons.isEmpty, local >= 0, local < buttons.count else {
+            selectionView.isHidden = true
+            selectionView.alpha = 0
+            return
+        }
+
+        guard buttons[local].bounds.width > 0 else {
+            needsSelectionLayoutUpdate = true
+            return
+        }
+
+        // Don't force isHidden/alpha here — let animatePageChange control visibility during slides
         selectionView.isHidden = false
-        let selectedButton = segmentButtons[selectedIndex]
+
+        let selectedButton = buttons[local]
         let frameInPill = selectedButton.superview?.convert(selectedButton.frame, to: pillContainer) ?? .zero
-        let expandX: CGFloat = 6; let insetY: CGFloat = 1
-        let targetFrame = frameInPill.insetBy(dx: -expandX, dy: insetY)
-        for (index, button) in segmentButtons.enumerated() { button.alpha = (index == selectedIndex) ? 1.0 : 0.85 }
-        let applyFrame = { self.selectionView.frame = targetFrame; self.selectionView.layer.cornerRadius = targetFrame.height / 2 }
+        let targetFrame = frameInPill.insetBy(dx: -6, dy: 1)
+
+        for (i, btn) in buttons.enumerated() {
+            btn.alpha = (i == local) ? 1.0 : 0.75
+        }
+
+        let applyFrame = {
+            self.selectionView.frame = targetFrame
+            self.selectionView.layer.cornerRadius = targetFrame.height / 2
+        }
+
         if animated {
-            UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 0.88, initialSpringVelocity: 0.25,
-                           options: [.beginFromCurrentState, .curveEaseOut]) { applyFrame() }
-        } else { applyFrame() }
+            UIView.animate(
+                withDuration: 0.25, delay: 0,
+                usingSpringWithDamping: 0.88, initialSpringVelocity: 0.25,
+                options: [.beginFromCurrentState, .curveEaseOut],
+                animations: applyFrame
+            )
+        } else {
+            applyFrame()
+        }
     }
 }
 
+// MARK: - Actions
 private extension ZoneSelectorView {
+
+    @objc func didTapLeft() {
+        guard windowStart > 0 else { return }
+        windowStart -= 1
+        renderVisible(slideDir: .prev)
+        onPrevPage?()
+    }
+
+    @objc func didTapRight() {
+        guard windowStart + maxVisible < allItems.count else { return }
+        windowStart += 1
+        renderVisible(slideDir: .next)
+        onNextPage?()
+    }
+
+    @objc func didTapSegment(_ sender: UIButton) {
+        let newGlobal = windowStart + sender.tag
+        guard allItems.indices.contains(newGlobal) else { return }
+
+        selectedGlobalIndex = newGlobal
+        updateSelection(animated: true)
+        emitSelection()
+
+        // Tap bounce animation
+        UIView.animate(withDuration: 0.12, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.93, y: 0.93)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.15) { sender.transform = .identity }
+        })
+    }
+
+    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+        switch gesture.direction {
+        case .left:  didTapRight()
+        case .right: didTapLeft()
+        default: break
+        }
+    }
+
+    func emitSelection() {
+        guard allItems.indices.contains(selectedGlobalIndex) else { return }
+        onSelectItem?(allItems[selectedGlobalIndex], selectedGlobalIndex)
+    }
+}
+
+// MARK: - Page Transition Animation
+private extension ZoneSelectorView {
+
     func animatePageChange(direction: PageDirection, update: @escaping () -> Void) {
-        let offset: CGFloat = (direction == .next) ? -40 : 40
-        UIView.animate(withDuration: 0.18, delay: 0, options: [.curveEaseIn]) {
+        let offset: CGFloat = direction == .next ? -60 : 60
+        
+        selectionView.isHidden = true
+        selectionView.alpha = 0
+        
+        UIView.animate(withDuration: 0.20, delay: 0, options: .curveEaseIn) {
             self.segmentsStack.transform = CGAffineTransform(translationX: offset, y: 0)
-            self.segmentsStack.alpha = 0; self.selectionView.alpha = 0
+            self.segmentsStack.alpha = 0
         } completion: { _ in
-            update(); self.segmentsStack.transform = CGAffineTransform(translationX: -offset, y: 0)
-            UIView.animate(withDuration: 0.22, delay: 0, usingSpringWithDamping: 0.92, initialSpringVelocity: 0.2,
-                           options: [.curveEaseOut]) {
-                self.segmentsStack.transform = .identity; self.segmentsStack.alpha = 1; self.selectionView.alpha = 1
-            } completion: { _ in self.updateSelection(animated: false) }
+            update()
+            self.segmentsStack.transform = CGAffineTransform(translationX: -offset, y: 0)
+            
+            UIView.animate(
+                withDuration: 0.35, delay: 0,
+                usingSpringWithDamping: 0.85, initialSpringVelocity: 0.3,
+                options: .curveEaseOut
+            ) {
+                self.segmentsStack.transform = .identity
+                self.segmentsStack.alpha = 1
+            } completion: { _ in
+                self.needsSelectionLayoutUpdate = false
+                self.updateSelection(animated: false)
+                UIView.animate(withDuration: 0.15) {
+                    self.selectionView.alpha = 1
+                }
+            }
         }
     }
 }
@@ -1807,6 +1993,8 @@ private extension Tables3DMapVC {
 
         currentPitch = initialPitch
         currentYaw = initialYaw
+        
+        currentDistance = cameraNode.position.length()
 
         SCNTransaction.commit()
 
