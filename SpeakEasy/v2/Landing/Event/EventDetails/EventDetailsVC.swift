@@ -272,6 +272,7 @@ class EventDetailsVC: UIViewController {
         ticketShimmerView.isHidden = false
         ticketTitleShimmerView.isHidden = false
         buyNowBtnShimmerView.isHidden = false
+        scrollView.isScrollEnabled = false
         //        buyNowBtnShimmerView.cornerRadius = 30
         ticketTitleStackShimmerView.isHidden = false
         ticketTitleStackView.isHidden = true
@@ -287,6 +288,7 @@ class EventDetailsVC: UIViewController {
         ticketShimmerView.stopAnimating()
         ticketTitleShimmerView.stopAnimating()
         buyNowBtnShimmerView.stopAnimating()
+        scrollView.isScrollEnabled = true
         
         ticketShimmerView.isHidden = true
         ticketTitleShimmerView.isHidden = true
@@ -816,27 +818,29 @@ class EventDetailsVC: UIViewController {
             buyNowBtnSuperView.isHidden = false
             continueToCheckOutView.isHidden = true
         }
+        
+        configureVIPTablesView()
 
-        let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
-
-        if isAnyFeatureEnabled  && isEventDetailAPICalled {
-//            UIView.transition(with: vipTablesView,
-//                              duration: 0.25,
-//                              options: .transitionCrossDissolve,
-//                              animations: {
-                self.vipTablesView.isHidden = !isAnyFeatureEnabled
-//            })
-        } else {
-            vipTablesView.isHidden = true
-        }
-
-        if event.isEnable3DMap && event.isEnableOnlineTables && !self.seatingAreasFilteredOut.isEmpty {
-            vipTableSubTitleLbl.text = "Ideal for larger groups. 3D map available."
-        } else if event.isEnable3DMap && event.isEnableOnlineTables {
-            vipTableSubTitleLbl.text = "Ideal for larger groups."
-        } else {
-            vipTableSubTitleLbl.text = "VIP Tables Ideal for larger groups."
-        }
+//        let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
+//
+//        if isAnyFeatureEnabled  && isEventDetailAPICalled {
+////            UIView.transition(with: vipTablesView,
+////                              duration: 0.25,
+////                              options: .transitionCrossDissolve,
+////                              animations: {
+//                self.vipTablesView.isHidden = !isAnyFeatureEnabled
+////            })
+//        } else {
+//            vipTablesView.isHidden = true
+//        }
+//
+//        if event.isEnable3DMap && event.isEnableOnlineTables && !self.seatingAreasFilteredOut.isEmpty {
+//            vipTableSubTitleLbl.text = "Ideal for larger groups. 3D map available."
+//        } else if event.isEnable3DMap && event.isEnableOnlineTables {
+//            vipTableSubTitleLbl.text = "Ideal for larger groups."
+//        } else {
+//            vipTableSubTitleLbl.text = "VIP Tables Ideal for larger groups."
+//        }
         
         if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
             webSiteTitleLbl.text = button.title
@@ -1040,6 +1044,56 @@ class EventDetailsVC: UIViewController {
                 noHiddenFeesLbl.isHidden = false
             }
         }
+    }
+    
+    private func configureVIPTablesView() {
+        
+        let isOnlineTablesEnabled = event?.isEnableOnlineTables
+        let isReservationRequestEnabled = event?.isEnableReservationRequest
+        let is3DMapEnabled = event?.isEnable3DMap
+        let hasSeatingAreas = !seatingAreasFilteredOut.isEmpty
+    
+        
+        let shouldShowVIPTablesView: Bool = {
+            if isReservationRequestEnabled ?? false {
+                return true
+            }
+            
+            // Show online tables only if seating areas exist
+            if isOnlineTablesEnabled ?? false && hasSeatingAreas {
+                return true
+            }
+            
+            return false
+        }()
+        
+        vipTablesView.isHidden = !(shouldShowVIPTablesView && isEventDetailAPICalled)
+        
+        // MARK: - Subtitle
+        
+        if isReservationRequestEnabled ?? false {
+            
+            vipTableSubTitleLbl.text = (
+                is3DMapEnabled ?? false && hasSeatingAreas
+            )
+            ? "Reservation requests available. 3D map available."
+            : "Reservation requests available."
+            
+            return
+        }
+        
+        if isOnlineTablesEnabled ?? false {
+            
+            vipTableSubTitleLbl.text = (
+                is3DMapEnabled ?? false && hasSeatingAreas
+            )
+            ? "Ideal for larger groups. 3D map available."
+            : "Ideal for larger groups."
+            
+            return
+        }
+        
+        vipTableSubTitleLbl.text = nil
     }
     
     func applyNavAppearance(collapsed: Bool) {

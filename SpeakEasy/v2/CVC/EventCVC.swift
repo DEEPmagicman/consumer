@@ -75,7 +75,7 @@ final class EventCVC: UICollectionViewCell {
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             eventTimeLbl.text = customText
         } else {
-            let timezone  = ""
+            let timezone  = event.venue?.timezone ?? ""
             let dateText  = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: timezone)
             let startTime = event.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma,    customTimeZone: timezone)
             let endTime   = event.endDateTime?.convertDateFormat(from:  .yyyyMMddHHmmss, to: .hmma,    customTimeZone: timezone) ?? "LATE"
