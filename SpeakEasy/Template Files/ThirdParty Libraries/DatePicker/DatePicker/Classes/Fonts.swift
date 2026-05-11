@@ -27,24 +27,31 @@ enum AppFont {
 
     // MARK: - Font Family
     enum Family {
-        case inter
-        case poppins
+           case inter
+           case poppins
+           case geist
 
-        var prefix: String {
-            switch self {
-            case .inter:    return "Inter"
-            case .poppins:  return "Poppins"
-            }
-        }
-    }
+           var prefix: String {
+               switch self {
+               case .inter:
+                   return "Inter"
+               case .poppins:
+                   return "Poppins"
+               case .geist:
+                   return "Geist"
+               }
+           }
+       }
 
     // MARK: - Weight
     enum Weight: String {
-        case regular = "Regular"
-        case medium = "Medium"
-        case semibold = "SemiBold"
-        case bold = "Bold"
-    }
+           case thin = "Thin"
+           case regular = "Regular"
+           case medium = "Medium"
+           case semibold = "SemiBold"
+           case bold = "Bold"
+           case extraBold = "ExtraBold"
+       }
 
     // MARK: - Main Font
     static func font(

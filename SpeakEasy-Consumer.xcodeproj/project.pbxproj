@@ -361,6 +361,12 @@
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
+		CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */; };
+		CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */; };
+		CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */; };
+		CEADBDC92FB1D67F004F8BE6 /* Geist-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC52FB1D67F004F8BE6 /* Geist-SemiBold.ttf */; };
+		CEADBDCA2FB1D67F004F8BE6 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */; };
+		CEADBDCC2FB1D696004F8BE6 /* Geist-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDCB2FB1D696004F8BE6 /* Geist-ExtraBold.ttf */; };
 		CEB654222E0D319400E9BFD3 /* BarTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEB654212E0D319400E9BFD3 /* BarTab.storyboard */; };
 		CEB654242E0D485100E9BFD3 /* BarTabCheckoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */; };
 		CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */; };
@@ -819,6 +825,12 @@
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
+		CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
+		CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
+		CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
+		CEADBDC52FB1D67F004F8BE6 /* Geist-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-SemiBold.ttf"; sourceTree = "<group>"; };
+		CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Thin.ttf"; sourceTree = "<group>"; };
+		CEADBDCB2FB1D696004F8BE6 /* Geist-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-ExtraBold.ttf"; sourceTree = "<group>"; };
 		CEB654212E0D319400E9BFD3 /* BarTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BarTab.storyboard; sourceTree = "<group>"; };
 		CEB654232E0D485100E9BFD3 /* BarTabCheckoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabCheckoutVC.swift; sourceTree = "<group>"; };
 		CEB654252E0D60C200E9BFD3 /* BarTabPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarTabPresenter.swift; sourceTree = "<group>"; };
@@ -1876,6 +1888,7 @@
 		CE48677B286F358700FD277E /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				CEADBDBF2FB1D61A004F8BE6 /* Geist */,
 				6AF2B9E02F0BA14B00069A90 /* Inter */,
 				691609402C7F418000C74F48 /* Avenir-Regular.ttf */,
 				691609422C7F418000C74F48 /* Motor-Regular.ttf */,
@@ -2039,6 +2052,19 @@
 				CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */,
 			);
 			path = DropDownCell;
+			sourceTree = "<group>";
+		};
+		CEADBDBF2FB1D61A004F8BE6 /* Geist */ = {
+			isa = PBXGroup;
+			children = (
+				CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */,
+				CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */,
+				CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */,
+				CEADBDC52FB1D67F004F8BE6 /* Geist-SemiBold.ttf */,
+				CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */,
+				CEADBDCB2FB1D696004F8BE6 /* Geist-ExtraBold.ttf */,
+			);
+			path = Geist;
 			sourceTree = "<group>";
 		};
 		CEB654202E0D317800E9BFD3 /* Bartab */ = {
@@ -2403,7 +2429,7 @@
 				CEDB81822AA20A5900DAD9FE /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				CEDB81852AA20A9600DAD9FE /* XCRemoteSwiftPackageReference "FSCalendar" */,
 				CEDB81882AA20BE100DAD9FE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */,
+				CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */,
 				69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				CE0A750B2B9854550013381D /* XCRemoteSwiftPackageReference "FSPagerView" */,
 				CECDD9EE2B986D7D007E94A7 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
@@ -2541,11 +2567,16 @@
 				041D58D62F87727D001999F6 /* ArtistDetailsVC.xib in Resources */,
 				CE0BA9342F6C183C00AB8996 /* VenueEventTVC.xib in Resources */,
 				6AF2B9E92F0BA1EC00069A90 /* Inter-Regular.ttf in Resources */,
+				CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */,
+				CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */,
+				CEADBDC92FB1D67F004F8BE6 /* Geist-SemiBold.ttf in Resources */,
+				CEADBDCA2FB1D67F004F8BE6 /* Geist-Regular.ttf in Resources */,
 				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
 				6AF2B9EA2F0BA1EC00069A90 /* Inter-Light.ttf in Resources */,
 				6AF2B9EB2F0BA1EC00069A90 /* Inter-SemiBold.ttf in Resources */,
 				04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */,
 				6AF2B9EC2F0BA1EC00069A90 /* Inter-Italic.ttf in Resources */,
+				CEADBDCC2FB1D696004F8BE6 /* Geist-ExtraBold.ttf in Resources */,
 				CE954B9A2C392C8500BD3009 /* DropdownCustomCell.xib in Resources */,
 				CE0E87492994C61000F2B2E9 /* Payment.storyboard in Resources */,
 				CE0762E22EFA9C1F00670694 /* SelectLocationVC.xib in Resources */,
@@ -2565,6 +2596,7 @@
 				04A202F22F3605D400900A27 /* EventLineUpCVC.xib in Resources */,
 				CE4580142EF94E3300A873C4 /* Discover.storyboard in Resources */,
 				CE48D8352EFA7CE100E7110B /* EventV2CVC.xib in Resources */,
+				CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */,
 				6AF2B9F62F0BC9CF00069A90 /* TableBookingListVC.xib in Resources */,
 				CE59ED6D2F6D5ADC00831974 /* CoverTicketTVC.xib in Resources */,
 				CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */,
@@ -2605,9 +2637,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SpeakEasy-Consumer/Pods-SpeakEasy-Consumer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3525,7 +3561,7 @@
 				version = 8.15.0;
 			};
 		};
-		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */ = {
+		CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
 			requirement = {
@@ -3633,12 +3669,12 @@
 		};
 		CEDB81A02AA2110E00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 		CEDB81A22AA2112C00DAD9FE /* SocketIO */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket.io-client-swift" */;
+			package = CEDB819F2AA2110E00DAD9FE /* XCRemoteSwiftPackageReference "socket" */;
 			productName = SocketIO;
 		};
 /* End XCSwiftPackageProductDependency section */
