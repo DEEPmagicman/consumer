@@ -67,6 +67,7 @@ extension AppDelegate {
         let controller = Splash()
         self.window?.rootViewController = controller
         self.window?.makeKeyAndVisible()
+        ThemeManager.shared.apply(theme: ThemeManager.shared.current)
     }
     
     func changeRootViewController(forceCreateAccount: Bool = false) {

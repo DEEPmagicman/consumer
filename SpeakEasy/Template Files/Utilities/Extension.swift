@@ -301,22 +301,22 @@ extension UIView {
 }
 
 extension UIView {
-
+    
     func applyGradient(id: String) {
         layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
-
+        
         let colors = gradientColors(for: id)
-
+        
         let gradient = CAGradientLayer()
         gradient.frame = bounds
         gradient.cornerRadius = bounds.height / 2
         gradient.colors = colors.map { $0.cgColor }
         gradient.startPoint = CGPoint(x: 0, y: 0)
         gradient.endPoint = CGPoint(x: 1, y: 1)
-
+        
         layer.insertSublayer(gradient, at: 0)
     }
-
+    
     private func gradientColors(for id: String) -> [UIColor] {
         let palettes: [[UIColor]] = [
             [UIColor(hex: "#f9d423"), UIColor(hex: "#ff4e50")],
@@ -328,10 +328,51 @@ extension UIView {
             [UIColor(hex: "#ffecd2"), UIColor(hex: "#fcb69f")],
             [UIColor(hex: "#a18cd1"), UIColor(hex: "#fbc2eb")]
         ]
-
+        
         let index = abs(id.hashValue) % palettes.count
         return palettes[index]
     }
+    
+    enum GradientDirection {
+        case topToBottom
+        case bottomToTop
+        case leftToRight
+        case rightToLeft
+
+        var startPoint: CGPoint {
+            switch self {
+            case .topToBottom: return CGPoint(x: 0.5, y: 0.0)
+            case .bottomToTop: return CGPoint(x: 0.5, y: 1.0)
+            case .leftToRight: return CGPoint(x: 0.0, y: 0.5)
+            case .rightToLeft: return CGPoint(x: 1.0, y: 0.5)
+            }
+        }
+
+        var endPoint: CGPoint {
+            switch self {
+            case .topToBottom: return CGPoint(x: 0.5, y: 1.0)
+            case .bottomToTop: return CGPoint(x: 0.5, y: 0.0)
+            case .leftToRight: return CGPoint(x: 1.0, y: 0.5)
+            case .rightToLeft: return CGPoint(x: 0.0, y: 0.5)
+            }
+        }
+    }
+    
+    func applyScreenBgGradient(
+        colors: [UIColor] = [AppColor.background, AppColor.primaryColor],
+        direction: GradientDirection = .topToBottom
+    ) {
+        layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.startPoint = direction.startPoint
+        gradient.endPoint = direction.endPoint
+        gradient.frame = bounds
+        
+        layer.insertSublayer(gradient, at: 0)
+    }
+    
 }
 
 extension UITapGestureRecognizer {

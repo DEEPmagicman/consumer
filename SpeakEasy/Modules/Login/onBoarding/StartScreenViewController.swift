@@ -106,7 +106,7 @@ final class StartScreenViewController: UIViewController {
     
     @IBAction func onClickAsGuest(_ sender: Any) {
         UserDefault.shared.isGuest = true
-        UserDefault.shared.isLoggedIn = false
+        UserDefault.shared.isLoggedIn = true
         AppDelegate.shared.changeRootViewController()
     }
 }
