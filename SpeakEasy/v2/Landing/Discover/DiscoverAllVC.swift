@@ -53,29 +53,10 @@ final class DiscoverAllVC: UIViewController {
         
         getTonightEvent()
         getAllEvents()
-        
-        premiumExperiencesView.setHorizontalGradientColor(
-            colors: [
-                UIColor(hex: "#292929").withAlphaComponent(0.1).cgColor,
-                UIColor(hex: "#FFCE51").withAlphaComponent(0.1).cgColor
-            ]
-        )
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        premiumExperiencesView.setHorizontalGradientColor(
-            colors: [
-                UIColor(hex: "#292929").withAlphaComponent(0.1).cgColor,
-                UIColor(hex: "#FFCE51").withAlphaComponent(0.1).cgColor
-            ]
-        )
-    }
-    
-    // MARK: - Setup
 
     private func registerCells() {
-        tonightEventCollectionView.register(EventCVC.nib,    forCellWithReuseIdentifier: EventCVC.identifier)
+        tonightEventCollectionView.register(EventV2CVC.nib,    forCellWithReuseIdentifier: EventV2CVC.identifier)
         venueListCollectionView.register(VenueCVC.nib,       forCellWithReuseIdentifier: VenueCVC.identifier)
         allEventsCollectionView.register(EventV2CVC.nib,     forCellWithReuseIdentifier: EventV2CVC.identifier)
     }
@@ -327,11 +308,10 @@ extension DiscoverAllVC: UICollectionViewDelegate, UICollectionViewDataSource {
         switch collectionView {
             
         case tonightEventCollectionView:
-            let cell: EventCVC = collectionView.dequeue(
-                withIdentifier: EventCVC.identifier, for: indexPath)
-            cell.bgImg.hero.id        = nil
-            cell.eventTitleLbl.hero.id = nil
-            // No cell shimmer — full-screen skeleton covers this
+            let cell: EventV2CVC = collectionView.dequeue(
+                withIdentifier: EventV2CVC.identifier, for: indexPath)
+            cell.image.hero.id     = nil
+            cell.eventName.hero.id = nil
             cell.setupData(event: todaysEvents[indexPath.item])
             return cell
             

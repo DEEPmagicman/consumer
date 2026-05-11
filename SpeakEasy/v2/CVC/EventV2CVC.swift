@@ -89,7 +89,7 @@ final class EventV2CVC: UICollectionViewCell {
         )
         
         // Text
-        venueName.text = event.venue?.name
+        venueName.text = event.venue?.name.uppercased()
         eventName.text = event.title
         
         if let customText = event.openTimeCustomText,
