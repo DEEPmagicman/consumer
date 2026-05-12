@@ -43,6 +43,11 @@ class PagerViewTVC: FSPagerViewCell {
         super.contentView.layer.shadowColor = UIColor.clear.cgColor
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        upsellQRBgView.layer.borderWidth = 0
+    }
+    
     
     @objc func qrImageTapped() {
         containerView.isUserInteractionEnabled = false
@@ -99,10 +104,11 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
             if let barBooking = barTabBooking {
                 if let color = qrBorderColorHex {
                     upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
+                    upsellQRBgView.layer.borderWidth = 8
                 } else {
                     upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
                 }
-                upsellQRBgView.layer.borderWidth = 8
+             
                 cell.titleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.customName ?? "" == "" ? barBooking.uniqueTickets[indexPath.row].coverTicket?.displayName : barBooking.uniqueTickets[indexPath.row].coverTicket?.displayCustomName
                 cell.subTitleLbl.text = barBooking.uniqueTickets[indexPath.row].coverTicket?.displayDescription
                 cell.quantityLbl.text = "\(barBooking.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
@@ -115,10 +121,11 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                
                 if let color = qrBorderColorHex {
                     upsellQRBgView.layer.borderColor =  UIColor(hex: color).cgColor
+                    upsellQRBgView.layer.borderWidth = 8
                 } else {
                     upsellQRBgView.layer.borderColor = UIColor.clear.cgColor
                 }
-                upsellQRBgView.layer.borderWidth = 8
+              
                 
                 cell.titleLbl.text = uniqueTickets[indexPath.row].customName ?? "" == "" ? uniqueTickets[indexPath.row].displayName : uniqueTickets[indexPath.row].displayCustomName
                 cell.subTitleLbl.text = uniqueTickets[indexPath.row].displayDescription
@@ -133,7 +140,7 @@ extension PagerViewTVC: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         } else {
-            upsellQRBgView.layer.borderColor = UIColor(hex: "#F1CE72").cgColor
+            upsellQRBgView.layer.borderColor = UIColor(hex: "#016FD0").cgColor
             upsellQRBgView.layer.borderWidth = 8
             cell.subTitleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.description
             cell.titleLbl.text = addOnsBookingHasItem[indexPath.row].addOns?.name

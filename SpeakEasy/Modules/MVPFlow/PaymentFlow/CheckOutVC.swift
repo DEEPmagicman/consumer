@@ -45,8 +45,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet private weak var timerLbl: UILabel!
     @IBOutlet private weak var noFeeView: UIView!
     @IBOutlet weak var salesTexView: UIView!
-    @IBOutlet weak var salesTaxAmount: UILabel!
-    @IBOutlet weak var salesTaxPr: UILabel!
+//    @IBOutlet weak var salesTaxAmount: UILabel!
+//    @IBOutlet weak var salesTaxPr: UILabel!
     @IBOutlet weak var bgImage: UIImageView!
     @IBOutlet weak var promoCodeView: UIView!
     @IBOutlet weak var promoCodeTF: UITextField!
@@ -54,7 +54,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var discountView: UIView!
     @IBOutlet weak var discountAmount: UILabel!
     @IBOutlet weak var promoCodeAppliedLbl: UILabel!
-    @IBOutlet weak var salesTaxName: UILabel!
+//    @IBOutlet weak var salesTaxName: UILabel!
     @IBOutlet weak var addOnsListHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketListView: UIView!
     @IBOutlet weak var addOnsView: UIView!
@@ -84,10 +84,13 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     @IBOutlet weak var disclaimerText: UILabel!
     @IBOutlet weak var customFeesTableView: UITableView!
     @IBOutlet weak var customFeesTableViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var salesTaxTableView: UITableView!
+    @IBOutlet weak var salesTaxTableViewHeight: NSLayoutConstraint!
     
     var selectedCoverTickets = [CoverTicket]()
     var selectedAddOnsItem = [UpSellTicket]()
     var selectedEventTicket = [EventTicket]()
+    private var salesTaxList = [SalesTax]()
     var totalPrice: Double = 0
     var venue: ClipVenue?
     var type: PaymentIntentType = .appClip
@@ -154,6 +157,8 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         addOnsTableView.dataSource = self
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         addOnsTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
+        salesTaxTableView.delegate = self
+        salesTaxTableView.dataSource = self
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }
             self.ticketListHeight.constant = self.ticketListTableView.contentSize.height
@@ -257,6 +262,30 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         policyLbl.text = venue?.venueSettings?.policyText ?? "Opt in for future messages"
         disclaimerText.text = venue?.venueSettings?.coverTicketSettings?.disclaimer ?? ""
         disclaimerView.isHidden = selectedCoverTickets.count == 0 || venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty ?? true
+    }
+    
+    private func setupSalesTaxViews() {
+        let currencySymbol = venue?.venueSettings?.currencySymbol ?? "$"
+
+        if let taxes = paymentDetail?.salesTaxes, !taxes.isEmpty {
+            salesTexView.isHidden = false
+            salesTaxList = taxes
+            salesTaxTableViewHeight.constant = CGFloat(taxes.count * 30)
+            salesTaxTableView.setNeedsLayout()
+            salesTaxTableView.reloadData()
+
+        } else if let tax = paymentDetail?.salesTax, tax > 0 {
+            salesTexView.isHidden = false
+            salesTaxList = [SalesTax(id: "", salesTax: tax, salesTaxName: paymentDetail?.salesTaxName ?? "Sales Tax")]
+            salesTaxTableViewHeight.constant = 30
+            salesTaxTableView.setNeedsLayout()
+            salesTaxTableView.reloadData()
+
+        } else {
+            salesTexView.isHidden = true
+            salesTaxList = []
+            salesTaxTableView.reloadData()
+        }
     }
         
     @objc func exitBackGround() {
@@ -543,12 +572,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
     
     private var setSalesTaxView: Bool {
         if selectedCoverTickets.allSatisfy({ $0.isCustom == true }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
+//            salesTaxPr.text = "(\(venue?.venueSettings?.customCoverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.customCoverTicketSettings?.isEnableSalesTax == true ? true : false
         }
         
         if selectedCoverTickets.allSatisfy({ $0.isCustom == false }) {
-            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
+//            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketSettings?.salesTax ?? 0.0)%)"
             return venue?.venueSettings?.coverTicketSettings?.isEnableSalesTax == true && venue?.venueSettings?.coverTicketSettings?.isUpFront == false ? true : false
         }
         
@@ -610,7 +639,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             totalPrice = paymentDetail?.total ?? 0
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
             processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
-            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
+//            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
             if paymentDetail?.customFee ?? 0 == 0 {
                 customFeesView.isHidden = true
             } else {
@@ -628,14 +657,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             subTotalView.isHidden = false
             processingFeesView.isHidden = event?.eventTicketSettings?.isProcessingFeePassToCustomer == true ? false : true
             
-            if paymentDetail?.salesTax ?? 0 == 0 || event?.eventTicketSettings?.isEnableSalesTax == false || event?.eventTicketSettings?.isUpFront == true {
-                salesTexView.isHidden = true
+            if event?.eventTicketSettings?.isEnableSalesTax == true && event?.eventTicketSettings?.isUpFront == false {
+                setupSalesTaxViews()
             } else {
-                salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
-                salesTaxName.text = paymentDetail?.salesTaxName ?? "Custom fee"
-                salesTaxPr.text = "(\(event?.eventTicketSettings?.salesTax ?? 0)%)"
-                salesTexView.isHidden = false
+                salesTexView.isHidden = true
             }
+            
             if event?.eventTicketSettings?.isUpFront == true {
                 if paymentDetail?.discount ?? 0 == 0 {
                     subTotalView.isHidden = true
@@ -659,7 +686,11 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             addOnsView.isHidden = selectedAddOnsItem.count == 0
             totalView.isHidden = selectedCoverTickets.count == 0 || selectedAddOnsItem.count == 0
             subTotalView.isHidden = !setSalesTaxView && !setProcessingTaxView && !setCustomTaxView
-            salesTexView.isHidden = !setSalesTaxView
+            if setSalesTaxView {
+                setupSalesTaxViews()
+            } else {
+                salesTexView.isHidden = true
+            }
             processingFeesView.isHidden = !setProcessingTaxView
             customFeesView.isHidden = !setCustomTaxView
             noFeeView.isHidden = !subTotalView.isHidden
@@ -672,9 +703,9 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
             totalPrice = ((paymentDetail?.total ?? 0) + (addOnsPaymentDetails?.total ?? 0))
             mainTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((totalPrice).decimalFormat(true))"
-            salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
+//            salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
             subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
-            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
+//            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
             if bookingType == .FREE {
                 subTotalView.isHidden = true
                 salesTexView.isHidden = true
@@ -983,6 +1014,8 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             return eventQuestions.count
         } else if tableView == customFeesTableView {
             return self.paymentDetail?.customFees?.count ?? 0
+        } else if tableView == salesTaxTableView  {
+            return salesTaxList.count
         } else {
             switch type {
             case .appClip:
@@ -1039,6 +1072,14 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
             cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
             return cell
+        } else if tableView == salesTaxTableView {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SalesTaxTVC", for: indexPath) as! SalesTaxTVC
+                let tax = salesTaxList[indexPath.row]
+            cell.salesTaxName.text = tax.salesTaxName ?? "Sales Tax"
+            cell.salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((tax.salesTax ?? 0).decimalFormat(true))"
+                cell.salesTaxPr.text = ""
+                cell.selectionStyle = .none
+                return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TicketDetailTVC", for: indexPath) as! TicketDetailTVC
             switch type {
