@@ -611,4 +611,24 @@ final class Navigate {
         let vc = StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func openPhoneLoginPopup(_ sender: UIViewController) {
+        let vc = AuthPhoneOTPVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        vc.isFromLogin = true
+        vc.isFromSettings = false
+
+        vc.onOtpSuccess = { [weak sender] in
+            guard let sender else { return }
+
+            if UserDefault.shared.user?.isProfileCompleted == true {
+                AppDelegate.shared.setRootVC()
+            } else {
+                Navigate.to.enterNameVc(sender)
+            }
+        }
+
+        sender.present(vc, animated: true)
+    }
 }

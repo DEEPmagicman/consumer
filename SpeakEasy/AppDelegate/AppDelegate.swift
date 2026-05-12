@@ -47,6 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         RemoteConfigHelper.shared.getRemoteConfigValues()
         window = UIWindow(frame: UIScreen.main.bounds)
+        
+        // isVersionV3 is true for new v3 version design
+        UserDefault.shared.isVersionV3 = true
         launchApplication()
         return true
     }
@@ -80,7 +83,27 @@ extension AppDelegate {
                 showOnboarding(isNavigateToDetail: true)
             }
         } else {
+//            if UserDefault.shared.isVersionV3 == true {
+////                showPhoneLoginRoot()
+//                return
+//            }
             showOnboarding(forceCreateAccount: forceCreateAccount)
+        }
+    }
+    
+    func showPhoneLoginRoot() {
+        let rootVC = UIViewController()
+        rootVC.view.backgroundColor = .clear
+
+        let navigation = UINavigationController(rootViewController: rootVC)
+        navigation.navigationBar.isHidden = true
+        navigation.modalPresentationStyle = .fullScreen
+
+        self.window?.rootViewController = navigation
+        self.window?.makeKeyAndVisible()
+
+        DispatchQueue.main.async {
+            Navigate.to.openPhoneLoginPopup(rootVC)
         }
     }
     
@@ -91,12 +114,13 @@ extension AppDelegate {
         tutorialNavigation.modalTransitionStyle = .crossDissolve
         tutorialNavigation.modalPresentationStyle = .overCurrentContext
         self.window?.rootViewController = tutorialNavigation
-        
-        if isNavigateToDetail {
-            Navigate.to.signUpViewControllerVc(controller)
-        } else if forceCreateAccount {
-            Navigate.to.enterPhoneNumVc(controller)
-        }
+        Navigate.to.openPhoneLoginPopup(controller)
+
+//        if isNavigateToDetail {
+//            Navigate.to.signUpViewControllerVc(controller)
+//        } else if forceCreateAccount {
+//            Navigate.to.enterPhoneNumVc(controller)
+//        }
     }
     
     func showNameVC() {
@@ -139,7 +163,7 @@ extension AppDelegate {
         }
     }
     
-    private func setRootVC() {
+    func setRootVC() {
         ReachabilityManager.shared.startMonitoring()
         
         let vc = AppDelegate.gotoTab
