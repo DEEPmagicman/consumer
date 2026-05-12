@@ -6,7 +6,7 @@ workflows:
       events:
         - push
       branch_patterns:
-        - pattern: consumer_v2_implementation
+        - pattern: feat/redesign-v3
           include: true
       cancel_previous_builds: true
 
