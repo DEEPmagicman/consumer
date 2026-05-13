@@ -28,7 +28,8 @@ final class AuthOTPInputView: UIView {
     private let backBtn = LoadingButton()
 
     private var otpText = ""
-
+    private var otpSize = 58.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -80,7 +81,8 @@ final class AuthOTPInputView: UIView {
             stack.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        let titleLabel = makeTitleLabel("Verification code", size: 22)
+        otpSize = min(58, floor(((UIScreen.main.bounds.width - 32 - 36) - (7 * 5)) / 6))
+        let titleLabel = Utility.main.makeLabel("Verification code", size: 22)
 
         phoneNumLbl.textColor = AuthTheme.subtitle
         phoneNumLbl.font = Constant.Font.geistRegular(size: 13)
@@ -91,7 +93,7 @@ final class AuthOTPInputView: UIView {
         stack.addArrangedSubview(phoneNumLbl)
         stack.addArrangedSubview(makeSpacer(16))
 
-        let otpSize = min(58, floor(((UIScreen.main.bounds.width - 32 - 36) - (7 * 5)) / 6))
+//        let otpSize = min(58, floor(((UIScreen.main.bounds.width - 32 - 36) - (7 * 5)) / 6))
         otpFieldView.translatesAutoresizingMaskIntoConstraints = false
         otpFieldView.heightAnchor.constraint(equalToConstant: otpSize + 10).isActive = true
         stack.addArrangedSubview(otpFieldView)
@@ -140,24 +142,28 @@ final class AuthOTPInputView: UIView {
         otpFieldView.displayType = .roundedCorner
         otpFieldView.shouldAllowIntermediateEditing = false
 
-        let availableWidth = UIScreen.main.bounds.width - 32 - 36
+//        let availableWidth = UIScreen.main.bounds.width - 32 - 36
         let spacing: CGFloat = 7
-        let calculatedSize = floor((availableWidth - spacing * 5) / 6)
+//        let calculatedSize = floor((CGFloat(availableWidth) - spacing * 5) / 6)
 
-        otpFieldView.fieldSize = min(58, calculatedSize)
+        otpFieldView.fieldSize = min(58, otpSize)
         otpFieldView.separatorSpace = spacing
         otpFieldView.initializeUI()
         print("-1-1-1\(self.otpFieldView.subviews.count)")
-        self.otpFieldView.subviews.forEach { view in
-            guard let textField = view as? UITextField else { return }
-            textField.textColor = AuthTheme.title
-            textField.font = Constant.Font.geistRegular(size: 26)
-            textField.backgroundColor = AuthTheme.fieldBackground
-            textField.layer.cornerRadius = 12
-            textField.layer.cornerCurve = .continuous
-            textField.clipsToBounds = true
-            textField.keyboardType = .numberPad
-            textField.textAlignment = .center
+        
+        DispatchQueue.main.async {
+            self.otpFieldView.subviews.forEach { view in
+                print("-1-1-1-1-1- \(self.otpFieldView.subviews.count)")
+                guard let textField = view as? UITextField else { return }
+                textField.textColor = AuthTheme.title
+                textField.font = Constant.Font.geistRegular(size: 26)
+                textField.backgroundColor = AuthTheme.fieldBackground
+                textField.layer.cornerRadius = 12
+                textField.layer.cornerCurve = .continuous
+                textField.clipsToBounds = true
+                textField.keyboardType = .numberPad
+                textField.textAlignment = .center
+            }
         }
     }
     
@@ -171,16 +177,6 @@ final class AuthOTPInputView: UIView {
 
     @objc private func onClickResend() {
         delegate?.authOTPInputViewDidTapResend(self)
-    }
-
-    private func makeTitleLabel(_ text: String, size: CGFloat) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = AppColor.primaryWhiteColor
-        label.font = Constant.Font.geistMedium(size: size)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
     }
 
     private func makeSpacer(_ height: CGFloat) -> UIView {

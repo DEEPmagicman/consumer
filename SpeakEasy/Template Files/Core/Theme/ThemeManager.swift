@@ -54,9 +54,17 @@ enum AuthTheme {
     static var subtitle: UIColor {
         AppColor.primaryWhiteColor
     }
+    
+    static var subtitleGrayColor: UIColor {
+        AppColor.primaryWhiteColor.withAlphaComponent(0.65)
+    }
 
     static var fieldBackground: UIColor {
         AppColor.primaryWhiteColor.withAlphaComponent(0.09)
+    }
+    
+    static var fieldLightBackground: UIColor {
+        UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: "#FFFFFF").withAlphaComponent(0.05) : UIColor(hex: "#2141B1D").withAlphaComponent(0.11) }
     }
 
     static var fieldText: UIColor {
@@ -82,12 +90,16 @@ enum AuthTheme {
     static var disabledButtonBg: UIColor {
         AppColor.primaryWhiteColor.withAlphaComponent(0.12)
     }
-
+    
     static var link: UIColor {
         UIColor.systemBlue
     }
     
     static var cardViewColor: UIColor {
         UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: "#232323").withAlphaComponent(0.50) : UIColor(hex: "#2141B1D").withAlphaComponent(0.11) }
+    }
+    
+    static var lineViewColor: UIColor {
+        UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: "#2E3030") : AppColor.primaryWhiteColor.withAlphaComponent(0.65) }
     }
 }

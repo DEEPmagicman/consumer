@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MHLoadingButton
 
 @objc class Utility: NSObject{
     static let main = Utility()
@@ -51,6 +52,187 @@ extension Utility {
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = Utility.main.topViewController()?.view
         Utility.main.topViewController()?.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    func isDarkMode(for view: UIView? = nil) -> Bool {
+
+        if #available(iOS 12.0, *) {
+
+            if let view {
+                return view.traitCollection.userInterfaceStyle == .dark
+            }
+
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = windowScene.windows.first else {
+                return false
+            }
+
+            return window.traitCollection.userInterfaceStyle == .dark
+        }
+
+        return false
+    }
+    
+    func makeLabel(_ text: String, size: CGFloat = 18, numberOfLines: Int = 0, textAlignment: NSTextAlignment = .center, textColor: UIColor = AppColor.primaryWhiteColor, font: UIFont = Constant.Font.geistMedium(size: 18)) -> UILabel {
+
+        var newFont = font
+        if newFont == Constant.Font.geistMedium(size: 18) {
+            newFont = Constant.Font.geistMedium(size: size)
+        }
+        let label = UILabel()
+        label.text = text
+        label.textColor = textColor
+        label.font = newFont
+        label.textAlignment = textAlignment
+        label.numberOfLines = numberOfLines
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+    
+    func makeSpacer(_ height: CGFloat) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: height).isActive = true
+        return view
+    }
+    
+    func stylePrimaryButton(_ button: LoadingButton, title: String, size: CGFloat = 17, cornerRadius: CGFloat = 16) {
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(AppColor.primaryBlackColor, for: .normal)
+        button.titleLabel?.font = Constant.Font.geistMedium(size: size)
+        button.bgColor = AuthTheme.primaryButtonBg
+        button.layer.cornerRadius = cornerRadius
+        button.clipsToBounds = true
+        button.indicator = MaterialLoadingIndicator(color: AuthTheme.primaryButtonTitle)
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    func setButton(_ button: LoadingButton, enabled: Bool) {
+        button.isUserInteractionEnabled = enabled
+        button.bgColor = enabled ? AuthTheme.primaryButtonBg : AuthTheme.disabledButtonBg
+        button.setTitleColor(enabled ? AuthTheme.primaryButtonTitle : AppColor.primaryColor, for: .normal)
+    }
+    
+    func makeBackButton(
+        size: CGFloat = 56,
+        iconSize: CGFloat = 26,
+        backgroundColor: UIColor = AppColor.primaryWhiteColor.withAlphaComponent(0.12),
+        iconColor: UIColor = AppColor.primaryWhiteColor,
+        borderColor: UIColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10),
+        borderWidth: CGFloat = 0,
+        target: Any?,
+        action: Selector
+    ) -> UIButton {
+
+        let button = UIButton(type: .system)
+
+        let imageConfig = UIImage.SymbolConfiguration(
+            pointSize: iconSize,
+            weight: .regular
+        )
+
+        button.setImage(
+            UIImage(systemName: "arrow.left", withConfiguration: imageConfig),
+            for: .normal
+        )
+
+        button.tintColor = iconColor
+        button.backgroundColor = backgroundColor
+        button.layer.cornerRadius = size / 2
+        button.layer.cornerCurve = .continuous
+        button.layer.borderWidth = borderWidth
+        button.layer.borderColor = borderColor.cgColor
+        button.clipsToBounds = true
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: size),
+            button.heightAnchor.constraint(equalToConstant: size)
+        ])
+
+        button.addTarget(target, action: action, for: .touchUpInside)
+
+        return button
+    }
+}
+
+final class PrimaryButton: LoadingButton {
+
+    init() {
+        super.init(frame: .zero)
+        commonInit()
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+
+    private func commonInit() {
+
+        translatesAutoresizingMaskIntoConstraints = false
+
+        setTitleColor(
+            AppColor.primaryBlackColor,
+            for: .normal
+        )
+
+        titleLabel?.font = Constant.Font.geistMedium(size: 17)
+
+        bgColor = AuthTheme.primaryButtonBg
+
+        layer.cornerRadius = 16
+        layer.cornerCurve = .continuous
+        clipsToBounds = true
+
+        indicator = MaterialLoadingIndicator(
+            color: AuthTheme.primaryButtonTitle
+        )
+
+        heightAnchor.constraint(equalToConstant: 56).isActive = true
+    }
+
+    func configure(
+        title: String,
+        fontSize: CGFloat = 17,
+        cornerRadius: CGFloat = 16
+    ) {
+
+        setTitle(title, for: .normal)
+
+        titleLabel?.font = Constant.Font.geistMedium(size: fontSize)
+
+        layer.cornerRadius = cornerRadius
+    }
+
+    func setEnabled(_ enabled: Bool) {
+
+        isUserInteractionEnabled = enabled
+
+        bgColor = enabled
+        ? AuthTheme.primaryButtonBg
+        : AuthTheme.disabledButtonBg
+
+        setTitleColor(
+            enabled
+            ? AuthTheme.primaryButtonTitle
+            : AppColor.primaryColor,
+            for: .normal
+        )
+    }
+
+    func startLoading() {
+        showLoader(userInteraction: false)
+    }
+
+    func stopLoading() {
+        hideLoader()
     }
 }
 

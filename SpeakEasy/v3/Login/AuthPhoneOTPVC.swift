@@ -45,6 +45,14 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
         timer.invalidate()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if !isShowingOTP {
+            phoneView.focusPhoneField()
+        }
+    }
+        
     private func setupChildViews() {
         phoneView.delegate = self
         otpView.delegate = self
@@ -60,11 +68,15 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
         isShowingOTP = true
 
         view.endEditing(true)
+        
         UIView.performWithoutAnimation {
             self.view.layoutIfNeeded()
         }
         
-        otpView.layoutIfNeeded()
+        otpView.configure(phone: phoneNum, countryCode: countryCode)
+        otpView.resetOTP()
+        resetTimer()
+        
         otpView.alpha = 0
         otpView.isHidden = false
         
@@ -78,10 +90,9 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
             
             self.phoneView.isHidden = true
             self.cardView.layoutIfNeeded()
+            self.otpView.layoutIfNeeded()
         }
-        
-        otpView.configure(phone: phoneNum, countryCode: countryCode)
-        resetTimer()
+       
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.otpView.focusFirstField()
         }
@@ -111,6 +122,8 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
             
             self.otpView.isHidden = true
             self.cardView.layoutIfNeeded()
+        } completion: { _ in
+            self.phoneView.focusPhoneField()
         }
     }
     

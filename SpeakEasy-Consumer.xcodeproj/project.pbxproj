@@ -174,6 +174,9 @@
 		6AF9DE082FB356F3008D6CBC /* AuthOTPInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE072FB356F3008D6CBC /* AuthOTPInputView.swift */; };
 		6AF9DE0A2FB3571F008D6CBC /* AuthPhoneOTPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE092FB3571F008D6CBC /* AuthPhoneOTPVC.swift */; };
 		6AF9DE0C2FB35728008D6CBC /* ClearHighlightLoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE0B2FB35728008D6CBC /* ClearHighlightLoadingButton.swift */; };
+		6AF9DE152FB480A5008D6CBC /* GenderSelectionBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE142FB480A5008D6CBC /* GenderSelectionBottomSheet.swift */; };
+		6AF9DE172FB480B4008D6CBC /* ProfileInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE162FB480B4008D6CBC /* ProfileInfoVC.swift */; };
+		6AF9DE192FB480BD008D6CBC /* NotificationPermissionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF9DE182FB480BD008D6CBC /* NotificationPermissionVC.swift */; };
 		824F86ED2987D52600A9F1FD /* SettingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 824F86EC2987D52600A9F1FD /* SettingPresenter.swift */; };
 		82847A792982485B00611DC4 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82847A782982485B00611DC4 /* Home.storyboard */; };
 		82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */; };
@@ -645,6 +648,9 @@
 		6AF9DE072FB356F3008D6CBC /* AuthOTPInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthOTPInputView.swift; sourceTree = "<group>"; };
 		6AF9DE092FB3571F008D6CBC /* AuthPhoneOTPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPhoneOTPVC.swift; sourceTree = "<group>"; };
 		6AF9DE0B2FB35728008D6CBC /* ClearHighlightLoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearHighlightLoadingButton.swift; sourceTree = "<group>"; };
+		6AF9DE142FB480A5008D6CBC /* GenderSelectionBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelectionBottomSheet.swift; sourceTree = "<group>"; };
+		6AF9DE162FB480B4008D6CBC /* ProfileInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoVC.swift; sourceTree = "<group>"; };
+		6AF9DE182FB480BD008D6CBC /* NotificationPermissionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionVC.swift; sourceTree = "<group>"; };
 		824F86EC2987D52600A9F1FD /* SettingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenter.swift; sourceTree = "<group>"; };
 		82847A782982485B00611DC4 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
 		82847A7A29824A4600611DC4 /* MVPVenueListVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPVenueListVc.swift; sourceTree = "<group>"; };
@@ -1351,6 +1357,7 @@
 		6A687D142FB30C30001BEDBF /* v3 */ = {
 			isa = PBXGroup;
 			children = (
+				6AF9DE0D2FB47A6A008D6CBC /* Profile */,
 				6A687D152FB30C40001BEDBF /* Login */,
 			);
 			path = v3;
@@ -1453,6 +1460,16 @@
 				6AF2B9FE2F0BE0CA00069A90 /* TableListTVC.xib */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		6AF9DE0D2FB47A6A008D6CBC /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				6AF9DE182FB480BD008D6CBC /* NotificationPermissionVC.swift */,
+				6AF9DE162FB480B4008D6CBC /* ProfileInfoVC.swift */,
+				6AF9DE142FB480A5008D6CBC /* GenderSelectionBottomSheet.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		82847A77298244A000611DC4 /* MVPFlow */ = {
@@ -2867,6 +2884,7 @@
 				CE0BA9282F6BFDE500AB8996 /* VenueHeaderVC.swift in Sources */,
 				CE0BA9292F6BFDE500AB8996 /* VenueVC.swift in Sources */,
 				CE677F972A41720F0025421D /* InvitePresenter.swift in Sources */,
+				6AF9DE192FB480BD008D6CBC /* NotificationPermissionVC.swift in Sources */,
 				CAC4141728A478050007BA86 /* YearCollectionViewCell.swift in Sources */,
 				04A202E82F36055200900A27 /* EventGuestListCVC.swift in Sources */,
 				0436D0982959848A0087D3DB /* SkyFloatingLabelTextField.swift in Sources */,
@@ -3000,6 +3018,7 @@
 				CAC4141B28A478050007BA86 /* ButtonCollectionViewCell.swift in Sources */,
 				041D58D72F87727D001999F6 /* ArtistDetailsVC.swift in Sources */,
 				6AF2B9D02F09477300069A90 /* TableCheckOutVC.swift in Sources */,
+				6AF9DE152FB480A5008D6CBC /* GenderSelectionBottomSheet.swift in Sources */,
 				CE48D8342EFA7CE100E7110B /* EventV2CVC.swift in Sources */,
 				6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */,
 				0426E1D82F52F08B005F474E /* LogInPopUpViewController.swift in Sources */,
@@ -3035,6 +3054,7 @@
 				CEE02DB42EFBAE8300AC7756 /* DateSelectionCVC.swift in Sources */,
 				CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
+				6AF9DE172FB480B4008D6CBC /* ProfileInfoVC.swift in Sources */,
 				2986836829756EA600CB827B /* Flyer.swift in Sources */,
 				6AF2BA002F0BE0CA00069A90 /* TableListTVC.swift in Sources */,
 				043722122F7294AA00E4F985 /* GuestListPopupCell.swift in Sources */,
