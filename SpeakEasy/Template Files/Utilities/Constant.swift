@@ -103,6 +103,30 @@ struct Constant {
         static func interBold(size: CGFloat) -> UIFont {
             return UIFont(name: "Inter-Bold", size: size)!
         }
+        
+        static func geistRegular(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .regular, size: size)
+        }
+        
+        static func geistMedium(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .medium, size: size)
+        }
+        
+        static func geistSemiBold(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .semibold, size: size)
+        }
+        
+        static func geistBold(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .bold, size: size)
+        }
+        
+        static func geistExtraBold(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .extraBold, size: size)
+        }
+        
+        static func geistThin(size: CGFloat) -> UIFont {
+            return AppFont.font(weight: .thin, size: size)
+        }
     }
     
     struct Card {

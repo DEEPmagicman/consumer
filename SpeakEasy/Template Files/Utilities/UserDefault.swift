@@ -15,6 +15,7 @@ final class UserDefault: NSObject {
         case refreshTokenKey = "refreshToken"
         case userKey = "user"
         case isLoggedInKey = "isLoggedIn"
+        case isVersionV3Key = "isVersionV3"
         case isGuest = "isGuest"
         case localCity = "localCity"
         case defaultCitySelected = "defaultCitySelected"
@@ -75,6 +76,14 @@ final class UserDefault: NSObject {
             return UserDefaults.standard.value(forKey: UserDefaultKey.isLoggedInKey.rawValue) as? Bool
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isLoggedInKey.rawValue)
+        }
+    }
+    
+    var isVersionV3: Bool? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.isVersionV3Key.rawValue) as? Bool
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isVersionV3Key.rawValue)
         }
     }
     

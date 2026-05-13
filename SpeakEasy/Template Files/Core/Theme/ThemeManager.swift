@@ -44,3 +44,50 @@ final class ThemeManager {
         }
     }
 }
+
+enum AuthTheme {
+    
+    static var title: UIColor {
+        AppColor.primaryWhiteColor
+    }
+
+    static var subtitle: UIColor {
+        AppColor.primaryWhiteColor
+    }
+
+    static var fieldBackground: UIColor {
+        AppColor.primaryWhiteColor.withAlphaComponent(0.09)
+    }
+
+    static var fieldText: UIColor {
+        AppColor.primaryWhiteColor
+    }
+
+    static var placeholder: UIColor {
+        AppColor.primaryWhiteColor.withAlphaComponent(0.35)
+    }
+
+    static var border: UIColor {
+        AppColor.primaryWhiteColor.withAlphaComponent(0.05)
+    }
+
+    static var primaryButtonBg: UIColor {
+        AppColor.primaryWhiteColor
+    }
+
+    static var primaryButtonTitle: UIColor {
+        AppColor.primaryBlackColor
+    }
+
+    static var disabledButtonBg: UIColor {
+        AppColor.primaryWhiteColor.withAlphaComponent(0.12)
+    }
+
+    static var link: UIColor {
+        UIColor.systemBlue
+    }
+    
+    static var cardViewColor: UIColor {
+        UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: "#232323").withAlphaComponent(0.50) : UIColor(hex: "#2141B1D").withAlphaComponent(0.11) }
+    }
+}
