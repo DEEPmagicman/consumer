@@ -474,7 +474,7 @@ final class Navigate {
     
     func selectLocationVC(_ sender: UIViewController) {
         let vc = SelectLocationVC(nibName: "SelectLocationVC", bundle: nil)
-        sender.pushVC(vc)
+        sender.presentVC(vc)
     }
     
     func dateRangeSelectionVC(_ sender: UIViewController) {

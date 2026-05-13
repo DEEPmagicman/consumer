@@ -16,16 +16,18 @@ final class LandingVC: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var firstNameLetter: UILabel!
     @IBOutlet weak var searchBtnView: UIView!
+    @IBOutlet var bgView: UIView!
     
     private var viewControllers = [UIViewController]()
     private var onBoardingPresenter = OnBoardingPresenter()
-    var titles = ["Explore", "Your Orders", "Photos", "Search"]
+    var titles = ["Sing in", "Your Orders", "Photos", "Search"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showSegmentView(0)
         setupUserData()
         whoAmIAPI()
+        bgView.applyScreenBgGradient()
     }
     
     override func viewDidLayoutSubviews() {

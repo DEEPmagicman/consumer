@@ -1,5 +1,5 @@
 {
-  "originHash" : "42ba6ce53bb3afc1a68c6281380b2e6e3224af9a08c6fe7bf245a6006f9ba5de",
+  "originHash" : "8d496922d2bf6932e4bebddca77cefc683b00ecf229106c6d025310345e00aca",
   "pins" : [
     {
       "identity" : "abseil-cpp-swiftpm",
@@ -116,6 +116,15 @@
       "state" : {
         "revision" : "670b81ed3d95f7183bbc009d0ec67c71506557b5",
         "version" : "1.6.4"
+      }
+    },
+    {
+      "identity" : "horizoncalendar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/HorizonCalendar.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "47e451e840a6b849a0b0f136e4340f5834767ed2"
       }
     },
     {

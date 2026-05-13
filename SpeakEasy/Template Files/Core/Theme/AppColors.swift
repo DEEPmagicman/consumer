@@ -12,4 +12,6 @@ enum AppColor {
     static let primaryWhiteColor = UIColor(named: "PrimaryWhiteColor") ?? .white
     static let primaryBlackColor = UIColor(named: "PrimaryBlackColor") ?? .black
     static let primaryColor = UIColor(named: "PrimaryColor") ?? .black
+    static let buttonBackGroundColor = UIColor(named: "IconButtonBackground") ?? .black
+    
 }

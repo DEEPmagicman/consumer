@@ -15,6 +15,7 @@ final class DiscoverVC: UIViewController {
     @IBOutlet var dateCrossView: UIView!
     @IBOutlet var dateView: UIView!
     @IBOutlet weak var selectedLocationName: UILabel!
+    @IBOutlet var bgView: UIView!
     
     private var viewControllers = [UIViewController]()
     private var cancellables = Set<AnyCancellable>()

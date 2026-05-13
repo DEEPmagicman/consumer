@@ -35,10 +35,11 @@ final class SelectLocationVC: UIViewController {
 
         userLocationCity = UserDefault.shared.localCity
         fetchCityList()
+        self.view.applyScreenBgGradient(direction: .bottomToTop)
     }
 
     @IBAction func onClickBack(_ sender: Any) {
-        Navigate.to.back(self)
+        self.dismiss(animated: false)
     }
     
     @IBAction func onClickSearchClosebtn(_ sender: Any) {
@@ -106,6 +107,7 @@ extension SelectLocationVC: UITableViewDelegate, UITableViewDataSource {
 
         let city = displayList[indexPath.row]
         cell.configure(with: city, isSelected: city.value == selectedCity)
+        cell.selectionStyle = .none
 
         return cell
     }
@@ -115,6 +117,5 @@ extension SelectLocationVC: UITableViewDelegate, UITableViewDataSource {
         UserDefault.shared.user?.city = selectedCity
         UserDefault.shared.localCity = selectedCity
         tableView.reloadData()
-        Navigate.to.back(self)
     }
 }

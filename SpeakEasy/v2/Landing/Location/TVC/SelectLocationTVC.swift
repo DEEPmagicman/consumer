@@ -14,12 +14,13 @@ final class SelectLocationTVC: UITableViewCell {
 
     func configure(with city: MVPCity, isSelected: Bool) {
         cityName.text = city.value
-        selectedCityImage.isHidden = !isSelected
+        selectedCityImage.image = isSelected ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
+        
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         cityName.text = nil
-        selectedCityImage.isHidden = true
     }
+    
 }

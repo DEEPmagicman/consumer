@@ -20,8 +20,10 @@ struct Constant {
     
     struct Icon {
         static let liveCover = UIImage(named: "liveCover")
-        static let uploadImage = UIImage(named: "uploadImage")
+        static let uploadImage = UIImage(named: "appLogo")
         static let defaultProfile = UIImage(named: "default-profile")
+        static let checkedIcon = UIImage(named: "checkedIcon")
+        static let uncheckedIcon = UIImage(named: "uncheckedIcon")
     }
     
     struct String {

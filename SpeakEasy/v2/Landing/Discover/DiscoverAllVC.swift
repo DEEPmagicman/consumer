@@ -13,7 +13,8 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var premiumExerienceParentView: UIView!
     @IBOutlet weak var eventsInCityTitleLbl: UILabel!
     @IBOutlet weak var eventsInCityView: UIView!
-
+    @IBOutlet weak var seeAllButton: UIButton!
+    
     // NOTE: shimmerView removed from here — it lives in parent DiscoverVC
 
     // MARK: - Loading States
