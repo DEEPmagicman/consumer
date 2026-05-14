@@ -91,22 +91,6 @@ extension AppDelegate {
         }
     }
     
-    func showPhoneLoginRoot() {
-        let rootVC = UIViewController()
-        rootVC.view.backgroundColor = .clear
-
-        let navigation = UINavigationController(rootViewController: rootVC)
-        navigation.navigationBar.isHidden = true
-        navigation.modalPresentationStyle = .fullScreen
-
-        self.window?.rootViewController = navigation
-        self.window?.makeKeyAndVisible()
-
-        DispatchQueue.main.async {
-            Navigate.to.openPhoneLoginPopup(rootVC)
-        }
-    }
-    
     func showOnboarding(isNavigateToDetail: Bool = false, forceCreateAccount: Bool = false) {
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
         let tutorialNavigation = UINavigationController(rootViewController: controller)

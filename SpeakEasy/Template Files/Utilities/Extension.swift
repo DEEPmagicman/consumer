@@ -369,7 +369,8 @@ extension UIView {
         gradient.startPoint = direction.startPoint
         gradient.endPoint = direction.endPoint
         gradient.frame = bounds
-        
+        gradient.masksToBounds = true
+        layer.masksToBounds = true
         layer.insertSublayer(gradient, at: 0)
     }
     

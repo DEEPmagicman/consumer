@@ -72,8 +72,8 @@ final class AuthPhoneInputView: UIView {
             stack.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
-        let titleLabel = makeTitleLabel("Continue with phone number")
-        let subtitleLabel = makeSubtitleLabel("Enter your phone number\nWe’ll send you a verification code")
+        let titleLabel = Utility.main.makeLabel("Continue with phone number")
+        let subtitleLabel = Utility.main.makeLabel("Enter your phone number\nWe’ll send you a verification code", font: Constant.Font.geistRegular(size: 14))
 
         stack.addArrangedSubview(titleLabel)
         stack.addArrangedSubview(subtitleLabel)
@@ -82,9 +82,9 @@ final class AuthPhoneInputView: UIView {
         setupPhoneInput()
         stack.addArrangedSubview(phoneContainer)
 
-        stylePrimaryButton(continueBtn, title: "Continue")
+        Utility.main.stylePrimaryButton(continueBtn, title: "Continue")
         continueBtn.addTarget(self, action: #selector(onClickContinue), for: .touchUpInside)
-        setButton(continueBtn, enabled: false)
+        Utility.main.setButton(continueBtn, enabled: false)
         stack.addArrangedSubview(continueBtn)
 
         stack.addArrangedSubview(makeSpacer(16))
@@ -193,52 +193,21 @@ final class AuthPhoneInputView: UIView {
         termsAndPrivacyLbl.numberOfLines = 0
         termsAndPrivacyLbl.textAlignment = .center
     }
+    
+    func focusPhoneField() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            self.phoneNumTextField.becomeFirstResponder()
+        }
+    }
 
     @objc private func onClickContinue() {
         delegate?.authPhoneInputViewDidTapContinue(self)
-    }
-
-    private func makeTitleLabel(_ text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = AppColor.primaryWhiteColor
-        label.font = Constant.Font.geistMedium(size: 18)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }
-
-    private func makeSubtitleLabel(_ text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = AppColor.primaryWhiteColor
-        label.font = Constant.Font.geistRegular(size: 14)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
     }
 
     private func makeSpacer(_ height: CGFloat) -> UIView {
         let view = UIView()
         view.heightAnchor.constraint(equalToConstant: height).isActive = true
         return view
-    }
-
-    func stylePrimaryButton(_ button: LoadingButton, title: String) {
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(AppColor.primaryBlackColor, for: .normal)
-        button.titleLabel?.font = Constant.Font.geistMedium(size: 17)
-        button.bgColor = AuthTheme.primaryButtonBg
-        button.layer.cornerRadius = 16
-        button.clipsToBounds = true
-        button.indicator = MaterialLoadingIndicator(color: AuthTheme.primaryButtonTitle)
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
-
-    func setButton(_ button: LoadingButton, enabled: Bool) {
-        button.isUserInteractionEnabled = enabled
-        button.bgColor = enabled ? AuthTheme.primaryButtonBg : AuthTheme.disabledButtonBg
-        button.setTitleColor(enabled ? AuthTheme.primaryButtonTitle : AppColor.primaryColor, for: .normal)
     }
 }
 
@@ -250,11 +219,11 @@ extension AuthPhoneInputView: UITextFieldDelegate {
                 withRegion: phoneNumTextField.defaultRegion
             )
             phoneNumber = parsed
-            setButton(continueBtn, enabled: true)
+            Utility.main.setButton(continueBtn, enabled: true)
             delegate?.authPhoneInputView(self, didChangeValidPhone: true)
         } catch {
             phoneNumber = nil
-            setButton(continueBtn, enabled: false)
+            Utility.main.setButton(continueBtn, enabled: false)
             delegate?.authPhoneInputView(self, didChangeValidPhone: false)
         }
     }

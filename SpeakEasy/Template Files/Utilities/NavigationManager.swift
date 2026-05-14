@@ -612,6 +612,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
+//-------v3----------
     func openPhoneLoginPopup(_ sender: UIViewController) {
         let vc = AuthPhoneOTPVC()
         vc.modalPresentationStyle = .overFullScreen
@@ -629,6 +630,20 @@ final class Navigate {
             }
         }
 
-        sender.present(vc, animated: true)
+        if  Utility.main.topViewController()?.navigationController?.navigationController == nil {
+            Utility.main.topViewController()?.present(vc, animated: true)
+        } else {
+            Utility.main.topViewController()?.navigationController?.present(vc, animated: true)
+        }
+    }
+    
+    func personalInformationVC(_ sender: UIViewController) {
+        let vc = ProfileInfoVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func notificationPermissionVC(_ sender: UIViewController) {
+        let vc = NotificationPermissionVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
     }
 }

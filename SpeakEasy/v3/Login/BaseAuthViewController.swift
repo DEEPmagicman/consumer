@@ -117,48 +117,4 @@ class BaseAuthViewController: UIViewController {
             self.cardView.transform = .identity
         }
     }
-    
-    func makeTitleLabel(_ text: String, size: CGFloat = 18) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = AppColor.primaryWhiteColor
-        label.font = Constant.Font.geistMedium(size: size)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }
-    
-    func makeSubtitleLabel(_ text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = AppColor.primaryWhiteColor
-        label.font = Constant.Font.geistRegular(size: 14)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }
-    
-    func makeSpacer(_ height: CGFloat) -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.heightAnchor.constraint(equalToConstant: height).isActive = true
-        return view
-    }
-    
-    func stylePrimaryButton(_ button: LoadingButton, title: String) {
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(AppColor.primaryBlackColor, for: .normal)
-        button.titleLabel?.font = Constant.Font.geistMedium(size: 17)
-        button.bgColor = AuthTheme.primaryButtonBg
-        button.layer.cornerRadius = 16
-        button.clipsToBounds = true
-        button.indicator = MaterialLoadingIndicator(color: AuthTheme.primaryButtonTitle)
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
-    
-    func setButton(_ button: LoadingButton, enabled: Bool) {
-        button.isUserInteractionEnabled = enabled
-        button.bgColor = enabled ? AuthTheme.primaryButtonBg : AuthTheme.disabledButtonBg
-        button.setTitleColor(enabled ? AuthTheme.primaryButtonTitle : AppColor.primaryColor, for: .normal)
-    }
 }
