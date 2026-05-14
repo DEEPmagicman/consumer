@@ -41,7 +41,11 @@ final class LandingVC: UIViewController {
     }
     
     @IBAction func onClickProfile(_ sender: UIButton) {
-        sideMenuController?.showLeftView()
+        if UserDefault.shared.isLoggedIn == true {
+            sideMenuController?.showLeftView()
+        } else {
+            Navigate.to.openPhoneLoginPopup(self)
+        }
     }
     
     @IBAction func onClickTabBarItem(_ sender: UIButton) {
@@ -50,6 +54,7 @@ final class LandingVC: UIViewController {
     
     @IBAction func onClickSearchBtn(_ sender: Any) {
         Navigate.to.gotoSearchVc(self)
+//        Navigate.to.personalInformationVC(self)
     }
     
     private func showSegmentView(_ index: Int) {
@@ -72,7 +77,7 @@ final class LandingVC: UIViewController {
         guard let user = UserDefault.shared.user else { return }
         
         let imageUrl = user.image.key
-        let firstLetter = user.firstName.first ?? Character("")
+        let firstLetter = user.firstName.first ?? Character("P")
         
         if !imageUrl.isEmpty {
             imageView.isHidden = false
@@ -93,6 +98,7 @@ final class LandingVC: UIViewController {
     }
     
     private func whoAmIAPI() {
+        if UserDefault.shared.isGuest == true { return }
         onBoardingPresenter.getCurrentUserDetail {[weak self] isSuccess in
             guard let self = self else { return }
             if isSuccess {

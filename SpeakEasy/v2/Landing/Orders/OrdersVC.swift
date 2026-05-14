@@ -46,7 +46,9 @@ final class OrdersVC: UIViewController {
         super.viewDidLoad()
         setupSegmentControl()
         setupTableView()
-        loadCurrentSegment(reset: false)
+        if UserDefault.shared.isGuest == false {
+            loadCurrentSegment(reset: false)
+        }
     }
     
     // MARK: - Setup

@@ -77,7 +77,7 @@ final class SideMenuVC: UIViewController {
             
             userProfilePic.isHidden = true
             userNameFirstLetter.isHidden = false
-            let firstLetter = user.firstName.first ?? Character("")
+            let firstLetter = user.firstName.first ?? Character("P")
             userNameFirstLetter.text = String(firstLetter).uppercased()
             userNameFirstLetter.textAlignment = .center
         }

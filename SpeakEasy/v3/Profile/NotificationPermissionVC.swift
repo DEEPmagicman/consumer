@@ -129,6 +129,7 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
                     guard let self else { return }
                     self.enableBtn.hideLoader()
                     Navigate.to.setLocationVc(self)
+                    AppDelegate.shared.setRootVC()
                 }
             }
         } else {
@@ -142,11 +143,11 @@ final class NotificationPermissionVC: UIViewController, UNUserNotificationCenter
             }
 
             enableBtn.hideLoader()
-            Navigate.to.setLocationVc(self)
+            AppDelegate.shared.setRootVC()
         }
     }
 
     @objc private func onClickSkip() {
-        Navigate.to.setLocationVc(self)
+        AppDelegate.shared.setRootVC()
     }
 }

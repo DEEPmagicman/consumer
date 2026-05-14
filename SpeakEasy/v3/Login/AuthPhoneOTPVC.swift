@@ -29,7 +29,6 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
     private var timer = Timer()
     private var count = 60
     private var isVerifyingOtp = false
-    private var isShowingOTP = false
 
     override func viewDidLoad() {
         super.viewDidLoad()

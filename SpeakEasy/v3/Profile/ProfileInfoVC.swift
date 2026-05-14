@@ -75,7 +75,7 @@ final class ProfileInfoVC: UIViewController {
     }
 
     private func setupHeader() {
-        titleLabel = Utility.main.makeLabel("Ticket holder info", size: 32, textAlignment: .left)
+        titleLabel = Utility.main.makeLabel("Additional info", size: 32, textAlignment: .left)
         subtitleLabel = Utility.main.makeLabel("Enter your first, last name and email address\nto continue to ticket purchase", textAlignment: .left, font: Constant.Font.geistRegular(size: 13))
         subtitleLabel.textColor = AuthTheme.subtitleGrayColor
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -242,7 +242,7 @@ final class ProfileInfoVC: UIViewController {
 
         let userGender = UserDefault.shared.user?.gender.capitalized ?? ""
 
-        if userGender.isEmpty {
+        if userGender.isEmpty || userGender == "Unassigned" {
             gender = "MALE"
             genderLabel.text = "Select gender"
         } else {
@@ -262,8 +262,7 @@ final class ProfileInfoVC: UIViewController {
     }
 
     @objc private func onClickBack() {
-        Navigate.to.notificationPermissionVC(self)
-//        Navigate.to.notificationPermissionVC(self)
+        Navigate.to.back(self)
     }
 
     @objc private func onClickDOB() {
@@ -288,11 +287,15 @@ final class ProfileInfoVC: UIViewController {
     }
     
     @objc private func onClickSave() {
+        view.endEditing(true)
+        
+        guard validateForm() else { return }
+        
         var date = dobTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
         if date == "No date Found" { date = "" }
-
+        
         continueBtn.startLoading()
-
+        
         presenter.editUserProfileApi(
             fName: firstNameTF.text ?? "",
             lName: lastNameTF.text ?? "",
@@ -309,7 +312,9 @@ final class ProfileInfoVC: UIViewController {
                 UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = date
                 UserDefault.shared.user?.gender = self.gender
-                Navigate.to.back(self)
+                UserDefault.shared.user?.isProfileCompleted = true
+                UserDefault.shared.user?.email = self.emailTF.text ?? ""
+                Navigate.to.notificationPermissionVC(self)
             } else {
                 Alert.showAlertSheet(
                     style: .alert,
@@ -331,5 +336,114 @@ extension ProfileInfoVC: GenderSelectionBottomSheetDelegate {
 extension ProfileInfoVC: DateSelectionDelegate {
     func selectedDate(date: Date) {
         dobTF.text = date.string(format: .MMMMDDYYYY, isUTC: false)
+    }
+}
+
+extension ProfileInfoVC {
+    
+    private func validateForm() -> Bool {
+        let firstName = firstNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let lastName = lastNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let email = emailTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let dob = dobTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let isGenderSelected = genderLabel.text != "Select gender"
+        
+        clearValidationUI()
+        
+        if firstName.isEmpty {
+            showFieldError(firstNameTF, message: "Please enter your first name.")
+            return false
+        }
+        
+        if lastName.isEmpty {
+            showFieldError(lastNameTF, message: "Please enter your last name.")
+            return false
+        }
+        
+        if email.isEmpty {
+            showFieldError(emailTF, message: "Please enter your email address.")
+            return false
+        }
+        
+        if !isValidEmail(email) {
+            showFieldError(emailTF, message: "Please enter a valid email address.")
+            return false
+        }
+        
+        if dob.isEmpty {
+            showFieldError(dobTF, message: "Please select your date of birth.")
+            return false
+        }
+        
+        if !isGenderSelected {
+            showGenderError(message: "Please select your gender.")
+            return false
+        }
+        
+        return true
+    }
+    
+    private func clearValidationUI() {
+        [firstNameTF, lastNameTF, emailTF, dobTF].forEach {
+            $0.layer.borderWidth = 0
+            $0.layer.borderColor = UIColor.clear.cgColor
+        }
+        
+        genderControl.layer.borderWidth = 0
+        genderControl.layer.borderColor = UIColor.clear.cgColor
+    }
+    
+    private func showFieldError(_ textField: UITextField, message: String) {
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.systemRed.cgColor
+        
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        
+        textField.shake()
+        scrollToView(textField)
+        
+        Alert.showAlertSheet(
+            style: .alert,
+            title: message,
+            message: ""
+        )
+    }
+    
+    private func showGenderError(message: String) {
+        genderControl.layer.borderWidth = 1
+        genderControl.layer.borderColor = UIColor.systemRed.cgColor
+        
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        
+        genderControl.shake()
+        scrollToView(genderControl)
+        
+        Alert.showAlertSheet(
+            style: .alert,
+            title: message,
+            message: ""
+        )
+    }
+    
+    private func scrollToView(_ targetView: UIView) {
+        let rect = targetView.convert(targetView.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(
+            rect.insetBy(dx: 0, dy: -24),
+            animated: true
+        )
+    }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+        let regex = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"#
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: email)
+    }
+}
+
+extension UIView {
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.values = [-8, 8, -6, 6, -3, 3, 0]
+        animation.duration = 0.32
+        layer.add(animation, forKey: "shake")
     }
 }

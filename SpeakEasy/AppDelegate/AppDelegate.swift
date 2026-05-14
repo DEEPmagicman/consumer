@@ -80,13 +80,19 @@ extension AppDelegate {
             } else if UserDefault.shared.user?.isSocial == true {
                 showNameVC()
             } else {
+                if UserDefault.shared.isVersionV3 == true {
+                    UserDefault.shared.isGuest = true
+                    setRootVC()
+                    return
+                }
                 showOnboarding(isNavigateToDetail: true)
             }
         } else {
-//            if UserDefault.shared.isVersionV3 == true {
-////                showPhoneLoginRoot()
-//                return
-//            }
+            if UserDefault.shared.isVersionV3 == true {
+                UserDefault.shared.isGuest = true
+                setRootVC()
+                return
+            }
             showOnboarding(forceCreateAccount: forceCreateAccount)
         }
     }
