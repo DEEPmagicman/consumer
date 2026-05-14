@@ -626,7 +626,7 @@ final class Navigate {
             if UserDefault.shared.user?.isProfileCompleted == true {
                 AppDelegate.shared.setRootVC()
             } else {
-                Navigate.to.enterNameVc(sender)
+                Navigate.to.personalInformationVC(sender)
             }
         }
 

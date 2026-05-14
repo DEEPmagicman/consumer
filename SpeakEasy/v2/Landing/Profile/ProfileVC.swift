@@ -77,7 +77,7 @@ class ProfileVC: UIViewController {
             
             userImage.isHidden = true
             userFirstWord.isHidden = false
-            let firstLetter = user.firstName.first ?? Character("")
+            let firstLetter = user.firstName.first ?? Character("P")
             userFirstWord.text = String(firstLetter).uppercased()
             userFirstWord.textAlignment = .center
         }

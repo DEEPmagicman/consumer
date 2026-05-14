@@ -149,6 +149,7 @@
 		6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
+		6AD75F2B2FB5ED6100F68C19 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */; };
 		6AF2B9C42F093F0600069A90 /* Tables3DMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C32F093EF100069A90 /* Tables3DMapVC.swift */; };
 		6AF2B9C62F09400800069A90 /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6AF2B9C52F09400800069A90 /* GLTFKit2 */; };
 		6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AF2B9C82F09463800069A90 /* Tables3DMapVC.xib */; };
@@ -2530,6 +2531,7 @@
 				04239BF02B9766BC00453CA6 /* PagerViewTVC.xib in Resources */,
 				2966E3372980F86000B5E103 /* LaunchScreen.storyboard in Resources */,
 				04862C132B9719A500836598 /* TicketTypeTableViewCell.xib in Resources */,
+				6AD75F2B2FB5ED6100F68C19 /* Geist-Regular.ttf in Resources */,
 				29AEDD972982549D00E8E1E9 /* Poppins-SemiBold.ttf in Resources */,
 				29AEDD9A2982654C00E8E1E9 /* Poppins-Bold.ttf in Resources */,
 				691609462C7F418000C74F48 /* OpenSans-Regular.ttf in Resources */,
@@ -3351,6 +3353,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
@@ -3359,7 +3362,9 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3443,6 +3448,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeakEasy/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speakeasy - LIVE";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "app need to access your camera for take Photos";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "app needs location for near by events";
 				INFOPLIST_KEY_NSLocationUsageDescription = "app will use your current location";
@@ -3451,7 +3457,9 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Dark;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

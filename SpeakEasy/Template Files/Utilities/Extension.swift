@@ -360,12 +360,13 @@ extension UIView {
     
     func applyScreenBgGradient(
         colors: [UIColor] = [AppColor.background, AppColor.primaryColor],
-        direction: GradientDirection = .topToBottom
+        direction: GradientDirection = .topToBottom,
+        colorAlpha: Double = 1.0
     ) {
         layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
         
         let gradient = CAGradientLayer()
-        gradient.colors = colors.map { $0.cgColor }
+        gradient.colors = colors.map { $0.withAlphaComponent(colorAlpha).cgColor }
         gradient.startPoint = direction.startPoint
         gradient.endPoint = direction.endPoint
         gradient.frame = bounds
