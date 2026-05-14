@@ -128,6 +128,13 @@ final class DateRangeSelectionVC: UIViewController {
     }
 
     @IBAction func onTapToday(_ sender: Any) {
+//        Navigate.to.presentLocationUpdatePopup(
+//            from: self,
+//            title: "You're updating your preferred location to Chicago?",
+//            subtitle: "Premium bookings, priority reservations, and high-demand experiences all in one place."
+//        ) {
+//            // handle confirm
+//        }
         calendarView.selectToday()
         updateDateLabel()
     }
@@ -177,6 +184,7 @@ extension SelectedDateDelegate {
 
 
 import UIKit
+import SwiftUI
 
 enum AppIconType: String {
     case back
@@ -185,111 +193,17 @@ enum AppIconType: String {
 
     var image: UIImage? {
         switch self {
-        case .back:
-            return UIImage(named: "backButtonIcon")
-        case .close:
-            return UIImage(named: "closeMarkIcon")
-        case .seeAll:
-            return UIImage(named: "seeAllButtonIcon")
+        case .back:   return UIImage(named: "backButtonIcon")
+        case .close:  return UIImage(named: "closeMarkIcon")
+        case .seeAll: return UIImage(named: "seeAllButtonIcon")
         }
     }
 
     var buttonSize: CGFloat {
         switch self {
-        case .back:
-            return 50
-        case .close:
-            return 40
-        case .seeAll:
-            return 34
-        }
-    }
-}
-
-@IBDesignable
-final class AppIconButton: UIButton {
-
-    @IBInspectable var iconTypeValue: String = AppIconType.back.rawValue {
-        didSet {
-            applyStyle()
-        }
-    }
-
-    @IBInspectable var iconSize: CGFloat = 12 {
-        didSet {
-            applyStyle()
-        }
-    }
-
-    private var iconType: AppIconType {
-        AppIconType(rawValue: iconTypeValue) ?? .back
-    }
-
-    private var widthConstraintRef: NSLayoutConstraint?
-    private var heightConstraintRef: NSLayoutConstraint?
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        applyStyle()
-    }
-
-    override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        applyStyle()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        layer.cornerRadius = bounds.height / 2
-    }
-
-    private func applyStyle() {
-        backgroundColor = AppColor.buttonBackGroundColor
-        tintColor = AppColor.primaryWhiteColor
-        clipsToBounds = true
-
-        setButtonSize(iconType.buttonSize)
-        setIcon(iconType.image, size: iconSize)
-    }
-
-    private func setButtonSize(_ size: CGFloat) {
-        translatesAutoresizingMaskIntoConstraints = false
-
-        if widthConstraintRef == nil {
-            widthConstraintRef = widthAnchor.constraint(equalToConstant: size)
-            widthConstraintRef?.isActive = true
-        }
-
-        if heightConstraintRef == nil {
-            heightConstraintRef = heightAnchor.constraint(equalToConstant: size)
-            heightConstraintRef?.isActive = true
-        }
-
-        widthConstraintRef?.constant = size
-        heightConstraintRef?.constant = size
-    }
-
-    private func setIcon(_ image: UIImage?, size: CGFloat) {
-        guard let image else {
-            setImage(nil, for: .normal)
-            return
-        }
-
-        let resizedImage = resizeImage(image, targetSize: CGSize(width: size, height: size))
-        setImage(resizedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-
-        imageView?.contentMode = .center
-        contentHorizontalAlignment = .center
-        contentVerticalAlignment = .center
-        imageEdgeInsets = .zero
-        contentEdgeInsets = .zero
-    }
-
-    private func resizeImage(_ image: UIImage, targetSize: CGSize) -> UIImage {
-        let renderer = UIGraphicsImageRenderer(size: targetSize)
-
-        return renderer.image { _ in
-            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        case .back:   return 50
+        case .close:  return 40
+        case .seeAll: return 34
         }
     }
 }

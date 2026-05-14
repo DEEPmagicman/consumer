@@ -185,6 +185,22 @@ final class Navigate {
         sender.present(imageViewer, animated: true, completion: nil)
     }
     
+    func presentLocationUpdatePopup(
+        from sender: UIViewController,
+        title: String,
+        subtitle: String,
+        confirmTitle: String = "Confirm",
+        onConfirm: @escaping () -> Void
+    ) {
+        LocationUpdatePopupViewController.show(
+            from: sender,
+            title: title,
+            subtitle: subtitle,
+            confirmTitle: confirmTitle,
+            onConfirm: onConfirm
+        )
+    }
+    
     func checkOutVC(_ sender: UIViewController, venue: ClipVenue?, selectedCoverTickets: [CoverTicket], selectedEventTicket: [EventTicket], selectedAddOnsItem: [UpSellTicket], event: Event? = nil, totalPrice: Double, type: PaymentIntentType, promoteId: String = "", bookingType: TicketPriceType = .PAID) {
         let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(CheckOutVC.self)
         vc.selectedCoverTickets = selectedCoverTickets

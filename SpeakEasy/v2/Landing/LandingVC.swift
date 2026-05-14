@@ -17,16 +17,19 @@ final class LandingVC: UIViewController {
     @IBOutlet weak var firstNameLetter: UILabel!
     @IBOutlet weak var searchBtnView: UIView!
     @IBOutlet var bgView: UIView!
+    @IBOutlet weak var signInView: UIView!
+    @IBOutlet weak var noImageView: UIView!
+    
     
     private var viewControllers = [UIViewController]()
     private var onBoardingPresenter = OnBoardingPresenter()
-    var titles = ["Sing in", "Your Orders", "Photos", "Search"]
+    var titles = ["", "Your Orders", "Photos", "Search"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         showSegmentView(0)
         setupUserData()
-        whoAmIAPI()
+//        whoAmIAPI()
         bgView.applyScreenBgGradient()
     }
     
@@ -53,7 +56,7 @@ final class LandingVC: UIViewController {
     }
     
     @IBAction func onClickSearchBtn(_ sender: Any) {
-        Navigate.to.gotoSearchVc(self)
+//        Navigate.to.gotoSearchVc(self)
 //        Navigate.to.personalInformationVC(self)
     }
     
@@ -74,7 +77,13 @@ final class LandingVC: UIViewController {
     
     private func setupUserData() {
         
-        guard let user = UserDefault.shared.user else { return }
+        guard let user = UserDefault.shared.user else {
+            self.imageView.isHidden = true
+            noImageView.isHidden = true
+            self.signInView.isHidden = false
+            self.pageTitleLbl.text = "Sing in"
+            return
+        }
         
         let imageUrl = user.image.key
         let firstLetter = user.firstName.first ?? Character("P")
@@ -82,6 +91,8 @@ final class LandingVC: UIViewController {
         if !imageUrl.isEmpty {
             imageView.isHidden = false
             firstNameLetter.isHidden = true
+            noImageView.isHidden = true
+            self.signInView.isHidden = true
             
             imageView.sd_setImage(
                 with: URL(string: imageUrl),
@@ -91,7 +102,9 @@ final class LandingVC: UIViewController {
         } else {
             imageView.isHidden = true
             firstNameLetter.isHidden = false
-            
+            noImageView.isHidden = false
+            self.signInView.isHidden = true
+            self.pageTitleLbl.text = user.firstName
             firstNameLetter.text = String(firstLetter).uppercased()
             firstNameLetter.textAlignment = .center
         }

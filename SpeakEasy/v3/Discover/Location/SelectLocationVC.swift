@@ -43,10 +43,13 @@ final class SelectLocationVC: UIViewController {
     }
     
     @IBAction func onClickSearchClosebtn(_ sender: Any) {
-        searchTextfeild.text = ""
-        closeBtn.isHidden = true
-        displayList = fullCityList
-        tableView.reloadData()
+        Navigate.to.presentLocationUpdatePopup(
+            from: self,
+            title: "You're updating your preferred location to Chicago?",
+            subtitle: "Premium bookings, priority reservations, and high-demand experiences all in one place."
+        ) {
+            // handle confirm
+        }
     }
 
     @objc private func textDidChange() {

@@ -98,7 +98,7 @@ final class DiscoverAllVC: UIViewController {
             if hasMore { self.tonightEventSkip = self.todaysEvents.count }
             
             self.isTonightEventInitialLoading       = false
-            self.todaysEventsView.isHidden          = self.todaysEvents.isEmpty
+//            self.todaysEventsView.isHidden          = self.todaysEvents.isEmpty
             self.tonightEventCollectionView.reloadData()
 
             self.checkAndHideSkeleton()  // ✅ check after this API done
