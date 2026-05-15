@@ -12,7 +12,7 @@ final class DiscoverVC: UIViewController {
     
     @IBOutlet var segmentViewContainer: [UIView]!
     @IBOutlet var dateLbl: UILabel!
-    @IBOutlet var dateView: UIView!
+    @IBOutlet var dateView: LiquidGlassBackgroundView!
     @IBOutlet weak var selectedLocationName: UILabel!
     @IBOutlet var bgView: UIView!
     @IBOutlet weak var calendarIcon: UIImageView!
@@ -22,30 +22,14 @@ final class DiscoverVC: UIViewController {
     var startDate: String?
     var endDate: String?
     private var shimmerDidFinish = false
+    private var filterCity: String?
     
     private let shimmerView = HomeSkeletonView()
-
+    
     private var isDateSelected: Bool = false {
         didSet {
-            DispatchQueue.main.async {
-                let startDate = self.startDate?.convertDateFormat(from: .YYYYMMDD, to: .MMMD)
-                let endDate   = self.endDate?.convertDateFormat(from: .YYYYMMDD, to: .MMMD)
-                let date      = (self.endDate ?? "").isEmpty
-                    ? "\(startDate ?? "")"
-                    : "\(startDate ?? "") - \(endDate ?? "")"
-                self.dateLbl.text         = self.isDateSelected ? date : "All Dates"
-                self.dateView.borderWidth = self.isDateSelected ? 2 : 0
-                self.dateView.backgroundColor = self.isDateSelected
-                    ? .white
-                    : UIColor(named: "glassWhite04")
-                self.dateLbl.textColor = self.isDateSelected
-                    ? .black
-                : .white
-                self.calendarIcon.tintColor = self.isDateSelected
-                    ? .black
-                : .white
-                
-                self.showSegmentView(self.isDateSelected ? 1 : 0)
+            DispatchQueue.main.async { [weak self] in
+                self?.updateDateSelectionUI()
             }
         }
     }
@@ -54,8 +38,6 @@ final class DiscoverVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        isDateSelected = false
-
         // Pin shimmer full-screen on top of everything
         view.addSubview(shimmerView)
         shimmerView.translatesAutoresizingMaskIntoConstraints = false
@@ -88,15 +70,92 @@ final class DiscoverVC: UIViewController {
         shimmerView.isHidden = false
         shimmerView.startShimmer()
     }
+    
+    private func updateDateSelectionUI() {
+
+        let startDate = self.startDate?.convertDateFormat(
+            from: .YYYYMMDD,
+            to: .MMMD
+        )
+
+        let endDate = self.endDate?.convertDateFormat(
+            from: .YYYYMMDD,
+            to: .MMMD
+        )
+
+        let dateText = (self.endDate ?? "").isEmpty
+        ? "\(startDate ?? "")"
+        : "\(startDate ?? "") - \(endDate ?? "")"
+
+        self.dateLbl.text = self.isDateSelected
+        ? dateText
+        : "All Dates"
+
+        UIView.performWithoutAnimation {
+
+            if self.isDateSelected {
+
+                // MARK: Selected State
+
+                self.dateView.alpha = 1
+                self.dateView.layer.opacity = 1
+                self.dateView.isOpaque = true
+                dateView.overrideBackgroundColor = .white
+                self.dateView.borderWidth = 0
+
+                self.dateLbl.textColor = .black
+                self.calendarIcon.tintColor = .black
+                
+
+            } else {
+
+                // MARK: Default State
+
+                self.dateView.alpha = 1
+                self.dateView.layer.opacity = 1
+                self.dateView.isOpaque = false
+                self.dateLbl.textColor = .white
+                self.calendarIcon.tintColor = .white
+                dateView.overrideBackgroundColor = nil
+            }
+        }
+
+        self.showSegmentView(self.isDateSelected ? 1 : 0)
+    }
 
     // MARK: - Actions
 
     @IBAction func onClickCity(_ sender: Any) {
-        Navigate.to.selectLocationVC(self)
+
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.selectedFilterCity = self.filterCity
+        vc.initialFilterCity = self.filterCity
+
+        vc.onSelectFilterCity = { [weak self] city in
+
+            guard let self else { return }
+
+            self.filterCity = city
+
+            self.selectedLocationName.text =
+            self.resolvedCity()
+
+            if let discoverAllVC = self.children.first(where: {
+                $0 is DiscoverAllVC
+            }) as? DiscoverAllVC {
+
+                discoverAllVC.reloadCityData(city: city ?? "")
+            }
+        }
     }
     
     @IBAction func onClickDate(_ sender: Any) {
-        Navigate.to.dateRangeSelectionVC(self)
+        if isDateSelected {
+            isDateSelected = false
+        } else {
+            Navigate.to.dateRangeSelectionVC(self)
+        }
+       
     }
     
     @IBAction func onClickDateCross(_ sender: Any) {
@@ -114,20 +173,29 @@ final class DiscoverVC: UIViewController {
     }
     
     private func resolvedCity() -> String {
-        let city = UserDefault.shared.localCity
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        return city.isEmpty ? "New York" : city
-    }
 
+        let city = filterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let city,
+           !city.isEmpty {
+
+            return city
+        }
+
+        return UserDefault.shared.localCity
+    }
     private func bindSelectedCity() {
-        UserDefault.shared.localCityPublisher
-            .removeDuplicates()
-            .map { _ in self.resolvedCity() }
-            .receive(on: RunLoop.main)
-            .sink { [weak self] city in
-                self?.selectedLocationName.text = city
-            }
-            .store(in: &cancellables)
+//        UserDefault.shared.localCityPublisher
+//            .removeDuplicates()
+//            .map { _ in self.resolvedCity() }
+//            .receive(on: RunLoop.main)
+//            .sink { [weak self] city in
+//                self?.selectedLocationName.text = city
+//            }
+//            .store(in: &cancellables)
+        
+        self.selectedLocationName.text = self.resolvedCity()
     }
 
     // MARK: - Segue

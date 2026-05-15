@@ -13,9 +13,7 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var todaysEventsView: DiscoverSectionView!
     @IBOutlet weak var venuesView: DiscoverSectionView!
     @IBOutlet weak var allEventsView: DiscoverSectionView!
-
     @IBOutlet weak var premiumExperiencesView: UIView!
-    @IBOutlet weak var premiumExerienceParentView: UIView!
 
     private var openVenueList = [ClipVenue]()
     private var closeVenueList = [ClipVenue]()
@@ -36,14 +34,19 @@ final class DiscoverAllVC: UIViewController {
     private let presenter = MVPPresenter()
     private var cancellables = Set<AnyCancellable>()
 
+    var selectedCity: String = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.isHidden = true
-
+        selectedCity = UserDefault.shared.localCity
         setupSections()
-        bindSelectedCity()
         fetchInitialData()
+    }
+
+    @IBAction func onClickPremiumCloseBtn(_ sender: Any) {
+        premiumExperiencesView.isHidden = true
     }
 }
 
@@ -163,7 +166,7 @@ private extension DiscoverAllVC {
             from: tonightEventSkip,
             venueId: "",
             time: "UPCOMING",
-            city: UserDefault.shared.localCity
+            city: selectedCity
         ) { [weak self] _, _, eventList, hasMore in
 
             guard let self else { return }
@@ -178,10 +181,17 @@ private extension DiscoverAllVC {
                 self.tonightEventSkip = self.todaysEvents.count
             }
 
-            self.todaysEventsView.configure(
-                type: .tonightEvents,
-                data: .events(self.todaysEvents)
-            )
+            if todaysEvents.isEmpty {
+                todaysEventsView.isHidden = true
+            } else {
+                todaysEventsView.isHidden = false
+
+                self.todaysEventsView.configure(
+                    type: .tonightEvents,
+                    data: .events(self.todaysEvents),
+                    city: selectedCity
+                )
+            }
 
             self.checkAndHideSkeleton()
         }
@@ -193,7 +203,7 @@ private extension DiscoverAllVC {
             from: allEventSkip,
             venueId: "",
             time: "UPCOMING",
-            city: UserDefault.shared.localCity
+            city: selectedCity
         ) { [weak self] _, _, eventList, hasMore in
 
             guard let self else { return }
@@ -210,10 +220,17 @@ private extension DiscoverAllVC {
 
             self.allEventHasMore = hasMore
 
-            self.allEventsView.configure(
-                type: .allEvents,
-                data: .events(self.allEvents)
-            )
+            if todaysEvents.isEmpty {
+                allEventsView.isHidden = true
+            } else {
+                allEventsView.isHidden = false
+
+                self.allEventsView.configure(
+                    type: .allEvents,
+                    data: .events(self.allEvents),
+                    city: selectedCity
+                )
+            }
 
             self.checkAndHideSkeleton()
         }
@@ -248,7 +265,8 @@ private extension DiscoverAllVC {
 
                 self.venuesView.configure(
                     type: .venues,
-                    data: .venues(self.openVenueList)
+                    data: .venues(self.openVenueList),
+                    city: selectedCity
                 )
 
                 self.checkAndHideSkeleton()
@@ -291,7 +309,8 @@ private extension DiscoverAllVC {
 
                 self.venuesView.configure(
                     type: .venues,
-                    data: .venues(self.openVenueList)
+                    data: .venues(self.openVenueList),
+                    city: selectedCity
                 )
 
                 self.checkAndHideSkeleton()
@@ -328,17 +347,20 @@ private extension DiscoverAllVC {
 
         todaysEventsView.configure(
             type: .tonightEvents,
-            data: .events([])
+            data: .events([]),
+            city: selectedCity
         )
 
         venuesView.configure(
             type: .venues,
-            data: .venues([])
+            data: .venues([]),
+            city: selectedCity
         )
 
         allEventsView.configure(
             type: .allEvents,
-            data: .events([])
+            data: .events([]),
+            city: selectedCity
         )
 
         fetchInitialData()
@@ -356,20 +378,14 @@ private extension DiscoverAllVC {
     }
 }
 
-// MARK: - City Binding
+// MARK: - City Reload
 
-private extension DiscoverAllVC {
+extension DiscoverAllVC {
 
-    func bindSelectedCity() {
+    func reloadCityData(city: String) {
 
-        UserDefault.shared.localCityPublisher
-            .removeDuplicates()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-
-                self?.refreshAllList()
-            }
-            .store(in: &cancellables)
+        selectedCity = city
+        refreshAllList()
     }
 }
 

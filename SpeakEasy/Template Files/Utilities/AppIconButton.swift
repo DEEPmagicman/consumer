@@ -10,6 +10,28 @@ import UIKit
 import SwiftUI
 // MARK: - UIKit AppIconButton
 
+enum AppIconType: String {
+    case back
+    case close
+    case seeAll
+
+    var image: UIImage? {
+        switch self {
+        case .back:   return UIImage(named: "backButtonIcon")
+        case .close:  return UIImage(named: "closeMarkIcon")
+        case .seeAll: return UIImage(named: "seeAllButtonIcon")
+        }
+    }
+
+    var buttonSize: CGFloat {
+        switch self {
+        case .back:   return 50
+        case .close:  return 40
+        case .seeAll: return 34
+        }
+    }
+}
+
 private struct GlassButtonView: View {
     let iconType: AppIconType
     let iconSize: CGFloat

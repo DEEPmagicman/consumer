@@ -7,25 +7,63 @@
 
 import Foundation
 import SwiftUI
+
 @available(iOS 26.0, *)
 private struct LiquidGlassSurface: View {
+
     let cornerRadius: CGFloat
-    let tintColor: Color  // ✅ added
-    let fillColor: Color = Color.white.opacity(0.04)
+    let tintColor: Color
+    let fillColor: Color
+    let overrideBackgroundColor: Color?
 
     var body: some View {
-        Rectangle()
-            .foregroundStyle(fillColor)
-            .glassEffect(.regular.interactive(), in: .capsule)
-            .cornerRadius(cornerRadius)
+
+        Group {
+
+            if let overrideBackgroundColor {
+
+                Rectangle()
+                    .foregroundStyle(overrideBackgroundColor)
+
+            } else {
+
+                Rectangle()
+                    .foregroundStyle(fillColor)
+                    .glassEffect(
+                        .regular.interactive(),
+                        in: .capsule
+                    )
+            }
+        }
+        .cornerRadius(cornerRadius)
     }
 }
 
 final class LiquidGlassBackgroundView: UIView {
 
-    var fillColor: UIColor = UIColor(white: 1, alpha: 0.04) { didSet { apply() } }
+    // MARK: - Public Properties
+
+    var fillColor: UIColor = UIColor(
+        white: 1,
+        alpha: 0.04
+    ) {
+        didSet { apply() }
+    }
+
+    /// Pass custom background color when needed
+    /// Example:
+    /// glassView.overrideBackgroundColor = .white
+    ///
+    /// Default = nil (normal glass effect)
+    var overrideBackgroundColor: UIColor? {
+        didSet { apply() }
+    }
+
+    // MARK: - Private
 
     private var hostingController: UIHostingController<AnyView>?
+
+    // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,21 +77,30 @@ final class LiquidGlassBackgroundView: UIView {
 
     convenience init(
         cornerRadius: CGFloat = 12,
-        fillColor: UIColor = UIColor(white: 1, alpha: 0.04),
+        fillColor: UIColor = UIColor(
+            white: 1,
+            alpha: 0.04
+        ),
         borderColor: UIColor? = nil,
         borderWidth: CGFloat = 0.75,
-        tintColor: UIColor = .clear  // ✅ added
+        tintColor: UIColor = .clear
     ) {
+
         self.init(frame: .zero)
+
         self.cornerRadius = cornerRadius
         self.fillColor    = fillColor
         self.borderColor  = borderColor
         self.borderWidth  = borderWidth
-        self.tintColor    = tintColor  // ✅ added
+        self.tintColor    = tintColor
+
         apply()
     }
 
+    // MARK: - Apply
+
     private func apply() {
+
         if #available(iOS 26.0, *) {
             applyGlass()
         } else {
@@ -63,18 +110,29 @@ final class LiquidGlassBackgroundView: UIView {
 
     @available(iOS 26.0, *)
     private func applyGlass() {
+
         hostingController?.view.removeFromSuperview()
-        backgroundColor   = .clear  // ✅ was fillColor, glass handles its own bg
+
+        backgroundColor   = .clear
         layer.borderWidth = 0
 
         let surface = LiquidGlassSurface(
             cornerRadius: cornerRadius,
-            tintColor: Color(tintColor)
+            tintColor: Color(tintColor),
+            fillColor: Color(fillColor),
+            overrideBackgroundColor: overrideBackgroundColor != nil
+            ? Color(overrideBackgroundColor!)
+            : nil
         )
-        let hc = UIHostingController(rootView: AnyView(surface))
-        hc.view.backgroundColor          = .clear
+
+        let hc = UIHostingController(
+            rootView: AnyView(surface)
+        )
+
+        hc.view.backgroundColor = .clear
         hc.view.translatesAutoresizingMaskIntoConstraints = false
         hc.view.isUserInteractionEnabled = false
+
         insertSubview(hc.view, at: 0)
 
         NSLayoutConstraint.activate([
@@ -88,13 +146,19 @@ final class LiquidGlassBackgroundView: UIView {
     }
 
     private func applyFallback() {
+
         hostingController?.view.removeFromSuperview()
-        hostingController    = nil
-        backgroundColor      = fillColor
-        layer.cornerRadius   = cornerRadius
-        layer.cornerCurve    = .continuous
-        clipsToBounds        = true
-        layer.borderColor    = borderColor?.cgColor
-        layer.borderWidth    = borderColor != nil ? borderWidth : 0
+        hostingController = nil
+
+        backgroundColor = overrideBackgroundColor ?? fillColor
+
+        layer.cornerRadius = cornerRadius
+        layer.cornerCurve  = .continuous
+        clipsToBounds      = true
+
+        layer.borderColor = borderColor?.cgColor
+        layer.borderWidth = borderColor != nil
+        ? borderWidth
+        : 0
     }
 }

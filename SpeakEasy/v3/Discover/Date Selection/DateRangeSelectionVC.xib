@@ -16,6 +16,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DateRangeSelectionVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="bgView" destination="Naq-Lx-bdN" id="hMK-AW-MlD"/>
                 <outlet property="calendarView" destination="8Nj-3m-z54" id="ieq-Ke-bYZ"/>
                 <outlet property="thisWeekBtnWidth" destination="F0X-qa-mOo" id="HiC-wa-yMr"/>
                 <outlet property="todayBtnWidth" destination="wON-YA-wEd" id="D4j-s8-BIi"/>
@@ -28,6 +29,10 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Naq-Lx-bdN">
+                    <rect key="frame" x="0.0" y="0.0" width="409" height="852"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZuN-Yg-Lwu">
                     <rect key="frame" x="20" y="138" width="355" height="40"/>
                     <subviews>
@@ -54,7 +59,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CJV-7Y-g2l">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CJV-7Y-g2l" customClass="liqu">
                             <rect key="frame" x="282" y="3.6666666666666572" width="73" height="33"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iB5-T0-5IC">
@@ -66,7 +71,7 @@
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U02-XX-ykd">
                                     <rect key="frame" x="18" y="5" width="37" height="23"/>
-                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
+                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="12"/>
                                     <color key="textColor" name="PrimaryBlackColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -109,7 +114,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5Oo-qG-3Cv">
                     <rect key="frame" x="16" y="198" width="316" height="30"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UVh-MG-OWa">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UVh-MG-OWa" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3pC-wd-vEw">
@@ -143,7 +148,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2s1-LT-wFK">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2s1-LT-wFK" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
                             <rect key="frame" x="108" y="0.0" width="100" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tomorrow" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C3h-R6-BTQ">
@@ -177,7 +182,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJ8-hP-hgu">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJ8-hP-hgu" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
                             <rect key="frame" x="216" y="0.0" width="100" height="30"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This Week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQQ-y2-UJF">
@@ -254,6 +259,10 @@
                 <constraint firstItem="yJB-uz-qqY" firstAttribute="top" secondItem="5Oo-qG-3Cv" secondAttribute="bottom" constant="20" id="LVD-cm-3Et"/>
                 <constraint firstItem="ZuN-Yg-Lwu" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="20" id="M10-mu-HS2"/>
                 <constraint firstAttribute="bottom" secondItem="yJB-uz-qqY" secondAttribute="bottom" id="MLK-T7-bhA"/>
+                <constraint firstAttribute="trailing" secondItem="Naq-Lx-bdN" secondAttribute="trailing" constant="-16" id="PUS-0n-069"/>
+                <constraint firstAttribute="bottom" secondItem="Naq-Lx-bdN" secondAttribute="bottom" id="X8x-v8-eOD"/>
+                <constraint firstItem="Naq-Lx-bdN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="a8f-y4-qYT"/>
+                <constraint firstItem="Naq-Lx-bdN" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dpd-uh-uiC"/>
                 <constraint firstItem="ZuN-Yg-Lwu" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="eOi-Oe-2oV"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="yJB-uz-qqY" secondAttribute="trailing" constant="6" id="fMT-X8-hC3"/>
                 <constraint firstItem="5Oo-qG-3Cv" firstAttribute="top" secondItem="ZuN-Yg-Lwu" secondAttribute="bottom" constant="20" id="g4Q-EG-4hi"/>

@@ -53,7 +53,7 @@ final class LocationUpdatePopupView: UIView {
 
     private func setup() {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .clear
+        backgroundColor = UIColor(hex: "#171717")
 
         cardView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(cardView)

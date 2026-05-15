@@ -33,6 +33,12 @@ final class LandingVC: UIViewController {
         bgView.applyScreenBgGradient()
     }
     
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//
+//        setupUserData()
+//    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -66,7 +72,7 @@ final class LandingVC: UIViewController {
             segmentViewContainer[enumeratedIndex].endEditing(enumeratedIndex != index)
             tabBarImages[enumeratedIndex].tintColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
             tabBarTitles[enumeratedIndex].textColor = enumeratedIndex == index ? .white : UIColor(hex: "#5C5C5C")
-            pageTitleLbl.text = titles[index]
+//            pageTitleLbl.text = titles[index]
             if index == 0 {
                 self.searchBtnView.isHidden = false
             } else {
@@ -98,6 +104,7 @@ final class LandingVC: UIViewController {
                 with: URL(string: imageUrl),
                 placeholderImage: UIImage(named: "placeholder")
             )
+            self.pageTitleLbl.text = user.firstName
             
         } else {
             imageView.isHidden = true

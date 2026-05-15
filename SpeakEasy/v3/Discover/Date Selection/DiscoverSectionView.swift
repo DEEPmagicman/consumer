@@ -56,7 +56,7 @@ final class DiscoverSectionView: UIView {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         let displayCity = resolvedCity.isEmpty
-        ? "New York City"
+        ? UserDefault.shared.localCity
         : resolvedCity
 
         switch type {
@@ -112,6 +112,15 @@ private extension DiscoverSectionView {
         collectionView.dataSource = self
 
         collectionView.showsHorizontalScrollIndicator = false
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                layout.sectionInset = UIEdgeInsets(
+                    top: 0,
+                    left: 16,
+                    bottom: 0,
+                    right: 16
+                )
+            }
 
         collectionView.register(
             EventCollectionViewCell.nib,

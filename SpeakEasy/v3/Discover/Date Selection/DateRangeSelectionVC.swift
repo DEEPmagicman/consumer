@@ -15,11 +15,10 @@ final class DateRangeSelectionVC: UIViewController {
     // MARK: - IBOutlets
 
     @IBOutlet weak var calendarView: CustomCalendar!
-    @IBOutlet weak var dateRangeLbl: UILabel?
     @IBOutlet weak var todayBtnWidth:    NSLayoutConstraint!
     @IBOutlet weak var tomorrowBtnWidth: NSLayoutConstraint!
     @IBOutlet weak var thisWeekBtnWidth: NSLayoutConstraint!
-
+    @IBOutlet weak var bgView: UIView!
     // MARK: - Public
 
     var initialStartDate: Date?
@@ -45,6 +44,7 @@ final class DateRangeSelectionVC: UIViewController {
         super.viewDidLoad()
         setupCalendar()
         applyInitialSelection()
+        self.bgView.applyScreenBgGradient(direction: .bottomToTop)
     }
 
     override func viewDidLayoutSubviews() {
@@ -65,7 +65,6 @@ final class DateRangeSelectionVC: UIViewController {
             guard let self else { return }
             self.startDate = startDate
             self.endDate   = endDate
-            self.updateDateLabel()
         }
     }
 
@@ -75,7 +74,6 @@ final class DateRangeSelectionVC: UIViewController {
             endDate   = initialEndDate
             calendarView.setSelectedRange(start: s, end: initialEndDate)
         }
-        updateDateLabel()
     }
 
     private func updateButtonWidths() {
@@ -128,47 +126,15 @@ final class DateRangeSelectionVC: UIViewController {
     }
 
     @IBAction func onTapToday(_ sender: Any) {
-//        Navigate.to.presentLocationUpdatePopup(
-//            from: self,
-//            title: "You're updating your preferred location to Chicago?",
-//            subtitle: "Premium bookings, priority reservations, and high-demand experiences all in one place."
-//        ) {
-//            // handle confirm
-//        }
         calendarView.selectToday()
-        updateDateLabel()
     }
 
     @IBAction func onTapTomorrow(_ sender: Any) {
         calendarView.selectTomorrow()
-        updateDateLabel()
     }
 
     @IBAction func onTapThisWeek(_ sender: Any) {
         calendarView.selectThisWeek()
-        updateDateLabel()
-    }
-
-    // MARK: - Label
-
-    private func updateDateLabel() {
-        guard let label = dateRangeLbl else { return }
-
-        guard let s = startDate else {
-            label.text = nil
-            return
-        }
-
-        let fmt        = DateFormatter()
-        fmt.calendar   = venueCalendar
-        fmt.timeZone   = Constant.venueTimeZone ?? .current
-        fmt.dateFormat = "MMM d"
-
-        if let e = endDate, !venueCalendar.isDate(s, inSameDayAs: e) {
-            label.text = "\(fmt.string(from: s)) - \(fmt.string(from: e))"
-        } else {
-            label.text = fmt.string(from: s)
-        }
     }
 }
 
@@ -180,30 +146,4 @@ protocol SelectedDateDelegate: AnyObject {
 
 extension SelectedDateDelegate {
     func selectedDateRange(startDate: String?, endDate: String?) { }
-}
-
-
-import UIKit
-import SwiftUI
-
-enum AppIconType: String {
-    case back
-    case close
-    case seeAll
-
-    var image: UIImage? {
-        switch self {
-        case .back:   return UIImage(named: "backButtonIcon")
-        case .close:  return UIImage(named: "closeMarkIcon")
-        case .seeAll: return UIImage(named: "seeAllButtonIcon")
-        }
-    }
-
-    var buttonSize: CGFloat {
-        switch self {
-        case .back:   return 50
-        case .close:  return 40
-        case .seeAll: return 34
-        }
-    }
 }

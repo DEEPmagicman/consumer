@@ -39,9 +39,6 @@ final class EventCollectionViewCell: UICollectionViewCell {
         eventName.text = nil
         eventDate.text = nil
         venueName.text = nil
-
-        image.hero.id = nil
-        eventName.hero.id = nil
     }
 
     func configure(with type: ContentType) {
@@ -58,11 +55,6 @@ final class EventCollectionViewCell: UICollectionViewCell {
             setupPremiumExperience(event)
         }
     }
-
-    func clearHeroIDs() {
-        image.hero.id = nil
-        eventName.hero.id = nil
-    }
 }
 
 // MARK: - Private
@@ -70,9 +62,6 @@ final class EventCollectionViewCell: UICollectionViewCell {
 private extension EventCollectionViewCell {
 
     func setupUI() {
-
-        bgView.clipsToBounds = true
-        bgView.layer.cornerRadius = 12
 
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill
