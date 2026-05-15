@@ -19,7 +19,7 @@ final class GenderSelectionBottomSheetVC: UIViewController {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let sheetView = UIView()
     private let titleLabel = UILabel()
-    private let backBtn = UIButton(type: .system)
+    private let backBtn = AppIconButton()
     private let optionsCard = UIView()
     private let updateBtn = PrimaryButton()
     
@@ -69,14 +69,14 @@ final class GenderSelectionBottomSheetVC: UIViewController {
         sheetView.clipsToBounds = true
         sheetView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sheetView)
-
-        let backBtn = Utility.main.makeBackButton(
-            size: 40,
-            iconSize: 16,
-            target: self,
-            action: #selector(onClickBack)
-        )
+        
+        backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
+        backBtn.iconSize = 16
+        backBtn.buttonSize = 40
+        backBtn.iconTintColor = .white
+        backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)
         sheetView.addSubview(backBtn)
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
 
         titleLabel.text = "Select gender"
         titleLabel.textColor = AppColor.primaryWhiteColor

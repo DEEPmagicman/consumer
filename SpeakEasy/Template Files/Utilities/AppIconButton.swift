@@ -35,20 +35,34 @@ enum AppIconType: String {
 private struct GlassButtonView: View {
     let iconType: AppIconType
     let iconSize: CGFloat
+    let buttonSize: CGFloat
+    let tintColor: UIColor
     let action: () -> Void
 
     var body: some View {
         if #available(iOS 26.0, *) {
             Button(action: action) {
                 Image(uiImage: iconType.image ?? UIImage())
+                    .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
                     .frame(width: iconSize, height: iconSize)
+                    .foregroundStyle(Color(tintColor))
             }
-            .frame(width: iconType.buttonSize, height: iconType.buttonSize)
+            .frame(width: buttonSize, height: buttonSize)
             .glassEffect(.regular.interactive(), in: .circle)
         } else {
-            // Fallback on earlier versions
+            Button(action: action) {
+                Image(uiImage: iconType.image ?? UIImage())
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: iconSize, height: iconSize)
+                    .foregroundColor(Color(tintColor))
+            }
+            .frame(width: buttonSize, height: buttonSize)
+            .background(Color.white.opacity(0.2))
+            .clipShape(Circle())
         }
     }
 }
@@ -64,8 +78,20 @@ final class AppIconButton: UIButton {
         didSet { updateGlass() }
     }
 
+    @IBInspectable var buttonSize: CGFloat = 0 {
+        didSet { updateGlass() }
+    }
+
+    @IBInspectable var iconTintColor: UIColor = .label {
+        didSet { updateGlass() }
+    }
+    
     private var iconType: AppIconType {
         AppIconType(rawValue: iconTypeValue) ?? .back
+    }
+    
+    private var resolvedButtonSize: CGFloat {
+        buttonSize > 0 ? buttonSize : iconType.buttonSize
     }
 
     private var widthConstraintRef: NSLayoutConstraint?
@@ -85,7 +111,7 @@ final class AppIconButton: UIButton {
         backgroundColor = .white.withAlphaComponent(0.2)
         layer.cornerRadius = iconType.buttonSize / 2
         clipsToBounds = true
-        setButtonSize(iconType.buttonSize)
+        setButtonSize(resolvedButtonSize)
         setIcon(iconType.image, size: iconSize)
     }
 
@@ -97,7 +123,7 @@ final class AppIconButton: UIButton {
         setImage(nil, for: .normal)
         setTitle(nil, for: .normal)
 
-        setButtonSize(iconType.buttonSize)
+        setButtonSize(resolvedButtonSize)
         embedGlassView()
     }
 
@@ -107,7 +133,9 @@ final class AppIconButton: UIButton {
 
         let glassView = GlassButtonView(
             iconType: iconType,
-            iconSize: iconSize
+            iconSize: iconSize,
+            buttonSize: resolvedButtonSize,
+            tintColor: iconTintColor
         ) { [weak self] in
             self?.sendActions(for: .touchUpInside)
         }
@@ -129,7 +157,7 @@ final class AppIconButton: UIButton {
     }
 
     private func updateGlass() {
-        setButtonSize(iconType.buttonSize)
+        setButtonSize(resolvedButtonSize)
         embedGlassView()
     }
 

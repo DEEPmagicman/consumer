@@ -116,9 +116,9 @@ extension Utility {
     func makeBackButton(
         size: CGFloat = 56,
         iconSize: CGFloat = 26,
-        backgroundColor: UIColor = AppColor.primaryWhiteColor.withAlphaComponent(0.12),
+        backgroundColor: UIColor = .clear,
         iconColor: UIColor = AppColor.primaryWhiteColor,
-        borderColor: UIColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10),
+        borderColor: UIColor = .clear,
         borderWidth: CGFloat = 0,
         target: Any?,
         action: Selector

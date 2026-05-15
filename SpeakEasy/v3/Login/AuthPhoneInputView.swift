@@ -28,6 +28,9 @@ final class AuthPhoneInputView: UIView {
 
     private(set) var phoneNumber: PhoneNumber?
 
+    private var termsRange: NSRange = .init(location: 0, length: 0)
+    private var privacyRange: NSRange = .init(location: 0, length: 0)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -182,7 +185,7 @@ final class AuthPhoneInputView: UIView {
         By continuing you agree to the Terms of Service and Privacy Policy. We'll text you a verification code and event updates if you opt in. Msg & data rates may apply. Reply STOP to opt out or HELP for support.
         """
 
-        termsAndPrivacyLbl.attributedText = NSAttributedString(
+        let attributedString = NSMutableAttributedString(
             string: fullText,
             attributes: [
                 .font: Constant.Font.geistRegular(size: 10),
@@ -190,8 +193,38 @@ final class AuthPhoneInputView: UIView {
             ]
         )
 
+        termsRange = (fullText as NSString).range(of: "Terms of Service")
+        privacyRange = (fullText as NSString).range(of: "Privacy Policy")
+
+        let highlightAttributes: [NSAttributedString.Key: Any] = [
+            .font: Constant.Font.interRegular(size: 10),
+            .foregroundColor: AppColor.primaryWhiteColor.withAlphaComponent(0.65)
+        ]
+
+        attributedString.addAttributes(highlightAttributes, range: termsRange)
+        attributedString.addAttributes(highlightAttributes, range: privacyRange)
+
+        termsAndPrivacyLbl.attributedText = attributedString
         termsAndPrivacyLbl.numberOfLines = 0
         termsAndPrivacyLbl.textAlignment = .center
+        termsAndPrivacyLbl.isUserInteractionEnabled = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickInfoLabel(_:)))
+        termsAndPrivacyLbl.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func onClickInfoLabel(_ sender: UITapGestureRecognizer) {
+        
+        guard let attributedText = termsAndPrivacyLbl.attributedText else { return }
+        
+        if sender.didTapAttributedTextInLabel(label: termsAndPrivacyLbl, inRange: termsRange) {
+            Navigate.externalURL(APIBuilder.termsConsumerURL)
+            return
+        }
+        
+        if sender.didTapAttributedTextInLabel(label: termsAndPrivacyLbl, inRange: privacyRange) {
+            Navigate.externalURL(APIBuilder.privacyConsumerURL)
+        }
     }
     
     func focusPhoneField() {

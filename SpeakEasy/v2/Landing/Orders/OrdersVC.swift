@@ -46,9 +46,7 @@ final class OrdersVC: UIViewController {
         super.viewDidLoad()
         setupSegmentControl()
         setupTableView()
-        if UserDefault.shared.isGuest == false {
-            loadCurrentSegment(reset: false)
-        }
+        loadCurrentSegment(reset: false)
     }
     
     // MARK: - Setup
@@ -129,6 +127,7 @@ final class OrdersVC: UIViewController {
     }
     
     private func loadCurrentSegment(reset: Bool) {
+        if UserDefault.shared.isGuest == true { return }
         guard !isLoading else { return }
         isLoading = true
         

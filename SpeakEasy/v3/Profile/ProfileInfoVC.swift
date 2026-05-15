@@ -13,7 +13,7 @@ final class ProfileInfoVC: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
 
-    private var backBtn = UIButton(type: .system)
+    private var backBtn = AppIconButton()
     private var titleLabel = UILabel()
     private var subtitleLabel = UILabel()
 
@@ -65,13 +65,13 @@ final class ProfileInfoVC: UIViewController {
     }
 
     private func setupBackButton() {
-        backBtn = Utility.main.makeBackButton(
-            size: 50,
-            iconSize: 22,
-            target: self,
-            action: #selector(onClickBack)
-        )
+        backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
+        backBtn.iconSize = 22
+        backBtn.buttonSize = 50
+        backBtn.iconTintColor = .white
+        backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)
         view.addSubview(backBtn)
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private func setupHeader() {
