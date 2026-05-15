@@ -147,32 +147,3 @@ protocol SelectedDateDelegate: AnyObject {
 extension SelectedDateDelegate {
     func selectedDateRange(startDate: String?, endDate: String?) { }
 }
-
-
-import UIKit
-import SwiftUI
-
-enum AppIconType: String {
-    case leftSideBack
-    case back
-    case close
-    case seeAll
-
-    var image: UIImage? {
-        switch self {
-        case .leftSideBack:   return UIImage(systemName: "arrow.left")
-        case .back:   return UIImage(named: "backButtonIcon")
-        case .close:  return UIImage(named: "closeMarkIcon")
-        case .seeAll: return UIImage(named: "seeAllButtonIcon")
-        }
-    }
-
-    var buttonSize: CGFloat {
-        switch self {
-        case .leftSideBack: return 50
-        case .back:   return 50
-        case .close:  return 40
-        case .seeAll: return 34
-        }
-    }
-}
