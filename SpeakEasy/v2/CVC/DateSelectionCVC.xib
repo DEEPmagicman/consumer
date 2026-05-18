@@ -59,7 +59,11 @@
             <size key="customSize" width="124" height="42"/>
             <connections>
                 <outlet property="bgView" destination="yPQ-xz-S35" id="biu-dk-XDV"/>
+                <outlet property="bottemConstraint" destination="EdA-Pl-Oxe" id="pKj-Kh-VRd"/>
                 <outlet property="dateLbl" destination="q7q-FI-n5f" id="r8T-W0-rde"/>
+                <outlet property="leadingConstraint" destination="NSF-DC-whr" id="8xd-vB-1EQ"/>
+                <outlet property="topConstraint" destination="gpP-kZ-MhY" id="bmk-Qq-WaJ"/>
+                <outlet property="trailingConstraint" destination="ys9-ro-xsb" id="m3d-2c-foo"/>
             </connections>
             <point key="canvasLocation" x="44.274809160305338" y="116.90140845070422"/>
         </collectionViewCell>

@@ -15,6 +15,7 @@ enum AppIconType: String {
     case back
     case close
     case seeAll
+    case filter
 
     var image: UIImage? {
         switch self {
@@ -22,6 +23,7 @@ enum AppIconType: String {
         case .back:   return UIImage(named: "backButtonIcon")
         case .close:  return UIImage(named: "closeMarkIcon")
         case .seeAll: return UIImage(named: "seeAllButtonIcon")
+        case .filter: return UIImage(named: "filterIcon")
         }
     }
 
@@ -31,6 +33,8 @@ enum AppIconType: String {
         case .back:   return 50
         case .close:  return 40
         case .seeAll: return 34
+        case .filter:
+            return 50
         }
     }
 }

@@ -7,23 +7,28 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Geist-Regular.ttf">
+            <string>Geist-Regular</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="VenueCVC" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="178" height="238"/>
+            <rect key="frame" x="0.0" y="0.0" width="168" height="168"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="178" height="238"/>
+                <rect key="frame" x="0.0" y="0.0" width="168" height="168"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JQm-Xc-ccV">
-                        <rect key="frame" x="2" y="2" width="158" height="236"/>
+                        <rect key="frame" x="0.0" y="0.0" width="168" height="168"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="PTn-rt-r7f">
-                                <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
+                                <rect key="frame" x="0.0" y="0.0" width="168" height="166"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="158" id="PLA-eY-6Tj"/>
+                                    <constraint firstAttribute="height" constant="166" id="eLe-LG-CGc"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -31,60 +36,60 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo venue" translatesAutoresizingMaskIntoConstraints="NO" id="Wxi-wr-5ND">
-                                <rect key="frame" x="37" y="37" width="84" height="84"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oc9-ti-sJq">
+                                <rect key="frame" x="15" y="134.66666666666666" width="90" height="20.333333333333343"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laissez Faire" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pTt-dB-gqR">
+                                        <rect key="frame" x="12" y="3.0000000000000009" width="66" height="14.333333333333336"/>
+                                        <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="11"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.94901960784313721" blue="0.94901960784313721" alpha="0.14490927419354838" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="84" id="Gan-FK-Tva"/>
-                                    <constraint firstAttribute="width" constant="84" id="KRf-Jq-BbR"/>
+                                    <constraint firstItem="pTt-dB-gqR" firstAttribute="leading" secondItem="Oc9-ti-sJq" secondAttribute="leading" constant="12" id="BMI-Q6-CZ7"/>
+                                    <constraint firstAttribute="trailing" secondItem="pTt-dB-gqR" secondAttribute="trailing" constant="12" id="FJ0-Cw-eiW"/>
+                                    <constraint firstItem="pTt-dB-gqR" firstAttribute="top" secondItem="Oc9-ti-sJq" secondAttribute="top" constant="3" id="Ks7-KQ-f99"/>
+                                    <constraint firstAttribute="bottom" secondItem="pTt-dB-gqR" secondAttribute="bottom" constant="3" id="gKy-RZ-zMW"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="8"/>
+                                        <real key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Moe’s Cantina River North" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3V-j0-iIQ">
-                                <rect key="frame" x="0.0" y="160" width="158" height="36"/>
+                            </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ByP-1v-xCW">
+                                <rect key="frame" x="23" y="60.666666666666657" width="122" height="47"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="KkO-qv-yKm"/>
+                                    <constraint firstAttribute="height" constant="47" id="mIG-cO-cYx"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="PTn-rt-r7f" secondAttribute="trailing" id="8Oa-go-mvJ"/>
-                            <constraint firstItem="Wxi-wr-5ND" firstAttribute="centerY" secondItem="PTn-rt-r7f" secondAttribute="centerY" id="9es-dk-ICB"/>
-                            <constraint firstAttribute="trailing" secondItem="T3V-j0-iIQ" secondAttribute="trailing" id="Bf4-IH-MXb"/>
-                            <constraint firstItem="T3V-j0-iIQ" firstAttribute="top" secondItem="PTn-rt-r7f" secondAttribute="bottom" constant="2" id="PTI-l0-Esl"/>
-                            <constraint firstItem="Wxi-wr-5ND" firstAttribute="centerX" secondItem="PTn-rt-r7f" secondAttribute="centerX" id="Rm5-nq-gz4"/>
-                            <constraint firstItem="T3V-j0-iIQ" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" id="aa0-zB-Yy8"/>
-                            <constraint firstAttribute="width" constant="158" id="gBx-7z-2la"/>
-                            <constraint firstItem="PTn-rt-r7f" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" id="hnm-ac-4vK"/>
-                            <constraint firstItem="PTn-rt-r7f" firstAttribute="top" secondItem="JQm-Xc-ccV" secondAttribute="top" id="lOu-n0-mje"/>
-                            <constraint firstAttribute="bottom" secondItem="T3V-j0-iIQ" secondAttribute="bottom" id="xpo-yk-OLh"/>
+                            <constraint firstItem="Oc9-ti-sJq" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" constant="15" id="0up-p6-bYC"/>
+                            <constraint firstItem="ByP-1v-xCW" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" constant="23" id="1ia-fP-Paw"/>
+                            <constraint firstAttribute="trailing" secondItem="ByP-1v-xCW" secondAttribute="trailing" constant="23" id="MBW-H2-BFA"/>
+                            <constraint firstItem="ByP-1v-xCW" firstAttribute="centerX" secondItem="JQm-Xc-ccV" secondAttribute="centerX" id="N6d-vw-m8I"/>
+                            <constraint firstItem="Oc9-ti-sJq" firstAttribute="bottom" secondItem="PTn-rt-r7f" secondAttribute="bottom" constant="-11" id="QBV-H8-u3W"/>
+                            <constraint firstAttribute="trailing" secondItem="PTn-rt-r7f" secondAttribute="trailing" id="Unk-Ai-Ob8"/>
+                            <constraint firstItem="PTn-rt-r7f" firstAttribute="top" secondItem="JQm-Xc-ccV" secondAttribute="top" id="jP0-a0-7B8"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Oc9-ti-sJq" secondAttribute="trailing" id="nPr-vt-DCf"/>
+                            <constraint firstItem="PTn-rt-r7f" firstAttribute="leading" secondItem="JQm-Xc-ccV" secondAttribute="leading" id="qOV-n7-w0c"/>
+                            <constraint firstItem="ByP-1v-xCW" firstAttribute="centerY" secondItem="JQm-Xc-ccV" secondAttribute="centerY" id="zFN-c6-tHR"/>
                         </constraints>
-                    </view>
-                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8z-mP-0G9">
-                        <rect key="frame" x="2" y="2" width="174" height="234"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="a8z-mP-0G9" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="67H-na-GKD"/>
-                <constraint firstItem="JQm-Xc-ccV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="MIE-OX-NRh"/>
-                <constraint firstAttribute="trailing" secondItem="a8z-mP-0G9" secondAttribute="trailing" constant="2" id="WfM-Ed-G9e"/>
-                <constraint firstAttribute="bottom" secondItem="a8z-mP-0G9" secondAttribute="bottom" constant="2" id="gtr-RY-Zy1"/>
-                <constraint firstItem="a8z-mP-0G9" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="jpo-7W-SHg"/>
-                <constraint firstItem="JQm-Xc-ccV" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="nAJ-l5-wM3"/>
-                <constraint firstAttribute="bottom" secondItem="JQm-Xc-ccV" secondAttribute="bottom" id="rle-0I-qUN"/>
-                <constraint firstAttribute="trailing" secondItem="JQm-Xc-ccV" secondAttribute="trailing" constant="2" id="v9u-GC-8eG"/>
+                <constraint firstAttribute="bottom" secondItem="JQm-Xc-ccV" secondAttribute="bottom" id="071-CI-JL2"/>
+                <constraint firstItem="JQm-Xc-ccV" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="2ae-iN-AMq"/>
+                <constraint firstAttribute="trailing" secondItem="JQm-Xc-ccV" secondAttribute="trailing" id="JIY-ii-Ahm"/>
+                <constraint firstItem="JQm-Xc-ccV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="XfG-jt-2cm"/>
             </constraints>
-            <size key="customSize" width="178" height="238"/>
+            <size key="customSize" width="168" height="168"/>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                     <real key="value" value="8"/>
@@ -92,12 +97,11 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="bgView" destination="JQm-Xc-ccV" id="a3j-re-l4I"/>
-                <outlet property="shimmerView" destination="a8z-mP-0G9" id="xQc-dJ-hSw"/>
                 <outlet property="venueImg" destination="PTn-rt-r7f" id="7xY-LZ-jpb"/>
-                <outlet property="venueLogo" destination="Wxi-wr-5ND" id="6gs-8t-bRN"/>
-                <outlet property="venueName" destination="T3V-j0-iIQ" id="h8v-Tl-OQj"/>
+                <outlet property="venueLogo" destination="ByP-1v-xCW" id="9re-Yd-fHp"/>
+                <outlet property="venueName" destination="pTt-dB-gqR" id="S1o-Jr-Ed4"/>
             </connections>
-            <point key="canvasLocation" x="85.496183206106863" y="144.36619718309859"/>
+            <point key="canvasLocation" x="77.862595419847324" y="140.84507042253523"/>
         </collectionViewCell>
     </objects>
     <resources>

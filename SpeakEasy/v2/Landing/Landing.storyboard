@@ -162,7 +162,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <connections>
-                                                    <action selector="onClickSearchBtn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="nPE-oe-UlI"/>
+                                                    <action selector="onClickMapBtn:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="WBb-Wx-pci"/>
                                                 </connections>
                                             </button>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mapIcon" translatesAutoresizingMaskIntoConstraints="NO" id="kMP-zV-oZ9">

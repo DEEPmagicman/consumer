@@ -11,19 +11,22 @@
         <array key="Geist-Medium.ttf">
             <string>Geist-Medium</string>
         </array>
+        <array key="GeistMono-Medium.ttf">
+            <string>GeistMono-Medium</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="gTV-IL-0wX" customClass="EventCollectionViewCell" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="163" height="243"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="EventCollectionViewCell" customModule="Speakeasy" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="143" height="243"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="163" height="243"/>
+                <rect key="frame" x="0.0" y="0.0" width="143" height="243"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jI8-5k-Tmb">
-                        <rect key="frame" x="0.0" y="0.0" width="143" height="199"/>
+                        <rect key="frame" x="0.0" y="0.0" width="143" height="243"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" image="bg_img" translatesAutoresizingMaskIntoConstraints="NO" id="Ksh-tt-vQW">
                                 <rect key="frame" x="0.0" y="0.0" width="142" height="142"/>
@@ -70,9 +73,34 @@
                                     <constraint firstAttribute="trailing" secondItem="Xft-Lg-4Rn" secondAttribute="trailing" id="x6R-DM-6dM"/>
                                 </constraints>
                             </stackView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PgO-6F-RwC">
+                                <rect key="frame" x="49.333333333333329" y="8" width="85.666666666666671" height="15"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPU-m6-Pb5">
+                                        <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>
+                                        <fontDescription key="fontDescription" name="GeistMono-Medium" family="Geist Mono" pointSize="7"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.85098039215686272" green="0.59999999999999998" blue="0.20784313725490194" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="HPU-m6-Pb5" secondAttribute="trailing" constant="7" id="4Ch-M9-0vs"/>
+                                    <constraint firstAttribute="height" constant="15" id="8Kj-qU-rik"/>
+                                    <constraint firstAttribute="bottom" secondItem="HPU-m6-Pb5" secondAttribute="bottom" constant="2" id="SwL-IW-DPM"/>
+                                    <constraint firstItem="HPU-m6-Pb5" firstAttribute="top" secondItem="PgO-6F-RwC" secondAttribute="top" constant="2" id="mmB-tY-EoG"/>
+                                    <constraint firstItem="HPU-m6-Pb5" firstAttribute="leading" secondItem="PgO-6F-RwC" secondAttribute="leading" constant="7" id="tq1-7P-8CT"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="7"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.070588235289999995" green="0.070588235289999995" blue="0.070588235289999995" alpha="0.045169454230000003" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
+                            <constraint firstItem="PgO-6F-RwC" firstAttribute="top" secondItem="jI8-5k-Tmb" secondAttribute="top" constant="8" id="16P-SG-WCZ"/>
                             <constraint firstItem="3Qe-hx-67R" firstAttribute="top" secondItem="Ksh-tt-vQW" secondAttribute="bottom" constant="7" id="4ye-OK-PZM"/>
                             <constraint firstItem="Ksh-tt-vQW" firstAttribute="leading" secondItem="jI8-5k-Tmb" secondAttribute="leading" id="9Xz-Kl-fBo"/>
                             <constraint firstAttribute="trailing" secondItem="Ksh-tt-vQW" secondAttribute="trailing" constant="1" id="Fwq-oc-fbj"/>
@@ -80,6 +108,7 @@
                             <constraint firstItem="Ksh-tt-vQW" firstAttribute="top" secondItem="jI8-5k-Tmb" secondAttribute="top" id="I8U-rF-6G8"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="3Qe-hx-67R" secondAttribute="bottom" id="cRZ-Lr-3OP"/>
                             <constraint firstItem="3Qe-hx-67R" firstAttribute="leading" secondItem="jI8-5k-Tmb" secondAttribute="leading" id="qeq-hK-4Dg"/>
+                            <constraint firstItem="PgO-6F-RwC" firstAttribute="trailing" secondItem="Ksh-tt-vQW" secondAttribute="trailing" constant="-7" id="zs4-sg-j98"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -91,7 +120,7 @@
                 <constraint firstItem="jI8-5k-Tmb" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="QbR-Cj-oUt"/>
                 <constraint firstAttribute="bottom" secondItem="jI8-5k-Tmb" secondAttribute="bottom" id="h3C-Uh-pkw"/>
             </constraints>
-            <size key="customSize" width="163" height="243"/>
+            <size key="customSize" width="143" height="243"/>
             <connections>
                 <outlet property="bgView" destination="jI8-5k-Tmb" id="nBE-Pr-4rd"/>
                 <outlet property="eventDate" destination="6E7-ct-mnp" id="GBu-z3-GoV"/>
@@ -99,7 +128,7 @@
                 <outlet property="image" destination="Ksh-tt-vQW" id="G68-tH-kSV"/>
                 <outlet property="venueName" destination="XfP-nr-hP9" id="svl-LJ-9gs"/>
             </connections>
-            <point key="canvasLocation" x="-45.038167938931295" y="165.84507042253523"/>
+            <point key="canvasLocation" x="-60.305343511450381" y="165.84507042253523"/>
         </collectionViewCell>
     </objects>
     <resources>

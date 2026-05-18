@@ -302,6 +302,15 @@
 		CE36C4762EFE69A400F2C75B /* AllVenueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE36C4732EFE69A400F2C75B /* AllVenueVC.swift */; };
 		CE3C896429A61C8A0072E93C /* FloorPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3C896329A61C8A0072E93C /* FloorPlan.swift */; };
 		CE3EF13A2C25901C00C2B21B /* CustomQRScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */; };
+		CE4245EE2FBAEDCA006FF16F /* GeistMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4245ED2FBAEDCA006FF16F /* GeistMono-Regular.ttf */; };
+		CE4245F02FBAEDD5006FF16F /* GeistMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4245EF2FBAEDD5006FF16F /* GeistMono-Medium.ttf */; };
+		CE4245F22FBAEDDF006FF16F /* GeistMono-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE4245F12FBAEDDF006FF16F /* GeistMono-MediumItalic.ttf */; };
+		CE4245F62FBAF38B006FF16F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4245F42FBAF38B006FF16F /* MapViewController.swift */; };
+		CE4245F72FBAF38B006FF16F /* MapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE4245F52FBAF38B006FF16F /* MapViewController.xib */; };
+		CE4245FB2FBAF811006FF16F /* MapEventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4245F92FBAF811006FF16F /* MapEventsTableViewCell.swift */; };
+		CE4245FC2FBAF811006FF16F /* MapEventsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE4245FA2FBAF811006FF16F /* MapEventsTableViewCell.xib */; };
+		CE4246002FBB0F41006FF16F /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4245FE2FBB0F41006FF16F /* FiltersViewController.swift */; };
+		CE4246012FBB0F41006FF16F /* FiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE4245FF2FBB0F41006FF16F /* FiltersViewController.xib */; };
 		CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45800D2EF944A700A873C4 /* LandingVC.swift */; };
 		CE4580122EF94D8300A873C4 /* DiscoverVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45800F2EF94D8300A873C4 /* DiscoverVC.swift */; };
 		CE4580142EF94E3300A873C4 /* Discover.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE4580132EF94E3300A873C4 /* Discover.storyboard */; };
@@ -383,6 +392,8 @@
 		CE9C41002C26973B0083222C /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC413D128A478040007BA86 /* Color.swift */; };
 		CEA15DC3298A6C270006D13A /* EventTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA15DC2298A6C270006D13A /* EventTicket.swift */; };
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
+		CEA76A312FBB2F6900661603 /* MapVenueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */; };
+		CEA76A322FBB2F6900661603 /* MapVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */; };
 		CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */; };
 		CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */; };
 		CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */; };
@@ -794,6 +805,15 @@
 		CE36C4742EFE69A400F2C75B /* AllVenueVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllVenueVC.xib; sourceTree = "<group>"; };
 		CE3C896329A61C8A0072E93C /* FloorPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlan.swift; sourceTree = "<group>"; };
 		CE3EF1392C25901B00C2B21B /* CustomQRScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQRScreen.swift; sourceTree = "<group>"; };
+		CE4245ED2FBAEDCA006FF16F /* GeistMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GeistMono-Regular.ttf"; sourceTree = "<group>"; };
+		CE4245EF2FBAEDD5006FF16F /* GeistMono-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GeistMono-Medium.ttf"; sourceTree = "<group>"; };
+		CE4245F12FBAEDDF006FF16F /* GeistMono-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GeistMono-MediumItalic.ttf"; sourceTree = "<group>"; };
+		CE4245F42FBAF38B006FF16F /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		CE4245F52FBAF38B006FF16F /* MapViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
+		CE4245F92FBAF811006FF16F /* MapEventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapEventsTableViewCell.swift; sourceTree = "<group>"; };
+		CE4245FA2FBAF811006FF16F /* MapEventsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapEventsTableViewCell.xib; sourceTree = "<group>"; };
+		CE4245FE2FBB0F41006FF16F /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
+		CE4245FF2FBB0F41006FF16F /* FiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FiltersViewController.xib; sourceTree = "<group>"; };
 		CE45800D2EF944A700A873C4 /* LandingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingVC.swift; sourceTree = "<group>"; };
 		CE45800F2EF94D8300A873C4 /* DiscoverVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverVC.swift; sourceTree = "<group>"; };
 		CE4580132EF94E3300A873C4 /* Discover.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Discover.storyboard; sourceTree = "<group>"; };
@@ -867,6 +887,8 @@
 		CE954B982C392C8500BD3009 /* DropdownCustomCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropdownCustomCell.xib; sourceTree = "<group>"; };
 		CEA15DC2298A6C270006D13A /* EventTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTicket.swift; sourceTree = "<group>"; };
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
+		CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVenueTableViewCell.swift; sourceTree = "<group>"; };
+		CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapVenueTableViewCell.xib; sourceTree = "<group>"; };
 		CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
 		CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
 		CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
@@ -1867,6 +1889,35 @@
 			path = Venues;
 			sourceTree = "<group>";
 		};
+		CE4245F32FBAF319006FF16F /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				CEA76A2E2FBB2F2200661603 /* MapVenueCell */,
+				CE4245F82FBAF78B006FF16F /* MapEventCell */,
+				CE4245F42FBAF38B006FF16F /* MapViewController.swift */,
+				CE4245F52FBAF38B006FF16F /* MapViewController.xib */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		CE4245F82FBAF78B006FF16F /* MapEventCell */ = {
+			isa = PBXGroup;
+			children = (
+				CE4245F92FBAF811006FF16F /* MapEventsTableViewCell.swift */,
+				CE4245FA2FBAF811006FF16F /* MapEventsTableViewCell.xib */,
+			);
+			path = MapEventCell;
+			sourceTree = "<group>";
+		};
+		CE4245FD2FBB0EC1006FF16F /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				CE4245FE2FBB0F41006FF16F /* FiltersViewController.swift */,
+				CE4245FF2FBB0F41006FF16F /* FiltersViewController.xib */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
 		CE486715286F2CB000FD277E = {
 			isa = PBXGroup;
 			children = (
@@ -2166,9 +2217,21 @@
 			path = DropDownCell;
 			sourceTree = "<group>";
 		};
+		CEA76A2E2FBB2F2200661603 /* MapVenueCell */ = {
+			isa = PBXGroup;
+			children = (
+				CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */,
+				CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */,
+			);
+			path = MapVenueCell;
+			sourceTree = "<group>";
+		};
 		CEADBDBF2FB1D61A004F8BE6 /* Geist */ = {
 			isa = PBXGroup;
 			children = (
+				CE4245F12FBAEDDF006FF16F /* GeistMono-MediumItalic.ttf */,
+				CE4245EF2FBAEDD5006FF16F /* GeistMono-Medium.ttf */,
+				CE4245ED2FBAEDCA006FF16F /* GeistMono-Regular.ttf */,
 				CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */,
 				CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */,
 				CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */,
@@ -2288,6 +2351,8 @@
 				CEE02DAF2EFB97C600AC7756 /* DiscoverDateFilterVC.storyboard */,
 				CEE02DAD2EFB97A700AC7756 /* DiscoverDateFilterVC.swift */,
 				CE0762E82EFAA97B00670694 /* Date Selection */,
+				CE4245F32FBAF319006FF16F /* Map */,
+				CE4245FD2FBB0EC1006FF16F /* Filters */,
 				CE0762DE2EFA9C0300670694 /* Location */,
 			);
 			path = Discover;
@@ -2614,6 +2679,7 @@
 				CE4580162EF94F4700A873C4 /* Orders.storyboard in Resources */,
 				CAC4140628A478050007BA86 /* DayCollectionViewCell.xib in Resources */,
 				6AF2B9FA2F0BC9EF00069A90 /* TableRequestVC.xib in Resources */,
+				CE4245F02FBAEDD5006FF16F /* GeistMono-Medium.ttf in Resources */,
 				0436D085295966CF0087D3DB /* Settings.storyboard in Resources */,
 				CE7F9B692878C29F00BFCCD1 /* Poppins-Medium.ttf in Resources */,
 				CEF48B522EFA4937006A6468 /* EventCVC.xib in Resources */,
@@ -2651,17 +2717,20 @@
 				0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */,
 				047B3B1D2F714A270085B3FC /* CustomQuestionTextFieldCell.xib in Resources */,
 				CE954B8F2C39159500BD3009 /* EventQuestionTVC.xib in Resources */,
+				CE4245EE2FBAEDCA006FF16F /* GeistMono-Regular.ttf in Resources */,
 				CE4B88D42A0B8519003C3EA5 /* Poppins-ExtraBold.ttf in Resources */,
 				CE3213CE29E03DA400EBC179 /* TitleHeader.xib in Resources */,
 				04A202C82F36041300900A27 /* TicketsTVC.xib in Resources */,
 				04A202C92F36041300900A27 /* TicketCheckoutVC.xib in Resources */,
 				0437CC682F87C5BD00D403B4 /* ArtistsCVC.xib in Resources */,
+				CE4245F22FBAEDDF006FF16F /* GeistMono-MediumItalic.ttf in Resources */,
 				04FACD4F2F52B0C80022011C /* SignUp.storyboard in Resources */,
 				04A202CA2F36041300900A27 /* TicketSelectionViewController.xib in Resources */,
 				CE48672B286F2CB100FD277E /* Assets.xcassets in Resources */,
 				CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */,
 				CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */,
 				6AF2B9C92F09463800069A90 /* Tables3DMapVC.xib in Resources */,
+				CE4246012FBB0F41006FF16F /* FiltersViewController.xib in Resources */,
 				04A202F72F36061000900A27 /* FAQsTableViewCell.xib in Resources */,
 				6AF2B9EF2F0BC0CA00069A90 /* TablesListVC.xib in Resources */,
 				CE901FFF2F6D2544008727A4 /* VenueExperiencesVC.xib in Resources */,
@@ -2676,6 +2745,7 @@
 				048CF2542BF22EC500F0D0D7 /* MaintenanceVC.xib in Resources */,
 				0443A7442F866C1B00158D26 /* EventsListVC.xib in Resources */,
 				CE0BA9302F6C158800AB8996 /* VenueEventsVC.xib in Resources */,
+				CEA76A312FBB2F6900661603 /* MapVenueTableViewCell.xib in Resources */,
 				CE0762E72EFAA41200670694 /* SelectLocationTVC.xib in Resources */,
 				6AF2B9E72F0BA1EC00069A90 /* Inter-Bold.ttf in Resources */,
 				6AF2B9E82F0BA1EC00069A90 /* Inter-Medium.ttf in Resources */,
@@ -2689,6 +2759,8 @@
 				04E63FCC2F4D635200295C04 /* TablePurchaseVC.xib in Resources */,
 				6AF2B9EA2F0BA1EC00069A90 /* Inter-Light.ttf in Resources */,
 				6AF2B9EB2F0BA1EC00069A90 /* Inter-SemiBold.ttf in Resources */,
+				CE4245F72FBAF38B006FF16F /* MapViewController.xib in Resources */,
+				CE4245FC2FBAF811006FF16F /* MapEventsTableViewCell.xib in Resources */,
 				04C2E9472F331D1C00C5D4FC /* VenueTVC.xib in Resources */,
 				6AF2B9EC2F0BA1EC00069A90 /* Inter-Italic.ttf in Resources */,
 				CEADBDCC2FB1D696004F8BE6 /* Geist-ExtraBold.ttf in Resources */,
@@ -2889,6 +2961,7 @@
 				BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */,
 				CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */,
 				CE48D8302EFA714300E7110B /* VenueCVC.swift in Sources */,
+				CE4245FB2FBAF811006FF16F /* MapEventsTableViewCell.swift in Sources */,
 				CE4867AB286F358800FD277E /* Utility.swift in Sources */,
 				0462B9832F3F0A1700E29D6D /* TicketItemTableViewCell.swift in Sources */,
 				BD829BDA2941F80100298271 /* ConnectAccountViewController.swift in Sources */,
@@ -2915,6 +2988,7 @@
 				CECE37122F6BF9640087A33A /* SJContentView.swift in Sources */,
 				047B3B202F714A4B0085B3FC /* CustomQuestionDropdownCell.swift in Sources */,
 				CECE37132F6BF9640087A33A /* SJSegmentTab.swift in Sources */,
+				CEA76A322FBB2F6900661603 /* MapVenueTableViewCell.swift in Sources */,
 				CAC4140728A478050007BA86 /* DatePicker.swift in Sources */,
 				CE0E87502994D1B600F2B2E9 /* CheckOutVC.swift in Sources */,
 				CAC413F328A478040007BA86 /* Date.swift in Sources */,
@@ -2992,6 +3066,7 @@
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
 				04A433212F444B3800FB119A /* TableSeatingViewController.swift in Sources */,
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
+				CE4245F62FBAF38B006FF16F /* MapViewController.swift in Sources */,
 				045B4AA82F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift in Sources */,
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
@@ -2999,6 +3074,7 @@
 				691574652A0CD0EF002F303A /* Stripe.swift in Sources */,
 				6AF9DE022FB33B22008D6CBC /* GradientBorderCardView.swift in Sources */,
 				0437CC622F87B4CA00D403B4 /* ArtistsVC.swift in Sources */,
+				CE4246002FBB0F41006FF16F /* FiltersViewController.swift in Sources */,
 				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,
 				CAC413FE28A478040007BA86 /* Map.swift in Sources */,
 				046866532B0F280F00E498CF /* FooterView.swift in Sources */,

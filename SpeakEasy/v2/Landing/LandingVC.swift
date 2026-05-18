@@ -61,7 +61,8 @@ final class LandingVC: UIViewController {
         showSegmentView(sender.tag)
     }
     
-    @IBAction func onClickSearchBtn(_ sender: Any) {
+    @IBAction func onClickMapBtn(_ sender: Any) {
+        Navigate.to.gotoMapVC(self)
 //        Navigate.to.gotoSearchVc(self)
     }
     

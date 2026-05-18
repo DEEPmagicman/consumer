@@ -80,8 +80,7 @@ private extension DiscoverAllVC {
             guard let self else { return }
 
             Navigate.to.eventsListVC(
-                self,
-                screenType: .discoverExperiences
+                self
             )
         }
 
@@ -125,8 +124,7 @@ private extension DiscoverAllVC {
             guard let self else { return }
 
             Navigate.to.eventsListVC(
-                self,
-                screenType: .allEvents
+                self
             )
         }
 

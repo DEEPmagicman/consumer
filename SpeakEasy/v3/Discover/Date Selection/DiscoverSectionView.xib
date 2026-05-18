@@ -54,6 +54,9 @@
                                             <real key="value" value="12"/>
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="onClickSeeAllButton:" destination="-1" eventType="touchUpInside" id="Ha0-Tw-CGf"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

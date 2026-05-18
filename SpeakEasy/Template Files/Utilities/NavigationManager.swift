@@ -613,8 +613,8 @@ final class Navigate {
     }
     
     func profileVC(_ sender: UIViewController) {
-        let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
-        sender.pushVC(vc)
+//        let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
+//        sender.pushVC(vc)
     }
     
     func premiumExperiencesVC(_ sender: UIViewController) {
@@ -622,10 +622,20 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func eventsListVC(_ sender: UIViewController, screenType: EventsScreenType) {
+    func eventsListVC(_ sender: UIViewController) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
-        vc.screenType = screenType
         sender.pushVC(vc)
+    }
+    
+    
+    func filtersVC(_ sender: UIViewController) {
+        let vc = FiltersViewController(nibName: "FiltersViewController", bundle: nil)
+        sender.present(vc, animated: true)
+    }
+    
+    func gotoMapVC(_ sender: UIViewController) {
+        let vc = MapViewController(nibName: "MapViewController", bundle: nil)
+        sender.pushVC(vc, animated: true)
     }
     
     func gotoArtistDetailsVC(_ sender: UIViewController) {
