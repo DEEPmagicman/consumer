@@ -682,4 +682,23 @@ final class Navigate {
         let vc = NotificationPermissionVC()
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func profileMenuVC(_ sender: UIViewController) {
+        let vc = ProfileMenuVC()
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        nav.modalTransitionStyle = .crossDissolve
+        nav.modalPresentationStyle = .overCurrentContext
+        sender.present(nav, animated: true)
+    }
+    
+    func editProfileVC(_ sender: UIViewController) {
+        let vc = EditProfileVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func accountInfoVC(_ sender: UIViewController) {
+        let vc = AccountInfoVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }
