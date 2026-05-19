@@ -146,7 +146,7 @@
 		69AEA1832A0E4BC500B8AA5D /* BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69AEA1812A0E4BBA00B8AA5D /* BundleExtension.swift */; };
 		69D242832B2B2B4000AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242822B2B2B4000AEC78F /* IQKeyboardManagerSwift */; };
 		69D242852B2B2B5F00AEC78F /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 69D242842B2B2B5F00AEC78F /* IQKeyboardManagerSwift */; };
-		6A2A99E42FB7030100A2A68B /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6A2A99E32FB7030100A2A68B /* GLTFKit2 */; };
+		6A2A99EC2FBC24CF00A2A68B /* GLTFKit2 in Frameworks */ = {isa = PBXBuildFile; productRef = 6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */; };
 		6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
@@ -982,7 +982,7 @@
 				CECDD9EC2B986B58007E94A7 /* FSPagerView in Frameworks */,
 				68CEA29A3575F1A0E293EA33 /* Pods_SpeakEasy_Consumer.framework in Frameworks */,
 				CEDB81842AA20A5900DAD9FE /* SDWebImage in Frameworks */,
-				6A2A99E42FB7030100A2A68B /* GLTFKit2 in Frameworks */,
+				6A2A99EC2FBC24CF00A2A68B /* GLTFKit2 in Frameworks */,
 				CEDB818C2AA20BE100DAD9FE /* FirebaseRemoteConfig in Frameworks */,
 				CE19C1AB2CA44469007050ED /* MHLoadingButton in Frameworks */,
 				CEDB81A12AA2110E00DAD9FE /* SocketIO in Frameworks */,
@@ -2566,7 +2566,7 @@
 				04FCDE242F3C56C700D10F90 /* YouTubeiOSPlayerHelper */,
 				04749CFC2F56AB6F0035898F /* Hero */,
 				CE78964D2FB33AE800F9DFDF /* HorizonCalendar */,
-				6A2A99E32FB7030100A2A68B /* GLTFKit2 */,
+				6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */,
 			);
 			productName = SpeakEasy;
 			productReference = CE48671E286F2CB000FD277E /* Speakeasy.app */;
@@ -2614,7 +2614,7 @@
 				04FCDE232F3C56C700D10F90 /* XCRemoteSwiftPackageReference "youtube-ios-player-helper" */,
 				04D2E13E2F56A71D00B4F640 /* XCRemoteSwiftPackageReference "Hero" */,
 				CE78964C2FB33AE800F9DFDF /* XCRemoteSwiftPackageReference "HorizonCalendar" */,
-				6A2A99E22FB7030100A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */,
+				6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */,
 			);
 			productRefGroup = CE48671F286F2CB000FD277E /* Products */;
 			projectDirPath = "";
@@ -3703,7 +3703,7 @@
 				version = 6.5.12;
 			};
 		};
-		6A2A99E22FB7030100A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */ = {
+		6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/warrenm/GLTFKit2";
 			requirement = {
@@ -3814,9 +3814,9 @@
 			package = 69D242812B2B2B4000AEC78F /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
 		};
-		6A2A99E32FB7030100A2A68B /* GLTFKit2 */ = {
+		6A2A99EB2FBC24CF00A2A68B /* GLTFKit2 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6A2A99E22FB7030100A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */;
+			package = 6A2A99EA2FBC24CF00A2A68B /* XCRemoteSwiftPackageReference "GLTFKit2" */;
 			productName = GLTFKit2;
 		};
 		CE19C1AA2CA44469007050ED /* MHLoadingButton */ = {
