@@ -235,7 +235,7 @@ final class ProfileInfoVC: UIViewController {
         emailTF.text = UserDefault.shared.user?.email
 
         if let dob = UserDefault.shared.user?.dateOfBirth, !dob.isEmpty {
-            dobTF.text = dob.convertDateFormat(from: .YYYYMMDD, to: .MMMMDDYYYY, isUTC: false)
+            dobTF.text = dob.convertDateFormat(from: .YYYYMMDD, to: .MMDDYYYY, isUTC: false)
         } else {
             dobTF.text = nil
         }
@@ -271,7 +271,7 @@ final class ProfileInfoVC: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             Navigate.to.presentDateSelectionBottomSheet(
                 self,
-                date: self.dobTF.text?.toDate(withFormat: .MMMMDDYYYY, isUTC: false)
+                date: self.dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
             )
         }
     }
@@ -291,7 +291,7 @@ final class ProfileInfoVC: UIViewController {
         
         guard validateForm() else { return }
         
-        var date = dobTF.text?.convertDateFormat(from: .MMMMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
+        var date = dobTF.text?.convertDateFormat(from: .MMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
         if date == "No date Found" { date = "" }
         
         continueBtn.startLoading()
@@ -335,7 +335,7 @@ extension ProfileInfoVC: GenderSelectionBottomSheetDelegate {
 
 extension ProfileInfoVC: DateSelectionDelegate {
     func selectedDate(date: Date) {
-        dobTF.text = date.string(format: .MMMMDDYYYY, isUTC: false)
+        dobTF.text = date.string(format: .MMDDYYYY, isUTC: false)
     }
 }
 

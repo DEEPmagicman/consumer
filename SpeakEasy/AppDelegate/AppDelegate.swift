@@ -77,7 +77,9 @@ extension AppDelegate {
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
                 setRootVC()
-            } else if UserDefault.shared.user?.isSocial == true {
+            } else if UserDefault.shared.isVersionV3 == true {
+                setRootVC()
+            } else if UserDefault.shared.user?.isSocial == true && UserDefault.shared.isVersionV3 == false {
                 showNameVC()
             } else {
                 if UserDefault.shared.isVersionV3 == true {

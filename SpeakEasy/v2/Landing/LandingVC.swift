@@ -51,7 +51,8 @@ final class LandingVC: UIViewController {
     
     @IBAction func onClickProfile(_ sender: UIButton) {
         if UserDefault.shared.isLoggedIn == true {
-            sideMenuController?.showLeftView()
+//            sideMenuController?.showLeftView()
+            Navigate.to.profileMenuVC(self)
         } else {
             Navigate.to.openPhoneLoginPopup(self)
         }
