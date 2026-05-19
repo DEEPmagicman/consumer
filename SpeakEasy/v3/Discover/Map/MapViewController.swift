@@ -221,6 +221,17 @@ class MapViewController: UIViewController {
             forCellReuseIdentifier: "MapEventsTableViewCell"
         )
     }
+    
+    @IBAction func onClickBackBtn(_ sender: Any) {
+        Navigate.to.back(self)
+    }
+    
+    
+    @IBAction func onClickFilterbtn(_ sender: Any) {
+        Navigate.to.filtersVC(self)
+    }
+    
+    
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource

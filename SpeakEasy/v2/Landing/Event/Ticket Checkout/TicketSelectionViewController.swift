@@ -21,9 +21,7 @@ import MHLoadingButton
 
 class TicketSelectionViewController: UIViewController {
 
-    @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
-    @IBOutlet weak var venueName2: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
     @IBOutlet weak var ticketTableView: UITableView!
     @IBOutlet weak var hiddenTicketField: UITextField!
@@ -257,13 +255,12 @@ class TicketSelectionViewController: UIViewController {
     private func setupHeaderData() {
         guard let event = event else { return }
 
-        venueLogoImg.sd_setImage(
-            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+//        venueLogoImg.sd_setImage(
+//            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
 
         venueName.text = venueDetails?.name ?? ""
-        venueName2.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event.title
 
         if let customText = event.openTimeCustomText,
@@ -309,13 +306,12 @@ class TicketSelectionViewController: UIViewController {
     private func setupData() {
         guard let event = event else { return }
 
-        venueLogoImg.sd_setImage(
-            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+//        venueLogoImg.sd_setImage(
+//            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
 
         venueName.text = venueDetails?.name ?? ""
-        venueName2.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event.title
         disabledTicketIds.removeAll()
 

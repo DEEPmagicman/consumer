@@ -93,9 +93,9 @@ class TicketsTVC: UITableViewCell {
 
         viewMoreBtnView.isHidden = true
         viewMoreBtn.setTitle("View More", for: .normal)
-
-        bgView.layer.borderWidth = 0
-        bgView.layer.borderColor = UIColor.clear.cgColor
+//
+//        bgView.layer.borderWidth = 0
+//        bgView.layer.borderColor = UIColor.clear.cgColor
         
         if isFromGroupTicket {
             bgView.layer.cornerRadius = 0
@@ -258,12 +258,12 @@ class TicketsTVC: UITableViewCell {
         resetUI()
 
         let isSelected = (ticket.selectedTicketCount ?? 0) > 0
-        bgView.layer.borderWidth = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
-        if let hex = whiteLabelColor {
-            bgView.layer.borderColor = UIColor(hex: hex).cgColor
-        } else {
-            bgView.layer.borderColor = UIColor.white.cgColor
-        }
+//        bgView.layer.borderWidth = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
+//        if let hex = whiteLabelColor {
+//            bgView.layer.borderColor = UIColor(hex: hex).cgColor
+//        } else {
+//            bgView.layer.borderColor = UIColor.white.cgColor
+//        }
         
         if isSoldOut(ticket) {
             applySoldOutUI(ticket: ticket)
