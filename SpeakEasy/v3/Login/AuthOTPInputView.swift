@@ -212,6 +212,24 @@ final class AuthOTPInputView: UIView {
             }
         }
     }
+    
+    func configureForEmail(_ email: String) {
+        phoneNumLbl.text = "Enter the 6 digits code sent to \(maskedEmail(email))"
+    }
+
+    private func maskedEmail(_ email: String) -> String {
+        let parts = email.split(separator: "@")
+        guard parts.count == 2 else { return email }
+
+        let name = String(parts[0])
+        let domain = String(parts[1])
+
+        if name.count <= 2 {
+            return "\(name.prefix(1))***@\(domain)"
+        }
+
+        return "\(name.prefix(2))***@\(domain)"
+    }
 }
 
 extension AuthOTPInputView: OTPFieldViewDelegate {

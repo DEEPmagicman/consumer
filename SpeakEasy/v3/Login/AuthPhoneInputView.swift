@@ -96,6 +96,37 @@ final class AuthPhoneInputView: UIView {
         setupPhoneTextField()
     }
 
+    func configureForChangePhone(phone: String, countryCode: String) {
+        continueBtn.setTitle("Confirm", for: .normal)
+
+        let code = countryCode.hasPrefix("+") ? countryCode : "+\(countryCode)"
+        let cleanPhone = phone
+            .replacingOccurrences(of: code, with: "")
+            .filter { $0.isNumber }
+
+        if let region = phoneNumTextField.utility.mainCountry(forCode: UInt64(code.replacingOccurrences(of: "+", with: "")) ?? 1) {
+            phoneNumTextField.defaultRegion = region
+        }
+
+        phoneNumTextField.text = cleanPhone
+        phoneNumTextField.updateFlag(code: code)
+
+        do {
+            let parsed = try phoneNumberUtility.parse(
+                cleanPhone,
+                withRegion: phoneNumTextField.defaultRegion
+            )
+
+            phoneNumber = parsed
+            Utility.main.setButton(continueBtn, enabled: true)
+            delegate?.authPhoneInputView(self, didChangeValidPhone: true)
+        } catch {
+            phoneNumber = nil
+            Utility.main.setButton(continueBtn, enabled: false)
+            delegate?.authPhoneInputView(self, didChangeValidPhone: false)
+        }
+    }
+    
     private func setupPhoneInput() {
         phoneContainer.translatesAutoresizingMaskIntoConstraints = false
         phoneContainer.heightAnchor.constraint(equalToConstant: 50).isActive = true

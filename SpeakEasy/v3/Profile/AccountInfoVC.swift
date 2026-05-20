@@ -17,6 +17,16 @@ final class AccountInfoVC: UIViewController {
     private let phoneBox = FloatingInputView(title: "Phone number")
     private let saveBtn = PrimaryButton()
 
+    private let settingPresenter = SettingPresenter()
+
+    private var originalEmail = ""
+    private var originalPhone = ""
+    private var pendingPhone = ""
+    private var pendingCountryCode = "+1"
+    private var isPhoneVerified = false
+    
+    private var pendingEmail = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -105,11 +115,17 @@ final class AccountInfoVC: UIViewController {
     private func loadUserData() {
         let user = UserDefault.shared.user
 
-        let email = user?.email.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        emailBox.text = email.isEmpty ? nil : email
+        originalEmail = user?.email.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        emailBox.text = originalEmail.isEmpty ? nil : originalEmail
 
-        let phone = user?.phone.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        phoneBox.text = phone.isEmpty ? nil : phone
+        let code = storedCountryCode()
+        let phone = storedPhoneNumber()
+
+        originalPhone = formattedPhoneDisplay(code: code, phone: phone)
+        phoneBox.text = originalPhone.isEmpty ? nil : originalPhone
+
+        pendingCountryCode = code
+        pendingPhone = phone
     }
 
     @objc private func onClickBack() {
@@ -121,13 +137,108 @@ final class AccountInfoVC: UIViewController {
     }
 
     @objc private func onClickPhone() {
-        Navigate.to.openPhoneLoginPopup(self)
+        let vc = AuthPhoneOTPVC()
+        vc.flowMode = .changePhone
+        vc.initialPhone = storedPhoneNumber()
+        vc.initialCountryCode = storedCountryCode()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+
+        vc.onPhoneChanged = { [weak self] phone, countryCode in
+            guard let self else { return }
+
+            let code = countryCode.hasPrefix("+") ? countryCode : "+\(countryCode)"
+            let displayPhone = self.formattedPhoneDisplay(code: code, phone: phone)
+
+            self.pendingPhone = phone
+            self.pendingCountryCode = code
+            self.isPhoneVerified = true
+            self.phoneBox.text = displayPhone
+
+            UserDefault.shared.user?.phone = phone
+            UserDefault.shared.user?.code = code
+        }
+
+        present(vc, animated: true)
     }
 
     @objc private func onClickSave() {
+        view.endEditing(true)
+
         guard validateForm() else { return }
 
+        let newEmail = emailBox.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let emailChanged = newEmail != originalEmail
+        let phoneChanged = (phoneBox.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "") != originalPhone
+
+        if phoneChanged && !isPhoneVerified {
+            showError(phoneBox, message: "Please verify your new phone number.")
+            return
+        }
+
+        if !emailChanged && !phoneChanged {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        if emailChanged {
+            presentConfirmEmail(newEmail)
+            return
+        }
+
         navigationController?.popViewController(animated: true)
+    }
+    
+    private func presentConfirmEmail(_ email: String) {
+        pendingEmail = email
+
+        let vc = ConfirmContactVC()
+        vc.type = .email
+        vc.displayText = email
+        vc.delegate = self
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+
+        present(vc, animated: true)
+    }
+    
+    private func updateEmail(_ email: String) {
+        saveBtn.startLoading()
+
+        settingPresenter.changeEmailApi(email: email) { [weak self] otp, otpRef, isSuccess, errMsg in
+            guard let self else { return }
+
+            self.saveBtn.stopLoading()
+
+            if isSuccess {
+                self.openEmailOTP(email: email, otp: otp, otpRef: otpRef)
+            } else {
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
+            }
+        }
+    }
+    
+    private func openEmailOTP(email: String, otp: String?, otpRef: String?) {
+        let vc = AuthPhoneOTPVC()
+        vc.flowMode = .changeEmail
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+
+        vc.onEmailChanged = { [weak self] email in
+            guard let self else { return }
+            UserDefault.shared.user?.email = email
+            self.originalEmail = email
+            self.emailBox.text = email
+            self.navigationController?.popViewController(animated: true)
+        }
+
+        present(vc, animated: true) {
+            vc.startEmailOTP(email: email, otp: otp, otpRef: otpRef)
+        }
     }
     
     private func validateForm() -> Bool {
@@ -184,6 +295,25 @@ final class AccountInfoVC: UIViewController {
     @objc private func endEditing() {
         view.endEditing(true)
     }
+    
+    private func storedCountryCode() -> String {
+        let rawCode = UserDefault.shared.user?.code ?? "+1"
+        return rawCode.hasPrefix("+") ? rawCode : "+\(rawCode)"
+    }
+
+    private func storedPhoneNumber() -> String {
+        UserDefault.shared.user?.phone.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+
+    private func formattedPhoneDisplay(code: String, phone: String) -> String {
+        let cleanPhone = phone
+            .replacingOccurrences(of: code, with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !cleanPhone.isEmpty else { return "" }
+
+        return "\(code) \(cleanPhone)"
+    }
 }
 
 extension AccountInfoVC: UITextFieldDelegate {
@@ -194,5 +324,18 @@ extension AccountInfoVC: UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         emailBox.clearError()
+    }
+}
+
+extension AccountInfoVC: ConfirmContactVCDelegate {
+    func confirmContactVCDidConfirm(_ vc: ConfirmContactVC) {
+        vc.dismiss(animated: true) { [weak self] in
+            guard let self else { return }
+//            self.updateEmail(self.pendingEmail)
+        }
+    }
+
+    func confirmContactVCDidGoBack(_ vc: ConfirmContactVC) {
+        vc.dismiss(animated: true)
     }
 }
