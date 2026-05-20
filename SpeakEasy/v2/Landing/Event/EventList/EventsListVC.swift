@@ -10,8 +10,8 @@ import UIKit
 final class EventsListVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-
     @IBOutlet weak var cityTitleLbl: UILabel!
+    
     private var eventList: [Event] = []
     private var skip = 0
     private var hasMore = true
@@ -37,15 +37,16 @@ final class EventsListVC: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.backgroundColor = .clear
-        collectionView.isScrollEnabled = false
         collectionView.register(
             EventCollectionViewCell.nib,
             forCellWithReuseIdentifier: EventCollectionViewCell.identifier
         )
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = lineSpacing
         layout.minimumInteritemSpacing = interItemSpacing
-        layout.sectionInset = UIEdgeInsets(top: 0, left: horizontalMargin, bottom: 0, right: horizontalMargin)
+        layout.sectionInset = UIEdgeInsets(top: 29, left: horizontalMargin, bottom: 0, right: horizontalMargin)
         collectionView.collectionViewLayout = layout
     }
 
@@ -88,7 +89,9 @@ extension EventsListVC: UICollectionViewDataSource {
             withIdentifier: EventCollectionViewCell.identifier,
             for: indexPath
         )
-        cell.configure(with: .event(eventList[indexPath.row]))
+        cell.imageViewWidthConstraint.constant = 173
+        cell.imageViewHeightConstraint.constant = 200
+        cell.configure(with: .event(eventList[indexPath.row]), screenType: .discover)
         return cell
     }
 }
@@ -111,7 +114,7 @@ extension EventsListVC: UICollectionViewDelegate {
 extension EventsListVC: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: cellWidth, height: 240)
+        return CGSize(width: cellWidth, height: 250)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

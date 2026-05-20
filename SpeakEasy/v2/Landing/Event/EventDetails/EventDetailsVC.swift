@@ -36,7 +36,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var venueTitleLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
-    @IBOutlet weak var buyNowBtnView: UIView!
     @IBOutlet weak var backGroundBlureImg: UIImageView!
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var instaImageView: UIImageView!
@@ -45,9 +44,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var xImageView: UIImageView!
     @IBOutlet weak var youTubeImageView: UIImageView!
     @IBOutlet weak var websiteImageView: UIImageView!
-    @IBOutlet weak var ticketsTitleLbl: UILabel!
-    @IBOutlet weak var noHiddenFeesLbl: UILabel!
-    @IBOutlet weak var buyNowBtnLbl: UILabel!
     @IBOutlet weak var attendeesView: UIView!
     @IBOutlet weak var imageListHiddenView: UIView!
     @IBOutlet weak var lineUpHiddenView: UIView!
@@ -69,25 +65,20 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var ticketShimmerView: ShimmerView!
-    @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
-    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
-    @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
-    @IBOutlet weak var ticketTitleStackView: UIStackView!
     @IBOutlet weak var eventAddressView: UIView!
     @IBOutlet weak var faqsTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var faqsView: UIView!
     @IBOutlet weak var lockIcon: UIImageView!
     @IBOutlet weak var buyNowBtnSuperView: UIView!
-    @IBOutlet weak var continueToCheckOutView: UIView!
+//    @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var vipTableSubTitleLbl: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var viewSkeleton: UIView!
     @IBOutlet weak var imageBackGroundView: UIView!
     @IBOutlet weak var navBarView: UIView!
+    @IBOutlet weak var checkOutBtn: LoadingButton!
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
@@ -147,7 +138,6 @@ class EventDetailsVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
         setupPosterHeaderView()
         let imageURLString = (event?.flyer?.key ?? "").imageURL
         mainImg.sd_setImage(
@@ -269,32 +259,14 @@ class EventDetailsVC: UIViewController {
         view.layoutIfNeeded()
         viewSkeleton.isHidden = false
         eventDetailsSkeletonView.startShimmer()
-        ticketShimmerView.isHidden = false
-        ticketTitleShimmerView.isHidden = false
-        buyNowBtnShimmerView.isHidden = false
         scrollView.isScrollEnabled = false
         //        buyNowBtnShimmerView.cornerRadius = 30
-        ticketTitleStackShimmerView.isHidden = false
-        ticketTitleStackView.isHidden = true
-        
-        ticketShimmerView.startAnimating()
-        ticketTitleShimmerView.startAnimating()
-        buyNowBtnShimmerView.startAnimating()
     }
     
     private func hideSkeleton() {
         eventDetailsSkeletonView.stopShimmer()
         viewSkeleton.isHidden = true
-        ticketShimmerView.stopAnimating()
-        ticketTitleShimmerView.stopAnimating()
-        buyNowBtnShimmerView.stopAnimating()
         scrollView.isScrollEnabled = true
-        
-        ticketShimmerView.isHidden = true
-        ticketTitleShimmerView.isHidden = true
-        buyNowBtnShimmerView.isHidden = true
-        ticketTitleStackShimmerView.isHidden = true
-        ticketTitleStackView.isHidden = false
     }
 
     private func setupTicketTable() {
@@ -778,12 +750,12 @@ class EventDetailsVC: UIViewController {
         setupExpandableLabel()
         setupPolicyExpandableLabel()
         venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
-            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")".uppercased()
+            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")".uppercased()
         
         venueNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")"
-        : "\(venueDetails?.name ?? "")"
+        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")".uppercased()
+        : "\(venueDetails?.name ?? "")".uppercased()
         eventAddressView.isHidden = !(event.showAddress ?? true)
 
         let addressComponents: [String]
@@ -813,10 +785,10 @@ class EventDetailsVC: UIViewController {
 
         if event.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
             buyNowBtnSuperView.isHidden = true
-            continueToCheckOutView.isHidden = true
+//            continueToCheckOutView.isHidden = true
         } else {
             buyNowBtnSuperView.isHidden = false
-            continueToCheckOutView.isHidden = true
+//            continueToCheckOutView.isHidden = true
         }
         
         configureVIPTablesView()
@@ -969,22 +941,22 @@ class EventDetailsVC: UIViewController {
         if let hexColor = event.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
-            buyNowBtnView.backgroundColor = color
-            buyNowBtnLbl.textColor = color.suitableTextColor()
+            checkOutBtn.backgroundColor = color
+//            buyNowBtnLbl.textColor = color.suitableTextColor()
             webSiteView.borderColor = color
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-            continueToCheckOutBtn.bgColor = color
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+            checkOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+            checkOutBtn.bgColor = color
+            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
             
         } else {
             let color = UIColor(hex: "F581FE")
-            buyNowBtnView.backgroundColor = color
+//            buyNowBtnView.backgroundColor = color
             webSiteView.borderColor = color
-            continueToCheckOutBtn.backgroundColor = color
-            buyNowBtnLbl.textColor = color.suitableTextColor()
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-            continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+            checkOutBtn.backgroundColor = color
+//            buyNowBtnLbl.textColor = color.suitableTextColor()
+            checkOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+            checkOutBtn.bgColor = checkOutBtn.backgroundColor ?? .orange
+            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
         }
 
         setupSocialLinks()
@@ -994,54 +966,53 @@ class EventDetailsVC: UIViewController {
             let eventTicketSettings = event.eventTicketSettings
 
             if event.isPausedSellingAllTickets == true {
-                ticketsTitleLbl.text = "Tickets from Free"
-                buyNowBtnView.isUserInteractionEnabled = true
+                checkOutBtn.setTitle("Tickets from Free", for: .normal)
+//                buyNowBtnView.isUserInteractionEnabled = true
 
             } else if event.isSaleEndedAllTickets == true {
-                ticketsTitleLbl.text = eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!"
+                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!", for: .normal)
 
                 if eventTicketSettings?.isSaleEndedTextEnabled == true {
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 } else {
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 }
 
-                buyNowBtnLbl.textColor = .black
-                buyNowBtnView.isUserInteractionEnabled = false
-                buyNowBtnView.backgroundColor = UIColor.lightGray
+//                buyNowBtnLbl.textColor = .black
+//                buyNowBtnView.isUserInteractionEnabled = false
+//                buyNowBtnView.backgroundColor = UIColor.lightGray
 
             } else if event.isSoldOutAllTickets == true {
                 if eventTicketSettings?.isSoldOutTextEnabled == true {
-                    ticketsTitleLbl.text = eventTicketSettings?.soldOutText ?? "It was a great time!"
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                    checkOutBtn.setTitle(eventTicketSettings?.soldOutText ?? "It was a great time!", for: .normal)
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 } else {
-                    ticketsTitleLbl.text = "It was a great time!"
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                    checkOutBtn.setTitle("It was a great time!", for: .normal)
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 }
 
-                buyNowBtnLbl.textColor = .black
-                buyNowBtnView.isUserInteractionEnabled = false
-                buyNowBtnView.backgroundColor = UIColor.lightGray
+//                buyNowBtnLbl.textColor = .black
+//                buyNowBtnView.isUserInteractionEnabled = false
+//                buyNowBtnView.backgroundColor = UIColor.lightGray
 
             } else if event.eventTicket?.count ?? 0 == 0 {
-                ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
-                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
-                buyNowBtnView.isUserInteractionEnabled = false
+                checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+//                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+//                buyNowBtnView.isUserInteractionEnabled = false
 
             } else {
                 let lowestPrice = event.lowestPriceTicket?.price ?? 0
                 let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
                 if lowestPrice == 0 {
-                    ticketsTitleLbl.text = "Tickets from Free"
+                    checkOutBtn.setTitle("Tickets from Free", for: .normal)
                 } else {
-                    ticketsTitleLbl.text = "Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))"
+                    checkOutBtn.setTitle("Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))", for: .normal)
                 }
 
-                buyNowBtnLbl.text = "Buy Now"
-                buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
-                buyNowBtnView.clipsToBounds = true
-                noHiddenFeesLbl.isHidden = false
+//                buyNowBtnLbl.text = "Buy Now"
+//                buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
+//                buyNowBtnView.clipsToBounds = true
             }
         }
     }
@@ -1360,7 +1331,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func updateContinueBtnState() {
-        continueToCheckOutView.isHidden = totalSelectedTickets == 0
+//        continueToCheckOutView.isHidden = totalSelectedTickets == 0
     }
     
     private func showGuestListPopup() {
@@ -1421,7 +1392,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
-        continueToCheckOutBtn.showLoader(userInteraction: false)
+        checkOutBtn.showLoader(userInteraction: false)
         
         guard let user = UserDefault.shared.user else {
             let loginVC = Navigate.to.loginPopUpVc(self)
@@ -1463,7 +1434,7 @@ class EventDetailsVC: UIViewController {
             tickets: ticketsPayload
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else { return }
-            continueToCheckOutBtn.hideLoader()
+            checkOutBtn.hideLoader()
 
 
             if isSuccess {
@@ -2020,7 +1991,7 @@ extension EventDetailsVC: UICollectionViewDelegate,
         if collectionView == guestListCollectionView {
             return CGSize(width: 40, height: 40)
         } else {
-            return CGSize(width: 140, height: 180)
+            return CGSize(width: 105, height: 120)
         }
     }
 

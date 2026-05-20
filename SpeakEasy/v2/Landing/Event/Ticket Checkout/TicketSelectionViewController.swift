@@ -36,7 +36,8 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-   
+    @IBOutlet weak var ContinueToCheckOutView: UIView!
+    
     var mode: TicketMode = .normal
 
     private var tickets: [EventTicket] = []
@@ -99,7 +100,7 @@ class TicketSelectionViewController: UIViewController {
         }
         
         continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-        continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
+//        continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
         
         getTicketLinksAndSetup()
         setupHeaderData()
@@ -293,14 +294,14 @@ class TicketSelectionViewController: UIViewController {
             dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         }
 
-        if let hex = self.event?.whiteLabelColor {
-            let color = UIColor(hex: hex)
-            dateandtimeLbl.textColor = color
-            continueToCheckOutBtn.backgroundColor = color
-            continueToCheckOutBtn.bgColor = color
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
-        }
+//        if let hex = self.event?.whiteLabelColor {
+//            let color = UIColor(hex: hex)
+//            dateandtimeLbl.textColor = color
+//            continueToCheckOutBtn.backgroundColor = color
+//            continueToCheckOutBtn.bgColor = color
+//            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+//            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
+//        }
     }
 
     private func setupData() {
@@ -345,14 +346,14 @@ class TicketSelectionViewController: UIViewController {
             dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         }
 
-        if let hex = self.event?.whiteLabelColor {
-            let color = UIColor(hex: hex)
-            dateandtimeLbl.textColor = color
-            continueToCheckOutBtn.backgroundColor = color
-            continueToCheckOutBtn.bgColor = color
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
-        }
+//        if let hex = self.event?.whiteLabelColor {
+//            let color = UIColor(hex: hex)
+//            dateandtimeLbl.textColor = color
+//            continueToCheckOutBtn.backgroundColor = color
+//            continueToCheckOutBtn.bgColor = color
+//            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+//            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: color.suitableTextColor())
+//        }
 
         let filteredNormalTickets = filterAvailableTickets(event.eventTicket ?? [])
         let filteredAddOnTickets = filterAvailableTickets(event.eventAddOnTicket ?? [])
@@ -918,21 +919,21 @@ class TicketSelectionViewController: UIViewController {
             shouldShow = true
         }
 
-        if continueToCheckOutBtn.isHidden == !shouldShow {
+        if ContinueToCheckOutView.isHidden == !shouldShow {
             return
         }
 
-        let hiddenBottom: CGFloat = -continueToCheckOutBtn.bounds.height - 24
+        let hiddenBottom: CGFloat = -ContinueToCheckOutView.bounds.height - 24
         let shownBottom: CGFloat = 32
 
-        continueToCheckOutBtn.isHidden = false
+        ContinueToCheckOutView.isHidden = false
 
         UIView.animate(withDuration: 0.25) {
             self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
-            self.continueToCheckOutBtn.alpha = shouldShow ? 1 : 0
+            self.ContinueToCheckOutView.alpha = shouldShow ? 1 : 0
             self.view.layoutIfNeeded()
         } completion: { _ in
-            self.continueToCheckOutBtn.isHidden = !shouldShow
+            self.ContinueToCheckOutView.isHidden = !shouldShow
         }
     }
 }

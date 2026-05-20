@@ -180,6 +180,7 @@ class MapViewController: UIViewController {
 
         setupSegmentedTab()
         setupTableView()
+        self.view.applyScreenBgGradient()
     }
 
     // MARK: - Setup Segmented Tab
@@ -200,8 +201,6 @@ class MapViewController: UIViewController {
 
             self.selectedIndex = index
             self.tableView.reloadData()
-
-            print("Selected tab: \(index)") // 0 = Venues, 1 = Events
         }
     }
 
@@ -255,6 +254,7 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
             ) as? MapVenueTableViewCell else {
                 return UITableViewCell()
             }
+            cell.selectionStyle = .none
 
             return cell
 
@@ -266,6 +266,7 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
             ) as? MapEventsTableViewCell else {
                 return UITableViewCell()
             }
+            cell.selectionStyle = .none
 
             return cell
         }

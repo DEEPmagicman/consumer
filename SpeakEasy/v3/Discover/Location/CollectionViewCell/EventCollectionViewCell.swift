@@ -20,12 +20,22 @@ final class EventCollectionViewCell: UICollectionViewCell {
         case venue(ClipVenue)
         case premiumExperience(Event)
     }
+    
+    enum ScreenType {
+        case discover
+        case normal
+    }
+
 
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var eventName: UILabel!
     @IBOutlet weak var eventDate: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var venueName: UILabel!
+    @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
@@ -41,7 +51,7 @@ final class EventCollectionViewCell: UICollectionViewCell {
         venueName.text = nil
     }
 
-    func configure(with type: ContentType) {
+    func configure(with type: ContentType, screenType: ScreenType = .discover) {
 
         switch type {
 

@@ -31,8 +31,8 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" image="bg_img" translatesAutoresizingMaskIntoConstraints="NO" id="Ksh-tt-vQW">
                                 <rect key="frame" x="0.0" y="0.0" width="142" height="142"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="Ksh-tt-vQW" secondAttribute="height" id="PR3-JR-bjN"/>
                                     <constraint firstAttribute="height" constant="142" id="T8P-H5-SrK"/>
+                                    <constraint firstAttribute="width" constant="142" id="b4S-Ws-tm5"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -74,7 +74,7 @@
                                 </constraints>
                             </stackView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PgO-6F-RwC">
-                                <rect key="frame" x="49.333333333333329" y="8" width="85.666666666666671" height="15"/>
+                                <rect key="frame" x="49.333333333333336" y="8" width="85.666666666666657" height="15"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPU-m6-Pb5">
                                         <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>
@@ -126,6 +126,8 @@
                 <outlet property="eventDate" destination="6E7-ct-mnp" id="GBu-z3-GoV"/>
                 <outlet property="eventName" destination="Xft-Lg-4Rn" id="bUr-Fa-2Pm"/>
                 <outlet property="image" destination="Ksh-tt-vQW" id="G68-tH-kSV"/>
+                <outlet property="imageViewHeightConstraint" destination="T8P-H5-SrK" id="t6r-GR-XEF"/>
+                <outlet property="imageViewWidthConstraint" destination="b4S-Ws-tm5" id="afV-Lv-TVq"/>
                 <outlet property="venueName" destination="XfP-nr-hP9" id="svl-LJ-9gs"/>
             </connections>
             <point key="canvasLocation" x="-60.305343511450381" y="165.84507042253523"/>

@@ -34,16 +34,16 @@
                     <rect key="frame" x="0.0" y="118.00000000000001" width="393" height="56.666666666666671"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHc-nY-udE" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="128" y="0.0" width="137" height="56.666666666666664"/>
+                            <rect key="frame" x="123" y="0.0" width="147" height="56.666666666666664"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Venues" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7QW-F0-G7m">
-                                    <rect key="frame" x="25" y="9.0000000000000018" width="87" height="23.666666666666671"/>
+                                    <rect key="frame" x="30" y="9.0000000000000018" width="87" height="23.666666666666671"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW YORK CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HA2-y7-Xwy">
-                                    <rect key="frame" x="0.0" y="35.666666666666657" width="137" height="12"/>
+                                    <rect key="frame" x="0.0" y="35.666666666666657" width="147" height="12"/>
                                     <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
                                     <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -52,13 +52,13 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="HA2-y7-Xwy" secondAttribute="bottom" constant="9" id="D4a-8k-WO8"/>
-                                <constraint firstAttribute="trailing" secondItem="7QW-F0-G7m" secondAttribute="trailing" constant="25" id="Hdc-7z-Y3x"/>
+                                <constraint firstAttribute="trailing" secondItem="7QW-F0-G7m" secondAttribute="trailing" constant="30" id="Hdc-7z-Y3x"/>
                                 <constraint firstItem="HA2-y7-Xwy" firstAttribute="leading" secondItem="fHc-nY-udE" secondAttribute="leading" id="Kfp-Rv-kLt"/>
                                 <constraint firstAttribute="trailing" secondItem="HA2-y7-Xwy" secondAttribute="trailing" id="MiN-mM-3aq"/>
                                 <constraint firstItem="HA2-y7-Xwy" firstAttribute="centerX" secondItem="fHc-nY-udE" secondAttribute="centerX" id="Xg1-Cs-393"/>
                                 <constraint firstItem="7QW-F0-G7m" firstAttribute="top" secondItem="fHc-nY-udE" secondAttribute="top" constant="9" id="ikg-5n-pPy"/>
                                 <constraint firstItem="HA2-y7-Xwy" firstAttribute="top" secondItem="7QW-F0-G7m" secondAttribute="bottom" constant="3" id="uG2-FD-nKq"/>
-                                <constraint firstItem="7QW-F0-G7m" firstAttribute="leading" secondItem="fHc-nY-udE" secondAttribute="leading" constant="25" id="zgc-JL-wXD"/>
+                                <constraint firstItem="7QW-F0-G7m" firstAttribute="leading" secondItem="fHc-nY-udE" secondAttribute="leading" constant="30" id="zgc-JL-wXD"/>
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uX0-Wo-aoZ" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
@@ -104,7 +104,6 @@
                         <constraint firstItem="fHc-nY-udE" firstAttribute="top" secondItem="o6u-rP-1N5" secondAttribute="top" id="Pie-4J-GAu"/>
                         <constraint firstItem="uX0-Wo-aoZ" firstAttribute="leading" secondItem="o6u-rP-1N5" secondAttribute="leading" constant="29" id="T36-3b-y0e"/>
                         <constraint firstAttribute="trailing" secondItem="etg-oN-FD3" secondAttribute="trailing" constant="20" id="hSQ-sj-fTQ"/>
-                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="fHc-nY-udE" secondAttribute="bottom" id="i9W-3l-w3T"/>
                         <constraint firstItem="etg-oN-FD3" firstAttribute="centerY" secondItem="o6u-rP-1N5" secondAttribute="centerY" id="vmn-HU-DsB"/>
                         <constraint firstItem="uX0-Wo-aoZ" firstAttribute="centerY" secondItem="fHc-nY-udE" secondAttribute="centerY" id="wba-6K-irS"/>
                     </constraints>
