@@ -8,6 +8,13 @@
 import UIKit
 import MHLoadingButton
 
+enum AuthPhoneFlowMode {
+    case login
+    case signup
+    case changePhone
+    case changeEmail
+}
+
 final class AuthPhoneOTPVC: BaseAuthViewController {
 
     private let phoneView = AuthPhoneInputView()
@@ -30,9 +37,18 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
     private var count = 60
     private var isVerifyingOtp = false
 
+    var flowMode: AuthPhoneFlowMode = .login
+    var initialPhone: String?
+    var initialCountryCode: String?
+    var onPhoneChanged: ((_ phone: String, _ countryCode: String) -> Void)?
+    
+    var pendingEmail: String?
+    var onEmailChanged: ((_ email: String) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupChildViews()
+        applyFlowMode()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -62,10 +78,37 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
         otpView.isHidden = true
     }
 
+    private func applyFlowMode() {
+        switch flowMode {
+        case .login:
+            isFromLogin = true
+            isFromSettings = false
+            
+        case .signup:
+            isFromLogin = false
+            isFromSettings = false
+            
+        case .changePhone:
+            isFromLogin = false
+            isFromSettings = true
+            isForEmail = false
+            
+            phoneView.configureForChangePhone(
+                phone: initialPhone ?? "",
+                countryCode: initialCountryCode ?? "+1"
+            )
+            
+        case .changeEmail:
+            isFromLogin = false
+            isFromSettings = true
+            isForEmail = true
+        }
+    }
+    
     private func flipToOTP() {
         guard !isShowingOTP else { return }
         isShowingOTP = true
-
+        
         view.endEditing(true)
         
         UIView.performWithoutAnimation {
@@ -212,7 +255,13 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                     self.isVerifyingOtp = false
 
                     if isSuccess {
-                        self.dismiss(animated: true)
+                        self.dismiss(animated: true) { [weak self] in
+                            guard let self else { return }
+                            if let email = self.pendingEmail {
+                                self.onEmailChanged?(email)
+                            }
+                            self.onOtpSuccess?()
+                        }
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                         self.resetAfterFailedOtp()
@@ -225,7 +274,11 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                     self.isVerifyingOtp = false
 
                     if isSuccess {
-                        self.dismiss(animated: true)
+                        self.dismiss(animated: true) { [weak self] in
+                            guard let self else { return }
+                            self.onPhoneChanged?(self.phoneNum, self.countryCode)
+                            self.onOtpSuccess?()
+                        }
                     } else {
                         Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
                         self.resetAfterFailedOtp()
@@ -248,6 +301,32 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                 Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
                 self.resetAfterFailedOtp()
             }
+        }
+    }
+    
+    func startEmailOTP(email: String, otp: String?, otpRef: String?) {
+        flowMode = .changeEmail
+        isFromLogin = false
+        isFromSettings = true
+        isForEmail = true
+
+        pendingEmail = email
+        currectOtp = otp
+        self.otpRef = otpRef ?? ""
+
+        phoneNum = email
+        countryCode = ""
+
+        phoneView.isHidden = true
+        otpView.isHidden = false
+        isShowingOTP = true
+
+        otpView.configureForEmail(email)
+        otpView.resetOTP()
+        resetTimer()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.otpView.focusFirstField()
         }
     }
 }
@@ -277,7 +356,23 @@ extension AuthPhoneOTPVC: AuthPhoneInputViewDelegate {
             }
             return
         }
+        
+        if flowMode == .changePhone {
+            let newPhone = view.phoneNationalNumber().filter { $0.isNumber }
+            let oldPhone = (initialPhone ?? "").filter { $0.isNumber }
 
+            let newCode = view.countryCode()
+            let oldCode = initialCountryCode?.hasPrefix("+") == true
+                ? initialCountryCode ?? "+1"
+                : "+\(initialCountryCode ?? "1")"
+
+            if newPhone == oldPhone && newCode == oldCode {
+                phoneView.continueBtn.hideLoader()
+                dismiss(animated: true)
+                return
+            }
+        }
+        
         if isFromSettings {
             settingPresenter.changePhoneNumberApi(phone: phone, code: code) { [weak self] otp, otpRef, isSuccess, errMsg in
                 guard let self else { return }

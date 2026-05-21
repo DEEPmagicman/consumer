@@ -29,29 +29,26 @@ final class LandingVC: UIViewController {
         super.viewDidLoad()
         showSegmentView(0)
         setupUserData()
+        setUpImg()
+        observeProfileUpdate()
 //        whoAmIAPI()
         bgView.applyScreenBgGradient()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        setupUserData()
-//    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         imageView.layer.cornerRadius = imageView.frame.height / 2
-        imageView.clipsToBounds = true
-        
         firstNameLetter.layer.cornerRadius = firstNameLetter.frame.height / 2
         firstNameLetter.clipsToBounds = true
     }
     
     @IBAction func onClickProfile(_ sender: UIButton) {
         if UserDefault.shared.isLoggedIn == true {
-//            sideMenuController?.showLeftView()
             Navigate.to.profileMenuVC(self)
         } else {
             Navigate.to.openPhoneLoginPopup(self)
@@ -64,7 +61,29 @@ final class LandingVC: UIViewController {
     
     @IBAction func onClickMapBtn(_ sender: Any) {
         Navigate.to.gotoMapVC(self)
-//        Navigate.to.gotoSearchVc(self)
+    }
+    
+    private func observeProfileUpdate() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onProfileUpdated(_:)),
+            name: .userProfileDidUpdate,
+            object: nil
+        )
+    }
+    
+    @objc private func onProfileUpdated(_ notification: Notification) {
+        setupUserData()
+    }
+    
+    private func setUpImg() {
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: noImageView.bounds.height),
+            imageView.heightAnchor.constraint(equalToConstant: noImageView.bounds.height)
+        ])
     }
     
     private func showSegmentView(_ index: Int) {

@@ -13,12 +13,13 @@ final class SettingPresenter {
         let param = ["email": email]
         AFWrapper.postRequest(APIBuilder.changeEmailURL, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String
             else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            let otp = responseDic["otp"] as? String
+            completion(otp ?? "", otpref, true, nil)
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {
@@ -95,12 +96,13 @@ final class SettingPresenter {
         let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String
             else {
                 completion("", "", false, nil)
                 return
             }
-            completion(otp, otpref, true, nil)
+            let otp = responseDic["otp"] as? String
+            completion(otp ?? "", otpref, true, nil)
 
         } failure: { (error) in
             if let err = (error as? NSError), err.code == 0 {

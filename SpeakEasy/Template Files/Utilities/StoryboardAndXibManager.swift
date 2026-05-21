@@ -19,6 +19,8 @@ struct StoryboardAndXibManager {
         static let signUp = UIStoryboard(name: "SignUp", bundle: nil)
         static let landing = UIStoryboard(name: "Landing", bundle: nil)
         static let search = UIStoryboard(name: "Search", bundle: nil)
-        
+        static let orders = UIStoryboard(name: "Orders", bundle: nil)
+        static let discover = UIStoryboard(name: "Discover", bundle: nil)
+        static let photos = UIStoryboard(name: "Photos", bundle: nil)
     }
 }
