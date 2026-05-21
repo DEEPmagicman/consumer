@@ -1425,20 +1425,12 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		6A40D1BB2FBF05BE00F3FAAB /* Tabbar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Tabbar;
-			sourceTree = "<group>";
-		};
 		6A687D142FB30C30001BEDBF /* v3 */ = {
 			isa = PBXGroup;
 			children = (
 				6A40D1B82FBEEAA500F3FAAB /* Core */,
 				6A687D152FB30C40001BEDBF /* Login */,
 				6AF9DE0D2FB47A6A008D6CBC /* Profile */,
-				6A40D1BB2FBF05BE00F3FAAB /* Tabbar */,
 				CEE02DA62EFB939F00AC7756 /* Discover */,
 			);
 			path = v3;

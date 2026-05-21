@@ -225,7 +225,7 @@ class TicketsTVC: UITableViewCell {
         let fee = ticket.extraFees ?? 0
         if fee > 0 {
             inclFeesLbl.isHidden = false
-            inclFeesLbl.text = "(Incl. \(currency)\(fee.decimalFormat(true)) in fees)"
+            inclFeesLbl.text = "Incl. \(currency)\(fee.decimalFormat(true)) in fees"
         } else {
             inclFeesLbl.isHidden = true
         }

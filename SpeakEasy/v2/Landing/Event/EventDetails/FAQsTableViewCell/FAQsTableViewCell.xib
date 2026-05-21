@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Inter-Regular.ttf">
-            <string>Inter-Regular</string>
+        <array key="Geist-Regular.ttf">
+            <string>Geist-Regular</string>
+        </array>
+        <array key="Geist-SemiBold.ttf">
+            <string>Geist-SemiBold</string>
         </array>
     </customFonts>
     <objects>
@@ -39,9 +42,9 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZA-9C-EK8">
-                                                <rect key="frame" x="24" y="10" width="414" height="81"/>
+                                                <rect key="frame" x="24" y="12" width="414" height="77"/>
                                                 <string key="text">what is the time? what is the time?what is the time?what is the time?what is the time?what is the time?what is the time?what is the time?</string>
-                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                                                <fontDescription key="fontDescription" name="Geist-SemiBold" family="Geist" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -64,16 +67,16 @@
                                             <constraint firstItem="RgP-fX-0fY" firstAttribute="centerY" secondItem="l46-GT-la2" secondAttribute="centerY" id="cMT-TP-Mxj"/>
                                             <constraint firstItem="rAn-Q9-AIW" firstAttribute="leading" secondItem="l46-GT-la2" secondAttribute="leading" id="gOA-48-EO3"/>
                                             <constraint firstItem="rAn-Q9-AIW" firstAttribute="top" secondItem="l46-GT-la2" secondAttribute="top" id="hyk-CU-Hjf"/>
-                                            <constraint firstItem="oZA-9C-EK8" firstAttribute="top" secondItem="l46-GT-la2" secondAttribute="top" constant="10" id="n4D-Ne-xHf"/>
+                                            <constraint firstItem="oZA-9C-EK8" firstAttribute="top" secondItem="l46-GT-la2" secondAttribute="top" constant="12" id="n4D-Ne-xHf"/>
                                             <constraint firstItem="RgP-fX-0fY" firstAttribute="leading" secondItem="l46-GT-la2" secondAttribute="leading" id="tWQ-dU-Z5J"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1LS-EJ-HRh">
                                         <rect key="frame" x="0.0" y="101" width="438" height="50"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="YES time is 8 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iOU-70-zOe">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iOU-70-zOe">
                                                 <rect key="frame" x="0.0" y="0.0" width="438" height="50"/>
-                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
+                                                <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>

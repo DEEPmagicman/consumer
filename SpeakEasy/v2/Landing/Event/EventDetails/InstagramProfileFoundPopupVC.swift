@@ -17,7 +17,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
     var onUseThisPictureTap: (() -> Void)?
 
     private let dimmedView = UIView()
-    private let popupView = UIView()
+    private let popupView = GradientBorderCardView()
     private let closeButton = UIButton(type: .system)
     private let titleLabel = UILabel()
     private let profileImageView = UIImageView()
@@ -38,7 +38,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        popupView.layer.cornerRadius = 16
+        popupView.layer.cornerRadius = 34
         popupView.clipsToBounds = true
 
         profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
@@ -63,7 +63,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         dimmedView.addGestureRecognizer(dismissTap)
 
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.backgroundColor = UIColor(hex: "#111111")
+        popupView.backgroundColor = UIColor(hex: "#171717")
         view.addSubview(popupView)
 
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -75,7 +75,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = "We found your Instagram profile picture!"
         titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.interBold(size: 20)
+        titleLabel.font = Constant.Font.geistBold(size: 20)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         popupView.addSubview(titleLabel)
@@ -91,7 +91,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.text = "Would you like to use this as your profile picture?"
         subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.82)
-        subtitleLabel.font = Constant.Font.interRegular(size: 14)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 0
         popupView.addSubview(subtitleLabel)
@@ -106,7 +106,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         uploadOwnButton.translatesAutoresizingMaskIntoConstraints = false
         uploadOwnButton.setTitle("NO, I'LL UPLOAD MY OWN", for: .normal)
         uploadOwnButton.setTitleColor(.white, for: .normal)
-        uploadOwnButton.titleLabel?.font = Constant.Font.interSemiBold(size: 14)
+        uploadOwnButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 14)
         uploadOwnButton.backgroundColor = .clear
         uploadOwnButton.layer.borderWidth = 1
         uploadOwnButton.layer.borderColor = UIColor.white.withAlphaComponent(0.20).cgColor
@@ -118,7 +118,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
         useThisPictureButton.translatesAutoresizingMaskIntoConstraints = false
         useThisPictureButton.setTitle("YES, USE THIS PICTURE", for: .normal)
         useThisPictureButton.setTitleColor(.black, for: .normal)
-        useThisPictureButton.titleLabel?.font = Constant.Font.interSemiBold(size: 14)
+        useThisPictureButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 14)
         useThisPictureButton.backgroundColor = .white
         useThisPictureButton.addTarget(self, action: #selector(handleUseThisPictureTap), for: UIControl.Event.touchUpInside)
         NSLayoutConstraint.activate([
