@@ -40,6 +40,15 @@ final class EditProfileVC: UIViewController {
     private let presenter = OnBoardingPresenter()
     private var gender = "MALE"
     
+    private var selectedProfileImage: UIImage?
+    private var didChangeProfileImage = false
+    
+    private var originalFirstName = ""
+    private var originalLastName = ""
+    private var originalDOB = ""
+    private var originalGender = ""
+    private var originalImageUrl = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -84,7 +93,11 @@ final class EditProfileVC: UIViewController {
         avatarContainer.clipsToBounds = true
         avatarContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(avatarContainer)
-        
+
+        let avatarTap = UITapGestureRecognizer(target: self, action: #selector(onClickAddPhoto))
+        avatarContainer.addGestureRecognizer(avatarTap)
+        avatarContainer.isUserInteractionEnabled = true
+
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +113,8 @@ final class EditProfileVC: UIViewController {
         addPhotoBtn.tintColor = .white
         addPhotoBtn.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.12)
         addPhotoBtn.translatesAutoresizingMaskIntoConstraints = false
-        
+        addPhotoBtn.addTarget(self, action: #selector(onClickAddPhoto), for: .touchUpInside)
+
         let addPhotoBtnBgView = LiquidGlassBackgroundView()
         addPhotoBtnBgView.borderWidth = 0.5
         addPhotoBtnBgView.overrideBackgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.12)
@@ -116,6 +130,10 @@ final class EditProfileVC: UIViewController {
         dobTF.inputView = UIView()
         dobTF.tintColor = .clear
         dobView.addTarget(self, action: #selector(onClickDOB), for: .touchUpInside)
+        
+        firstNameTF.addTarget(self, action: #selector(profileFieldDidChange), for: .editingChanged)
+        lastNameTF.addTarget(self, action: #selector(profileFieldDidChange), for: .editingChanged)
+        dobTF.addTarget(self, action: #selector(profileFieldDidChange), for: .editingChanged)
 
         setupGenderView()
     }
@@ -193,6 +211,8 @@ final class EditProfileVC: UIViewController {
         saveBtn.configure(title: "Save changes", fontSize: 18, cornerRadius: 16)
         saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
         view.addSubview(saveBtn)
+
+        updateSaveButtonState()
     }
     
     private func setupConstraints() {
@@ -250,6 +270,16 @@ final class EditProfileVC: UIViewController {
         ])
     }
     
+    @objc private func onClickAddPhoto() {
+        view.endEditing(true)
+
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        picker.sourceType = .photoLibrary
+        present(picker, animated: true)
+    }
+    
     private func loadUserData() {
         let user = UserDefault.shared.user
 
@@ -297,6 +327,15 @@ final class EditProfileVC: UIViewController {
             firstNameLetter.isHidden = false
             firstNameLetter.text = String(firstLetter).uppercased()
         }
+        
+        originalFirstName = firstNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        originalLastName = lastNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        originalDOB = dobTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        originalGender = gender
+        originalImageUrl = UserDefault.shared.user?.image.key ?? ""
+
+        didChangeProfileImage = false
+        updateSaveButtonState()
     }
     
     private func setGenderEmpty() {
@@ -347,6 +386,30 @@ final class EditProfileVC: UIViewController {
         view.addGestureRecognizer(tap)
     }
     
+    @objc private func profileFieldDidChange() {
+        clearValidationUI()
+        updateSaveButtonState()
+    }
+
+    private func updateSaveButtonState() {
+        let currentFirstName = firstNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let currentLastName = lastNameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let currentDOB = dobTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let hasChanges =
+            currentFirstName != originalFirstName ||
+            currentLastName != originalLastName ||
+            currentDOB != originalDOB ||
+            gender != originalGender ||
+            didChangeProfileImage
+
+        saveBtn.isUserInteractionEnabled = hasChanges
+
+        UIView.animate(withDuration: 0.2) {
+            self.saveBtn.alpha = hasChanges ? 1.0 : 0.45
+        }
+    }
+    
     @objc private func endEditing() {
         view.endEditing(true)
     }
@@ -354,37 +417,109 @@ final class EditProfileVC: UIViewController {
     @objc private func onClickSave() {
         view.endEditing(true)
         guard validate() else { return }
-        
+
+        if didChangeProfileImage, let image = selectedProfileImage {
+            uploadProfileAndSave(image: image)
+        } else {
+            saveProfile(imageDetail: nil)
+        }
+    }
+    
+    private func uploadProfileAndSave(image: UIImage) {
+        saveBtn.startLoading()
+        view.isUserInteractionEnabled = false
+
+        presenter.uploadPhotoApi(image: image) { [weak self] imgUrl, isSuccess in
+            guard let self else { return }
+
+            if isSuccess {
+                let imgDetail = ImageDetail(
+                    key: imgUrl,
+                    name: "\(UserDefault.shared.user?.phone ?? "")",
+                    description: "profile picture"
+                )
+
+                self.saveProfile(imageDetail: imgDetail)
+            } else {
+                self.saveBtn.stopLoading()
+                self.view.isUserInteractionEnabled = true
+
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: "Image not uploaded",
+                    message: ""
+                )
+            }
+        }
+    }
+
+    private func saveProfile(imageDetail: ImageDetail?) {
         var date = dobTF.text?.convertDateFormat(from: .MMDDYYYY, to: .YYYYMMDD, isUTC: false) ?? ""
         if date == "No date Found" { date = "" }
-        
-        saveBtn.startLoading()
-        
-        presenter.editUserProfileApi(
-            fName: firstNameTF.text ?? "",
-            lName: lastNameTF.text ?? "",
-            nickName: "",
-            dob: date,
-            gender: gender
-        ) { [weak self] isSuccess, errorMsg in
+
+        if !didChangeProfileImage {
+            saveBtn.startLoading()
+            view.isUserInteractionEnabled = false
+        }
+
+        let completion: (Bool, String?) -> Void = { [weak self] isSuccess, errorMsg in
             guard let self else { return }
+
             self.saveBtn.stopLoading()
-            
+            self.view.isUserInteractionEnabled = true
+
             if isSuccess {
                 UserDefault.shared.user?.firstName = self.firstNameTF.text ?? ""
                 UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = date
                 UserDefault.shared.user?.gender = self.gender
+
+                if let imageDetail {
+                    UserDefault.shared.user?.image = imageDetail
+                }
+
                 if UserDefault.shared.user?.email != nil && UserDefault.shared.user?.email != "" {
                     UserDefault.shared.user?.isProfileCompleted = true
                 }
+
+                ProfileUpdateNotifier.post(
+                    firstName: self.firstNameTF.text ?? "",
+                    lastName: self.lastNameTF.text ?? "",
+                    imageUrl: UserDefault.shared.user?.image.key
+                )
+                
                 self.navigationController?.popViewController(animated: true)
             } else {
-                Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errorMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
             }
         }
+
+        if let imageDetail {
+            presenter.editUserProfileApi(
+                fName: firstNameTF.text ?? "",
+                lName: lastNameTF.text ?? "",
+                nickName: "",
+                dob: date,
+                gender: gender,
+                image: imageDetail,
+                completion: completion
+            )
+        } else {
+            presenter.editUserProfileApi(
+                fName: firstNameTF.text ?? "",
+                lName: lastNameTF.text ?? "",
+                nickName: "",
+                dob: date,
+                gender: gender,
+                completion: completion
+            )
+        }
     }
-    
+        
     private func validate() -> Bool {
         clearValidationUI()
         
@@ -447,16 +582,48 @@ final class EditProfileVC: UIViewController {
     }
 }
 
+extension EditProfileVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+    ) {
+        let image =
+            info[.editedImage] as? UIImage ??
+            info[.originalImage] as? UIImage
+
+        if let image {
+            selectedProfileImage = image
+            didChangeProfileImage = true
+
+            imageView.isHidden = false
+            firstNameLetter.isHidden = true
+            imageView.image = image
+            updateSaveButtonState()
+        }
+
+        picker.dismiss(animated: true)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+}
+
 extension EditProfileVC: GenderSelectionBottomSheetDelegate {
     func genderSelectionBottomSheet(_ vc: GenderSelectionBottomSheetVC, didSelect gender: String) {
         self.gender = gender.uppercased()
         setGenderSelected(gender)
         clearValidationUI()
+        updateSaveButtonState()
     }
 }
 
 extension EditProfileVC: DateSelectionDelegate {
     func selectedDate(date: Date) {
         dobTF.text = date.string(format: .MMDDYYYY, isUTC: false)
+        dobView.text = dobTF.text
+        clearValidationUI()
+        updateSaveButtonState()
     }
 }

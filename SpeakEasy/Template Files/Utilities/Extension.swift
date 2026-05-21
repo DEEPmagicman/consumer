@@ -486,3 +486,9 @@ extension UIColor {
         return brightness > 0.6 ? .black : .white
     }
 }
+
+extension Notification.Name {
+
+    static let userProfileDidUpdate =
+        Notification.Name("userProfileDidUpdate")
+}

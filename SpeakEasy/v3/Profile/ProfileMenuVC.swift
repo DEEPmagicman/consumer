@@ -27,10 +27,15 @@ final class ProfileMenuVC: UIViewController {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let darkBlurOverlay = UIView()
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupUserData()
+        observeProfileUpdate()
     }
 
     override func viewDidLayoutSubviews() {
@@ -39,7 +44,20 @@ final class ProfileMenuVC: UIViewController {
         avatarContainer.layer.cornerRadius = avatarContainer.bounds.height / 2
         imageView.layer.cornerRadius = imageView.bounds.height / 2
     }
+    
+    private func observeProfileUpdate() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onProfileUpdated(_:)),
+            name: .userProfileDidUpdate,
+            object: nil
+        )
+    }
 
+    @objc private func onProfileUpdated(_ notification: Notification) {
+        setupUserData()
+    }
+    
     private func setupUI() {
         view.backgroundColor = .clear
 
@@ -369,7 +387,7 @@ final class ProfileMenuVC: UIViewController {
     }
     
     @objc private func onClickDelete() {
-        Navigate.to.deleteAccountVc(self)
+        Navigate.to.deleteAccountBottomSheet(self)
     }
     
     @objc private func onClickHelp() {
@@ -377,20 +395,11 @@ final class ProfileMenuVC: UIViewController {
     }
     
     @objc private func onClickNotificationSettings() {
+        Navigate.to.notificationSettingsVC(self)
     }
     
     @objc private func onClickLogOut() {
-        let okAction = UIAlertAction(title: "Yes", style: .default) {
-            UIAlertAction in
-            UserDefault.shared.emptyData()
-            AppDelegate.shared.changeRootViewController()
-            OnBoardingPresenter.logout { isSuccess, errorMsg in
-            }
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) {
-            _ in
-        }
-        Alert.showAlertSheet(style: .alert, title: "", message: "Are you sure you want to log out?", actions: [okAction, cancelAction])
+        Navigate.to.logoutConfirmationBottomSheet(self)
     }
 }
 

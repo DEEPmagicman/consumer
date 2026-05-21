@@ -701,4 +701,23 @@ final class Navigate {
         let vc = AccountInfoVC()
         sender.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func deleteAccountBottomSheet(_ sender: UIViewController) {
+        let vc = DeleteAccountBottomSheetVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        sender.present(vc, animated: false)
+    }
+    
+    func logoutConfirmationBottomSheet(_ sender: UIViewController) {
+        let vc = LogoutConfirmationBottomSheetVC()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.modalTransitionStyle = .crossDissolve
+        sender.present(vc, animated: false)
+    }
+    
+    func notificationSettingsVC(_ sender: UIViewController) {
+        let vc = NotificationSettingsVC()
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
 }
