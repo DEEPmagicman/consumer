@@ -300,8 +300,9 @@ final class ProfileInfoVC: UIViewController {
             fName: firstNameTF.text ?? "",
             lName: lastNameTF.text ?? "",
             nickName: "",
+            email: self.emailTF.text ?? "",
             dob: date,
-            gender: gender
+            gender: gender,
         ) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
 

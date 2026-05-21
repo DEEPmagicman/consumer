@@ -16,7 +16,7 @@ enum ConfirmContactType {
         case .phone:
             return "Is the number correct? You’ll receive a\nverification code there"
         case .email:
-            return "Is the email correct? You’ll receive a\nverification code there"
+            return "Is the email correct?" // "You’ll receive a\nverification code there"
         }
     }
 }
@@ -52,14 +52,14 @@ final class ConfirmContactVC: BaseAuthViewController {
 
         subtitleLabel.text = type.subtitle
         subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 12)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 13)
         subtitleLabel.textAlignment = .center
         subtitleLabel.numberOfLines = 0
 
-        confirmBtn.configure(title: "Confirm", fontSize: 16, cornerRadius: 14)
+        confirmBtn.configure(title: "Confirm", fontSize: 18, cornerRadius: 16)
         confirmBtn.addTarget(self, action: #selector(onConfirm), for: .touchUpInside)
 
-        backBtn.configure(title: "Go back", fontSize: 16, cornerRadius: 14)
+        backBtn.configure(title: "Go back", fontSize: 18, cornerRadius: 16)
         backBtn.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10)
         backBtn.setTitleColor(AppColor.primaryWhiteColor, for: .normal)
         backBtn.addTarget(self, action: #selector(onGoBack), for: .touchUpInside)

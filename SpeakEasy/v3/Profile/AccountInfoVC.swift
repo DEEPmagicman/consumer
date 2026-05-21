@@ -26,6 +26,7 @@ final class AccountInfoVC: UIViewController {
     private var isPhoneVerified = false
     
     private var pendingEmail = ""
+    private let presenter = OnBoardingPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,16 +76,45 @@ final class AccountInfoVC: UIViewController {
 
         phoneBox.addTarget(self, action: #selector(onClickPhone), for: .touchUpInside)
 
+        emailBox.textField.addTarget(
+            self,
+            action: #selector(emailDidChange),
+            for: .editingChanged
+        )
+        
         view.addSubview(emailBox)
         view.addSubview(phoneBox)
     }
 
+    @objc private func emailDidChange() {
+        emailBox.clearError()
+        updateSaveButtonState()
+    }
+    
     private func setupButton() {
         saveBtn.configure(title: "Save changes", fontSize: 18, cornerRadius: 16)
-        saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
-        view.addSubview(saveBtn)
+           saveBtn.addTarget(self, action: #selector(onClickSave), for: .touchUpInside)
+
+           view.addSubview(saveBtn)
+
+           updateSaveButtonState()
     }
 
+    private func updateSaveButtonState() {
+
+        let currentEmail = emailBox.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let hasChanges =
+            currentEmail != originalEmail
+        
+        saveBtn.isUserInteractionEnabled = hasChanges
+
+        UIView.animate(withDuration: 0.2) {
+            self.saveBtn.alpha = hasChanges ? 1.0 : 0.45
+        }
+    }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
@@ -182,6 +212,7 @@ final class AccountInfoVC: UIViewController {
         }
 
         if emailChanged {
+            self.saveBtn.startLoading()
             presentConfirmEmail(newEmail)
             return
         }
@@ -233,6 +264,7 @@ final class AccountInfoVC: UIViewController {
             UserDefault.shared.user?.email = email
             self.originalEmail = email
             self.emailBox.text = email
+            self.updateSaveButtonState()
             self.navigationController?.popViewController(animated: true)
         }
 
@@ -314,6 +346,33 @@ final class AccountInfoVC: UIViewController {
 
         return "\(code) \(cleanPhone)"
     }
+    
+    @objc private func saveEmail() {
+        view.endEditing(true)
+    
+        presenter.editUserProfileApi(
+            email: self.emailBox.text ?? ""
+        ) { [weak self] isSuccess, errorMsg in
+            guard let self else { return }
+
+            self.saveBtn.stopLoading()
+
+            if isSuccess {
+                if UserDefault.shared.user?.firstName != nil && UserDefault.shared.user?.firstName != "" {
+                    UserDefault.shared.user?.isProfileCompleted = true
+                }
+                UserDefault.shared.user?.email = self.emailBox.text ?? ""
+                self.originalEmail = self.emailBox.text ?? ""
+                self.updateSaveButtonState()
+            } else {
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errorMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
+            }
+        }
+    }
 }
 
 extension AccountInfoVC: UITextFieldDelegate {
@@ -331,11 +390,13 @@ extension AccountInfoVC: ConfirmContactVCDelegate {
     func confirmContactVCDidConfirm(_ vc: ConfirmContactVC) {
         vc.dismiss(animated: true) { [weak self] in
             guard let self else { return }
+            self.saveEmail()
 //            self.updateEmail(self.pendingEmail)
         }
     }
 
     func confirmContactVCDidGoBack(_ vc: ConfirmContactVC) {
         vc.dismiss(animated: true)
+        self.saveBtn.stopLoading()
     }
 }

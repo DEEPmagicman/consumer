@@ -375,7 +375,9 @@ final class EditProfileVC: UIViewController {
                 UserDefault.shared.user?.lastName = self.lastNameTF.text ?? ""
                 UserDefault.shared.user?.dateOfBirth = date
                 UserDefault.shared.user?.gender = self.gender
-                UserDefault.shared.user?.isProfileCompleted = true
+                if UserDefault.shared.user?.email != nil && UserDefault.shared.user?.email != "" {
+                    UserDefault.shared.user?.isProfileCompleted = true
+                }
                 self.navigationController?.popViewController(animated: true)
             } else {
                 Alert.showAlertSheet(style: .alert, title: errorMsg ?? Constant.String.somethingWrong, message: "")
