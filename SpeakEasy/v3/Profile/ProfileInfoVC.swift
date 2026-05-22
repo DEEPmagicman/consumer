@@ -303,6 +303,7 @@ final class ProfileInfoVC: UIViewController {
             email: self.emailTF.text ?? "",
             dob: date,
             gender: gender,
+            isProfileCompleted: true
         ) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
 

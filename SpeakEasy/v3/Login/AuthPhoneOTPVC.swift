@@ -236,6 +236,12 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                 self.isVerifyingOtp = false
 
                 if isSuccess {
+                    let user = UserDefault.shared.user
+                    ProfileUpdateNotifier.post(
+                        firstName: user?.firstName,
+                        lastName: user?.lastName,
+                        imageUrl: user?.image.key
+                    )
                     self.dismiss(animated: true) { [weak self] in
                         self?.onOtpSuccess?()
                     }
@@ -294,6 +300,13 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
             self.isVerifyingOtp = false
 
             if isSuccess {
+                let user = UserDefault.shared.user
+                ProfileUpdateNotifier.post(
+                    firstName: user?.firstName,
+                    lastName: user?.lastName,
+                    imageUrl: user?.image.key
+                )
+
                 self.dismiss(animated: true) { [weak self] in
                     self?.onOtpSuccess?()
                 }

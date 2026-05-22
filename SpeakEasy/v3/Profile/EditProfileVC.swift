@@ -497,6 +497,12 @@ final class EditProfileVC: UIViewController {
                 )
             }
         }
+        
+        var isProfileCompleted = UserDefault.shared.user?.isProfileCompleted ?? false
+        if !isProfileCompleted && UserDefault.shared.user?.email != nil && UserDefault.shared.user?.email != "" {
+            isProfileCompleted = true
+            UserDefault.shared.user?.isProfileCompleted = true
+        }
 
         if let imageDetail {
             presenter.editUserProfileApi(
@@ -506,6 +512,7 @@ final class EditProfileVC: UIViewController {
                 dob: date,
                 gender: gender,
                 image: imageDetail,
+                isProfileCompleted: isProfileCompleted,
                 completion: completion
             )
         } else {
@@ -515,6 +522,7 @@ final class EditProfileVC: UIViewController {
                 nickName: "",
                 dob: date,
                 gender: gender,
+                isProfileCompleted: isProfileCompleted,
                 completion: completion
             )
         }

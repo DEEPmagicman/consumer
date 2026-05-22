@@ -45,6 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        if AppDesign.useModernIOS26Design {
+            IQKeyboardManager.shared.enableAutoToolbar = false
+            GlobalTextFieldHandler.shared.setup()
+        }
         RemoteConfigHelper.shared.getRemoteConfigValues()
         window = UIWindow(frame: UIScreen.main.bounds)
         
@@ -158,8 +162,16 @@ extension AppDelegate {
     func setRootVC() {
         ReachabilityManager.shared.startMonitoring()
         
-        let vc = AppDelegate.gotoTab
-        let navigation = UINavigationController(rootViewController: vc)
+        var navigation = UINavigationController()
+        
+        if UserDefault.shared.isVersionV3 == true {
+            let vc = NewLandingVC()
+            navigation = UINavigationController(rootViewController: vc)
+        } else {
+            let vc = AppDelegate.gotoTab
+            navigation = UINavigationController(rootViewController: vc)
+        }
+//        
         navigation.navigationBar.isHidden = true
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()

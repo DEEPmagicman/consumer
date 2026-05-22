@@ -350,8 +350,15 @@ final class AccountInfoVC: UIViewController {
     @objc private func saveEmail() {
         view.endEditing(true)
     
+        var isProfileCompleted = UserDefault.shared.user?.isProfileCompleted ?? false
+        if !isProfileCompleted && UserDefault.shared.user?.firstName != nil && UserDefault.shared.user?.firstName != "" {
+            isProfileCompleted = true
+            UserDefault.shared.user?.isProfileCompleted = true
+        }
+        
         presenter.editUserProfileApi(
-            email: self.emailBox.text ?? ""
+            email: self.emailBox.text ?? "",
+            isProfileCompleted: isProfileCompleted
         ) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
 
