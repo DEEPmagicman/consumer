@@ -320,7 +320,7 @@ struct APIBuilder {
     }
     
     static var MVPVenueListURL: String {
-        baseURL + route + venue + coverVenue + "&city=\(UserDefault.shared.localCity.replacingOccurrences(of: " ", with: "%20"))"
+        baseURL + route + venue + coverVenue
     }
     
     static var MVPVenueURL: String {

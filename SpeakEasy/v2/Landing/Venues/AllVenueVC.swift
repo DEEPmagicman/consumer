@@ -22,7 +22,7 @@ final class AllVenueVC: UIViewController {
     private var isInitialLoading = false
 
     // MARK: - Layout Constants
-    private let horizontalMargin: CGFloat = 16
+    private let horizontalMargin: CGFloat = 20
     private let interItemSpacing: CGFloat = 16
     private let lineSpacing: CGFloat = 16
     private let columns: CGFloat = 2
@@ -32,6 +32,11 @@ final class AllVenueVC: UIViewController {
         setupCollectionView()
         setupVenueTitle()
         fetchVenues()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.view.applyScreenBgGradient(direction: .topToBottom)
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
@@ -97,7 +102,7 @@ final class AllVenueVC: UIViewController {
 
         presenter.getVenueListForMVP(
             from: skip,
-            status: VenueStatus.open.rawValue
+            status: VenueStatus.open.rawValue, city: nil
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self = self else { return }
 
@@ -130,7 +135,7 @@ extension AllVenueVC: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return isInitialLoading ? 6 : venueList.count
+        return isInitialLoading ? 0 : venueList.count
     }
 
     func collectionView(

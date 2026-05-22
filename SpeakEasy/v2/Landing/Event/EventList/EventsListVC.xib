@@ -30,19 +30,19 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lv2-gd-3Se">
-                    <rect key="frame" x="0.0" y="118.00000000000001" width="393" height="48.666666666666671"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="72"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pVF-yC-Oqd" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="106.33333333333333" y="0.0" width="180.66666666666669" height="48.666666666666664"/>
+                            <rect key="frame" x="106.33333333333333" y="7.6666666666666679" width="180.66666666666669" height="56.666666666666657"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events Tonight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOS-tW-KDW">
-                                    <rect key="frame" x="30.000000000000007" y="5.0000000000000018" width="120.66666666666669" height="23.666666666666671"/>
+                                    <rect key="frame" x="30.000000000000007" y="8.9999999999999876" width="120.66666666666669" height="23.666666666666671"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW YORK CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hjO-Fu-O30">
-                                    <rect key="frame" x="0.0" y="31.666666666666657" width="180.66666666666666" height="12"/>
+                                    <rect key="frame" x="0.0" y="35.666666666666671" width="180.66666666666666" height="12"/>
                                     <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
                                     <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -51,17 +51,22 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="87k-IA-iUM"/>
-                                <constraint firstAttribute="bottom" secondItem="hjO-Fu-O30" secondAttribute="bottom" constant="5" id="Pkk-Qm-6ZW"/>
+                                <constraint firstAttribute="bottom" secondItem="hjO-Fu-O30" secondAttribute="bottom" constant="9" id="Pkk-Qm-6ZW"/>
                                 <constraint firstAttribute="trailing" secondItem="hjO-Fu-O30" secondAttribute="trailing" id="S3K-W0-0mY"/>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="centerX" secondItem="pVF-yC-Oqd" secondAttribute="centerX" id="Y7t-9Y-RbL"/>
-                                <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" constant="5" id="eZb-Iv-t56"/>
+                                <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" constant="9" id="eZb-Iv-t56"/>
                                 <constraint firstAttribute="trailing" secondItem="qOS-tW-KDW" secondAttribute="trailing" constant="30" id="kaz-sX-5dz"/>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="top" secondItem="qOS-tW-KDW" secondAttribute="bottom" constant="3" id="pDZ-dy-Tbh"/>
                                 <constraint firstItem="qOS-tW-KDW" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" constant="30" id="qNR-YT-zgy"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="28"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </view>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Smp-sI-3EV" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="29" y="4.3333333333333286" width="40" height="40"/>
+                            <rect key="frame" x="16" y="16" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="6bi-Rz-ZjN"/>
                                 <constraint firstAttribute="width" constant="40" id="t1V-jn-Yyg"/>
@@ -70,7 +75,10 @@
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="back"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                    <real key="value" value="18"/>
+                                    <real key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                                    <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
@@ -78,7 +86,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tCf-nv-FrM" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="333" y="4.3333333333333286" width="40" height="40"/>
+                            <rect key="frame" x="337" y="16" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="DkY-gc-eEx"/>
                                 <constraint firstAttribute="width" constant="40" id="ed9-2O-w8M"/>
@@ -87,9 +95,15 @@
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="filter"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                    <real key="value" value="18"/>
+                                    <real key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                                    <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="onClickFilterBtn:" destination="-1" eventType="touchUpInside" id="By0-1d-dWb"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -97,15 +111,15 @@
                         <constraint firstItem="Smp-sI-3EV" firstAttribute="centerY" secondItem="pVF-yC-Oqd" secondAttribute="centerY" id="FAh-25-l6m"/>
                         <constraint firstItem="pVF-yC-Oqd" firstAttribute="centerX" secondItem="Lv2-gd-3Se" secondAttribute="centerX" id="SMK-kR-Be6"/>
                         <constraint firstItem="Smp-sI-3EV" firstAttribute="centerY" secondItem="Lv2-gd-3Se" secondAttribute="centerY" id="VXz-ur-ZlY"/>
-                        <constraint firstItem="Smp-sI-3EV" firstAttribute="leading" secondItem="Lv2-gd-3Se" secondAttribute="leading" constant="29" id="ZjQ-GP-ehw"/>
-                        <constraint firstItem="pVF-yC-Oqd" firstAttribute="top" secondItem="Lv2-gd-3Se" secondAttribute="top" id="efX-VR-C9W"/>
+                        <constraint firstItem="Smp-sI-3EV" firstAttribute="leading" secondItem="Lv2-gd-3Se" secondAttribute="leading" constant="16" id="ZjQ-GP-ehw"/>
                         <constraint firstItem="tCf-nv-FrM" firstAttribute="centerY" secondItem="Lv2-gd-3Se" secondAttribute="centerY" id="hBW-HE-3JS"/>
-                        <constraint firstAttribute="trailing" secondItem="tCf-nv-FrM" secondAttribute="trailing" constant="20" id="hPe-ul-gQ2"/>
+                        <constraint firstAttribute="trailing" secondItem="tCf-nv-FrM" secondAttribute="trailing" constant="16" id="hPe-ul-gQ2"/>
+                        <constraint firstItem="Smp-sI-3EV" firstAttribute="top" secondItem="Lv2-gd-3Se" secondAttribute="top" constant="16" id="usj-ab-qHd"/>
                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="pVF-yC-Oqd" secondAttribute="bottom" id="ztR-kz-ktp"/>
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ydC-08-RKW">
-                    <rect key="frame" x="0.0" y="171.66666666666669" width="393" height="612.33333333333326"/>
+                    <rect key="frame" x="0.0" y="195" width="393" height="589"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="NRL-7d-kUg">
                         <size key="itemSize" width="128" height="128"/>

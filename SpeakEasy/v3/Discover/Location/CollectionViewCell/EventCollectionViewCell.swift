@@ -112,7 +112,8 @@ private extension EventCollectionViewCell {
 
     func setupVenue(_ venue: ClipVenue) {
         eventName.isHidden = true
-        venueName.text = venue.name
+        eventDate.isHidden = true
+        venueName.text = venue.name.uppercased()
 
         let logoUrl = URL(
             string: "\(SharedURL.amazonStorage)\(venue.logo?.key ?? "")"

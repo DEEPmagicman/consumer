@@ -40,16 +40,17 @@ final class DiscoverVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        landingHeaderView.isHidden = true
         // Pin shimmer full-screen on top of everything
-        view.addSubview(shimmerView)
+//        view.addSubview(shimmerView)
         setupLandingHeader()
-        shimmerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
-            shimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            shimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            shimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+//        shimmerView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
+//            shimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            shimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            shimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
 
         showSegmentView(0)
         bindSelectedCity()
@@ -78,12 +79,14 @@ final class DiscoverVC: UIViewController {
     func hideSkeletonScreen() {
         shimmerDidFinish = true
         shimmerView.stopShimmer()
+        landingHeaderView.isHidden = false
         shimmerView.isHidden = true
     }
 
     func showSkeletonScreen() {
         shimmerDidFinish = false
         shimmerView.isHidden = false
+        landingHeaderView.isHidden = true
         shimmerView.startShimmer()
     }
     

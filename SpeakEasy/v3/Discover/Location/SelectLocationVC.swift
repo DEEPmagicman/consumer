@@ -68,7 +68,10 @@ final class SelectLocationVC: UIViewController {
         setupUI()
         fetchCityList()
         bindSelectedCity()
-
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         bgView.applyScreenBgGradient(direction: .topToBottom)
     }
     
@@ -297,9 +300,26 @@ private extension SelectLocationVC {
             }
 
             if isSuccess {
+                
+                switch self.mode {
 
-                self.fullCityList = cityList
-                self.displayList = cityList
+                case .selectCity:
+
+                    let primaryLocation = UserDefault.shared.localCity
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .lowercased()
+
+                    self.fullCityList = cityList.filter {
+                        $0.value.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .lowercased() != primaryLocation
+                    }
+
+                case .updatePrimaryLocation:
+
+                    self.fullCityList = cityList
+                }
+
+                self.displayList = self.fullCityList
 
                 self.tableView.reloadData()
 

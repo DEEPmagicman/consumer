@@ -35,4 +35,21 @@ enum AppDesign {
     static var useLegacyDesign: Bool {
         !useModernIOS26Design
     }
+    
+    static func adaptiveConstraint(
+           modernValue: CGFloat = 0,
+           smallDeviceValue: CGFloat,
+           regularDeviceValue: CGFloat
+       ) -> CGFloat {
+
+           if useModernIOS26Design {
+               return modernValue
+           }
+
+           let isSmallDevice = UIScreen.main.bounds.width <= 375
+
+           return isSmallDevice
+               ? smallDeviceValue
+               : regularDeviceValue
+       }
 }

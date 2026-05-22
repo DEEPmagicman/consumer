@@ -12,7 +12,7 @@ final class SegmentedTabView: UIView {
     
     var onSelectionChanged: ((Int) -> Void)?
 
-    private(set) var selectedIndex: Int = 1 {
+    private(set) var selectedIndex: Int = 0 {
         didSet { updateSelection(animated: true) }
     }
 
@@ -180,9 +180,12 @@ class MapViewController: UIViewController {
 
         setupSegmentedTab()
         setupTableView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         self.view.applyScreenBgGradient()
     }
-
     // MARK: - Setup Segmented Tab
 
     private func setupSegmentedTab() {

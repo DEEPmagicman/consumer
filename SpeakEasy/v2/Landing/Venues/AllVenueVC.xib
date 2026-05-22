@@ -31,19 +31,19 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o6u-rP-1N5">
-                    <rect key="frame" x="0.0" y="118.00000000000001" width="393" height="56.666666666666671"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="72"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHc-nY-udE" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="123" y="0.0" width="147" height="56.666666666666664"/>
+                            <rect key="frame" x="123.33333333333333" y="9.333333333333325" width="146.66666666666669" height="53.666666666666657"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Venues" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7QW-F0-G7m">
-                                    <rect key="frame" x="30" y="9.0000000000000018" width="87" height="23.666666666666671"/>
+                                    <rect key="frame" x="30.000000000000007" y="9.000000000000016" width="86.666666666666686" height="23.666666666666671"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW YORK CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HA2-y7-Xwy">
-                                    <rect key="frame" x="0.0" y="35.666666666666657" width="147" height="12"/>
+                                    <rect key="frame" x="0.0" y="32.666666666666671" width="146.66666666666666" height="12"/>
                                     <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
                                     <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -57,12 +57,17 @@
                                 <constraint firstAttribute="trailing" secondItem="HA2-y7-Xwy" secondAttribute="trailing" id="MiN-mM-3aq"/>
                                 <constraint firstItem="HA2-y7-Xwy" firstAttribute="centerX" secondItem="fHc-nY-udE" secondAttribute="centerX" id="Xg1-Cs-393"/>
                                 <constraint firstItem="7QW-F0-G7m" firstAttribute="top" secondItem="fHc-nY-udE" secondAttribute="top" constant="9" id="ikg-5n-pPy"/>
-                                <constraint firstItem="HA2-y7-Xwy" firstAttribute="top" secondItem="7QW-F0-G7m" secondAttribute="bottom" constant="3" id="uG2-FD-nKq"/>
+                                <constraint firstItem="HA2-y7-Xwy" firstAttribute="top" secondItem="7QW-F0-G7m" secondAttribute="bottom" id="uG2-FD-nKq"/>
                                 <constraint firstItem="7QW-F0-G7m" firstAttribute="leading" secondItem="fHc-nY-udE" secondAttribute="leading" constant="30" id="zgc-JL-wXD"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="25"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </view>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uX0-Wo-aoZ" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="29" y="8.3333333333333286" width="40" height="40"/>
+                            <rect key="frame" x="16" y="16" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="LMN-WJ-IO1"/>
                                 <constraint firstAttribute="width" constant="40" id="gDg-Bd-3KE"/>
@@ -71,7 +76,10 @@
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="back"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                    <real key="value" value="18"/>
+                                    <real key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                                    <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
@@ -79,7 +87,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="etg-oN-FD3" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="333" y="8.3333333333333286" width="40" height="40"/>
+                            <rect key="frame" x="337" y="16" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="C9L-BP-snv"/>
                                 <constraint firstAttribute="width" constant="40" id="cvb-Kg-Ybr"/>
@@ -88,7 +96,10 @@
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="filter"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
-                                    <real key="value" value="18"/>
+                                    <real key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                                    <real key="value" value="40"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
@@ -101,16 +112,16 @@
                     <constraints>
                         <constraint firstItem="fHc-nY-udE" firstAttribute="centerX" secondItem="o6u-rP-1N5" secondAttribute="centerX" id="12G-7c-Km5"/>
                         <constraint firstItem="uX0-Wo-aoZ" firstAttribute="centerY" secondItem="o6u-rP-1N5" secondAttribute="centerY" id="L5c-iu-v6X"/>
-                        <constraint firstItem="fHc-nY-udE" firstAttribute="top" secondItem="o6u-rP-1N5" secondAttribute="top" id="Pie-4J-GAu"/>
-                        <constraint firstItem="uX0-Wo-aoZ" firstAttribute="leading" secondItem="o6u-rP-1N5" secondAttribute="leading" constant="29" id="T36-3b-y0e"/>
-                        <constraint firstAttribute="trailing" secondItem="etg-oN-FD3" secondAttribute="trailing" constant="20" id="hSQ-sj-fTQ"/>
+                        <constraint firstItem="uX0-Wo-aoZ" firstAttribute="leading" secondItem="o6u-rP-1N5" secondAttribute="leading" constant="16" id="T36-3b-y0e"/>
+                        <constraint firstItem="uX0-Wo-aoZ" firstAttribute="top" secondItem="o6u-rP-1N5" secondAttribute="top" constant="16" id="Z72-ku-e8x"/>
+                        <constraint firstAttribute="trailing" secondItem="etg-oN-FD3" secondAttribute="trailing" constant="16" id="hSQ-sj-fTQ"/>
                         <constraint firstItem="etg-oN-FD3" firstAttribute="centerY" secondItem="o6u-rP-1N5" secondAttribute="centerY" id="vmn-HU-DsB"/>
                         <constraint firstItem="uX0-Wo-aoZ" firstAttribute="centerY" secondItem="fHc-nY-udE" secondAttribute="centerY" id="wba-6K-irS"/>
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="yUl-74-MDK">
-                    <rect key="frame" x="16" y="186.66666666666669" width="361" height="597.33333333333326"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <rect key="frame" x="0.0" y="202" width="393" height="582"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="XzS-cn-xd6">
                         <size key="itemSize" width="128" height="128"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -122,11 +133,11 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="yUl-74-MDK" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="JBH-XF-r4R"/>
+                <constraint firstItem="yUl-74-MDK" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="JBH-XF-r4R"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="o6u-rP-1N5" secondAttribute="trailing" id="Ocl-kp-md6"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="yUl-74-MDK" secondAttribute="bottom" id="cod-9z-mGb"/>
                 <constraint firstItem="o6u-rP-1N5" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="eFe-wk-z1P"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="yUl-74-MDK" secondAttribute="trailing" constant="16" id="fDK-IZ-LxV"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="yUl-74-MDK" secondAttribute="trailing" id="fDK-IZ-LxV"/>
                 <constraint firstItem="o6u-rP-1N5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gSq-Pf-X7v"/>
                 <constraint firstItem="yUl-74-MDK" firstAttribute="top" secondItem="o6u-rP-1N5" secondAttribute="bottom" constant="12" id="hr9-Ds-Ca3"/>
             </constraints>

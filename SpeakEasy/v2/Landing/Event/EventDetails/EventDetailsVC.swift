@@ -743,7 +743,7 @@ class EventDetailsVC: UIViewController {
         disabledTicketIds.removeAll()
 
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-        backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
+//        backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event.title
         fullText = event.description
         setupExpandableLabel()
@@ -1039,11 +1039,29 @@ class EventDetailsVC: UIViewController {
         vipTableSubTitleLbl.text = nil
     }
     
+    private let navBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+
     func applyNavAppearance(collapsed: Bool) {
         if collapsed {
-            navBarView.backgroundColor = UIColor(hex: "#121212")
+            navBarView.backgroundColor = .clear
+
+            if navBlurView.superview == nil {
+                navBlurView.translatesAutoresizingMaskIntoConstraints = false
+                navBarView.insertSubview(navBlurView, at: 0) // behind all nav content
+
+                NSLayoutConstraint.activate([
+                    navBlurView.topAnchor.constraint(equalTo: navBarView.topAnchor),
+                    navBlurView.leadingAnchor.constraint(equalTo: navBarView.leadingAnchor),
+                    navBlurView.trailingAnchor.constraint(equalTo: navBarView.trailingAnchor),
+                    navBlurView.bottomAnchor.constraint(equalTo: navBarView.bottomAnchor)
+                ])
+            }
+
+            navBlurView.isHidden = false
+
         } else {
             navBarView.backgroundColor = .clear
+            navBlurView.isHidden = true
         }
     }
 
@@ -2550,22 +2568,23 @@ final class EventPosterHeaderView: UIView {
             bottomGradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bottomGradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
             bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            bottomGradientView.heightAnchor.constraint(equalToConstant: 100)
+            bottomGradientView.topAnchor.constraint(equalTo: topAnchor) // full screen
         ])
 
         bottomGradientView.layer.addSublayer(bottomGradientLayer)
 
         bottomGradientLayer.colors = [
-            UIColor.clear.cgColor,
-            screenBackgroundColor.withAlphaComponent(0.65).cgColor,
-            screenBackgroundColor.cgColor
+            UIColor.clear.cgColor,                          // top — fully transparent
+            UIColor.clear.cgColor,                          // stays clear through middle
+            UIColor.black.withAlphaComponent(0.60).cgColor, // starts bleeding in
+            UIColor.black.cgColor                           // bottom — solid black
         ]
 
-        bottomGradientLayer.locations = [0.0, 0.55, 1.0]
-        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        bottomGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        bottomGradientLayer.locations = [0.0, 0.50, 0.75, 1.0]
+        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0) // top
+        bottomGradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0) // bottom
     }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         bottomGradientLayer.frame = bottomGradientView.bounds

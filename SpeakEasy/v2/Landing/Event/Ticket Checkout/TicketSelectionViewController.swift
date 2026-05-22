@@ -98,6 +98,12 @@ class TicketSelectionViewController: UIViewController {
         getTicketLinksAndSetup()
         setupHeaderData()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.view.applyScreenBgGradient(direction: .topToBottom)
+    }
+
 
     private func setupTableViews() {
         ticketTableView.delegate = self

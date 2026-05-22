@@ -44,7 +44,6 @@ final class DateRangeSelectionVC: UIViewController {
         super.viewDidLoad()
         setupCalendar()
         applyInitialSelection()
-        self.bgView.applyScreenBgGradient(direction: .bottomToTop)
     }
 
     override func viewDidLayoutSubviews() {
@@ -55,6 +54,7 @@ final class DateRangeSelectionVC: UIViewController {
             self?.calendarView.scrollToSelectedOrToday(animated: false)
         }
         updateButtonWidths()
+        self.bgView.applyScreenBgGradient(direction: .bottomToTop)
     }
 
     // MARK: - Setup

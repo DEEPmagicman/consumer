@@ -24,8 +24,7 @@ final class LandingHeaderView: UIView {
     private let signInIconView = UIImageView()
     private let titleLabel = UILabel()
 
-    private let mapButtonContainer = LiquidGlassBackgroundView()
-    private let mapButton = UIButton(type: .system)
+    private let mapButton = AppIconButton()
     private let profileButton = UIButton(type: .system)
 
     private var currentVC = UIViewController()
@@ -47,7 +46,6 @@ final class LandingHeaderView: UIView {
         avatarContainer.layer.cornerRadius = avatarContainer.bounds.height / 2
         imageView.layer.cornerRadius = imageView.bounds.height / 2
         firstNameLetter.layer.cornerRadius = firstNameLetter.bounds.height / 2
-        mapButtonContainer.layer.cornerRadius = mapButtonContainer.bounds.height / 2
     }
 
     private func setup() {
@@ -84,21 +82,14 @@ final class LandingHeaderView: UIView {
         profileButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(profileButton)
 
-        mapButtonContainer.cornerRadius = 16
-        mapButtonContainer.borderWidth = 0.5
-        mapButtonContainer.overrideBackgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.08)
-        mapButtonContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(mapButtonContainer)
-
-        let mapIcon = UIImageView(image: UIImage(named: "mapIcon"))
-        mapIcon.tintColor = AppColor.primaryWhiteColor
-        mapIcon.contentMode = .scaleAspectFit
-        mapIcon.translatesAutoresizingMaskIntoConstraints = false
-        mapButtonContainer.addSubview(mapIcon)
-
-        mapButton.addTarget(self, action: #selector(onMap), for: .touchUpInside)
+        mapButton.backgroundColor = .clear
+        mapButton.addTarget(self, action: #selector(onClickMap), for: .touchUpInside)
         mapButton.translatesAutoresizingMaskIntoConstraints = false
-        mapButtonContainer.addSubview(mapButton)
+        
+        mapButton.buttonSize = 36
+        mapButton.iconSize = 13
+        mapButton.iconTypeValue = "map"
+        addSubview(mapButton)
 
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 40),
@@ -125,27 +116,17 @@ final class LandingHeaderView: UIView {
 
             titleLabel.leadingAnchor.constraint(equalTo: avatarContainer.trailingAnchor, constant: 12),
             titleLabel.centerYAnchor.constraint(equalTo: avatarContainer.centerYAnchor),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: mapButtonContainer.leadingAnchor, constant: -12),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: mapButton.leadingAnchor, constant: -12),
 
             profileButton.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
             profileButton.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 12),
             profileButton.topAnchor.constraint(equalTo: topAnchor),
             profileButton.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            mapButtonContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            mapButtonContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
-            mapButtonContainer.widthAnchor.constraint(equalToConstant: 32),
-            mapButtonContainer.heightAnchor.constraint(equalToConstant: 32),
-
-            mapIcon.centerXAnchor.constraint(equalTo: mapButtonContainer.centerXAnchor),
-            mapIcon.centerYAnchor.constraint(equalTo: mapButtonContainer.centerYAnchor),
-            mapIcon.widthAnchor.constraint(equalToConstant: 13),
-            mapIcon.heightAnchor.constraint(equalToConstant: 13),
-
-            mapButton.topAnchor.constraint(equalTo: mapButtonContainer.topAnchor),
-            mapButton.leadingAnchor.constraint(equalTo: mapButtonContainer.leadingAnchor),
-            mapButton.trailingAnchor.constraint(equalTo: mapButtonContainer.trailingAnchor),
-            mapButton.bottomAnchor.constraint(equalTo: mapButtonContainer.bottomAnchor)
+            mapButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
+            mapButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            mapButton.widthAnchor.constraint(equalToConstant: 32),
+            mapButton.heightAnchor.constraint(equalToConstant: 32)
         ])
         
         if Utility.main.topViewController()?.navigationController?.navigationController == nil {
@@ -156,7 +137,7 @@ final class LandingHeaderView: UIView {
     }
 
     func setMapHidden(_ hidden: Bool) {
-        mapButtonContainer.isHidden = hidden
+        mapButton.isHidden = hidden
     }
 
     func reloadUser() {
@@ -195,7 +176,7 @@ final class LandingHeaderView: UIView {
 //        delegate?.landingHeaderDidTapProfile(self)
     }
 
-    @objc private func onMap() {
+    @objc private func onClickMap() {
         Navigate.to.gotoMapVC(currentVC)
 //        delegate?.landingHeaderDidTapMap(self)
     }

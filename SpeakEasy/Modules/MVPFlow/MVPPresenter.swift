@@ -30,38 +30,78 @@ final class MVPPresenter {
         }
     }
     
-    func getVenueListForMVP(from: Int, status: String, completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venueList: [ClipVenue], _ hasMore: Bool) -> Void) {
-        let param = ["skip": from, 
-                     "bookingStatus": status] as [String : Any]
-        
-        AFWrapper.getRequest(APIBuilder.MVPVenueListURL, params: param, headers: Header.header(), success: { response in
-            if let responseDict = response as? [String: Any] {
-                do {
-                    guard let venueArray = responseDict["list"] as? [[String: Any]],
-                          let hasMore = responseDict["hasMany"] as? Bool else {
-                        completion(false, "Invalid response format", [], false)
-                        return
+    func getVenueListForMVP(
+        from: Int,
+        status: String,
+        city: String? ,
+        completion: @escaping (
+            _ isSuccess: Bool,
+            _ errMsg: String?,
+            _ venueList: [ClipVenue],
+            _ hasMore: Bool
+        ) -> Void
+    ) {
+
+        let param = [
+            "skip": from,
+            "bookingStatus": status,
+            "city": city ?? UserDefault.shared.localCity
+        ] as [String : Any]
+
+        AFWrapper.getRequest(
+            APIBuilder.MVPVenueListURL,
+            params: param,
+            headers: Header.header(),
+            success: { response in
+
+                if let responseDict = response as? [String: Any] {
+
+                    do {
+
+                        guard let venueArray = responseDict["list"] as? [[String: Any]],
+                              let hasMore = responseDict["hasMany"] as? Bool else {
+
+                            completion(false, "Invalid response format", [], false)
+                            return
+                        }
+
+                        let jsonDecoder = JSONDecoder()
+
+                        let data = try JSONSerialization.data(
+                            withJSONObject: venueArray,
+                            options: .prettyPrinted
+                        )
+
+                        let venueList = try jsonDecoder.decode(
+                            [ClipVenue].self,
+                            from: data
+                        )
+
+                        completion(true, nil, venueList, hasMore)
+
+                    } catch {
+
+                        completion(false, "Decoding error: \(error)", [], false)
+                        print(error)
                     }
-                    
-                    let jsonDecoder = JSONDecoder()
-                    let data = try JSONSerialization.data(withJSONObject: venueArray, options: .prettyPrinted)
-                    let venueList = try jsonDecoder.decode([ClipVenue].self, from: data)
-                    
-                    completion(true, nil, venueList, hasMore)
-                } catch {
-                    completion(false, "Decoding error: \(error)", [], false)
-                    print(error)
+
+                } else {
+
+                    completion(false, "Invalid response format", [], false)
                 }
-            } else {
-                completion(false, "Invalid response format", [], false)
+
+            }, failure: { error in
+
+                if let err = error as NSError?, err.code == 0 {
+
+                    completion(false, err.domain, [], false)
+
+                } else {
+
+                    completion(false, nil, [], false)
+                }
             }
-        }, failure: { error in
-            if let err = error as NSError?, err.code == 0 {
-                completion(false, err.domain, [], false)
-            } else {
-                completion(false, nil, [], false)
-            }
-        })
+        )
     }
 
     func mvpCityListAPi(completion: @escaping (_ cityList: [MVPCity], _ isSuccess: Bool, _ errMsg: String?) -> Void) {

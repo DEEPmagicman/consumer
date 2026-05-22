@@ -15,9 +15,14 @@ class FiltersViewController: UIViewController {
     private var selectedIndexes: Set<Int> = [0] // First item selected by default
 
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         self.view.applyScreenBgGradient(direction: .bottomToTop)
     }
 

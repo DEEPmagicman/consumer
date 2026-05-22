@@ -18,8 +18,6 @@ final class NewLandingVC: UIViewController {
     private let firstNameLetter = UILabel()
     private let signInIconView = UIImageView()
     private let pageTitleLbl = UILabel()
-    private let mapButtonContainer = LiquidGlassBackgroundView()
-    private let mapButton = UIButton(type: .system)
     private let mapIconView = UIImageView()
 
     private let contentContainer = UIView()
@@ -68,7 +66,6 @@ final class NewLandingVC: UIViewController {
         firstNameLetter.layer.cornerRadius = firstNameLetter.bounds.height / 2
         firstNameLetter.clipsToBounds = true
         avatarContainer.layer.cornerRadius = avatarContainer.bounds.height / 2
-        mapButtonContainer.layer.cornerRadius = mapButtonContainer.bounds.height / 2
     }
 
     deinit {
@@ -244,7 +241,6 @@ final class NewLandingVC: UIViewController {
         currentVC = newVC
         selectedIndex = index
         customTabBar.setSelected(index: index)
-        mapButtonContainer.isHidden = index != 0
     }
 
     // MARK: - User

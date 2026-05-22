@@ -17,6 +17,7 @@ enum AppIconType: String {
     case seeAll
     case filter
     case share
+    case map
 
     var image: UIImage? {
         switch self {
@@ -27,6 +28,8 @@ enum AppIconType: String {
         case .filter: return UIImage(named: "filterIcon")
         case .share:
             return UIImage(named: "shareIcon")
+        case .map:
+            return UIImage(named: "mapIcon")
         }
     }
 
@@ -39,6 +42,8 @@ enum AppIconType: String {
         case .filter:
             return 50
         case .share:
+            return 40
+        case .map:
             return 40
         }
     }

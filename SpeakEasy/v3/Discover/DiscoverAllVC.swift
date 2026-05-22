@@ -14,6 +14,7 @@ final class DiscoverAllVC: UIViewController {
     @IBOutlet weak var venuesView: DiscoverSectionView!
     @IBOutlet weak var allEventsView: DiscoverSectionView!
     @IBOutlet weak var premiumExperiencesView: UIView!
+    @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
 
     private var openVenueList = [ClipVenue]()
     private var closeVenueList = [ClipVenue]()
@@ -43,6 +44,11 @@ final class DiscoverAllVC: UIViewController {
         selectedCity = UserDefault.shared.localCity
         setupSections()
         fetchInitialData()
+        
+        bottomConstraint.constant = AppDesign.adaptiveConstraint(
+                smallDeviceValue: 65,
+                regularDeviceValue: 75
+            )
     }
 
     @IBAction func onClickPremiumCloseBtn(_ sender: Any) {
@@ -94,7 +100,7 @@ private extension DiscoverAllVC {
         }
 
         todaysEventsView.onReachEnd = { [weak self] in
-            self?.getTonightEvent()
+//            self?.getTonightEvent()
         }
 
         venuesView.onTapSeeAll = { [weak self] in
@@ -115,9 +121,9 @@ private extension DiscoverAllVC {
         venuesView.onReachEnd = { [weak self] in
             guard let self else { return }
 
-            if self.openHasMore {
-                self.fetchAllOpenVenueForMVP()
-            }
+//            if self.openHasMore {
+//                self.fetchAllOpenVenueForMVP()
+//            }
         }
 
         allEventsView.onTapSeeAll = { [weak self] in
@@ -140,9 +146,9 @@ private extension DiscoverAllVC {
         allEventsView.onReachEnd = { [weak self] in
             guard let self else { return }
 
-            if self.allEventHasMore {
-                self.getAllEvents()
-            }
+//            if self.allEventHasMore {
+//                self.getAllEvents()
+//            }
         }
     }
 
@@ -218,7 +224,7 @@ private extension DiscoverAllVC {
 
             self.allEventHasMore = hasMore
 
-            if todaysEvents.isEmpty {
+            if allEvents.isEmpty {
                 allEventsView.isHidden = true
             } else {
                 allEventsView.isHidden = false
@@ -238,7 +244,7 @@ private extension DiscoverAllVC {
 
         presenter.getVenueListForMVP(
             from: openFrom,
-            status: VenueStatus.open.rawValue
+            status: VenueStatus.open.rawValue, city: selectedCity
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }
@@ -284,7 +290,7 @@ private extension DiscoverAllVC {
 
         presenter.getVenueListForMVP(
             from: closeFrom,
-            status: VenueStatus.close.rawValue
+            status: VenueStatus.close.rawValue, city: selectedCity
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }
