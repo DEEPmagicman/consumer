@@ -28,7 +28,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="474" height="128"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7I4-Oo-7nw">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="7I4-Oo-7nw">
                         <rect key="frame" x="0.0" y="18" width="76" height="92"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="76" id="kO9-8V-RLL"/>
@@ -78,7 +78,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K0u-wV-HTt" userLabel="View event">
-                        <rect key="frame" x="385.66666666666669" y="81" width="88.333333333333314" height="29"/>
+                        <rect key="frame" x="355.66666666666669" y="81" width="88.333333333333314" height="29"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eg5-e4-bf3">
                                 <rect key="frame" x="14.000000000000004" y="6" width="60.333333333333343" height="17"/>
@@ -105,7 +105,7 @@
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="7I4-Oo-7nw" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="ADg-lk-EKk"/>
-                    <constraint firstAttribute="trailing" secondItem="K0u-wV-HTt" secondAttribute="trailing" id="J6C-nX-YyS"/>
+                    <constraint firstAttribute="trailing" secondItem="K0u-wV-HTt" secondAttribute="trailing" constant="30" id="J6C-nX-YyS"/>
                     <constraint firstItem="Bjp-fq-QL8" firstAttribute="top" secondItem="H0n-uW-50R" secondAttribute="bottom" constant="6" id="MBt-H9-wJH"/>
                     <constraint firstAttribute="trailing" secondItem="H0n-uW-50R" secondAttribute="trailing" id="MRA-M2-YMC"/>
                     <constraint firstAttribute="trailing" secondItem="Ypv-3k-cjh" secondAttribute="trailing" id="Ndk-Yq-UUY"/>
@@ -119,7 +119,6 @@
                     <constraint firstItem="Ypv-3k-cjh" firstAttribute="leading" secondItem="7I4-Oo-7nw" secondAttribute="trailing" constant="15" id="hcp-4D-CT0"/>
                     <constraint firstItem="H0n-uW-50R" firstAttribute="top" secondItem="Ypv-3k-cjh" secondAttribute="bottom" constant="6" id="pa9-r2-74V"/>
                     <constraint firstAttribute="bottom" secondItem="K0u-wV-HTt" secondAttribute="bottom" constant="18" id="uZ1-MB-X8W"/>
-                    <constraint firstAttribute="trailing" secondItem="K0u-wV-HTt" secondAttribute="trailing" id="vYI-V0-lw8"/>
                     <constraint firstItem="jaJ-9M-bka" firstAttribute="leading" secondItem="Bjp-fq-QL8" secondAttribute="leading" id="vvz-cm-Bir"/>
                 </constraints>
             </tableViewCellContentView>
@@ -128,4 +127,7 @@
             <point key="canvasLocation" x="143.5114503816794" y="132.3943661971831"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="1.jpg" width="283.46456909179688" height="177.16534423828125"/>
+    </resources>
 </document>

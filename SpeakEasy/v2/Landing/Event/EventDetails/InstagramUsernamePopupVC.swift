@@ -7,7 +7,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
     var onSubmitUsername: ((InstagramProfile?) -> Void)?
 
     private let dimmedView = UIView()
-    private let popupView = UIView()
+    private let popupView = GradientBorderCardView()
     private let closeButton = UIButton(type: .system)
     private let titleLabel = UILabel()
 
@@ -34,7 +34,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        popupView.layer.cornerRadius = 16
+        popupView.layer.cornerRadius = 34
         popupView.clipsToBounds = true
 
         inputContainerView.layer.cornerRadius = 8
@@ -59,7 +59,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         dimmedView.addGestureRecognizer(dismissTap)
 
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.backgroundColor = UIColor(hex: "#111111")
+        popupView.backgroundColor =  UIColor(hex: "#171717")
         view.addSubview(popupView)
 
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -71,7 +71,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = "Let's get your Instagram profile picture!"
         titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.interBold(size: 20)
+        titleLabel.font = Constant.Font.geistBold(size: 20)
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
         popupView.addSubview(titleLabel)
@@ -94,12 +94,12 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         usernameTextField.tintColor = .white
         usernameTextField.backgroundColor = .clear
         usernameTextField.borderStyle = .none
-        usernameTextField.font = Constant.Font.interRegular(size: 16)
+        usernameTextField.font =  Constant.Font.geistRegular(size: 16)
         usernameTextField.attributedPlaceholder = NSAttributedString(
             string: "Instagram Username",
             attributes: [
                 .foregroundColor: UIColor.white.withAlphaComponent(0.75),
-                .font: Constant.Font.interRegular(size: 12)
+                .font: Constant.Font.geistRegular(size: 12)
             ]
         )
         usernameTextField.autocorrectionType = .no
@@ -117,7 +117,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         skipButton.setTitle("SKIP", for: .normal)
         skipButton.setTitleColor(.white, for: .normal)
-        skipButton.titleLabel?.font = Constant.Font.interSemiBold(size: 16)
+        skipButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 16)
         skipButton.backgroundColor = .clear
         skipButton.layer.borderWidth = 1
         skipButton.layer.borderColor = UIColor.white.withAlphaComponent(0.22).cgColor
@@ -128,7 +128,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         continueButton.setTitle("CONTINUE")
         continueButton.setTitleColor(.black, for: .normal)
-        continueButton.titleLabel?.font = Constant.Font.interSemiBold(size: 12)
+        continueButton.titleLabel?.font = Constant.Font.geistSemiBold(size: 12)
         continueButton.backgroundColor = UIColor.white
 //        continueButton.cornerRadius = 22
         continueButton.indicator.color = UIColor.black
@@ -211,10 +211,15 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
         skipButton.isUserInteractionEnabled = !loading
         usernameTextField.isUserInteractionEnabled = !loading
 
+        continueButton.isUserInteractionEnabled = !loading
+
         if loading {
             continueButton.showLoader(userInteraction: false)
         } else {
             continueButton.hideLoader()
+            continueButton.alpha = 1.0
+            continueButton.backgroundColor = .white
+            continueButton.setTitleColor(.black, for: .normal)
         }
     }
 

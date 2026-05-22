@@ -41,8 +41,8 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
-                        <rect key="frame" x="80" y="63.666666666666657" width="129" height="13"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
+                        <rect key="frame" x="80" y="63.666666666666657" width="122.66666666666669" height="13"/>
                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -72,7 +72,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQk-rz-kGl" userLabel="View event">
-                        <rect key="frame" x="385.66666666666669" y="41.666666666666664" width="88.333333333333314" height="28.999999999999993"/>
+                        <rect key="frame" x="355.66666666666669" y="41.666666666666664" width="88.333333333333314" height="28.999999999999993"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See events" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXw-Nl-SMt">
                                 <rect key="frame" x="14.000000000000004" y="6" width="60.333333333333343" height="17"/>
@@ -105,13 +105,12 @@
                     <constraint firstItem="vK0-ux-5dd" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="bottom" constant="4" id="aFm-Ey-Kcc"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mpF-rh-IJB" secondAttribute="bottom" constant="18" id="agL-lr-j47"/>
                     <constraint firstItem="sQk-rz-kGl" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="top" constant="3" id="gf1-ng-mip"/>
-                    <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" id="iAX-4p-q5Q"/>
+                    <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" constant="30" id="iAX-4p-q5Q"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="leading" secondItem="mOd-Im-OJG" secondAttribute="trailing" constant="15" id="mMA-89-iBh"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="centerY" secondItem="kdO-1S-7yb" secondAttribute="centerY" id="n7j-PM-qW5"/>
                     <constraint firstItem="vK0-ux-5dd" firstAttribute="leading" secondItem="Dgz-Kh-ZOl" secondAttribute="leading" id="pVl-7E-KjB"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mOd-Im-OJG" secondAttribute="bottom" constant="18" id="u1Y-iV-hWV"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="top" secondItem="mOd-Im-OJG" secondAttribute="top" constant="7" id="wiO-p9-7TR"/>
-                    <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" id="yyP-br-tm6"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="Coe-LF-Nx9"/>

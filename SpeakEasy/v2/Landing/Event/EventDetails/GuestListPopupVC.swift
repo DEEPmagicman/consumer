@@ -13,7 +13,7 @@ final class GuestListPopupVC: UIViewController {
     var attendees: [Attendee] = []
 
     private let dimmedView = UIView()
-    private let popupView = UIView()
+    private let popupView = GradientBorderCardView()
     private let headerContainerView = UIView()
     private let titleLabel = UILabel()
     private let countLabel = UILabel()
@@ -54,9 +54,9 @@ final class GuestListPopupVC: UIViewController {
         dimmedView.addGestureRecognizer(tap)
 
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.backgroundColor = UIColor(hex: "#121212")
-        popupView.layer.cornerRadius = 16
-        popupView.clipsToBounds = true
+        popupView.backgroundColor = UIColor(hex: "#171717")
+//        popupView.layer.cornerRadius = 16
+//        popupView.clipsToBounds = true
         view.addSubview(popupView)
 
         headerContainerView.translatesAutoresizingMaskIntoConstraints = false

@@ -29,14 +29,11 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var viewGuestListBtn: UIButton!
     @IBOutlet weak var viewMoreBtnView: UIView!
     @IBOutlet weak var viewMoreBtn: UIButton!
-    @IBOutlet weak var leftSwipeBtn: UIButton!
-    @IBOutlet weak var rightSwipeBtn: UIButton!
     @IBOutlet weak var mainImg: UIImageView!
     @IBOutlet weak var imageShadowView: UIView!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var venueTitleLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
-    @IBOutlet weak var buyNowBtnView: UIView!
     @IBOutlet weak var backGroundBlureImg: UIImageView!
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var instaImageView: UIImageView!
@@ -45,9 +42,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var xImageView: UIImageView!
     @IBOutlet weak var youTubeImageView: UIImageView!
     @IBOutlet weak var websiteImageView: UIImageView!
-    @IBOutlet weak var ticketsTitleLbl: UILabel!
-    @IBOutlet weak var noHiddenFeesLbl: UILabel!
-    @IBOutlet weak var buyNowBtnLbl: UILabel!
     @IBOutlet weak var attendeesView: UIView!
     @IBOutlet weak var imageListHiddenView: UIView!
     @IBOutlet weak var lineUpHiddenView: UIView!
@@ -69,25 +63,21 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var detailsTitleLbl: UILabel!
     @IBOutlet weak var tableBookNowButtonView: UIView!
     @IBOutlet weak var policyView: UIView!
-    @IBOutlet weak var ticketShimmerView: ShimmerView!
-    @IBOutlet weak var ticketTitleShimmerView: ShimmerView!
-    @IBOutlet weak var buyNowBtnShimmerView: ShimmerView!
-    @IBOutlet weak var ticketTitleStackShimmerView: UIStackView!
-    @IBOutlet weak var ticketTitleStackView: UIStackView!
     @IBOutlet weak var eventAddressView: UIView!
     @IBOutlet weak var faqsTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var faqsView: UIView!
     @IBOutlet weak var lockIcon: UIImageView!
     @IBOutlet weak var buyNowBtnSuperView: UIView!
-    @IBOutlet weak var continueToCheckOutView: UIView!
+//    @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var vipTableSubTitleLbl: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var viewSkeleton: UIView!
     @IBOutlet weak var imageBackGroundView: UIView!
     @IBOutlet weak var navBarView: UIView!
+    @IBOutlet weak var checkOutBtn: LoadingButton!
+    @IBOutlet weak var imageListViewHeightConstraint: NSLayoutConstraint!
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
@@ -95,7 +85,7 @@ class EventDetailsVC: UIViewController {
     private var playerView: YTPlayerView!
     private var isExpanded = false
     private var isPolicyLblExpanded = false
-    private let collapsedLines = 3
+    private let collapsedLines = 5
     private var fullText = ""
     private var faqsTableObserver: NSKeyValueObservation?
     private var ticketTableObserver: NSKeyValueObservation?
@@ -130,6 +120,10 @@ class EventDetailsVC: UIViewController {
     private let posterHeaderView = EventPosterHeaderView()
     private let collapseThreshold: CGFloat = 20
     private var isCollapsed = false
+    private var galleryImageURLs: [String] = []
+    private var galleryImageViews: [UIImageView] = []
+    private var galleryOverlayView: UIView?
+    private var galleryMoreLabel: UILabel?
     
     
 //    private let skeletonView = EventDetailsSkeletonView()
@@ -147,7 +141,6 @@ class EventDetailsVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
         setupPosterHeaderView()
         let imageURLString = (event?.flyer?.key ?? "").imageURL
         mainImg.sd_setImage(
@@ -168,7 +161,6 @@ class EventDetailsVC: UIViewController {
         setupData()
         setupCollectionViews()
         setupTableView()
-        setupImagePager()
         startTicketTableObserver()
         startGroupTableObserver()
         startFAQsTableObserver()
@@ -269,32 +261,14 @@ class EventDetailsVC: UIViewController {
         view.layoutIfNeeded()
         viewSkeleton.isHidden = false
         eventDetailsSkeletonView.startShimmer()
-        ticketShimmerView.isHidden = false
-        ticketTitleShimmerView.isHidden = false
-        buyNowBtnShimmerView.isHidden = false
         scrollView.isScrollEnabled = false
         //        buyNowBtnShimmerView.cornerRadius = 30
-        ticketTitleStackShimmerView.isHidden = false
-        ticketTitleStackView.isHidden = true
-        
-        ticketShimmerView.startAnimating()
-        ticketTitleShimmerView.startAnimating()
-        buyNowBtnShimmerView.startAnimating()
     }
     
     private func hideSkeleton() {
         eventDetailsSkeletonView.stopShimmer()
         viewSkeleton.isHidden = true
-        ticketShimmerView.stopAnimating()
-        ticketTitleShimmerView.stopAnimating()
-        buyNowBtnShimmerView.stopAnimating()
         scrollView.isScrollEnabled = true
-        
-        ticketShimmerView.isHidden = true
-        ticketTitleShimmerView.isHidden = true
-        buyNowBtnShimmerView.isHidden = true
-        ticketTitleStackShimmerView.isHidden = true
-        ticketTitleStackView.isHidden = false
     }
 
     private func setupTicketTable() {
@@ -771,19 +745,16 @@ class EventDetailsVC: UIViewController {
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event.title
-        venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
-            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
         fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
         venueName.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")"
-            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")"
+            ? "\(event.customVenue?.name ?? "") by \(venueDetails?.name ?? "")".uppercased()
+            : "\(venueDetails?.name ?? ""), \(venueDetails?.city ?? "")".uppercased()
         
         venueNameLbl.text = (event.customVenue != nil && venueDetails?.venueSettings?.isOrganizer == true)
-        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")"
-        : "\(venueDetails?.name ?? "")"
+        ? "\(event.customVenue?.name ?? event.venue?.name ?? "")".uppercased()
+        : "\(venueDetails?.name ?? "")".uppercased()
         eventAddressView.isHidden = !(event.showAddress ?? true)
 
         let addressComponents: [String]
@@ -809,38 +780,15 @@ class EventDetailsVC: UIViewController {
         }
 
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
-        venueTitleLbl.text = venueDetails?.name ?? ""
+        venueTitleLbl.text = venueDetails?.name.uppercased() ?? ""
 
         if event.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
             buyNowBtnSuperView.isHidden = true
-            continueToCheckOutView.isHidden = true
         } else {
             buyNowBtnSuperView.isHidden = false
-            continueToCheckOutView.isHidden = true
         }
         
         configureVIPTablesView()
-
-//        let isAnyFeatureEnabled = event.isEnableOnlineTables || event.isEnableReservationRequest
-//
-//        if isAnyFeatureEnabled  && isEventDetailAPICalled {
-////            UIView.transition(with: vipTablesView,
-////                              duration: 0.25,
-////                              options: .transitionCrossDissolve,
-////                              animations: {
-//                self.vipTablesView.isHidden = !isAnyFeatureEnabled
-////            })
-//        } else {
-//            vipTablesView.isHidden = true
-//        }
-//
-//        if event.isEnable3DMap && event.isEnableOnlineTables && !self.seatingAreasFilteredOut.isEmpty {
-//            vipTableSubTitleLbl.text = "Ideal for larger groups. 3D map available."
-//        } else if event.isEnable3DMap && event.isEnableOnlineTables {
-//            vipTableSubTitleLbl.text = "Ideal for larger groups."
-//        } else {
-//            vipTableSubTitleLbl.text = "VIP Tables Ideal for larger groups."
-//        }
         
         if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
             webSiteTitleLbl.text = button.title
@@ -848,8 +796,8 @@ class EventDetailsVC: UIViewController {
         } else {
             webSiteView.isHidden = true
         }
-
-        setupImagePager()
+        
+        setupGalleryGrid()
 
         let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
         ticketHidenView.isHidden = !showInlineTickets
@@ -969,22 +917,22 @@ class EventDetailsVC: UIViewController {
         if let hexColor = event.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
-            buyNowBtnView.backgroundColor = color
-            buyNowBtnLbl.textColor = color.suitableTextColor()
+            checkOutBtn.backgroundColor = color
+//            buyNowBtnLbl.textColor = color.suitableTextColor()
             webSiteView.borderColor = color
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-            continueToCheckOutBtn.bgColor = color
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+            checkOutBtn.indicator = MaterialLoadingIndicator(color: .black)
+//            checkOutBtn.bgColor = color
+//            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
             
         } else {
-            let color = UIColor(hex: "F581FE")
-            buyNowBtnView.backgroundColor = color
-            webSiteView.borderColor = color
-            continueToCheckOutBtn.backgroundColor = color
-            buyNowBtnLbl.textColor = color.suitableTextColor()
-            continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-            continueToCheckOutBtn.bgColor = continueToCheckOutBtn.backgroundColor ?? .orange
-            continueToCheckOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
+//            let color = UIColor(hex: "F581FE")
+//            buyNowBtnView.backgroundColor = color
+//            webSiteView.borderColor = color
+//            checkOutBtn.backgroundColor = color
+//            buyNowBtnLbl.textColor = color.suitableTextColor()
+//            checkOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+//            checkOutBtn.bgColor = checkOutBtn.backgroundColor ?? .orange
+//            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
         }
 
         setupSocialLinks()
@@ -994,54 +942,49 @@ class EventDetailsVC: UIViewController {
             let eventTicketSettings = event.eventTicketSettings
 
             if event.isPausedSellingAllTickets == true {
-                ticketsTitleLbl.text = "Tickets from Free"
-                buyNowBtnView.isUserInteractionEnabled = true
+                checkOutBtn.setTitle("Tickets from Free", for: .normal)
+//                buyNowBtnView.isUserInteractionEnabled = true
 
             } else if event.isSaleEndedAllTickets == true {
-                ticketsTitleLbl.text = eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!"
+                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!", for: .normal)
 
                 if eventTicketSettings?.isSaleEndedTextEnabled == true {
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 } else {
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 }
 
-                buyNowBtnLbl.textColor = .black
-                buyNowBtnView.isUserInteractionEnabled = false
-                buyNowBtnView.backgroundColor = UIColor.lightGray
+//                buyNowBtnLbl.textColor = .black
+//                buyNowBtnView.isUserInteractionEnabled = false
+//                buyNowBtnView.backgroundColor = UIColor.lightGray
 
             } else if event.isSoldOutAllTickets == true {
                 if eventTicketSettings?.isSoldOutTextEnabled == true {
-                    ticketsTitleLbl.text = eventTicketSettings?.soldOutText ?? "It was a great time!"
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                    checkOutBtn.setTitle(eventTicketSettings?.soldOutText ?? "It was a great time!", for: .normal)
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 } else {
-                    ticketsTitleLbl.text = "It was a great time!"
-                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+                    checkOutBtn.setTitle("It was a great time!", for: .normal)
+//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
                 }
 
-                buyNowBtnLbl.textColor = .black
-                buyNowBtnView.isUserInteractionEnabled = false
-                buyNowBtnView.backgroundColor = UIColor.lightGray
+//                buyNowBtnLbl.textColor = .black
+//                buyNowBtnView.isUserInteractionEnabled = false
+//                buyNowBtnView.backgroundColor = UIColor.lightGray
 
             } else if event.eventTicket?.count ?? 0 == 0 {
-                ticketsTitleLbl.text = Constant.String.salePaused.uppercased()
-                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
-                buyNowBtnView.isUserInteractionEnabled = false
+                checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+//                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+//                buyNowBtnView.isUserInteractionEnabled = false
 
             } else {
                 let lowestPrice = event.lowestPriceTicket?.price ?? 0
                 let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
                 if lowestPrice == 0 {
-                    ticketsTitleLbl.text = "Tickets from Free"
+                    checkOutBtn.setTitle("Tickets from Free", for: .normal)
                 } else {
-                    ticketsTitleLbl.text = "Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))"
+                    checkOutBtn.setTitle("Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))", for: .normal)
                 }
-
-                buyNowBtnLbl.text = "Buy Now"
-                buyNowBtnView.layer.cornerRadius = buyNowBtnView.frame.height / 2
-                buyNowBtnView.clipsToBounds = true
-                noHiddenFeesLbl.isHidden = false
             }
         }
     }
@@ -1360,7 +1303,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func updateContinueBtnState() {
-        continueToCheckOutView.isHidden = totalSelectedTickets == 0
+//        continueToCheckOutView.isHidden = totalSelectedTickets == 0
     }
     
     private func showGuestListPopup() {
@@ -1421,7 +1364,7 @@ class EventDetailsVC: UIViewController {
     }
 
     private func createInlineBookingAndCheckout(selectedTickets: [EventTicket]) {
-        continueToCheckOutBtn.showLoader(userInteraction: false)
+        checkOutBtn.showLoader(userInteraction: false)
         
         guard let user = UserDefault.shared.user else {
             let loginVC = Navigate.to.loginPopUpVc(self)
@@ -1463,7 +1406,7 @@ class EventDetailsVC: UIViewController {
             tickets: ticketsPayload
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self = self else { return }
-            continueToCheckOutBtn.hideLoader()
+            checkOutBtn.hideLoader()
 
 
             if isSuccess {
@@ -1518,10 +1461,10 @@ class EventDetailsVC: UIViewController {
 
         if isExpanded {
             detailsLbl.numberOfLines = 0
-            viewMoreBtn.setTitle("View Less", for: .normal)
+            viewMoreBtn.setTitle("Read Less", for: .normal)
         } else {
             detailsLbl.numberOfLines = collapsedLines
-            viewMoreBtn.setTitle("View More", for: .normal)
+            viewMoreBtn.setTitle("Read More", for: .normal)
         }
 
         UIView.animate(withDuration: 0.25) {
@@ -1534,10 +1477,10 @@ class EventDetailsVC: UIViewController {
 
         if isPolicyLblExpanded {
             policyLbl.numberOfLines = 0
-            policyViewMoreBtn.setTitle("View Less", for: .normal)
+            policyViewMoreBtn.setTitle("Read Less", for: .normal)
         } else {
             policyLbl.numberOfLines = collapsedLines
-            policyViewMoreBtn.setTitle("View More", for: .normal)
+            policyViewMoreBtn.setTitle("Read More", for: .normal)
         }
 
         UIView.animate(withDuration: 0.25) {
@@ -1782,8 +1725,7 @@ class EventDetailsVC: UIViewController {
 
         detailsLbl.attributedText = mutable
         detailsLbl.numberOfLines = collapsedLines
-        detailsLbl.font = .systemFont(ofSize: 15)
-        viewMoreBtn.setTitle("View More", for: .normal)
+        viewMoreBtn.setTitle("Read More", for: .normal)
 
         view.layoutIfNeeded()
         checkIfTextNeedsExpansion()
@@ -1815,7 +1757,7 @@ class EventDetailsVC: UIViewController {
 
         policyLbl.attributedText = mutable
         policyLbl.numberOfLines = collapsedLines
-        policyViewMoreBtn.setTitle("View More", for: .normal)
+        policyViewMoreBtn.setTitle("Read More", for: .normal)
 
         view.layoutIfNeeded()
         checkIfPolicyTextNeedsExpansion()
@@ -2020,7 +1962,7 @@ extension EventDetailsVC: UICollectionViewDelegate,
         if collectionView == guestListCollectionView {
             return CGSize(width: 40, height: 40)
         } else {
-            return CGSize(width: 140, height: 180)
+            return CGSize(width: 105, height: 120)
         }
     }
 
@@ -2664,3 +2606,304 @@ extension EventDetailsVC: UIScrollViewDelegate {
     }
 }
 
+private extension EventDetailsVC {
+
+    func setupGalleryGrid() {
+        imageListView.subviews.forEach { $0.removeFromSuperview() }
+
+        let gallery = (event?.eventGallery ?? [])
+            .filter { $0.status == "ENABLED" && $0.isDeleted == false }
+
+        galleryImageURLs = gallery.map { $0.key.imageURL }
+
+        guard !galleryImageURLs.isEmpty else {
+            imageListHiddenView.isHidden = true
+            imageListViewHeightConstraint.constant = 0
+            return
+        }
+
+        imageListHiddenView.isHidden = false
+
+        view.layoutIfNeeded()
+        imageListView.layoutIfNeeded()
+
+        let spacing: CGFloat = 10
+        let visibleCount = min(galleryImageURLs.count, 4)
+
+        let itemWidth = floor((imageListView.bounds.width - spacing) / 2)
+        let itemHeight = itemWidth
+
+        let rowCount = ceil(CGFloat(visibleCount) / 2)
+        imageListViewHeightConstraint.constant =
+            (rowCount * itemHeight) + ((rowCount - 1) * spacing)
+
+        for index in 0..<visibleCount {
+            let row = CGFloat(index / 2)
+            let column = CGFloat(index % 2)
+
+            let x = column * (itemWidth + spacing)
+            let y = row * (itemHeight + spacing)
+
+            let imageContainer = UIView(frame: CGRect(
+                x: x,
+                y: y,
+                width: itemWidth,
+                height: itemHeight
+            ))
+
+            imageContainer.clipsToBounds = true
+            imageContainer.layer.cornerRadius = 16
+            imageContainer.tag = index
+            imageContainer.isUserInteractionEnabled = true
+
+            let imageView = UIImageView(frame: imageContainer.bounds)
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
+            imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+            imageView.sd_setImage(
+                with: URL(string: galleryImageURLs[index]),
+                placeholderImage: Constant.Icon.uploadImage
+            )
+
+            imageContainer.addSubview(imageView)
+
+            if index == 3 && galleryImageURLs.count > 4 {
+                addViewMoreButton(to: imageContainer, moreCount: galleryImageURLs.count - 4)
+            }
+
+            let tap = UITapGestureRecognizer(
+                target: self,
+                action: #selector(onGalleryImageTap(_:))
+            )
+            imageContainer.addGestureRecognizer(tap)
+
+            imageListView.addSubview(imageContainer)
+        }
+
+        view.layoutIfNeeded()
+    }
+
+    func addViewMoreButton(to parentView: UIView, moreCount: Int) {
+        let buttonView = UIView()
+        buttonView.backgroundColor = UIColor.white
+        buttonView.layer.borderWidth = 1
+        buttonView.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        buttonView.layer.cornerRadius = 18
+        buttonView.clipsToBounds = true
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+
+        parentView.addSubview(buttonView)
+
+        NSLayoutConstraint.activate([
+            buttonView.trailingAnchor.constraint(equalTo: parentView.trailingAnchor, constant: -12),
+            buttonView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor, constant: -10),
+            buttonView.heightAnchor.constraint(equalToConstant: 36),
+            buttonView.widthAnchor.constraint(greaterThanOrEqualToConstant: 86)
+        ])
+
+        let label = UILabel()
+        label.text = "+\(moreCount) more"
+        label.textColor = .black
+        label.font = Constant.Font.geistSemiBold(size: 12)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        buttonView.addSubview(label)
+
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: buttonView.topAnchor),
+            label.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor, constant: 14),
+            label.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor, constant: -14),
+            label.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor)
+        ])
+    }
+
+    @objc func onGalleryImageTap(_ sender: UITapGestureRecognizer) {
+        guard let index = sender.view?.tag else { return }
+
+        if index == 3 && galleryImageURLs.count > 4 {
+            openGalleryScreen(selectedIndex: index)
+        } else {
+            openImagePreview(selectedIndex: index)
+        }
+    }
+
+    func openGalleryScreen(selectedIndex: Int) {
+        let vc = EventGalleryVC()
+        vc.imageURLs = galleryImageURLs
+        vc.selectedIndex = selectedIndex
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func openImagePreview(selectedIndex: Int) {
+        let vc = EventGalleryVC()
+        vc.imageURLs = galleryImageURLs
+        vc.selectedIndex = selectedIndex
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+import UIKit
+
+final class EventGalleryImageCell: UICollectionViewCell {
+
+    private let imageView = UIImageView()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        contentView.backgroundColor = .clear
+        contentView.clipsToBounds = true
+        contentView.layer.cornerRadius = 16
+
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(imageView)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+    }
+
+    func configure(urlString: String) {
+        imageView.sd_setImage(
+            with: URL(string: urlString),
+            placeholderImage: Constant.Icon.uploadImage
+        )
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+    }
+}
+
+final class EventGalleryVC: UIViewController {
+
+    var imageURLs: [String] = []
+    var selectedIndex: Int = 0
+    var galleryTitle: String = "Gallery"
+
+    private let backBtn = AppIconButton()
+    private let titleLabel = UILabel()
+
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 10
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 24, right: 16)
+
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .clear
+        cv.showsVerticalScrollIndicator = false
+        cv.register(EventGalleryImageCell.self, forCellWithReuseIdentifier: EventGalleryImageCell.identifier)
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        return cv
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        setupConstraints()
+        scrollToSelectedIndex()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.applyScreenBgGradient()
+    }
+
+    private func setupUI() {
+        setupNav()
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        view.addSubview(collectionView)
+    }
+
+    private func setupNav() {
+        backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
+        backBtn.iconSize = 20
+        backBtn.buttonSize = 40
+        backBtn.iconTintColor = .white
+        backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backBtn)
+
+        titleLabel.text = galleryTitle
+        titleLabel.textColor = AppColor.primaryWhiteColor
+        titleLabel.font = Constant.Font.geistMedium(size: 22)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+    }
+
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            backBtn.widthAnchor.constraint(equalToConstant: 40),
+            backBtn.heightAnchor.constraint(equalToConstant: 40),
+
+            titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            collectionView.topAnchor.constraint(equalTo: backBtn.bottomAnchor, constant: 12),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func scrollToSelectedIndex() {
+        guard selectedIndex < imageURLs.count else { return }
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(item: self.selectedIndex, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: false)
+        }
+    }
+
+    @objc private func onClickBack() {
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+extension EventGalleryVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        imageURLs.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: EventGalleryImageCell.identifier,
+            for: indexPath
+        ) as? EventGalleryImageCell else {
+            return UICollectionViewCell()
+        }
+        cell.configure(urlString: imageURLs[indexPath.item])
+        return cell
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let spacing: CGFloat = 10
+        let sidePadding: CGFloat = 16
+        let itemWidth = floor((collectionView.bounds.width - sidePadding * 2 - spacing) / 2)
+        return CGSize(width: itemWidth, height: itemWidth)
+    }
+}

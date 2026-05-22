@@ -461,7 +461,7 @@ extension NSMutableAttributedString {
     }
 
     func forceSystemFont15() {
-        let base = Constant.Font.interRegular(size: 12)
+        let base = Constant.Font.geistRegular(size: 14)
 
         enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
             let traits = (value as? UIFont)?.fontDescriptor.symbolicTraits ?? []
