@@ -34,12 +34,15 @@ final class DiscoverVC: UIViewController {
         }
     }
     
+    private let landingHeaderView = LandingHeaderView()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Pin shimmer full-screen on top of everything
         view.addSubview(shimmerView)
+        setupLandingHeader()
         shimmerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -57,6 +60,19 @@ final class DiscoverVC: UIViewController {
         if !shimmerDidFinish {
             shimmerView.startShimmer()
         }
+    }
+    
+    private func setupLandingHeader() {
+//        landingHeaderView.delegate = self
+        landingHeaderView.setMapHidden(false)
+        view.addSubview(landingHeaderView)
+
+        NSLayoutConstraint.activate([
+            landingHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            landingHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            landingHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            landingHeaderView.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
 
     func hideSkeletonScreen() {

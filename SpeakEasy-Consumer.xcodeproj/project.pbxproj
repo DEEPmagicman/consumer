@@ -160,6 +160,7 @@
 		6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
+		6AB5E6B62FC0636A003F1A5B /* LandingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */; };
 		6AD75F2B2FB5ED6100F68C19 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */; };
 		6AD8CE2D2FBC63B900AC8A89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD8CE2C2FBC63B900AC8A89 /* EditProfileVC.swift */; };
 		6AD8CE2F2FBC63D000AC8A89 /* AccountInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD8CE2E2FBC63D000AC8A89 /* AccountInfoVC.swift */; };
@@ -672,6 +673,7 @@
 		6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthViewController.swift; sourceTree = "<group>"; };
 		6A8A84492FB1E00700AC87BB /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		6A8A844B2FB1E01000AC87BB /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingHeaderView.swift; sourceTree = "<group>"; };
 		6AD8CE2C2FBC63B900AC8A89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		6AD8CE2E2FBC63D000AC8A89 /* AccountInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoVC.swift; sourceTree = "<group>"; };
 		6AD8CE332FBC779C00AC8A89 /* FloatingInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingInputView.swift; sourceTree = "<group>"; };
@@ -1443,6 +1445,7 @@
 		6A40D1BB2FBF05BE00F3FAAB /* Tabbar */ = {
 			isa = PBXGroup;
 			children = (
+				6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */,
 				6A40D1CA2FBF2CAA00F3FAAB /* FloatingTabButton.swift */,
 				6A40D1C82FBF2C8100F3FAAB /* FloatingTabItem.swift */,
 				6A40D1C42FBF1D1100F3FAAB /* NewLandingVC.swift */,
@@ -1456,7 +1459,7 @@
 				6A40D1B82FBEEAA500F3FAAB /* Core */,
 				6A687D152FB30C40001BEDBF /* Login */,
 				6AF9DE0D2FB47A6A008D6CBC /* Profile */,
-                6A40D1BB2FBF05BE00F3FAAB /* Tabbar */,
+				6A40D1BB2FBF05BE00F3FAAB /* Tabbar */,
 				CEE02DA62EFB939F00AC7756 /* Discover */,
 			);
 			path = v3;
@@ -3155,6 +3158,7 @@
 				691574652A0CD0EF002F303A /* Stripe.swift in Sources */,
 				6A40D1AF2FBDCC3100F3FAAB /* ConfirmContactVC.swift in Sources */,
 				6AF9DE022FB33B22008D6CBC /* GradientBorderCardView.swift in Sources */,
+				6AB5E6B62FC0636A003F1A5B /* LandingHeaderView.swift in Sources */,
 				0437CC622F87B4CA00D403B4 /* ArtistsVC.swift in Sources */,
 				CE4246002FBB0F41006FF16F /* FiltersViewController.swift in Sources */,
 				CE25D02C29EFB46100965C9F /* DateSelectionBottomSheet.swift in Sources */,

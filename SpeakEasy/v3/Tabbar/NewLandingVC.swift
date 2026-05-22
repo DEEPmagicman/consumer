@@ -12,7 +12,6 @@ final class NewLandingVC: UIViewController {
 
     private let bgView = UIView()
 
-    private let headerView = UIView()
     private let profileTapButton = UIButton(type: .system)
     private let avatarContainer = UIView()
     private let imageView = UIImageView()
@@ -79,7 +78,7 @@ final class NewLandingVC: UIViewController {
     // MARK: - iOS 26 System Tab
     private func setupSystemLanding() {
         setupCommonBackground()
-        setupHeader()
+//        setupHeader()
 
         let tabVC = UITabBarController()
         systemTabVC = tabVC
@@ -105,29 +104,9 @@ final class NewLandingVC: UIViewController {
         tabVC.viewControllers = [discover, experiences, search]
         tabVC.selectedIndex = 0
         tabVC.delegate = self
-
-        let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-        appearance.backgroundColor = UIColor(hex: "#191919").withAlphaComponent(0.65)
-
-        let selectedColor = UIColor(hex: "#85B2E8")
-        let normalColor = AppColor.primaryWhiteColor.withAlphaComponent(0.72)
-
-        appearance.stackedLayoutAppearance.selected.iconColor = selectedColor
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: selectedColor,
-            .font: Constant.Font.geistMedium(size: 10)
-        ]
-
-        appearance.stackedLayoutAppearance.normal.iconColor = normalColor
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: normalColor,
-            .font: Constant.Font.geistMedium(size: 10)
-        ]
-
-        tabVC.tabBar.standardAppearance = appearance
-        tabVC.tabBar.scrollEdgeAppearance = appearance
+        
+        let selectedColor = UIColor(hex: "#8CB7FF")
+        let normalColor = UIColor(hex: "#D1D1D1")
         tabVC.tabBar.tintColor = selectedColor
         tabVC.tabBar.unselectedItemTintColor = normalColor
 
@@ -137,7 +116,7 @@ final class NewLandingVC: UIViewController {
         view.addSubview(tabVC.view)
 
         NSLayoutConstraint.activate([
-            tabVC.view.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            tabVC.view.topAnchor.constraint(equalTo: view.topAnchor),
             tabVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tabVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tabVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -156,7 +135,8 @@ final class NewLandingVC: UIViewController {
 
         let nav = UINavigationController(rootViewController: root)
         nav.navigationBar.isHidden = true
-
+        nav.delegate = self
+        
         nav.tabBarItem = UITabBarItem(
             title: title,
             image: image,
@@ -170,7 +150,6 @@ final class NewLandingVC: UIViewController {
 
     private func setupCustomLanding() {
         setupCommonBackground()
-        setupHeader()
         setupCustomContent()
         setupCustomTabBar()
         selectTab(index: 0)
@@ -189,129 +168,13 @@ final class NewLandingVC: UIViewController {
             bgView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-
-    private func setupHeader() {
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headerView)
-
-        avatarContainer.backgroundColor = .clear
-        avatarContainer.clipsToBounds = true
-        avatarContainer.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(avatarContainer)
-
-        signInIconView.image = UIImage(resource: .profileIcon)
-        signInIconView.contentMode = .scaleAspectFit
-        signInIconView.translatesAutoresizingMaskIntoConstraints = false
-        avatarContainer.addSubview(signInIconView)
-
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.isHidden = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        avatarContainer.addSubview(imageView)
-
-        firstNameLetter.textColor = AppColor.primaryWhiteColor
-        firstNameLetter.backgroundColor = .clear
-        firstNameLetter.textAlignment = .center
-        firstNameLetter.font = Constant.Font.interRegular(size: 16)
-        firstNameLetter.isHidden = true
-        firstNameLetter.translatesAutoresizingMaskIntoConstraints = false
-        avatarContainer.addSubview(firstNameLetter)
-
-        pageTitleLbl.text = "Sign in"
-        pageTitleLbl.textColor = AppColor.primaryWhiteColor
-        pageTitleLbl.font = Constant.Font.geistMedium(size: 16)
-        pageTitleLbl.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(pageTitleLbl)
-
-        profileTapButton.backgroundColor = .clear
-        profileTapButton.addTarget(self, action: #selector(onClickProfile), for: .touchUpInside)
-        profileTapButton.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(profileTapButton)
-
-        avatarContainer.isUserInteractionEnabled = true
-        let avatarTap = UITapGestureRecognizer(target: self, action: #selector(onClickProfile))
-        avatarContainer.addGestureRecognizer(avatarTap)
-
-        imageView.isUserInteractionEnabled = true
-        firstNameLetter.isUserInteractionEnabled = true
-        signInIconView.isUserInteractionEnabled = true
-        
-        mapButtonContainer.cornerRadius = 16
-        mapButtonContainer.borderWidth = 0.5
-        mapButtonContainer.overrideBackgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.08)
-        mapButtonContainer.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(mapButtonContainer)
-
-        mapIconView.image = UIImage(named: "mapIcon")
-        mapIconView.tintColor = AppColor.primaryWhiteColor
-        mapIconView.contentMode = .scaleAspectFit
-        mapIconView.translatesAutoresizingMaskIntoConstraints = false
-        mapButtonContainer.addSubview(mapIconView)
-
-        mapButton.backgroundColor = .clear
-        mapButton.addTarget(self, action: #selector(onClickMap), for: .touchUpInside)
-        mapButton.translatesAutoresizingMaskIntoConstraints = false
-        mapButtonContainer.addSubview(mapButton)
-
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 40),
-
-            avatarContainer.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
-            avatarContainer.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            avatarContainer.widthAnchor.constraint(equalToConstant: 30),
-            avatarContainer.heightAnchor.constraint(equalToConstant: 30),
-
-            signInIconView.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
-            signInIconView.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
-            signInIconView.trailingAnchor.constraint(equalTo: avatarContainer.trailingAnchor),
-            signInIconView.bottomAnchor.constraint(equalTo: avatarContainer.bottomAnchor),
-
-            imageView.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: avatarContainer.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: avatarContainer.bottomAnchor),
-
-            firstNameLetter.topAnchor.constraint(equalTo: avatarContainer.topAnchor),
-            firstNameLetter.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
-            firstNameLetter.trailingAnchor.constraint(equalTo: avatarContainer.trailingAnchor),
-            firstNameLetter.bottomAnchor.constraint(equalTo: avatarContainer.bottomAnchor),
-
-            pageTitleLbl.leadingAnchor.constraint(equalTo: avatarContainer.trailingAnchor, constant: 12),
-            pageTitleLbl.centerYAnchor.constraint(equalTo: avatarContainer.centerYAnchor),
-            pageTitleLbl.trailingAnchor.constraint(lessThanOrEqualTo: mapButtonContainer.leadingAnchor, constant: -12),
-
-            profileTapButton.leadingAnchor.constraint(equalTo: avatarContainer.leadingAnchor),
-            profileTapButton.trailingAnchor.constraint(equalTo: pageTitleLbl.trailingAnchor, constant: 12),
-            profileTapButton.topAnchor.constraint(equalTo: headerView.topAnchor),
-            profileTapButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor),
-
-            mapButtonContainer.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            mapButtonContainer.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            mapButtonContainer.widthAnchor.constraint(equalToConstant: 32),
-            mapButtonContainer.heightAnchor.constraint(equalToConstant: 32),
-
-            mapIconView.centerXAnchor.constraint(equalTo: mapButtonContainer.centerXAnchor),
-            mapIconView.centerYAnchor.constraint(equalTo: mapButtonContainer.centerYAnchor),
-            mapIconView.widthAnchor.constraint(equalToConstant: 13),
-            mapIconView.heightAnchor.constraint(equalToConstant: 13),
-
-            mapButton.topAnchor.constraint(equalTo: mapButtonContainer.topAnchor),
-            mapButton.leadingAnchor.constraint(equalTo: mapButtonContainer.leadingAnchor),
-            mapButton.trailingAnchor.constraint(equalTo: mapButtonContainer.trailingAnchor),
-            mapButton.bottomAnchor.constraint(equalTo: mapButtonContainer.bottomAnchor)
-        ])
-    }
-
+    
     private func setupCustomContent() {
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contentContainer)
 
         NSLayoutConstraint.activate([
-            contentContainer.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            contentContainer.topAnchor.constraint(equalTo: view.topAnchor),
             contentContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -328,9 +191,9 @@ final class NewLandingVC: UIViewController {
         let sidePadding: CGFloat = isSmallDevice ? 14 : 24
 
         customTabBar.configure(items: [
-            FloatingTabItem(title: "Discover", icon: UIImage(resource: .discoverIcon)),
+            FloatingTabItem(title: "Discover", icon: UIImage(resource: .discoverIconV3)),
             FloatingTabItem(title: "Experiences", icon: UIImage(resource: .experiencesIcon)),
-            FloatingTabItem(title: "Search", icon: UIImage(resource: .searchIcon))
+            FloatingTabItem(title: "Search", icon: UIImage(resource: .searchIconV3))
         ])
 
         NSLayoutConstraint.activate([
@@ -454,4 +317,18 @@ extension NewLandingVC: FloatingCustomTabBarDelegate {
     func floatingCustomTabBar(_ tabBar: FloatingCustomTabBar, didSelect index: Int) {
         selectTab(index: index)
     }
+}
+
+extension NewLandingVC: UINavigationControllerDelegate {
+    func navigationController(
+        _ navigationController: UINavigationController,
+        willShow viewController: UIViewController,
+        animated: Bool
+    ) {
+        
+        let isRoot = navigationController.viewControllers.count <= 1
+        
+        systemTabVC?.tabBar.isHidden = !isRoot
+    }
+    
 }
