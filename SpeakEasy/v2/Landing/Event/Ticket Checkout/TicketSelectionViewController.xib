@@ -21,11 +21,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TicketSelectionViewController" customModule="Speakeasy" customModuleProvider="target">
             <connections>
-                <outlet property="ContinueToCheckOutView" destination="e5s-2Q-GxO" id="6xo-sB-2tz"/>
                 <outlet property="addOnTicketTitleLbl" destination="4QK-FH-w4h" id="QLw-cI-JAL"/>
                 <outlet property="addOnTicketTitleView" destination="WWA-Ux-jQc" id="Tav-ad-5DD"/>
                 <outlet property="continueButtonBottomConstraint" destination="quL-gL-Drw" id="olF-sB-scf"/>
                 <outlet property="continueToCheckOutBtn" destination="kVH-2Z-5HZ" id="kqR-2g-Lkd"/>
+                <outlet property="continueToCheckOutView" destination="e5s-2Q-GxO" id="JIU-E3-bi9"/>
                 <outlet property="dateandtimeLbl" destination="ZIU-O8-eVe" id="cbw-Rc-gQV"/>
                 <outlet property="eventTitleLbl" destination="22C-en-57q" id="ngL-Jd-Gxe"/>
                 <outlet property="extraFeesLbl" destination="uiP-ML-9ds" id="iQJ-da-ZWc"/>

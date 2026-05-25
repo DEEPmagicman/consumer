@@ -23,7 +23,7 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var groupTableView: UITableView!
     @IBOutlet weak var groupTableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-    @IBOutlet weak var ContinueToCheckOutView: UIView!
+    @IBOutlet weak var continueToCheckOutView: UIView!
     @IBOutlet weak var totalAmountLbl: UILabel!
     @IBOutlet weak var totalTicketLbl: UILabel!
     @IBOutlet weak var extraFeesLbl: UILabel!
@@ -685,19 +685,19 @@ class TicketSelectionViewController: UIViewController {
         case .addOn:   shouldShow = true
         }
 
-        guard ContinueToCheckOutView.isHidden == shouldShow else { return }
+        guard continueToCheckOutView.isHidden == shouldShow else { return }
 
-        let hiddenBottom: CGFloat = -ContinueToCheckOutView.bounds.height - 24
+        let hiddenBottom: CGFloat = -continueToCheckOutView.bounds.height - 24
         let shownBottom: CGFloat = 32
 
-        ContinueToCheckOutView.isHidden = false
+        continueToCheckOutView.isHidden = false
 
         UIView.animate(withDuration: 0.25) {
             self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
-            self.ContinueToCheckOutView.alpha = shouldShow ? 1 : 0
+            self.continueToCheckOutView.alpha = shouldShow ? 1 : 0
             self.view.layoutIfNeeded()
         } completion: { _ in
-            self.ContinueToCheckOutView.isHidden = !shouldShow
+            self.continueToCheckOutView.isHidden = !shouldShow
         }
     }
 }
