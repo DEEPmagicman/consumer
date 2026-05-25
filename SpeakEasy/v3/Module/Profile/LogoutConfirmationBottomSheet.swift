@@ -5,7 +5,6 @@
 //  Created by Paras on 21/05/26.
 //
 
-
 import UIKit
 
 final class LogoutConfirmationBottomSheetVC: UIViewController {
@@ -135,8 +134,7 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
         logoutBtn.startLoading()
         UserDefault.shared.emptyData()
         AppDelegate.shared.changeRootViewController()
-        OnBoardingPresenter.logout { isSuccess, errorMsg in
-        }
+        OnBoardingPresenter.logout { _, _ in }
         logoutBtn.stopLoading()
         dismissSheet()
     }

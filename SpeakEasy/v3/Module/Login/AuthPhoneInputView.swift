@@ -5,7 +5,6 @@
 //  Created by Paras on 12/05/26.
 //
 
-
 import UIKit
 import MHLoadingButton
 
@@ -246,7 +245,7 @@ final class AuthPhoneInputView: UIView {
     
     @objc private func onClickInfoLabel(_ sender: UITapGestureRecognizer) {
         
-        guard let attributedText = termsAndPrivacyLbl.attributedText else { return }
+        guard let _ = termsAndPrivacyLbl.attributedText else { return }
         
         if sender.didTapAttributedTextInLabel(label: termsAndPrivacyLbl, inRange: termsRange) {
             Navigate.externalURL(APIBuilder.termsConsumerURL)

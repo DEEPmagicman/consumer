@@ -33,7 +33,7 @@ final class Navigate {
     }
     
     func back(_ sender: UIViewController) {
-        sender.navigationController?.popViewController(animated: true)
+        sender.navigationController?.popViewController(animated: false)
     }
     
     func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
@@ -718,6 +718,21 @@ final class Navigate {
     
     func notificationSettingsVC(_ sender: UIViewController) {
         let vc = NotificationSettingsVC()
-        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.pushVC(vc)
+    }
+    
+    func myOrdersVC(_ sender: UIViewController) {
+        let vc = MyOrdersVC()
+        sender.pushVC(vc)
+    }
+    
+    func savedVC(_ sender: UIViewController) {
+        let vc = NotificationSettingsVC()
+        sender.pushVC(vc)
+    }
+    
+    func venuesVC(_ sender: UIViewController) {
+        let vc = NotificationSettingsVC()
+        sender.pushVC(vc)
     }
 }

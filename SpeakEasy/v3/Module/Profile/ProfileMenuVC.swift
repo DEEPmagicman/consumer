@@ -144,9 +144,9 @@ final class ProfileMenuVC: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         topActionsCard.addSubview(stack)
 
-        stack.addArrangedSubview(makeTopAction(title: "My orders", icon: UIImage(resource: .myOrderIc)))
-        stack.addArrangedSubview(makeTopAction(title: "Saved", icon: UIImage(resource: .savedIc)))
-        stack.addArrangedSubview(makeTopAction(title: "Venues", icon: UIImage(resource: .venuesIc)))
+        stack.addArrangedSubview(makeTopAction(title: "My orders", icon: UIImage(resource: .myOrderIc), tag: 0))
+        stack.addArrangedSubview(makeTopAction(title: "Saved", icon: UIImage(resource: .savedIc), tag: 1))
+        stack.addArrangedSubview(makeTopAction(title: "Venues", icon: UIImage(resource: .venuesIc), tag: 2))
 
         contentView.addSubview(topActionsCard)
 
@@ -255,9 +255,11 @@ final class ProfileMenuVC: UIViewController {
         ])
     }
 
-    private func makeTopAction(title: String, icon: UIImage?) -> UIControl {
+    private func makeTopAction(title: String, icon: UIImage?, tag: Int) -> UIControl {
         let control = UIControl()
+        control.tag = tag
         control.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        control.addTarget(self, action: #selector(topActionTapped(_:)), for: .touchUpInside)
         
         let imageView = UIImageView(image: icon)
         imageView.tintColor = .white
@@ -279,6 +281,22 @@ final class ProfileMenuVC: UIViewController {
         ])
 
         return control
+    }
+    
+    @objc private func topActionTapped(_ sender: UIControl) {
+        switch sender.tag {
+        case 0:
+            Navigate.to.myOrdersVC(self)
+
+        case 1:
+            Navigate.to.savedVC(self)
+
+        case 2:
+            Navigate.to.venuesVC(self)
+
+        default:
+            break
+        }
     }
 
     private func addRows(to card: UIView, rows: [ProfileMenuRow]) {

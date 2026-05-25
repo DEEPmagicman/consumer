@@ -100,7 +100,11 @@ final class NewLandingVC: UIViewController {
 
         tabVC.viewControllers = [discover, experiences, search]
         tabVC.selectedIndex = 0
-        tabVC.delegate = self
+        if #available(iOS 26.0, *) {
+            tabVC.delegate = self
+        } else {
+            // Fallback on earlier versions
+        }
         
         let selectedColor = UIColor(hex: "#8CB7FF")
         let normalColor = UIColor(hex: "#D1D1D1")
