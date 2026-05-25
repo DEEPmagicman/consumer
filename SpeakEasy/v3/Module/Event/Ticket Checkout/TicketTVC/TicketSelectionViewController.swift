@@ -27,6 +27,7 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var totalAmountLbl: UILabel!
     @IBOutlet weak var totalTicketLbl: UILabel!
     @IBOutlet weak var extraFeesLbl: UILabel!
+    @IBOutlet weak var backgroundContainerView: UIView!
 
     var mode: TicketMode = .normal
     var event: Event?
@@ -41,6 +42,7 @@ class TicketSelectionViewController: UIViewController {
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
     private var isLoading = true
+    private let posterHeaderView = EventPosterHeaderView()
 
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var groupListHeightObservation: NSKeyValueObservation?
@@ -101,7 +103,23 @@ class TicketSelectionViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.view.applyScreenBgGradient(direction: .topToBottom)
+        setupPosterBackground()
+    }
+    
+    private func setupPosterBackground() {
+
+        backgroundContainerView.addSubview(posterHeaderView)
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
+        ])
+
+        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        posterHeaderView.loadImage(from: imageURLString)
     }
 
 

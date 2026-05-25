@@ -34,7 +34,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var venueTitleLbl: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
-    @IBOutlet weak var backGroundBlureImg: UIImageView!
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var instaImageView: UIImageView!
     @IBOutlet weak var tikTokImageView: UIImageView!
@@ -57,7 +56,6 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var unLockBtn: UIView!
     @IBOutlet weak var ticketTableHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var webSiteView: UIView!
-    @IBOutlet weak var webSiteTitleLbl: UILabel!
     @IBOutlet weak var bottemButtonView: UIStackView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var detailsTitleLbl: UILabel!
@@ -78,6 +76,8 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var navBarView: UIView!
     @IBOutlet weak var checkOutBtn: LoadingButton!
     @IBOutlet weak var imageListViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var additionalButtonsTableView: UITableView!
+    @IBOutlet weak var additionalButtonsTableHeight: NSLayoutConstraint!
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
@@ -90,6 +90,7 @@ class EventDetailsVC: UIViewController {
     private var faqsTableObserver: NSKeyValueObservation?
     private var ticketTableObserver: NSKeyValueObservation?
     private var groupTableObserver: NSKeyValueObservation?
+    private var additionalButtonsTableObserver: NSKeyValueObservation?
 
     var venueDetails: ClipVenue?
     var event: Event?
@@ -164,9 +165,20 @@ class EventDetailsVC: UIViewController {
         startTicketTableObserver()
         startGroupTableObserver()
         startFAQsTableObserver()
+        startAdditionalButtonsTableObserver()
         setupUI()
         setupSkeletonView()
         showSkeleton()
+        
+        additionalButtonsTableView.delegate = self
+        additionalButtonsTableView.dataSource = self
+
+        additionalButtonsTableView.register(
+            AdditionalButtonsTableViewCell.nib,
+            forCellReuseIdentifier: AdditionalButtonsTableViewCell.identifier
+        )
+
+        additionalButtonsTableView.isScrollEnabled = false
 
     }
     
@@ -238,6 +250,22 @@ class EventDetailsVC: UIViewController {
         groupTableObserver = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
             self.groupTableViewHeight.constant = tableView.contentSize.height
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func startAdditionalButtonsTableObserver() {
+
+        additionalButtonsTableObserver?.invalidate()
+
+        additionalButtonsTableObserver = additionalButtonsTableView.observe(
+            \.contentSize,
+             options: [.new]
+        ) { [weak self] tableView, _ in
+
+            guard let self = self else { return }
+
+            self.additionalButtonsTableHeight.constant = tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -743,7 +771,6 @@ class EventDetailsVC: UIViewController {
         disabledTicketIds.removeAll()
 
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
-//        backGroundBlureImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event.title
         fullText = event.description
         setupExpandableLabel()
@@ -787,16 +814,9 @@ class EventDetailsVC: UIViewController {
         } else {
             buyNowBtnSuperView.isHidden = false
         }
+        webSiteView.isHidden = event.additionalButtons?.isEmpty ?? true
         
         configureVIPTablesView()
-        
-        if let button = event.additionalButtons?.first(where: { $0.isEnable }) {
-            webSiteTitleLbl.text = button.title
-            webSiteView.isHidden = false
-        } else {
-            webSiteView.isHidden = true
-        }
-        
         setupGalleryGrid()
 
         let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
@@ -2007,6 +2027,10 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         if tableView == faqsTableView {
             return faqs.count
         }
+        
+        if tableView == additionalButtonsTableView {
+            return event?.additionalButtons?.filter({ $0.isEnable }).count ?? 0
+        }
 
         return 0
     }
@@ -2140,6 +2164,33 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                     self.view.layoutIfNeeded()
                 }
             }
+
+            return cell
+        }
+        
+        if tableView == additionalButtonsTableView {
+
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: AdditionalButtonsTableViewCell.identifier,
+                for: indexPath
+            ) as? AdditionalButtonsTableViewCell else {
+                return UITableViewCell()
+            }
+
+            let buttons = event?.additionalButtons?.filter({ $0.isEnable }) ?? []
+            let item = buttons[indexPath.row]
+
+            cell.selectionStyle = .none
+
+            cell.webSiteTitleLbl.text = item.title
+//            cell.webSiteDiscriptionLbl.text = item.
+
+            let tintColor = UIColor(
+                hex: event?.whiteLabelColor ?? "#FFFFFF"
+            )
+
+            cell.linkImageView.image = UIImage(named: "ic_link")?.withRenderingMode(.alwaysTemplate)
+            cell.linkImageView.tintColor = tintColor
 
             return cell
         }
