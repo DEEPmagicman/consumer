@@ -5,7 +5,6 @@
 //  Created by Paras on 21/05/26.
 //
 
-
 import UIKit
 
 final class NotificationSettingsVC: UIViewController {
@@ -57,7 +56,7 @@ final class NotificationSettingsVC: UIViewController {
 
     private func setupNav() {
         backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
-        backBtn.iconSize = 20
+        backBtn.iconSize = 14
         backBtn.buttonSize = 40
         backBtn.iconTintColor = .white
         backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)

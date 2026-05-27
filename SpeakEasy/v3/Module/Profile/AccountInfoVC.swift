@@ -5,7 +5,6 @@
 //  Created by Paras on 19/05/26.
 //
 
-
 import UIKit
 
 final class AccountInfoVC: UIViewController {
@@ -49,7 +48,7 @@ final class AccountInfoVC: UIViewController {
 
     private func setupNav() {
         backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
-        backBtn.iconSize = 20
+        backBtn.iconSize = 14
         backBtn.buttonSize = 40
         backBtn.iconTintColor = .white
         backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)
