@@ -158,7 +158,7 @@ final class OrdersSegmentView: UIControl {
             selectedLeading,
             selectedView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
             selectedView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-            selectedView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5, constant: -4),
+            selectedView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5, constant: -2),
 
             // Tickets label constraints
             ticketsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),

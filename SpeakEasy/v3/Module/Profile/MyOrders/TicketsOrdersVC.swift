@@ -7,87 +7,95 @@
 
 import UIKit
 
-final class TicketsOrdersVC: UIViewController {
+final class TicketsOrdersVC: BaseOrdersGridVC {
 
-    private let scrollView = UIScrollView()
-    private let stackView = UIStackView()
+    override var upcomingTitle: String { "Upcoming tickets" }
+    override var pastTitle: String { "Past tickets" }
+    override var emptyTitle: String { "No tickets found" }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
+    override func loadUpcoming(reset: Bool) {
+        guard !UserDefault.shared.isGuest else { return }
+        guard !isLoadingUpcoming else { return }
+
+        isLoadingUpcoming = true
+
+        if reset {
+            upcomingSkip = 0
+            upcomingHasMany = false
+            upcomingItems.removeAll()
+            reloadUI()
+        }
+
+        PaymentPresenter.getUpcomingTicket(skip: upcomingSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+            guard let self else { return }
+
+            self.isLoadingUpcoming = false
+            self.didLoadUpcoming = true
+
+            if isSuccess {
+                self.upcomingItems = reset ? bookings : self.upcomingItems + bookings
+                self.upcomingHasMany = hasMany
+                self.upcomingSkip = self.upcomingItems.count
+            } else {
+                if reset { self.upcomingItems.removeAll() }
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
+            }
+
+            self.reloadUI()
+        }
     }
 
-    private func setupUI() {
-        view.backgroundColor = .clear
+    override func loadPast(reset: Bool) {
+        guard !UserDefault.shared.isGuest else { return }
+        guard !isLoadingPast else { return }
 
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(scrollView)
+        isLoadingPast = true
 
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(stackView)
+        if reset {
+            pastSkip = 0
+            pastHasMany = false
+            pastItems.removeAll()
+            reloadUI()
+        }
 
-        stackView.addArrangedSubview(makeTitle("Upcoming tickets"))
-        stackView.addArrangedSubview(makeDemoCard(title: "MARQUEE SKYDECK", subtitle: "Arodes with Lasarte"))
-        stackView.addArrangedSubview(makeTitle("Past tickets"))
-        stackView.addArrangedSubview(makeDemoCard(title: "No past tickets", subtitle: "Your previous tickets will appear here"))
+        PaymentPresenter.getPastTicket(skip: pastSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+            guard let self else { return }
 
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 44),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -44),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            self.isLoadingPast = false
+            self.didLoadPast = true
 
-            stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            if isSuccess {
+                self.pastItems = reset ? bookings : self.pastItems + bookings
+                self.pastHasMany = hasMany
+                self.pastSkip = self.pastItems.count
+            } else {
+                if reset { self.pastItems.removeAll() }
+                Alert.showAlertSheet(
+                    style: .alert,
+                    title: errMsg ?? Constant.String.somethingWrong,
+                    message: ""
+                )
+            }
 
-            stackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
-        ])
-    }
-    
-    private func makeTitle(_ text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = .white
-        label.font = Constant.Font.geistMedium(size: 24)
-        return label
+            self.reloadUI()
+        }
     }
 
-    private func makeDemoCard(title: String, subtitle: String) -> UIView {
-        let card = UIView()
-        card.backgroundColor = UIColor.white.withAlphaComponent(0.06)
-        card.layer.cornerRadius = 24
-        card.layer.borderWidth = 1
-        card.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
+    override func configure(_ cell: OrderCardCollectionCell, booking: Booking) {
+        cell.configureTicket(booking)
+    }
 
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.textColor = .white
-        titleLabel.font = Constant.Font.geistMedium(size: 18)
-
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = subtitle
-        subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.6)
-        subtitleLabel.font = Constant.Font.geistRegular(size: 15)
-
-        let stack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        stack.axis = .vertical
-        stack.spacing = 6
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        card.addSubview(stack)
-
-        NSLayoutConstraint.activate([
-            card.heightAnchor.constraint(equalToConstant: 120),
-
-            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 18),
-            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -18),
-            stack.centerYAnchor.constraint(equalTo: card.centerYAnchor)
-        ])
-
-        return card
+    override func didSelect(_ booking: Booking) {
+        if booking.eventId != nil {
+            Navigate.to.showQRCode(self, booking: booking, bookingId: booking.id, type: .singleTickedEvent)
+        } else if booking.inviteLink != nil {
+            Navigate.to.showQRCode(self, booking: booking, bookingId: booking.id, type: .appClip)
+        } else {
+            Navigate.to.scanQR(self, bookingId: booking.id, booking: booking, addOnsBookingId: "")
+        }
     }
 }

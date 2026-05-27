@@ -52,6 +52,7 @@ struct APIBuilder {
     static private let past = "/past"
     static private let upcoming = "/upcoming"
     static private let booking = "/booking"
+    static private let reservation = "/reservation"
     static private let freeTicket = "/free-booking"
     static private let recommendedEvents = "/recommended-events"
     static private let deleteAccount = "/delete-account"
@@ -353,6 +354,14 @@ struct APIBuilder {
     
     static var pastTicketsURL: String {
         baseURL + route + booking + past
+    }
+    
+    static var upcomingTableReservationsURL: String {
+        baseURL + route + reservation + upcoming
+    }
+    
+    static var pastTableReservationsURL: String {
+        baseURL + route + reservation + past
     }
     
     static func addPaymentURL(_ id: String) -> String {

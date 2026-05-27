@@ -162,6 +162,9 @@
 		6A60CADC2FC466F100155E9D /* TicketsOrdersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60CADB2FC466F100155E9D /* TicketsOrdersVC.swift */; };
 		6A60CADE2FC466F500155E9D /* TablesOrdersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60CADD2FC466F500155E9D /* TablesOrdersVC.swift */; };
 		6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */; };
+		6A83A58F2FC6F7B0002AA775 /* OrderCardCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A83A58E2FC6F7B0002AA775 /* OrderCardCollectionCell.swift */; };
+		6A83A5912FC6F7E8002AA775 /* BaseOrdersGridVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */; };
+		6A83A5962FC6F810002AA775 /* OrdersSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A83A5952FC6F810002AA775 /* OrdersSectionHeaderView.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
 		6AB5E6B62FC0636A003F1A5B /* LandingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */; };
@@ -679,6 +682,9 @@
 		6A60CADB2FC466F100155E9D /* TicketsOrdersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsOrdersVC.swift; sourceTree = "<group>"; };
 		6A60CADD2FC466F500155E9D /* TablesOrdersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablesOrdersVC.swift; sourceTree = "<group>"; };
 		6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthViewController.swift; sourceTree = "<group>"; };
+		6A83A58E2FC6F7B0002AA775 /* OrderCardCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardCollectionCell.swift; sourceTree = "<group>"; };
+		6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOrdersGridVC.swift; sourceTree = "<group>"; };
+		6A83A5952FC6F810002AA775 /* OrdersSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersSectionHeaderView.swift; sourceTree = "<group>"; };
 		6A8A84492FB1E00700AC87BB /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		6A8A844B2FB1E01000AC87BB /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingHeaderView.swift; sourceTree = "<group>"; };
@@ -1464,10 +1470,13 @@
 		6A60CAD62FC4638000155E9D /* MyOrders */ = {
 			isa = PBXGroup;
 			children = (
+				6A83A5942FC6F80C002AA775 /* Views */,
+				6A83A58D2FC6F7AB002AA775 /* Cells */,
 				6A60CADD2FC466F500155E9D /* TablesOrdersVC.swift */,
 				6A60CADB2FC466F100155E9D /* TicketsOrdersVC.swift */,
 				6A60CAD92FC466E700155E9D /* OrdersSegmentView.swift */,
 				6A60CAD72FC463A800155E9D /* MyOrdersVC.swift */,
+				6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */,
 			);
 			path = MyOrders;
 			sourceTree = "<group>";
@@ -1491,6 +1500,22 @@
 				6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		6A83A58D2FC6F7AB002AA775 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				6A83A58E2FC6F7B0002AA775 /* OrderCardCollectionCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		6A83A5942FC6F80C002AA775 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A83A5952FC6F810002AA775 /* OrdersSectionHeaderView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		6A8A84472FB1DFF500AC87BB /* Core */ = {
@@ -3101,6 +3126,7 @@
 				CAC413F328A478040007BA86 /* Date.swift in Sources */,
 				BD942F4729599FED00D52115 /* Loader.swift in Sources */,
 				CAC4140028A478040007BA86 /* UILabel.swift in Sources */,
+				6A83A58F2FC6F7B0002AA775 /* OrderCardCollectionCell.swift in Sources */,
 				CE45A5B82C3BC9DF00E1FE3F /* DPDConstants.swift in Sources */,
 				6A60CAD82FC463A800155E9D /* MyOrdersVC.swift in Sources */,
 				CAC4141928A478050007BA86 /* DatePickerColors.swift in Sources */,
@@ -3121,6 +3147,7 @@
 				CE59ED672F6D544900831974 /* CoverTicketListVC.swift in Sources */,
 				0426E1DA2F52F0BB005F474E /* VerifyNumberViewController.swift in Sources */,
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
+				6A83A5912FC6F7E8002AA775 /* BaseOrdersGridVC.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CEE02DAA2EFB93F600AC7756 /* DiscoverAllVC.swift in Sources */,
 				046AA23B2F84E54300961C9B /* OrdersTableViewCell.swift in Sources */,
@@ -3170,6 +3197,7 @@
 				04CC7BCD2F52CC8000ABB455 /* SignUpViewController.swift in Sources */,
 				CEBCF6062D48E2FD00B640C8 /* PhoneNumber+Codable.swift in Sources */,
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
+				6A83A5962FC6F810002AA775 /* OrdersSectionHeaderView.swift in Sources */,
 				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
 				6A40D1C92FBF2C8100F3FAAB /* FloatingTabItem.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,

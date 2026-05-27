@@ -96,11 +96,11 @@ final class MyOrdersVC: UIViewController {
             titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
 
             segmentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 22),
+            segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
             segmentView.heightAnchor.constraint(equalToConstant: 48),  // Optimized for new design
 
-            pageVC.view.topAnchor.constraint(equalTo: segmentView.bottomAnchor, constant: 30),
+            pageVC.view.topAnchor.constraint(equalTo: segmentView.bottomAnchor, constant: 10),
             pageVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             pageVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pageVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
