@@ -33,6 +33,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var imageShadowView: UIView!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var venueTitleLbl: UILabel!
+    @IBOutlet weak var pageTitleName: UILabel!
     @IBOutlet weak var timingLbl: UILabel!
     @IBOutlet weak var venueLogo: UIImageView!
     @IBOutlet weak var instaImageView: UIImageView!
@@ -78,6 +79,7 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var imageListViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var additionalButtonsTableView: UITableView!
     @IBOutlet weak var additionalButtonsTableHeight: NSLayoutConstraint!
+    @IBOutlet weak var checkOutBtnView: CheckoutBarView!
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
@@ -137,6 +139,33 @@ class EventDetailsVC: UIViewController {
         return normalTotal + groupedTotal
     }
     
+    private var allSelectedTickets: [EventTicket] {
+
+        let normalSelected = normalTickets.filter {
+            ($0.selectedTicketCount ?? 0) > 0
+        }
+
+        let groupedSelected = groupedNormalTickets
+            .flatMap { $0.tickets }
+            .filter { ($0.selectedTicketCount ?? 0) > 0 }
+
+        return normalSelected + groupedSelected
+    }
+
+    private var checkoutSubtotal: Double {
+
+        allSelectedTickets.reduce(0) {
+            $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
+        }
+    }
+
+    private var checkoutFees: Double {
+
+        allSelectedTickets.reduce(0) {
+            $0 + (($1.extraFees ?? 0) * Double($1.selectedTicketCount ?? 0))
+        }
+    }
+    
     private var seatingAreas: [SeatingArea] = []
     private var seatingAreasFilteredOut: [SeatingArea] = []
 
@@ -179,6 +208,11 @@ class EventDetailsVC: UIViewController {
         )
 
         additionalButtonsTableView.isScrollEnabled = false
+        
+        checkOutBtnView.delegate = self
+        checkOutBtnView.setButtonTitle("Continue to Checkout")
+
+        updateCheckoutSummaryView()
 
     }
     
@@ -441,13 +475,131 @@ class EventDetailsVC: UIViewController {
             } else {
                 self.attendeesView.isHidden = true
             }
-
+            
+            if event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
+                buyNowBtnSuperView.isHidden = true
+            } else {
+                buyNowBtnSuperView.isHidden = false
+            }
+            
             self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
 
             self.updateLineUpView()
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
         }
+    }
+    
+    private func updateCheckoutSummaryView() {
+
+        let selectedNormalTickets =
+        normalTickets.filter {
+            ($0.selectedTicketCount ?? 0) > 0
+        }
+
+        let selectedGroupedTickets =
+        groupedNormalTickets
+            .flatMap { $0.tickets }
+            .filter {
+                ($0.selectedTicketCount ?? 0) > 0
+            }
+
+        let selectedTickets =
+        selectedNormalTickets + selectedGroupedTickets
+
+        let totalCount =
+        selectedTickets.reduce(0) {
+            $0 + ($1.selectedTicketCount ?? 0)
+        }
+
+        guard totalCount > 0 else {
+
+            hideCheckoutBar()
+            return
+        }
+
+        let subtotal =
+        selectedTickets.reduce(0.0) {
+
+            $0 +
+            (
+                Double($1.selectedTicketCount ?? 0)
+                *
+                ($1.price ?? 0)
+            )
+        }
+
+        let fees =
+        selectedTickets.reduce(0.0) {
+
+            $0 +
+            (
+                ($1.extraFees ?? 0)
+                *
+                Double($1.selectedTicketCount ?? 0)
+            )
+        }
+
+        let currency =
+        venueDetails?.venueSettings?.currencySymbol ?? "$"
+
+        checkOutBtnView.updateSummary(
+            currency: currency,
+            count: totalCount,
+            subtotal: subtotal + fees,
+            fees: fees
+        )
+
+        checkOutBtnView.setButtonTitle(
+            "Continue to Checkout"
+        )
+
+        showCheckoutBar()
+    }
+    
+    private func showCheckoutBar() {
+
+        guard checkOutBtnView.isHidden else {
+            return
+        }
+
+        checkOutBtnView.isHidden = false
+
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 0.9,
+            initialSpringVelocity: 0.6
+        ) {
+
+            self.checkOutBtnView.alpha = 1
+
+            self.checkOutBtnView.transform = .identity
+        }
+    }
+
+    private func hideCheckoutBar() {
+
+        guard !checkOutBtnView.isHidden else {
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.25,
+            animations: {
+
+                self.checkOutBtnView.alpha = 0
+
+                self.checkOutBtnView.transform =
+                CGAffineTransform(
+                    translationX: 0,
+                    y: 120
+                )
+
+            }) { _ in
+
+                self.checkOutBtnView.isHidden = true
+            }
     }
     
     private func fetchSeatingAreas() {
@@ -783,7 +935,7 @@ class EventDetailsVC: UIViewController {
         ? "\(event.customVenue?.name ?? event.venue?.name ?? "")".uppercased()
         : "\(venueDetails?.name ?? "")".uppercased()
         eventAddressView.isHidden = !(event.showAddress ?? true)
-
+        pageTitleName.text = event.title
         let addressComponents: [String]
 
         if let custom = event.customVenue,
@@ -809,11 +961,6 @@ class EventDetailsVC: UIViewController {
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = venueDetails?.name.uppercased() ?? ""
 
-        if event.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
-            buyNowBtnSuperView.isHidden = true
-        } else {
-            buyNowBtnSuperView.isHidden = false
-        }
         webSiteView.isHidden = event.additionalButtons?.isEmpty ?? true
         
         configureVIPTablesView()
@@ -966,7 +1113,7 @@ class EventDetailsVC: UIViewController {
 //                buyNowBtnView.isUserInteractionEnabled = true
 
             } else if event.isSaleEndedAllTickets == true {
-                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText?.uppercased() ?? "It was a great time!", for: .normal)
+                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText ?? "It was a great time!", for: .normal)
 
                 if eventTicketSettings?.isSaleEndedTextEnabled == true {
 //                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
@@ -1200,6 +1347,7 @@ class EventDetailsVC: UIViewController {
             ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
             updateContinueBtnState()
             updateTicketTableHeight()
+            updateCheckoutSummaryView()
         } else {
             Alert.showToast("Max tickets selected: create a separate order to purchase more.")
         }
@@ -1230,6 +1378,7 @@ class EventDetailsVC: UIViewController {
         ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
         updateContinueBtnState()
         updateTicketTableHeight()
+        updateCheckoutSummaryView()
     }
 
     private func handleRSVP(ticket: EventTicket) {
@@ -1283,6 +1432,7 @@ class EventDetailsVC: UIViewController {
                 updateContinueBtnState()
                 updateGroupTableHeight()
                 groupTableView.reloadData()
+                updateCheckoutSummaryView()
             } else {
                 Alert.showToast("Max tickets selected: create a separate order to purchase more.")
             }
@@ -1318,6 +1468,7 @@ class EventDetailsVC: UIViewController {
             updateContinueBtnState()
             updateGroupTableHeight()
             groupTableView.reloadData()
+            updateCheckoutSummaryView()
             return
         }
     }
@@ -1524,14 +1675,6 @@ class EventDetailsVC: UIViewController {
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
-    }
-
-    @IBAction func onClickLeftSwipeBtn(_ sender: Any) {
-        imagePagerVC?.movePrevious()
-    }
-
-    @IBAction func onClickRightSwipeBtn(_ sender: Any) {
-        imagePagerVC?.moveNext()
     }
 
     @IBAction func onClickBuyNow(_ sender: Any) {
@@ -2201,6 +2344,8 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         ) as? FAQsTableViewCell else {
             return UITableViewCell()
         }
+        
+        cell.selectionStyle = .none
 
         let faq = faqs[indexPath.row]
         let isExpanded = expandedFAQIndex == indexPath.row
@@ -2905,7 +3050,7 @@ final class EventGalleryVC: UIViewController {
 
     private func setupNav() {
         backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
-        backBtn.iconSize = 20
+        backBtn.iconSize = 14
         backBtn.buttonSize = 40
         backBtn.iconTintColor = .white
         backBtn.addTarget(self, action: #selector(onClickBack), for: .touchUpInside)
@@ -2975,5 +3120,90 @@ extension EventGalleryVC: UICollectionViewDelegate, UICollectionViewDataSource, 
         let sidePadding: CGFloat = 16
         let itemWidth = floor((collectionView.bounds.width - sidePadding * 2 - spacing) / 2)
         return CGSize(width: itemWidth, height: itemWidth)
+    }
+}
+
+extension EventDetailsVC: CheckoutBarDelegate {
+
+    func checkoutBarDidTapButton() {
+
+        guard let user = UserDefault.shared.user else {
+            Navigate.to.openPhoneLoginPopup(self)
+            return
+        }
+
+        guard let event = event else {
+            return
+        }
+        
+        checkOutBtnView.showLoader()
+
+        let selectedNormalTickets =
+        normalTickets.filter {
+            ($0.selectedTicketCount ?? 0) > 0
+        }
+
+        let selectedGroupedTickets =
+        groupedNormalTickets
+            .flatMap { $0.tickets }
+            .filter {
+                ($0.selectedTicketCount ?? 0) > 0
+            }
+
+        let selectedTickets =
+        selectedNormalTickets + selectedGroupedTickets
+
+        guard !selectedTickets.isEmpty else {
+            Alert.showToast(
+                "Please select at least one ticket"
+            )
+            checkOutBtnView.hideLoader()
+            return
+        }
+
+        checkOutBtnView.showLoader()
+
+        let payload: [[String: Any]] = selectedTickets.map {
+
+            [
+                "ticketId": $0.id ?? "",
+                "ticketQuantity": $0.selectedTicketCount ?? 0,
+                "ticketPrice": $0.price ?? 0
+            ]
+        }
+
+        PaymentPresenter.createEventBookingV2(
+            eventId: event.id,
+            code: user.code,
+            phone: user.phone,
+            gender: user.gender,
+            userId: user.id,
+            tickets: payload
+        ) { [weak self]
+            isSuccess,
+            errMsg,
+            bookingId,
+            _ in
+
+            guard let self else { return }
+
+            self.checkOutBtnView.hideLoader()
+
+            if isSuccess {
+
+                Navigate.to.orderListVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedTickets,
+                    bookingId: bookingId
+                )
+
+            } else {
+
+                Alert.showToast(
+                    errMsg ?? "Something went wrong"
+                )
+            }
+        }
     }
 }

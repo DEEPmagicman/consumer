@@ -397,6 +397,8 @@
 		CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */; };
 		CE901FFE2F6D2544008727A4 /* VenueExperiencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */; };
 		CE901FFF2F6D2544008727A4 /* VenueExperiencesVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */; };
+		CE93BDD02FC5603F00E2D815 /* OrderItemTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE93BDCF2FC5603F00E2D815 /* OrderItemTableViewCell.xib */; };
+		CE93BDD12FC5603F00E2D815 /* OrderItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93BDCE2FC5603F00E2D815 /* OrderItemTableViewCell.swift */; };
 		CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297E37362983B16200139947 /* TicketTypeTVC.swift */; };
 		CE94707529952061007102A6 /* TicketTypeTVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 297E37372983B16200139947 /* TicketTypeTVC.xib */; };
 		CE954B8E2C39159500BD3009 /* EventQuestionTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE954B8C2C39159500BD3009 /* EventQuestionTVC.swift */; };
@@ -919,6 +921,8 @@
 		CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SideMenuVC.xib; sourceTree = "<group>"; };
 		CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueExperiencesVC.swift; sourceTree = "<group>"; };
 		CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VenueExperiencesVC.xib; sourceTree = "<group>"; };
+		CE93BDCE2FC5603F00E2D815 /* OrderItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderItemTableViewCell.swift; sourceTree = "<group>"; };
+		CE93BDCF2FC5603F00E2D815 /* OrderItemTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderItemTableViewCell.xib; sourceTree = "<group>"; };
 		CE954B8C2C39159500BD3009 /* EventQuestionTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQuestionTVC.swift; sourceTree = "<group>"; };
 		CE954B8D2C39159500BD3009 /* EventQuestionTVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQuestionTVC.xib; sourceTree = "<group>"; };
 		CE954B972C392C8500BD3009 /* DropdownCustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownCustomCell.swift; sourceTree = "<group>"; };
@@ -2284,6 +2288,15 @@
 			path = Cover;
 			sourceTree = "<group>";
 		};
+		CE93BDCD2FC5600700E2D815 /* OrderItemTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				CE93BDCE2FC5603F00E2D815 /* OrderItemTableViewCell.swift */,
+				CE93BDCF2FC5603F00E2D815 /* OrderItemTableViewCell.xib */,
+			);
+			path = OrderItemTableViewCell;
+			sourceTree = "<group>";
+		};
 		CE954B8B2C39156F00BD3009 /* EventQuestionTVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -2459,6 +2472,7 @@
 		CEE646E82FC46604001DF84E /* OrderListVC */ = {
 			isa = PBXGroup;
 			children = (
+				CE93BDCD2FC5600700E2D815 /* OrderItemTableViewCell */,
 				CEE646E92FC4666B001DF84E /* OrderListViewController.swift */,
 				CEE646EA2FC4666B001DF84E /* OrderListViewController.xib */,
 				CEE646ED2FC46955001DF84E /* CheckoutBarView.swift */,
@@ -2813,6 +2827,7 @@
 				CE45801C2EF94FB800A873C4 /* Photos.storyboard in Resources */,
 				CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
+				CE93BDD02FC5603F00E2D815 /* OrderItemTableViewCell.xib in Resources */,
 				045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */,
 				CE0BA92A2F6BFDE500AB8996 /* VenueHeaderVC.xib in Resources */,
 				CE0BA92B2F6BFDE500AB8996 /* VenueVC.xib in Resources */,
@@ -3142,6 +3157,7 @@
 				CAC413FC28A478040007BA86 /* UIImage.swift in Sources */,
 				CAC4140C28A478050007BA86 /* DayCollectionViewCell.swift in Sources */,
 				CEE02DAA2EFB93F600AC7756 /* DiscoverAllVC.swift in Sources */,
+				CE93BDD12FC5603F00E2D815 /* OrderItemTableViewCell.swift in Sources */,
 				046AA23B2F84E54300961C9B /* OrdersTableViewCell.swift in Sources */,
 				297AB3EF2975608D0086259F /* VenuePresenter.swift in Sources */,
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,

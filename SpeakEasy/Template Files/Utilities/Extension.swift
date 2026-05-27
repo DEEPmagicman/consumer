@@ -492,7 +492,7 @@ extension UIView {
     func applyAutoBorderBackground() {
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(hex: "#FFFFFF").withAlphaComponent(0.12).cgColor
-        self.backgroundColor = UIColor(hex: "#000000").withAlphaComponent(0.25)
+        self.backgroundColor = UIColor(hex: "#000000").withAlphaComponent(0.15)
     }
 }
 

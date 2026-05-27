@@ -11,7 +11,6 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
     @IBOutlet weak var ticketTableView: UITableView!
-    @IBOutlet weak var hiddenTicketField: UITextField!
     @IBOutlet weak var eventTitleLbl: UILabel!
     @IBOutlet weak var continueToCheckOutBtn: LoadingButton!
     @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
@@ -121,7 +120,6 @@ class TicketSelectionViewController: UIViewController {
         let imageURLString = (event?.flyer?.key ?? "").imageURL
         posterHeaderView.loadImage(from: imageURLString)
     }
-
 
     private func setupTableViews() {
         ticketTableView.delegate = self
@@ -269,10 +267,35 @@ class TicketSelectionViewController: UIViewController {
         ticketTableView.reloadData()
         updateGroupTableHeight()
 
-        let protectedVisible = filterAvailableTickets(event.protectedEventTicket ?? [])
-        protectedTicketView.isHidden = protectedVisible.isEmpty
+//        let protectedVisible = filterAvailableTickets(event.protectedEventTicket ?? [])
+//        protectedTicketView.isHidden = protectedVisible.isEmpty
 
         mode == .addOn ? switchToAddOnMode() : switchToNormalMode()
+    }
+    
+    private func currentProtectedTickets() -> [EventTicket] {
+
+        switch mode {
+
+        case .normal:
+
+            return event?.protectedEventTicket ?? []
+
+        case .addOn:
+
+            return event?.protectedeventAddOnTicket ?? []
+        }
+    }
+    
+    private func updateProtectedTicketVisibility() {
+
+        let protectedTickets =
+        filterAvailableTickets(
+            currentProtectedTickets()
+        )
+
+        protectedTicketView.isHidden =
+        protectedTickets.isEmpty
     }
 
     private func formattedDateText(for event: Event) -> String {
@@ -306,26 +329,49 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func switchToNormalMode() {
+
         mode = .normal
+
         tickets = normalTickets
+
         addOnTicketTitleView.isHidden = true
-        groupTableView.isHidden = groupedNormalTickets.isEmpty
+
+        groupTableView.isHidden =
+        groupedNormalTickets.isEmpty
+
+        updateProtectedTicketVisibility()
+
         updateContinueButtonForMode()
+
         updateContinueBtnState()
+
         updateCheckoutSummary()
+
         ticketTableView.reloadData()
+
         groupTableView.reloadData()
+
         updateGroupTableHeight()
     }
 
     private func switchToAddOnMode() {
+
         mode = .addOn
+
         tickets = addOnTickets
+
         addOnTicketTitleView.isHidden = false
+
         groupTableView.isHidden = true
+
+        updateProtectedTicketVisibility()
+
         updateContinueButtonForMode()
+
         updateContinueBtnState()
+
         updateCheckoutSummary()
+
         ticketTableView.reloadData()
     }
 
@@ -369,6 +415,7 @@ class TicketSelectionViewController: UIViewController {
 
     private func updateGroupTableLayout() {
         groupTableView.beginUpdates()
+        groupTableView.reloadData()
         groupTableView.endUpdates()
         groupTableView.layoutIfNeeded()
         groupTableViewHeight.constant = groupTableView.contentSize.height
@@ -421,59 +468,131 @@ class TicketSelectionViewController: UIViewController {
 
     @objc func unLockPassword() {}
 
-    @IBAction func onClickUnLockBtn(_ sender: Any) {
-        let code = (unLockTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !code.isEmpty, var event = event else { return }
+    @IBAction func onClickUnLockBtn(
+        _ sender: Any
+    ) {
 
-        let alreadyUnlocked = normalTickets.contains {
-            ($0.eventTicketHasPassword?.password ?? "").caseInsensitiveCompare(code) == .orderedSame
-        }
+        let code =
+        (unLockTF.text ?? "")
+            .trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
 
-        guard !alreadyUnlocked else {
-            Alert.showToast("Tickets already unlocked")
+        guard !code.isEmpty,
+              var event = event else {
             return
         }
 
-        let protectedList = event.protectedEventTicket ?? []
-        let displayable = filterAvailableTickets(protectedList)
+        let protectedList =
+        currentProtectedTickets()
+
+        let displayable =
+        filterAvailableTickets(
+            protectedList
+        )
 
         guard !displayable.isEmpty else {
+
             protectedTicketView.isHidden = true
             return
         }
 
-        let matched = displayable.filter {
-            ($0.eventTicketHasPassword?.password ?? "").caseInsensitiveCompare(code) == .orderedSame
+        let matched =
+        displayable.filter {
+
+            ($0.eventTicketHasPassword?.password ?? "")
+                .caseInsensitiveCompare(code)
+            == .orderedSame
         }
 
         guard !matched.isEmpty else {
-            Alert.showToast("Invalid password please try again")
+
+            Alert.showToast(
+                "Invalid password please try again"
+            )
+
             return
         }
 
-        let valid = filterAvailableTickets(matched)
-        for ticket in valid where !normalTickets.contains(where: { $0.id == ticket.id }) {
-            normalTickets.append(ticket)
+        let valid =
+        filterAvailableTickets(matched)
+
+        switch mode {
+
+        case .normal:
+
+            for ticket in valid
+            where !normalTickets.contains(
+                where: { $0.id == ticket.id }
+            ) {
+
+                normalTickets.append(ticket)
+            }
+
+        case .addOn:
+
+            for ticket in valid
+            where !addOnTickets.contains(
+                where: { $0.id == ticket.id }
+            ) {
+
+                addOnTickets.append(ticket)
+            }
         }
 
-        let unlockedIds = Set(valid.compactMap { $0.id })
-        event.protectedEventTicket = protectedList.filter { ticket in
-            guard let id = ticket.id else { return true }
-            return !unlockedIds.contains(id)
+        let unlockedIds =
+        Set(valid.compactMap { $0.id })
+
+        switch mode {
+
+        case .normal:
+
+            event.protectedEventTicket =
+            protectedList.filter {
+
+                guard let id = $0.id else {
+                    return true
+                }
+
+                return !unlockedIds.contains(id)
+            }
+
+        case .addOn:
+
+            event.protectedeventAddOnTicket =
+            protectedList.filter {
+
+                guard let id = $0.id else {
+                    return true
+                }
+
+                return !unlockedIds.contains(id)
+            }
         }
 
         self.event = event
+
         unLockTF.text = ""
+
         unLockPassword()
 
-        protectedTicketView.isHidden = filterAvailableTickets(event.protectedEventTicket ?? []).isEmpty
+        updateProtectedTicketVisibility()
 
-        if mode == .normal {
+        switch mode {
+
+        case .normal:
+
             tickets = normalTickets
-            ticketTableView.reloadData()
-        }
-    }
 
+        case .addOn:
+
+            tickets = addOnTickets
+        }
+
+        ticketTableView.reloadData()
+    }
+    
+    
     @IBAction func onClickCloseBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
@@ -525,7 +644,8 @@ class TicketSelectionViewController: UIViewController {
             guard let self else { return }
             self.continueToCheckOutBtn.hideLoader()
             if isSuccess {
-                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
+//                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
+                Navigate.to.orderListVC(self, event: event, selectedTickets: tickets, bookingId: id)
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")
             }

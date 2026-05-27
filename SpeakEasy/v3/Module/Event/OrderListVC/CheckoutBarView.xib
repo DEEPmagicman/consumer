@@ -20,7 +20,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CheckoutBarView" customModule="Speakeasy" customModuleProvider="target">
             <connections>
                 <outlet property="actionBtn" destination="DlG-SH-kDc" id="3Nm-oh-9fH"/>
-                <outlet property="containerView" destination="uIi-Zb-s2p" id="Ezr-v8-mDh"/>
+                <outlet property="containerView" destination="iN0-l3-epB" id="Tm5-4z-IfV"/>
                 <outlet property="extraFeesLbl" destination="aaM-jp-Ya8" id="Vzk-VU-tjQ"/>
                 <outlet property="totalAmountLbl" destination="2Bc-2e-Mpg" id="yTu-Rg-dk2"/>
                 <outlet property="totalTicketLbl" destination="6rP-vG-D3g" id="a2m-oF-izJ"/>

@@ -32,7 +32,6 @@
                 <outlet property="extraFeesLbl" destination="uiP-ML-9ds" id="iQJ-da-ZWc"/>
                 <outlet property="groupTableView" destination="HgD-UR-Bvg" id="Etu-Ye-1wI"/>
                 <outlet property="groupTableViewHeight" destination="Hbc-GD-lXb" id="HCf-wx-yHx"/>
-                <outlet property="hiddenTicketField" destination="yqm-h6-9ME" id="h7k-m5-EOM"/>
                 <outlet property="protectedTicketView" destination="3EF-mc-0tR" id="M0Q-WJ-hUq"/>
                 <outlet property="ticketTableView" destination="E8z-Q1-vlH" id="ph2-ib-Oqf"/>
                 <outlet property="ticketTableViewHeight" destination="UNE-9M-F2X" id="rMt-3L-EQd"/>
@@ -125,7 +124,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="307" height="44"/>
                                                     <subviews>
                                                         <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Unlock hidden tickets" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yqm-h6-9ME">
-                                                            <rect key="frame" x="10" y="0.0" width="287" height="44"/>
+                                                            <rect key="frame" x="21" y="0.0" width="276" height="44"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="14"/>
@@ -137,7 +136,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="yqm-h6-9ME" secondAttribute="bottom" id="3Ay-nG-1tY"/>
                                                         <constraint firstItem="yqm-h6-9ME" firstAttribute="top" secondItem="RrB-LW-HTf" secondAttribute="top" id="fwY-rO-Chh"/>
                                                         <constraint firstAttribute="trailing" secondItem="yqm-h6-9ME" secondAttribute="trailing" constant="10" id="hYh-LN-2IK"/>
-                                                        <constraint firstItem="yqm-h6-9ME" firstAttribute="leading" secondItem="RrB-LW-HTf" secondAttribute="leading" constant="10" id="u6X-EB-DHA"/>
+                                                        <constraint firstItem="yqm-h6-9ME" firstAttribute="leading" secondItem="RrB-LW-HTf" secondAttribute="leading" constant="21" id="u6X-EB-DHA"/>
                                                         <constraint firstAttribute="height" constant="44" id="zEW-Yd-FnJ"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
@@ -187,7 +186,7 @@
                                                             <real key="value" value="0.5"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                            <real key="value" value="6"/>
+                                                            <real key="value" value="11"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                                             <color key="value" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
@@ -219,10 +218,10 @@
                             </constraints>
                         </view>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quD-X3-Sg2">
-                            <rect key="frame" x="20" y="108.66666666666674" width="353" height="567.33333333333348"/>
+                            <rect key="frame" x="20" y="108.66666666666669" width="353" height="567.33333333333326"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="lBb-Pv-dV5">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="972"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lBb-Pv-dV5">
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="900"/>
                                     <subviews>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="HgD-UR-Bvg">
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="400"/>
@@ -231,30 +230,20 @@
                                                 <constraint firstAttribute="height" constant="400" id="Hbc-GD-lXb"/>
                                             </constraints>
                                         </tableView>
-                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="E8z-Q1-vlH">
-                                            <rect key="frame" x="0.0" y="416" width="393" height="500"/>
+                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="E8z-Q1-vlH">
+                                            <rect key="frame" x="0.0" y="400" width="393" height="500"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="500" id="UNE-9M-F2X"/>
                                             </constraints>
                                         </tableView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Zd-61-Zo1">
-                                            <rect key="frame" x="0.0" y="932.00000000000011" width="393" height="40"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="1y2-yD-FoY"/>
-                                            </constraints>
-                                        </view>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="HgD-UR-Bvg" firstAttribute="top" secondItem="lBb-Pv-dV5" secondAttribute="top" id="73s-n0-Ypk"/>
-                                        <constraint firstAttribute="trailing" secondItem="3Zd-61-Zo1" secondAttribute="trailing" id="8HT-zx-Jkr"/>
                                         <constraint firstItem="E8z-Q1-vlH" firstAttribute="leading" secondItem="lBb-Pv-dV5" secondAttribute="leading" id="H1f-VX-hwx"/>
                                         <constraint firstAttribute="trailing" secondItem="HgD-UR-Bvg" secondAttribute="trailing" id="JcN-vD-JhT"/>
                                         <constraint firstItem="HgD-UR-Bvg" firstAttribute="leading" secondItem="lBb-Pv-dV5" secondAttribute="leading" id="V1T-4l-XNT"/>
                                         <constraint firstAttribute="trailing" secondItem="E8z-Q1-vlH" secondAttribute="trailing" id="Xdg-TG-CiT"/>
-                                        <constraint firstAttribute="bottom" secondItem="3Zd-61-Zo1" secondAttribute="bottom" id="i4b-W0-SSi"/>
-                                        <constraint firstItem="3Zd-61-Zo1" firstAttribute="leading" secondItem="lBb-Pv-dV5" secondAttribute="leading" id="xHD-1m-s0t"/>
                                     </constraints>
                                 </stackView>
                             </subviews>

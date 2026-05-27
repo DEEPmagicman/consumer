@@ -7,7 +7,7 @@ protocol CheckoutBarDelegate: AnyObject {
 
 class CheckoutBarView: UIView {
 
-    @IBOutlet private weak var containerView: UIView!
+    @IBOutlet var containerView: UIView!
     @IBOutlet private weak var totalAmountLbl: UILabel!
     @IBOutlet private weak var totalTicketLbl: UILabel!
     @IBOutlet private weak var extraFeesLbl: UILabel!
@@ -28,13 +28,26 @@ class CheckoutBarView: UIView {
     }
 
     private func loadFromXib() {
+
         let nib = UINib(nibName: "CheckoutBarView", bundle: nil)
-        guard let view = nib.instantiate(withOwner: self, options: nil).first as? UIView else { return }
-        view.frame = bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(view)
-        view.isHidden = false
-        view.alpha = 1
+
+        guard let view = nib.instantiate(withOwner: self, options: nil).first as? UIView else {
+            return
+        }
+
+        containerView = view
+
+        containerView.frame = bounds
+        containerView.autoresizingMask = [
+            .flexibleWidth,
+            .flexibleHeight
+        ]
+
+        addSubview(containerView)
+        actionBtn.indicator =
+            MaterialLoadingIndicator(
+                color: .black
+            )
     }
 
     // MARK: - Public API
@@ -52,22 +65,6 @@ class CheckoutBarView: UIView {
 
     func setButtonTitle(_ title: String) {
         actionBtn.setTitle(title, for: .normal)
-    }
-
-    func setVisible(_ visible: Bool, animated: Bool = true) {
-        guard containerView.isHidden == visible else { return }
-
-        if visible {
-            containerView.isHidden = false
-            containerView.alpha = 0
-        }
-
-        UIView.animate(withDuration: animated ? 0.25 : 0) {
-            self.containerView.alpha = visible ? 1 : 0
-            self.layoutIfNeeded()
-        } completion: { _ in
-            self.containerView.isHidden = !visible
-        }
     }
 
     func showLoader() { actionBtn.showLoader(userInteraction: false) }

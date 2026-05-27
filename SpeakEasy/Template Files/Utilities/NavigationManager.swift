@@ -554,6 +554,14 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
+    func orderListVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
+        let vc = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
+        vc.event = event
+        vc.selectedTickets = selectedTickets
+        vc.bookingId = bookingId
+        sender.pushVC(vc)
+    }
+    
     func tableSeatingVC(
         _ sender: UIViewController,
         seatingArea: SeatingArea,

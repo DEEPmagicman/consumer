@@ -97,15 +97,15 @@ class TicketsTVC: UITableViewCell {
 //        bgView.layer.borderWidth = 0
 //        bgView.layer.borderColor = UIColor.clear.cgColor
         
-        if isFromGroupTicket {
-            bgView.layer.cornerRadius = 0
-            topConstraint.constant = 0
-            topSapraterView.isHidden = false
-        } else {
+//        if isFromGroupTicket {
+//            bgView.layer.cornerRadius = 0
+//            topConstraint.constant = 0
+//            topSapraterView.isHidden = false
+//        } else {
             bgView.layer.cornerRadius = 10
             topConstraint.constant = 12
             topSapraterView.isHidden = true
-        }
+//        }
     }
 
     private func remainingQuantity(for ticket: EventTicket) -> Int {
