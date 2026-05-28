@@ -13,7 +13,8 @@ class GroupTicketTVC: UITableViewCell {
     @IBOutlet weak var groupTitle: UILabel!
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var expandBnt: UIButton!
-
+    @IBOutlet weak var tableParentView: UIView!
+    
     var tickets: [EventTicket] = []
     var currency: String = "$"
     var whiteLabelColor: String?
@@ -82,8 +83,8 @@ class GroupTicketTVC: UITableViewCell {
         self.eventTicketSetting = eventTicketSetting
         self.expandedTicketDescriptions = expandedTicketDescriptions
         self.disabledTicketIds = disabledTicketIds
-
-        ticketListTableView.isHidden = !isExpanded
+        
+        tableParentView.isHidden = !isExpanded
         ticketListTableView.reloadData()
         ticketListTableView.layoutIfNeeded()
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
@@ -91,7 +92,7 @@ class GroupTicketTVC: UITableViewCell {
 
     @IBAction func onClickExpandBtn(_ sender: Any) {
         isExpanded.toggle()
-        ticketListTableView.isHidden = !isExpanded
+        tableParentView.isHidden = !isExpanded
         ticketListTableView.layoutIfNeeded()
         tableViewHeight.constant = isExpanded ? ticketListTableView.contentSize.height : 0
         onHeightChanged?()

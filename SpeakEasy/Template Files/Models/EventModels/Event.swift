@@ -49,6 +49,7 @@ struct Event: Codable {
     var eventTicketSettings: EventTicketSettings?
     var showEventAttendees: Bool?
     var protectedEventTicket: [EventTicket]?
+    var protectedeventAddOnTicket: [EventTicket]?
     var isEnableOnlineTables: Bool
     var isEnable3DMap: Bool
     var isEnableReservationRequest: Bool
