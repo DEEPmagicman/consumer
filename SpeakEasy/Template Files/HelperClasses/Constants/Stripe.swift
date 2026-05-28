@@ -25,6 +25,7 @@ struct SharedURL {
     static let baseURL = "https://production.speakeasygo.com"
     static let webBaseURL = "https://speakeasygo.com"
     static let isEncryptionEnabled = true
+    static let tableBaseURL = "https://table.production.speakeasygo.com"
 #endif
     static let amazonStorage = "https://media.speakeasygo.com/"
     static let appStoreURL = "https://apps.apple.com/app/speakeasy-go/id1642351956"

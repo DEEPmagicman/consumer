@@ -78,7 +78,10 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
+            imageView.heightAnchor.constraint(
+                equalTo: imageView.widthAnchor,
+                multiplier: 1.2
+            ),
 
             countBadge.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 6),
             countBadge.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -6),
@@ -140,8 +143,8 @@ final class OrderCardCollectionCell: UICollectionViewCell {
     func configureTable(_ reservation: Booking) {
         venueLabel.text = reservation.venueObject?.name ?? ""
         eventLabel.text = reservation.event?.title ?? Constant.String.tableReservation
-        countBadge.isHidden = false
-        countBadge.text = "Table"
+        countBadge.isHidden = true
+//        countBadge.text = "Table"
 
         if let event = reservation.event {
             dateLabel.text = event.startDateTime.convertDateFormat(
@@ -170,3 +173,4 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         }
     }
 }
+

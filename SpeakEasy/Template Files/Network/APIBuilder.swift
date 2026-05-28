@@ -357,11 +357,11 @@ struct APIBuilder {
     }
     
     static var upcomingTableReservationsURL: String {
-        baseURL + route + reservation + upcoming
+        SharedURL.tableBaseURL + route + reservation + upcoming
     }
     
     static var pastTableReservationsURL: String {
-        baseURL + route + reservation + past
+        SharedURL.tableBaseURL + route + reservation + past
     }
     
     static func addPaymentURL(_ id: String) -> String {

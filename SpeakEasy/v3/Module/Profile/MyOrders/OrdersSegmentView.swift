@@ -187,7 +187,7 @@ final class OrdersSegmentView: UIControl {
 
     func setSelectedIndex(_ index: Int, animated: Bool) {
         selectedIndex = index
-        selectedLeading.constant = index == 0 ? 6 : (bounds.width / 2)
+        selectedLeading.constant = index == 0 ? 4 : ((bounds.width / 2) - 2)
 
         updateLabels()
 

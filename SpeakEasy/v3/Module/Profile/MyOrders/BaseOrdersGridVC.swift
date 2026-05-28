@@ -14,8 +14,11 @@ class BaseOrdersGridVC: UIViewController {
         case past
     }
 
-    private let collectionView: UICollectionView
+    // MARK: - UI
+    let collectionView: UICollectionView
     private let emptyView = UILabel()
+
+    // MARK: - Data
 
     var upcomingTitle: String { "" }
     var pastTitle: String { "" }
@@ -32,200 +35,553 @@ class BaseOrdersGridVC: UIViewController {
 
     var isLoadingUpcoming = false
     var isLoadingPast = false
+
     var didLoadUpcoming = false
     var didLoadPast = false
 
+    var isInitialLoading = true
+    var isPaginating = false
+    
+    var paginationShimmerCount: Int {
+        2
+    }
+    
+    var paginatingSection: Int?
+    
+    // MARK: - Init
+
     init() {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(0.5),
-                heightDimension: .estimated(260)
-            )
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-            let groupSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(285)
-            )
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item])
-            group.interItemSpacing = .fixed(16)
+        let layout = PinterestLayout()
 
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 24
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 24, bottom: 34, trailing: 24)
+        layout.numberOfColumns = 2
 
-            let headerSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1),
-                heightDimension: .absolute(48)
-            )
-            let header = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerSize,
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top
-            )
-            section.boundarySupplementaryItems = [header]
-            return section
-        }
+        layout.sectionInsets = UIEdgeInsets(
+            top: 0,
+            left: 24,
+            bottom: 34,
+            right: 24
+        )
 
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        super.init(nibName: nil, bundle: nil)
+        layout.interItemSpacing = 14
+        layout.lineSpacing = 22
+
+        collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: layout
+        )
+
+        super.init(
+            nibName: nil,
+            bundle: nil
+        )
+
+        layout.delegate = self
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setupUI()
         loadInitialData()
     }
 
+    // MARK: - Setup
     private func setupUI() {
+
         view.backgroundColor = .clear
 
         collectionView.backgroundColor = .clear
+
         collectionView.showsVerticalScrollIndicator = false
+
+        collectionView.alwaysBounceVertical = true
+
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.alwaysBounceVertical = true
-        collectionView.register(OrderCardCollectionCell.self, forCellWithReuseIdentifier: OrderCardCollectionCell.identifier)
+
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+        collectionView.register(
+            OrderCardCollectionCell.self,
+            forCellWithReuseIdentifier: OrderCardCollectionCell.identifier
+        )
+        
         collectionView.register(
             OrdersSectionHeaderView.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: OrdersSectionHeaderView.identifier
+            forSupplementaryViewOfKind:
+                UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier:
+                OrdersSectionHeaderView.identifier
         )
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind:
+                UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier:
+                PaginationShimmerFooterView.identifier
+        )
+        
+        collectionView.register(
+            OrderCardShimmerCell.self,
+            forCellWithReuseIdentifier:
+                OrderCardShimmerCell.identifier
+        )
+
         view.addSubview(collectionView)
 
-        emptyView.textColor = UIColor.white.withAlphaComponent(0.55)
-        emptyView.font = Constant.Font.geistMedium(size: 16)
+        emptyView.textColor =
+            UIColor.white.withAlphaComponent(0.55)
+
+        emptyView.font =
+            Constant.Font.geistMedium(size: 16)
+
         emptyView.textAlignment = .center
+
         emptyView.numberOfLines = 0
+
         emptyView.isHidden = true
+
         emptyView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(emptyView)
 
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
+            collectionView.topAnchor.constraint(
+                equalTo: view.topAnchor
+            ),
+
+            collectionView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor
+            ),
+
+            collectionView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor
+            ),
+
+            collectionView.bottomAnchor.constraint(
+                equalTo: view.bottomAnchor
+            ),
+
+            emptyView.centerXAnchor.constraint(
+                equalTo: view.centerXAnchor
+            ),
+
+            emptyView.centerYAnchor.constraint(
+                equalTo: view.centerYAnchor
+            ),
+
+            emptyView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: 40
+            ),
+
+            emptyView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -40
+            )
         ])
     }
 
+    // MARK: - Load Data
+
     func loadInitialData() {
+
         loadUpcoming(reset: true)
         loadPast(reset: true)
     }
 
-    func reloadUI() {
-        collectionView.reloadData()
+    func loadUpcoming(reset: Bool) { }
 
-        let hasNoData = didLoadUpcoming &&
-        didLoadPast &&
-        upcomingItems.isEmpty &&
-        pastItems.isEmpty
+    func loadPast(reset: Bool) { }
+
+    // MARK: - UI Refresh
+    func reloadUI() {
+
+        let hasNoData =
+            didLoadUpcoming &&
+            didLoadPast &&
+            upcomingItems.isEmpty &&
+            pastItems.isEmpty
 
         emptyView.isHidden = !hasNoData
+
         collectionView.isHidden = hasNoData
+
         emptyView.text = emptyTitle
+
+        UIView.performWithoutAnimation {
+
+            collectionView.reloadData()
+
+            collectionView.layoutIfNeeded()
+        }
     }
 
-    func loadUpcoming(reset: Bool) {}
-    func loadPast(reset: Bool) {}
+    func configure(
+        _ cell: OrderCardCollectionCell,
+        booking: Booking
+    ) { }
 
-    func configure(_ cell: OrderCardCollectionCell, booking: Booking) {}
-    func didSelect(_ booking: Booking) {}
+    func didSelect(
+        _ booking: Booking
+    ) { }
+
+    private func item(
+        at indexPath: IndexPath
+    ) -> Booking? {
+
+        if indexPath.section == SectionType.upcoming.rawValue {
+            guard upcomingItems.indices.contains(indexPath.item) else { return nil }
+            return upcomingItems[indexPath.item]
+        }
+        guard pastItems.indices.contains(indexPath.item) else { return nil }
+        return pastItems[indexPath.item]
+    }
+    
+    func insertOrderItems(_ indexPaths: [IndexPath]) {
+        UIView.performWithoutAnimation {
+            
+            self.collectionView.performBatchUpdates ({
+                
+                self.collectionView.insertItems(
+                    at: indexPaths
+                )
+            }) { _ in
+                self.isPaginating = false
+                self.paginatingSection = nil
+                if let layout = self.collectionView.collectionViewLayout as? PinterestLayout {
+                            layout.invalidateFooter()
+                        } else {
+                            self.collectionView.collectionViewLayout.invalidateLayout()
+                        }
+            }
+        }
+    }
 }
 
-// MARK: - CollectionView
+// MARK: - UICollectionViewDataSource
 
-extension BaseOrdersGridVC: UICollectionViewDataSource, UICollectionViewDelegate {
+extension BaseOrdersGridVC:
+UICollectionViewDataSource,
+UICollectionViewDelegate {
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(
+        in collectionView: UICollectionView
+    ) -> Int {
+
         SectionType.allCases.count
     }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch SectionType(rawValue: section) {
-        case .upcoming:
-            return upcomingItems.count
-        case .past:
-            return pastItems.count
-        case .none:
-            return 0
+        // Initial shimmer
+        if isInitialLoading {
+            return 6
         }
+
+        let count: Int
+
+        switch SectionType(rawValue: section) {
+
+        case .upcoming:
+            count = upcomingItems.count
+
+        case .past:
+            count = pastItems.count
+
+        case .none:
+            count = 0
+        }
+
+        return count
     }
 
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
+
+        if isInitialLoading {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                for: indexPath
+            )
+        }
+
+        guard let booking = item(at: indexPath) else {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                for: indexPath
+            )
+        }
+
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: OrderCardCollectionCell.identifier,
             for: indexPath
         ) as! OrderCardCollectionCell
 
-        let booking = item(at: indexPath)
         configure(cell, booking: booking)
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didSelect(item(at: indexPath))
-    }
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
 
+        guard !isInitialLoading, let booking = item(at: indexPath) else { return }
+        didSelect(booking)
+    }
+    
     func collectionView(
         _ collectionView: UICollectionView,
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath
     ) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: OrdersSectionHeaderView.identifier,
-            for: indexPath
-        ) as! OrdersSectionHeaderView
 
-        header.configure(
-            title: indexPath.section == 0 ? upcomingTitle : pastTitle
-        )
+        if kind ==
+            UICollectionView.elementKindSectionFooter {
+
+            let footer =
+                collectionView.dequeueReusableSupplementaryView(
+                    ofKind: kind,
+                    withReuseIdentifier:
+                        PaginationShimmerFooterView.identifier,
+                    for: indexPath
+                ) as! PaginationShimmerFooterView
+
+            footer.isHidden = (!isPaginating || paginatingSection != indexPath.section)
+
+            return footer
+        }
+
+        
+        let header =
+            collectionView.dequeueReusableSupplementaryView(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                withReuseIdentifier:
+                    OrdersSectionHeaderView.identifier,
+                for: indexPath
+            ) as! OrdersSectionHeaderView
+
+        let isUpcoming =
+            indexPath.section == 0
+
+        let title: String
+
+        if isUpcoming {
+
+            title =
+                upcomingItems.isEmpty
+                ? "No Upcoming Orders"
+                : upcomingTitle
+
+        } else {
+
+            title =
+                pastItems.isEmpty
+                ? "No Past Orders"
+                : pastTitle
+        }
+        
+        header.configure( text: title, isEmpty: isUpcoming ? upcomingItems.isEmpty : pastItems.isEmpty )
 
         return header
     }
+}
+
+// MARK: - PinterestLayoutDelegate
+
+extension BaseOrdersGridVC:
+PinterestLayoutDelegate {
 
     func collectionView(
         _ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath
-    ) {
+        heightForItemAt indexPath: IndexPath,
+        with width: CGFloat
+    ) -> CGFloat {
+
+        if isInitialLoading {
+            let imageHeight = width * 1.2
+            return imageHeight + 90
+        }
+
+        guard let booking = item(at: indexPath) else {
+            return 0.1
+        }
+
+        let imageHeight = width * 1.2
+
+        let title =
+            booking.event?.title ??
+            booking.inviteLink?.name ??
+            Constant.String.liveCoverTicket
+
+        let venue =
+            booking.venueObject?.name ?? ""
+
+        let dateText: String = {
+
+            if let event = booking.event {
+
+                return event.startDateTime.convertDateFormat(
+                    from: .yyyyMMddHHmmss,
+                    to: .MMMDDATHMMA,
+                    useDayLightSavingTime: true,
+                    customTimeZone:
+                        booking.venueObject?.useTimezone ?? ""
+                )
+            }
+
+            return booking.createdAt.convertDateFormat(
+                from: .yyyyMMddTHHmmssSSSz,
+                to: .MMMDDATHMMA
+            )
+        }()
+
+        let titleFont =
+            Constant.Font.geistMedium(size: 15)
+
+        let venueFont =
+            Constant.Font.geistMedium(size: 14)
+
+        let dateFont =
+            Constant.Font.geistMedium(size: 14)
+
+        let textWidth = width
+
+        let titleHeight =
+            title.boundingRect(
+                with: CGSize(
+                    width: textWidth,
+                    height: .greatestFiniteMagnitude
+                ),
+                options: [
+                    .usesLineFragmentOrigin,
+                    .usesFontLeading
+                ],
+                attributes: [
+                    .font: titleFont
+                ],
+                context: nil
+            ).height
+
+        let venueHeight =
+            venue.boundingRect(
+                with: CGSize(
+                    width: textWidth,
+                    height: .greatestFiniteMagnitude
+                ),
+                options: [
+                    .usesLineFragmentOrigin,
+                    .usesFontLeading
+                ],
+                attributes: [
+                    .font: venueFont
+                ],
+                context: nil
+            ).height
+
+        let dateHeight =
+            dateText.boundingRect(
+                with: CGSize(
+                    width: textWidth,
+                    height: .greatestFiniteMagnitude
+                ),
+                options: [
+                    .usesLineFragmentOrigin,
+                    .usesFontLeading
+                ],
+                attributes: [
+                    .font: dateFont
+                ],
+                context: nil
+            ).height
+
+        // MARK: Final Height
+
+        let totalHeight =
+            imageHeight +
+            16 +
+            titleHeight +
+            4 +
+            venueHeight +
+            10 +
+            dateHeight
+
+        return ceil(totalHeight)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForFooterIn section: Int
+    ) -> CGFloat {
+
+        guard isPaginating else { return 0 }
+        guard paginatingSection == section else { return 0 }
+        
+        return isPaginating ? 300 : 0
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isInitialLoading else { return }
         guard !UserDefault.shared.isGuest else { return }
 
-        if indexPath.section == SectionType.upcoming.rawValue,
-           indexPath.item == upcomingItems.count - 1,
-           upcomingHasMany,
-           !isLoadingUpcoming {
-            loadUpcoming(reset: false)
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+
+        let threshold: CGFloat = 400
+
+        guard offsetY > contentHeight - visibleHeight - threshold else {
+            return
         }
 
-        if indexPath.section == SectionType.past.rawValue,
-           indexPath.item == pastItems.count - 1,
-           pastHasMany,
-           !isLoadingPast {
-            loadPast(reset: false)
-        }
+        loadNextPageIfNeeded()
     }
+    
+    private func loadNextPageIfNeeded() {
+        guard !isPaginating else { return }
 
-    private func item(at indexPath: IndexPath) -> Booking {
-        if indexPath.section == SectionType.upcoming.rawValue {
-            return upcomingItems[indexPath.item]
-        } else {
-            return pastItems[indexPath.item]
+        let visibleSections = Set(
+            collectionView.indexPathsForVisibleItems.map { $0.section }
+        )
+
+        if visibleSections.contains(0),
+           upcomingHasMany,
+           !isLoadingUpcoming,
+           !upcomingItems.isEmpty {
+
+            isPaginating = true
+            paginatingSection = 0
+            collectionView.collectionViewLayout.invalidateLayout()
+
+            loadUpcoming(reset: false)
+            return
+        }
+
+        if visibleSections.contains(1),
+           pastHasMany,
+           !isLoadingPast,
+           !pastItems.isEmpty {
+
+            isPaginating = true
+            paginatingSection = 1
+            collectionView.collectionViewLayout.invalidateLayout()
+
+            loadPast(reset: false)
         }
     }
 }

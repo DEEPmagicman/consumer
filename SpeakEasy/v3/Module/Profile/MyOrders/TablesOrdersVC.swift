@@ -31,21 +31,54 @@ final class TablesOrdersVC: BaseOrdersGridVC {
 
             self.isLoadingUpcoming = false
             self.didLoadUpcoming = true
-
+            self.isPaginating = false
+            self.paginatingSection = nil
+            
+            if self.didLoadUpcoming && self.didLoadPast {
+                self.isInitialLoading = false
+            }
             if isSuccess {
-                self.upcomingItems = reset ? bookings : self.upcomingItems + bookings
+                
+                let oldCount =
+                    self.upcomingItems.count
+
+                self.upcomingItems =
+                    reset
+                    ? bookings
+                    : self.upcomingItems + bookings
+
+                if reset {
+
+                    self.reloadUI()
+
+                } else {
+                    
+                    let newCount =
+                    self.upcomingItems.count
+                    
+                    let indexPaths =
+                    (oldCount..<newCount).map {
+                        
+                        IndexPath(
+                            item: $0,
+                            section: 0
+                        )
+                    }
+                    
+                    self.insertOrderItems(indexPaths)
+                }
+                
                 self.upcomingHasMany = hasMany
                 self.upcomingSkip = self.upcomingItems.count
             } else {
                 if reset { self.upcomingItems.removeAll() }
+                self.reloadUI()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? Constant.String.somethingWrong,
                     message: ""
                 )
             }
-
-            self.reloadUI()
         }
     }
 
@@ -67,21 +100,54 @@ final class TablesOrdersVC: BaseOrdersGridVC {
 
             self.isLoadingPast = false
             self.didLoadPast = true
-
+            self.isPaginating = false
+            self.paginatingSection = nil
+            
+            if self.didLoadUpcoming && self.didLoadPast {
+                self.isInitialLoading = false
+            }
+            
             if isSuccess {
-                self.pastItems = reset ? bookings : self.pastItems + bookings
+                let oldCount =
+                    self.pastItems.count
+
+                self.pastItems =
+                    reset
+                    ? bookings
+                    : self.pastItems + bookings
+
+                if reset {
+
+                    self.reloadUI()
+
+                } else {
+                    
+                    let newCount =
+                    self.pastItems.count
+                    
+                    let indexPaths =
+                    (oldCount..<newCount).map {
+                        
+                        IndexPath(
+                            item: $0,
+                            section: 1
+                        )
+                    }
+                    
+                    self.insertOrderItems(indexPaths)
+                }
+                
                 self.pastHasMany = hasMany
                 self.pastSkip = self.pastItems.count
             } else {
                 if reset { self.pastItems.removeAll() }
+                self.reloadUI()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? Constant.String.somethingWrong,
                     message: ""
                 )
             }
-
-            self.reloadUI()
         }
     }
 
