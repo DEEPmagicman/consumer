@@ -89,7 +89,6 @@
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="22C-en-57q" secondAttribute="trailing" constant="10" id="hru-rC-Pmh"/>
                                 <constraint firstItem="7id-Hy-iWy" firstAttribute="top" secondItem="22C-en-57q" secondAttribute="bottom" constant="8" id="kPu-nv-IwB"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7id-Hy-iWy" secondAttribute="trailing" constant="10" id="o2K-bI-KD1"/>
-                                <constraint firstItem="22C-en-57q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="YaN-6l-JtQ" secondAttribute="leading" constant="10" id="pZU-eE-gXo"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nc1-TR-YLd">
@@ -256,7 +255,7 @@
                             </constraints>
                         </scrollView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CUa-3z-CZ5" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="20" y="10" width="40" height="40"/>
+                            <rect key="frame" x="20" y="16" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="0kJ-g6-6D2"/>
                                 <constraint firstAttribute="height" constant="40" id="Eqz-4a-6q7"/>
@@ -279,12 +278,13 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="Nc1-TR-YLd" firstAttribute="leading" secondItem="z9p-oc-QRM" secondAttribute="leading" id="3Th-81-1wk"/>
+                        <constraint firstItem="22C-en-57q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="CUa-3z-CZ5" secondAttribute="trailing" constant="16" id="9Ao-T9-pcG"/>
                         <constraint firstAttribute="bottom" secondItem="quD-X3-Sg2" secondAttribute="bottom" constant="10" id="BRg-67-Bdh"/>
                         <constraint firstAttribute="trailing" secondItem="Nc1-TR-YLd" secondAttribute="trailing" id="CX8-fS-LGX"/>
                         <constraint firstItem="YaN-6l-JtQ" firstAttribute="top" secondItem="z9p-oc-QRM" secondAttribute="top" id="Ccs-7B-qx0"/>
                         <constraint firstAttribute="trailing" secondItem="quD-X3-Sg2" secondAttribute="trailing" constant="20" id="MmE-wA-IW5"/>
                         <constraint firstAttribute="trailing" secondItem="YaN-6l-JtQ" secondAttribute="trailing" id="NsA-RC-DhU"/>
-                        <constraint firstItem="CUa-3z-CZ5" firstAttribute="top" secondItem="z9p-oc-QRM" secondAttribute="top" constant="10" id="eRR-m2-c0q"/>
+                        <constraint firstItem="CUa-3z-CZ5" firstAttribute="top" secondItem="z9p-oc-QRM" secondAttribute="top" constant="16" id="eRR-m2-c0q"/>
                         <constraint firstItem="CUa-3z-CZ5" firstAttribute="leading" secondItem="z9p-oc-QRM" secondAttribute="leading" constant="20" id="fsx-Kc-16Q"/>
                         <constraint firstItem="Nc1-TR-YLd" firstAttribute="top" secondItem="YaN-6l-JtQ" secondAttribute="bottom" constant="24" id="iLK-KQ-PJG"/>
                         <constraint firstItem="quD-X3-Sg2" firstAttribute="leading" secondItem="z9p-oc-QRM" secondAttribute="leading" constant="20" id="mW3-Gg-NG9"/>

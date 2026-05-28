@@ -169,6 +169,7 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var browsingLbl: UILabel!
 
     // MARK: - Tab Bar
     private let segmentedTab = SegmentedTabView(items: ["Venues", "Events"])
@@ -180,6 +181,8 @@ class MapViewController: UIViewController {
 
         setupSegmentedTab()
         setupTableView()
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -203,6 +206,7 @@ class MapViewController: UIViewController {
             guard let self else { return }
 
             self.selectedIndex = index
+            self.browsingLbl.text = self.selectedIndex == 0 ? "Browsing Venues" : "Browsing Events"
             self.tableView.reloadData()
         }
     }
@@ -232,8 +236,6 @@ class MapViewController: UIViewController {
     @IBAction func onClickFilterbtn(_ sender: Any) {
         Navigate.to.filtersVC(self)
     }
-    
-    
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource

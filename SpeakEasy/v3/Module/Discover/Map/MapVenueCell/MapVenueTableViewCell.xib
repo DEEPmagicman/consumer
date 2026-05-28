@@ -77,7 +77,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQk-rz-kGl" userLabel="View event">
-                        <rect key="frame" x="355.66666666666669" y="41.666666666666664" width="88.333333333333314" height="28.999999999999993"/>
+                        <rect key="frame" x="385.66666666666669" y="41.666666666666664" width="88.333333333333314" height="28.999999999999993"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See events" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXw-Nl-SMt">
                                 <rect key="frame" x="14.000000000000004" y="6" width="60.333333333333343" height="17"/>
@@ -100,21 +100,31 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bT6-2m-W2Z">
+                        <rect key="frame" x="0.0" y="127" width="474" height="1"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0703125" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="B30-My-Rfr"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="mpF-rh-IJB" firstAttribute="top" secondItem="vK0-ux-5dd" secondAttribute="bottom" constant="9" id="4vE-Iu-gXS"/>
+                    <constraint firstItem="bT6-2m-W2Z" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="7eG-Br-yNz"/>
                     <constraint firstAttribute="trailing" secondItem="Dgz-Kh-ZOl" secondAttribute="trailing" id="A8Y-Kz-TE5"/>
+                    <constraint firstAttribute="bottom" secondItem="bT6-2m-W2Z" secondAttribute="bottom" id="Gs9-3V-gZ5"/>
                     <constraint firstItem="mpF-rh-IJB" firstAttribute="leading" secondItem="vK0-ux-5dd" secondAttribute="leading" id="LuM-Ho-cpk"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="NeR-PF-dHI"/>
                     <constraint firstItem="vK0-ux-5dd" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="bottom" constant="4" id="aFm-Ey-Kcc"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mpF-rh-IJB" secondAttribute="bottom" constant="18" id="agL-lr-j47"/>
                     <constraint firstItem="sQk-rz-kGl" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="top" constant="3" id="gf1-ng-mip"/>
-                    <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" constant="30" id="iAX-4p-q5Q"/>
+                    <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" id="iAX-4p-q5Q"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="leading" secondItem="mOd-Im-OJG" secondAttribute="trailing" constant="15" id="mMA-89-iBh"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="centerY" secondItem="kdO-1S-7yb" secondAttribute="centerY" id="n7j-PM-qW5"/>
                     <constraint firstItem="vK0-ux-5dd" firstAttribute="leading" secondItem="Dgz-Kh-ZOl" secondAttribute="leading" id="pVl-7E-KjB"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mOd-Im-OJG" secondAttribute="bottom" constant="18" id="u1Y-iV-hWV"/>
+                    <constraint firstAttribute="trailing" secondItem="bT6-2m-W2Z" secondAttribute="trailing" id="v6H-rR-EYn"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="top" secondItem="mOd-Im-OJG" secondAttribute="top" constant="7" id="wiO-p9-7TR"/>
                 </constraints>
             </tableViewCellContentView>

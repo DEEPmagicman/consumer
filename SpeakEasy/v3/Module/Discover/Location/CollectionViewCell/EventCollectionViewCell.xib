@@ -70,11 +70,12 @@
                                     <constraint firstItem="Xft-Lg-4Rn" firstAttribute="leading" secondItem="3Qe-hx-67R" secondAttribute="leading" id="m5a-7U-fGT"/>
                                     <constraint firstItem="6E7-ct-mnp" firstAttribute="leading" secondItem="3Qe-hx-67R" secondAttribute="leading" id="oI5-3W-UQ8"/>
                                     <constraint firstAttribute="bottom" secondItem="6E7-ct-mnp" secondAttribute="bottom" id="sg2-HT-WfN"/>
+                                    <constraint firstItem="6E7-ct-mnp" firstAttribute="top" secondItem="Xft-Lg-4Rn" secondAttribute="bottom" id="uQE-pZ-HkR"/>
                                     <constraint firstAttribute="trailing" secondItem="Xft-Lg-4Rn" secondAttribute="trailing" id="x6R-DM-6dM"/>
                                 </constraints>
                             </stackView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PgO-6F-RwC">
-                                <rect key="frame" x="49.333333333333336" y="8" width="85.666666666666657" height="15"/>
+                                <rect key="frame" x="49.333333333333329" y="8" width="85.666666666666671" height="15"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPU-m6-Pb5">
                                         <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>

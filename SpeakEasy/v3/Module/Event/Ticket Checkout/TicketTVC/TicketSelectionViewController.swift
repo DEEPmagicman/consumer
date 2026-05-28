@@ -146,7 +146,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func setupContinueButton() {
-        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .white)
+        continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .black)
     }
 
     private func ticketDate(_ value: String?) -> Date? {
@@ -402,7 +402,7 @@ class TicketSelectionViewController: UIViewController {
             continueToCheckOutBtn.setTitle("Continue to Checkout", for: .normal)
         case .addOn:
             let anySelected = addOnTickets.contains(where: { ($0.selectedTicketCount ?? 0) > 0 })
-            continueToCheckOutBtn.setTitle(anySelected ? "Continue to Checkout" : "NO THANKS", for: .normal)
+            continueToCheckOutBtn.setTitle(anySelected ? "Continue to Checkout" : "No Thanks", for: .normal)
         }
     }
 
@@ -592,7 +592,6 @@ class TicketSelectionViewController: UIViewController {
         ticketTableView.reloadData()
     }
     
-    
     @IBAction func onClickCloseBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
@@ -717,18 +716,38 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
-        guard !isTicketDisabledByLink(ticket), let event = event else { return }
 
-        switch mode {
-        case .normal:
-            selectedNormalTickets = [ticket]
-            addOnTickets.isEmpty
-                ? Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: selectedNormalTickets, bookingId: nil)
-                : switchToAddOnMode()
-
-        case .addOn:
-            Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: selectedNormalTickets + [ticket], bookingId: nil)
+        guard !isTicketDisabledByLink(ticket),
+              let event = event else { return }
+        
+        normalTickets.indices.forEach {
+            normalTickets[$0].selectedTicketCount = nil
         }
+
+        for groupIndex in groupedNormalTickets.indices {
+            for ticketIndex in groupedNormalTickets[groupIndex].tickets.indices {
+                groupedNormalTickets[groupIndex].tickets[ticketIndex].selectedTicketCount = nil
+            }
+        }
+
+        var updatedTicket = ticket
+        updatedTicket.selectedTicketCount = 1
+
+        if let index = normalTickets.firstIndex(where: { $0.id == updatedTicket.id }) {
+            normalTickets[index].selectedTicketCount = 1
+            updatedTicket = normalTickets[index]
+        }
+
+        selectedNormalTickets = [updatedTicket]
+
+        addOnTickets.isEmpty
+            ? Navigate.to.ticketCheckoutVC(
+                self,
+                event: event,
+                selectedTickets: selectedNormalTickets,
+                bookingId: nil
+            )
+            : switchToAddOnMode()
     }
 
     private func handleGroupPlus(ticket: EventTicket) {
@@ -787,14 +806,48 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func handleGroupRSVP(ticket: EventTicket) {
-        guard !isTicketDisabledByLink(ticket), let event = event, let ticketId = ticket.id else { return }
 
-        for group in groupedNormalTickets {
-            guard let selected = group.tickets.first(where: { $0.id == ticketId }) else { continue }
+        guard !isTicketDisabledByLink(ticket),
+              let event = event,
+              let ticketId = ticket.id else { return }
+
+        // Remove all previous selections
+        normalTickets.indices.forEach {
+            normalTickets[$0].selectedTicketCount = nil
+        }
+
+        for groupIndex in groupedNormalTickets.indices {
+            for ticketIndex in groupedNormalTickets[groupIndex].tickets.indices {
+                groupedNormalTickets[groupIndex].tickets[ticketIndex].selectedTicketCount = nil
+            }
+        }
+
+        for groupIndex in groupedNormalTickets.indices {
+
+            guard let ticketIndex = groupedNormalTickets[groupIndex]
+                .tickets
+                .firstIndex(where: { $0.id == ticketId }) else { continue }
+
+            // Select only RSVP ticket
+            groupedNormalTickets[groupIndex]
+                .tickets[ticketIndex]
+                .selectedTicketCount = 1
+
+            let selected =
+            groupedNormalTickets[groupIndex]
+                .tickets[ticketIndex]
+
             selectedNormalTickets = [selected]
+
             addOnTickets.isEmpty
-                ? Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: selectedNormalTickets, bookingId: nil)
+                ? Navigate.to.ticketCheckoutVC(
+                    self,
+                    event: event,
+                    selectedTickets: selectedNormalTickets,
+                    bookingId: nil
+                )
                 : switchToAddOnMode()
+
             return
         }
     }

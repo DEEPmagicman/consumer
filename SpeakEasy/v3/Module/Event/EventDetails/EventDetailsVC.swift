@@ -80,6 +80,9 @@ class EventDetailsVC: UIViewController {
     @IBOutlet weak var additionalButtonsTableView: UITableView!
     @IBOutlet weak var additionalButtonsTableHeight: NSLayoutConstraint!
     @IBOutlet weak var checkOutBtnView: CheckoutBarView!
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var soldOutView: UIView!
+    @IBOutlet weak var soldOutLbl: UILabel!
     
     private let eventDetailsSkeletonView = EventDetailsSkeletonView()
     private var imagePagerVC: ImagePagerVC?
@@ -306,7 +309,7 @@ class EventDetailsVC: UIViewController {
     
     private func setupSkeletonView() {
         viewSkeleton.isHidden = true
-        viewSkeleton.backgroundColor = UIColor(hex: "#111111")
+//        viewSkeleton.backgroundColor = UIColor(hex: "#111111")
 
         eventDetailsSkeletonView.translatesAutoresizingMaskIntoConstraints = false
         viewSkeleton.addSubview(eventDetailsSkeletonView)
@@ -322,14 +325,15 @@ class EventDetailsVC: UIViewController {
     private func showSkeleton() {
         view.layoutIfNeeded()
         viewSkeleton.isHidden = false
+        contentStackView.isHidden = true
         eventDetailsSkeletonView.startShimmer()
         scrollView.isScrollEnabled = false
-        //        buyNowBtnShimmerView.cornerRadius = 30
     }
     
     private func hideSkeleton() {
         eventDetailsSkeletonView.stopShimmer()
         viewSkeleton.isHidden = true
+        contentStackView.isHidden = false
         scrollView.isScrollEnabled = true
     }
 
@@ -346,7 +350,7 @@ class EventDetailsVC: UIViewController {
     }
     
     private func updateSaveUI() {
-        let imageName = isSaved ? "ic_bookmark_filled" : "ic-bookmark"
+        let imageName = isSaved ? "ic-bookmark" : "ic-bookmark"
         
         saveBtn.setImage(UIImage(named: imageName), for: .normal)
         saveBtn.tintColor =  .white
@@ -476,11 +480,7 @@ class EventDetailsVC: UIViewController {
                 self.attendeesView.isHidden = true
             }
             
-            if event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
-                buyNowBtnSuperView.isHidden = true
-            } else {
-                buyNowBtnSuperView.isHidden = false
-            }
+           
             
             self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
 
@@ -555,6 +555,31 @@ class EventDetailsVC: UIViewController {
         )
 
         showCheckoutBar()
+    }
+    
+    private func showContinueBtn() {
+        if event?.eventTicketSettings?.showTicketListingOnMainScreen ?? false {
+            buyNowBtnSuperView.isHidden = true
+        } else {
+            guard buyNowBtnSuperView.isHidden else {
+                return
+            }
+
+            buyNowBtnSuperView.isHidden = false
+
+            UIView.animate(
+                withDuration: 0.3,
+                delay: 0,
+                usingSpringWithDamping: 0.9,
+                initialSpringVelocity: 0.6
+            ) {
+
+                self.buyNowBtnSuperView.alpha = 1
+
+                self.buyNowBtnSuperView.transform = .identity
+            }
+        }
+
     }
     
     private func showCheckoutBar() {
@@ -690,6 +715,7 @@ class EventDetailsVC: UIViewController {
 
             self.setupData()
             hideSkeleton()
+            showContinueBtn()
         }
     }
 
@@ -1091,69 +1117,128 @@ class EventDetailsVC: UIViewController {
 //            checkOutBtn.bgColor = color
 //            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
             
-        } else {
-//            let color = UIColor(hex: "F581FE")
-//            buyNowBtnView.backgroundColor = color
-//            webSiteView.borderColor = color
-//            checkOutBtn.backgroundColor = color
-//            buyNowBtnLbl.textColor = color.suitableTextColor()
-//            checkOutBtn.indicator = MaterialLoadingIndicator(color: .white)
-//            checkOutBtn.bgColor = checkOutBtn.backgroundColor ?? .orange
-//            checkOutBtn.setTitleColor(color.suitableTextColor(), for: .normal)
         }
 
         setupSocialLinks()
+        setupTicketsButton()
 
-        if event.eventTicket == nil {
-        } else {
-            let eventTicketSettings = event.eventTicketSettings
+//        if event.eventTicket == nil {
+//        } else {
+//            let eventTicketSettings = event.eventTicketSettings
+//
+//            if event.isPausedSellingAllTickets == true {
+//                checkOutBtn.setTitle("Tickets from Free", for: .normal)
+////                buyNowBtnView.isUserInteractionEnabled = true
+//
+//            } else if event.isSaleEndedAllTickets == true {
+//                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText ?? "It was a great time!", for: .normal)
+//
+//                if eventTicketSettings?.isSaleEndedTextEnabled == true {
+////                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                } else {
+////                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                }
+//
+////                buyNowBtnLbl.textColor = .black
+////                buyNowBtnView.isUserInteractionEnabled = false
+////                buyNowBtnView.backgroundColor = UIColor.lightGray
+//
+//            } else if event.isSoldOutAllTickets == true {
+//                if eventTicketSettings?.isSoldOutTextEnabled == true {
+//                    checkOutBtn.setTitle(eventTicketSettings?.soldOutText ?? "It was a great time!", for: .normal)
+////                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                } else {
+//                    checkOutBtn.setTitle("It was a great time!", for: .normal)
+////                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
+//                }
+//
+////                buyNowBtnLbl.textColor = .black
+////                buyNowBtnView.isUserInteractionEnabled = false
+////                buyNowBtnView.backgroundColor = UIColor.lightGray
+//
+//            } else if event.eventTicket?.count ?? 0 == 0 {
+//                checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+////                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
+////                buyNowBtnView.isUserInteractionEnabled = false
+//
+//            } else {
+//                let lowestPrice = event.lowestPriceTicket?.price ?? 0
+//                let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
+//
+//                if lowestPrice == 0 {
+//                    checkOutBtn.setTitle("Tickets from Free", for: .normal)
+//                } else {
+//                    checkOutBtn.setTitle("Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))", for: .normal)
+//                }
+//            }
+//        }
+    }
+    
+    
+    
+    private func setupTicketsButton() {
+        guard let event = event else { return }
 
-            if event.isPausedSellingAllTickets == true {
-                checkOutBtn.setTitle("Tickets from Free", for: .normal)
-//                buyNowBtnView.isUserInteractionEnabled = true
+        let settings = event.eventTicketSettings
+        let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
-            } else if event.isSaleEndedAllTickets == true {
-                checkOutBtn.setTitle(eventTicketSettings?.saleEndedText ?? "It was a great time!", for: .normal)
+        // Reset state
+        soldOutView.isHidden = true
+        soldOutLbl.text = ""
+        checkOutBtn.isEnabled = true
+        checkOutBtn.isUserInteractionEnabled = true
 
-                if eventTicketSettings?.isSaleEndedTextEnabled == true {
-//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
-                } else {
-//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
-                }
-
-//                buyNowBtnLbl.textColor = .black
-//                buyNowBtnView.isUserInteractionEnabled = false
-//                buyNowBtnView.backgroundColor = UIColor.lightGray
-
-            } else if event.isSoldOutAllTickets == true {
-                if eventTicketSettings?.isSoldOutTextEnabled == true {
-                    checkOutBtn.setTitle(eventTicketSettings?.soldOutText ?? "It was a great time!", for: .normal)
-//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
-                } else {
-                    checkOutBtn.setTitle("It was a great time!", for: .normal)
-//                    buyNowBtnLbl.text = Constant.String.saleEnded.uppercased()
-                }
-
-//                buyNowBtnLbl.textColor = .black
-//                buyNowBtnView.isUserInteractionEnabled = false
-//                buyNowBtnView.backgroundColor = UIColor.lightGray
-
-            } else if event.eventTicket?.count ?? 0 == 0 {
-                checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-//                buyNowBtnLbl.text = Constant.String.salePaused.uppercased()
-//                buyNowBtnView.isUserInteractionEnabled = false
-
-            } else {
-                let lowestPrice = event.lowestPriceTicket?.price ?? 0
-                let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
-
-                if lowestPrice == 0 {
-                    checkOutBtn.setTitle("Tickets from Free", for: .normal)
-                } else {
-                    checkOutBtn.setTitle("Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))", for: .normal)
-                }
-            }
+        guard let tickets = event.eventTicket, !tickets.isEmpty else {
+            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.salePaused.uppercased()
+            return
         }
+
+        if event.isPausedSellingAllTickets == true {
+            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.salePaused.uppercased()
+            return
+        }
+
+        if event.isSaleEndedAllTickets == true {
+            let title = settings?.isSaleEndedTextEnabled == true
+                ? (settings?.saleEndedText ?? "It was a great time!")
+                : "It was a great time!"
+            checkOutBtn.setTitle(title, for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.saleEnded.uppercased()
+            return
+        }
+
+        if event.isSoldOutAllTickets == true {
+            let title = settings?.isSoldOutTextEnabled == true
+                ? (settings?.soldOutText ?? "Sold Out!")
+                : "Sold Out!"
+            checkOutBtn.setTitle(title, for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.soldOut.uppercased()
+            return
+        }
+
+        // Normal — tickets available
+        let lowestPrice = event.lowestPriceTicket?.price ?? 0
+        let title = lowestPrice == 0
+            ? "Tickets from Free"
+            : "Tickets from \(currency)\(Double(lowestPrice).decimalFormat(true))"
+        checkOutBtn.setTitle(title, for: .normal)
+        checkOutBtn.isEnabled = true
+        checkOutBtn.isUserInteractionEnabled = true
+        soldOutView.isHidden = true
     }
     
     private func configureVIPTablesView() {
@@ -2558,7 +2643,7 @@ final class EventDetailsSkeletonView: UIView {
     }
 
     private func setupUI() {
-        backgroundColor = UIColor(hex: "#111111")
+        backgroundColor = .clear
 
         let W = bounds.width
         let pad: CGFloat = 16
@@ -2636,17 +2721,35 @@ final class EventDetailsSkeletonView: UIView {
         make(CGRect(x: W - pad - 80, y: y + 8, width: 80, height: 10), corner: 5)
 
         y += avatarSize + 24
+        
+        // ─────────────────────────────
+        // 5. CONTINUE BUTTON SKELETON
+        // ─────────────────────────────
+
+        let continueBtnHeight: CGFloat = 44
+
+        make(
+            CGRect(
+                x: 16,
+                y: y,
+                width: W - 32,
+                height: continueBtnHeight
+            ),
+            corner: 22
+        )
+
+        y += continueBtnHeight + 33
 
         // ─────────────────────────────
         // 4. DESCRIPTION
         // ─────────────────────────────
-        make(CGRect(x: pad, y: y, width: W * 0.9, height: 10), corner: 5)
-        y += 16
-        make(CGRect(x: pad, y: y, width: W * 0.8, height: 10), corner: 5)
-        y += 16
-        make(CGRect(x: pad, y: y, width: W * 0.6, height: 10), corner: 5)
-
-        y += 30
+//        make(CGRect(x: pad, y: y, width: W * 0.9, height: 10), corner: 5)
+//        y += 16
+//        make(CGRect(x: pad, y: y, width: W * 0.8, height: 10), corner: 5)
+//        y += 16
+//        make(CGRect(x: pad, y: y, width: W * 0.6, height: 10), corner: 5)
+//
+//        y += 30
 
 //        // ─────────────────────────────
 //        // 5. BOTTOM BAR (PRICE + BUTTON)
