@@ -553,3 +553,48 @@ extension PaymentPresenter {
         }
     }
 }
+
+extension PaymentPresenter {
+
+    static func getSavedEvents(
+        skip: Int,
+        completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ bookings: [Booking], _ hasMany: Bool) -> Void
+    ) {
+        let param: [String: Any] = [
+            "skip": skip,
+            "take": 8,
+            "include": [
+                "venue",
+                "venue.venueAttachment",
+                "event",
+                "event.flyer"
+            ],
+            "orderBy": "createdAt|desc"
+        ]
+
+        AFWrapper.getRequest(APIBuilder.savedEventsURL, params: param, headers: Header.header()) { response in
+            guard
+                let responseDic = response as? [String: Any],
+                let list = responseDic["list"] as? [[String: Any]],
+                let hasMany = responseDic["hasMany"] as? Bool
+            else {
+                completion(false, nil, [], false)
+                return
+            }
+
+            if let bookings = [Booking].parse(list) {
+                completion(true, nil, bookings, hasMany)
+            } else {
+                completion(false, "internal error", [], false)
+            }
+
+        } failure: { error in
+            if let err = error as NSError?, err.code == 0 {
+                completion(false, err.domain, [], false)
+                return
+            }
+
+            completion(false, nil, [], false)
+        }
+    }
+}

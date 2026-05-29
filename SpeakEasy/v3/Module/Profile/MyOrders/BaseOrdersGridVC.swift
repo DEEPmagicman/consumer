@@ -55,7 +55,7 @@ class BaseOrdersGridVC: UIViewController {
         let layout = PinterestLayout()
 
         layout.numberOfColumns = 2
-
+        layout.showsHeaders = true
         layout.sectionInsets = UIEdgeInsets(
             top: 0,
             left: 24,

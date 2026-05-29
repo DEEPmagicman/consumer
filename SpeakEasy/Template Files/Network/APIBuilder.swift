@@ -448,6 +448,10 @@ struct APIBuilder {
         baseURL + route + barTab + "/\(posCheckId)" + paymentDetails
     }
     
+    static var savedEventsURL: String {
+        baseURL + route + "/saved"
+    }
+    
     static func venueEvents(
         venueId: String,
         includes: [String] = [],

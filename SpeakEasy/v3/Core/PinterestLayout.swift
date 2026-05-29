@@ -56,6 +56,8 @@ final class PinterestLayout: UICollectionViewLayout {
 
     var lineSpacing: CGFloat = 22
 
+    var showsHeaders = false
+    
     var headerElementKind =
         UICollectionView.elementKindSectionHeader
 
@@ -140,19 +142,19 @@ final class PinterestLayout: UICollectionViewLayout {
         // MARK: - Sections
 
         for section in 0..<collectionView.numberOfSections {
-
+            
             // MARK: Header
-
-            let headerHeight =
+            if showsHeaders {
+                let headerHeight =
                 delegate?.collectionView(
                     collectionView,
                     referenceHeightForHeaderIn: section
                 ) ?? 48
-
-            let currentTop =
+                
+                let currentTop =
                 yOffsets.max() ?? 0
-
-            let headerAttributes =
+                
+                let headerAttributes =
                 UICollectionViewLayoutAttributes(
                     forSupplementaryViewOfKind:
                         headerElementKind,
@@ -161,23 +163,24 @@ final class PinterestLayout: UICollectionViewLayout {
                         section: section
                     )
                 )
-
-            headerAttributes.frame = CGRect(
-                x: 0,
-                y: currentTop,
-                width: contentWidth,
-                height: headerHeight
-            )
-
-            cache.append(headerAttributes)
-
-            // Reset columns below header
-            yOffsets =
+                
+                headerAttributes.frame = CGRect(
+                    x: 0,
+                    y: currentTop,
+                    width: contentWidth,
+                    height: headerHeight
+                )
+                
+                cache.append(headerAttributes)
+                
+                // Reset columns below header
+                yOffsets =
                 Array(
                     repeating:
                         headerAttributes.frame.maxY + 8,
                     count: numberOfColumns
                 )
+            }
 
             // MARK: Items
             
