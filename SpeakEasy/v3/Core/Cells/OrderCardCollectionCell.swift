@@ -192,6 +192,34 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             return (nil, nil, nil)
         }
     }
+    
+    func configureDiscoverEvent(_ event: Event) {
+        let dateText: String
+        let imageURL: String?
+        let placeholder: UIImage?
+
+            dateText = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .MMMDDATHMMA,
+                useDayLightSavingTime: true,
+                customTimeZone: event.venue?.useTimezone ?? ""
+            )
+
+            imageURL = (event.flyer?.key ?? "").imageURL
+            placeholder = Constant.Icon.uploadImage
+
+
+        configure(
+            OrderCardViewModel(
+                imageURL: imageURL,
+                placeholder: placeholder,
+                badgeText: nil,
+                title: event.title,
+                subtitle: event.venue?.name.uppercased() ?? "",
+                dateText: dateText, statusText: nil, statusBgColor: nil, statusTextColor: nil
+            )
+        )
+    }
 
     func configureTicket(_ booking: Booking) {
         let ticketCount = booking.bookingHasItem.count

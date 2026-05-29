@@ -23,12 +23,20 @@ final class VenueHeaderVC: UIViewController {
     private var isLoading: Bool = false
     
     var headerHeight: CGFloat {
-        return hasAvailableTickets ? 110 : 50
+        return 130
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+//        coverTicketView.layer.cornerRadius = 20
+        coverTicketView.clipsToBounds = true
+        coverTicketView.borderColor = UIColor(hex: "#FFFFFF", alpha: 0.10)
     }
     
     private func setupUI() {

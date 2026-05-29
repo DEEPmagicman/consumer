@@ -38,7 +38,10 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var termsAndConditionsBtn: UIButton!
     @IBOutlet weak var venueMessageBtn: UIButton!
     @IBOutlet weak var backgroundContainerView: UIView!
-
+    @IBOutlet weak var paymentTypeView: UIView!
+    @IBOutlet weak var paymentTypeName: UILabel!
+    @IBOutlet weak var paymentCardImage: UIImageView!
+    
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
     var event: Event?
@@ -58,6 +61,7 @@ final class OrderListViewController: UIViewController {
 
     private var isPromoCodeApplied = false
     private var appliedPromoCode = ""
+    var selectedPaymentMethod: PaymentType?
 
     private var currency: String {
         return venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -73,7 +77,6 @@ final class OrderListViewController: UIViewController {
         setupTableViews()
         setupHeaderData()
         calculateTotal()
-        updatePromoCodeUI()
         setupTermsText()
 
         getBooking(id: bookingId)
@@ -113,7 +116,18 @@ final class OrderListViewController: UIViewController {
         addPromoCodeView.isHidden = true
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
-
+        
+        switch selectedPaymentMethod {
+        case .applePay:
+            paymentTypeName.text = "Apple Pay"
+            paymentCardImage.image = UIImage(named: "applePayIcon")
+        case .card:
+            paymentTypeName.text = "Mastercard ending 0987"
+            paymentCardImage.image = UIImage(named: "creditCardIcon")
+        
+        case .none:
+            paymentTypeName.text = "Apple Pay"
+        }
         checkOutView.delegate = self
     }
 
@@ -378,6 +392,11 @@ final class OrderListViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func onClickCardBtn(_ sender: Any) {
+        Navigate.to.back(self)
+    }
+    
 
     // MARK: - Payment / Booking
 
@@ -506,7 +525,6 @@ final class OrderListViewController: UIViewController {
     private func updatePromoCodeUI() {
         promoCodeAppliedView.isHidden = !isPromoCodeApplied
         promoCodeTitleView.isHidden = isPromoCodeApplied
-        addPromoCodeView.isHidden = isPromoCodeApplied
 
         if isPromoCodeApplied {
             promoCodeLbl.text = appliedPromoCode.uppercased()
@@ -581,7 +599,8 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
-            let paymentVC = PaymentVC()
-            navigationController?.pushViewController(paymentVC, animated: true)
-        }
+//        let paymentVC = PaymentVC()
+//        paymentVC.event = event
+//        navigationController?.pushViewController(paymentVC, animated: true)
+    }
 }

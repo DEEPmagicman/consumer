@@ -644,7 +644,7 @@ class TicketSelectionViewController: UIViewController {
             self.continueToCheckOutBtn.hideLoader()
             if isSuccess {
 //                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
-                Navigate.to.orderListVC(self, event: event, selectedTickets: tickets, bookingId: id)
+                Navigate.to.paymentVc(self, event: event, selectedTickets: tickets, bookingId: id)
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
@@ -1013,8 +1013,25 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard tableView == ticketTableView else { return }
+
         let ticket = tickets[indexPath.row]
-        guard !isTicketDisabledByLink(ticket), (ticket.selectedTicketCount ?? 0) == 0 else { return }
-        handlePlus(ticket: ticket)
+
+        guard !isTicketDisabledByLink(ticket),
+              (ticket.selectedTicketCount ?? 0) == 0 else {
+            return
+        }
+
+        if isRSVPTicket(ticket),
+           let cell = tableView.cellForRow(at: indexPath) as? TicketsTVC {
+            handleRSVP(ticket: ticket, cell: cell)
+        } else {
+            handlePlus(ticket: ticket)
+        }
+    }
+    
+    private func isRSVPTicket(_ ticket: EventTicket) -> Bool {
+        let price = ticket.price ?? 0
+        let extraFees = ticket.extraFees ?? 0
+        return price == 0 && extraFees == 0
     }
 }

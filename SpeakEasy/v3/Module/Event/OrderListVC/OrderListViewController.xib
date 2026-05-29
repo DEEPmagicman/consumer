@@ -35,6 +35,9 @@
                 <outlet property="feesAndTaxesTableView" destination="WxF-sD-nVo" id="22e-IO-j4m"/>
                 <outlet property="feesAndTaxesTableViewHeight" destination="h14-Gq-E54" id="t9b-MN-lii"/>
                 <outlet property="feesDropDowenIc" destination="V9N-Q0-fim" id="z2d-zZ-C4x"/>
+                <outlet property="paymentCardImage" destination="Uc4-D0-fwK" id="2KV-Gn-3gX"/>
+                <outlet property="paymentTypeName" destination="JeS-29-VRY" id="Y2h-Fy-HZp"/>
+                <outlet property="paymentTypeView" destination="7UB-6X-dIg" id="Jzr-LZ-Lw0"/>
                 <outlet property="pluseBtn" destination="iFq-5W-20V" id="AgZ-OG-ztE"/>
                 <outlet property="promoCodeAppliedView" destination="mmT-ga-MoJ" id="LNr-qb-ytT"/>
                 <outlet property="promoCodeLbl" destination="bXY-rX-x6P" id="fWU-oN-tRW"/>
@@ -123,7 +126,7 @@
                             </connections>
                         </button>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Etc-XV-giG">
-                            <rect key="frame" x="0.0" y="98.666666666666657" width="393" height="427.33333333333337"/>
+                            <rect key="frame" x="0.0" y="98.666666666666629" width="393" height="427.33333333333326"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Pw-ph-o9K">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="1306.6666666666667"/>
@@ -495,6 +498,13 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7UB-6X-dIg">
                                                     <rect key="frame" x="0.0" y="1118.6666666666665" width="357" height="60"/>
                                                     <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5ko-6c-Dkl">
+                                                            <rect key="frame" x="0.0" y="0.0" width="357" height="60"/>
+                                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                            <connections>
+                                                                <action selector="onClickCardBtn:" destination="-1" eventType="touchUpInside" id="LyA-qh-NYJ"/>
+                                                            </connections>
+                                                        </button>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="creditCardIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Uc4-D0-fwK">
                                                             <rect key="frame" x="24" y="22" width="26" height="16"/>
                                                             <constraints>
@@ -533,6 +543,9 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.24750784050179211" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="Uc4-D0-fwK" firstAttribute="leading" secondItem="7UB-6X-dIg" secondAttribute="leading" constant="24" id="0RY-W4-3Oq"/>
+                                                        <constraint firstItem="5ko-6c-Dkl" firstAttribute="top" secondItem="7UB-6X-dIg" secondAttribute="top" id="3Nw-4h-fLX"/>
+                                                        <constraint firstAttribute="bottom" secondItem="5ko-6c-Dkl" secondAttribute="bottom" id="4lv-HJ-hBk"/>
+                                                        <constraint firstAttribute="trailing" secondItem="5ko-6c-Dkl" secondAttribute="trailing" id="91R-LF-VKq"/>
                                                         <constraint firstAttribute="height" constant="60" id="GFS-BH-4YX"/>
                                                         <constraint firstItem="sJu-f7-5Ne" firstAttribute="centerY" secondItem="7UB-6X-dIg" secondAttribute="centerY" id="Rut-e0-GF2"/>
                                                         <constraint firstAttribute="trailing" secondItem="sJu-f7-5Ne" secondAttribute="trailing" constant="13" id="Yud-bl-EIb"/>
@@ -540,6 +553,7 @@
                                                         <constraint firstItem="Uc4-D0-fwK" firstAttribute="centerY" secondItem="7UB-6X-dIg" secondAttribute="centerY" id="f7P-Li-ijG"/>
                                                         <constraint firstItem="JeS-29-VRY" firstAttribute="top" secondItem="7UB-6X-dIg" secondAttribute="top" constant="22" id="iPI-Pz-RR5"/>
                                                         <constraint firstAttribute="bottom" secondItem="JeS-29-VRY" secondAttribute="bottom" constant="22" id="pI8-yX-XpG"/>
+                                                        <constraint firstItem="5ko-6c-Dkl" firstAttribute="leading" secondItem="7UB-6X-dIg" secondAttribute="leading" id="qMS-rX-1rl"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -625,6 +639,7 @@
                                                         <constraint firstItem="vuU-dv-QF0" firstAttribute="top" secondItem="J9k-gi-9ud" secondAttribute="top" id="clj-Xw-i6i"/>
                                                         <constraint firstItem="9bu-HG-Mjs" firstAttribute="leading" secondItem="vuU-dv-QF0" secondAttribute="trailing" constant="8" id="nal-Sv-vvr"/>
                                                         <constraint firstAttribute="trailing" secondItem="9bu-HG-Mjs" secondAttribute="trailing" id="nke-0i-gA3"/>
+                                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="vuU-dv-QF0" secondAttribute="bottom" constant="5" id="u9l-jK-TdV"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -647,6 +662,7 @@
                                 <constraint firstAttribute="bottom" secondItem="5Pw-ph-o9K" secondAttribute="bottom" id="dPU-4v-bc9"/>
                                 <constraint firstAttribute="trailing" secondItem="5Pw-ph-o9K" secondAttribute="trailing" id="hkX-Wq-lAT"/>
                                 <constraint firstItem="5Pw-ph-o9K" firstAttribute="width" secondItem="Etc-XV-giG" secondAttribute="width" id="m79-Pg-GK2"/>
+                                <constraint firstItem="5Pw-ph-o9K" firstAttribute="height" secondItem="Etc-XV-giG" secondAttribute="height" priority="250" id="wwK-Fh-5fN"/>
                                 <constraint firstItem="5Pw-ph-o9K" firstAttribute="top" secondItem="Etc-XV-giG" secondAttribute="top" id="z91-dp-Tyk"/>
                             </constraints>
                         </scrollView>

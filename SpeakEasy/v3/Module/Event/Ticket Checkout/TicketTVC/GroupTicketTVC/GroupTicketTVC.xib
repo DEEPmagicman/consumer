@@ -44,7 +44,7 @@
                                                     <action selector="onClickExpandBtn:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="rcy-xP-BEI"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-cD-ZqA">
+                                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGR-cD-ZqA">
                                                 <rect key="frame" x="702" y="67.666666666666671" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="LNe-4F-ErQ"/>

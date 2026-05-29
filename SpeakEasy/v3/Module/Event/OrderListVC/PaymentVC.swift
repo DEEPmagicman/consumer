@@ -3,6 +3,11 @@ import MHLoadingButton
 
 // MARK: - PaymentVC
 
+enum PaymentType {
+    case applePay
+    case card
+}
+
 final class PaymentVC: UIViewController {
 
     // MARK: - UI Components
@@ -47,11 +52,21 @@ final class PaymentVC: UIViewController {
     private var isApplePaySelected = false
     private var isCardSelected     = true
     private var isSaveCard         = false
+    
+    var event: Event?
+    var selectedTickets: [EventTicket] = []
+    var venueDetails: ClipVenue?
+    var bookingId: String?
+    var selectedPaymentMethod: PaymentType = .card
+    private let posterHeaderView = EventPosterHeaderView()
+    private let backgroundContainerView = UIView()
 
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupBackgroundView()
         setupNav()
         setupScrollView()
         setupMainCard()
@@ -61,12 +76,32 @@ final class PaymentVC: UIViewController {
         updateCheckboxStates()
     }
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.applyScreenBgGradient()
-    }
 
-    // MARK: - Nav
+    private func setupBackgroundView() {
+
+        backgroundContainerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backgroundContainerView)
+
+        NSLayoutConstraint.activate([
+            backgroundContainerView.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        backgroundContainerView.addSubview(posterHeaderView)
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
+        ])
+
+        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        posterHeaderView.loadImage(from: imageURLString)
+    }
 
     private func setupNav() {
         backBtn.iconTypeValue = AppIconType.leftSideBack.rawValue
@@ -288,42 +323,6 @@ final class PaymentVC: UIViewController {
         innerStack.addArrangedSubview(doneContainer)
         contentStack.addArrangedSubview(mainCard)
     }
-
-    // MARK: - Save card row (outside the main card)
-
-//    private func setupSaveCardRow() {
-//        saveCardCheckbox.setImage(UIImage(named: "uncheckedIcon"), for: .normal)
-//        saveCardCheckbox.setImage(UIImage(named: "checkedIcon"), for: .selected)
-//        saveCardCheckbox.addTarget(self, action: #selector(onSaveCardTapped), for: .touchUpInside)
-//        saveCardCheckbox.translatesAutoresizingMaskIntoConstraints = false
-//        saveCardCheckbox.widthAnchor.constraint(equalToConstant: 18).isActive = true
-//        saveCardCheckbox.heightAnchor.constraint(equalToConstant: 18).isActive = true
-//
-//        saveCardLabel.text = "Save card to my profile"
-//        saveCardLabel.textColor = AppColor.primaryWhiteColor
-//        saveCardLabel.font = Constant.Font.geistRegular(size: 14)
-//        saveCardLabel.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let rowStack = UIStackView(arrangedSubviews: [saveCardCheckbox, saveCardLabel])
-//        rowStack.axis = .horizontal
-//        rowStack.spacing = 10
-//        rowStack.alignment = .center
-//        rowStack.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let wrapper = UIView()
-//        wrapper.translatesAutoresizingMaskIntoConstraints = false
-//        wrapper.addSubview(rowStack)
-//        NSLayoutConstraint.activate([
-//            rowStack.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor),
-//            rowStack.topAnchor.constraint(equalTo: wrapper.topAnchor, constant: 4),
-//            rowStack.bottomAnchor.constraint(equalTo: wrapper.bottomAnchor, constant: -4),
-//            rowStack.trailingAnchor.constraint(lessThanOrEqualTo: wrapper.trailingAnchor),
-//        ])
-//        contentStack.addArrangedSubview(wrapper)
-//    }
-
-    // MARK: - Done button
-
     private func setupDoneButton() {
         doneBtn.setTitle("Done", for: .normal)
         doneBtn.setTitleColor(AppColor.primaryBlackColor, for: .normal)
@@ -340,8 +339,6 @@ final class PaymentVC: UIViewController {
         contentStack.addArrangedSubview(doneBtn)
         contentStack.addArrangedSubview(makeSpacer(24))
     }
-
-    // MARK: - Constraints
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -370,21 +367,12 @@ final class PaymentVC: UIViewController {
         ])
     }
 
-    // MARK: - Actions
-
     @objc private func onClickBack() {
         navigationController?.popViewController(animated: true)
     }
 
     @objc private func onApplePayTapped() {
-        isApplePaySelected.toggle()
-        if isApplePaySelected { isCardSelected = false }
-        updateCheckboxStates()
-    }
-
-    @objc private func onCardTapped() {
-        isCardSelected.toggle()
-        if isCardSelected { isApplePaySelected = false }
+        selectedPaymentMethod = .applePay
         updateCheckboxStates()
     }
 
@@ -393,16 +381,28 @@ final class PaymentVC: UIViewController {
         saveCardCheckbox.isSelected = isSaveCard
     }
 
+    @objc private func onCardTapped() {
+        selectedPaymentMethod = .card
+        updateCheckboxStates()
+    }
+
     @objc private func onClickDone() {
-        // Handle payment submission
-    }
 
+        if let event = event {
+
+            Navigate.to.orderListVC(
+                self,
+                event: event,
+                selectedTickets: selectedTickets,
+                bookingId: bookingId,
+                paymentMethod: selectedPaymentMethod
+            )
+        }
+    }
     private func updateCheckboxStates() {
-        applePayCheckbox.isSelected = isApplePaySelected
-        cardCheckbox.isSelected     = isCardSelected
+        applePayCheckbox.isSelected = selectedPaymentMethod == .applePay
+        cardCheckbox.isSelected = selectedPaymentMethod == .card
     }
-
-    // MARK: - Helpers
 
     private func makeDivider() -> UIView {
         let v = UIView()
@@ -417,8 +417,6 @@ final class PaymentVC: UIViewController {
         return v
     }
 }
-
-// MARK: - PaymentTextField
 
 final class PaymentTextField: UIView {
 
@@ -474,8 +472,6 @@ final class PaymentTextField: UIView {
         ])
     }
 }
-
-// MARK: - UIColor Hex Extension
 
 extension UIColor {
     convenience init(hex: String, alpha: CGFloat = 1.0) {

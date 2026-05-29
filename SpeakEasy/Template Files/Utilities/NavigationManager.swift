@@ -546,6 +546,14 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
+    func paymentVc(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
+        let vc = PaymentVC()
+        vc.event = event
+        vc.selectedTickets = selectedTickets
+        vc.bookingId = bookingId
+        sender.pushVC(vc)
+    }
+    
     func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
         let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
         vc.event = event
@@ -554,11 +562,13 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func orderListVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
+    func orderListVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil,
+                     paymentMethod: PaymentType) {
         let vc = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
         vc.event = event
         vc.selectedTickets = selectedTickets
         vc.bookingId = bookingId
+        vc.selectedPaymentMethod = paymentMethod
         sender.pushVC(vc)
     }
     

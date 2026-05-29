@@ -3294,7 +3294,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
 
             if isSuccess {
 
-                Navigate.to.orderListVC(
+                Navigate.to.paymentVc(
                     self,
                     event: event,
                     selectedTickets: selectedTickets,
