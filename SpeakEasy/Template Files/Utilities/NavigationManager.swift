@@ -735,7 +735,7 @@ final class Navigate {
     }
     
     func savedVC(_ sender: UIViewController) {
-        let vc = NotificationSettingsVC()
+        let vc = SavedVC()
         sender.pushVC(vc)
     }
     

@@ -501,3 +501,29 @@ extension Notification.Name {
     static let userProfileDidUpdate =
         Notification.Name("userProfileDidUpdate")
 }
+
+extension String {
+
+    func height(
+        width: CGFloat,
+        font: UIFont
+    ) -> CGFloat {
+
+        let rect = self.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                NSStringDrawingOptions.usesLineFragmentOrigin,
+                NSStringDrawingOptions.usesFontLeading
+            ],
+            attributes: [
+                .font: font
+            ],
+            context: nil
+        )
+
+        return ceil(rect.height)
+    }
+}

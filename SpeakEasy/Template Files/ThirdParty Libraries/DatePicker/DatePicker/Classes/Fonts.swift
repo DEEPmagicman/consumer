@@ -30,6 +30,7 @@ enum AppFont {
            case inter
            case poppins
            case geist
+           case mono
 
            var prefix: String {
                switch self {
@@ -39,7 +40,10 @@ enum AppFont {
                    return "Poppins"
                case .geist:
                    return "Geist"
+               case .mono:
+                   return "GeistMono"
                }
+               
            }
        }
 

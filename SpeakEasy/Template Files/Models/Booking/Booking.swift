@@ -25,7 +25,7 @@ struct Booking: Codable {
     var createdAt: String
     var isDeleted: Bool?
     var bookingType: String?
-    var bookingHasItem: [BookingHasItem]
+    var bookingHasItem: [BookingHasItem] = []
     var event: Event?
     var ticketDetails: [TicketDetails]?
     var floorPlanTimeSlotBooking: [TimeSlot]?
@@ -123,6 +123,148 @@ struct Booking: Codable {
         try container.encode(addOnsBookingId, forKey: .addOnsBookingId)
         try container.encodeIfPresent(bookingHasCheckIn, forKey: .bookingHasCheckIn)
         try container.encodeIfPresent(bookingDetails, forKey: .bookingDetails)
+    }
+    
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(
+            keyedBy: CodingKeys.self
+        )
+
+        venueObject = try container.decodeIfPresent(
+            ClipVenue.self,
+            forKey: .venueObject
+        )
+
+        id = try container.decodeIfPresent(
+            String.self,
+            forKey: .id
+        ) ?? ""
+
+        createdAt = try container.decodeIfPresent(
+            String.self,
+            forKey: .createdAt
+        ) ?? ""
+
+        bookingHasItem = try container.decodeIfPresent(
+            [BookingHasItem].self,
+            forKey: .bookingHasItem
+        ) ?? []
+
+        event = try container.decodeIfPresent(
+            Event.self,
+            forKey: .event
+        )
+
+        venueId = try container.decodeIfPresent(
+            String.self,
+            forKey: .venueId
+        )
+
+        eventId = try container.decodeIfPresent(
+            String.self,
+            forKey: .eventId
+        )
+
+        paymentType = try container.decodeIfPresent(
+            String.self,
+            forKey: .paymentType
+        )
+
+        totalPrice = try container.decodeIfPresent(
+            Double.self,
+            forKey: .totalPrice
+        )
+
+        note = try container.decodeIfPresent(
+            String.self,
+            forKey: .note
+        )
+
+        consumerUserId = try container.decodeIfPresent(
+            [String].self,
+            forKey: .consumerUserId
+        )
+
+        bookingStartTime = try container.decodeIfPresent(
+            String.self,
+            forKey: .bookingStartTime
+        )
+
+        bookingEndTime = try container.decodeIfPresent(
+            String.self,
+            forKey: .bookingEndTime
+        )
+
+        paymentIntent = try container.decodeIfPresent(
+            String.self,
+            forKey: .paymentIntent
+        )
+
+        isCompedTicket = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .isCompedTicket
+        )
+
+        bookingExpireDateTime = try container.decodeIfPresent(
+            String.self,
+            forKey: .bookingExpireDateTime
+        )
+
+        isDeleted = try container.decodeIfPresent(
+            Bool.self,
+            forKey: .isDeleted
+        )
+
+        bookingType = try container.decodeIfPresent(
+            String.self,
+            forKey: .bookingType
+        )
+
+        ticketDetails = try container.decodeIfPresent(
+            [TicketDetails].self,
+            forKey: .ticketDetails
+        )
+
+        floorPlanTimeSlotBooking = try container.decodeIfPresent(
+            [TimeSlot].self,
+            forKey: .floorPlanTimeSlotBooking
+        )
+
+        inviteLink = try container.decodeIfPresent(
+            InviteLink.self,
+            forKey: .inviteLink
+        )
+
+        inviteLinkId = try container.decodeIfPresent(
+            String.self,
+            forKey: .inviteLinkId
+        )
+
+        fees = try container.decodeIfPresent(
+            PaymentDetail.self,
+            forKey: .fees
+        )
+
+        guestList = try container.decodeIfPresent(
+            GuestList.self,
+            forKey: .guestList
+        )
+
+        addOnsBookingId = try container.decodeIfPresent(
+            String.self,
+            forKey: .addOnsBookingId
+        )
+
+        bookingHasCheckIn = try container.decodeIfPresent(
+            [BookingHasCheckIn].self,
+            forKey: .bookingHasCheckIn
+        )
+
+        bookingDetails = try container.decodeIfPresent(
+            BookingDetails.self,
+            forKey: .bookingDetails
+        )
     }
 }
 
