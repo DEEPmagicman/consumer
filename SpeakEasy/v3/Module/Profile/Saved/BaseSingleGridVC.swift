@@ -90,7 +90,7 @@ class BaseSingleGridVC: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
             emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])

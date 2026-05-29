@@ -176,7 +176,8 @@ class BaseOrdersGridVC: UIViewController {
             ),
 
             emptyView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor
+                equalTo: view.centerYAnchor,
+                constant: -40
             ),
 
             emptyView.leadingAnchor.constraint(

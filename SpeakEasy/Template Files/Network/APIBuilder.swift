@@ -452,6 +452,10 @@ struct APIBuilder {
         baseURL + route + "/saved"
     }
     
+    static var venueListURL: String {
+        baseURL + route + venue + coverVenue
+    }
+    
     static func venueEvents(
         venueId: String,
         includes: [String] = [],

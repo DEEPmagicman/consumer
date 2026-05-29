@@ -173,6 +173,10 @@
 		6A83A5912FC6F7E8002AA775 /* BaseOrdersGridVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */; };
 		6A8A844A2FB1E00A00AC87BB /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A84492FB1E00700AC87BB /* ThemeManager.swift */; };
 		6A8A844C2FB1E01100AC87BB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A844B2FB1E01000AC87BB /* AppColors.swift */; };
+		6A91E2C02FC96F3C000319C4 /* VenueGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A91E2BF2FC96F3C000319C4 /* VenueGridCell.swift */; };
+		6A91E2C32FC96F51000319C4 /* VenueGridShimmerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A91E2C22FC96F51000319C4 /* VenueGridShimmerCell.swift */; };
+		6A91E2C52FC96F58000319C4 /* VenueListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A91E2C42FC96F58000319C4 /* VenueListVC.swift */; };
+		6A91E2C72FC96FAF000319C4 /* VenueListVC+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A91E2C62FC96FAF000319C4 /* VenueListVC+CollectionView.swift */; };
 		6AB5E6B62FC0636A003F1A5B /* LandingHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */; };
 		6AD75F2B2FB5ED6100F68C19 /* Geist-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */; };
 		6AD8CE2D2FBC63B900AC8A89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD8CE2C2FBC63B900AC8A89 /* EditProfileVC.swift */; };
@@ -710,6 +714,10 @@
 		6A83A5902FC6F7E8002AA775 /* BaseOrdersGridVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseOrdersGridVC.swift; sourceTree = "<group>"; };
 		6A8A84492FB1E00700AC87BB /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		6A8A844B2FB1E01000AC87BB /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		6A91E2BF2FC96F3C000319C4 /* VenueGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueGridCell.swift; sourceTree = "<group>"; };
+		6A91E2C22FC96F51000319C4 /* VenueGridShimmerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueGridShimmerCell.swift; sourceTree = "<group>"; };
+		6A91E2C42FC96F58000319C4 /* VenueListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueListVC.swift; sourceTree = "<group>"; };
+		6A91E2C62FC96FAF000319C4 /* VenueListVC+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VenueListVC+CollectionView.swift"; sourceTree = "<group>"; };
 		6AB5E6B52FC0636A003F1A5B /* LandingHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingHeaderView.swift; sourceTree = "<group>"; };
 		6AD8CE2C2FBC63B900AC8A89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		6AD8CE2E2FBC63D000AC8A89 /* AccountInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfoVC.swift; sourceTree = "<group>"; };
@@ -1594,6 +1602,25 @@
 			path = Theme;
 			sourceTree = "<group>";
 		};
+		6A91E2BE2FC96F30000319C4 /* Venues */ = {
+			isa = PBXGroup;
+			children = (
+				6A91E2C12FC96F4D000319C4 /* Cells */,
+				6A91E2C42FC96F58000319C4 /* VenueListVC.swift */,
+				6A91E2C62FC96FAF000319C4 /* VenueListVC+CollectionView.swift */,
+			);
+			path = Venues;
+			sourceTree = "<group>";
+		};
+		6A91E2C12FC96F4D000319C4 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				6A91E2BF2FC96F3C000319C4 /* VenueGridCell.swift */,
+				6A91E2C22FC96F51000319C4 /* VenueGridShimmerCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		6AD8CE322FBC778600AC8A89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1676,6 +1703,7 @@
 		6AF9DE0D2FB47A6A008D6CBC /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				6A91E2BE2FC96F30000319C4 /* Venues */,
 				6A4FA1AB2FC87222007EB116 /* Saved */,
 				6A60CAD62FC4638000155E9D /* MyOrders */,
 				6AD8CE322FBC778600AC8A89 /* Views */,
@@ -3333,6 +3361,7 @@
 				CAC4140228A478040007BA86 /* Color.swift in Sources */,
 				920B4CFE2B90932200C07402 /* ScanQRCodeVC.swift in Sources */,
 				6A40D1C92FBF2C8100F3FAAB /* FloatingTabItem.swift in Sources */,
+				6A91E2C32FC96F51000319C4 /* VenueGridShimmerCell.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
 				CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */,
 				0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */,
@@ -3373,12 +3402,14 @@
 				6A40D1B52FBEDE8A00F3FAAB /* NotificationSettingsVC.swift in Sources */,
 				CE2A6CAC2FB5DBB200FE8596 /* EventCollectionViewCell.swift in Sources */,
 				045D04C82B1739E400B68D9E /* PurchaseDetailsTVC.swift in Sources */,
+				6A91E2C72FC96FAF000319C4 /* VenueListVC+CollectionView.swift in Sources */,
 				043722102F7292EE00E4F985 /* InstagramUsernamePopupVC.swift in Sources */,
 				CE7349292FB64A6600558DFB /* AppIconButton.swift in Sources */,
 				CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */,
 				BD829BD82941E69300298271 /* ConfirmPopUpViewController.swift in Sources */,
 				CE3213C929E03B8E00EBC179 /* AccountVC.swift in Sources */,
 				E16705A028CA6B3700644BF0 /* HoursTVC.swift in Sources */,
+				6A91E2C02FC96F3C000319C4 /* VenueGridCell.swift in Sources */,
 				6A40D1B32FBED16600F3FAAB /* DeleteAccountBottomSheet.swift in Sources */,
 				BD942F3D29595A3300D52115 /* AFWrapper.swift in Sources */,
 				CE94707429952058007102A6 /* TicketTypeTVC.swift in Sources */,
@@ -3443,6 +3474,7 @@
 				0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */,
 				6A60CADA2FC466E700155E9D /* OrdersSegmentView.swift in Sources */,
 				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,
+				6A91E2C52FC96F58000319C4 /* VenueListVC.swift in Sources */,
 				CAC4140928A478050007BA86 /* MonthsCollectionViewCell.swift in Sources */,
 				6A4FA1AA2FC847D5007EB116 /* OrderCardShimmerContentView.swift in Sources */,
 				82847A7F29824B2B00611DC4 /* VenueTableCell.swift in Sources */,
