@@ -93,4 +93,53 @@ final class VenuePresenter {
             completion(false, nil, [], false)
         }
     }
+
+    static func getVenueList(
+        skip: Int,
+        completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ venues: [ClipVenue], _ hasMany: Bool) -> Void
+    ) {
+        let params: [String: Any] = [
+            "skip": skip,
+            "take": 10,
+            "include": [
+                "logo",
+                "venueAttachment"
+            ],
+            "bookingStatus": "OPEN",
+            "city": UserDefault.shared.localCity,
+            "orderBy": "createdAt|desc"
+        ]
+
+        AFWrapper.getRequest(
+            APIBuilder.venueListURL,
+            params: params,
+            headers: Header.header()
+        ) { response in
+
+            guard
+                let responseDic = response as? [String: Any],
+                let list = responseDic["list"] as? [[String: Any]]
+            else {
+                completion(false, nil, [], false)
+                return
+            }
+
+            let hasMany = responseDic["hasMany"] as? Bool ?? false
+
+            if let venues = [ClipVenue].parse(list) {
+                completion(true, nil, venues, hasMany)
+            } else {
+                completion(false, "internal error", [], false)
+            }
+
+        } failure: { error in
+
+            if let err = error as NSError?, err.code == 0 {
+                completion(false, err.domain, [], false)
+                return
+            }
+
+            completion(false, nil, [], false)
+        }
+    }
 }

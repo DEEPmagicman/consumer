@@ -20,7 +20,8 @@ final class AllVenueVC: UIViewController {
     private var hasMore = true
     private var isLoading = false
     private var isInitialLoading = false
-
+    private var isPaginating = false
+    
     // MARK: - Layout Constants
     private let horizontalMargin: CGFloat = 20
     private let interItemSpacing: CGFloat = 16
@@ -47,25 +48,44 @@ final class AllVenueVC: UIViewController {
         Navigate.to.filtersVC(self)
     }
     
-
     // MARK: - Setup
 
     private func setupCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(VenueCVC.nib, forCellWithReuseIdentifier: VenueCVC.identifier)
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
+
+        collectionView.register(
+            VenueGridCell.self,
+            forCellWithReuseIdentifier: VenueGridCell.identifier
+        )
+
+        collectionView.register(
+            VenueGridShimmerCell.self,
+            forCellWithReuseIdentifier: VenueGridShimmerCell.identifier
+        )
+
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier
+        )
+
         collectionView.contentInset = UIEdgeInsets(
-            top: 16,
+            top: 4,
             left: horizontalMargin,
-            bottom: 16,
+            bottom: 24,
             right: horizontalMargin
         )
-        collectionView.showsVerticalScrollIndicator = false
 
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = interItemSpacing
         layout.minimumLineSpacing = lineSpacing
         layout.scrollDirection = .vertical
+        layout.footerReferenceSize = .zero
+
         collectionView.collectionViewLayout = layout
     }
 
@@ -98,31 +118,32 @@ final class AllVenueVC: UIViewController {
         if venueList.isEmpty {
             isInitialLoading = true
             collectionView.reloadData()
+        } else {
+            isPaginating = true
+            collectionView.collectionViewLayout.invalidateLayout()
         }
 
         presenter.getVenueListForMVP(
             from: skip,
-            status: VenueStatus.open.rawValue, city: nil
+            status: VenueStatus.open.rawValue,
+            city: nil
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
-            guard let self = self else { return }
+            guard let self else { return }
 
+            self.isLoading = false
             self.isInitialLoading = false
+            self.isPaginating = false
 
             if isSuccess {
                 self.venueList.append(contentsOf: venues)
                 self.skip = self.venueList.count
                 self.hasMore = hasMore
-                self.collectionView.reloadData()
             } else {
-                self.collectionView.reloadData()
-                Alert.showAlertSheet(
-                    style: .alert,
-                    title: errMsg ?? Constant.String.somethingWrong,
-                    message: ""
-                )
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
             }
 
-            self.isLoading = false
+            self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.invalidateLayout()
         }
     }
 }
@@ -130,31 +151,39 @@ final class AllVenueVC: UIViewController {
 // MARK: - UICollectionViewDataSource
 
 extension AllVenueVC: UICollectionViewDataSource {
-
+    
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return isInitialLoading ? 0 : venueList.count
+        return isInitialLoading ? 8 : venueList.count
     }
-
+    
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-
-        let cell: VenueCVC = collectionView.dequeue(
-            withIdentifier: VenueCVC.identifier,
-            for: indexPath
-        )
-
+        
         if isInitialLoading {
-//            cell.showSkeleton()
-            return cell
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: VenueGridShimmerCell.identifier,
+                for: indexPath
+            )
         }
-
-        let venue = venueList[indexPath.item]
-        cell.configure(with: venue)
+        
+        guard venueList.indices.contains(indexPath.item) else {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: VenueGridShimmerCell.identifier,
+                for: indexPath
+            )
+        }
+        
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: VenueGridCell.identifier,
+            for: indexPath
+        ) as! VenueGridCell
+        
+        cell.configure(venueList[indexPath.item])
         return cell
     }
 }
@@ -181,24 +210,44 @@ extension AllVenueVC: UICollectionViewDelegate {
         didSelectItemAt indexPath: IndexPath
     ) {
         guard !isInitialLoading else { return }
+        guard venueList.indices.contains(indexPath.item) else { return }
+        
+        Navigate.to.venueVC(self, venueDetails: venueList[indexPath.item])
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        let footer = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier,
+            for: indexPath
+        ) as! PaginationShimmerFooterView
 
-        let venue = venueList[indexPath.item]
-        Navigate.to.venueVC(self, venueDetails: venue)
+        footer.isHidden = !isPaginating
+        return footer
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isInitialLoading else { return }
+        guard !isLoading else { return }
+        guard hasMore else { return }
+
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+
+        if offsetY > contentHeight - visibleHeight - 400 {
+            fetchVenues(showLoader: false)
+        }
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension AllVenueVC: UICollectionViewDelegateFlowLayout {
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        // Height can be adjusted to match your design
-        return CGSize(width: cellWidth, height: cellWidth )
-    }
 
     func collectionView(
         _ collectionView: UICollectionView,
@@ -214,5 +263,23 @@ extension AllVenueVC: UICollectionViewDelegateFlowLayout {
         minimumLineSpacingForSectionAt section: Int
     ) -> CGFloat {
         return lineSpacing
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        return CGSize(width: cellWidth, height: cellWidth)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        referenceSizeForFooterInSection section: Int
+    ) -> CGSize {
+        return isPaginating
+        ? CGSize(width: collectionView.bounds.width, height: 220)
+        : .zero
     }
 }

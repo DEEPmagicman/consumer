@@ -740,7 +740,7 @@ final class Navigate {
     }
     
     func venuesVC(_ sender: UIViewController) {
-        let vc = NotificationSettingsVC()
+        let vc = VenueListVC()
         sender.pushVC(vc)
     }
 }
