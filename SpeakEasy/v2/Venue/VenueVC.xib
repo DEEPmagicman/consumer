@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,55 +27,53 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="y0Q-Fq-rSB">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SampleVenue1" translatesAutoresizingMaskIntoConstraints="NO" id="y0Q-Fq-rSB">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                 </imageView>
-                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZAk-Zy-jps">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="TkW-hZ-gOY">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
-                    <blurEffect style="regular"/>
-                </visualEffectView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="thO-mw-1Fg">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="95"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EaM-fZ-gSA">
-                            <rect key="frame" x="20" y="54" width="43" height="43"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="43" id="vKZ-0z-8Lp"/>
-                                <constraint firstAttribute="height" constant="43" id="x5r-CI-Grb"/>
-                            </constraints>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="" image="backArrowV2"/>
-                            <connections>
-                                <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="Ia0-x6-CYQ"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LdU-hy-SRt">
-                            <rect key="frame" x="330" y="54" width="43" height="43"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="43" id="TAV-ZU-0dw"/>
-                                <constraint firstAttribute="height" constant="43" id="YLh-lW-mdr"/>
-                            </constraints>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" image="shareIconV2"/>
-                            <connections>
-                                <action selector="onClickShare:" destination="-1" eventType="touchUpInside" id="FKI-Fv-iKK"/>
-                            </connections>
-                        </button>
-                    </subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cDR-yn-LGL" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="21" y="134" width="40" height="40"/>
                     <constraints>
-                        <constraint firstItem="EaM-fZ-gSA" firstAttribute="top" secondItem="thO-mw-1Fg" secondAttribute="top" constant="54" id="5Qk-5B-yij"/>
-                        <constraint firstItem="LdU-hy-SRt" firstAttribute="centerY" secondItem="EaM-fZ-gSA" secondAttribute="centerY" id="Za5-IQ-sYn"/>
-                        <constraint firstAttribute="trailing" secondItem="LdU-hy-SRt" secondAttribute="trailing" constant="20" id="bFb-E9-9qD"/>
-                        <constraint firstAttribute="height" constant="95" id="gIe-gP-CfJ"/>
-                        <constraint firstItem="EaM-fZ-gSA" firstAttribute="leading" secondItem="thO-mw-1Fg" secondAttribute="leading" constant="20" id="wvl-IZ-isU"/>
+                        <constraint firstAttribute="width" constant="40" id="9xr-dW-wdp"/>
+                        <constraint firstAttribute="height" constant="40" id="WQh-zm-Zyp"/>
                     </constraints>
-                </view>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title=""/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="back"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="14"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickBack:" destination="-1" eventType="touchUpInside" id="rR9-nu-yGx"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wkh-X4-Qx0" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="323" y="134" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="X6m-Jr-Zxs"/>
+                        <constraint firstAttribute="height" constant="40" id="jk6-Ir-sbV"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" image="shareIconV2"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="share"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="18"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickShare:" destination="-1" eventType="touchUpInside" id="XCd-EK-hrn"/>
+                    </connections>
+                </button>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.xbox" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="xhi-9o-YK3">
-                    <rect key="frame" x="146.66666666666666" y="95.666666666666686" width="100" height="99"/>
+                    <rect key="frame" x="146.66666666666666" y="168.66666666666666" width="100" height="99.000000000000028"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="100" id="TfQ-P4-Aqv"/>
                         <constraint firstAttribute="width" constant="100" id="hg7-Ox-Gf5"/>
@@ -87,7 +85,7 @@
                     </userDefinedRuntimeAttributes>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ALN-3l-0qS">
-                    <rect key="frame" x="16" y="205" width="361" height="25"/>
+                    <rect key="frame" x="16" y="278" width="361" height="25"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="25" id="U5Y-vD-X2a"/>
                     </constraints>
@@ -96,7 +94,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LtE-MV-TC6">
-                    <rect key="frame" x="0.0" y="230" width="393" height="622"/>
+                    <rect key="frame" x="0.0" y="303" width="393" height="549"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
@@ -105,22 +103,19 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ALN-3l-0qS" secondAttribute="trailing" constant="16" id="2aX-Vs-7gN"/>
                 <constraint firstAttribute="trailing" secondItem="LtE-MV-TC6" secondAttribute="trailing" id="43z-QF-gJD"/>
-                <constraint firstItem="xhi-9o-YK3" firstAttribute="top" secondItem="thO-mw-1Fg" secondAttribute="bottom" id="55n-v3-UH4"/>
-                <constraint firstAttribute="bottom" secondItem="ZAk-Zy-jps" secondAttribute="bottom" id="5Rn-v7-Yyq"/>
-                <constraint firstItem="thO-mw-1Fg" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="6K1-G8-yju"/>
-                <constraint firstItem="thO-mw-1Fg" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="BBl-vQ-Dbt"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Kao-2P-RWG"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="xhi-9o-YK3" secondAttribute="top" constant="-50" id="MZE-fr-hBB"/>
                 <constraint firstItem="LtE-MV-TC6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OyM-GH-CtZ"/>
                 <constraint firstAttribute="bottom" secondItem="y0Q-Fq-rSB" secondAttribute="bottom" id="UE1-vB-32b"/>
                 <constraint firstItem="LtE-MV-TC6" firstAttribute="top" secondItem="ALN-3l-0qS" secondAttribute="bottom" id="VDc-ML-SZe"/>
+                <constraint firstItem="wkh-X4-Qx0" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="Vx9-QU-SpV"/>
                 <constraint firstAttribute="bottom" secondItem="LtE-MV-TC6" secondAttribute="bottom" id="XSg-B9-3nB"/>
-                <constraint firstItem="ZAk-Zy-jps" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="dMk-BN-hWB"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fde-bu-GX4"/>
-                <constraint firstItem="ZAk-Zy-jps" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="hgV-7p-IKw"/>
                 <constraint firstItem="ALN-3l-0qS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="hzJ-wc-FvR"/>
-                <constraint firstItem="ZAk-Zy-jps" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mjm-2d-nz6"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="wkh-X4-Qx0" secondAttribute="trailing" constant="30" id="pq1-bh-0Jo"/>
                 <constraint firstItem="ALN-3l-0qS" firstAttribute="top" secondItem="xhi-9o-YK3" secondAttribute="bottom" constant="10" id="rag-r6-3qY"/>
-                <constraint firstItem="thO-mw-1Fg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="tZU-ZP-4je"/>
+                <constraint firstItem="cDR-yn-LGL" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="wiS-aR-5C4"/>
+                <constraint firstItem="cDR-yn-LGL" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="21" id="xjn-Re-L5W"/>
                 <constraint firstItem="y0Q-Fq-rSB" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="yBI-sS-eoq"/>
                 <constraint firstItem="xhi-9o-YK3" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="zCD-Rq-ZUF"/>
             </constraints>
@@ -129,7 +124,6 @@
     </objects>
     <resources>
         <image name="SampleVenue1" width="358" height="242"/>
-        <image name="backArrowV2" width="24" height="24"/>
         <image name="logo.xbox" catalog="system" width="128" height="123"/>
         <image name="shareIconV2" width="20" height="20"/>
     </resources>

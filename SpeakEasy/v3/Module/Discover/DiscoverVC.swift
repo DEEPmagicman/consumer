@@ -124,8 +124,6 @@ final class DiscoverVC: UIViewController {
 
                 self.dateLbl.textColor = .black
                 self.calendarIcon.tintColor = .black
-                
-
             } else {
 
                 // MARK: Default State

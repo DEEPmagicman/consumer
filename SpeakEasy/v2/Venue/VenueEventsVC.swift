@@ -7,78 +7,143 @@
 
 import UIKit
 
-final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource {
-    
-    @IBOutlet weak var tableView: UITableView!
+final class VenueEventsVC: UIViewController,
+                           SJSegmentedViewControllerViewSource {
+
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var emptyView: UIView!
-    
+
     var venueId = ""
+
     private var events: [Event] = []
+
     private var skip = 0
     private var hasMore = true
-    private var page = 1
+
+    private var isLoading = false
     private var shimmerView: VenueEventsShimmerView?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(VenueEventTVC.nib, forCellReuseIdentifier: VenueEventTVC.identifier)
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-          tap.cancelsTouchesInView = false
-          tableView.addGestureRecognizer(tap)
 
+        setupCollectionView()
         showShimmer()
         getEvents()
-        
     }
-    
+
+    func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
+        return collectionView
+    }
+}
+
+// MARK: - Setup
+
+extension VenueEventsVC {
+
+    private func setupCollectionView() {
+
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.prefetchDataSource = self
+
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
+
+        collectionView.register(
+            OrderCardCollectionCell.self,
+            forCellWithReuseIdentifier: OrderCardCollectionCell.identifier
+        )
+
+        collectionView.register(
+            OrderCardShimmerCell.self,
+            forCellWithReuseIdentifier: OrderCardShimmerCell.identifier
+        )
+
+        let layout = PinterestLayout()
+
+        layout.numberOfColumns = 2
+
+        layout.sectionInsets = UIEdgeInsets(
+            top: 10,
+            left: 24,
+            bottom: 24,
+            right: 24
+        )
+
+        layout.interItemSpacing = 14
+        layout.lineSpacing = 22
+        layout.delegate = self
+
+        collectionView.collectionViewLayout = layout
+    }
+
     private func showShimmer() {
-        let shimmer = VenueEventsShimmerView(frame: tableView.bounds)
-        tableView.addSubview(shimmer)
+
+        let shimmer = VenueEventsShimmerView(
+            frame: collectionView.bounds
+        )
+
+        collectionView.addSubview(shimmer)
+
         shimmer.start()
+
         shimmerView = shimmer
     }
-    
-    func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
-        tableView
-    }
-    
+}
+
+// MARK: - API
+
+extension VenueEventsVC {
+
     func getEvents() {
-        
+
+        guard !isLoading else { return }
         guard hasMore else { return }
-        
+
+        isLoading = true
+
         VenuePresenter.getEventVenues(
             venueId: venueId,
             skip: skip,
             time: "UPCOMING"
-        ) { [weak self] isSuccess, errMsg, list, hasMore in
-            
+        ) { [weak self] isSuccess,
+            errMsg,
+            list,
+            hasMore in
+
             guard let self = self else { return }
-            
+
             DispatchQueue.main.async {
-                
+
+                self.isLoading = false
+
                 self.shimmerView?.stop()
-                
+
                 if isSuccess {
-                    
+
                     let newItems = list.filter { newEvent in
-                        !self.events.contains(where: { $0.id == newEvent.id })
+                        !self.events.contains(where: {
+                            $0.id == newEvent.id
+                        })
                     }
-                    
+
                     self.events.append(contentsOf: newItems)
+
                     self.skip = self.events.count
                     self.hasMore = hasMore
+
                     self.emptyView.isHidden = !self.events.isEmpty
-                    self.tableView.isHidden = self.events.isEmpty
-                    
-                    self.tableView.reloadData()
-                    
+                    self.collectionView.isHidden = self.events.isEmpty
+
+                    self.collectionView.reloadData()
+
                 } else {
+
                     self.emptyView.isHidden = false
-                    self.tableView.isHidden = true
-                    
+                    self.collectionView.isHidden = true
+
                     print(errMsg ?? "Error")
                 }
             }
@@ -86,110 +151,273 @@ final class VenueEventsVC: UIViewController, SJSegmentedViewControllerViewSource
     }
 }
 
-extension VenueEventsVC: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+// MARK: - UICollectionViewDataSource
+
+extension VenueEventsVC: UICollectionViewDataSource {
+
+    func numberOfSections(
+        in collectionView: UICollectionView
+    ) -> Int {
+        return 1
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+
         return events.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell: VenueEventTVC = tableView.dequeue(
-            withIdentifier: VenueEventTVC.identifier,
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: OrderCardCollectionCell.identifier,
             for: indexPath
-        )
-        let event = events[indexPath.row]
-        cell.configure(with: event)
-        
-        cell.selectionStyle = .none
+        ) as! OrderCardCollectionCell
+
+        let event = events[indexPath.item]
+
+        cell.configureDiscoverEvent(event)
+
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let event = events[indexPath.row]
-        Navigate.eventDetailsVC(self, event: event)
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension VenueEventsVC: UICollectionViewDelegate {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+
+        let event = events[indexPath.item]
+
+        Navigate.eventDetailsVC(
+            self,
+            event: event
+        )
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        if indexPath.row == events.count - 2 {
+
+    func scrollViewDidScroll(
+        _ scrollView: UIScrollView
+    ) {
+
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+
+        let threshold: CGFloat = 400
+
+        if offsetY > contentHeight - visibleHeight - threshold {
             getEvents()
-        }
-    }
-    
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        
-//        let offsetY = scrollView.contentOffset.y
-//        let contentHeight = scrollView.contentSize.height
-//        let height = scrollView.frame.size.height
-//        
-//        if offsetY > contentHeight - height - 100 {
-//            getEvents()
-//        }
-//    }
-    
-    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-        let point = gesture.location(in: tableView)
-        
-        if let indexPath = tableView.indexPathForRow(at: point) {
-            let event = events[indexPath.row]
-            print("Tapped working ✅")
-            Navigate.eventDetailsVC(self, event: event)
         }
     }
 }
 
+// MARK: - UICollectionViewDataSourcePrefetching
+
+extension VenueEventsVC:
+    UICollectionViewDataSourcePrefetching {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        prefetchItemsAt indexPaths: [IndexPath]
+    ) {
+
+        if indexPaths.contains(where: {
+            $0.item >= self.events.count - 4
+        }) {
+            getEvents()
+        }
+    }
+}
+
+// MARK: - PinterestLayoutDelegate
+
+extension VenueEventsVC: PinterestLayoutDelegate {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        heightForItemAt indexPath: IndexPath,
+        with width: CGFloat
+    ) -> CGFloat {
+
+        guard events.indices.contains(indexPath.item) else {
+            return 0.1
+        }
+
+        let event = events[indexPath.item]
+
+        let imageHeight = width * 1.2
+
+        let title = event.title ?? ""
+        let venue = event.venue?.name ?? ""
+
+        let dateText = event.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .MMMDDATHMMA,
+            useDayLightSavingTime: true,
+            customTimeZone: event.venue?.useTimezone ?? ""
+        )
+
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let venueFont = Constant.Font.geistMedium(size: 14)
+        let dateFont = Constant.Font.geistMedium(size: 14)
+
+        let titleHeight = title.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: titleFont
+            ],
+            context: nil
+        ).height
+
+        let venueHeight = venue.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: venueFont
+            ],
+            context: nil
+        ).height
+
+        let dateHeight = dateText.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: dateFont
+            ],
+            context: nil
+        ).height
+
+        let totalHeight =
+            imageHeight +
+            16 +
+            titleHeight +
+            3 +
+            venueHeight +
+            10 +
+            dateHeight
+
+        return ceil(totalHeight)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForHeaderIn section: Int
+    ) -> CGFloat {
+
+        return 0.1
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForFooterIn section: Int
+    ) -> CGFloat {
+
+        return hasMore ? 120 : 0
+    }
+}
+
+// MARK: - Shimmer View
 
 final class VenueEventsShimmerView: UIView {
-    
+
     private var shimmerViews: [ShimmerView] = []
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
     }
-    
-    private func make(_ frame: CGRect, corner: CGFloat = 10) {
+
+    private func make(
+        _ frame: CGRect,
+        corner: CGFloat = 10
+    ) {
+
         let v = ShimmerView(frame: frame)
+
         v.layer.cornerRadius = corner
         v.clipsToBounds = true
+
         addSubview(v)
+
         shimmerViews.append(v)
     }
-    
+
     private func setupUI() {
+
         let width = UIScreen.main.bounds.width
-        
+
         var y: CGFloat = 10
-        
+
         for _ in 0..<6 {
-            
-            // image
-            make(CGRect(x: 16, y: y, width: 80, height: 80), corner: 12)
-            
-            // title
-            make(CGRect(x: 110, y: y + 10, width: width - 140, height: 16))
-            
-            // subtitle
-            make(CGRect(x: 110, y: y + 35, width: width - 180, height: 14))
-            
-            // location
-            make(CGRect(x: 110, y: y + 55, width: width - 200, height: 14))
-            
-            y += 100
+
+            make(
+                CGRect(
+                    x: 24,
+                    y: y,
+                    width: (width / 2) - 36,
+                    height: 220
+                ),
+                corner: 20
+            )
+
+            make(
+                CGRect(
+                    x: width / 2 + 4,
+                    y: y + 40,
+                    width: (width / 2) - 36,
+                    height: 260
+                ),
+                corner: 20
+            )
+
+            y += 290
         }
     }
-    
+
     func start() {
-        shimmerViews.forEach { $0.startAnimating() }
+        shimmerViews.forEach {
+            $0.startAnimating()
+        }
     }
-    
+
     func stop() {
-        shimmerViews.forEach { $0.stopAnimating() }
+        shimmerViews.forEach {
+            $0.stopAnimating()
+        }
+
         removeFromSuperview()
     }
 }

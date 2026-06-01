@@ -20,7 +20,6 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var ticketLeftLbl: UILabel!
     @IBOutlet weak var rsvpBtnView: UIView!
     @IBOutlet weak var inclFeesLbl: UILabel!
-//    @IBOutlet weak var rsvpBtn: LoadingButton!
     @IBOutlet weak var soldOutView: UIView!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var discriptionLbl: UILabel!
@@ -31,32 +30,53 @@ class TicketsTVC: UITableViewCell {
     @IBOutlet weak var topSapraterView: UIView!
     @IBOutlet weak var shimmerView: ShimmerView!
     @IBOutlet weak var rsvpBtn: UIButton!
-    
+
+    // MARK: - Event Ticket Callbacks
+
     var onPlusTap: ((EventTicket) -> Void)?
     var onMinusTap: ((EventTicket) -> Void)?
     var onRSVPTap: ((EventTicket) -> Void)?
     var onDescriptionToggle: (() -> Void)?
     var isFromGroupTicket: Bool = false
 
+    // MARK: - Cover Ticket Callbacks
+
+    private var onCoverPlusTap: (() -> Void)?
+    private var onCoverMinusTap: (() -> Void)?
+
+    // MARK: - Private State
+
     private var currentTicket: EventTicket?
     private let collapsedLines = 3
     private var isDescriptionExpanded = false
     private var isLinkDisabled = false
+    private var isCoverTicketMode = false
+
+    // MARK: - Lifecycle
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
         currentTicket = nil
+
         onPlusTap = nil
         onMinusTap = nil
         onRSVPTap = nil
         onDescriptionToggle = nil
+
+        onCoverPlusTap = nil
+        onCoverMinusTap = nil
+
         isDescriptionExpanded = false
         isLinkDisabled = false
+        isCoverTicketMode = false
+
         shimmerView.stopAnimating()
         shimmerView.isHidden = true
+
         resetUI()
     }
-    
+
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(false, animated: false)
     }
@@ -64,6 +84,8 @@ class TicketsTVC: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(false, animated: false)
     }
+
+    // MARK: - Reset
 
     private func resetUI() {
         titleLbl.attributedText = nil
@@ -93,20 +115,168 @@ class TicketsTVC: UITableViewCell {
 
         viewMoreBtnView.isHidden = true
         viewMoreBtn.setTitle("View More", for: .normal)
-//
-//        bgView.layer.borderWidth = 0
-//        bgView.layer.borderColor = UIColor.clear.cgColor
-        
-//        if isFromGroupTicket {
-//            bgView.layer.cornerRadius = 0
-//            topConstraint.constant = 0
-//            topSapraterView.isHidden = false
-//        } else {
-            bgView.layer.cornerRadius = 10
-            topConstraint.constant = 12
-            topSapraterView.isHidden = true
-//        }
+
+        bgView.layer.cornerRadius = 10
+        topConstraint.constant = 12
+        topSapraterView.isHidden = true
     }
+
+    // MARK: - Shimmer
+
+    func showShimmer() {
+        shimmerView.isHidden = false
+        bgView.isHidden = true
+        shimmerView.startAnimating()
+    }
+
+    func hideShimmer() {
+        shimmerView.stopAnimating()
+        shimmerView.isHidden = true
+        bgView.isHidden = false
+    }
+
+    // MARK: - Shared Description Setup
+
+    private func setupDescription(_ text: String?) {
+        let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !trimmed.isEmpty else {
+            discriptionLbl.isHidden = true
+            viewMoreBtnView.isHidden = true
+            return
+        }
+
+        discriptionLbl.isHidden = false
+        discriptionLbl.text = trimmed
+        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
+        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
+
+        layoutIfNeeded()
+
+        let fullHeight = discriptionLbl.sizeThatFits(
+            CGSize(width: discriptionLbl.frame.width, height: .greatestFiniteMagnitude)
+        ).height
+
+        let collapsedHeight = discriptionLbl.font.lineHeight * CGFloat(collapsedLines)
+
+        if fullHeight > collapsedHeight {
+            viewMoreBtnView.isHidden = false
+        } else {
+            viewMoreBtnView.isHidden = true
+            discriptionLbl.numberOfLines = 0
+        }
+    }
+
+    // MARK: - Cover Ticket Configure
+
+    func configure(
+        coverTicketName: String,
+        description: String?,
+        price: Double,
+        extraFees: Double?,
+        selectedCount: Int,
+        currency: String,
+        whiteLabelColor: String?,
+        isDescriptionExpanded: Bool,
+        onPlus: (() -> Void)?,
+        onMinus: (() -> Void)?
+    ) {
+        // Mark as cover ticket mode
+        isCoverTicketMode = true
+
+        // Clear event ticket state
+        currentTicket = nil
+        onPlusTap = nil
+        onMinusTap = nil
+        onRSVPTap = nil
+
+        // Store cover ticket closures
+        onCoverPlusTap = onPlus
+        onCoverMinusTap = onMinus
+        self.isDescriptionExpanded = isDescriptionExpanded
+
+        resetUI()
+
+        // Title
+        titleLbl.text = coverTicketName
+
+        // Price + selection UI
+        if price == 0 {
+            priceLbl.text = "FREE"
+            rsvpBtnView.isHidden = false
+            plusView.isHidden = true
+        } else {
+            priceLbl.text = "\(currency)\(price.decimalFormat(true))"
+            rsvpBtnView.isHidden = true
+            plusView.isHidden = false
+            plusBtn.isHidden = false
+
+            if selectedCount > 0 {
+                quantityLbl.isHidden = false
+                quantityLbl.text = "\(selectedCount)"
+                minusView.isHidden = false
+            }
+        }
+
+        // Extra fees
+        let fee = extraFees ?? 0
+        if fee > 0 {
+            inclFeesLbl.isHidden = false
+            inclFeesLbl.text = "Incl. \(currency)\(fee.decimalFormat(true)) in fees"
+        } else {
+            inclFeesLbl.isHidden = true
+        }
+
+        // Cover tickets never show sold out or tickets left
+        soldOutView.isHidden = true
+        ticketLeftLbl.isHidden = true
+
+        // Description
+        setupDescription(description)
+    }
+
+    // MARK: - Event Ticket Configure
+
+    func configure(
+        ticket: EventTicket,
+        currency: String,
+        whiteLabelColor: String?,
+        eventTicketSetting: EventTicketSettings?,
+        isDescriptionExpanded: Bool = false,
+        isLinkDisabled: Bool = false
+    ) {
+        // Mark as event ticket mode
+        isCoverTicketMode = false
+
+        // Clear cover ticket state
+        onCoverPlusTap = nil
+        onCoverMinusTap = nil
+
+        self.currentTicket = ticket
+        self.isDescriptionExpanded = isDescriptionExpanded
+        self.isLinkDisabled = isLinkDisabled
+
+        resetUI()
+
+        if isSoldOut(ticket) {
+            applySoldOutUI(ticket: ticket)
+            setupDescription(ticket.tierDescription)
+            return
+        }
+
+        applyNormalUI(
+            ticket: ticket,
+            currency: currency,
+            whiteLabelColor: whiteLabelColor,
+            shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
+        )
+
+        if isLinkDisabled {
+            applyComingSoonUI()
+        }
+    }
+
+    // MARK: - Event Ticket Private UI
 
     private func remainingQuantity(for ticket: EventTicket) -> Int {
         if let remaining = ticket.remainingQuantity {
@@ -129,9 +299,7 @@ class TicketsTVC: UITableViewCell {
                 .foregroundColor: UIColor.white
             ]
         )
-
         titleLbl.attributedText = attributedText
-
         soldOutView.isHidden = false
         priceLbl.isHidden = true
         quantityLbl.isHidden = true
@@ -148,48 +316,6 @@ class TicketsTVC: UITableViewCell {
         minusView.isHidden = true
         plusView.isHidden = true
         rsvpBtnView.isHidden = true
-    }
-    
-    func showShimmer() {
-        shimmerView.isHidden = false
-        bgView.isHidden = true
-        shimmerView.startAnimating()
-    }
-    
-    func hideShimmer() {
-        shimmerView.stopAnimating()
-        shimmerView.isHidden = true
-        bgView.isHidden = false
-    }
-
-    private func setupDescription(_ text: String?) {
-        let descriptionText = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        guard !descriptionText.isEmpty else {
-            discriptionLbl.isHidden = true
-            viewMoreBtnView.isHidden = true
-            return
-        }
-
-        discriptionLbl.isHidden = false
-        discriptionLbl.text = descriptionText
-        discriptionLbl.numberOfLines = isDescriptionExpanded ? 0 : collapsedLines
-        viewMoreBtn.setTitle(isDescriptionExpanded ? "View Less" : "View More", for: .normal)
-
-        layoutIfNeeded()
-
-        let fullHeight = discriptionLbl.sizeThatFits(
-            CGSize(width: discriptionLbl.frame.width, height: .greatestFiniteMagnitude)
-        ).height
-
-        let collapsedHeight = discriptionLbl.font.lineHeight * CGFloat(collapsedLines)
-
-        if fullHeight > collapsedHeight {
-            viewMoreBtnView.isHidden = false
-        } else {
-            viewMoreBtnView.isHidden = true
-            discriptionLbl.numberOfLines = 0
-        }
     }
 
     private func applyNormalUI(
@@ -208,7 +334,6 @@ class TicketsTVC: UITableViewCell {
             priceLbl.text = "FREE"
             rsvpBtnView.isHidden = false
             plusView.isHidden = true
-//            rsvpBtn.indicator = MaterialLoadingIndicator(color: .white)
         } else {
             priceLbl.text = "\(currency)\(Double(price).decimalFormat(true))"
             rsvpBtnView.isHidden = true
@@ -231,11 +356,9 @@ class TicketsTVC: UITableViewCell {
         }
 
         let remaining = remainingQuantity(for: ticket)
-
         if shouldShowLeftLabel && remaining > 0 && remaining < 20 {
             ticketLeftLbl.isHidden = false
             ticketLeftLbl.text = "Only \(remaining) left"
-
             if let hex = whiteLabelColor {
                 ticketLeftLbl.textColor = UIColor(hex: hex)
             }
@@ -244,51 +367,18 @@ class TicketsTVC: UITableViewCell {
         }
     }
 
-    func configure(
-        ticket: EventTicket,
-        currency: String,
-        whiteLabelColor: String?,
-        eventTicketSetting: EventTicketSettings?,
-        isDescriptionExpanded: Bool = false,
-        isLinkDisabled: Bool = false
-    ) {
-        self.currentTicket = ticket
-        self.isDescriptionExpanded = isDescriptionExpanded
-        self.isLinkDisabled = isLinkDisabled
-        resetUI()
-
-        let isSelected = (ticket.selectedTicketCount ?? 0) > 0
-//        bgView.layer.borderWidth = (isSelected && !isFromGroupTicket && !isLinkDisabled) ? 1 : 0
-//        if let hex = whiteLabelColor {
-//            bgView.layer.borderColor = UIColor(hex: hex).cgColor
-//        } else {
-//            bgView.layer.borderColor = UIColor.white.cgColor
-//        }
-        
-        if isSoldOut(ticket) {
-            applySoldOutUI(ticket: ticket)
-            setupDescription(ticket.tierDescription)
-            return
-        }
-
-        applyNormalUI(
-            ticket: ticket,
-            currency: currency,
-            whiteLabelColor: whiteLabelColor,
-            shouldShowLeftLabel: !(eventTicketSetting?.hideLowInventory ?? true)
-        )
-
-        if isLinkDisabled {
-            applyComingSoonUI()
-        }
-    }
-
     func hideMinusView() {
         minusView.isHidden = true
         quantityLbl.isHidden = true
     }
 
+    // MARK: - IBActions
+
     @IBAction func onClickMinusBtn(_ sender: Any) {
+        if isCoverTicketMode {
+            onCoverMinusTap?()
+            return
+        }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
@@ -296,6 +386,10 @@ class TicketsTVC: UITableViewCell {
     }
 
     @IBAction func onClickPlusBtn(_ sender: Any) {
+        if isCoverTicketMode {
+            onCoverPlusTap?()
+            return
+        }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
@@ -303,6 +397,11 @@ class TicketsTVC: UITableViewCell {
     }
 
     @IBAction func onClickRSVPBtn(_ sender: Any) {
+        if isCoverTicketMode {
+            // FREE cover ticket — treat as plus tap
+            onCoverPlusTap?()
+            return
+        }
         guard !isLinkDisabled else { return }
         guard let ticket = currentTicket else { return }
         guard !isSoldOut(ticket) else { return }
@@ -316,87 +415,3 @@ class TicketsTVC: UITableViewCell {
         onDescriptionToggle?()
     }
 }
-
-//import UIKit
-//
-//final class TicketShimmerView: UIView {
-//
-//    private let titleLine    = ShimmerView2()
-//    private let priceLine    = ShimmerView2()
-//    private let feesLine     = ShimmerView2()
-//    private let bottomLabel  = ShimmerView2()
-//
-//    private var didSetup = false
-//
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        guard !didSetup, bounds.width > 0 else { return }
-//        didSetup = true
-//        setupUI()
-//    }
-//
-//    private func setupUI() {
-//        backgroundColor = UIColor(white: 0.13, alpha: 1)
-//        layer.cornerRadius = 10
-//        clipsToBounds = true
-//
-//        let W    = bounds.width
-//        let H    = bounds.height
-//        let pad: CGFloat = 14
-//
-//        let titleW: CGFloat = W * 0.45
-//        let titleH: CGFloat = 15
-//        titleLine.frame = CGRect(x: pad, y: pad, width: titleW, height: titleH)
-//        titleLine.layer.cornerRadius = 6
-//        titleLine.clipsToBounds = true
-//
-//        let priceW: CGFloat = 70
-//        let priceH: CGFloat = 15
-//        priceLine.frame = CGRect(
-//            x: W - pad - priceW,
-//            y: pad,
-//            width: priceW,
-//            height: priceH
-//        )
-//        priceLine.layer.cornerRadius = 6
-//        priceLine.clipsToBounds = true
-//
-//        // ── RIGHT BELOW PRICE: "(Incl. $5.02 in fees)" ──
-//        let feesW: CGFloat = 110
-//        let feesH: CGFloat = 11
-//        feesLine.frame = CGRect(
-//            x: W - pad - feesW,
-//            y: pad + priceH + 6,
-//            width: feesW,
-//            height: feesH
-//        )
-//        feesLine.layer.cornerRadius = 5
-//        feesLine.clipsToBounds = true
-//
-//        // ── BOTTOM RIGHT: "Only X left" label ──
-//        let botW: CGFloat = 90
-//        let botH: CGFloat = 11
-//        bottomLabel.frame = CGRect(
-//            x: W - pad - botW,
-//            y: H - pad - botH,
-//            width: botW,
-//            height: botH
-//        )
-//        bottomLabel.layer.cornerRadius = 5
-//        bottomLabel.clipsToBounds = true
-//
-//        [titleLine, priceLine, feesLine, bottomLabel].forEach { addSubview($0) }
-//    }
-//
-//    // MARK: - Control
-//
-//    func startAnimating() {
-//        isHidden = false
-//        [titleLine, priceLine, feesLine, bottomLabel].forEach { $0.startAnimating() }
-//    }
-//
-//    func stopAnimating() {
-//        [titleLine, priceLine, feesLine, bottomLabel].forEach { $0.stopAnimating() }
-//        isHidden = true
-//    }
-//}

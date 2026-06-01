@@ -5,7 +5,6 @@
 //  Created by Paras on 29/05/26.
 //
 
-
 import UIKit
 
 final class VenueGridShimmerCell: UICollectionViewCell {

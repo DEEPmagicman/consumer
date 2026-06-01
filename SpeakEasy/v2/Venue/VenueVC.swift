@@ -19,7 +19,7 @@ final class VenueVC: UIViewController {
     var presenter = MVPPresenter()
     private var shimmerView: VenueShimmerView?
 
-    private let glassSegment = GlassSegmentView(titles: ["Events", "Details", "Artists"])
+    private let glassSegment = GlassSegmentView(titles: ["Events", "Premium", "Artists"])
 
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
@@ -112,9 +112,9 @@ final class VenueVC: UIViewController {
         vc1.title = "Events"
         vc1.venueId = venueDetails?.id ?? ""
         
-        let vc2 = VenueDetailsVC(nibName: "VenueDetailsVC", bundle: nil)
-        vc2.venueDetails = venueDetails
-        vc2.title = "Details"
+        let vc2 = VenueExperiencesVC(nibName: "VenueExperiencesVC", bundle: nil)
+//        vc2.venueDetails = venueDetails
+        vc2.title = "Premium"
         
         let vc3 = ArtistsVC(nibName: "ArtistsVC", bundle: nil)
         vc3.title = "Artists"
