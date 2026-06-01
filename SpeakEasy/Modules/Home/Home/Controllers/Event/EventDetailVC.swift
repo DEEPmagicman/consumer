@@ -148,7 +148,7 @@ final class EventDetailVC: UIViewController {
         descriptionView.isHidden = venueDetails?.venueSettings?.isOrganizer ?? false == false
         descriptionText.text = venueDetails?.description ?? "-"
         organizerView.isHidden = !(venueDetails?.venueSettings?.isOrganizer == true)
-        detailLbl.text = event?.description.withEmptyPlaceHolder ?? Constant.String.dash
+        detailLbl.text = event?.description.withEmptyPlaceHolder.htmlToPlainText() ?? Constant.String.dash
         eventPolicyLbl.text = event?.disclaimer?.withEmptyPlaceHolder ?? Constant.String.dash
         dressCodeLbl.text = venueDetails?.dressCode?.withEmptyPlaceHolder ?? Constant.String.dash
         updateLocationOnMap(to: CLLocationCoordinate2D(latitude: venueDetails?.latitude ?? 0, longitude: venueDetails?.longitude ?? 0), with: event?.customVenue?.name ?? "Venue")

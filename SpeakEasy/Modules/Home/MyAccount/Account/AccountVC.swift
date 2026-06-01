@@ -48,18 +48,9 @@ final class AccountVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getUpcomingTickets()
-//        getRecommended()
-        whoAmIAPI()
+        self.displayData()
     }
     
-    private func whoAmIAPI() {
-        onBoardingPresenter.getCurrentUserDetail {[weak self] isSuccess in
-            guard let self = self else { return }
-            if isSuccess {
-                self.displayData()
-            }
-        }
-    }
     private func displayData() {
         profileImg.sd_setImage(with: URL(string: UserDefault.shared.user?.image.key ?? ""), placeholderImage: Constant.Icon.defaultProfile) { [weak self] _, err, _, _ in
             self?.profileImg.borderWidth = err == nil ? 2 : 0
@@ -88,17 +79,6 @@ final class AccountVC: UIViewController {
                 self.listTableView.reloadData()
                 self.refresh.endRefreshing()
             }
-        }
-    }
-    
-    private func getRecommended() {
-        EventPresenter.getRecommendedEvents { [weak self] isSuccess, errMsg, eventList in
-            guard let self = self else { return }
-            self.recommended = eventList
-//            DispatchQueue.main.async {
-//                self.listTableView.reloadSections([1], with: .automatic)
-//            }
-            self.checkZeroViewCase()
         }
     }
     

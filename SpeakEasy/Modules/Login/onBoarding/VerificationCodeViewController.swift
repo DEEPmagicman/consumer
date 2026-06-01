@@ -49,7 +49,7 @@ final class VerificationCodeViewController: UIViewController {
         resendBtn.alpha = 0.5
         resendBtn.isUserInteractionEnabled = false
         if Utility.isDebug {
-            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
+//            Alert.showAlertSheet(style: .alert, title: "Otp", message: "\(currectOtp ?? "")")
         }
     }
     

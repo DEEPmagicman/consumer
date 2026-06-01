@@ -95,11 +95,12 @@ final class SettingPresenter {
         let param = ["phone": phone.replacingOccurrences(of: "-", with: ""), "code": code]
         AFWrapper.postRequest(APIBuilder.changePhoneNumURL, params: param, headers: Header.header()) { (response) in
             
-            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String, let otp = responseDic["otp"] as? String
+            guard let responseDic = response as? [String: Any], let otpref = responseDic["otpRef"] as? String
             else {
                 completion("", "", false, nil)
                 return
             }
+            let otp = responseDic["otp"] as? String ?? ""
             completion(otp, otpref, true, nil)
 
         } failure: { (error) in

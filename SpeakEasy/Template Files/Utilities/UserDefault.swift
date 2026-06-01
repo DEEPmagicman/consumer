@@ -7,114 +7,132 @@
 
 import Foundation
 
-final class UserDefault: NSObject {
+final class UserDefault {
+    
+    // MARK: - Singleton
+    
+    static let shared = UserDefault()
+    private init() {}
+    
+    // MARK: - Keys
     
     enum UserDefaultKey: String {
-        case accessTokenKey = "accessToken"
-        case refreshTokenKey = "refreshToken"
-        case userKey = "user"
-        case isLoggedInKey = "isLoggedIn"
-        case isGuest = "isGuest"
-        case localCity = "localCity"
-        case defaultCitySelected = "defaultCitySelected"
-        case isNotificationOnKey = "isNotificationOn"
+        case accessToken
+        case refreshToken
+        case user
+        case isLoggedIn
+        case isGuest
+        case localCity
+        case defaultCitySelected
+        case isNotificationOn
     }
     
-    let userDefaults = UserDefaults.standard
+    // MARK: - Properties
     
-    class var shared: UserDefault {
-        struct Static {
-            static let instance: UserDefault = UserDefault()
+    private let defaults = UserDefaults.standard
+    
+    // MARK: - Generic Helpers
+    
+    private func getValue<T>(for key: UserDefaultKey) -> T? {
+        defaults.object(forKey: key.rawValue) as? T
+    }
+    
+    private func setValue<T>(_ value: T?, for key: UserDefaultKey) {
+        defaults.set(value, forKey: key.rawValue)
+    }
+    
+    private func getCodable<T: Codable>(for key: UserDefaultKey) -> T? {
+        guard let data = defaults.data(forKey: key.rawValue) else {
+            return nil
         }
-        return Static.instance
+        
+        return try? JSONDecoder().decode(T.self, from: data)
     }
+    
+    private func setCodable<T: Codable>(_ value: T?, for key: UserDefaultKey) {
+        guard let value else {
+            defaults.removeObject(forKey: key.rawValue)
+            return
+        }
+        
+        do {
+            let data = try JSONEncoder().encode(value)
+            defaults.set(data, forKey: key.rawValue)
+        } catch {
+            print("Failed to encode \(key.rawValue): \(error)")
+        }
+    }
+    
+    // MARK: - Access Token
     
     var accessToken: String? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.accessTokenKey.rawValue) as? String
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.accessTokenKey.rawValue)
-        }
+        get { getValue(for: .accessToken) }
+        set { setValue(newValue, for: .accessToken) }
     }
+    
+    // MARK: - Refresh Token
     
     var refreshToken: String? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.refreshTokenKey.rawValue) as? String
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.refreshTokenKey.rawValue)
-        }
+        get { getValue(for: .refreshToken) }
+        set { setValue(newValue, for: .refreshToken) }
     }
+    
+    // MARK: - User
     
     var user: User? {
-        get {
-            if let savedUser = UserDefaults.standard.object(forKey: UserDefaultKey.userKey.rawValue) as? Data {
-                do {
-                    let loadedUser = try JSONDecoder().decode(User.self, from: savedUser)
-                    return loadedUser
-                } catch { }
-            }
-            return nil
-        } set {
-            do {
-                let encoded = try JSONEncoder().encode(newValue)
-                UserDefaults.standard.set(encoded, forKey: UserDefaultKey.userKey.rawValue)
-                UserDefaults.standard.synchronize()
-            } catch { }
-        }
+        get { getCodable(for: .user) }
+        set { setCodable(newValue, for: .user) }
     }
     
-    var isLoggedIn: Bool? {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isLoggedInKey.rawValue) as? Bool
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isLoggedInKey.rawValue)
-        }
+    // MARK: - Login
+    
+    var isLoggedIn: Bool {
+        get { getValue(for: .isLoggedIn) ?? false }
+        set { setValue(newValue, for: .isLoggedIn) }
     }
     
     var isGuest: Bool {
-        get {
-            return UserDefaults.standard.value(forKey: UserDefaultKey.isGuest.rawValue) as? Bool ?? true
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isGuest.rawValue)
-        }
+        get { getValue(for: .isGuest) ?? true }
+        set { setValue(newValue, for: .isGuest) }
     }
     
+    // MARK: - City
+    
     var localCity: String {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.localCity.rawValue) as? String) ?? "Chicago"
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.localCity.rawValue)
-        }
+        get { getValue(for: .localCity) ?? "Chicago" }
+        set { setValue(newValue, for: .localCity) }
     }
     
     var defaultCitySelected: Bool {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.defaultCitySelected.rawValue) as? Bool) ?? false
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.defaultCitySelected.rawValue)
-        }
+        get { getValue(for: .defaultCitySelected) ?? false }
+        set { setValue(newValue, for: .defaultCitySelected) }
     }
+    
+    // MARK: - Notification
     
     var isNotificationOn: Bool {
-        get {
-            (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
-        } set {
-            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
+        get { getValue(for: .isNotificationOn) ?? false }
+        set { setValue(newValue, for: .isNotificationOn) }
+    }
+    
+    // MARK: - Reset
+    
+    func clearAll(except preserved: Set<UserDefaultKey> = []) {
+        let all = defaults.dictionaryRepresentation()
+        
+        all.keys.forEach { key in
+            guard let typedKey = UserDefaultKey(rawValue: key) else {
+                defaults.removeObject(forKey: key)
+                return
+            }
+            
+            if !preserved.contains(typedKey) {
+                defaults.removeObject(forKey: key)
+            }
         }
     }
     
-//    func removeInstaConnection() {
-//        user?.instagramId = ""
-//        user?.instagramToken = nil
-//        user?.instaNextPageURL = nil
-//        user?.instaUserName = nil
-//    }
-    
     func emptyData() {
-        accessToken = nil
-        user = nil
-        isLoggedIn = false
-        isGuest = true
-        isNotificationOn = false
+        clearAll()
     }
 }
