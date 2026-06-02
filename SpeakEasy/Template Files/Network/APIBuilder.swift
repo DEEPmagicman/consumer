@@ -69,17 +69,11 @@ struct APIBuilder {
     
     //MARK: - common-data
     static private let city = "/common-data/city"
-    static private let mvpCity = "/common-data/venueCitys" 
+    static private let mvpCity = "/common-data/venueCitys"
     
-    // MARK: Remaining -------*-------------*-------------*-------------*------
-    static private let inviteLink = "/invite-link"
-    static private let redeem = "/redeem"
-    static private let deepLink = "/deep-link"
+    //MARK: - App clip
     static private let freeTicket = "/free-booking"
     static private let appleWallet = "/apple-wallet"
-    static private let question = "/question"
-    static private let answer = "/answer"
-    // -------*-------------*-------------*-------------*------
     
     // MARK: - Bar Tab
 
@@ -94,6 +88,9 @@ struct APIBuilder {
     static private let upcoming = "/upcoming"
     static private let redirect = "/redirect"
     static private let statusSuccess = "/status?status=SUCCESS"
+    static private let inviteLink = "/invite-link"
+    static private let redeem = "/redeem"
+    static private let deepLink = "/deep-link"
 
     static let INSTAGRAMTOKEN =  "https://api.instagram.com/oauth/access_token"
     static let INSTAGRAMUSERNAME = "https://graph.instagram.com/me/media?fields=username&access_token=%@"
@@ -110,6 +107,8 @@ struct APIBuilder {
     static private let contactUs = "/contact-us"
     static private let tickets = "/tickets"
     static private let checkin = "/checkin"
+    static private let question = "/question"
+    static private let answer = "/answer"
     //-------*--------*--------*--------*--------*--------
     
     static var loginWithPhoneURL: String {
