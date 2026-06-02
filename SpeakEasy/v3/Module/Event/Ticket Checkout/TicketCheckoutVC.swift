@@ -51,6 +51,8 @@ final class TicketCheckoutVC: UIViewController {
     @IBOutlet weak var promoCodeParentView: UIView!
     @IBOutlet weak var feesAndTaxesParentTableView: UIView!
     
+    private let paymentService = PaymentService()
+    
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
     var event: Event?
@@ -220,7 +222,7 @@ final class TicketCheckoutVC: UIViewController {
         
         if booking == nil {  }
         
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
+        paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
             if isSuccess {
                 self.booking = booking
@@ -232,7 +234,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     private func getEventQuestions() {
-        PaymentPresenter.getEventBookingQuestion(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
+        paymentService.fetchEventBookingQuestions(eventUniqueId: event?.uniqueId ?? "") { [weak self] isSuccess, errMsg, questions in
             guard let self = self else { return }
 
             if isSuccess {
@@ -385,7 +387,7 @@ final class TicketCheckoutVC: UIViewController {
 
         let coverTickets = buildCoverTicketsForPaymentIntent()
 
-        PaymentPresenter.getPaymentIntent(
+        paymentService.createPaymentIntent(
             bookingId: bookingId,
             selectedTickets: coverTickets,
             promoCode: promoCode,
@@ -485,7 +487,7 @@ final class TicketCheckoutVC: UIViewController {
 
     private func completePaymentSuccess() {
         guard let bookingId = bookingId else { return }
-        PaymentPresenter.successPayment(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: nil) { [weak self] isSuccess, _ in
+        paymentService.confirmPaymentSuccess(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: nil) { [weak self] isSuccess, _ in
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
@@ -505,7 +507,7 @@ final class TicketCheckoutVC: UIViewController {
             ]
         }
 
-        PaymentPresenter.createEventBookingV2(
+        paymentService.createEventBooking(
             eventId: eventId,
             code: UserDefault.shared.user?.code ?? "+1",
             phone: UserDefault.shared.user?.phone ?? "",
@@ -522,12 +524,12 @@ final class TicketCheckoutVC: UIViewController {
     
     private func cancelBooking() {
         countdownTimer?.invalidate()
-        PaymentPresenter.cancelBooking(bookingId: bookingId ?? "") { _, _ in
+        paymentService.cancelBooking(bookingId: bookingId ?? "") { _, _ in
         }
     }
     
     private func postQuestionAns(ans: [Any]) {
-        PaymentPresenter.postEventBookingQueAns(
+        paymentService.submitEventBookingAnswers(
             eventUniqueId: event?.uniqueId ?? "",
             answers: ans,
             bookingId: bookingId ?? ""

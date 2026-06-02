@@ -18,6 +18,8 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
     private let cancelBtn = PrimaryButton()
     private let logoutBtn = PrimaryButton()
 
+    private let authService = AuthService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -134,7 +136,7 @@ final class LogoutConfirmationBottomSheetVC: UIViewController {
         logoutBtn.startLoading()
         UserDefault.shared.emptyData()
         AppDelegate.shared.changeRootViewController()
-        OnBoardingPresenter.logout { _, _ in }
+        authService.logout { _, _ in }
         logoutBtn.stopLoading()
         dismissSheet()
     }

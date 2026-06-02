@@ -16,7 +16,7 @@ final class AccountInfoVC: UIViewController {
     private let phoneBox = FloatingInputView(title: "Phone number")
     private let saveBtn = PrimaryButton()
 
-    private let settingPresenter = SettingPresenter()
+    private let settingsService = SettingsService()
 
     private var originalEmail = ""
     private var originalPhone = ""
@@ -25,7 +25,7 @@ final class AccountInfoVC: UIViewController {
     private var isPhoneVerified = false
     
     private var pendingEmail = ""
-    private let presenter = OnBoardingPresenter()
+    private let profileService = ProfileService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -235,7 +235,7 @@ final class AccountInfoVC: UIViewController {
     private func updateEmail(_ email: String) {
         saveBtn.startLoading()
 
-        settingPresenter.changeEmailApi(email: email) { [weak self] otp, otpRef, isSuccess, errMsg in
+        settingsService.requestEmailChangeOTP(email: email) { [weak self] otp, otpRef, isSuccess, errMsg in
             guard let self else { return }
 
             self.saveBtn.stopLoading()
@@ -355,7 +355,7 @@ final class AccountInfoVC: UIViewController {
             UserDefault.shared.user?.isProfileCompleted = true
         }
         
-        presenter.editUserProfileApi(
+        profileService.updateProfile(
             email: self.emailBox.text ?? "",
             isProfileCompleted: isProfileCompleted
         ) { [weak self] isSuccess, errorMsg in

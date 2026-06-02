@@ -25,6 +25,8 @@ class TicketConfirmationVC: UIViewController {
     var event: Event?
     var bookingId: String?
 
+    private let paymentService = PaymentService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getBooking(id: bookingId ?? "be5af872-e29d-4115-93ab-6660d47662eb")
@@ -97,7 +99,7 @@ class TicketConfirmationVC: UIViewController {
     }
     
     private func getBooking(id: String) {
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
+        paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self = self else { return }
             if isSuccess {
                 self.booking = booking

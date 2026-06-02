@@ -14,7 +14,7 @@ final class AllVenueVC: UIViewController {
     @IBOutlet weak var backbtn: AppIconButton!
 
     private var venueList: [ClipVenue] = []
-    private var presenter = MVPPresenter()
+    private var venueService = VenueService()
 
     private var skip = 0
     private var hasMore = true
@@ -123,10 +123,9 @@ final class AllVenueVC: UIViewController {
             collectionView.collectionViewLayout.invalidateLayout()
         }
 
-        presenter.getVenueListForMVP(
-            from: skip,
-            status: VenueStatus.open.rawValue,
-            city: nil
+        venueService.fetchVenueList(
+            skip: skip,
+            status: VenueStatus.open.rawValue
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self else { return }
 

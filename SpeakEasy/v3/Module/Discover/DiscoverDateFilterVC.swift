@@ -27,6 +27,8 @@ final class DiscoverDateFilterVC: UIViewController {
     private let lineSpacing: CGFloat = 16
     private let columns: CGFloat = 2
 
+    private let eventService = EventService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -103,7 +105,7 @@ final class DiscoverDateFilterVC: UIViewController {
 
         isLoading = true
 
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: skip,
             venueId: "",
             time: "UPCOMING",

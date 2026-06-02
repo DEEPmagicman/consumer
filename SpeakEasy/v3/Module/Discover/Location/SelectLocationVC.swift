@@ -51,8 +51,7 @@ final class SelectLocationVC: UIViewController {
     
     var onSelectFilterCity: ((String?) -> Void)?
 
-    private var presenter = OnBoardingPresenter()
-    private var mvpPresenter = MVPPresenter()
+    private var venueService = VenueService()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
@@ -292,7 +291,7 @@ private extension SelectLocationVC {
 
     func fetchCityList() {
 
-        mvpPresenter.mvpCityListAPi { [weak self] cityList, isSuccess, errMsg in
+        venueService.fetchCityList { [weak self] cityList, isSuccess, errMsg in
 
             guard let self else {
                 Loader.hide()

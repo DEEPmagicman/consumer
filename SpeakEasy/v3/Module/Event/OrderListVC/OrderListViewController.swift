@@ -68,6 +68,8 @@ final class OrderListViewController: UIViewController {
     }
     private let posterHeaderView = EventPosterHeaderView()
 
+    private let paymentService = PaymentService()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -397,13 +399,12 @@ final class OrderListViewController: UIViewController {
         Navigate.to.back(self)
     }
     
-
     // MARK: - Payment / Booking
 
     private func getBooking(id: String?) {
         guard let id else { return }
 
-        PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, _, booking in
+        paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self else { return }
             if isSuccess {
                 self.booking = booking
@@ -433,13 +434,13 @@ final class OrderListViewController: UIViewController {
 
         let coverTickets = buildCoverTicketsForPaymentIntent()
 
-        PaymentPresenter.getPaymentIntent(
+        paymentService.createPaymentIntent(
             bookingId: bookingId,
             selectedTickets: coverTickets,
             promoCode: promoCode,
             type: .singleTickedEvent
         ) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
-            guard let self else { return }
+            guard let self = self else { return }
             self.applyPromoBtn.hideLoader()
 
             if isSuccess {

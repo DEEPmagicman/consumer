@@ -36,7 +36,7 @@ final class EditProfileVC: UIViewController {
     
     private let saveBtn = PrimaryButton()
     
-    private let presenter = OnBoardingPresenter()
+    private let profileService = ProfileService()
     private var gender = "MALE"
     
     private var selectedProfileImage: UIImage?
@@ -428,7 +428,7 @@ final class EditProfileVC: UIViewController {
         saveBtn.startLoading()
         view.isUserInteractionEnabled = false
 
-        presenter.uploadPhotoApi(image: image) { [weak self] imgUrl, isSuccess in
+        profileService.uploadProfileImage(image: image) { [weak self] imgUrl, isSuccess in
             guard let self else { return }
 
             if isSuccess {
@@ -502,11 +502,11 @@ final class EditProfileVC: UIViewController {
             isProfileCompleted = true
             UserDefault.shared.user?.isProfileCompleted = true
         }
-
+        
         if let imageDetail {
-            presenter.editUserProfileApi(
-                fName: firstNameTF.text ?? "",
-                lName: lastNameTF.text ?? "",
+            profileService.updateProfile(
+                firstName: firstNameTF.text ?? "",
+                lastName: lastNameTF.text ?? "",
                 nickName: "",
                 dob: date,
                 gender: gender,
@@ -515,9 +515,9 @@ final class EditProfileVC: UIViewController {
                 completion: completion
             )
         } else {
-            presenter.editUserProfileApi(
-                fName: firstNameTF.text ?? "",
-                lName: lastNameTF.text ?? "",
+            profileService.updateProfile(
+                firstName: firstNameTF.text ?? "",
+                lastName: lastNameTF.text ?? "",
                 nickName: "",
                 dob: date,
                 gender: gender,

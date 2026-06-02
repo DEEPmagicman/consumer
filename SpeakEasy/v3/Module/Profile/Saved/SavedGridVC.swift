@@ -5,11 +5,12 @@
 //  Created by Paras on 28/05/26.
 //
 
-
 import UIKit
 
 final class SavedGridVC: BaseSingleGridVC {
 
+    private let orderService = OrderService()
+    
     override var emptyTitle: String {
         "No saved items found"
     }
@@ -28,7 +29,7 @@ final class SavedGridVC: BaseSingleGridVC {
             reloadUI()
         }
 
-        PaymentPresenter.getPastTicket(skip: skip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        orderService.fetchPastTickets(skip: skip) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self else { return }
 
             self.isLoading = false
@@ -71,7 +72,7 @@ final class SavedGridVC: BaseSingleGridVC {
     }
 
     override func didSelect(_ booking: Booking) {
-        guard let event = booking.event else { return }
+        guard let _ = booking.event else { return }
 
 //        Navigate.to.eventDetails(
 //            self,

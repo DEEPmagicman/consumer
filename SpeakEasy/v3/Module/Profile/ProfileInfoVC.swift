@@ -27,7 +27,7 @@ final class ProfileInfoVC: UIViewController {
 
     private let continueBtn = PrimaryButton()
 
-    private let presenter = OnBoardingPresenter()
+    private let profileService = ProfileService()
     private var gender = "MALE"
 
     override func viewDidLoad() {
@@ -295,9 +295,9 @@ final class ProfileInfoVC: UIViewController {
         
         continueBtn.startLoading()
         
-        presenter.editUserProfileApi(
-            fName: firstNameTF.text ?? "",
-            lName: lastNameTF.text ?? "",
+        profileService.updateProfile(
+            firstName: firstNameTF.text ?? "",
+            lastName: lastNameTF.text ?? "",
             nickName: "",
             email: self.emailTF.text ?? "",
             dob: date,

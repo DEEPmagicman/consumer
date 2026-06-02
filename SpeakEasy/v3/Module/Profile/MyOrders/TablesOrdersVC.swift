@@ -13,6 +13,8 @@ final class TablesOrdersVC: BaseOrdersGridVC {
     override var pastTitle: String { "Past tables" }
     override var emptyTitle: String { "No table reservations found" }
 
+    private let orderService = OrderService()
+    
     override func loadUpcoming(reset: Bool) {
         guard !UserDefault.shared.isGuest else { return }
         guard !isLoadingUpcoming else { return }
@@ -26,7 +28,7 @@ final class TablesOrdersVC: BaseOrdersGridVC {
             reloadUI()
         }
 
-        PaymentPresenter.getUpcomingTableReservation(skip: upcomingSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        orderService.fetchUpcomingTableReservations(skip: upcomingSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self else { return }
 
             self.isLoadingUpcoming = false
@@ -95,7 +97,7 @@ final class TablesOrdersVC: BaseOrdersGridVC {
             reloadUI()
         }
 
-        PaymentPresenter.getPastTableReservation(skip: pastSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        orderService.fetchPastTableReservations(skip: pastSkip) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self else { return }
 
             self.isLoadingPast = false

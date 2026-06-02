@@ -19,6 +19,8 @@ final class DeleteAccountBottomSheetVC: UIViewController {
     private let cancelBtn = PrimaryButton()
     private let deleteBtn = PrimaryButton()
 
+    private let authService = AuthService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -158,7 +160,7 @@ final class DeleteAccountBottomSheetVC: UIViewController {
     
     @objc private func onClickDelete() {
         deleteBtn.startLoading()
-        OnBoardingPresenter.deleteUser { isSuccess, errorMsg in
+        authService.deleteAccount { isSuccess, errorMsg in
             self.deleteBtn.stopLoading()
             if isSuccess {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

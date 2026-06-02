@@ -32,7 +32,9 @@ final class DiscoverAllVC: UIViewController {
     private var allEvents = [Event]()
     private var allEventHasMore = false
 
-    private let presenter = MVPPresenter()
+    private let venueService = VenueService()
+    private let eventService = EventService()
+    
     private var cancellables = Set<AnyCancellable>()
 
     var selectedCity: String = ""
@@ -166,7 +168,7 @@ private extension DiscoverAllVC {
 
     func getTonightEvent() {
 
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: tonightEventSkip,
             venueId: "",
             time: "UPCOMING",
@@ -203,7 +205,7 @@ private extension DiscoverAllVC {
 
     func getAllEvents() {
 
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: allEventSkip,
             venueId: "",
             time: "UPCOMING",
@@ -242,9 +244,9 @@ private extension DiscoverAllVC {
 
     func fetchAllOpenVenueForMVP() {
 
-        presenter.getVenueListForMVP(
-            from: openFrom,
-            status: VenueStatus.open.rawValue, city: selectedCity
+        venueService.fetchVenuesForDiscover(
+            skip: openFrom,
+            bookingStatus: VenueStatus.open.rawValue, city: selectedCity
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }
@@ -288,9 +290,9 @@ private extension DiscoverAllVC {
 
     func fetchAllCloseVenueForMVP() {
 
-        presenter.getVenueListForMVP(
-            from: closeFrom,
-            status: VenueStatus.close.rawValue, city: selectedCity
+        venueService.fetchVenuesForDiscover(
+            skip: closeFrom,
+            bookingStatus: VenueStatus.close.rawValue, city: selectedCity
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }

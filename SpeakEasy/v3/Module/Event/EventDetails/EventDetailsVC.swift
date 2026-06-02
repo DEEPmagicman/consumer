@@ -131,6 +131,9 @@ class EventDetailsVC: UIViewController {
     private var galleryOverlayView: UIView?
     private var galleryMoreLabel: UILabel?
     
+    private var eventService = EventService()
+    private var paymentService = PaymentService()
+    private var tableService = TableService()
     
 //    private let skeletonView = EventDetailsSkeletonView()
 
@@ -437,7 +440,7 @@ class EventDetailsVC: UIViewController {
 
         showSkeleton()
 
-        EventPresenter.getEventDetail(
+        eventService.fetchEventDetail(
             eventId: eventId,
             venueTimeZone: venueDetails?.useTimezone,
             promotionLinkId: promoteId
@@ -629,7 +632,7 @@ class EventDetailsVC: UIViewController {
     
     private func fetchSeatingAreas() {
 
-        TablePresenter.getSeatingAreas(
+        tableService.fetchSeatingAreas(
             eventId: event?.id ?? "",
             skip: 0
         ) { [weak self] isSuccess, errMsg, list, _ in
@@ -651,7 +654,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        EventPresenter.getEventAttendees(eventId: eventId) { [weak self] success, _, data, _ in
+        eventService.fetchEventAttendees(eventId: eventId) { [weak self] success, _, data, _ in
             guard let self = self else { return }
 
             if success {
@@ -682,7 +685,7 @@ class EventDetailsVC: UIViewController {
     private func getEventFAQs() {
         guard let eventId = event?.uniqueId else { return }
 
-        EventPresenter.getEventFAQs(eventId: eventId) { [weak self] isSuccess, _, faqs, _ in
+        eventService.fetchEventFAQs(eventId: eventId) { [weak self] isSuccess, _, faqs, _ in
             guard let self = self else { return }
 
             if isSuccess {
@@ -704,7 +707,7 @@ class EventDetailsVC: UIViewController {
             return
         }
 
-        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
+        eventService.fetchTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
             guard let self = self else { return }
 
             if isSuccess {
@@ -1671,7 +1674,7 @@ class EventDetailsVC: UIViewController {
         }
 
 
-        PaymentPresenter.createEventBookingV2(
+        paymentService.createEventBooking(
             eventId: event.id,
             code: user.code,
             phone: user.phone,
@@ -1805,7 +1808,7 @@ class EventDetailsVC: UIViewController {
         
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
         if UserDefault.shared.isLoggedIn ??  false {
-            if let intsaGramId = UserDefault.shared.user?.instagramUserId  {
+            if let _ = UserDefault.shared.user?.instagramUserId  {
                 showGuestListPopup()
             } else {
                 showIntsaPopup()
@@ -3318,7 +3321,7 @@ extension EventDetailsVC: CheckoutBarDelegate {
             ]
         }
 
-        PaymentPresenter.createEventBookingV2(
+        paymentService.createEventBooking(
             eventId: event.id,
             code: user.code,
             phone: user.phone,

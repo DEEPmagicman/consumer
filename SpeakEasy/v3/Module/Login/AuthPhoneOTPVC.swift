@@ -25,8 +25,8 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
     var isForEmail = false
     var onOtpSuccess: (() -> Void)?
 
-    private var onBoardingPresenter = OnBoardingPresenter()
-    private var settingPresenter = SettingPresenter()
+    private let authService = AuthService()
+    private let settingsService = SettingsService()
 
     private var currectOtp: String?
     private var otpRef = ""
@@ -230,7 +230,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
         otpView.continueBtn.showLoader(userInteraction: false)
 
         if isFromLogin {
-            onBoardingPresenter.loginOtpVerifyApi(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+            authService.verifyLoginOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
                 guard let self else { return }
                 self.otpView.continueBtn.hideLoader()
                 self.isVerifyingOtp = false
@@ -255,7 +255,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
 
         if isFromSettings {
             if isForEmail {
-                settingPresenter.changeEmailPhoneVerifyApi(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.otpView.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -274,7 +274,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                     }
                 }
             } else {
-                settingPresenter.changeEmailPhoneVerifyApi(otp: Int(otp) ?? 0, otpRef: otpRef, isForPhone: true) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: Int(otp) ?? 0, otpRef: otpRef, isPhone: true) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.otpView.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -294,7 +294,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
             return
         }
 
-        onBoardingPresenter.signUpOtpVerifyApi(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+        authService.verifySignupOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
             self.otpView.continueBtn.hideLoader()
             self.isVerifyingOtp = false
@@ -355,7 +355,7 @@ extension AuthPhoneOTPVC: AuthPhoneInputViewDelegate {
         phoneView.continueBtn.showLoader(userInteraction: false)
 
         if isFromLogin {
-            onBoardingPresenter.loginWithPhoneApi(phonenum: phone, code: code) { [weak self] otp, otpRef, isSuccess, errorMsg in
+            authService.sendLoginOTP(phone: phone, code: code) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self else { return }
                 self.phoneView.continueBtn.hideLoader()
 
@@ -387,7 +387,7 @@ extension AuthPhoneOTPVC: AuthPhoneInputViewDelegate {
         }
         
         if isFromSettings {
-            settingPresenter.changePhoneNumberApi(phone: phone, code: code) { [weak self] otp, otpRef, isSuccess, errMsg in
+            settingsService.requestPhoneChangeOTP(phone: phone, countryCode: code) { [weak self] otp, otpRef, isSuccess, errMsg in
                 guard let self else { return }
                 self.phoneView.continueBtn.hideLoader()
 
@@ -400,7 +400,7 @@ extension AuthPhoneOTPVC: AuthPhoneInputViewDelegate {
                 }
             }
         } else {
-            onBoardingPresenter.signUpWithPhoneApi(phonenum: phone, code: code) { [weak self] otp, otpRef, isSuccess, errorMsg in
+            authService.sendSignupOTP(phone: phone, code: code) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self else { return }
                 self.phoneView.continueBtn.hideLoader()
 
@@ -440,7 +440,7 @@ extension AuthPhoneOTPVC: AuthOTPInputViewDelegate {
         otpView.resendBtn.showLoader(userInteraction: false)
 
         if isFromLogin {
-            onBoardingPresenter.loginResendOtpApi(otpref: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
+            authService.resendLoginOTP(otpRef: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self else { return }
                 self.otpView.resendBtn.hideLoader()
 
@@ -452,7 +452,7 @@ extension AuthPhoneOTPVC: AuthOTPInputViewDelegate {
                 }
             }
         } else {
-            onBoardingPresenter.signUpResendOtpApi(otpref: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
+            authService.resendSignupOTP(otpRef: otpRef) { [weak self] otp, otpRef, isSuccess, errorMsg in
                 guard let self else { return }
                 self.otpView.resendBtn.hideLoader()
 

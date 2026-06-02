@@ -18,8 +18,8 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
     private let buttonStackView = UIStackView()
     private let skipButton = UIButton(type: .system)
     private let continueButton = LoadingButton()
-    private var onBoardingPresenter = OnBoardingPresenter()
-
+    
+    private var profileService = ProfileService()
 
     private var isRequestInProgress = false
 
@@ -269,7 +269,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
 
         setLoading(true)
 
-        EventPresenter.getInstagramProfile(instagramUserId: username) { [weak self] isSuccess, errMsg, profileData in
+        profileService.fetchInstagramProfile(instagramUserId: username) { [weak self] isSuccess, errMsg, profileData in
             guard let self = self else { return }
 
             DispatchQueue.main.async {
@@ -292,7 +292,7 @@ final class InstagramUsernamePopupVC: UIViewController, UITextFieldDelegate {
     }
     
     private func updateUserProfile(instagramUserId: String) {
-        onBoardingPresenter.editUserProfileApi(instagramUserId: instagramUserId) { [weak self] isSuccess, errorMsg in
+        profileService.updateProfile(instagramUserId: instagramUserId) { [weak self] isSuccess, errorMsg in
             DispatchQueue.main.async {
                 if isSuccess {
                     if var user = UserDefault.shared.user {

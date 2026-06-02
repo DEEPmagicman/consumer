@@ -47,6 +47,9 @@ class TicketSelectionViewController: UIViewController {
     private var groupListHeightObservation: NSKeyValueObservation?
     private var eventTicketId = [String]()
 
+    private let paymentService = PaymentService()
+    private let eventService = EventService()
+    
     private var totalSelectedTickets: Int {
         switch mode {
         case .normal:
@@ -320,7 +323,7 @@ class TicketSelectionViewController: UIViewController {
             return
         }
 
-        EventPresenter.getTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
+        eventService.fetchTicketLinks(eventId: eventId) { [weak self] isSuccess, _, links in
             guard let self else { return }
             self.ticketLinks = isSuccess ? (links ?? []) : []
             self.isLoading = false
@@ -431,7 +434,7 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func getTicketByPassWord() {
-        EventPresenter.getEventTicketByPassWord(
+        eventService.fetchTicketsByPassword(
             eventId: event?.uniqueId ?? "",
             venueTimeZone: venueDetails?.useTimezone,
             password: unLockTF.text ?? ""
@@ -632,7 +635,7 @@ class TicketSelectionViewController: UIViewController {
 
     private func createBooking(event: Event, user: User, tickets: [EventTicket]) {
         let payload = buildTicketsPayload(from: tickets)
-        PaymentPresenter.createEventBookingV2(
+        paymentService.createEventBooking(
             eventId: event.id,
             code: user.code,
             phone: user.phone,

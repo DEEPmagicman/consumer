@@ -26,7 +26,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
     private let uploadOwnButton = UIButton(type: .system)
     private let useThisPictureButton = UIButton(type: .system)
     
-    private var presenter = OnBoardingPresenter()
+    private var profileService = ProfileService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -211,7 +211,7 @@ final class InstagramProfileFoundPopupVC: UIViewController {
     @objc private func handleUseThisPictureTap() {
         let imgDetail = ImageDetail(key: self.instaProfileData?.profilePictureKey ?? "" , name: self.instaProfileData?.profilePictureFilename ?? "", description: "profile picture")
         
-        self.presenter.editUserProfileApi(image: imgDetail) { [weak self] isSuccess, errorMsg  in
+        self.profileService.updateProfile(image: imgDetail) { [weak self] isSuccess, errorMsg  in
             guard let self = self else { return }
             self.view.isUserInteractionEnabled = true
             

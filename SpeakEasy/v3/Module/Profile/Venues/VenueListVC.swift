@@ -20,6 +20,8 @@ final class VenueListVC: UIViewController {
     private let emptyTitleLabel = UILabel()
     private let emptySubTitleLabel = UILabel()
     
+    private let venueService = VenueService()
+    
     var venues: [ClipVenue] = []
 
     private var skip = 0
@@ -177,7 +179,7 @@ extension VenueListVC {
             collectionView.reloadData()
         }
         
-        VenuePresenter.getVenueList(skip: skip) { [weak self] isSuccess, errMsg, venues, hasMany in
+        venueService.fetchVenueList(skip: skip) { [weak self] isSuccess, errMsg, venues, hasMany in
             guard let self else { return }
             
             self.isLoading = false

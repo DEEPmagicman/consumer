@@ -21,6 +21,8 @@ final class EventsListVC: UIViewController {
     private var isInitialLoading = true
     private var isPaginating = false
 
+    private let eventService = EventService()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -109,7 +111,7 @@ final class EventsListVC: UIViewController {
             reloadUI()
         }
 
-        EventPresenter.getEvents(
+        eventService.fetchEvents(
             from: skip,
             venueId: "",
             time: "UPCOMING",
@@ -327,7 +329,7 @@ extension EventsListVC: PinterestLayoutDelegate {
 
         let imageHeight = width * 1.2
 
-        let title = event.title ?? ""
+        let title = event.title
         let venue = event.venue?.name ?? ""
 
         let dateText = event.startDateTime.convertDateFormat(
@@ -431,9 +433,7 @@ extension EventsListVC: UICollectionViewDataSourcePrefetching {
     }
 }
 
-
 final class EmptyCollectionReusableView: UICollectionReusableView {
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
