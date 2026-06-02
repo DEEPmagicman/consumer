@@ -19,6 +19,9 @@ final class CoverTicketListVC: UIViewController {
     @IBOutlet weak var timeLbl: UILabel!
     @IBOutlet weak var ticketsTitleLbl: UILabel!
     @IBOutlet weak var continueToCheckoutBtn: CheckoutBarView!
+    @IBOutlet weak var backgroundContainerView: UIView!
+    
+    private let posterHeaderView = VenuePosterHeaderView()
 
     // MARK: - Public
 
@@ -139,8 +142,8 @@ final class CoverTicketListVC: UIViewController {
         super.viewDidLoad()
 
         setupTableView()
-        setupContinueTap()
         setupScreen()
+        setupPosterBackground()
         setupCoverTickets()
         getUpsellTickets()
         updateCheckoutState()
@@ -150,6 +153,22 @@ final class CoverTicketListVC: UIViewController {
 // MARK: - Setup
 
 private extension CoverTicketListVC {
+    
+    private func setupPosterBackground() {
+        self.backgroundContainerView.addSubview(posterHeaderView)
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: self.backgroundContainerView.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: self.backgroundContainerView.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: self.backgroundContainerView.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: self.backgroundContainerView.bottomAnchor)
+        ])
+        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+
+//        posterHeaderView.configure(style: .gradientImage)
+        posterHeaderView.loadImage(from: imageUrlString)
+    }
 
     func setupTableView() {
         tableView.delegate = self
@@ -166,28 +185,20 @@ private extension CoverTicketListVC {
             forCellReuseIdentifier: TicketsTVC.identifier
         )
     }
-
-    func setupContinueTap() {
-        let tap = UITapGestureRecognizer(
-            target: self,
-            action: #selector(onClickContinue)
-        )
-        continueToCheckoutBtn.addGestureRecognizer(tap)
-    }
-
+    
     func setupScreen() {
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
 
-        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
-        if let url = URL(string: imageUrlString) {
-            bgImage.sd_setImage(
-                with: url,
-                placeholderImage: UIImage(named: "newSpeakeasy")
-            )
-        } else {
-            bgImage.image = UIImage(named: "newSpeakeasy")
-        }
+//        let imageUrlString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+//        if let url = URL(string: imageUrlString) {
+//            bgImage.sd_setImage(
+//                with: url,
+//                placeholderImage: UIImage(named: "newSpeakeasy")
+//            )
+//        } else {
+//            bgImage.image = UIImage(named: "newSpeakeasy")
+//        }
 
         venueName.text = venueDetails?.name ?? ""
         timeLbl.text = venueDetails?.timezone
@@ -198,6 +209,7 @@ private extension CoverTicketListVC {
 
         continueToCheckoutBtn.isHidden = true
         continueToCheckoutBtn.alpha = 0
+        continueToCheckoutBtn.delegate = self
     }
 
     func setupCoverTickets() {
@@ -382,12 +394,19 @@ extension CoverTicketListVC {
         Navigate.to.back(self)
     }
 
-    @objc func onClickContinue() {
-        if UserDefault.shared.isGuest == true {
-            Navigate.to.loginMandatory(self)
+    private func onClickContinueBtn() {
+        if UserDefault.shared.user == nil {
+            Navigate.to.openPhoneLoginPopup(self) { [weak self] in
+                guard let self else { return }
+                self.continueFlow()
+            }
             return
         }
 
+        continueFlow()
+    }
+
+    private func continueFlow() {
         guard !selectedCoverTickets.isEmpty else { return }
 
         switch currentStep {
@@ -397,7 +416,7 @@ extension CoverTicketListVC {
             proceedToFinalCheckout()
         }
     }
-
+    
     private func createFreeBooking() {
         guard !selectedCoverTickets.isEmpty else { return }
 
@@ -648,5 +667,125 @@ extension CoverTicketListVC: UITableViewDelegate {
         heightForHeaderInSection section: Int
     ) -> CGFloat {
         return .leastNormalMagnitude
+    }
+}
+
+
+//
+//  EventPosterHeaderView.swift
+//  SpeakEasy-Consumer
+//
+import UIKit
+
+final class VenuePosterHeaderView: UIView {
+
+    // MARK: - Private Properties
+
+    private let screenBackgroundColor = UIColor(hex: "#121212")
+    private let backgroundImageView = UIImageView()
+    private let bottomGradientView = UIView()
+    private let bottomGradientLayer = CAGradientLayer()
+
+    // MARK: - Init
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    // MARK: - Setup
+
+    private func setup() {
+        backgroundColor = screenBackgroundColor
+        clipsToBounds = true
+        setupBackground()
+        setupBottomGradient()
+    }
+
+    private func setupBackground() {
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(backgroundImageView)
+
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            // Image only covers top half
+            backgroundImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5)
+        ])
+    }
+
+    private func setupBottomGradient() {
+        bottomGradientView.isUserInteractionEnabled = false
+        bottomGradientView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(bottomGradientView)
+
+        NSLayoutConstraint.activate([
+            bottomGradientView.topAnchor.constraint(equalTo: topAnchor),
+            bottomGradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottomGradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+
+        bottomGradientView.layer.addSublayer(bottomGradientLayer)
+
+        // Top — image fully visible
+        // Middle — smooth fade from image to black
+        // Bottom — solid black
+        bottomGradientLayer.colors = [
+            UIColor.clear.cgColor,                           // 0%   — image fully visible
+            UIColor.clear.cgColor,                           // 30%  — still clear
+            UIColor.black.withAlphaComponent(0.4).cgColor,   // 42%  — starts blending
+            UIColor.black.withAlphaComponent(0.85).cgColor,  // 50%  — heavy fade at midpoint
+            UIColor.black.cgColor                            // 60%+ — solid black
+        ]
+        bottomGradientLayer.locations = [0.0, 0.30, 0.42, 0.50, 0.60]
+        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        bottomGradientLayer.endPoint   = CGPoint(x: 0.5, y: 1.0)
+    }
+
+    // MARK: - Layout
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        bottomGradientLayer.frame = bottomGradientView.bounds
+    }
+
+    // MARK: - Public API
+
+    func setBackgroundImage(_ image: UIImage?) {
+        backgroundImageView.image = image
+    }
+
+    func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard
+                error == nil,
+                let self,
+                let data,
+                let image = UIImage(data: data)
+            else { return }
+
+            DispatchQueue.main.async {
+                self.setBackgroundImage(image)
+            }
+        }.resume()
+    }
+}
+
+
+extension CoverTicketListVC: CheckoutBarDelegate {
+
+    func checkoutBarDidTapButton() {
+        onClickContinueBtn()
     }
 }

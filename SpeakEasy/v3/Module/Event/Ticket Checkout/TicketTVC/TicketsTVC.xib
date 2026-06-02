@@ -43,7 +43,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tcy-9s-9oL">
-                                <rect key="frame" x="21" y="16" width="479" height="140"/>
+                                <rect key="frame" x="21" y="15" width="479" height="141"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dJz-Tb-tfB">
                                         <rect key="frame" x="0.0" y="0.0" width="479" height="21"/>
@@ -67,7 +67,7 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="sFM-N5-Ebz">
                                                 <rect key="frame" x="0.0" y="0.0" width="479" height="0.0"/>
-                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="15"/>
+                                                <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="10"/>
                                                 <color key="textColor" red="0.75294117650000003" green="0.74901960779999999" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -348,7 +348,7 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.24943996415770608" colorSpace="custom" customColorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Tcy-9s-9oL" firstAttribute="leading" secondItem="O1l-C6-mnB" secondAttribute="leading" constant="21" id="3zZ-L2-Cfu"/>
-                            <constraint firstItem="Tcy-9s-9oL" firstAttribute="top" secondItem="O1l-C6-mnB" secondAttribute="top" constant="16" id="7YU-fG-ven"/>
+                            <constraint firstItem="Tcy-9s-9oL" firstAttribute="top" secondItem="O1l-C6-mnB" secondAttribute="top" constant="15" id="7YU-fG-ven"/>
                             <constraint firstItem="Sda-8e-jtS" firstAttribute="leading" secondItem="O1l-C6-mnB" secondAttribute="leading" id="8V4-zE-rcg"/>
                             <constraint firstItem="FZN-ZJ-SOO" firstAttribute="top" secondItem="Tcy-9s-9oL" secondAttribute="bottom" constant="20" id="BFw-Z1-emW"/>
                             <constraint firstAttribute="trailing" secondItem="Sda-8e-jtS" secondAttribute="trailing" id="CXJ-aC-0IH"/>
@@ -369,7 +369,7 @@
                                 <real key="value" value="1"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="19"/>
+                                <real key="value" value="25"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>

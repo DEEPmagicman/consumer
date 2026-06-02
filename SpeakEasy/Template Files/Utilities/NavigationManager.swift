@@ -667,7 +667,7 @@ final class Navigate {
     }
     
 //-------v3----------
-    func openPhoneLoginPopup(_ sender: UIViewController) {
+    func openPhoneLoginPopup(_ sender: UIViewController, onLoginSuccess: (() -> Void)? = nil) {
         let vc = AuthPhoneOTPVC()
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
@@ -677,10 +677,15 @@ final class Navigate {
         vc.onOtpSuccess = { [weak sender] in
             guard let sender else { return }
 
-            if UserDefault.shared.user?.isProfileCompleted == true {
-                AppDelegate.shared.setRootVC()
+            if let onLoginSuccess {
+                onLoginSuccess()
             } else {
-                Navigate.to.personalInformationVC(sender)
+                // Default behaviour — same as before
+                if UserDefault.shared.user?.isProfileCompleted == true {
+                    AppDelegate.shared.setRootVC()
+                } else {
+                    Navigate.to.personalInformationVC(sender)
+                }
             }
         }
 

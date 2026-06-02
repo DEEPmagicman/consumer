@@ -230,6 +230,7 @@ class TicketsTVC: UITableViewCell {
         // Cover tickets never show sold out or tickets left
         soldOutView.isHidden = true
         ticketLeftLbl.isHidden = true
+        bgView.backgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.25)
 
         // Description
         setupDescription(description)
