@@ -2794,165 +2794,121 @@ final class EventDetailsSkeletonView: UIView {
     }
 }
 
-
 final class EventPosterHeaderView: UIView {
-
-    enum BackgroundStyle {
-        case blur
-        case gradientImage
-    }
-
+    
     private let screenBackgroundColor = UIColor(hex: "#121212")
-
+    
     private let backgroundImageView = UIImageView()
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let darkOverlayView = UIView()
-
+    
     private let bottomGradientView = UIView()
     private let bottomGradientLayer = CAGradientLayer()
-
-    private var style: BackgroundStyle = .blur
-
-    // MARK: - Init
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
-
-    // MARK: - Setup
-
+    
     private func setup() {
         backgroundColor = screenBackgroundColor
         clipsToBounds = true
-
-        setupBackgroundImage()
-        setupBlurView()
-        setupOverlay()
+        
+        setupBlurredBackground()
         setupBottomGradient()
-
-        applyStyle()
     }
-
-    private func setupBackgroundImage() {
+    
+    private func setupBlurredBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
+        backgroundImageView.alpha = 0.75
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundImageView)
-
+        
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-
-            // HALF SCREEN IMAGE
-            backgroundImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.60)
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: -30),
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -30),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
+            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 20)
         ])
-    }
-
-    private func setupBlurView() {
+        
         blurView.alpha = 0.90
         blurView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(blurView)
-
+        
         NSLayoutConstraint.activate([
             blurView.topAnchor.constraint(equalTo: topAnchor),
             blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
             blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            blurView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor)
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-    }
-
-    private func setupOverlay() {
-        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(0.20)
+        
+        darkOverlayView.backgroundColor = UIColor.black.withAlphaComponent(0.35)
         darkOverlayView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(darkOverlayView)
-
+        
         NSLayoutConstraint.activate([
             darkOverlayView.topAnchor.constraint(equalTo: topAnchor),
             darkOverlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
             darkOverlayView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            darkOverlayView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor)
+            darkOverlayView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-
+    
     private func setupBottomGradient() {
         bottomGradientView.isUserInteractionEnabled = false
         bottomGradientView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomGradientView)
-
+        
         NSLayoutConstraint.activate([
-            bottomGradientView.topAnchor.constraint(equalTo: topAnchor),
             bottomGradientView.leadingAnchor.constraint(equalTo: leadingAnchor),
             bottomGradientView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            bottomGradientView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            bottomGradientView.topAnchor.constraint(equalTo: topAnchor) // full screen
         ])
-
+        
         bottomGradientView.layer.addSublayer(bottomGradientLayer)
-
+        
         bottomGradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.65).cgColor,
-            UIColor.black.cgColor
+            UIColor.clear.cgColor,             // top — fully transparent
+            UIColor.clear.cgColor,             // stays clear through middle
+            UIColor.black.withAlphaComponent(0.60).cgColor, // starts bleeding in
+            UIColor.black.cgColor              // bottom — solid black
         ]
-
-        bottomGradientLayer.locations = [0.0, 0.45, 0.75, 1.0]
-        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        bottomGradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        
+        bottomGradientLayer.locations = [0.0, 0.50, 0.75, 1.0]
+        bottomGradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0) // top
+        bottomGradientLayer.endPoint  = CGPoint(x: 0.5, y: 1.0) // bottom
     }
-
-    private func applyStyle() {
-        switch style {
-
-        case .blur:
-            blurView.isHidden = false
-            backgroundImageView.alpha = 0.75
-
-        case .gradientImage:
-            blurView.isHidden = true
-            backgroundImageView.alpha = 1.0
-        }
-    }
-
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         bottomGradientLayer.frame = bottomGradientView.bounds
     }
-
-    // MARK: - Public
-
-    func configure(style: BackgroundStyle) {
-        self.style = style
-        applyStyle()
-    }
-
+    
     func setBackgroundImage(_ image: UIImage?) {
         backgroundImageView.image = image
     }
-
+    
     func loadImage(from urlString: String) {
-
         guard let url = URL(string: urlString) else { return }
-
+        
         URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-
             guard
                 error == nil,
                 let self,
                 let data,
                 let image = UIImage(data: data)
             else { return }
-
+            
             DispatchQueue.main.async {
                 self.setBackgroundImage(image)
             }
-
         }.resume()
     }
 }

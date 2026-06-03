@@ -225,11 +225,11 @@ final class Navigate {
                          bookingType: TicketPriceType = .PAID) {
         let vc = CoverTicketCheckOutVC(nibName: "CoverTicketCheckOutVC", bundle: nil)
         vc.selectedCoverTickets = selectedCoverTickets
-        vc.selectedAddOnsItem = selectedAddOnsItem
-        vc.totalPrice = totalPrice
+        vc.selectedAddOnsItems = selectedAddOnsItem
+//        vc.totalPrice = totalPrice
         vc.venue = venue
         vc.bookingType = bookingType
-        vc.updateDelegate = sender as? UpdateDetailDelegate
+//        vc.updateDelegate = sender as? UpdateDetailDelegate
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -644,7 +644,6 @@ final class Navigate {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
         sender.pushVC(vc)
     }
-    
     
     func filtersVC(_ sender: UIViewController) {
         let vc = FiltersViewController(nibName: "FiltersViewController", bundle: nil)

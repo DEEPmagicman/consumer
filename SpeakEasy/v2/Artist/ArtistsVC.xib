@@ -26,13 +26,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artists" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ngE-Qd-K8u">
-                    <rect key="frame" x="20" y="148" width="48" height="21"/>
+                    <rect key="frame" x="20" y="134" width="48" height="21"/>
                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qRH-CN-6c2">
-                    <rect key="frame" x="20" y="186" width="353" height="598"/>
+                    <rect key="frame" x="20" y="172" width="353" height="612"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
             </subviews>
@@ -44,7 +44,7 @@
                 <constraint firstItem="qRH-CN-6c2" firstAttribute="top" secondItem="ngE-Qd-K8u" secondAttribute="bottom" constant="17" id="NpY-q4-nQS"/>
                 <constraint firstItem="Jyz-Sh-thd" firstAttribute="bottom" secondItem="qRH-CN-6c2" secondAttribute="bottom" id="U5S-sP-Kmb"/>
                 <constraint firstItem="ngE-Qd-K8u" firstAttribute="leading" secondItem="Jyz-Sh-thd" secondAttribute="leading" constant="20" id="eJM-bU-bzV"/>
-                <constraint firstItem="ngE-Qd-K8u" firstAttribute="top" secondItem="Jyz-Sh-thd" secondAttribute="top" constant="30" id="goi-ec-C78"/>
+                <constraint firstItem="ngE-Qd-K8u" firstAttribute="top" secondItem="Jyz-Sh-thd" secondAttribute="top" constant="16" id="goi-ec-C78"/>
             </constraints>
             <point key="canvasLocation" x="223.66412213740458" y="74.647887323943664"/>
         </view>

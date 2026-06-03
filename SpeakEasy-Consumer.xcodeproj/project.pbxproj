@@ -537,6 +537,10 @@
 		CEE646F42FC47CC9001DF84E /* TicketSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE646F32FC47CC9001DF84E /* TicketSelectionViewController.xib */; };
 		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
 		CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
+		CEEACF452FD038690009EFB5 /* CoverQRCodeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEEACF442FD038690009EFB5 /* CoverQRCodeVC.xib */; };
+		CEEACF462FD038690009EFB5 /* CoverQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEACF432FD038690009EFB5 /* CoverQRCodeVC.swift */; };
+		CEEACF492FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */; };
+		CEEACF4A2FD03AE90009EFB5 /* CustomQRCodePagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEEACF482FD03AE90009EFB5 /* CustomQRCodePagerViewCell.xib */; };
 		CEEF8D6E2FC42C1B004873AB /* AdditionalButtonsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEEF8D6D2FC42C1B004873AB /* AdditionalButtonsTableViewCell.xib */; };
 		CEEF8D6F2FC42C1B004873AB /* AdditionalButtonsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEF8D6C2FC42C1B004873AB /* AdditionalButtonsTableViewCell.swift */; };
 		CEF48B522EFA4937006A6468 /* EventCVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEF48B512EFA4937006A6468 /* EventCVC.xib */; };
@@ -1047,6 +1051,10 @@
 		CEE646F12FC47CA6001DF84E /* TicketSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketSelectionViewController.swift; sourceTree = "<group>"; };
 		CEE646F32FC47CC9001DF84E /* TicketSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketSelectionViewController.xib; sourceTree = "<group>"; };
 		CEE7A2292A28BC9C009A027F /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		CEEACF432FD038690009EFB5 /* CoverQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverQRCodeVC.swift; sourceTree = "<group>"; };
+		CEEACF442FD038690009EFB5 /* CoverQRCodeVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoverQRCodeVC.xib; sourceTree = "<group>"; };
+		CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQRCodePagerViewCell.swift; sourceTree = "<group>"; };
+		CEEACF482FD03AE90009EFB5 /* CustomQRCodePagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomQRCodePagerViewCell.xib; sourceTree = "<group>"; };
 		CEEF8D6C2FC42C1B004873AB /* AdditionalButtonsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalButtonsTableViewCell.swift; sourceTree = "<group>"; };
 		CEEF8D6D2FC42C1B004873AB /* AdditionalButtonsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdditionalButtonsTableViewCell.xib; sourceTree = "<group>"; };
 		CEF48B502EFA4937006A6468 /* EventCVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCVC.swift; sourceTree = "<group>"; };
@@ -2414,6 +2422,8 @@
 			children = (
 				CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */,
 				CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */,
+				CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */,
+				CEEACF482FD03AE90009EFB5 /* CustomQRCodePagerViewCell.xib */,
 			);
 			path = TVC;
 			sourceTree = "<group>";
@@ -2468,6 +2478,8 @@
 				CE59ED662F6D544900831974 /* CoverTicketListVC.xib */,
 				04EA6B852F7B839A00B5B087 /* CoverTicketCheckOutVC.swift */,
 				04EA6B862F7B839A00B5B087 /* CoverTicketCheckOutVC.xib */,
+				CEEACF432FD038690009EFB5 /* CoverQRCodeVC.swift */,
+				CEEACF442FD038690009EFB5 /* CoverQRCodeVC.xib */,
 			);
 			path = Cover;
 			sourceTree = "<group>";
@@ -3012,6 +3024,7 @@
 				CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
 				CE93BDD02FC5603F00E2D815 /* OrderItemTableViewCell.xib in Resources */,
+				CEEACF4A2FD03AE90009EFB5 /* CustomQRCodePagerViewCell.xib in Resources */,
 				045D04C92B1739E400B68D9E /* PurchaseDetailsTVC.xib in Resources */,
 				CE0BA92A2F6BFDE500AB8996 /* VenueHeaderVC.xib in Resources */,
 				CE0BA92B2F6BFDE500AB8996 /* VenueVC.xib in Resources */,
@@ -3052,6 +3065,7 @@
 				04AB758B2F862478001D76D0 /* SearchVenueTableViewCell.xib in Resources */,
 				82847A792982485B00611DC4 /* Home.storyboard in Resources */,
 				BD7FA0EB294836C900935275 /* Login.storyboard in Resources */,
+				CEEACF452FD038690009EFB5 /* CoverQRCodeVC.xib in Resources */,
 				CE565478299CF741009CE55C /* Assets.xcassets in Resources */,
 				CEE646EC2FC4666B001DF84E /* OrderListViewController.xib in Resources */,
 				CE78CDE72A17607D00FA47FC /* ArtistListTVC.xib in Resources */,
@@ -3303,6 +3317,7 @@
 				BDCC5C282946EA8800595436 /* SelectCityViewController.swift in Sources */,
 				CAC413F828A478040007BA86 /* NSAttributedString.swift in Sources */,
 				6A40D1B72FBEDEA800F3FAAB /* NotificationSettingsSectionView.swift in Sources */,
+				CEEACF462FD038690009EFB5 /* CoverQRCodeVC.swift in Sources */,
 				6A4FA1A42FC83EFC007EB116 /* ShimmerViewV3.swift in Sources */,
 				CECE370D2F6BF9640087A33A /* SJUtil.swift in Sources */,
 				6A79E28B2FCEC34C00B7F1F4 /* VenueService.swift in Sources */,
@@ -3513,6 +3528,7 @@
 				BDD1D4B029434219003EB5FC /* NotificationPermissionViewController.swift in Sources */,
 				0434F9642F7E98D400164A2E /* ProfileVC.swift in Sources */,
 				CE45A5B42C3BC9CF00E1FE3F /* DropDownCell.swift in Sources */,
+				CEEACF492FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift in Sources */,
 				0436D0972959848A0087D3DB /* UITextField+fixCaretPosition.swift in Sources */,
 				6A60CADA2FC466E700155E9D /* OrdersSegmentView.swift in Sources */,
 				0436D08D295981AA0087D3DB /* PersonalInformationViewController.swift in Sources */,

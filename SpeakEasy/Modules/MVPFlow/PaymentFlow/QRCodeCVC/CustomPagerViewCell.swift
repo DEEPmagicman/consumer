@@ -37,7 +37,6 @@ final class CustomPagerViewCell: FSPagerViewCell {
         containerView.addGestureRecognizer(tapGesture)
     }
     
-    
     @objc func qrImageTapped() {
         containerView.isUserInteractionEnabled = false
         flipView()
