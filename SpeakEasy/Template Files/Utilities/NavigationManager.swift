@@ -758,4 +758,16 @@ final class Navigate {
         let vc = VenueListVC()
         sender.pushVC(vc)
     }
+    
+    func searchVenueVC(_ sender: UIViewController) {
+        let vc = SearchVenueVC()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.present(vc, animated: true)
+    }
+    
+    func searchEventVC(_ sender: UIViewController) {
+        let vc = SearchEventVC()
+        sender.present(vc, animated: true)
+    }
 }
