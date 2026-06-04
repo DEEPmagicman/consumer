@@ -51,7 +51,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keep an eye out for upcoming events!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JpJ-Ua-fEy">
-                            <rect key="frame" x="86.999999999999986" y="352.33333333333337" width="219" height="14"/>
+                            <rect key="frame" x="87" y="352.33333333333337" width="219" height="14"/>
                             <fontDescription key="fontDescription" name="Inter-SemiBold" family="Inter" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -85,6 +85,26 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="agv-on-h5S" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="333" y="124" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="OAj-Ct-e1N"/>
+                        <constraint firstAttribute="height" constant="40" id="css-2r-ebI"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="14"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="questionMark"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickPermuimExp:" destination="-1" eventType="touchUpInside" id="Dsc-Uf-Dl1"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -94,6 +114,7 @@
                 <constraint firstItem="ciB-vU-nok" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="DBH-Lp-oCd"/>
                 <constraint firstAttribute="bottom" secondItem="ciB-vU-nok" secondAttribute="bottom" id="PnY-BP-IAg"/>
                 <constraint firstItem="ciB-vU-nok" firstAttribute="top" secondItem="N5H-A9-Sxe" secondAttribute="bottom" constant="28" id="SVt-JG-u1D"/>
+                <constraint firstItem="agv-on-h5S" firstAttribute="centerY" secondItem="XZ1-a9-7He" secondAttribute="centerY" id="T6U-5f-5oS"/>
                 <constraint firstItem="N5H-A9-Sxe" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="cfH-4E-rjf"/>
                 <constraint firstItem="SS7-l3-Pja" firstAttribute="top" secondItem="ciB-vU-nok" secondAttribute="top" id="dqt-p2-IBJ"/>
                 <constraint firstItem="ciB-vU-nok" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="fBp-qu-yni"/>
@@ -101,6 +122,7 @@
                 <constraint firstItem="XZ1-a9-7He" firstAttribute="leading" secondItem="N5H-A9-Sxe" secondAttribute="trailing" constant="11" id="tjD-r2-3RS"/>
                 <constraint firstItem="SS7-l3-Pja" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="uSI-FU-dL5"/>
                 <constraint firstAttribute="bottom" secondItem="SS7-l3-Pja" secondAttribute="bottom" id="wGd-1d-65S"/>
+                <constraint firstAttribute="trailing" secondItem="agv-on-h5S" secondAttribute="trailing" constant="20" id="zAa-P9-hM1"/>
             </constraints>
             <point key="canvasLocation" x="-22.137404580152669" y="100"/>
         </view>

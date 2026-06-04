@@ -19,6 +19,7 @@ enum AppIconType: String {
     case share
     case map
     case search
+    case questionMark
 
     var image: UIImage? {
         switch self {
@@ -32,6 +33,8 @@ enum AppIconType: String {
         case .map:
             return UIImage(named: "mapIcon")
         case .search: return UIImage(resource: .searchIconV3)
+        case .questionMark:
+            return UIImage(named: "questionMarkIcon")
         }
     }
 
@@ -48,6 +51,8 @@ enum AppIconType: String {
         case .map:
             return 40
         case .search: return 40
+        case .questionMark:
+            return 24
         }
     }
 }

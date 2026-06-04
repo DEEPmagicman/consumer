@@ -90,7 +90,9 @@
                     </constraints>
                     <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="17"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" title="Buy another ticket"/>
+                    <state key="normal" title="Buy another ticket">
+                        <color key="titleColor" red="0.019607843137254902" green="0.011764705882352941" blue="0.078431372549019607" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                             <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -87,11 +87,12 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         setupTableViews()
         setupHeaderData()
         setupPosterBackground()
-        setupCheckoutButton()
+//        setupCheckoutButton()
         setupNotifications()
 
         checkOutBtnView.alpha = 0.5
         checkOutBtnView.isUserInteractionEnabled = false
+        checkOutBtnView.delegate = self
 
         if !selectedCoverTickets.isEmpty && bookingType != .FREE {
             createBooking()
@@ -209,15 +210,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         privacyPolicyLbl.text = "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
     }
 
-    private func setupCheckoutButton() {
-        let tap = UITapGestureRecognizer(
-            target: self,
-            action: #selector(onClickContinueToCheckout)
-        )
-
-        checkOutBtnView.addGestureRecognizer(tap)
-        checkOutBtnView.isUserInteractionEnabled = false
-    }
+//    private func setupCheckoutButton() {
+//        let tap = UITapGestureRecognizer(
+//            target: self,
+//            action: #selector(onClickContinueToCheckout)
+//        )
+//
+//        checkOutBtnView.addGestureRecognizer(tap)
+//        checkOutBtnView.isUserInteractionEnabled = false
+//    }
 
     private func setupNotifications() {
         NotificationCenter.default.addObserver(
@@ -284,7 +285,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         cancelBooking()
     }
 
-    @objc private func onClickContinueToCheckout() {
+ func onClickContinueToCheckout() {
         if isPaymentInitiated { return }
 
         isPaymentInitiated = true
@@ -1157,3 +1158,11 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
         }
     }
 }
+
+extension CoverTicketCheckOutVC: CheckoutBarDelegate {
+
+    func checkoutBarDidTapButton() {
+        onClickContinueToCheckout()
+    }
+}
+

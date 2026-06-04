@@ -32,6 +32,8 @@ final class CoverQRCodeVC: UIViewController {
     var addOnsBookingId: String = ""
     var isAddOnsAvailable: Bool = false
     var isOnlyAddOnAvailable: Bool = false
+    var venueId = String()
+    var venueNameText: String? = ""
 
     private let paymentService = PaymentService()
 
@@ -47,6 +49,16 @@ final class CoverQRCodeVC: UIViewController {
 
         pagerView.delegate = self
         pagerView.dataSource = self
+        
+        pagerView.interitemSpacing = 25
+        pagerView.transformer = FSPagerViewTransformer(type: .linear)
+        pagerView.transformer?.minimumAlpha = 1
+        pagerView.backgroundColor = .clear
+        
+        DispatchQueue.main.async {
+            self.pagerView.itemSize = CGSize(width: 300,
+                                                  height: self.pagerView.frame.height)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -34,6 +34,11 @@ final class VenueExperiencesVC: UIViewController,
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
         return collectionView
     }
+    
+    @IBAction func onClickPermuimExp(_ sender: Any) {
+        Navigate.to.presentPremiumExpPopUp(self)
+    }
+    
 }
 
 // MARK: - Setup

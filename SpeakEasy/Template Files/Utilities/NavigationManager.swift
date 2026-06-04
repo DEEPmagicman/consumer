@@ -177,6 +177,13 @@ final class Navigate {
         sender.navigationController?.present(vc, animated: true, completion: nil)
     }
     
+    func presentPremiumExpPopUp(_ sender: UIViewController) {
+        let vc = PremiumExperiencesPopupVC()
+        vc.modalTransitionStyle = .crossDissolve
+        vc.modalPresentationStyle = .overCurrentContext
+        sender.navigationController?.present(vc, animated: true)
+    }
+    
     func presentGSImageViewerController(_ sender: UIViewController, imageView: UIImageView) {
         let image = imageView.image ?? Constant.Icon.uploadImage ?? UIImage()
         let imageInfo = GSImageInfo(image: image, imageMode: .aspectFit)
@@ -325,7 +332,7 @@ final class Navigate {
     }
     
     func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: String = "", addOnsBookingId: String, venueName: String? = "") {
-        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ScanQRCodeVC.self)
+        let vc = CoverQRCodeVC(nibName: "CoverQRCodeVC", bundle: nil)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId
         vc.booking = booking
@@ -349,7 +356,7 @@ final class Navigate {
             vc.delegate = accountVc as? AccountVC
             return
         }
-        sender.navigationController?.present(vc, animated: true)
+        sender.navigationController?.pushViewController(vc, animated: true)
     }
     
     func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String, bookingType: TicketPriceType = .PAID) {

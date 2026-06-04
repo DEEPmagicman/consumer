@@ -47,7 +47,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
         // Popup card
         popupView.translatesAutoresizingMaskIntoConstraints = false
         popupView.backgroundColor = UIColor(hex: "#171717")
-        popupView.layer.cornerRadius = 28
+        popupView.layer.cornerRadius = 34
         popupView.layer.cornerCurve = .continuous
         popupView.clipsToBounds = true
         popupView.alpha = 0
