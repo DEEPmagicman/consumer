@@ -11,7 +11,9 @@ final class EventsListVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var cityTitleLbl: UILabel!
-
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var topRightSideBtn: AppIconButton!
+    
     private var eventList: [Event] = []
 
     private var skip = 0
@@ -20,12 +22,15 @@ final class EventsListVC: UIViewController {
     private var isLoading = false
     private var isInitialLoading = true
     private var isPaginating = false
+    
+    var venue: SearchVenueItem? = nil
 
     private let eventService = EventService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupUI()
         setupCollectionView()
         fetchEvents(reset: true)
     }
@@ -39,8 +44,22 @@ final class EventsListVC: UIViewController {
         Navigate.to.back(self)
     }
 
-    @IBAction func onClickFilterBtn(_ sender: Any) {
-        Navigate.to.filtersVC(self)
+    @IBAction func onClickTopRightSideBtn(_ sender: Any) {
+        if let venue = venue {
+            Navigate.to.searchEventVC(self, venueID: venue.id)
+        } else {
+            Navigate.to.filtersVC(self)
+        }
+    }
+    
+    private func setupUI() {
+        if let venue = venue {
+            topRightSideBtn.iconTypeValue = AppIconType.search.rawValue
+            topRightSideBtn.iconSize = 14
+            topRightSideBtn.buttonSize = 40
+            
+            titleLbl.text = venue.name
+        }
     }
 
     private func setupCollectionView() {

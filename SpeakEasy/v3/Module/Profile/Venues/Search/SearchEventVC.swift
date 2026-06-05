@@ -19,11 +19,48 @@ final class SearchEventVC: BaseSearchSheetVC {
     private var events: [SearchEventItem] = []
     private var searchWorkItem: DispatchWorkItem?
 
+    private let leftDateLabel = UILabel()
+    private let rightDateLabel = UILabel()
+    
+    var venueID: String = ""
+    
     private var fromDate: Date?
     private var toDate: Date?
 
     private var isLoading = false
     
+    private let dummyEvents: [SearchEventItem] = [
+        SearchEventItem(
+            id: "1",
+            title: "The Grand Hall",
+            dateText: "Apr 18 at 8PM",
+            imageURL: nil
+        ),
+        SearchEventItem(
+            id: "2",
+            title: "Skyline Rooftop",
+            dateText: "Apr 18 at 8PM",
+            imageURL: nil
+        ),
+        SearchEventItem(
+            id: "3",
+            title: "Ocean View Lounge",
+            dateText: "Apr 18 at 8PM",
+            imageURL: nil
+        ),
+        SearchEventItem(
+            id: "4",
+            title: "Downtown Club",
+            dateText: "Apr 18 at 8PM",
+            imageURL: nil
+        ),
+        SearchEventItem(
+            id: "5",
+            title: "Sunset Terrace",
+            dateText: "Apr 18 at 8PM",
+            imageURL: nil
+        )
+    ]
     init(venue: SearchVenueItem? = nil) {
         self.venue = venue
         super.init(nibName: nil, bundle: nil)
@@ -38,7 +75,11 @@ final class SearchEventVC: BaseSearchSheetVC {
         super.viewDidLoad()
         titleLabel.text = "Search"
         setupUI()
-        loadSuggested()
+//        loadSuggested() // enable after api implement
+        
+        //MARK: Dummy Data
+        emptyView.isHidden = false
+//        searchEvents("A")
     }
 
     private func setupUI() {
@@ -66,7 +107,7 @@ final class SearchEventVC: BaseSearchSheetVC {
         sheetView.addSubview(searchField)
 
         NSLayoutConstraint.activate([
-            searchField.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 20),
+            searchField.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 16),
             searchField.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
             searchField.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
             searchField.heightAnchor.constraint(equalToConstant: 50)
@@ -88,32 +129,51 @@ final class SearchEventVC: BaseSearchSheetVC {
         sheetView.addSubview(tableView)
 
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 18),
             tableView.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: sheetView.safeAreaLayoutGuide.bottomAnchor, constant: -92)
         ])
     }
-
+    
     private func setupDateButton() {
-        dateButton.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.06)
+
+        dateButton.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.04)
         dateButton.layer.cornerRadius = 16
         dateButton.layer.cornerCurve = .continuous
-        dateButton.setTitle("Search by date                                      Add dates", for: .normal)
-        dateButton.setTitleColor(.white, for: .normal)
-        dateButton.titleLabel?.font = Constant.Font.geistRegular(size: 14)
         dateButton.addTarget(self, action: #selector(onClickDate), for: .touchUpInside)
         dateButton.translatesAutoresizingMaskIntoConstraints = false
+
+        leftDateLabel.text = "Search by date"
+        leftDateLabel.textColor = UIColor(hex: "#737373")
+        leftDateLabel.font = Constant.Font.geistRegular(size: 16)
+
+        rightDateLabel.text = "Add dates"
+        rightDateLabel.textColor = .white
+        rightDateLabel.font = Constant.Font.geistMedium(size: 16)
+
+        [leftDateLabel, rightDateLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            dateButton.addSubview($0)
+        }
+
         sheetView.addSubview(dateButton)
 
         NSLayoutConstraint.activate([
-            dateButton.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 20),
-            dateButton.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -20),
-            dateButton.bottomAnchor.constraint(equalTo: sheetView.safeAreaLayoutGuide.bottomAnchor, constant: -22),
-            dateButton.heightAnchor.constraint(equalToConstant: 56)
+
+            dateButton.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
+            dateButton.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
+            dateButton.bottomAnchor.constraint(equalTo: sheetView.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            dateButton.heightAnchor.constraint(equalToConstant: 56),
+
+            leftDateLabel.leadingAnchor.constraint(equalTo: dateButton.leadingAnchor, constant: 20),
+            leftDateLabel.centerYAnchor.constraint(equalTo: dateButton.centerYAnchor),
+
+            rightDateLabel.trailingAnchor.constraint(equalTo: dateButton.trailingAnchor, constant: -20),
+            rightDateLabel.centerYAnchor.constraint(equalTo: dateButton.centerYAnchor)
         ])
     }
-
+    
     private func setupEmpty() {
 
         emptyView.isHidden = true
@@ -131,7 +191,7 @@ final class SearchEventVC: BaseSearchSheetVC {
     }
 
     private func loadSuggested() {
-        searchEvents(keyword: nil)
+        searchEvents(nil)
     }
 
     @objc private func onSearchChanged() {
@@ -141,17 +201,17 @@ final class SearchEventVC: BaseSearchSheetVC {
 
         guard !keyword.isEmpty else {
             events.removeAll()
-            UIView.animate(withDuration: 0.25) {
-                self.emptyView.alpha = 0
-            } completion: { _ in
-                self.emptyView.isHidden = true
-            }
             tableView.reloadData()
+            UIView.animate(withDuration: 0.25) {
+                self.emptyView.alpha = 1 // need to change 0 after api
+            } completion: { _ in
+                self.emptyView.isHidden = false // need to change true after api
+            }
             return
         }
         
         let work = DispatchWorkItem { [weak self] in
-            self?.searchEvents(keyword: keyword)
+            self?.searchEvents(keyword)
         }
 
         searchWorkItem = work
@@ -168,27 +228,34 @@ final class SearchEventVC: BaseSearchSheetVC {
             self.fromDate = from
             self.toDate = to
             self.updateDateButton()
-            self.searchEvents(keyword: self.searchField.text)
+            self.searchEvents(self.searchField.text)
         }
 
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
         present(vc, animated: true)
     }
-
+    
     private func updateDateButton() {
+
         guard let fromDate, let toDate else {
-            dateButton.setTitle("Search by date                                      Add dates", for: .normal)
+
+            leftDateLabel.text = "Search by date"
+            leftDateLabel.textColor = UIColor(hex: "#737373")
+
+            rightDateLabel.text = "Add dates"
+            rightDateLabel.textColor = .white
             return
         }
 
-        dateButton.setTitle(
-            "\(fromDate.shortDisplay()) - \(toDate.shortDisplay())",
-            for: .normal
-        )
+        leftDateLabel.text = "\(fromDate.shortDisplay()) - \(toDate.shortDisplay())"
+        leftDateLabel.textColor = .white
+
+        rightDateLabel.text = "Edit"
+        rightDateLabel.textColor = .white.withAlphaComponent(0.7)
     }
 
-    private func searchEvents(keyword: String?) {
+    private func searchEvents(_ keyword: String?) {
         isLoading = true
         tableView.isHidden = false
         tableView.reloadData()
@@ -201,27 +268,30 @@ final class SearchEventVC: BaseSearchSheetVC {
         ) { [weak self] events in
             guard let self else { return }
             
-            self.isLoading = false
-            self.events = events
-            let hasResults = !events.isEmpty
-
-            if hasResults {
-                UIView.animate(withDuration: 0.25) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.isLoading = false
+                self.events = events
+                self.events = self.dummyEvents // remove this line after correct api  implement
+                let hasResults = !self.events.isEmpty
+                
+                if hasResults {
+                    UIView.animate(withDuration: 0.25) {
+                        self.emptyView.alpha = 0
+                    } completion: { _ in
+                        self.emptyView.isHidden = true
+                    }
+                } else {
+                    self.emptyView.isHidden = false
                     self.emptyView.alpha = 0
-                } completion: { _ in
-                    self.emptyView.isHidden = true
+                    
+                    UIView.animate(withDuration: 0.25) {
+                        self.emptyView.alpha = 1
+                    }
                 }
-            } else {
-                self.emptyView.isHidden = false
-                self.emptyView.alpha = 0
-
-                UIView.animate(withDuration: 0.25) {
-                    self.emptyView.alpha = 1
-                }
+                
+                self.tableView.isHidden = !hasResults
+                self.tableView.reloadData()
             }
-            
-            self.tableView.isHidden = !hasResults
-            self.tableView.reloadData()
         }
     }
 
@@ -261,5 +331,10 @@ extension SearchEventVC: UITableViewDataSource, UITableViewDelegate {
 
         cell.configure(events[indexPath.row])
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if events.count <= indexPath.row { return }
+//        let event = events[indexPath.row]
     }
 }

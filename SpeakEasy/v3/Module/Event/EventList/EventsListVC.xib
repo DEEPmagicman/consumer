@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,6 +21,8 @@
             <connections>
                 <outlet property="cityTitleLbl" destination="hjO-Fu-O30" id="EIo-CQ-B3B"/>
                 <outlet property="collectionView" destination="ydC-08-RKW" id="K01-1K-0ZI"/>
+                <outlet property="titleLbl" destination="qOS-tW-KDW" id="BhE-7S-yyh"/>
+                <outlet property="topRightSideBtn" destination="tCf-nv-FrM" id="IWP-v0-GQm"/>
                 <outlet property="view" destination="QEx-Gc-EKI" id="Ht5-5E-FU6"/>
             </connections>
         </placeholder>
@@ -102,7 +104,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="onClickFilterBtn:" destination="-1" eventType="touchUpInside" id="By0-1d-dWb"/>
+                                <action selector="onClickTopRightSideBtn:" destination="-1" eventType="touchUpInside" id="fTk-pU-fbV"/>
                             </connections>
                         </button>
                     </subviews>

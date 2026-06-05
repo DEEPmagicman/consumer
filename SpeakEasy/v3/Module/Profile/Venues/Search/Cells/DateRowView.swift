@@ -19,7 +19,7 @@ struct SearchVenueItem {
 struct SearchEventItem {
     let id: String
     let title: String
-    let dateText: String
+    let dateText: String?
     let imageURL: String?
 }
 
@@ -50,24 +50,26 @@ final class DateRowView: UIControl {
     }
 
     private func setup() {
-        backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.06)
+        backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.05)
         layer.cornerRadius = 16
         layer.cornerCurve = .continuous
         clipsToBounds = true
         translatesAutoresizingMaskIntoConstraints = false
 
-        iconBox.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.07)
+        iconBox.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.05)
         iconBox.layer.cornerRadius = 10
+        iconBox.layer.borderColor = AppColor.primaryWhiteColor.withAlphaComponent(0.04).cgColor
+        iconBox.layer.borderWidth = 0.4
         iconBox.translatesAutoresizingMaskIntoConstraints = false
         addSubview(iconBox)
 
-        let icon = UIImageView(image: UIImage(systemName: "calendar"))
-        icon.tintColor = .white.withAlphaComponent(0.75)
+        let icon = UIImageView(image: UIImage(resource: .calendarIc))
+        icon.tintColor = .white.withAlphaComponent(0.5)
         icon.translatesAutoresizingMaskIntoConstraints = false
         iconBox.addSubview(icon)
 
-        titleLabel.textColor = .white.withAlphaComponent(0.35)
-        titleLabel.font = Constant.Font.geistRegular(size: 13)
+        titleLabel.textColor = UIColor(hex: "#737373")
+        titleLabel.font = Constant.Font.geistRegular(size: 14)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
 
@@ -78,7 +80,7 @@ final class DateRowView: UIControl {
         addSubview(valueLabel)
 
         arrowImageView.image = UIImage(systemName: "chevron.down")
-        arrowImageView.tintColor = .white.withAlphaComponent(0.4)
+        arrowImageView.tintColor = AppColor.primaryWhiteColor.withAlphaComponent(0.35)
         arrowImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(arrowImageView)
 
@@ -100,9 +102,7 @@ final class DateRowView: UIControl {
             valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
 
             arrowImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18),
-            arrowImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            arrowImageView.widthAnchor.constraint(equalToConstant: 14),
-            arrowImageView.heightAnchor.constraint(equalToConstant: 14)
+            arrowImageView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 }
@@ -113,7 +113,7 @@ extension Date {
 
     func shortDisplay() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM"
+        formatter.dateFormat = "dd MMM yy"
         return formatter.string(from: self)
     }
 
@@ -123,4 +123,3 @@ extension Date {
         return formatter.string(from: self)
     }
 }
-

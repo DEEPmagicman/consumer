@@ -25,7 +25,10 @@ final class SearchDateFilterVC: BaseSearchSheetVC {
         super.viewDidLoad()
 
         titleLabel.text = "Search by date"
-        closeBtn.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        closeBtn.iconTypeValue = AppIconType.close.rawValue
+        closeBtn.iconSize = 14
+        closeBtn.buttonSize = 40
+        closeBtn.iconTintColor = .white
 
         setupApply()
         setupRows()
@@ -59,7 +62,7 @@ final class SearchDateFilterVC: BaseSearchSheetVC {
         sheetView.addSubview(toRow)
 
         NSLayoutConstraint.activate([
-            fromRow.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 32),
+            fromRow.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 20),
             fromRow.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 20),
             fromRow.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -20),
             fromRow.heightAnchor.constraint(equalToConstant: 74),

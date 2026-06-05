@@ -68,7 +68,7 @@ final class SearchEventCell: UITableViewCell {
         if let imageURL = item.imageURL, let url = URL(string: imageURL) {
             posterImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder"))
         } else {
-            posterImageView.image = UIImage(named: "placeholder")
+            posterImageView.image = Constant.Icon.uploadImage
         }
     }
 }

@@ -56,6 +56,9 @@ final class SearchVenueVC: BaseSearchSheetVC {
         setupSearchField()
         setupTable()
         setupEmpty()
+        
+        // MARK: Dummy Data
+        searchVenues("A")
     }
 
     private func setupSearchField() {
@@ -76,7 +79,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
         sheetView.addSubview(searchField)
 
         NSLayoutConstraint.activate([
-            searchField.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 20),
+            searchField.topAnchor.constraint(equalTo: closeBtn.bottomAnchor, constant: 16),
             searchField.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
             searchField.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
             searchField.heightAnchor.constraint(equalToConstant: 50)
@@ -102,7 +105,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
         sheetView.addSubview(tableView)
 
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 28),
+            tableView.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 18),
             tableView.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: sheetView.safeAreaLayoutGuide.bottomAnchor)
@@ -156,10 +159,10 @@ final class SearchVenueVC: BaseSearchSheetVC {
         
         SearchFlowService.shared.searchVenues(keyword: keyword) { [weak self] venues in
             guard let self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.isLoading = false
                 self.venues = venues
-                self.venues = self.dummyVenues
+                self.venues = self.dummyVenues // remove this line after correct api  implement
                 let hasResults = !self.venues.isEmpty
                 
                 if hasResults {
@@ -222,11 +225,11 @@ extension SearchVenueVC: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if venues.count <= indexPath.row { return }
         let venue = venues[indexPath.row]
-
-        let vc = SearchEventVC(venue: venue)
-        vc.modalPresentationStyle = .overFullScreen
-        vc.modalTransitionStyle = .crossDissolve
-        present(vc, animated: true)
+        
+        Navigate.to.eventsListVC(
+            self, venue: venue
+        )
     }
 }

@@ -640,11 +640,11 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func eventsListVC(_ sender: UIViewController) {
+    func eventsListVC(_ sender: UIViewController, venue: SearchVenueItem? = nil) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
+        vc.venue = venue
         sender.pushVC(vc)
     }
-    
     
     func filtersVC(_ sender: UIViewController) {
         let vc = FiltersViewController(nibName: "FiltersViewController", bundle: nil)
@@ -761,13 +761,14 @@ final class Navigate {
     
     func searchVenueVC(_ sender: UIViewController) {
         let vc = SearchVenueVC()
-        vc.modalTransitionStyle = .crossDissolve
-        vc.modalPresentationStyle = .overCurrentContext
-        sender.present(vc, animated: true)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        sender.present(nav, animated: true)
     }
     
-    func searchEventVC(_ sender: UIViewController) {
+    func searchEventVC(_ sender: UIViewController, venueID: String = "") {
         let vc = SearchEventVC()
+        vc.venueID = venueID
         sender.present(vc, animated: true)
     }
 }
