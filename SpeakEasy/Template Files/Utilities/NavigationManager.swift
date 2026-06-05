@@ -673,7 +673,7 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-//-------v3----------
+// -------v3----------
     func openPhoneLoginPopup(_ sender: UIViewController, onLoginSuccess: (() -> Void)? = nil) {
         let vc = AuthPhoneOTPVC()
         vc.modalPresentationStyle = .overFullScreen

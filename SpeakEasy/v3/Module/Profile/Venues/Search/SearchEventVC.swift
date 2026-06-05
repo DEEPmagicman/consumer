@@ -230,9 +230,6 @@ final class SearchEventVC: BaseSearchSheetVC {
             self.updateDateButton()
             self.searchEvents(self.searchField.text)
         }
-
-        vc.modalPresentationStyle = .overFullScreen
-        vc.modalTransitionStyle = .crossDissolve
         present(vc, animated: true)
     }
     

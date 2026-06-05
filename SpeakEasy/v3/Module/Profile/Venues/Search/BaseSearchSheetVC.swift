@@ -46,7 +46,7 @@ class BaseSearchSheetVC: UIViewController {
 
         NSLayoutConstraint.activate([
 
-            sheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            sheetView.topAnchor.constraint(equalTo: view.topAnchor),
             sheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             sheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             sheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
