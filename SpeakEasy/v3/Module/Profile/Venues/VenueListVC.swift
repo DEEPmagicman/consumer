@@ -160,7 +160,7 @@ final class VenueListVC: UIViewController {
     }
 
     @objc private func onClickSearch() {
-        // Push search screen
+        Navigate.to.searchVenueVC(self)
     }
 }
 

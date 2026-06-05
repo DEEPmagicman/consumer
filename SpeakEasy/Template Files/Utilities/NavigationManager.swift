@@ -647,8 +647,9 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func eventsListVC(_ sender: UIViewController) {
+    func eventsListVC(_ sender: UIViewController, venue: SearchVenueItem? = nil) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
+        vc.venue = venue
         sender.pushVC(vc)
     }
     
@@ -763,5 +764,18 @@ final class Navigate {
     func venuesVC(_ sender: UIViewController) {
         let vc = VenueListVC()
         sender.pushVC(vc)
+    }
+    
+    func searchVenueVC(_ sender: UIViewController) {
+        let vc = SearchVenueVC()
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        sender.present(nav, animated: true)
+    }
+    
+    func searchEventVC(_ sender: UIViewController, venueID: String = "") {
+        let vc = SearchEventVC()
+        vc.venueID = venueID
+        sender.present(vc, animated: true)
     }
 }
