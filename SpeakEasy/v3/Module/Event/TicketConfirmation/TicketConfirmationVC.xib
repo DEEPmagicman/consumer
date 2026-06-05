@@ -215,12 +215,12 @@
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sbM-Z1-nHS">
                                                             <rect key="frame" x="25" y="12" width="269" height="346"/>
-                                                            <mutableString key="text">Take a piece of E11EVEN with you anywhere you go HERE
+                                                            <string key="text">Take a piece of E11EVEN with you anywhere you go HERE
 DRESS CODE:
 Upscale and Stylish Nightlife attire. No oversized clothing, including but not limited to T-shirts and pants. No beachwear permitted, such as shorts, tank tops, flip-flops, baseball caps, jerseys, etc.
 
 NOTICE OF FILMING AND PHOTOGRAPHY
-VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDANCE CONSTITUTES YOUR CONSENT TO BE PHOTOGRAPHED, FILMED, AND/OR OTHERWISE RECORDED AND GIVES E11EVEN ALL USAGE RIGHTS AT THEIR DISCRETION</mutableString>
+VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDANCE CONSTITUTES YOUR CONSENT TO BE PHOTOGRAPHED, FILMED, AND/OR OTHERWISE RECORDED AND GIVES E11EVEN ALL USAGE RIGHTS AT THEIR DISCRETION</string>
                                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
