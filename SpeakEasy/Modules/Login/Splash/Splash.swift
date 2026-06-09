@@ -35,13 +35,13 @@ final class Splash: UIViewController {
             NSLayoutConstraint.activate([
                 logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                logoImageView.widthAnchor.constraint(equalToConstant: 120),
-                logoImageView.heightAnchor.constraint(equalToConstant: 120)
+                logoImageView.widthAnchor.constraint(equalToConstant: 110),
+                logoImageView.heightAnchor.constraint(equalToConstant: 110)
             ])
         }
 }
 
-//MARK: - Animate Logo
+// MARK: - Animate Logo
 extension Splash {
     
     private func startAnimation() {
@@ -74,15 +74,19 @@ extension Splash {
     
     private func exitAnimation() {
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: 0.55,
             delay: 0,
             options: [.curveEaseIn],
             animations: {
-                self.logoImageView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-            },
-            completion: { _ in
-                AppDelegate.shared.changeRootViewController()
+                self.logoImageView.transform = CGAffineTransform(
+                    scaleX: 50,
+                    y: 50
+                )
             }
         )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
+            AppDelegate.shared.changeRootViewController()
+        }
     }
 }
