@@ -106,13 +106,9 @@ final class EventCVC: UICollectionViewCell {
     }
 
     func applyHeroIDs(event: Event, suffix: String) {
-        bgImg.hero.id         = "event.image.\(event.id ?? "").\(suffix)"
-        eventTitleLbl.hero.id = "event.title.\(event.id ?? "").\(suffix)"
     }
 
     func clearHeroIDs() {
-        bgImg.hero.id         = nil
-        eventTitleLbl.hero.id = nil
     }
 }
 

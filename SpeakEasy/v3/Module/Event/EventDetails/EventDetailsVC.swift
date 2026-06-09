@@ -9,7 +9,6 @@
 import UIKit
 import MapKit
 import YouTubeiOSPlayerHelper
-import Hero
 import MHLoadingButton
 
 class EventDetailsVC: UIViewController {
@@ -101,7 +100,6 @@ class EventDetailsVC: UIViewController {
     var event: Event?
     var uniqueId: String? = ""
     var promoteId = ""
-    var heroSuffix: String = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
 
@@ -116,7 +114,6 @@ class EventDetailsVC: UIViewController {
     private var totalAttendees = 0
     private var skeletonView: SkeletonOverlayView?
     private var isLoading = false
-    var heroIndex: Int = 0
     private var faqs: [EventFAQ] = []
     private var expandedFAQIndex: Int?
     private var autoScrollTimer: Timer?
@@ -188,8 +185,6 @@ class EventDetailsVC: UIViewController {
         setupMainImageStyle()
         scrollView.contentInsetAdjustmentBehavior = .never
 
-
-        hero.isEnabled = true
         scrollView.delegate = self
         fetchSeatingAreas()
         getEventDetail()
@@ -230,19 +225,11 @@ class EventDetailsVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startAutoScrollIfNeeded()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-               self.mainImg.hero.id  = nil
-               self.titleLbl.hero.id   = nil
-           }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.layoutIfNeeded()
-        hero.isEnabled = true
-        navigationController?.hero.isEnabled = true
-        mainImg.hero.id = "event.image.\(event?.id ?? "").\(heroSuffix)"
-        titleLbl.hero.id = "event.title.\(event?.id ?? "").\(heroSuffix)"
     }
 
     deinit {

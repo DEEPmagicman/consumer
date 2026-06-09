@@ -33,7 +33,7 @@ final class Navigate {
     }
     
     func back(_ sender: UIViewController) {
-        sender.navigationController?.popViewController(animated: false)
+        sender.navigationController?.popViewController(animated: true)
     }
     
     func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
@@ -529,20 +529,10 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    static func eventDetailsVC(_ sender: UIViewController, event: Event?, heroSuffix: String? = "") {
+    static func eventDetailsVC(_ sender: UIViewController, event: Event?) {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event        = event
         vc.venueDetails = event?.venue
-        vc.heroSuffix   = heroSuffix ?? ""
-        vc.hero.isEnabled = true
-
-        // ✅ selectBy lets hero handle matched views, fade everything else
-        sender.navigationController?.hero.isEnabled = true
-        sender.navigationController?.hero.navigationAnimationType = .selectBy(
-            presenting: .fade,
-            dismissing: .fade
-        )
-
         sender.pushVC(vc)
     }
     

@@ -31,8 +31,6 @@ final class EventV2CVC: UICollectionViewCell {
     
     // EventV2CVC
     func clearHeroIDs() {
-        image.hero.id     = nil
-        eventName.hero.id = nil
     }
     
     override func prepareForReuse() {

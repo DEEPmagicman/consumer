@@ -1538,13 +1538,13 @@
 		6A40D1B82FBEEAA500F3FAAB /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				6A4FA1AC2FC87416007EB116 /* Cells */,
 				6A4FA19B2FC818FB007EB116 /* PinterestLayout.swift */,
 				6A4FA1A32FC83EFC007EB116 /* ShimmerViewV3.swift */,
 				6AF6AA3E2FC0336E00834BF2 /* GlobalTextFieldHandler.swift */,
 				6AF6AA3C2FC01D8300834BF2 /* LegacySwitchControl.swift */,
 				6AF6AA3A2FC015F600834BF2 /* AppDesign.swift */,
 				6A40D1B92FBEEB4700F3FAAB /* ProfileUpdateNotifier.swift */,
+				6A4FA1AC2FC87416007EB116 /* Cells */,
 			);
 			path = Core;
 			sourceTree = "<group>";
