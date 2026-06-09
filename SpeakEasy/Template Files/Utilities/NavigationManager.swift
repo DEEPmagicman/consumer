@@ -533,7 +533,8 @@ final class Navigate {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event        = event
         vc.venueDetails = event?.venue
-        sender.pushVC(vc)
+        sender.presentPremium(vc)
+//        sender.pushVC(vc, animated: false)
     }
     
     func ticketSelectionVc(_ sender: UIViewController, event: Event, mode: TicketMode) {
@@ -640,7 +641,7 @@ final class Navigate {
     func eventsListVC(_ sender: UIViewController, venue: SearchVenueItem? = nil) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
         vc.venue = venue
-        sender.pushVC(vc)
+        sender.pushVC(vc, animated: false)
     }
     
     func filtersVC(_ sender: UIViewController) {

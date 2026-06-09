@@ -1759,7 +1759,8 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
-        Navigate.to.back(self)
+//        Navigate.to.back(self)
+        dismissPremium()
     }
 
     @IBAction func onClickShareBtn(_ sender: Any) {}
