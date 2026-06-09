@@ -242,26 +242,27 @@ final class Navigate {
     }
     
     func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
-        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(ShowQRCodeVC.self)
+//        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(EventQRTicketVC.self)
+        let vc = EventQRTicketVC(nibName: "EventQRTicketVC", bundle: nil)
         vc.booking = booking
         vc.bookingId = bookingId
-        vc.delegate = sender as? QRCodeVCNavigationDelegate
+//        vc.delegate = sender as? QRCodeVCNavigationDelegate
         vc.type = type
-        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
-            homeVc.present(vc, animated: true)
-            homeVc.tabBarController?.selectedIndex = 1
-            sender.navigationController?.viewControllers = [homeVc]
-            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
-                vc.delegate = accountVC
-            }
-            return
-        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
-            accountVc.present(vc, animated: true)
-            accountVc.tabBarController?.selectedIndex = 1
-            sender.navigationController?.viewControllers = [accountVc]
-            vc.delegate = accountVc as? AccountVC
-            return
-        }
+//        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
+//            homeVc.present(vc, animated: true)
+//            homeVc.tabBarController?.selectedIndex = 1
+//            sender.navigationController?.viewControllers = [homeVc]
+//            if vc.delegate == nil, let tabTwo = homeVc.tabBarController?.viewControllers?.last as? UINavigationController, let accountVC = tabTwo.viewControllers.first(where: { $0 is AccountVC }) as? AccountVC {
+//                vc.delegate = accountVC
+//            }
+//            return
+//        } else if let accountVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: AccountVC.self) }) {
+//            accountVc.present(vc, animated: true)
+//            accountVc.tabBarController?.selectedIndex = 1
+//            sender.navigationController?.viewControllers = [accountVc]
+//            vc.delegate = accountVc as? AccountVC
+//            return
+//        }
         sender.navigationController?.present(vc, animated: true)
     }
     
@@ -491,7 +492,7 @@ final class Navigate {
     }
     
     func allVenueVC(_ sender: UIViewController) {
-        let vc = AllVenueVC(nibName: "AllVenueVC", bundle: nil)
+        let vc = TicketConfirmationVC(nibName: "TicketConfirmationVC", bundle: nil)
         sender.pushVC(vc)
     }
     
@@ -569,14 +570,22 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func orderListVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil,
-                     paymentMethod: PaymentType) {
-        let vc = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
-        vc.event = event
-        vc.selectedTickets = selectedTickets
-        vc.bookingId = bookingId
-        vc.selectedPaymentMethod = paymentMethod
-        sender.pushVC(vc)
+    // In Navigate.swift — update orderListVC:
+    static func orderListVC(
+        _ vc: UIViewController,
+        event: Event?,
+        selectedTickets: [EventTicket],
+        bookingId: String?,
+        paymentMethod: PaymentType?,
+        cardDetails: CardDetails? = nil
+    ) {
+        let dest = OrderListViewController()  // or storyboard instantiate
+        dest.event             = event
+        dest.selectedTickets   = selectedTickets
+        dest.bookingId         = bookingId
+        dest.selectedPaymentMethod = paymentMethod
+        dest.cardDetails       = cardDetails
+        vc.navigationController?.pushViewController(dest, animated: true)
     }
     
     func tableSeatingVC(

@@ -342,6 +342,8 @@
 		CE2A6CAC2FB5DBB200FE8596 /* EventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A6CA92FB5DBB200FE8596 /* EventCollectionViewCell.swift */; };
 		CE2A6CAE2FB5EF2300FE8596 /* DiscoverSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A6CAD2FB5EF2300FE8596 /* DiscoverSectionView.swift */; };
 		CE2A6CB02FB5EF5F00FE8596 /* DiscoverSectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2A6CAF2FB5EF5F00FE8596 /* DiscoverSectionView.xib */; };
+		CE3115A52FD7D6200071EDD9 /* EventQRPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */; };
+		CE3115A72FD7D6F80071EDD9 /* EventQRPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
 		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
@@ -916,6 +918,8 @@
 		CE2A6CAA2FB5DBB200FE8596 /* EventCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventCollectionViewCell.xib; sourceTree = "<group>"; };
 		CE2A6CAD2FB5EF2300FE8596 /* DiscoverSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSectionView.swift; sourceTree = "<group>"; };
 		CE2A6CAF2FB5EF5F00FE8596 /* DiscoverSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DiscoverSectionView.xib; sourceTree = "<group>"; };
+		CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQRPagerViewCell.xib; sourceTree = "<group>"; };
+		CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQRPagerViewCell.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
 		CE3213C629E02E8700EBC179 /* Account.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
@@ -2168,6 +2172,15 @@
 			path = CollectionViewCell;
 			sourceTree = "<group>";
 		};
+		CE31159D2FD7D2220071EDD9 /* EventQRPagerViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */,
+				CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */,
+			);
+			path = EventQRPagerViewCell;
+			sourceTree = "<group>";
+		};
 		CE3213CA29E03D6500EBC179 /* TitleHeader */ = {
 			isa = PBXGroup;
 			children = (
@@ -2524,6 +2537,7 @@
 		CE81DD112FD1B41F00ED623F /* EventQRTicketVC */ = {
 			isa = PBXGroup;
 			children = (
+				CE31159D2FD7D2220071EDD9 /* EventQRPagerViewCell */,
 				CE81DD122FD1B48900ED623F /* EventQRTicketVC.swift */,
 				CE81DD132FD1B48900ED623F /* EventQRTicketVC.xib */,
 			);
@@ -3080,6 +3094,7 @@
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				6AF2B9FF2F0BE0CA00069A90 /* TableListTVC.xib in Resources */,
 				CE09064D2EFBEB4000936E9D /* DateSelectionTVC.xib in Resources */,
+				CE3115A52FD7D6200071EDD9 /* EventQRPagerViewCell.xib in Resources */,
 				CE45801C2EF94FB800A873C4 /* Photos.storyboard in Resources */,
 				CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
@@ -3612,6 +3627,7 @@
 				BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */,
 				CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
+				CE3115A72FD7D6F80071EDD9 /* EventQRPagerViewCell.swift in Sources */,
 				6A765E8D2FD053EB000FEF22 /* SearchDateFilterVC.swift in Sources */,
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				6A4FA1A02FC81F67007EB116 /* OrdersSectionHeaderView.swift in Sources */,

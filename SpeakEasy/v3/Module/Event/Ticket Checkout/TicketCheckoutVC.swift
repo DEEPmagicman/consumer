@@ -21,7 +21,7 @@ final class TicketCheckoutVC: UIViewController {
 
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var venueLogoImg: UIImageView!
+//    @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var venueName2: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
@@ -63,7 +63,21 @@ final class TicketCheckoutVC: UIViewController {
     var eventQuestions = [Questions]()
     var questionAnswers = [String: Any]()
     var isEventQueAnsCollected = false
-    private var questionHeightObservation: NSKeyValueObservation?    
+    
+    private var faqs: [(question: String, answer: String)] = [
+        (
+            question: "Event details.",
+            answer: "View all event information including venue, date, time, and other event-related details."
+        ),
+        (
+            question: "How to use my tickets",
+            answer: "Show your QR ticket at the venue entrance for scanning and entry."
+        )
+    ]
+
+    private var expandedFAQIndex: Int?
+    private var isUpdatingTableHeight = false
+    private var questionHeightObservation: NSKeyValueObservation?
     private var setAnswerData: Bool {
 
         var requiredIndex = [Int]()
@@ -194,10 +208,10 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func setupHeaderData() {
-        venueLogoImg.sd_setImage(
-            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+//        venueLogoImg.sd_setImage(
+//            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
         if isFreeTicket {
             promoCodeParentView.isHidden = true
             feesAndTaxesParentTableView.isHidden = true

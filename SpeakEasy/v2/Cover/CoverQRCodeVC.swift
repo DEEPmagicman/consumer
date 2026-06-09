@@ -11,6 +11,7 @@ final class CoverQRCodeVC: UIViewController {
 
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicketBtn: UIButton!
+    @IBOutlet weak var progressBarView: UIView!
     @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             self.pagerView.register(
@@ -19,7 +20,7 @@ final class CoverQRCodeVC: UIViewController {
             )
         }
     }
-    @IBOutlet weak var addToWalletBtn: PKAddPassButton!
+    @IBOutlet weak var addToWalletBtn: UIButton!
 //    @IBOutlet weak var bgImage: UIImageView!
 
     // MARK: - Data
@@ -36,6 +37,10 @@ final class CoverQRCodeVC: UIViewController {
     var venueNameText: String? = ""
 
     private let paymentService = PaymentService()
+    private var dotViews: [UIView] = []
+    private var currentPage: Int = 0 {
+        didSet { updateProgressDots() }
+    }
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -59,6 +64,7 @@ final class CoverQRCodeVC: UIViewController {
             self.pagerView.itemSize = CGSize(width: 300,
                                                   height: self.pagerView.frame.height)
         }
+        setupProgressDots(count: isAddOnsAvailable ? 2 : 1)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -79,12 +85,6 @@ final class CoverQRCodeVC: UIViewController {
     private func setupUI() {
 //        bgImage.sd_setImage(with: URL(string: (venue?.venueAttachment?.first?.key ?? "").imageURL))
         venueName.text = venue?.name.isEmpty == false ? venue?.name : "-"
-
-        let attributedString = NSAttributedString(
-            string: "Buy another ticket",
-            attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue]
-        )
-        buyAnotherTicketBtn.setAttributedTitle(attributedString, for: .normal)
     }
 
     private func generateQRCode() {
@@ -125,6 +125,52 @@ final class CoverQRCodeVC: UIViewController {
                 DispatchQueue.main.async {
                     self.pagerView.reloadData()
                 }
+            }
+        }
+    }
+    
+    // MARK: - Progress Dots
+
+    private func setupProgressDots(count: Int) {
+        progressBarView.subviews.forEach { $0.removeFromSuperview() }
+        dotViews.removeAll()
+
+        progressBarView.isHidden = count <= 1
+        guard count > 1 else { return }
+
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        progressBarView.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: progressBarView.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: progressBarView.centerYAnchor)
+        ])
+
+        for _ in 0..<count {
+            let dot = UIView()
+            dot.translatesAutoresizingMaskIntoConstraints = false
+            dot.layer.cornerRadius = 5
+            NSLayoutConstraint.activate([
+                dot.widthAnchor.constraint(equalToConstant: 10),
+                dot.heightAnchor.constraint(equalToConstant: 10)
+            ])
+            stackView.addArrangedSubview(dot)
+            dotViews.append(dot)
+        }
+
+        updateProgressDots()
+    }
+
+    private func updateProgressDots() {
+        for (index, dot) in dotViews.enumerated() {
+            UIView.animate(withDuration: 0.2) {
+                dot.backgroundColor = index == self.currentPage
+                    ? .white
+                    : UIColor.white.withAlphaComponent(0.25)
             }
         }
     }
@@ -180,6 +226,11 @@ extension CoverQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         }
 
         return cell
+    }
+    
+    func pagerViewDidScroll(_ pagerView: FSPagerView) {
+        guard currentPage != pagerView.currentIndex else { return }
+        currentPage = pagerView.currentIndex
     }
 }
 

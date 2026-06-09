@@ -13,7 +13,6 @@ class FAQsTableViewCell: UITableViewCell {
     @IBOutlet weak var dropDowenBtn: UIImageView!
     @IBOutlet weak var ansLbl: UILabel!
     @IBOutlet weak var ansView: UIView!
-    
 
     var onToggle: (() -> Void)?
 
