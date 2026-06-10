@@ -679,7 +679,8 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             Navigate.externalURL(String(format: APIBuilder.eventLink, events[indexPath.row].uniqueId ?? ""))
         case todaysEventTableView:
             updateContinueBtn(forceRemove: true)
-            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
+            Navigate.externalURL(String(format: APIBuilder.eventLink, todaysEvents[indexPath.row].uniqueId ?? ""))
+//            Navigate.to.eventDetail(self, eventId: todaysEvents[indexPath.row].uniqueId ?? "", venueDetail: venueDetails, event: todaysEvents[indexPath.row])
         default:
             break
         }

@@ -225,7 +225,8 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
                 Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], venueId: bookings[indexPath.row].venueId ?? "", addOnsBookingId: "")
             }
         case 1:
-            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
+            Navigate.externalURL(String(format: APIBuilder.eventLink, recommended[indexPath.row].uniqueId ?? ""))
+//            Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)
         default:
             break
         }
@@ -281,7 +282,8 @@ extension AccountVC: UIImagePickerControllerDelegate, UINavigationControllerDele
 
 extension AccountVC: QRCodeVCNavigationDelegate {
     func navigateToEventDetail(eventId: String, venueDetail: ClipVenue?, event: Event?) {
-        Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
+//        Navigate.to.eventDetail(self, eventId: eventId, venueDetail: venueDetail, event: event)
+        Navigate.externalURL(String(format: APIBuilder.eventLink, event?.uniqueId ?? ""))
     }
     
     func navigateToVenueDetail(venueId: String, venueUniqueId: String, venueTimeZone: String) {
