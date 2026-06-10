@@ -709,11 +709,10 @@ extension BarTabCheckOutClipVC: WebSocketCallBackDelegate {
     func updateTicketPrice(ticket: [CoverTicket]) {
         if isPaymentInitiated { return }
         if selectedCoverTickets.count == 0 { return }
-        var coverTickets = [CoverTicket]()
-        ticket.forEach({ tick in
-            coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
-        })
-        if coverTickets.count != 0 {
+        let hasMatchedTicket = ticket.contains { tick in
+            selectedCoverTickets.contains { $0.id == tick.id }
+        }
+        if hasMatchedTicket {
             if navigationController?.viewControllers.last is CheckOutClipVC {
                 alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
                     self.navigationController?.popToRootViewController(animated: true)

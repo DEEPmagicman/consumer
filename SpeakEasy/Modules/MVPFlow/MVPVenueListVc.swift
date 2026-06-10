@@ -61,6 +61,11 @@ final class MVPVenueListVc: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UserDefault.shared.selectedVenueId = nil
+    }
+    
     @objc private func checkForceUpdate() {
         RemoteConfigHelper.shared.getRemoteConfigValues()
     }

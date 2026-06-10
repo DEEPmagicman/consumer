@@ -222,7 +222,7 @@ extension AccountVC: UITableViewDataSource, UITableViewDelegate {
             } else if bookings[indexPath.row].inviteLink != nil {
                 Navigate.to.showQRCode(self, booking: bookings[indexPath.row], bookingId: bookings[indexPath.row].id, type: .appClip)
             } else {
-                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], addOnsBookingId: "")
+                Navigate.to.scanQR(self, bookingId: bookings[indexPath.row].id, booking: bookings[indexPath.row], venueId: bookings[indexPath.row].venueId ?? "", addOnsBookingId: "")
             }
         case 1:
             Navigate.to.eventDetail(self, eventId: recommended[indexPath.row].uniqueId ?? "", venueDetail: nil, event: nil)

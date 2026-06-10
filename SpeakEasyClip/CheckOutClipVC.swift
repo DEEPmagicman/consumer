@@ -117,9 +117,7 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
     private var salesTaxList = [SalesTax]()
 
     override func viewDidLoad() {
-        super.viewDidLoad()
-        WebSocketWrapper.shared.delegate.append(self)
-        
+        super.viewDidLoad()        
         ticketListView.isHidden = (selectedCoverTickets.count == 0 && selectedAddOnsItem.count != 0) ? true : false
         addOnsView.isHidden = (selectedCoverTickets.count == 0 || selectedAddOnsItem.count != 0) ? false : true
         totalView.isHidden = ticketListView.isHidden || addOnsView.isHidden
@@ -225,6 +223,16 @@ final class CheckOutClipVC: UIViewController, ApplePayContextDelegate {
             self.noFeesTextForAddOns.textColor = UIColor(hex: color)
         }
         emailTF.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
     
     override func viewDidLayoutSubviews() {
@@ -1627,6 +1635,7 @@ extension CheckOutClipVC {
             if let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: String(describing: "QRClipVC")) as? QRClipVC {
                 AppClipLoader.hideLoader()
                 vc.venueName = self.venue?.name ?? ""
+                vc.venueId = self.venue?.id
                 vc.bookingId = self.bookingId
                 vc.booking = self.booking
                 vc.addOnsBooking = self.addOnsBooking
@@ -1772,11 +1781,10 @@ extension CheckOutClipVC: WebSocketCallBackDelegate {
     func updateTicketPrice(ticket: [CoverTicket]) {
         if isPaymentInitiated { return }
         if selectedCoverTickets.count == 0 { return }
-        var coverTickets = [CoverTicket]()
-        ticket.forEach({ tick in
-            coverTickets = selectedCoverTickets.filter({ $0.id == tick.id})
-        })
-        if coverTickets.count != 0 {
+        let hasMatchedTicket = ticket.contains { tick in
+            selectedCoverTickets.contains { $0.id == tick.id }
+        }
+        if hasMatchedTicket {
             if navigationController?.viewControllers.last is CheckOutClipVC {
                 alertPopup("Update", "Venue you trying to booking, updated it's ticket") {
                     self.navigationController?.popToRootViewController(animated: true)

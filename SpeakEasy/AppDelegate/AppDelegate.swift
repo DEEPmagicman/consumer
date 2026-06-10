@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        UserDefault.shared.selectedVenueId = nil
         RemoteConfigHelper.shared.getRemoteConfigValues()
         window = UIWindow(frame:UIScreen.main.bounds)
         launchApplication()

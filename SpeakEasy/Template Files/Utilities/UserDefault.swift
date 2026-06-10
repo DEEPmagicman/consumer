@@ -25,6 +25,7 @@ final class UserDefault {
         case localCity
         case defaultCitySelected
         case isNotificationOn
+        case selectedVenueId
     }
     
     // MARK: - Properties
@@ -113,6 +114,13 @@ final class UserDefault {
     var isNotificationOn: Bool {
         get { getValue(for: .isNotificationOn) ?? false }
         set { setValue(newValue, for: .isNotificationOn) }
+    }
+    
+    // MARK: - Selected Venue
+
+    var selectedVenueId: String? {
+        get { getValue(for: .selectedVenueId) }
+        set { setValue(newValue, for: .selectedVenueId) }
     }
     
     // MARK: - Reset
