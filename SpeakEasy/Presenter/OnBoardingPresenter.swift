@@ -36,7 +36,7 @@ final class OnBoardingPresenter {
                 completion(false, nil)
                 return
             }
-            let imageDic = userDic["image"] as? [String: Any]
+            let imageDic = userDic["consumerUserImage"] as? [String: Any]
             UserDefault.shared.accessToken = sessionDic["accessToken"] as? String
             UserDefault.shared.refreshToken = sessionDic["refreshToken"] as? String
             UserDefault.shared.isLoggedIn = true
