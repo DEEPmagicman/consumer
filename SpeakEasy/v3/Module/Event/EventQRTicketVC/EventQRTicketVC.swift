@@ -10,7 +10,11 @@ class EventQRTicketVC: UIViewController {
     @IBOutlet weak var pagerView: FSPagerView!
     @IBOutlet weak var fandQtableView: UITableView!
     @IBOutlet weak var fandQtableViewHeight: NSLayoutConstraint!
-
+    @IBOutlet weak var fAndQDropDownImage: UIImageView!
+    @IBOutlet weak var fandQtableHiddenView: UIView!
+    
+    
+    
     // MARK: - Data
     var tickets: [EventTicketQR] = [
         EventTicketQR(ticketName: "General Admission", qrString: "SPEAKEASY-GA-001-2026"),
@@ -34,6 +38,8 @@ class EventQRTicketVC: UIViewController {
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var isUpdatingTableHeight = false
     private var pagerViewConfigured = false
+    private let posterHeaderView = EventPosterHeaderView()
+    private var hasSetupPosterBackground = false
 
     private var faqs: [(question: String, answer: String)] = [
         (
@@ -67,11 +73,13 @@ class EventQRTicketVC: UIViewController {
 
     private var expandedFandQIndex: Int?
     private var expandedFAQIndex: Int?
+    private var isFAndQExpanded = false
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupPosterBackground()
         setupPagerView()
         setupProgressDots(count: tickets.count)
         setupTableView()
@@ -93,6 +101,10 @@ class EventQRTicketVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        if posterHeaderView.superview != nil {
+            view.sendSubviewToBack(posterHeaderView)
+        }
+
         guard !pagerViewConfigured,
               pagerView.bounds.height > 0 else {
             return
@@ -100,9 +112,30 @@ class EventQRTicketVC: UIViewController {
 
         pagerViewConfigured = true
         pagerView.itemSize = CGSize(
-            width: view.bounds.width - 32,
+            width: view.bounds.width - 40,
             height: pagerView.bounds.height
         )
+    }
+
+    private func setupPosterBackground() {
+        guard !hasSetupPosterBackground else { return }
+
+        hasSetupPosterBackground = true
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        posterHeaderView.isUserInteractionEnabled = false
+        view.insertSubview(posterHeaderView, at: 0)
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func refreshPosterBackground() {
+        let imageURLString = (booking?.event?.flyer?.key ?? "").imageURL
+        posterHeaderView.loadImage(from: imageURLString)
     }
 
     // MARK: - KVO
@@ -246,6 +279,7 @@ class EventQRTicketVC: UIViewController {
             if isSuccess {
                 self.booking = booking
 //                self.setupData()
+                self.refreshPosterBackground()
                 self.setupTickets()
                 self.tableView.reloadData()
                 self.pagerView.reloadData()
@@ -258,19 +292,57 @@ class EventQRTicketVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(FAQsTableViewCell.nib, forCellReuseIdentifier: FAQsTableViewCell.identifier)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 80
-        tableView.separatorStyle = .none
-        tableView.isScrollEnabled = false
+        configureFAQTable(tableView)
 
         fandQtableView.delegate = self
         fandQtableView.dataSource = self
         fandQtableView.register(FAQsTableViewCell.nib, forCellReuseIdentifier: FAQsTableViewCell.identifier)
-        fandQtableView.rowHeight = UITableView.automaticDimension
-        fandQtableView.estimatedRowHeight = 80
-        fandQtableView.separatorStyle = .none
-        fandQtableView.isScrollEnabled = false
+        configureFAQTable(fandQtableView)
     }
+
+    private func configureFAQTable(_ tableView: UITableView) {
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 80
+        tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
+        tableView.backgroundColor = .clear
+        tableView.contentInset = .zero
+        tableView.sectionHeaderHeight = .leastNormalMagnitude
+        tableView.sectionFooterHeight = .leastNormalMagnitude
+        tableView.tableHeaderView = UIView(frame: .zero)
+        tableView.tableFooterView = UIView(frame: .zero)
+
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
+    }
+
+    private func updateFAndQSection(animated: Bool) {
+        fandQtableHiddenView.isHidden = !isFAndQExpanded
+
+        let angle: CGFloat = isFAndQExpanded ? 0 : .pi
+        let updates = {
+            self.fAndQDropDownImage.transform = CGAffineTransform(rotationAngle: angle)
+            self.view.layoutIfNeeded()
+        }
+
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: updates)
+        } else {
+            updates()
+        }
+    }
+    
+    @IBAction func onClickFAndQBtn(_ sender: Any) {
+        isFAndQExpanded.toggle()
+        updateFAndQSection(animated: true)
+    }
+    
+    @IBAction func onClickCloseBtn(_ sender: Any) {
+        self.dismiss(animated: false)
+    }
+    
+    
 }
 
 // MARK: - FSPagerView
@@ -321,10 +393,12 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
         let item = isFandQ ? fandQItems[indexPath.row] : faqs[indexPath.row]
         let expandedIndex = isFandQ ? expandedFandQIndex : expandedFAQIndex
 
-        cell.questionLbl.text = item.question
-        cell.ansLbl.text = item.answer
         cell.selectionStyle = .none
-        cell.ansView.isHidden = expandedIndex != indexPath.row
+        cell.configure(
+            title: item.question,
+            content: item.answer,
+            isExpanded: expandedIndex == indexPath.row
+        )
 
         cell.onToggle = { [weak self] in
             guard let self = self else { return }

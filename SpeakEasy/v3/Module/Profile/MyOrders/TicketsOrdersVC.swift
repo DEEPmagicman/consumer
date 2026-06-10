@@ -161,7 +161,7 @@ final class TicketsOrdersVC: BaseOrdersGridVC {
         } else if booking.inviteLink != nil {
             Navigate.to.showQRCode(self, booking: booking, bookingId: booking.id, type: .appClip)
         } else {
-            Navigate.to.scanQR(self, bookingId: booking.id, booking: booking, addOnsBookingId: "")
+            Navigate.to.scanQR(self, bookingId: booking.id, booking: booking, addOnsBookingId: booking.addOnsBookingId ?? "")
         }
     }
 }

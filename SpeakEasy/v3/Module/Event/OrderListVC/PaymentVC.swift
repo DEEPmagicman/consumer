@@ -67,6 +67,7 @@ final class PaymentVC: UIViewController {
     var venueDetails: ClipVenue?
     var bookingId: String?
     var selectedPaymentMethod: PaymentType = .card
+    var onPaymentSelected: ((PaymentType, CardDetails?) -> Void)?
     private let posterHeaderView = EventPosterHeaderView()
     private let backgroundContainerView = UIView()
 
@@ -396,10 +397,15 @@ final class PaymentVC: UIViewController {
     }
 
     @objc private func onClickDone() {
-        guard let event else { return }
-
         // Apple Pay — no card fields needed, pass nil
         if selectedPaymentMethod == .applePay {
+            if let onPaymentSelected {
+                onPaymentSelected(selectedPaymentMethod, nil)
+                navigationController?.popViewController(animated: true)
+                return
+            }
+
+            guard let event else { return }
             Navigate.orderListVC(
                 self,
                 event: event,
@@ -442,6 +448,13 @@ final class PaymentVC: UIViewController {
             cvv:         cvv
         )
 
+        if let onPaymentSelected {
+            onPaymentSelected(selectedPaymentMethod, cardDetails)
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        guard let event else { return }
         Navigate.orderListVC(
             self,
             event: event,

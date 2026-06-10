@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -20,8 +19,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CoverQRCodeVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
                 <outlet property="addToWalletBtn" destination="cb5-6T-a0x" id="21s-S6-CcS"/>
+                <outlet property="backgroundContainerView" destination="NJb-zE-3p4" id="YkD-TS-b0L"/>
                 <outlet property="buyAnotherTicketBtn" destination="6sF-8c-ngu" id="WiO-hL-5eb"/>
                 <outlet property="pagerView" destination="6Ym-D6-ZcL" id="GmA-Uu-nGf"/>
+                <outlet property="pagerViewheight" destination="Szn-h3-YdI" id="4mg-8K-d8t"/>
                 <outlet property="progressBarView" destination="n07-pO-Uzr" id="KBL-Yo-2S6"/>
                 <outlet property="venueName" destination="NGM-mH-aIh" id="155-ST-pQd"/>
                 <outlet property="view" destination="sWA-pv-sx5" id="Ijb-Z1-rB0"/>
@@ -36,6 +37,26 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fi1-qG-q4Z" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                    <rect key="frame" x="20" y="132.33333333333334" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="Qwg-70-aZy"/>
+                        <constraint firstAttribute="width" constant="40" id="TnP-zQ-y9C"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="iconTypeValue" value="close"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="iconSize">
+                            <real key="value" value="12"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="buttonSize">
+                            <real key="value" value="40"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickCloseBtn:" destination="-1" eventType="touchUpInside" id="Ikz-x1-El3"/>
+                    </connections>
+                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laissez Faire" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKA-G8-rvB">
                     <rect key="frame" x="110.66666666666667" y="134" width="171.66666666666663" height="36.666666666666657"/>
                     <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="28"/>
@@ -68,7 +89,7 @@
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n07-pO-Uzr">
                     <rect key="frame" x="171.66666666666666" y="648.66666666666663" width="50" height="10"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="10" id="5Fk-Ld-tb9"/>
                         <constraint firstAttribute="width" constant="50" id="vWI-dq-jCA"/>
@@ -81,6 +102,9 @@
                             <rect key="frame" x="0.0" y="0.0" width="160" height="50"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" image="appleWalletIcon"/>
+                            <connections>
+                                <action selector="onClickAddToWalletBtn:" destination="-1" eventType="touchUpInside" id="dDP-95-0PT"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -111,6 +135,9 @@
                             <real key="value" value="24"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="onClickBuyAnotherTicket:" destination="-1" eventType="touchUpInside" id="Wh6-lL-e4a"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="CYH-en-AZ4"/>
@@ -122,6 +149,7 @@
                 <constraint firstItem="6Ym-D6-ZcL" firstAttribute="leading" secondItem="CYH-en-AZ4" secondAttribute="leading" constant="16" id="A0z-Bn-chS"/>
                 <constraint firstItem="NGM-mH-aIh" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="ALP-6Z-CxL"/>
                 <constraint firstItem="NJb-zE-3p4" firstAttribute="top" secondItem="sWA-pv-sx5" secondAttribute="top" id="Cuy-TL-VQx"/>
+                <constraint firstItem="fi1-qG-q4Z" firstAttribute="centerY" secondItem="FKA-G8-rvB" secondAttribute="centerY" id="E59-rC-uge"/>
                 <constraint firstItem="6Ym-D6-ZcL" firstAttribute="top" secondItem="41g-cq-Uz1" secondAttribute="bottom" constant="33" id="JIw-NR-AwK"/>
                 <constraint firstItem="NJb-zE-3p4" firstAttribute="leading" secondItem="sWA-pv-sx5" secondAttribute="leading" id="K3y-9M-HqJ"/>
                 <constraint firstItem="6Ym-D6-ZcL" firstAttribute="trailing" secondItem="CYH-en-AZ4" secondAttribute="trailing" constant="-16" id="Nnf-Nm-Yd0"/>
@@ -137,14 +165,12 @@
                 <constraint firstItem="Nfb-X7-rK1" firstAttribute="top" secondItem="n07-pO-Uzr" secondAttribute="bottom" constant="30" id="q4A-Pq-rsH"/>
                 <constraint firstItem="FKA-G8-rvB" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="q5c-Dv-9mJ"/>
                 <constraint firstItem="NGM-mH-aIh" firstAttribute="top" secondItem="FKA-G8-rvB" secondAttribute="bottom" constant="7" id="rnK-mD-iQA"/>
+                <constraint firstItem="fi1-qG-q4Z" firstAttribute="leading" secondItem="CYH-en-AZ4" secondAttribute="leading" constant="20" id="uPS-5L-ftc"/>
             </constraints>
             <point key="canvasLocation" x="-488" y="-493"/>
         </view>
     </objects>
     <resources>
         <image name="appleWalletIcon" width="160" height="49.666667938232422"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

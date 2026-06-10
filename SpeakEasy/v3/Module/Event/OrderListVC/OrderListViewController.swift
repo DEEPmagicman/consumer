@@ -1,8 +1,9 @@
 import UIKit
 import MHLoadingButton
+import PassKit
+import StripeApplePay
 import StripePaymentSheet
 import StripePayments
-
 
 // MARK: - OrderListViewController
 
@@ -703,27 +704,52 @@ final class OrderListViewController: UIViewController {
         }.resume()
     }
 
-    // MARK: - Stripe: Apple Pay (via PaymentSheet)
+    // MARK: - Stripe: Apple Pay (direct native sheet)
 
     private func confirmApplePay() {
-        guard let paymentSheet else {
+        guard !paymentIntentClientSecret.isEmpty else {
             isPaymentInitiated = false
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
 
-        paymentSheet.present(from: self) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .completed:
-                self.confirmPaymentAndNavigate()
-            case .canceled:
-                self.isPaymentInitiated = false
-            case .failed(let error):
-                self.isPaymentInitiated = false
-                Alert.showToast(error.localizedDescription)
-            }
+        guard StripeAPI.deviceSupportsApplePay() else {
+            isPaymentInitiated = false
+            Alert.showToast("Apple Pay is not available on this device.")
+            return
         }
+
+        let merchantIdentifier = "merchant.com.speakeasy"
+        let countryCode = venueDetails?.code ?? "+1"
+        let currencyCode = venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
+        let amount = paymentDetail?.total ?? 0
+
+        let paymentRequest = StripeAPI.paymentRequest(
+            withMerchantIdentifier: merchantIdentifier,
+            country: "US",
+            currency: venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
+        )
+        paymentRequest.supportedNetworks = [.visa, .masterCard, .amex, .discover]
+        paymentRequest.paymentSummaryItems = [
+            PKPaymentSummaryItem(
+                label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)",
+                amount: NSDecimalNumber(value: amount)
+            )
+        ]
+        paymentRequest.requiredBillingContactFields = []
+
+        guard let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+            isPaymentInitiated = false
+            Alert.showToast("Problem with your Apple Pay configuration.")
+            return
+        }
+        
+        print("deviceSupportsApplePay:", StripeAPI.deviceSupportsApplePay())
+        print("canMakePayments:", PKPaymentAuthorizationViewController.canMakePayments())
+        print("canMakePaymentsUsingNetworks:", PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.visa, .masterCard, .amex, .discover]))
+        print("merchantId:", merchantIdentifier)
+        print("clientSecret empty:", paymentIntentClientSecret.isEmpty)
+        applePayContext.presentApplePay()
     }
 
     // MARK: - Confirm + Navigate
@@ -753,6 +779,36 @@ final class OrderListViewController: UIViewController {
                     Alert.showToast(errMsg ?? "Payment confirmation failed")
                 }
             }
+        }
+    }
+}
+
+extension OrderListViewController: ApplePayContextDelegate {
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        completion(paymentIntentClientSecret, nil)
+    }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCompleteWith status: STPApplePayContext.PaymentStatus,
+        error: Error?
+    ) {
+        switch status {
+        case .success:
+            confirmPaymentAndNavigate()
+        case .error:
+            isPaymentInitiated = false
+            Alert.showToast(error?.localizedDescription ?? "Payment failed")
+        case .userCancellation:
+            isPaymentInitiated = false
+        @unknown default:
+            isPaymentInitiated = false
+            Alert.showToast("Payment failed")
         }
     }
 }
@@ -817,7 +873,7 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
-        guard !isPaymentInitiated else { return }
+//        guard !isPaymentInitiated else { return }
 
         guard isTermsAccepted || termsAndConditions.isHidden else {
             Alert.showToast("Please accept the terms and conditions")

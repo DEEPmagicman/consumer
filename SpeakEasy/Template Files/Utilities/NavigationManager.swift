@@ -339,6 +339,7 @@ final class Navigate {
         vc.booking = booking
         vc.isOnlyAddOnAvailable = isOnlyAddOnAvailable
         vc.venueId = venueId
+        vc.venue = booking?.venueObject
         vc.delegate = sender as? QRCodeVCNavigationDelegate
         vc.addOnsBookingId = addOnsBookingId
         vc.venueNameText = venueName
@@ -357,7 +358,7 @@ final class Navigate {
             vc.delegate = accountVc as? AccountVC
             return
         }
-        sender.navigationController?.pushViewController(vc, animated: true)
+        sender.navigationController?.present(vc, animated: true)
     }
     
     func upSellTicketVC(_ sender: UIViewController, upSellTicket: [UpSellTicket], hasMany: Bool, venueDetails: ClipVenue?, doormanId: String, bookingType: TicketPriceType = .PAID) {
