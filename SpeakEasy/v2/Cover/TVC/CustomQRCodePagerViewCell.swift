@@ -9,6 +9,8 @@ import FSPagerView
 final class CustomQRCodePagerViewCell: FSPagerViewCell {
 
     @IBOutlet weak var cardView: UIView!
+    @IBOutlet weak var blurContainerView: UIView!
+    @IBOutlet weak var blurEffectView: UIVisualEffectView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var qrImageView: UIImageView!
     @IBOutlet weak var ticketCodeView: UIView!
@@ -17,21 +19,24 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
     @IBOutlet weak var ticketsTableView: UITableView!
     @IBOutlet weak var upsellBadgeView: UIView!
     @IBOutlet weak var ticketTableViewHeight: NSLayoutConstraint!
-    
+
     private var booking: Booking?
     private var addOnsBooking: AddOnsBooking?
     var onHeightChange: ((CGFloat) -> Void)?
-    private var ticketsTableHeightObservation: NSKeyValueObservation?
-    private var lastReportedHeight: CGFloat = 0
+    private var tableViewObserver: NSKeyValueObservation?
+    private var lastTableHeight: CGFloat = 0
+    private let cardCornerRadius: CGFloat = 20
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        applyCardMasking()
+
         ticketsTableView.delegate = self
         ticketsTableView.dataSource = self
         ticketsTableView.register(
-            OrderItemTableViewCell.nib,
-            forCellReuseIdentifier: OrderItemTableViewCell.identifier
+            QRTicketTableViewCell.nib,
+            forCellReuseIdentifier: QRTicketTableViewCell.identifier
         )
         ticketsTableView.isScrollEnabled = false
         ticketsTableView.separatorStyle = .none
@@ -39,24 +44,47 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         ticketsTableView.rowHeight = UITableView.automaticDimension
         ticketsTableView.estimatedRowHeight = 84
 
-        ticketsTableHeightObservation = ticketsTableView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
-            self?.updateTableHeightAndNotify()
+        tableViewObserver = ticketsTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            guard let self = self else { return }
+
+            let newHeight = ceil(tableView.contentSize.height)
+
+            guard abs(newHeight - self.lastTableHeight) > 1 else { return }
+
+            self.lastTableHeight = newHeight
+            self.ticketTableViewHeight.constant = newHeight
+
+            self.onHeightChange?(newHeight)
         }
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
         containerView.addGestureRecognizer(tap)
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyCardMasking()
+    }
+
+    deinit {
+        tableViewObserver?.invalidate()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         onHeightChange = nil
-        lastReportedHeight = 0
+        lastTableHeight = 0
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard booking != nil || addOnsBooking != nil else { return }
-        updateTableHeightAndNotify()
+    private func applyCardMasking() {
+        clipsToBounds = true
+        contentView.clipsToBounds = true
+
+        [cardView, blurContainerView, blurEffectView].forEach { view in
+            view?.clipsToBounds = true
+            view?.layer.cornerRadius = cardCornerRadius
+            view?.layer.masksToBounds = true
+        }
     }
 
     // MARK: - Configure
@@ -87,43 +115,6 @@ final class CustomQRCodePagerViewCell: FSPagerViewCell {
         }
 
         ticketsTableView.reloadData()
-        DispatchQueue.main.async { [weak self] in
-            self?.updateTableHeightAndNotify()
-        }
-    }
-
-    private func updateTableHeightAndNotify() {
-        ticketsTableView.layoutIfNeeded()
-
-        let tableHeight = max(ticketsTableView.contentSize.height, 0)
-        if abs(ticketTableViewHeight.constant - tableHeight) > 0.5 {
-            ticketTableViewHeight.constant = tableHeight
-        }
-
-        contentView.setNeedsLayout()
-        contentView.layoutIfNeeded()
-        notifyHeightChange()
-    }
-
-    private func notifyHeightChange() {
-        guard cardView != nil else { return }
-        guard booking != nil || addOnsBooking != nil else { return }
-
-        let fittingWidth = bounds.width > 0 ? bounds.width : cardView.bounds.width
-        guard fittingWidth > 0 else { return }
-
-        cardView.layoutIfNeeded()
-
-        let measuredHeight = cardView.systemLayoutSizeFitting(
-            CGSize(width: fittingWidth, height: UIView.layoutFittingCompressedSize.height),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        ).height
-
-        guard measuredHeight > 0, abs(measuredHeight - lastReportedHeight) > 0.5 else { return }
-
-        lastReportedHeight = measuredHeight
-        onHeightChange?(ceil(measuredHeight))
     }
 
     // MARK: - Flip
@@ -163,9 +154,9 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: OrderItemTableViewCell.identifier,
+            withIdentifier: QRTicketTableViewCell.identifier,
             for: indexPath
-        ) as? OrderItemTableViewCell else {
+        ) as? QRTicketTableViewCell else {
             return UITableViewCell()
         }
 
@@ -174,8 +165,8 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
         if let booking = booking {
             let ticket = booking.uniqueTickets[indexPath.row]
             let quantity = ticket.selectedQuantity ?? 0
-            let checkedIn = ticket.checkedInQuantity ?? 0
             cell.totalTicketCountLbl.text = "\(quantity)"
+//            let checkedIn = ticket.checkedInQuantity ?? 0
             cell.ticketNameLbl.text = ticket.ticketCustomName?.isEmpty == false ? ticket.ticketCustomName : ticket.ticketName
 //            cell.priceLbl.text = "\(checkedIn)/\(quantity)"
 //            cell.extraFeesLbl.text = ticket.ticketDescription ?? ""
@@ -183,7 +174,7 @@ extension CustomQRCodePagerViewCell: UITableViewDelegate, UITableViewDataSource 
         } else if let addOnsBooking = addOnsBooking {
             let ticket = addOnsBooking.uniqueTickets[indexPath.row]
             let quantity = ticket.selectedQuantity ?? 0
-            let checkedIn = ticket.checkedInQuantity ?? 0
+//            let checkedIn = ticket.checkedInQuantity ?? 0
             cell.totalTicketCountLbl.text = "\(quantity)"
             cell.ticketNameLbl.text = ticket.addOns.name
 //            cell.priceLbl.text = "\(checkedIn)/\(quantity)"

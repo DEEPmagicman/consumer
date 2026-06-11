@@ -64,12 +64,18 @@ final class PaymentVC: UIViewController {
     
     var event: Event?
     var selectedTickets: [EventTicket] = []
+    var selectedCoverTickets: [CoverTicket] = []
+    var selectedAddOnsItems: [UpSellTicket] = []
     var venueDetails: ClipVenue?
     var bookingId: String?
+    var bookingType: TicketPriceType = .PAID
     var selectedPaymentMethod: PaymentType = .card
     var onPaymentSelected: ((PaymentType, CardDetails?) -> Void)?
     private let posterHeaderView = EventPosterHeaderView()
     private let backgroundContainerView = UIView()
+    private var isCoverFlow: Bool {
+        !selectedCoverTickets.isEmpty || !selectedAddOnsItems.isEmpty
+    }
 
     // MARK: - Lifecycle
 
@@ -109,7 +115,12 @@ final class PaymentVC: UIViewController {
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
 
-        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        let imageURLString: String
+        if let eventFlyerKey = event?.flyer?.key, !eventFlyerKey.isEmpty {
+            imageURLString = eventFlyerKey.imageURL
+        } else {
+            imageURLString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        }
         posterHeaderView.loadImage(from: imageURLString)
     }
 
@@ -405,6 +416,20 @@ final class PaymentVC: UIViewController {
                 return
             }
 
+            if isCoverFlow {
+                Navigate.to.coverCheckOutVC(
+                    self,
+                    venue: venueDetails,
+                    selectedCoverTickets: selectedCoverTickets,
+                    selectedAddOnsItem: selectedAddOnsItems,
+                    totalPrice: 0,
+                    bookingType: bookingType,
+                    selectedPaymentMethod: selectedPaymentMethod,
+                    cardDetails: nil
+                )
+                return
+            }
+
             guard let event else { return }
             Navigate.orderListVC(
                 self,
@@ -451,6 +476,20 @@ final class PaymentVC: UIViewController {
         if let onPaymentSelected {
             onPaymentSelected(selectedPaymentMethod, cardDetails)
             navigationController?.popViewController(animated: true)
+            return
+        }
+
+        if isCoverFlow {
+            Navigate.to.coverCheckOutVC(
+                self,
+                venue: venueDetails,
+                selectedCoverTickets: selectedCoverTickets,
+                selectedAddOnsItem: selectedAddOnsItems,
+                totalPrice: 0,
+                bookingType: bookingType,
+                selectedPaymentMethod: selectedPaymentMethod,
+                cardDetails: cardDetails
+            )
             return
         }
 

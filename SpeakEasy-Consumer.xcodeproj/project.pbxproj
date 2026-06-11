@@ -455,6 +455,8 @@
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA76A312FBB2F6900661603 /* MapVenueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */; };
 		CEA76A322FBB2F6900661603 /* MapVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */; };
+		CEA9CFE02FDA67100083F321 /* QRTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */; };
+		CEA9CFE12FDA67100083F321 /* QRTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */; };
 		CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */; };
 		CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */; };
 		CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */; };
@@ -1022,6 +1024,8 @@
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVenueTableViewCell.swift; sourceTree = "<group>"; };
 		CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapVenueTableViewCell.xib; sourceTree = "<group>"; };
+		CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRTicketTableViewCell.swift; sourceTree = "<group>"; };
+		CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRTicketTableViewCell.xib; sourceTree = "<group>"; };
 		CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
 		CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
 		CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
@@ -2484,6 +2488,7 @@
 		CE59ED692F6D5AC000831974 /* TVC */ = {
 			isa = PBXGroup;
 			children = (
+				CEA9CFDD2FDA669D0083F321 /* QRTicketTableViewCell */,
 				CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */,
 				CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */,
 				CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */,
@@ -2593,6 +2598,15 @@
 				CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */,
 			);
 			path = MapVenueCell;
+			sourceTree = "<group>";
+		};
+		CEA9CFDD2FDA669D0083F321 /* QRTicketTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */,
+				CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */,
+			);
+			path = QRTicketTableViewCell;
 			sourceTree = "<group>";
 		};
 		CEADBDBF2FB1D61A004F8BE6 /* Geist */ = {
@@ -3194,6 +3208,7 @@
 				CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */,
 				6AF2B9F62F0BC9CF00069A90 /* TableBookingListVC.xib in Resources */,
 				CE59ED6D2F6D5ADC00831974 /* CoverTicketTVC.xib in Resources */,
+				CEA9CFE12FDA67100083F321 /* QRTicketTableViewCell.xib in Resources */,
 				CEE646F42FC47CC9001DF84E /* TicketSelectionViewController.xib in Resources */,
 				CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */,
 				CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */,
@@ -3445,6 +3460,7 @@
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
 				CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
+				CEA9CFE02FDA67100083F321 /* QRTicketTableViewCell.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,

@@ -11,6 +11,8 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
 
     @IBOutlet weak var tableView: UITableView!
 
+    weak var scrollDelegate: ChildScrollDelegate?
+
     // MARK: - Data
     private var artists: [String] = []
 
@@ -88,6 +90,10 @@ extension ArtistsVC: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension ArtistsVC: UITableViewDelegate {
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollDelegate?.childScrollViewDidScroll(scrollView)
+    }
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {

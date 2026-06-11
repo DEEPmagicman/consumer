@@ -12,17 +12,8 @@
         <array key="Geist-Medium.ttf">
             <string>Geist-Medium</string>
         </array>
-        <array key="Geist-Regular.ttf">
-            <string>Geist-Regular</string>
-        </array>
         <array key="Geist-SemiBold.ttf">
             <string>Geist-SemiBold</string>
-        </array>
-        <array key="Poppins-Bold.ttf">
-            <string>Poppins-Bold</string>
-        </array>
-        <array key="Poppins-Medium.ttf">
-            <string>Poppins-Medium</string>
         </array>
     </customFonts>
     <objects>
@@ -120,118 +111,9 @@
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pxy-r5-euz" userLabel="ImageView" customClass="FSPagerView" customModule="FSPagerView">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
-                                    <subviews>
-                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Elm-Lh-LgB">
-                                            <rect key="frame" x="0.0" y="48.333333333333343" width="400" height="291.66666666666663"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="emptyTicketIcon" translatesAutoresizingMaskIntoConstraints="NO" id="L4h-OW-fMM">
-                                                    <rect key="frame" x="150" y="29.999999999999972" width="100" height="100"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="100" id="8MP-mm-ke2"/>
-                                                        <constraint firstAttribute="width" constant="100" id="Rfi-4F-fIQ"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not available yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RTg-3b-AlD">
-                                                    <rect key="frame" x="139" y="169.99999999999997" width="122.33333333333331" height="21"/>
-                                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tickets will be available 24hrs before the events" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5m-gD-I7O">
-                                                    <rect key="frame" x="50" y="209.99999999999997" width="300" height="36.666666666666657"/>
-                                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="14"/>
-                                                    <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="RTg-3b-AlD" firstAttribute="top" secondItem="L4h-OW-fMM" secondAttribute="bottom" constant="40" id="034-qe-O6a"/>
-                                                <constraint firstAttribute="trailing" secondItem="x5m-gD-I7O" secondAttribute="trailing" constant="50" id="0vY-Gy-8yz"/>
-                                                <constraint firstItem="x5m-gD-I7O" firstAttribute="centerX" secondItem="Elm-Lh-LgB" secondAttribute="centerX" id="JVf-5s-r8K"/>
-                                                <constraint firstItem="x5m-gD-I7O" firstAttribute="leading" secondItem="Elm-Lh-LgB" secondAttribute="leading" constant="50" id="Kw3-IB-hfd"/>
-                                                <constraint firstItem="L4h-OW-fMM" firstAttribute="centerX" secondItem="Elm-Lh-LgB" secondAttribute="centerX" id="hFS-pW-rAb"/>
-                                                <constraint firstItem="RTg-3b-AlD" firstAttribute="centerX" secondItem="Elm-Lh-LgB" secondAttribute="centerX" id="ltJ-qt-yho"/>
-                                                <constraint firstItem="x5m-gD-I7O" firstAttribute="top" secondItem="RTg-3b-AlD" secondAttribute="bottom" constant="19" id="oVh-OM-33f"/>
-                                                <constraint firstItem="L4h-OW-fMM" firstAttribute="top" secondItem="Elm-Lh-LgB" secondAttribute="top" constant="30" id="usK-Ep-sCg"/>
-                                            </constraints>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPo-zS-ay1">
-                                            <rect key="frame" x="100" y="100" width="200" height="200"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="QRCodeAP" translatesAutoresizingMaskIntoConstraints="NO" id="eYK-h7-WDY">
-                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                                </imageView>
-                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aa0-Sg-88x">
-                                                    <rect key="frame" x="20" y="0.0" width="160" height="200"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SUZ-oZ-2hA">
-                                                            <rect key="frame" x="67" y="0.0" width="26.333333333333329" height="56"/>
-                                                            <fontDescription key="fontDescription" name="Poppins-Bold" family="Poppins" pointSize="40"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Purchased on 11:29PM June 21" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CfY-Y4-qzF">
-                                                            <rect key="frame" x="0.0" y="59.999999999999986" width="160" height="140.66666666666663"/>
-                                                            <fontDescription key="fontDescription" name="Poppins-Medium" family="Poppins" pointSize="16"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstItem="CfY-Y4-qzF" firstAttribute="top" secondItem="SUZ-oZ-2hA" secondAttribute="bottom" constant="4" id="7H3-Sy-2qu"/>
-                                                        <constraint firstItem="CfY-Y4-qzF" firstAttribute="leading" secondItem="aa0-Sg-88x" secondAttribute="leading" id="8GP-Vi-NhT"/>
-                                                        <constraint firstAttribute="bottom" secondItem="CfY-Y4-qzF" secondAttribute="bottom" constant="-0.5" id="QOR-Go-pU2"/>
-                                                        <constraint firstItem="SUZ-oZ-2hA" firstAttribute="centerX" secondItem="aa0-Sg-88x" secondAttribute="centerX" id="lBV-ZT-hqT"/>
-                                                        <constraint firstItem="SUZ-oZ-2hA" firstAttribute="top" secondItem="aa0-Sg-88x" secondAttribute="top" id="scO-5z-9ah"/>
-                                                        <constraint firstItem="CfY-Y4-qzF" firstAttribute="centerX" secondItem="aa0-Sg-88x" secondAttribute="centerX" id="zhR-JO-Vhh"/>
-                                                    </constraints>
-                                                </view>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="aa0-Sg-88x" firstAttribute="top" secondItem="hPo-zS-ay1" secondAttribute="top" id="0QQ-pR-zCz"/>
-                                                <constraint firstAttribute="bottom" secondItem="aa0-Sg-88x" secondAttribute="bottom" id="50a-92-JoI"/>
-                                                <constraint firstAttribute="bottom" secondItem="eYK-h7-WDY" secondAttribute="bottom" id="7nR-5k-LTh"/>
-                                                <constraint firstAttribute="width" constant="200" id="O9Z-8n-h0M"/>
-                                                <constraint firstAttribute="trailing" secondItem="eYK-h7-WDY" secondAttribute="trailing" id="WUq-Tr-gRD"/>
-                                                <constraint firstItem="aa0-Sg-88x" firstAttribute="leading" secondItem="hPo-zS-ay1" secondAttribute="leading" constant="20" id="ZdK-9E-c7x"/>
-                                                <constraint firstItem="aa0-Sg-88x" firstAttribute="centerY" secondItem="hPo-zS-ay1" secondAttribute="centerY" id="d1N-ks-y8T"/>
-                                                <constraint firstAttribute="height" constant="200" id="lGs-j6-3EF"/>
-                                                <constraint firstItem="aa0-Sg-88x" firstAttribute="centerX" secondItem="hPo-zS-ay1" secondAttribute="centerX" id="nlY-Jm-mhs"/>
-                                                <constraint firstItem="eYK-h7-WDY" firstAttribute="top" secondItem="hPo-zS-ay1" secondAttribute="top" id="qQG-ia-ivD"/>
-                                                <constraint firstItem="eYK-h7-WDY" firstAttribute="leading" secondItem="hPo-zS-ay1" secondAttribute="leading" id="z3m-g2-Swl"/>
-                                            </constraints>
-                                        </view>
-                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" General Admission" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AAM-38-0Gr">
-                                            <rect key="frame" x="0.0" y="30" width="400" height="18.333333333333329"/>
-                                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="14"/>
-                                            <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 of 3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l0Q-cn-c9q">
-                                            <rect key="frame" x="182.66666666666666" y="357.66666666666663" width="35" height="18.333333333333314"/>
-                                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="14"/>
-                                            <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="Elm-Lh-LgB" secondAttribute="bottom" constant="60" id="0Ge-lr-qrc"/>
                                         <constraint firstAttribute="width" constant="400" id="Gkw-Lt-FA9"/>
-                                        <constraint firstItem="AAM-38-0Gr" firstAttribute="top" secondItem="pxy-r5-euz" secondAttribute="top" constant="30" id="IAq-fW-ND2"/>
-                                        <constraint firstItem="Elm-Lh-LgB" firstAttribute="top" secondItem="AAM-38-0Gr" secondAttribute="bottom" id="WJL-52-7O5"/>
-                                        <constraint firstItem="hPo-zS-ay1" firstAttribute="centerX" secondItem="pxy-r5-euz" secondAttribute="centerX" id="XcM-bW-5nK"/>
-                                        <constraint firstAttribute="trailing" secondItem="AAM-38-0Gr" secondAttribute="trailing" id="Xcd-Fu-P6E"/>
-                                        <constraint firstItem="hPo-zS-ay1" firstAttribute="centerY" secondItem="pxy-r5-euz" secondAttribute="centerY" id="aih-FT-wfF"/>
-                                        <constraint firstItem="l0Q-cn-c9q" firstAttribute="centerX" secondItem="pxy-r5-euz" secondAttribute="centerX" id="fX1-V9-MCT"/>
-                                        <constraint firstAttribute="trailing" secondItem="Elm-Lh-LgB" secondAttribute="trailing" id="fmN-hW-ysy"/>
-                                        <constraint firstItem="AAM-38-0Gr" firstAttribute="centerX" secondItem="pxy-r5-euz" secondAttribute="centerX" id="paF-Fi-m95"/>
-                                        <constraint firstItem="Elm-Lh-LgB" firstAttribute="leading" secondItem="pxy-r5-euz" secondAttribute="leading" id="tVm-7S-Xka"/>
-                                        <constraint firstAttribute="bottom" secondItem="l0Q-cn-c9q" secondAttribute="bottom" constant="24" id="uVn-up-slK"/>
-                                        <constraint firstItem="AAM-38-0Gr" firstAttribute="leading" secondItem="pxy-r5-euz" secondAttribute="leading" id="vdC-lO-bfn"/>
                                         <constraint firstAttribute="height" constant="400" id="x8d-fD-uFI"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
@@ -390,9 +272,7 @@
         </view>
     </objects>
     <resources>
-        <image name="QRCodeAP" width="304" height="301"/>
         <image name="arrowTopIcon" width="8.6666669845581055" height="6"/>
-        <image name="emptyTicketIcon" width="100" height="96.666664123535156"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

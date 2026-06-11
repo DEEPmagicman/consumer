@@ -116,7 +116,7 @@ final class SettingsService {
     // MARK: - Verify OTP
 
     func verifyPhoneOrEmailOTP(
-        otp: Int,
+        otp: String,
         otpRef: String,
         isPhone: Bool = false,
         completion: @escaping (

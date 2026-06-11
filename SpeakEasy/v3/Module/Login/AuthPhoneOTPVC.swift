@@ -230,7 +230,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
         otpView.continueBtn.showLoader(userInteraction: false)
 
         if isFromLogin {
-            authService.verifyLoginOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+            authService.verifyLoginOTP(otp: otp, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
                 guard let self else { return }
                 self.otpView.continueBtn.hideLoader()
                 self.isVerifyingOtp = false
@@ -255,7 +255,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
 
         if isFromSettings {
             if isForEmail {
-                settingsService.verifyPhoneOrEmailOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: otp, otpRef: otpRef) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.otpView.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -274,7 +274,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
                     }
                 }
             } else {
-                settingsService.verifyPhoneOrEmailOTP(otp: Int(otp) ?? 0, otpRef: otpRef, isPhone: true) { [weak self] isSuccess, errMsg in
+                settingsService.verifyPhoneOrEmailOTP(otp: otp, otpRef: otpRef, isPhone: true) { [weak self] isSuccess, errMsg in
                     guard let self else { return }
                     self.otpView.continueBtn.hideLoader()
                     self.isVerifyingOtp = false
@@ -294,7 +294,7 @@ final class AuthPhoneOTPVC: BaseAuthViewController {
             return
         }
 
-        authService.verifySignupOTP(otp: Int(otp) ?? 0, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
+        authService.verifySignupOTP(otp: otp, otpRef: otpRef) { [weak self] isSuccess, errorMsg in
             guard let self else { return }
             self.otpView.continueBtn.hideLoader()
             self.isVerifyingOtp = false

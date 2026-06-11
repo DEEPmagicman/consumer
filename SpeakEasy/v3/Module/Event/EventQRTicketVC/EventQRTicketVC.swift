@@ -12,9 +12,7 @@ class EventQRTicketVC: UIViewController {
     @IBOutlet weak var fandQtableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var fAndQDropDownImage: UIImageView!
     @IBOutlet weak var fandQtableHiddenView: UIView!
-    
-    
-    
+
     // MARK: - Data
     var tickets: [EventTicketQR] = [
         EventTicketQR(ticketName: "General Admission", qrString: "SPEAKEASY-GA-001-2026"),
@@ -203,7 +201,7 @@ class EventQRTicketVC: UIViewController {
         booking.uniqueTickets.forEach { ticket in
             let qrString = """
             {
-                "id": "\(booking.id ?? "")",
+                "id": "\(booking.id)",
                 "type": "BOOKING"
             }
             """
@@ -341,8 +339,6 @@ class EventQRTicketVC: UIViewController {
     @IBAction func onClickCloseBtn(_ sender: Any) {
         self.dismiss(animated: false)
     }
-    
-    
 }
 
 // MARK: - FSPagerView

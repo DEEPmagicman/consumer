@@ -229,14 +229,32 @@ final class Navigate {
                          selectedCoverTickets: [CoverTicket],
                          selectedAddOnsItem: [UpSellTicket],
                          totalPrice: Double,
-                         bookingType: TicketPriceType = .PAID) {
+                         bookingType: TicketPriceType = .PAID,
+                         selectedPaymentMethod: PaymentType? = nil,
+                         cardDetails: CardDetails? = nil) {
         let vc = CoverTicketCheckOutVC(nibName: "CoverTicketCheckOutVC", bundle: nil)
         vc.selectedCoverTickets = selectedCoverTickets
         vc.selectedAddOnsItems = selectedAddOnsItem
 //        vc.totalPrice = totalPrice
         vc.venue = venue
         vc.bookingType = bookingType
+        vc.initialPaymentMethod = selectedPaymentMethod
+        vc.initialCardDetails = cardDetails
 //        vc.updateDelegate = sender as? UpdateDetailDelegate
+        vc.hidesBottomBarWhenPushed = true
+        sender.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func coverPaymentVC(_ sender: UIViewController,
+                        venue: ClipVenue?,
+                        selectedCoverTickets: [CoverTicket],
+                        selectedAddOnsItem: [UpSellTicket],
+                        bookingType: TicketPriceType = .PAID) {
+        let vc = PaymentVC()
+        vc.venueDetails = venue
+        vc.selectedCoverTickets = selectedCoverTickets
+        vc.selectedAddOnsItems = selectedAddOnsItem
+        vc.bookingType = bookingType
         vc.hidesBottomBarWhenPushed = true
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -493,7 +511,7 @@ final class Navigate {
     }
     
     func allVenueVC(_ sender: UIViewController) {
-        let vc = TicketConfirmationVC(nibName: "TicketConfirmationVC", bundle: nil)
+        let vc = AllVenueVC(nibName: "AllVenueVC", bundle: nil)
         sender.pushVC(vc)
     }
     

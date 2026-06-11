@@ -13,6 +13,10 @@ class EventQRPagerViewCell: FSPagerViewCell {
     @IBOutlet weak var ticketNameLbl: UILabel!
     @IBOutlet weak var ticketProgressLbl: UILabel!
     @IBOutlet weak var noTicketHiddenView: UIView!
+    
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var backupCode: UILabel!
+    @IBOutlet weak var bookingDateTime: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

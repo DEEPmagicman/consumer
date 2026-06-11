@@ -21,10 +21,11 @@
                 <outlet property="addToWalletBtn" destination="cb5-6T-a0x" id="21s-S6-CcS"/>
                 <outlet property="backgroundContainerView" destination="NJb-zE-3p4" id="YkD-TS-b0L"/>
                 <outlet property="buyAnotherTicketBtn" destination="6sF-8c-ngu" id="WiO-hL-5eb"/>
+                <outlet property="cityLbl" destination="NGM-mH-aIh" id="fUp-UB-NKt"/>
                 <outlet property="pagerView" destination="6Ym-D6-ZcL" id="GmA-Uu-nGf"/>
                 <outlet property="pagerViewheight" destination="Szn-h3-YdI" id="4mg-8K-d8t"/>
                 <outlet property="progressBarView" destination="n07-pO-Uzr" id="KBL-Yo-2S6"/>
-                <outlet property="venueName" destination="NGM-mH-aIh" id="155-ST-pQd"/>
+                <outlet property="venueName" destination="FKA-G8-rvB" id="qzU-CF-trj"/>
                 <outlet property="view" destination="sWA-pv-sx5" id="Ijb-Z1-rB0"/>
             </connections>
         </placeholder>
@@ -69,11 +70,11 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ym-D6-ZcL" customClass="FSPagerView" customModule="FSPagerView">
-                    <rect key="frame" x="16" y="218.66666666666663" width="361" height="400"/>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ym-D6-ZcL" customClass="FSPagerView" customModule="FSPagerView">
+                    <rect key="frame" x="0.0" y="218.66666666666663" width="393" height="416"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="400" id="Szn-h3-YdI"/>
+                        <constraint firstAttribute="height" constant="416" id="Szn-h3-YdI"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -88,7 +89,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n07-pO-Uzr">
-                    <rect key="frame" x="171.66666666666666" y="648.66666666666663" width="50" height="10"/>
+                    <rect key="frame" x="171.66666666666666" y="664.66666666666663" width="50" height="10"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="10" id="5Fk-Ld-tb9"/>
@@ -96,7 +97,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nfb-X7-rK1">
-                    <rect key="frame" x="116.66666666666669" y="688.66666666666663" width="160" height="50"/>
+                    <rect key="frame" x="116.66666666666669" y="704.66666666666663" width="160" height="50"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cb5-6T-a0x">
                             <rect key="frame" x="0.0" y="0.0" width="160" height="50"/>
@@ -146,13 +147,13 @@
                 <constraint firstItem="Nfb-X7-rK1" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="1tw-D2-ZrC"/>
                 <constraint firstItem="6sF-8c-ngu" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="2ZL-F7-RQ3"/>
                 <constraint firstItem="FKA-G8-rvB" firstAttribute="top" secondItem="CYH-en-AZ4" secondAttribute="top" constant="16" id="7QK-tX-fNQ"/>
-                <constraint firstItem="6Ym-D6-ZcL" firstAttribute="leading" secondItem="CYH-en-AZ4" secondAttribute="leading" constant="16" id="A0z-Bn-chS"/>
+                <constraint firstItem="6Ym-D6-ZcL" firstAttribute="leading" secondItem="CYH-en-AZ4" secondAttribute="leading" id="A0z-Bn-chS"/>
                 <constraint firstItem="NGM-mH-aIh" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="ALP-6Z-CxL"/>
                 <constraint firstItem="NJb-zE-3p4" firstAttribute="top" secondItem="sWA-pv-sx5" secondAttribute="top" id="Cuy-TL-VQx"/>
                 <constraint firstItem="fi1-qG-q4Z" firstAttribute="centerY" secondItem="FKA-G8-rvB" secondAttribute="centerY" id="E59-rC-uge"/>
                 <constraint firstItem="6Ym-D6-ZcL" firstAttribute="top" secondItem="41g-cq-Uz1" secondAttribute="bottom" constant="33" id="JIw-NR-AwK"/>
                 <constraint firstItem="NJb-zE-3p4" firstAttribute="leading" secondItem="sWA-pv-sx5" secondAttribute="leading" id="K3y-9M-HqJ"/>
-                <constraint firstItem="6Ym-D6-ZcL" firstAttribute="trailing" secondItem="CYH-en-AZ4" secondAttribute="trailing" constant="-16" id="Nnf-Nm-Yd0"/>
+                <constraint firstItem="6Ym-D6-ZcL" firstAttribute="trailing" secondItem="CYH-en-AZ4" secondAttribute="trailing" id="Nnf-Nm-Yd0"/>
                 <constraint firstItem="6Ym-D6-ZcL" firstAttribute="top" secondItem="NGM-mH-aIh" secondAttribute="bottom" constant="20" id="Rq0-SV-Vdh"/>
                 <constraint firstAttribute="bottom" secondItem="6sF-8c-ngu" secondAttribute="bottom" constant="20" id="S91-fV-b7j"/>
                 <constraint firstItem="n07-pO-Uzr" firstAttribute="centerX" secondItem="sWA-pv-sx5" secondAttribute="centerX" id="VoC-W0-2x0"/>

@@ -44,7 +44,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not available yet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27b-7A-Vde">
-                                        <rect key="frame" x="146" y="170" width="122.66666666666669" height="21"/>
+                                        <rect key="frame" x="146.33333333333334" y="170" width="122.33333333333334" height="21"/>
                                         <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -137,6 +137,7 @@
                             <constraint firstItem="FbZ-ut-8Tk" firstAttribute="leading" secondItem="KSA-PG-MWg" secondAttribute="leading" id="M7R-nA-JvT"/>
                             <constraint firstAttribute="bottom" secondItem="9IP-9W-R45" secondAttribute="bottom" constant="60" id="OGT-yN-m2s"/>
                             <constraint firstItem="FbZ-ut-8Tk" firstAttribute="top" secondItem="KSA-PG-MWg" secondAttribute="top" constant="30" id="Van-dt-tro"/>
+                            <constraint firstAttribute="width" secondItem="KSA-PG-MWg" secondAttribute="height" multiplier="1:1" id="Ysv-zc-EL6"/>
                             <constraint firstItem="9IP-9W-R45" firstAttribute="top" secondItem="FbZ-ut-8Tk" secondAttribute="bottom" id="dI5-tu-zjQ"/>
                             <constraint firstItem="B1S-2j-JdS" firstAttribute="centerX" secondItem="KSA-PG-MWg" secondAttribute="centerX" id="dKC-ZU-RHE"/>
                             <constraint firstAttribute="trailing" secondItem="9IP-9W-R45" secondAttribute="trailing" id="j1Q-f0-REK"/>
@@ -151,7 +152,6 @@
                     <constraint firstAttribute="trailing" secondItem="KSA-PG-MWg" secondAttribute="trailing" id="Jnj-yt-NkP"/>
                     <constraint firstItem="KSA-PG-MWg" firstAttribute="leading" secondItem="SWT-Ma-k9X" secondAttribute="leading" id="RQi-eY-cY2"/>
                     <constraint firstAttribute="bottom" secondItem="KSA-PG-MWg" secondAttribute="bottom" id="SbJ-mN-BLg"/>
-                    <constraint firstItem="KSA-PG-MWg" firstAttribute="width" secondItem="KSA-PG-MWg" secondAttribute="height" multiplier="1:1" id="Ysv-zc-EL6"/>
                     <constraint firstItem="KSA-PG-MWg" firstAttribute="top" secondItem="SWT-Ma-k9X" secondAttribute="top" id="fRO-0a-9wh"/>
                 </constraints>
                 <userDefinedRuntimeAttributes>
@@ -161,6 +161,9 @@
                 </userDefinedRuntimeAttributes>
             </tableViewCellContentView>
             <connections>
+                <outlet property="backupCode" destination="6Mr-5e-ZdY" id="EIB-76-DwF"/>
+                <outlet property="bookingDateTime" destination="QRP-Cm-wT1" id="4P0-aX-2qc"/>
+                <outlet property="containerView" destination="ZIx-wo-u5Z" id="gl2-Mi-0J6"/>
                 <outlet property="noTicketHiddenView" destination="9IP-9W-R45" id="tcf-tZ-zeT"/>
                 <outlet property="qrCodeImageView" destination="gtb-Ov-8zW" id="9RF-hp-EwI"/>
                 <outlet property="ticketNameLbl" destination="FbZ-ut-8Tk" id="frm-3s-VAY"/>

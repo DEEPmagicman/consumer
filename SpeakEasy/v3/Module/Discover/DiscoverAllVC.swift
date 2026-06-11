@@ -107,8 +107,6 @@ private extension DiscoverAllVC {
 
         venuesView.onTapSeeAll = { [weak self] in
             guard let self else { return }
-
-            
             Navigate.to.allVenueVC(self)
         }
 

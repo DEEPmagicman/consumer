@@ -13,6 +13,7 @@ final class CoverQRCodeVC: UIViewController {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var buyAnotherTicketBtn: UIButton!
     @IBOutlet weak var progressBarView: UIView!
+    @IBOutlet weak var cityLbl: UILabel!
     @IBOutlet weak var pagerView: FSPagerView! {
         didSet {
             pagerView.register(
@@ -43,9 +44,7 @@ final class CoverQRCodeVC: UIViewController {
     private var dotViews: [UIView] = []
     private var pagerItemHeights: [Int: CGFloat] = [:]
     private var currentPage: Int = 0
-    private var hasAppliedInitialPagerHeight = false
-    private var lastAppliedPagerWidth: CGFloat = 0
-    private let fallbackPagerHeight: CGFloat = 400
+    private let fallbackPagerHeight: CGFloat = 415
     private var pass: PKPass?
 
     private var showsAddOnsPage: Bool {
@@ -81,7 +80,8 @@ final class CoverQRCodeVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updatePagerWidthIfNeeded()
+        clipPagerOverflow()
+        updatePagerItemSize(height: pagerView.itemSize.height > 0 ? pagerView.itemSize.height : fallbackPagerHeight)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -101,6 +101,7 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Setup
     private func setupUI() {
         venueName.text = venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-")
+        cityLbl.text = venue?.city
     }
 
     private func setupPosterBackground() {
@@ -121,10 +122,13 @@ final class CoverQRCodeVC: UIViewController {
     private func setupPagerView() {
         pagerView.delegate = self
         pagerView.dataSource = self
-        pagerView.interitemSpacing = 25
+        pagerView.isInfinite = false
+        pagerView.interitemSpacing = 0
         pagerView.transformer = FSPagerViewTransformer(type: .linear)
         pagerView.transformer?.minimumAlpha = 1
         pagerView.backgroundColor = .clear
+        clipPagerOverflow()
+        updatePagerItemSize(height: fallbackPagerHeight)
     }
 
     private func setupProgressDots(count: Int) {
@@ -178,7 +182,6 @@ final class CoverQRCodeVC: UIViewController {
 
     private func invalidatePagerHeights() {
         pagerItemHeights.removeAll()
-        hasAppliedInitialPagerHeight = false
     }
 
     // MARK: - Data Loading
@@ -327,51 +330,50 @@ final class CoverQRCodeVC: UIViewController {
 
     // MARK: - Pager Height
     private func handlePagerCellHeightChange(at index: Int, height: CGFloat) {
-        let isFirstMeasurementForPage = pagerItemHeights[index] == nil
-        guard pagerItemHeights[index] != height else { return }
 
-        pagerItemHeights[index] = height
-        updatePagerItemSizeToMax()
+        let totalHeight = height + 400
+
+        guard pagerItemHeights[index] != totalHeight else { return }
+
+        pagerItemHeights[index] = totalHeight
 
         guard currentPage == index else { return }
-        let shouldAnimate = hasAppliedInitialPagerHeight && !isFirstMeasurementForPage
-        applyPagerHeight(for: index, animated: shouldAnimate)
-        hasAppliedInitialPagerHeight = true
-    }
 
-    private func updatePagerItemSizeToMax() {
-        let maxHeight = pagerItemHeights.values.max() ?? fallbackPagerHeight
-        let width = pagerView.bounds.width > 0 ? 300 : 300
-        guard width > 0 else { return }
-        pagerView.itemSize = CGSize(width: 300, height: maxHeight)
-    }
+//        pagerViewheight.constant = totalHeight
+        updatePagerItemSize(height: fallbackPagerHeight)
 
-    private func applyPagerHeight(for index: Int, animated: Bool) {
-        let height = pagerItemHeights[index] ?? fallbackPagerHeight
-        let width = pagerView.bounds.width > 0 ? pagerView.bounds.width : max(view.bounds.width - 32, 0)
-        guard width > 0 else { return }
-
-        guard pagerViewheight.constant != height else { return }
-
-        pagerViewheight.constant = height
-        updatePagerItemSizeToMax()
-        lastAppliedPagerWidth = width
-
-        guard animated else {
-            view.layoutIfNeeded()
-            return
-        }
-        UIView.animate(withDuration: 0.25) {
+        UIView.performWithoutAnimation {
             self.view.layoutIfNeeded()
         }
     }
 
-    private func updatePagerWidthIfNeeded() {
-        let width = pagerView.bounds.width
-        guard width > 0, width != lastAppliedPagerWidth else { return }
-        let height = pagerItemHeights[currentPage] ?? pagerViewheight.constant
-        pagerView.itemSize = CGSize(width: width, height: height)
-        lastAppliedPagerWidth = width
+    private func applyPagerHeight(for index: Int, animated: Bool) {
+
+        let height = pagerItemHeights[index] ?? fallbackPagerHeight
+
+//        pagerViewheight.constant = height
+        updatePagerItemSize(height: height)
+    }
+
+    private func updatePagerItemSize(height: CGFloat) {
+        let width = pagerView.bounds.width > 0 ? pagerView.bounds.width : 300
+        let itemSize = CGSize(width: width, height: height)
+        guard pagerView.itemSize != itemSize else { return }
+        pagerView.itemSize = itemSize
+    }
+
+    private func clipPagerOverflow() {
+        pagerView.clipsToBounds = true
+        pagerView.layer.masksToBounds = true
+        pagerView.subviews.forEach { clipPagerScrollContainers(in: $0) }
+    }
+
+    private func clipPagerScrollContainers(in view: UIView) {
+        if let scrollView = view as? UIScrollView {
+            scrollView.clipsToBounds = true
+            scrollView.layer.masksToBounds = true
+        }
+        view.subviews.forEach { clipPagerScrollContainers(in: $0) }
     }
 
     private func syncPagerPage(from pagerView: FSPagerView, animatedHeight: Bool) {
@@ -508,13 +510,13 @@ extension CoverQRCodeVC: FSPagerViewDelegate, FSPagerViewDataSource {
         updateProgressDots(activePage: page)
     }
 
-    func pagerViewDidEndDecelerating(_ pagerView: FSPagerView) {
-        syncPagerPage(from: pagerView, animatedHeight: false)
-    }
-
-    func pagerViewDidEndScrollAnimation(_ pagerView: FSPagerView) {
-        syncPagerPage(from: pagerView, animatedHeight: false)
-    }
+//    func pagerViewDidEndDecelerating(_ pagerView: FSPagerView) {
+//        syncPagerPage(from: pagerView, animatedHeight: false)
+//    }
+//
+//    func pagerViewDidEndScrollAnimation(_ pagerView: FSPagerView) {
+//        syncPagerPage(from: pagerView, animatedHeight: false)
+//    }
 }
 
 // MARK: - PKAddPassesViewControllerDelegate

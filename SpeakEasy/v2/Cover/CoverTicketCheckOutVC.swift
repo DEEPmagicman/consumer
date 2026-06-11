@@ -53,6 +53,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     var venue: ClipVenue?
     var totalPrice: Double = 0
     var bookingType: TicketPriceType = .FREE
+    var initialPaymentMethod: PaymentType?
+    var initialCardDetails: CardDetails?
     weak var updateDelegate: UpdateDetailDelegate?
 
     // MARK: - Payment
@@ -77,9 +79,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isTermsAccepted = false
     private var isVenueMessageAccepted = false
     private var isTermsExpanded = false
-    private let collapsedLines = 2
+    private var isVenueMessageExpanded = false
+    private var isCoverFeesExpanded = false
+    private var isUpsellFeesExpanded = false
+    private var isPricingLoading = false
+    private let collapsedLines = 3
+    private let feeShimmerRowCount = 3
     private var hasLaidOutTerms = false
     private var fullTermsText = ""
+    private var fullVenueMessageText = ""
 
     // Both must flip true before checkout button enables
     private var isBookingLoaded = false {
@@ -118,6 +126,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         setupNotifications()
         setupCheckoutBar()
         setupPaymentMethodUI()
+        setupCheckoutSurfaceStyle()
+        hideScrollIndicators(in: view)
+        setPricingLoading(true, animated: false)
 
         if !selectedCoverTickets.isEmpty && bookingType != .FREE {
             createBooking()
@@ -126,19 +137,14 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             getAddOnsPaymentIntent(bookingId: "")
         }
         setupTermsText()
-
-        fullTermsText = venue?.venueSettings?.policyText ?? ""
-//        venueMessageLbl.text = venue?.ven
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        guard !hasLaidOutTerms,
-              termsAndConditionsLbl.frame.width > 0 else { return }
-
+        guard !hasLaidOutTerms else { return }
         hasLaidOutTerms = true
-        updateTermsLabel()
+        updateAgreementLabels()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -171,10 +177,10 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     // MARK: - Setup
     private func setupTableViews() {
-        tableView.register(OrderItemTableViewCell.nib,
-                           forCellReuseIdentifier: OrderItemTableViewCell.identifier)
-        upsellTicketTableView.register(OrderItemTableViewCell.nib,
-                                       forCellReuseIdentifier: OrderItemTableViewCell.identifier)
+        tableView.register(QRTicketTableViewCell.nib,
+                           forCellReuseIdentifier: QRTicketTableViewCell.identifier)
+        upsellTicketTableView.register(QRTicketTableViewCell.nib,
+                                       forCellReuseIdentifier: QRTicketTableViewCell.identifier)
         coverTicketFeesAndTaxTableView.register(TicketItemTableViewCell.nib,
                                                 forCellReuseIdentifier: TicketItemTableViewCell.identifier)
         upsellTicketFeesAndTaxTableView.register(TicketItemTableViewCell.nib,
@@ -189,6 +195,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             $0?.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         }
         kvoRegistered = true
+        applyFeeBreakdownState(animated: false)
     }
 
     private func setupPosterBackground() {
@@ -224,7 +231,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         }
 
         venueName.text = venue?.name ?? ""
-        termsAndConditionsLbl.text = "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        let termsText = venue?.venueSettings?.coverTicketSettings?.disclaimer
+            ?? Constant.String.checkoutTextCover
+        fullTermsText = cleanAgreementText(termsText)
+        fullVenueMessageText = cleanAgreementText(
+            venue?.venueSettings?.policyText
+            ?? "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+        )
+        termsAndConditions.isHidden = fullTermsText.isEmpty
+        venueMessageView.isHidden = venue?.venueSettings?.optedPolicy != true || fullVenueMessageText.isEmpty
 
         // Set initial state — hidden sections start invisible and collapsed
         // Animation happens later in animateContentIn() after data loads
@@ -252,8 +267,36 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     private func setupPaymentMethodUI() {
-        selectedPaymentMethod = StripeAPI.deviceSupportsApplePay() ? .applePay : .card
+        selectedPaymentMethod = initialPaymentMethod
+            ?? (StripeAPI.deviceSupportsApplePay() ? .applePay : .card)
+        cardDetails = initialCardDetails
         updatePaymentMethodUI()
+    }
+
+    private func setupCheckoutSurfaceStyle() {
+        [tableView, coverTicketFeesAndTaxTableView,
+         upsellTicketTableView, upsellTicketFeesAndTaxTableView].forEach {
+            $0?.contentInset = .zero
+            $0?.sectionHeaderHeight = 0
+            $0?.sectionFooterHeight = 0
+            $0?.estimatedSectionHeaderHeight = 0
+            $0?.estimatedSectionFooterHeight = 0
+        }
+
+        [coverTicketParentView, upsellTicketParentView].forEach {
+            $0?.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+            $0?.layer.cornerRadius = 16
+            $0?.layer.cornerCurve = .continuous
+            $0?.layer.borderWidth = 1
+            $0?.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
+        }
+
+//        paymentTypeView.backgroundColor = UIColor.black.withAlphaComponent(0.24)
+        paymentTypeView.layer.cornerRadius = 14
+        paymentTypeView.layer.cornerCurve = .continuous
+        paymentTypeView.layer.borderWidth = 1
+        paymentTypeView.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
+        paymentTypeView.clipsToBounds = true
     }
 
     private func updatePaymentMethodUI() {
@@ -294,52 +337,214 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
     
     private func setupTermsText() {
-        termsAndConditionsLbl.font = Constant.Font.geistMedium(size: 12)
-        termsAndConditionsLbl.textColor = .white
+        termsAndConditionsLbl.font = Constant.Font.geistRegular(size: 10)
+        termsAndConditionsLbl.textColor = UIColor.white.withAlphaComponent(0.78)
         termsAndConditionsLbl.isUserInteractionEnabled = true
+        termsAndConditionsLbl.numberOfLines = collapsedLines
 
-        venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
+        venueMessageLbl.font = Constant.Font.geistRegular(size: 10)
+        venueMessageLbl.textColor = UIColor.white.withAlphaComponent(0.78)
+        venueMessageLbl.isUserInteractionEnabled = true
+        venueMessageLbl.numberOfLines = collapsedLines
 
-        let tap = UITapGestureRecognizer(
+        let termsTap = UITapGestureRecognizer(
             target: self,
             action: #selector(onTapTermsLabel)
         )
-        termsAndConditionsLbl.addGestureRecognizer(tap)
+        termsAndConditionsLbl.addGestureRecognizer(termsTap)
 
+        let venueMessageTap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(onTapVenueMessageLabel)
+        )
+        venueMessageLbl.addGestureRecognizer(venueMessageTap)
+
+        updateAgreementLabels()
         updateTermsCheckboxUI()
         updateVenueCheckboxUI()
     }
-    
-    private func updateTermsLabel() {
 
-        guard !fullTermsText.isEmpty else {
-            termsAndConditionsLbl.text = ""
+    private func hideScrollIndicators(in rootView: UIView) {
+        if let scrollView = rootView as? UIScrollView {
+            scrollView.showsVerticalScrollIndicator = false
+            scrollView.showsHorizontalScrollIndicator = false
+        }
+        rootView.subviews.forEach { hideScrollIndicators(in: $0) }
+    }
+
+    private func setPricingLoading(_ isLoading: Bool, animated: Bool) {
+        isPricingLoading = isLoading
+        reloadFeeTables()
+        applyFeeBreakdownState(animated: animated)
+    }
+
+    private func reloadFeeTables() {
+        coverTicketFeesAndTaxTableView.reloadData()
+        upsellTicketFeesAndTaxTableView.reloadData()
+    }
+
+    private func cleanAgreementText(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func updateAgreementLabels() {
+        updateAgreementLabel(
+            termsAndConditionsLbl,
+            text: fullTermsText,
+            isExpanded: isTermsExpanded
+        )
+        updateAgreementLabel(
+            venueMessageLbl,
+            text: fullVenueMessageText,
+            isExpanded: isVenueMessageExpanded
+        )
+    }
+
+    private func updateAgreementLabel(_ label: UILabel, text: String, isExpanded: Bool) {
+        guard !text.isEmpty else {
+            label.attributedText = nil
+            label.text = ""
+            label.numberOfLines = 0
             return
         }
 
-        let toggleText = isTermsExpanded ? "View Less" : "View More"
-
-        let displayText = isTermsExpanded
-        ? "\(fullTermsText) \(toggleText)"
-        : "\(fullTermsText)... \(toggleText)"
+        let needsToggle = shouldShowAgreementToggle(for: text, label: label)
+        let toggleText = isExpanded ? "View Less" : "View More"
+        let bodyText = isExpanded || !needsToggle ? text : collapsedAgreementPreview(from: text)
+        let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
 
         let attributed = NSMutableAttributedString(
             string: displayText,
             attributes: [
-                .font: Constant.Font.geistMedium(size: 12),
-                .foregroundColor: UIColor.white
+                .font: Constant.Font.geistRegular(size: 10),
+                .foregroundColor: UIColor.white.withAlphaComponent(0.78)
             ]
         )
 
-        let toggleRange = (displayText as NSString).range(of: toggleText)
+        if needsToggle {
+            let toggleRange = (displayText as NSString).range(of: toggleText)
+            attributed.addAttributes([
+                .font: Constant.Font.geistMedium(size: 10),
+                .foregroundColor: UIColor.white
+            ], range: toggleRange)
+        }
 
-        attributed.addAttributes([
-            .font: Constant.Font.geistMedium(size: 10),
-            .foregroundColor: UIColor.lightGray
-        ], range: toggleRange)
+        label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.attributedText = attributed
+    }
 
-        termsAndConditionsLbl.numberOfLines = isTermsExpanded ? 0 : collapsedLines
-        termsAndConditionsLbl.attributedText = attributed
+    private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
+        let width = label.bounds.width > 0
+            ? label.bounds.width
+            : max(view.bounds.width - 64, 240)
+        let font = Constant.Font.geistRegular(size: 10)
+        let textHeight = (text as NSString).boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).height
+        return textHeight > (font.lineHeight * CGFloat(collapsedLines)) + 2
+    }
+
+    private func collapsedAgreementPreview(from text: String) -> String {
+        let cleanText = cleanAgreementText(text)
+        let maxCharacters = 140
+
+        guard cleanText.count > maxCharacters else { return cleanText }
+
+        let endIndex = cleanText.index(cleanText.startIndex, offsetBy: maxCharacters)
+        return String(cleanText[..<endIndex])
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            + "..."
+    }
+
+    private func agreementToggleRange(in label: UILabel, expanded: Bool) -> NSRange {
+        guard let text = label.attributedText?.string else { return NSRange(location: NSNotFound, length: 0) }
+        let toggleText = expanded ? "View Less" : "View More"
+        return (text as NSString).range(of: toggleText)
+    }
+
+    private func animateAgreementLayout() {
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func toggleAgreementIfNeeded(
+        gesture: UITapGestureRecognizer,
+        label: UILabel,
+        expanded: Bool,
+        toggle: () -> Void
+    ) {
+        let range = agreementToggleRange(in: label, expanded: expanded)
+        guard range.location != NSNotFound else { return }
+        let tappedToggle = range.location != NSNotFound &&
+            gesture.didTapAttributedTextInLabel(label: label, inRange: range)
+
+        // The rendered "View More" can be tight on small devices, so the whole label toggles.
+        guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
+
+        toggle()
+        updateAgreementLabels()
+        animateAgreementLayout()
+    }
+
+    private func applyFeeBreakdownState(animated: Bool) {
+        let coverHasFees = !feesAndTaxes.isEmpty
+        let upsellHasFees = !upsellFeesAndTaxes.isEmpty
+        let coverIsLoading = isPricingLoading && !selectedCoverTickets.isEmpty
+        let upsellIsLoading = isPricingLoading && !selectedAddOnsItems.isEmpty
+
+        let coverVisible = coverIsLoading || (isCoverFeesExpanded && coverHasFees)
+        let upsellVisible = upsellIsLoading || (isUpsellFeesExpanded && upsellHasFees)
+
+        coverTicketFeesAndTaxTableView.superview?.isHidden = !coverVisible
+        upsellTicketFeesAndTaxTableView.superview?.isHidden = !upsellVisible
+
+        coverTicketFeesAndTaxTableViewHeight.constant = coverVisible
+            ? feeTableHeight(
+                coverTicketFeesAndTaxTableView,
+                itemCount: coverIsLoading ? feeShimmerRowCount : feesAndTaxes.count
+            )
+            : 0
+        upsellTicketFeesAndTaxTableViewHeight.constant = upsellVisible
+            ? feeTableHeight(
+                upsellTicketFeesAndTaxTableView,
+                itemCount: upsellIsLoading ? feeShimmerRowCount : upsellFeesAndTaxes.count
+            )
+            : 0
+
+        let updates = { self.view.layoutIfNeeded() }
+        guard animated else {
+            updates()
+            return
+        }
+
+        UIView.animate(withDuration: 0.24, delay: 0, options: [.curveEaseOut, .allowUserInteraction]) {
+            updates()
+        }
+    }
+
+    private func feeTableHeight(_ tableView: UITableView, itemCount: Int) -> CGFloat {
+        tableView.layoutIfNeeded()
+        let contentHeight = ceil(tableView.contentSize.height)
+        if contentHeight > 1 { return contentHeight }
+        return CGFloat(itemCount) * 44
+    }
+
+    @objc private func onCoverFeesToggle() {
+        guard !isPricingLoading, !feesAndTaxes.isEmpty else { return }
+        isCoverFeesExpanded.toggle()
+        applyFeeBreakdownState(animated: true)
+    }
+
+    @objc private func onUpsellFeesToggle() {
+        guard !isPricingLoading, !upsellFeesAndTaxes.isEmpty else { return }
+        isUpsellFeesExpanded.toggle()
+        applyFeeBreakdownState(animated: true)
     }
 
     // MARK: - KVO
@@ -358,40 +563,43 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             case self.tableView:
                 self.tableViewHeight.constant = table.contentSize.height
             case self.coverTicketFeesAndTaxTableView:
-                self.coverTicketFeesAndTaxTableViewHeight.constant = table.contentSize.height
+                self.coverTicketFeesAndTaxTableViewHeight.constant =
+                    (self.isPricingLoading && !self.selectedCoverTickets.isEmpty) || self.isCoverFeesExpanded
+                    ? table.contentSize.height
+                    : 0
             case self.upsellTicketTableView:
                 self.upsellTicketTableViewHeight.constant = table.contentSize.height
             case self.upsellTicketFeesAndTaxTableView:
-                self.upsellTicketFeesAndTaxTableViewHeight.constant = table.contentSize.height
+                self.upsellTicketFeesAndTaxTableViewHeight.constant =
+                    (self.isPricingLoading && !self.selectedAddOnsItems.isEmpty) || self.isUpsellFeesExpanded
+                    ? table.contentSize.height
+                    : 0
             default:
                 break
             }
+            self.applyFeeBreakdownState(animated: false)
         }
     }
     
     @objc
     private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
-
-        guard let text = termsAndConditionsLbl.attributedText?.string else {
-            return
-        }
-
-        let targetText = isTermsExpanded ? "View Less" : "View More"
-
-        let range = (text as NSString).range(of: targetText)
-
-        guard gesture.didTapAttributedTextInLabel(
+        toggleAgreementIfNeeded(
+            gesture: gesture,
             label: termsAndConditionsLbl,
-            inRange: range
-        ) else {
-            return
+            expanded: isTermsExpanded
+        ) { [weak self] in
+            self?.isTermsExpanded.toggle()
         }
+    }
 
-        isTermsExpanded.toggle()
-        updateTermsLabel()
-
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+    @objc
+    private func onTapVenueMessageLabel(_ gesture: UITapGestureRecognizer) {
+        toggleAgreementIfNeeded(
+            gesture: gesture,
+            label: venueMessageLbl,
+            expanded: isVenueMessageExpanded
+        ) { [weak self] in
+            self?.isVenueMessageExpanded.toggle()
         }
     }
 
@@ -675,6 +883,7 @@ extension CoverTicketCheckOutVC {
             } else {
                 self.isBookingLoaded = true
                 self.isPaymentIntentLoaded = true
+                self.setPricingLoading(false, animated: true)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -707,6 +916,7 @@ extension CoverTicketCheckOutVC {
                 }
             } else {
                 self.isPaymentIntentLoaded = true
+                self.setPricingLoading(false, animated: true)
                 if self.isPromoCodeApplied { self.isPromoCodeApplied = false }
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
@@ -737,6 +947,7 @@ extension CoverTicketCheckOutVC {
             } else {
                 self.isBookingLoaded = true
                 self.isPaymentIntentLoaded = true
+                self.setPricingLoading(false, animated: true)
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -798,9 +1009,8 @@ extension CoverTicketCheckOutVC {
 
             // Reload first so KVO fires and constraints get correct heights
             self.tableView.reloadData()
-            self.coverTicketFeesAndTaxTableView.reloadData()
             self.upsellTicketTableView.reloadData()
-            self.upsellTicketFeesAndTaxTableView.reloadData()
+            self.setPricingLoading(false, animated: false)
 
             // Then animate the sections in — slight delay lets layout settle first
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -938,7 +1148,7 @@ extension CoverTicketCheckOutVC {
             return
         }
 
-        paymentStatus(optedPolicy: venue?.venueSettings?.optedPolicy == true ? true : nil) {
+        paymentStatus(optedPolicy: self.venueMessageView.isHidden ? nil : self.isVenueMessageAccepted) {
             if self.selectedAddOnsItems.isEmpty {
                 self.finishAndNavigate(isAddOnsAvailable: false, isOnlyAddOn: false)
             } else {
@@ -983,13 +1193,11 @@ extension CoverTicketCheckOutVC {
     }
 
     private func paymentStatus(optedPolicy: Bool? = nil, completion: @escaping () -> Void) {
-        Loader.show()
         PaymentPresenter.successPayment(
             paymentHistoryId: paymentHistoryId,
             bookingId: bookingId,
             optedPolicy: optedPolicy
         ) { [weak self] isSuccess, errMsg in
-            Loader.hide()
             if isSuccess {
                 completion()
             } else {
@@ -1170,9 +1378,15 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case self.tableView:                    return selectedCoverTickets.count
-        case coverTicketFeesAndTaxTableView:    return feesAndTaxes.count
+        case coverTicketFeesAndTaxTableView:
+            return isPricingLoading && !selectedCoverTickets.isEmpty
+                ? feeShimmerRowCount
+                : feesAndTaxes.count
         case upsellTicketTableView:             return selectedAddOnsItems.count
-        case upsellTicketFeesAndTaxTableView:   return upsellFeesAndTaxes.count
+        case upsellTicketFeesAndTaxTableView:
+            return isPricingLoading && !selectedAddOnsItems.isEmpty
+                ? feeShimmerRowCount
+                : upsellFeesAndTaxes.count
         default:                                return 0
         }
     }
@@ -1182,37 +1396,55 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         case self.tableView:
             return makeCoverTicketCell(for: indexPath, in: tableView)
         case coverTicketFeesAndTaxTableView:
+            if isPricingLoading && !selectedCoverTickets.isEmpty {
+                return makeFeeShimmerCell(in: tableView)
+            }
             return makeFeesCell(item: feesAndTaxes[indexPath.row], in: tableView, at: indexPath)
         case upsellTicketTableView:
             return makeUpsellTicketCell(for: indexPath, in: tableView)
         case upsellTicketFeesAndTaxTableView:
+            if isPricingLoading && !selectedAddOnsItems.isEmpty {
+                return makeFeeShimmerCell(in: tableView)
+            }
             return makeFeesCell(item: upsellFeesAndTaxes[indexPath.row], in: tableView, at: indexPath)
         default:
             return UITableViewCell()
         }
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        switch tableView {
+        case self.tableView:
+            onCoverFeesToggle()
+        case upsellTicketTableView:
+            onUpsellFeesToggle()
+        default:
+            break
+        }
+    }
+
     private func makeCoverTicketCell(for indexPath: IndexPath, in tableView: UITableView) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: OrderItemTableViewCell.identifier, for: indexPath
-        ) as? OrderItemTableViewCell else { return UITableViewCell() }
+            withIdentifier: QRTicketTableViewCell.identifier, for: indexPath
+        ) as? QRTicketTableViewCell else { return UITableViewCell() }
 
         let ticket   = selectedCoverTickets[indexPath.row]
         let quantity = ticket.selectedQuantity ?? 0
         let total    = Double(quantity) * ticket.price
 
         cell.selectionStyle           = .none
-        cell.totalTicketCountLbl.text = "\(quantity)x"
+        cell.totalTicketCountLbl.text = "\(quantity)"
         cell.ticketNameLbl.text       = ticket.customName?.isEmpty == false ? ticket.customName : ticket.name
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-        cell.extraFeesLbl.text        = ""
         return cell
     }
 
     private func makeUpsellTicketCell(for indexPath: IndexPath, in tableView: UITableView) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: OrderItemTableViewCell.identifier, for: indexPath
-        ) as? OrderItemTableViewCell else { return UITableViewCell() }
+            withIdentifier: QRTicketTableViewCell.identifier, for: indexPath
+        ) as? QRTicketTableViewCell else { return UITableViewCell() }
 
         let item     = selectedAddOnsItems[indexPath.row]
         let quantity = item.selectedQuantity ?? 0
@@ -1222,7 +1454,15 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.totalTicketCountLbl.text = "\(quantity)x"
         cell.ticketNameLbl.text       = item.addOns?.name ?? ""
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-        cell.extraFeesLbl.text        = ""
+        return cell
+    }
+
+    private func makeFeeShimmerCell(in tableView: UITableView) -> UITableViewCell {
+        let identifier = FeeBreakdownShimmerCell.identifier
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
+            as? FeeBreakdownShimmerCell
+            ?? FeeBreakdownShimmerCell(style: .default, reuseIdentifier: identifier)
+        cell.selectionStyle = .none
         return cell
     }
 
@@ -1316,5 +1556,54 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
 extension CoverTicketCheckOutVC: CheckoutBarDelegate {
     func checkoutBarDidTapButton() {
         onClickContinueToCheckout()
+    }
+}
+
+private final class FeeBreakdownShimmerCell: UITableViewCell {
+
+    private let titleLine = ShimmerViewV3()
+    private let amountLine = ShimmerViewV3()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+
+        [titleLine, amountLine].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            titleLine.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+            titleLine.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            titleLine.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            titleLine.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.44),
+            titleLine.heightAnchor.constraint(equalToConstant: 12),
+
+            amountLine.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -2),
+            amountLine.centerYAnchor.constraint(equalTo: titleLine.centerYAnchor),
+            amountLine.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.22),
+            amountLine.heightAnchor.constraint(equalToConstant: 12)
+        ])
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        if newWindow == nil {
+            titleLine.stopShimmer()
+            amountLine.stopShimmer()
+        } else {
+            titleLine.startShimmer()
+            amountLine.startShimmer()
+        }
     }
 }
