@@ -1,10 +1,11 @@
-//
-//  OrderListViewController.swift
-//  SpeakEasy-Consumer
-//
-
 import UIKit
 import MHLoadingButton
+import PassKit
+import StripeApplePay
+import StripePaymentSheet
+import StripePayments
+
+// MARK: - OrderListViewController
 
 final class OrderListViewController: UIViewController {
 
@@ -30,7 +31,6 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var promoCodeTitleLbl: UILabel!
     @IBOutlet weak var feesDropDowenIc: UIImageView!
     @IBOutlet weak var applyPromoBtn: LoadingButton!
-
     @IBOutlet weak var termsAndConditions: UIView!
     @IBOutlet weak var venueMessageView: UIView!
     @IBOutlet weak var termsAndConditionsLbl: UILabel!
@@ -41,62 +41,65 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var paymentTypeView: UIView!
     @IBOutlet weak var paymentTypeName: UILabel!
     @IBOutlet weak var paymentCardImage: UIImageView!
-    
+
+    // MARK: - Data
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
     var event: Event?
     var booking: Booking?
     var bookingId: String?
+    var selectedPaymentMethod: PaymentType?
+    var cardDetails: CardDetails?
 
+    // MARK: - Stripe state
+    private var paymentSheet: PaymentSheet?
+    private var paymentIntentClientSecret: String = ""
+    private var stripePaymentHistoryId: String = ""
+    private var stripeEphemeralKey: String = ""
+    private var isFreeTicket: Bool = false
+    private var isPaymentInitiated = false
+
+    // MARK: - UI state
     private var isTermsAccepted = false
     private var isVenueMessageAccepted = false
     private var isTermsExpanded = false
     private let collapsedLines = 2
-    private var hasLaidOutTerms = false  // ensures we only do first layout once
-
+    private var hasLaidOutTerms = false
     private var fullTermsText = ""
 
+    // MARK: - Data state
     private var feesAndTaxes: [FeeDisplayItem] = []
     private var paymentDetail: PaymentDetail?
-
     private var isPromoCodeApplied = false
     private var appliedPromoCode = ""
-    var selectedPaymentMethod: PaymentType?
 
     private var currency: String {
-        return venueDetails?.venueSettings?.currencySymbol ?? "$"
+        venueDetails?.venueSettings?.currencySymbol ?? "$"
     }
-    private let posterHeaderView = EventPosterHeaderView()
 
+    private let posterHeaderView = EventPosterHeaderView()
     private let paymentService = PaymentService()
-    
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         setupUI()
         setupTableViews()
         setupHeaderData()
         calculateTotal()
         setupTermsText()
-
+        fetchPaymentIntentAndSetup(promoCode: "")
         getBooking(id: bookingId)
-        fetchPaymentIntentAndSetup(promoCode: appliedPromoCode)
-
         ticketTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
-
         applyPromoBtn.indicator = MaterialLoadingIndicator(color: .black)
-
         fullTermsText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
         venueMessageLbl.text = "Venue message text here"
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        // Wait until label has a real frame, then render once
         guard !hasLaidOutTerms, termsAndConditionsLbl.frame.width > 0 else { return }
         hasLaidOutTerms = true
         updateTermsLabel()
@@ -114,22 +117,21 @@ final class OrderListViewController: UIViewController {
         yourOrderView.applyAutoBorderBackground()
         feesAndTaxesParentView.applyAutoBorderBackground()
         view.applyScreenBgGradient()
-
         addPromoCodeView.isHidden = true
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
-        
+
         switch selectedPaymentMethod {
         case .applePay:
             paymentTypeName.text = "Apple Pay"
             paymentCardImage.image = UIImage(named: "applePayIcon")
         case .card:
-            paymentTypeName.text = "Mastercard ending 0987"
+            paymentTypeName.text = "Pay with Card"
             paymentCardImage.image = UIImage(named: "creditCardIcon")
-        
         case .none:
             paymentTypeName.text = "Apple Pay"
         }
+
         checkOutView.delegate = self
     }
 
@@ -138,13 +140,10 @@ final class OrderListViewController: UIViewController {
         ticketTableView.dataSource = self
         feesAndTaxesTableView.delegate = self
         feesAndTaxesTableView.dataSource = self
-
         ticketTableView.separatorStyle = .none
         feesAndTaxesTableView.separatorStyle = .none
-
         ticketTableView.showsVerticalScrollIndicator = false
         feesAndTaxesTableView.showsVerticalScrollIndicator = false
-
         ticketTableView.register(
             OrderItemTableViewCell.nib,
             forCellReuseIdentifier: OrderItemTableViewCell.identifier
@@ -154,21 +153,17 @@ final class OrderListViewController: UIViewController {
             forCellReuseIdentifier: TicketItemTableViewCell.identifier
         )
     }
-    
-        private func setupPosterBackground() {
 
-        self.backgroundContainerView.addSubview(posterHeaderView)
+    private func setupPosterBackground() {
+        backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
-            posterHeaderView.topAnchor.constraint(equalTo: self.backgroundContainerView.topAnchor),
-            posterHeaderView.leadingAnchor.constraint(equalTo: self.backgroundContainerView.leadingAnchor),
-            posterHeaderView.trailingAnchor.constraint(equalTo: self.backgroundContainerView.trailingAnchor),
-            posterHeaderView.bottomAnchor.constraint(equalTo: self.backgroundContainerView.bottomAnchor)
+            posterHeaderView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: backgroundContainerView.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: backgroundContainerView.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
-
-        let imageURLString = (event?.flyer?.key ?? "").imageURL
-        posterHeaderView.loadImage(from: imageURLString)
+        posterHeaderView.loadImage(from: (event?.flyer?.key ?? "").imageURL)
     }
 
     private func setupHeaderData() {
@@ -180,9 +175,12 @@ final class OrderListViewController: UIViewController {
             dateandtimeLbl.text = customText
         } else {
             let timezone = venueDetails?.useTimezone ?? ""
-            let dateText = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: timezone) ?? ""
-            let startTime = event?.startDateTime.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? ""
-            let endTime = event?.endDateTime?.convertDateFormat(from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? "LATE"
+            let dateText = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss, to: .EEEMMMD, customTimeZone: timezone) ?? ""
+            let startTime = event?.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? ""
+            let endTime = event?.endDateTime?.convertDateFormat(
+                from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? "LATE"
             dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         }
     }
@@ -193,12 +191,9 @@ final class OrderListViewController: UIViewController {
         termsAndConditionsLbl.font = Constant.Font.geistMedium(size: 12)
         termsAndConditionsLbl.textColor = .white
         termsAndConditionsLbl.isUserInteractionEnabled = true
-
         venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
-
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
         termsAndConditionsLbl.addGestureRecognizer(tap)
-
         updateTermsCheckboxUI()
         updateVenueCheckboxUI()
     }
@@ -216,8 +211,6 @@ final class OrderListViewController: UIViewController {
                 .foregroundColor: UIColor.white
             ]
         )
-
-        // Style "View More" / "View Less" differently
         let toggleRange = (displayText as NSString).range(of: toggleText)
         attributed.addAttributes([
             .font: Constant.Font.geistMedium(size: 10),
@@ -230,18 +223,12 @@ final class OrderListViewController: UIViewController {
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
         guard let text = termsAndConditionsLbl.attributedText?.string else { return }
-
         let targetText = isTermsExpanded ? "View Less" : "View More"
         let range = (text as NSString).range(of: targetText)
-
         guard gesture.didTapAttributedTextInLabel(label: termsAndConditionsLbl, inRange: range) else { return }
-
         isTermsExpanded.toggle()
         updateTermsLabel()
-
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
-        }
+        UIView.animate(withDuration: 0.25) { self.view.layoutIfNeeded() }
     }
 
     // MARK: - KVO
@@ -253,25 +240,20 @@ final class OrderListViewController: UIViewController {
         context: UnsafeMutableRawPointer?
     ) {
         guard keyPath == "contentSize", let table = object as? UITableView else { return }
-
-        if table == ticketTableView {
+        if table === ticketTableView {
             tableViewHeight.constant = table.contentSize.height
-        } else if table == feesAndTaxesTableView {
+        } else if table === feesAndTaxesTableView {
             feesAndTaxesTableViewHeight.constant = table.contentSize.height
         }
-
         view.layoutIfNeeded()
     }
 
-    // MARK: - Checkout & Totals
+    // MARK: - Totals
 
     private func calculateTotal() {
-        let subtotal = selectedTickets.reduce(0.0) { result, ticket in
-            let quantity = ticket.selectedTicketCount ?? 0
-            let price = ticket.price ?? 0
-            return result + (Double(quantity) * price)
+        let subtotal = selectedTickets.reduce(0.0) {
+            $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
         }
-
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         checkOutView.updateSummary(currency: currency, count: totalTickets, subtotal: subtotal, fees: 0)
         checkOutView.setButtonTitle("Purchase Tickets")
@@ -280,13 +262,17 @@ final class OrderListViewController: UIViewController {
     // MARK: - Checkbox UI
 
     private func updateTermsCheckboxUI() {
-        let image = isTermsAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
-        termsAndConditionsBtn.setImage(image, for: .normal)
+        termsAndConditionsBtn.setImage(
+            isTermsAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon,
+            for: .normal
+        )
     }
 
     private func updateVenueCheckboxUI() {
-        let image = isVenueMessageAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon
-        venueMessageBtn.setImage(image, for: .normal)
+        venueMessageBtn.setImage(
+            isVenueMessageAccepted ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon,
+            for: .normal
+        )
     }
 
     // MARK: - IBActions
@@ -308,41 +294,39 @@ final class OrderListViewController: UIViewController {
     @IBAction func onClickApplyBtn(_ sender: Any) {
         let promo = (addCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !promo.isEmpty else { return }
-
         applyPromoBtn.showLoader(userInteraction: false)
         fetchPaymentIntentAndSetup(promoCode: promo)
     }
 
     @IBAction func onClickPluseBtn(_ sender: Any) {
-        let shouldShowPromoView = addPromoCodeView.isHidden
-
-        UIView.animate(withDuration: 0.2, animations: {
+        let shouldShow = addPromoCodeView.isHidden
+        UIView.animate(withDuration: 0.2) {
             self.pluseBtn.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
+        } completion: { _ in
             self.pluseBtn.setImage(
-                shouldShowPromoView ? UIImage(named: "minusPromoIcon") : UIImage(named: "plusIcon"),
+                UIImage(named: shouldShow ? "minusPromoIcon" : "plusIcon"),
                 for: .normal
             )
-            UIView.animate(withDuration: 0.25) {
-                self.pluseBtn.transform = .identity
-            }
+            UIView.animate(withDuration: 0.25) { self.pluseBtn.transform = .identity }
         }
 
-        if shouldShowPromoView {
+        if shouldShow {
             addPromoCodeView.alpha = 0
             addPromoCodeView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
             addPromoCodeView.isHidden = false
-
-            UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
+            UIView.animate(
+                withDuration: 0.35, delay: 0,
+                usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5
+            ) {
                 self.addPromoCodeView.alpha = 1
                 self.addPromoCodeView.transform = .identity
                 self.view.layoutIfNeeded()
             }
         } else {
-            UIView.animate(withDuration: 0.25, animations: {
+            UIView.animate(withDuration: 0.25) {
                 self.addPromoCodeView.alpha = 0
                 self.addPromoCodeView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            }) { _ in
+            } completion: { _ in
                 self.addPromoCodeView.isHidden = true
                 self.addPromoCodeView.transform = .identity
             }
@@ -350,60 +334,58 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickRemovePromoCodeBtn(_ sender: Any) {
-        fetchPaymentIntentAndSetup(promoCode: "")
-
         isPromoCodeApplied = false
         appliedPromoCode = ""
         addCodeTextFeild.text = ""
         addCodeTextFeild.isUserInteractionEnabled = true
         addCodeTextFeild.alpha = 1
-
         updatePromoCodeUI()
+        fetchPaymentIntentAndSetup(promoCode: "")
     }
 
     @IBAction func onClickFeesAndTaxesView(_ sender: Any) {
-        let shouldShowView = feesAndTaxesHiddenView.isHidden
-
-        UIView.animate(withDuration: 0.2, animations: {
+        let shouldShow = feesAndTaxesHiddenView.isHidden
+        UIView.animate(withDuration: 0.2) {
             self.feesDropDowenIc.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }) { _ in
+        } completion: { _ in
             UIView.animate(withDuration: 0.25) {
-                self.feesDropDowenIc.transform = shouldShowView
-                    ? CGAffineTransform(rotationAngle: .pi)
-                    : .identity
+                self.feesDropDowenIc.transform = shouldShow
+                    ? CGAffineTransform(rotationAngle: .pi) : .identity
             }
         }
 
-        if shouldShowView {
+        if shouldShow {
             feesAndTaxesHiddenView.alpha = 0
             feesAndTaxesHiddenView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
             feesAndTaxesHiddenView.isHidden = false
-
-            UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: [.curveEaseInOut]) {
+            UIView.animate(
+                withDuration: 0.35, delay: 0,
+                usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5,
+                options: .curveEaseInOut
+            ) {
                 self.feesAndTaxesHiddenView.alpha = 1
                 self.feesAndTaxesHiddenView.transform = .identity
                 self.view.layoutIfNeeded()
             }
         } else {
-            UIView.animate(withDuration: 0.25, animations: {
+            UIView.animate(withDuration: 0.25) {
                 self.feesAndTaxesHiddenView.alpha = 0
                 self.feesAndTaxesHiddenView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            }) { _ in
+            } completion: { _ in
                 self.feesAndTaxesHiddenView.isHidden = true
                 self.feesAndTaxesHiddenView.transform = .identity
             }
         }
     }
-    
+
     @IBAction func onClickCardBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
-    // MARK: - Payment / Booking
+
+    // MARK: - Booking
 
     private func getBooking(id: String?) {
         guard let id else { return }
-
         paymentService.fetchBookingDetail(bookingId: id) { [weak self] isSuccess, _, booking in
             guard let self else { return }
             if isSuccess {
@@ -417,17 +399,23 @@ final class OrderListViewController: UIViewController {
         feesAndTaxes = buildFeesArray(from: booking?.fees)
         feesAndTaxesHiddenView.isHidden = feesAndTaxes.isEmpty
         feesAndTaxesTableView.reloadData()
-
         DispatchQueue.main.async {
             self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
         }
     }
-
+    
     private func buildCoverTicketsForPaymentIntent() -> [[String: Any]] {
-        return selectedTickets.map {
-            ["ticketId": $0.id ?? "", "quantity": $0.selectedTicketCount ?? 0]
+        var coverTickets = [[String: Any]]()
+        selectedTickets.forEach {
+            coverTickets.append([
+                "ticketId": $0.id ?? "",
+                "quantity": $0.selectedTicketCount ?? 0
+            ])
         }
+        return coverTickets
     }
+
+    // MARK: - Payment Intent
 
     private func fetchPaymentIntentAndSetup(promoCode: String) {
         guard let bookingId else { return }
@@ -440,38 +428,79 @@ final class OrderListViewController: UIViewController {
             promoCode: promoCode,
             type: .singleTickedEvent
         ) { [weak self] isSuccess, errMsg, clientSecret, paymentHistoryId, ephemeralKey, paymentDetail, isFreeTicket in
-            guard let self = self else { return }
-            self.applyPromoBtn.hideLoader()
+            guard let self else { return }
 
-            if isSuccess {
-                self.paymentDetail = paymentDetail
+            DispatchQueue.main.async {
+                self.applyPromoBtn.hideLoader()
+
+                guard isSuccess else {
+                    Alert.showToast(errMsg ?? "Something went wrong")
+                    return
+                }
+
+                self.isFreeTicket              = isFreeTicket
+                self.stripePaymentHistoryId    = paymentHistoryId
+                self.paymentIntentClientSecret = clientSecret ?? ""
+                self.stripeEphemeralKey        = ephemeralKey
+                self.paymentDetail             = paymentDetail
+
                 let discount = paymentDetail?.discount ?? 0
-
                 if promoCode.isEmpty {
                     self.isPromoCodeApplied = false
-                    self.appliedPromoCode = ""
+                    self.appliedPromoCode   = ""
                 } else if discount > 0 {
                     self.isPromoCodeApplied = true
-                    self.appliedPromoCode = promoCode
+                    self.appliedPromoCode   = promoCode
                     self.addCodeTextFeild.isUserInteractionEnabled = false
                     self.addCodeTextFeild.alpha = 0.5
                 } else {
                     self.isPromoCodeApplied = false
-                    self.appliedPromoCode = ""
+                    self.appliedPromoCode   = ""
                     self.addCodeTextFeild.isUserInteractionEnabled = true
                     self.addCodeTextFeild.alpha = 1
                 }
 
                 self.updatePromoCodeUI()
                 self.updateUIWithPaymentDetail(paymentDetail)
-            } else {
-                self.isPromoCodeApplied = false
-                self.appliedPromoCode = ""
-                self.updatePromoCodeUI()
-                Alert.showToast(errMsg ?? "Something went wrong")
+
+                // Setup Stripe for both card and Apple Pay
+                if !isFreeTicket, let secret = clientSecret, !secret.isEmpty {
+                    STPAPIClient.shared.publishableKey = Stripe.publishableKey
+                    self.setupPaymentSheet(
+                        clientSecret: secret,
+                        ephemeralKey: ephemeralKey
+                    )
+                }
             }
         }
     }
+
+    // MARK: - Stripe: PaymentSheet (Apple Pay)
+
+    private func setupPaymentSheet(clientSecret: String, ephemeralKey: String) {
+        STPAPIClient.shared.publishableKey = Stripe.publishableKey
+
+        var config = PaymentSheet.Configuration()
+        config.merchantDisplayName = "Speakeasy Bookings Inc. (VIA Speakeasy Go!)"
+
+        let customerId = UserDefault.shared.user?.stripeCusId ?? ""
+        if !customerId.isEmpty && !ephemeralKey.isEmpty {
+            config.customer = .init(id: customerId, ephemeralKeySecret: ephemeralKey)
+        }
+
+        config.allowsDelayedPaymentMethods = true
+        config.applePay = .init(
+            merchantId: "merchant.com.speakeasy",
+            merchantCountryCode: "US"
+        )
+
+        paymentSheet = PaymentSheet(
+            paymentIntentClientSecret: clientSecret,
+            configuration: config
+        )
+    }
+
+    // MARK: - UI Updates
 
     private func updateUIWithPaymentDetail(_ detail: PaymentDetail?) {
         guard let detail else {
@@ -486,8 +515,12 @@ final class OrderListViewController: UIViewController {
 
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
         let feesAmount = detail.total - detail.subTotal
-
-        checkOutView.updateSummary(currency: currency, count: totalTickets, subtotal: detail.total, fees: feesAmount)
+        checkOutView.updateSummary(
+            currency: currency,
+            count: totalTickets,
+            subtotal: detail.total,
+            fees: feesAmount
+        )
 
         let discount = detail.discount ?? 0
         if discount > 0 {
@@ -507,9 +540,7 @@ final class OrderListViewController: UIViewController {
 
     private func buildFeesArray(from fees: PaymentDetail?) -> [FeeDisplayItem] {
         guard let fees, fees.total != fees.subTotal else { return [] }
-
         var items: [FeeDisplayItem] = []
-
         if fees.customFee > 0 {
             items.append(FeeDisplayItem(title: fees.customFeeName ?? "Custom Fee", amount: fees.customFee))
         }
@@ -519,14 +550,12 @@ final class OrderListViewController: UIViewController {
         if fees.processingFee > 0 {
             items.append(FeeDisplayItem(title: "Processing Fee", amount: fees.processingFee))
         }
-
         return items
     }
 
     private func updatePromoCodeUI() {
         promoCodeAppliedView.isHidden = !isPromoCodeApplied
         promoCodeTitleView.isHidden = isPromoCodeApplied
-
         if isPromoCodeApplied {
             promoCodeLbl.text = appliedPromoCode.uppercased()
             let discount = paymentDetail?.discount ?? 0
@@ -541,6 +570,247 @@ final class OrderListViewController: UIViewController {
             addCodeTextFeild.alpha = 1
         }
     }
+
+    // MARK: - Stripe: Card (direct STPAPIClient confirm)
+
+    private func confirmCardPayment() {
+        guard let cardDetails else {
+            isPaymentInitiated = false
+            Alert.showToast("Card details missing.")
+            return
+        }
+
+        guard !paymentIntentClientSecret.isEmpty else {
+            isPaymentInitiated = false
+            Alert.showToast("Payment not ready yet.")
+            return
+        }
+
+        checkOutView.showLoader()
+
+        // Step 1 — tokenize card via STPAPIClient (available in StripePaymentSheet)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number   = cardDetails.cardNumber
+        cardParams.expMonth = NSNumber(value: cardDetails.expiryMonth)
+        cardParams.expYear  = NSNumber(value: cardDetails.expiryYear)
+        cardParams.cvc      = cardDetails.cvv
+
+        let billing = STPPaymentMethodBillingDetails()
+        billing.name = "\(cardDetails.firstName) \(cardDetails.lastName)"
+
+        let paymentMethodParams = STPPaymentMethodParams(
+            card: cardParams,
+            billingDetails: billing,
+            metadata: nil
+        )
+
+        STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) { [weak self] paymentMethod, error in
+            guard let self else { return }
+
+            if let error {
+                DispatchQueue.main.async {
+                    self.checkOutView.hideLoader()
+                    self.isPaymentInitiated = false
+                    Alert.showToast(error.localizedDescription)
+                }
+                return
+            }
+
+            guard let paymentMethodId = paymentMethod?.stripeId else {
+                DispatchQueue.main.async {
+                    self.checkOutView.hideLoader()
+                    self.isPaymentInitiated = false
+                    Alert.showToast("Failed to create payment method.")
+                }
+                return
+            }
+
+            // Step 2 — confirm via REST (no SDK type needed)
+            self.confirmIntentViaREST(paymentMethodId: paymentMethodId)
+        }
+    }
+
+    private func confirmIntentViaREST(paymentMethodId: String) {
+        // Extract intent ID from clientSecret: "pi_xxxxx_secret_yyyyy" → "pi_xxxxx"
+        let intentId = paymentIntentClientSecret
+            .components(separatedBy: "_secret_").first ?? ""
+
+        guard !intentId.isEmpty,
+              let url = URL(string: "https://api.stripe.com/v1/payment_intents/\(intentId)/confirm") else {
+            DispatchQueue.main.async {
+                self.checkOutView.hideLoader()
+                self.isPaymentInitiated = false
+                Alert.showToast("Invalid payment intent.")
+            }
+            return
+        }
+
+        let bodyString = [
+            "payment_method=\(paymentMethodId)",
+            "client_secret=\(paymentIntentClientSecret)"
+        ].joined(separator: "&")
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(
+            "Bearer \(STPAPIClient.shared.publishableKey ?? "")",
+            forHTTPHeaderField: "Authorization"
+        )
+        request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.httpBody = bodyString.data(using: .utf8)
+
+        URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.checkOutView.hideLoader()
+
+                if let error {
+                    self.isPaymentInitiated = false
+                    Alert.showToast(error.localizedDescription)
+                    return
+                }
+
+                guard let data,
+                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    self.isPaymentInitiated = false
+                    Alert.showToast("Payment failed. Please try again.")
+                    return
+                }
+
+                // Check for Stripe error in response
+                if let errorObj = json["error"] as? [String: Any],
+                   let message = errorObj["message"] as? String {
+                    self.isPaymentInitiated = false
+                    Alert.showToast(message)
+                    return
+                }
+
+                let status = json["status"] as? String ?? ""
+                switch status {
+                case "succeeded", "requires_capture":
+                    self.confirmPaymentAndNavigate()
+                case "requires_action":
+                    // 3DS authentication needed — for now show message
+                    self.isPaymentInitiated = false
+                    Alert.showToast("Additional authentication required. Please use Apple Pay.")
+                default:
+                    self.isPaymentInitiated = false
+                    Alert.showToast("Payment status: \(status). Please try again.")
+                }
+            }
+        }.resume()
+    }
+
+    // MARK: - Stripe: Apple Pay (direct native sheet)
+
+    private func confirmApplePay() {
+        guard !paymentIntentClientSecret.isEmpty else {
+            isPaymentInitiated = false
+            Alert.showToast("Payment not ready yet. Please wait.")
+            return
+        }
+
+        guard StripeAPI.deviceSupportsApplePay() else {
+            isPaymentInitiated = false
+            Alert.showToast("Apple Pay is not available on this device.")
+            return
+        }
+
+        let merchantIdentifier = "merchant.com.speakeasy"
+        let countryCode = venueDetails?.code ?? "+1"
+        let currencyCode = venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
+        let amount = paymentDetail?.total ?? 0
+
+        let paymentRequest = StripeAPI.paymentRequest(
+            withMerchantIdentifier: merchantIdentifier,
+            country: "US",
+            currency: venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
+        )
+        paymentRequest.supportedNetworks = [.visa, .masterCard, .amex, .discover]
+        paymentRequest.paymentSummaryItems = [
+            PKPaymentSummaryItem(
+                label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)",
+                amount: NSDecimalNumber(value: amount)
+            )
+        ]
+        paymentRequest.requiredBillingContactFields = []
+
+        guard let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+            isPaymentInitiated = false
+            Alert.showToast("Problem with your Apple Pay configuration.")
+            return
+        }
+        
+        print("deviceSupportsApplePay:", StripeAPI.deviceSupportsApplePay())
+        print("canMakePayments:", PKPaymentAuthorizationViewController.canMakePayments())
+        print("canMakePaymentsUsingNetworks:", PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.visa, .masterCard, .amex, .discover]))
+        print("merchantId:", merchantIdentifier)
+        print("clientSecret empty:", paymentIntentClientSecret.isEmpty)
+        applePayContext.presentApplePay()
+    }
+
+    // MARK: - Confirm + Navigate
+
+    private func confirmPaymentAndNavigate() {
+        guard let bookingId else { return }
+
+        Loader.show()
+
+        paymentService.confirmPaymentSuccess(
+            paymentHistoryId: stripePaymentHistoryId,
+            bookingId: bookingId
+        ) { [weak self] isSuccess, errMsg in
+            DispatchQueue.main.async {
+                Loader.hide()
+                guard let self else { return }
+                self.isPaymentInitiated = false
+
+                if isSuccess {
+                    Navigate.to.ticketConfirmationVC(
+                        self,
+                        booking: nil,
+                        bookingId: bookingId,
+                        type: .singleTickedEvent
+                    )
+                } else {
+                    Alert.showToast(errMsg ?? "Payment confirmation failed")
+                }
+            }
+        }
+    }
+}
+
+extension OrderListViewController: ApplePayContextDelegate {
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        completion(paymentIntentClientSecret, nil)
+    }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didCompleteWith status: STPApplePayContext.PaymentStatus,
+        error: Error?
+    ) {
+        switch status {
+        case .success:
+            confirmPaymentAndNavigate()
+        case .error:
+            isPaymentInitiated = false
+            Alert.showToast(error?.localizedDescription ?? "Payment failed")
+        case .userCancellation:
+            isPaymentInitiated = false
+        @unknown default:
+            isPaymentInitiated = false
+            Alert.showToast("Payment failed")
+        }
+    }
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource
@@ -548,13 +818,17 @@ final class OrderListViewController: UIViewController {
 extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableView == ticketTableView ? selectedTickets.count : feesAndTaxes.count
+        tableView === ticketTableView ? selectedTickets.count : feesAndTaxes.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if tableView == ticketTableView {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+
+        if tableView === ticketTableView {
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: "OrderItemTableViewCell",
+                withIdentifier: OrderItemTableViewCell.identifier,
                 for: indexPath
             ) as? OrderItemTableViewCell else { return UITableViewCell() }
 
@@ -567,15 +841,12 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.totalTicketCountLbl.text = "\(quantity)x"
             cell.ticketNameLbl.text = ticket.tierName
             cell.priceLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-
+            cell.extraFeesLbl.isHidden = (ticket.extraFees ?? 0) <= 0
             if (ticket.extraFees ?? 0) > 0 {
-                cell.extraFeesLbl.isHidden = false
                 cell.extraFeesLbl.text = "Incl. \(currency)\((ticket.extraFees ?? 0).decimalFormat(true)) fees"
-            } else {
-                cell.extraFeesLbl.isHidden = true
             }
-
             return cell
+
         } else {
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: TicketItemTableViewCell.identifier,
@@ -585,12 +856,14 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             let item = feesAndTaxes[indexPath.row]
             cell.titleLbl.text = item.title
             cell.amountLbl.text = "\(currency)\(item.amount.decimalFormat(true))"
-
             return cell
         }
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath
+    ) -> CGFloat {
         UITableView.automaticDimension
     }
 }
@@ -600,8 +873,27 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
-//        let paymentVC = PaymentVC()
-//        paymentVC.event = event
-//        navigationController?.pushViewController(paymentVC, animated: true)
+//        guard !isPaymentInitiated else { return }
+
+        guard isTermsAccepted || termsAndConditions.isHidden else {
+            Alert.showToast("Please accept the terms and conditions")
+            return
+        }
+
+        isPaymentInitiated = true
+
+        if isFreeTicket {
+            confirmPaymentAndNavigate()
+            return
+        }
+
+        switch selectedPaymentMethod {
+        case .card:
+            confirmCardPayment()
+        case .applePay:
+            confirmApplePay()
+        case .none:
+            confirmCardPayment()
+        }
     }
 }

@@ -107,7 +107,6 @@ private extension DiscoverAllVC {
 
         venuesView.onTapSeeAll = { [weak self] in
             guard let self else { return }
-
             Navigate.to.allVenueVC(self)
         }
 
@@ -392,15 +391,5 @@ extension DiscoverAllVC {
 
         selectedCity = city
         refreshAllList()
-    }
-}
-
-// MARK: - Actions
-
-extension DiscoverAllVC {
-
-    @IBAction func onClickBookNow(_ sender: Any) {
-
-        Navigate.to.premiumExperiencesVC(self)
     }
 }

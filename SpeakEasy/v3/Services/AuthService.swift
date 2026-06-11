@@ -55,7 +55,7 @@ final class AuthService {
     }
 
     func verifyLoginOTP(
-        otp: Int,
+        otp: String,
         otpRef: String,
         completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void
     ) {
@@ -182,7 +182,7 @@ final class AuthService {
     }
 
     func verifySignupOTP(
-        otp: Int,
+        otp: String,
         otpRef: String,
         completion: @escaping (_ isSuccess: Bool, _ errorMsg: String?) -> Void
     ) {

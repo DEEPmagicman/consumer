@@ -343,6 +343,8 @@
 		CE2A6CAC2FB5DBB200FE8596 /* EventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A6CA92FB5DBB200FE8596 /* EventCollectionViewCell.swift */; };
 		CE2A6CAE2FB5EF2300FE8596 /* DiscoverSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A6CAD2FB5EF2300FE8596 /* DiscoverSectionView.swift */; };
 		CE2A6CB02FB5EF5F00FE8596 /* DiscoverSectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2A6CAF2FB5EF5F00FE8596 /* DiscoverSectionView.xib */; };
+		CE3115A52FD7D6200071EDD9 /* EventQRPagerViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */; };
+		CE3115A72FD7D6F80071EDD9 /* EventQRPagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */; };
 		CE31C0E02990C0CA00D04956 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0DF2990C0CA00D04956 /* Helper.swift */; };
 		CE31C0E32990CE3700D04956 /* ClipVenue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE65D67A298D24B800DE1E8A /* ClipVenue.swift */; };
 		CE31C0E42990CE8A00D04956 /* MVPPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */; };
@@ -428,6 +430,8 @@
 		CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */; };
 		CE7F9B6B2878C29F00BFCCD1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */; };
 		CE7F9B6C2878C29F00BFCCD1 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */; };
+		CE81DD142FD1B48900ED623F /* EventQRTicketVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE81DD122FD1B48900ED623F /* EventQRTicketVC.swift */; };
+		CE81DD152FD1B48900ED623F /* EventQRTicketVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE81DD132FD1B48900ED623F /* EventQRTicketVC.xib */; };
 		CE85806B299A3D45001F6E56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2966E32A2980F85E00B5E103 /* AppDelegate.swift */; };
 		CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8AB895299F60200083059B /* MVPStartScreenVC.swift */; };
 		CE8C62D92EF95965008D1FDF /* SideMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */; };
@@ -452,6 +456,8 @@
 		CEA7557C29E416A00032EF55 /* PaymentDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */; };
 		CEA76A312FBB2F6900661603 /* MapVenueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */; };
 		CEA76A322FBB2F6900661603 /* MapVenueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */; };
+		CEA9CFE02FDA67100083F321 /* QRTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */; };
+		CEA9CFE12FDA67100083F321 /* QRTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */; };
 		CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */; };
 		CEADBDC72FB1D67F004F8BE6 /* Geist-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */; };
 		CEADBDC82FB1D67F004F8BE6 /* Geist-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEADBDC62FB1D67F004F8BE6 /* Geist-Thin.ttf */; };
@@ -916,6 +922,8 @@
 		CE2A6CAA2FB5DBB200FE8596 /* EventCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventCollectionViewCell.xib; sourceTree = "<group>"; };
 		CE2A6CAD2FB5EF2300FE8596 /* DiscoverSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverSectionView.swift; sourceTree = "<group>"; };
 		CE2A6CAF2FB5EF5F00FE8596 /* DiscoverSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DiscoverSectionView.xib; sourceTree = "<group>"; };
+		CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQRPagerViewCell.xib; sourceTree = "<group>"; };
+		CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQRPagerViewCell.swift; sourceTree = "<group>"; };
 		CE31C0DF2990C0CA00D04956 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		CE31C0E12990CD7B00D04956 /* MVPPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPPresenter.swift; sourceTree = "<group>"; };
 		CE3213C629E02E8700EBC179 /* Account.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
@@ -997,6 +1005,8 @@
 		CE7F9B652878C29F00BFCCD1 /* Poppins-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Light.ttf"; sourceTree = "<group>"; };
 		CE7F9B662878C29F00BFCCD1 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		CE7F9B672878C29F00BFCCD1 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		CE81DD122FD1B48900ED623F /* EventQRTicketVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventQRTicketVC.swift; sourceTree = "<group>"; };
+		CE81DD132FD1B48900ED623F /* EventQRTicketVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventQRTicketVC.xib; sourceTree = "<group>"; };
 		CE8AB895299F60200083059B /* MVPStartScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVPStartScreenVC.swift; sourceTree = "<group>"; };
 		CE8C62D72EF95965008D1FDF /* SideMenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuVC.swift; sourceTree = "<group>"; };
 		CE8C62D82EF95965008D1FDF /* SideMenuVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SideMenuVC.xib; sourceTree = "<group>"; };
@@ -1016,6 +1026,8 @@
 		CEA7557B29E416A00032EF55 /* PaymentDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailVC.swift; sourceTree = "<group>"; };
 		CEA76A2F2FBB2F6900661603 /* MapVenueTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVenueTableViewCell.swift; sourceTree = "<group>"; };
 		CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MapVenueTableViewCell.xib; sourceTree = "<group>"; };
+		CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRTicketTableViewCell.swift; sourceTree = "<group>"; };
+		CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRTicketTableViewCell.xib; sourceTree = "<group>"; };
 		CEADBDC02FB1D662004F8BE6 /* Geist-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Bold.ttf"; sourceTree = "<group>"; };
 		CEADBDC32FB1D67F004F8BE6 /* Geist-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Medium.ttf"; sourceTree = "<group>"; };
 		CEADBDC42FB1D67F004F8BE6 /* Geist-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Geist-Regular.ttf"; sourceTree = "<group>"; };
@@ -1156,6 +1168,7 @@
 			isa = PBXGroup;
 			children = (
 				CEE646E82FC46604001DF84E /* OrderListVC */,
+				CE81DD112FD1B41F00ED623F /* EventQRTicketVC */,
 				045D2BF82F3A15F400842613 /* TicketConfirmation */,
 				04A202C72F36041300900A27 /* Ticket Checkout */,
 				0425E3C62F346071005E4130 /* EventDetails */,
@@ -2174,6 +2187,15 @@
 			path = CollectionViewCell;
 			sourceTree = "<group>";
 		};
+		CE31159D2FD7D2220071EDD9 /* EventQRPagerViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				CE3115A42FD7D6200071EDD9 /* EventQRPagerViewCell.xib */,
+				CE3115A62FD7D6F80071EDD9 /* EventQRPagerViewCell.swift */,
+			);
+			path = EventQRPagerViewCell;
+			sourceTree = "<group>";
+		};
 		CE3213CA29E03D6500EBC179 /* TitleHeader */ = {
 			isa = PBXGroup;
 			children = (
@@ -2477,6 +2499,7 @@
 		CE59ED692F6D5AC000831974 /* TVC */ = {
 			isa = PBXGroup;
 			children = (
+				CEA9CFDD2FDA669D0083F321 /* QRTicketTableViewCell */,
 				CE59ED6A2F6D5ADC00831974 /* CoverTicketTVC.swift */,
 				CE59ED6B2F6D5ADC00831974 /* CoverTicketTVC.xib */,
 				CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */,
@@ -2525,6 +2548,16 @@
 				CE78CDE52A17607D00FA47FC /* ArtistListTVC.xib */,
 			);
 			path = ArtistListTVC;
+			sourceTree = "<group>";
+		};
+		CE81DD112FD1B41F00ED623F /* EventQRTicketVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE31159D2FD7D2220071EDD9 /* EventQRPagerViewCell */,
+				CE81DD122FD1B48900ED623F /* EventQRTicketVC.swift */,
+				CE81DD132FD1B48900ED623F /* EventQRTicketVC.xib */,
+			);
+			path = EventQRTicketVC;
 			sourceTree = "<group>";
 		};
 		CE9020012F6D4A99008727A4 /* Cover */ = {
@@ -2576,6 +2609,15 @@
 				CEA76A302FBB2F6900661603 /* MapVenueTableViewCell.xib */,
 			);
 			path = MapVenueCell;
+			sourceTree = "<group>";
+		};
+		CEA9CFDD2FDA669D0083F321 /* QRTicketTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				CEA9CFDE2FDA67100083F321 /* QRTicketTableViewCell.swift */,
+				CEA9CFDF2FDA67100083F321 /* QRTicketTableViewCell.xib */,
+			);
+			path = QRTicketTableViewCell;
 			sourceTree = "<group>";
 		};
 		CEADBDBF2FB1D61A004F8BE6 /* Geist */ = {
@@ -3077,6 +3119,7 @@
 				CAC4140D28A478050007BA86 /* YearCollectionViewCell.xib in Resources */,
 				6AF2B9FF2F0BE0CA00069A90 /* TableListTVC.xib in Resources */,
 				CE09064D2EFBEB4000936E9D /* DateSelectionTVC.xib in Resources */,
+				CE3115A52FD7D6200071EDD9 /* EventQRPagerViewCell.xib in Resources */,
 				CE45801C2EF94FB800A873C4 /* Photos.storyboard in Resources */,
 				CE8C62DA2EF95965008D1FDF /* SideMenuVC.xib in Resources */,
 				CAC4140828A478050007BA86 /* DayHeaderCollectionViewCell.xib in Resources */,
@@ -3099,6 +3142,7 @@
 				CE48D8312EFA714300E7110B /* VenueCVC.xib in Resources */,
 				82847A8729828BA600611DC4 /* TicketTypeTableViewCell.xib in Resources */,
 				CE59ED682F6D544900831974 /* CoverTicketListVC.xib in Resources */,
+				CE81DD152FD1B48900ED623F /* EventQRTicketVC.xib in Resources */,
 				CE7F9B682878C29F00BFCCD1 /* Poppins-Bold.ttf in Resources */,
 				BD3FB24A294063A200BE7713 /* OnBoarding.storyboard in Resources */,
 				0433FB912F3331EA008BC77B /* VenueDetailsVC.xib in Resources */,
@@ -3175,6 +3219,7 @@
 				CEADBDC22FB1D662004F8BE6 /* Geist-Bold.ttf in Resources */,
 				6AF2B9F62F0BC9CF00069A90 /* TableBookingListVC.xib in Resources */,
 				CE59ED6D2F6D5ADC00831974 /* CoverTicketTVC.xib in Resources */,
+				CEA9CFE12FDA67100083F321 /* QRTicketTableViewCell.xib in Resources */,
 				CEE646F42FC47CC9001DF84E /* TicketSelectionViewController.xib in Resources */,
 				CE7F9B6A2878C29F00BFCCD1 /* Poppins-Light.ttf in Resources */,
 				CE3213C729E02E8700EBC179 /* Account.storyboard in Resources */,
@@ -3369,6 +3414,7 @@
 				CE236E342CC10BEE00FB8B4A /* TokenManager.swift in Sources */,
 				CAC4140B28A478050007BA86 /* PickerViewController.swift in Sources */,
 				04EA6B872F7B839A00B5B087 /* CoverTicketCheckOutVC.swift in Sources */,
+				CE81DD142FD1B48900ED623F /* EventQRTicketVC.swift in Sources */,
 				CEE646F22FC47CA6001DF84E /* TicketSelectionViewController.swift in Sources */,
 				CE587F382FC8116500FD70DA /* AllVenueVC.swift in Sources */,
 				82847A7B29824A4600611DC4 /* MVPVenueListVc.swift in Sources */,
@@ -3425,6 +3471,7 @@
 				CAC413F628A478040007BA86 /* Array.swift in Sources */,
 				CAC413FB28A478040007BA86 /* String.swift in Sources */,
 				CEB6542D2E0D6D2800E9BFD3 /* BarTab.swift in Sources */,
+				CEA9CFE02FDA67100083F321 /* QRTicketTableViewCell.swift in Sources */,
 				BDB2D3FE2955BCB400FD9407 /* User.swift in Sources */,
 				0436D08B295978170087D3DB /* DeleteAccountViewController.swift in Sources */,
 				CAC413FA28A478040007BA86 /* Int.swift in Sources */,
@@ -3607,6 +3654,7 @@
 				BD90FF4D2943340400B0E20E /* SetProfilePictureViewController.swift in Sources */,
 				CE45800E2EF944A700A873C4 /* LandingVC.swift in Sources */,
 				CE4867B2286F358800FD277E /* UIView+Extention.swift in Sources */,
+				CE3115A72FD7D6F80071EDD9 /* EventQRPagerViewCell.swift in Sources */,
 				6A765E8D2FD053EB000FEF22 /* SearchDateFilterVC.swift in Sources */,
 				CE677F952A4169EA0025421D /* InviteLinkVC.swift in Sources */,
 				6A4FA1A02FC81F67007EB116 /* OrdersSectionHeaderView.swift in Sources */,

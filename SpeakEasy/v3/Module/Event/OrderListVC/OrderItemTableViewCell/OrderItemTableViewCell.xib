@@ -29,7 +29,7 @@
                         <rect key="frame" x="0.0" y="7" width="431" height="77"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission   " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ln-Zb-7eD">
-                                <rect key="frame" x="55" y="23.666666666666671" width="281.66666666666669" height="21"/>
+                                <rect key="frame" x="61" y="23.666666666666671" width="350" height="21"/>
                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -68,16 +68,14 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yZR-Pj-B5V">
-                                <rect key="frame" x="336.66666666666669" y="21" width="74.333333333333314" height="39"/>
+                                <rect key="frame" x="411" y="21" width="0.0" height="0.0"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$33.86" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNV-HA-AkY">
-                                        <rect key="frame" x="0.0" y="0.0" width="74.333333333333329" height="26"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNV-HA-AkY">
                                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="incl. $3.86 fees " textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L48-1w-dPa">
-                                        <rect key="frame" x="0.0" y="26" width="74.333333333333329" height="13"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L48-1w-dPa">
                                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
                                         <color key="textColor" red="0.65490196079999996" green="0.65490196079999996" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -100,7 +98,7 @@
                             <constraint firstItem="yZR-Pj-B5V" firstAttribute="top" secondItem="X72-jh-a2w" secondAttribute="top" constant="5" id="I87-ax-RqZ"/>
                             <constraint firstAttribute="trailing" secondItem="yZR-Pj-B5V" secondAttribute="trailing" constant="20" id="M2M-5U-Dlz"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yZR-Pj-B5V" secondAttribute="bottom" constant="11" id="Q0g-5C-79M"/>
-                            <constraint firstItem="4Ln-Zb-7eD" firstAttribute="leading" secondItem="X72-jh-a2w" secondAttribute="trailing" constant="7" id="aH9-R5-fYv"/>
+                            <constraint firstItem="4Ln-Zb-7eD" firstAttribute="leading" secondItem="X72-jh-a2w" secondAttribute="trailing" constant="13" id="aH9-R5-fYv"/>
                             <constraint firstItem="4Ln-Zb-7eD" firstAttribute="centerY" secondItem="X72-jh-a2w" secondAttribute="centerY" id="bdp-kU-w5E"/>
                             <constraint firstItem="X72-jh-a2w" firstAttribute="leading" secondItem="tdD-ke-6PO" secondAttribute="leading" constant="12" id="gUa-im-3tQ"/>
                             <constraint firstItem="yZR-Pj-B5V" firstAttribute="leading" secondItem="4Ln-Zb-7eD" secondAttribute="trailing" id="iLq-Oe-YOe"/>

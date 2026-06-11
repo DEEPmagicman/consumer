@@ -8,6 +8,15 @@ enum PaymentType {
     case card
 }
 
+struct CardDetails {
+    let firstName: String
+    let lastName: String
+    let cardNumber: String
+    let expiryMonth: UInt
+    let expiryYear: UInt
+    let cvv: String
+}
+
 final class PaymentVC: UIViewController {
 
     // MARK: - UI Components
@@ -33,12 +42,12 @@ final class PaymentVC: UIViewController {
     private let cardCheckbox = UIButton()
 
     // Card detail fields
-    private let firstNameField  = PaymentTextField(placeholder: "First name")
-    private let lastNameField   = PaymentTextField(placeholder: "Last name")
-    private let cardNumberField = PaymentTextField(placeholder: "Card number")
-    private let expiryField     = PaymentTextField(placeholder: "Expiry date")
-    private let cvvField        = PaymentTextField(placeholder: "CVV")
-    private let zipField        = PaymentTextField(placeholder: "Zip code")
+    let firstNameField  = PaymentTextField(placeholder: "First name")
+     let lastNameField   = PaymentTextField(placeholder: "Last name")
+     let cardNumberField = PaymentTextField(placeholder: "Card number")
+     let expiryField     = PaymentTextField(placeholder: "Expiry date")
+     let cvvField        = PaymentTextField(placeholder: "CVV")
+     let zipField        = PaymentTextField(placeholder: "Zip code")
 
     // Save card row
     private let saveCardCheckbox = UIButton()
@@ -55,11 +64,18 @@ final class PaymentVC: UIViewController {
     
     var event: Event?
     var selectedTickets: [EventTicket] = []
+    var selectedCoverTickets: [CoverTicket] = []
+    var selectedAddOnsItems: [UpSellTicket] = []
     var venueDetails: ClipVenue?
     var bookingId: String?
+    var bookingType: TicketPriceType = .PAID
     var selectedPaymentMethod: PaymentType = .card
+    var onPaymentSelected: ((PaymentType, CardDetails?) -> Void)?
     private let posterHeaderView = EventPosterHeaderView()
     private let backgroundContainerView = UIView()
+    private var isCoverFlow: Bool {
+        !selectedCoverTickets.isEmpty || !selectedAddOnsItems.isEmpty
+    }
 
     // MARK: - Lifecycle
 
@@ -99,7 +115,12 @@ final class PaymentVC: UIViewController {
             posterHeaderView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor)
         ])
 
-        let imageURLString = (event?.flyer?.key ?? "").imageURL
+        let imageURLString: String
+        if let eventFlyerKey = event?.flyer?.key, !eventFlyerKey.isEmpty {
+            imageURLString = eventFlyerKey.imageURL
+        } else {
+            imageURLString = "\(SharedURL.amazonStorage)\(venueDetails?.venueAttachment?.first?.key ?? "")"
+        }
         posterHeaderView.loadImage(from: imageURLString)
     }
 
@@ -387,18 +408,102 @@ final class PaymentVC: UIViewController {
     }
 
     @objc private func onClickDone() {
+        // Apple Pay — no card fields needed, pass nil
+        if selectedPaymentMethod == .applePay {
+            if let onPaymentSelected {
+                onPaymentSelected(selectedPaymentMethod, nil)
+                navigationController?.popViewController(animated: true)
+                return
+            }
 
-        if let event = event {
+            if isCoverFlow {
+                Navigate.to.coverCheckOutVC(
+                    self,
+                    venue: venueDetails,
+                    selectedCoverTickets: selectedCoverTickets,
+                    selectedAddOnsItem: selectedAddOnsItems,
+                    totalPrice: 0,
+                    bookingType: bookingType,
+                    selectedPaymentMethod: selectedPaymentMethod,
+                    cardDetails: nil
+                )
+                return
+            }
 
-            Navigate.to.orderListVC(
+            guard let event else { return }
+            Navigate.orderListVC(
                 self,
                 event: event,
                 selectedTickets: selectedTickets,
                 bookingId: bookingId,
-                paymentMethod: selectedPaymentMethod
+                paymentMethod: selectedPaymentMethod,
+                cardDetails: nil
             )
+            return
         }
+
+        // Card — validate fields
+        let firstName  = firstNameField.text ?? ""
+        let lastName   = lastNameField.text ?? ""
+        let cardNumber = cardNumberField.text ?? ""
+        let expiry     = expiryField.text ?? ""       // expects "MM/YY"
+        let cvv        = cvvField.text ?? ""
+
+        guard !firstName.isEmpty else { Alert.showToast("Enter first name"); return }
+        guard !lastName.isEmpty  else { Alert.showToast("Enter last name"); return }
+        guard cardNumber.count >= 15 else { Alert.showToast("Enter valid card number"); return }
+        guard !cvv.isEmpty       else { Alert.showToast("Enter CVV"); return }
+
+        // Parse MM/YY
+        let parts = expiry.split(separator: "/")
+        guard parts.count == 2,
+              let month = UInt(parts[0]),
+              let year  = UInt(parts[1]),
+              month >= 1, month <= 12 else {
+            Alert.showToast("Enter expiry as MM/YY")
+            return
+        }
+
+        let cardDetails = CardDetails(
+            firstName:   firstName,
+            lastName:    lastName,
+            cardNumber:  cardNumber.replacingOccurrences(of: " ", with: ""),
+            expiryMonth: month,
+            expiryYear:  2000 + year,
+            cvv:         cvv
+        )
+
+        if let onPaymentSelected {
+            onPaymentSelected(selectedPaymentMethod, cardDetails)
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        if isCoverFlow {
+            Navigate.to.coverCheckOutVC(
+                self,
+                venue: venueDetails,
+                selectedCoverTickets: selectedCoverTickets,
+                selectedAddOnsItem: selectedAddOnsItems,
+                totalPrice: 0,
+                bookingType: bookingType,
+                selectedPaymentMethod: selectedPaymentMethod,
+                cardDetails: cardDetails
+            )
+            return
+        }
+
+        guard let event else { return }
+        Navigate.orderListVC(
+            self,
+            event: event,
+            selectedTickets: selectedTickets,
+            bookingId: bookingId,
+            paymentMethod: selectedPaymentMethod,
+            cardDetails: cardDetails
+        )
     }
+    
     private func updateCheckboxStates() {
         applePayCheckbox.isSelected = selectedPaymentMethod == .applePay
         cardCheckbox.isSelected = selectedPaymentMethod == .card
@@ -420,7 +525,7 @@ final class PaymentVC: UIViewController {
 
 final class PaymentTextField: UIView {
 
-    private let textField = UITextField()
+     let textField = UITextField()
 
     init(placeholder: String) {
         super.init(frame: .zero)
@@ -483,5 +588,29 @@ extension UIColor {
         let g = CGFloat((rgb & 0x00FF00) >> 8)  / 255
         let b = CGFloat(rgb & 0x0000FF)          / 255
         self.init(red: r, green: g, blue: b, alpha: alpha)
+    }
+}
+
+
+extension PaymentVC: UITextFieldDelegate {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        guard textField == expiryField.textField else { return true }
+
+        let current = (textField.text ?? "") as NSString
+        var updated = current.replacingCharacters(in: range, with: string)
+            .replacingOccurrences(of: "/", with: "")
+
+        if updated.count > 4 { return false }
+
+        if updated.count > 2 {
+            updated.insert("/", at: updated.index(updated.startIndex, offsetBy: 2))
+        }
+
+        textField.text = updated
+        return false
     }
 }

@@ -13,6 +13,7 @@ final class VenueEventsVC: UIViewController,
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var emptyView: UIView!
 
+    weak var scrollDelegate: ChildScrollDelegate?
     var venueId = ""
 
     private var events: [Event] = []
@@ -207,6 +208,8 @@ extension VenueEventsVC: UICollectionViewDelegate {
     func scrollViewDidScroll(
         _ scrollView: UIScrollView
     ) {
+
+        scrollDelegate?.childScrollViewDidScroll(scrollView)
 
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height

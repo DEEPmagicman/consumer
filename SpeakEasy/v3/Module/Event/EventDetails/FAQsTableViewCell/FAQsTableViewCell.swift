@@ -13,7 +13,6 @@ class FAQsTableViewCell: UITableViewCell {
     @IBOutlet weak var dropDowenBtn: UIImageView!
     @IBOutlet weak var ansLbl: UILabel!
     @IBOutlet weak var ansView: UIView!
-    
 
     var onToggle: (() -> Void)?
 
@@ -22,6 +21,9 @@ class FAQsTableViewCell: UITableViewCell {
 
         ansLbl.numberOfLines = 0
         ansView.isHidden = true
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        selectionStyle = .none
     }
 
     override func prepareForReuse() {
@@ -37,7 +39,7 @@ class FAQsTableViewCell: UITableViewCell {
         ansView.isHidden = !isExpanded
 
         dropDowenBtn.transform = isExpanded
-            ? CGAffineTransform(rotationAngle: .pi/2)
+            ? CGAffineTransform(rotationAngle: .pi)
             : .identity
     }
 

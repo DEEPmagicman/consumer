@@ -9,9 +9,9 @@ import UIKit
 
 class TicketConfirmationVC: UIViewController {
     
-    @IBOutlet weak var venueLogoImg: UIImageView!
+//    @IBOutlet weak var venueLogoImg: UIImageView!
     @IBOutlet weak var venueName: UILabel!
-    @IBOutlet weak var venueName2: UILabel!
+//    @IBOutlet weak var venueName2: UILabel!
     @IBOutlet weak var dateandtimeLbl: UILabel!
     @IBOutlet weak var eventTitleLbl: UILabel!
     @IBOutlet weak var noteLbl: UILabel!
@@ -20,17 +20,36 @@ class TicketConfirmationVC: UIViewController {
     @IBOutlet weak var viewTicketBtnView: UIView!
     @IBOutlet weak var ticketCardView: TicketCardView!
     
+    @IBOutlet weak var faqTableView: UITableView!
+    @IBOutlet weak var faqTableViewHeight: NSLayoutConstraint!
+    
     var booking: Booking?
     var venueDetails: ClipVenue?
     var event: Event?
     var bookingId: String?
+    private var faqs: [(question: String, answer: String)] = [
+        (
+            question: "Event details.",
+            answer: "View all event information including venue, date, time, and other event-related details."
+        ),
+        (
+            question: "How to use my tickets",
+            answer: "Show your QR ticket at the venue entrance for scanning and entry."
+        )
+    ]
+
+    private var expandedFAQIndex: Int?
+    private var isUpdatingTableHeight = false
 
     private let paymentService = PaymentService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getBooking(id: bookingId ?? "be5af872-e29d-4115-93ab-6660d47662eb")
-        ticketCardView.setImage(named: "demo venue")
+       
+        
+        setupFAQTableView()
+        setupKVO()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -43,19 +62,35 @@ class TicketConfirmationVC: UIViewController {
 
         guard let booking = booking else { return }
         venueDetails = booking.venueObject
-        venueLogoImg.sd_setImage(
-            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+//        venueLogoImg.sd_setImage(
+//            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
         event = booking.event
 
         venueName.text = venueDetails?.name ?? ""
-        venueName2.text = venueDetails?.name ?? ""
+//        venueName2.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event?.title ?? ""
-        eventImgView.sd_setImage(
-            with: URL(string: (event?.flyer?.key ?? "").imageURL),
-            placeholderImage: Constant.Icon.uploadImage
-        )
+//        eventImgView.sd_setImage(
+//            with: URL(string: (event?.flyer?.key ?? "").imageURL),
+//            placeholderImage: Constant.Icon.uploadImage
+//        )
+        if let imageUrlString = event?.flyer?.key?.imageURL {
+            
+            ticketCardView.setImage(named: "demo venue")
+            if let url = URL(string: imageUrlString) {
+                SDWebImageManager.shared.loadImage(with: url, options: .highPriority, progress: nil) {
+                    [weak self] image, _, _, _, _, _ in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        self.ticketCardView.setImage(image ?? UIImage(named: "newSpeakeasy"))
+                    }
+                }
+            } else {
+                ticketCardView.setImage(named: "newSpeakeasy")
+            }
+        }
+        
         if let hexColor = event?.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             viewTicketBtnView.backgroundColor = color
@@ -90,11 +125,73 @@ class TicketConfirmationVC: UIViewController {
         }
     }
     
+    private func setupFAQTableView() {
+        faqTableView.delegate = self
+        faqTableView.dataSource = self
+
+        faqTableView.register(
+            FAQsTableViewCell.nib,
+            forCellReuseIdentifier: FAQsTableViewCell.identifier
+        )
+
+        faqTableView.rowHeight = UITableView.automaticDimension
+        faqTableView.estimatedRowHeight = 80
+        faqTableView.separatorStyle = .none
+        faqTableView.isScrollEnabled = false
+    }
+    
+    private func setupKVO() {
+        faqTableView.addObserver(
+            self,
+            forKeyPath: "contentSize",
+            options: .new,
+            context: nil
+        )
+    }
+    
+    deinit {
+        faqTableView?.removeObserver(
+            self,
+            forKeyPath: "contentSize"
+        )
+    }
+    
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey : Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        guard keyPath == "contentSize",
+              let tableView = object as? UITableView,
+              tableView == faqTableView,
+              !isUpdatingTableHeight else {
+            return
+        }
+
+        let newHeight = tableView.contentSize.height
+
+        guard faqTableViewHeight.constant != newHeight else {
+            return
+        }
+
+        isUpdatingTableHeight = true
+
+        faqTableViewHeight.constant = newHeight
+        view.layoutIfNeeded()
+
+        isUpdatingTableHeight = false
+    }
+    
     @IBAction func onClickViewtTicket(_ sender: Any) {
         Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId ?? "", type: .singleTickedEvent)
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        Navigate.to.back(self)
+    }
+    
+    @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
     
@@ -112,8 +209,82 @@ class TicketConfirmationVC: UIViewController {
     }
 }
 
+extension TicketConfirmationVC: UITableViewDelegate, UITableViewDataSource {
+
+    func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        return faqs.count
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: FAQsTableViewCell.identifier,
+            for: indexPath
+        ) as! FAQsTableViewCell
+
+        let item = faqs[indexPath.row]
+
+        cell.questionLbl.text = item.question
+        cell.ansLbl.text = item.answer
+        cell.selectionStyle = .none
+        cell.ansView.isHidden = expandedFAQIndex != indexPath.row
+
+        cell.onToggle = { [weak self] in
+            guard let self = self else { return }
+
+            let previous = self.expandedFAQIndex
+            self.expandedFAQIndex =
+                (self.expandedFAQIndex == indexPath.row)
+                ? nil
+                : indexPath.row
+
+            var indexPaths = [indexPath]
+
+            if let previous,
+               previous != indexPath.row {
+                indexPaths.append(
+                    IndexPath(row: previous, section: 0)
+                )
+            }
+
+            UIView.performWithoutAnimation {
+                self.faqTableView.reloadRows(
+                    at: indexPaths,
+                    with: .none
+                )
+            }
+
+            self.faqTableView.beginUpdates()
+            self.faqTableView.endUpdates()
+        }
+
+        return cell
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+
+        expandedFAQIndex =
+            (expandedFAQIndex == indexPath.row)
+            ? nil
+            : indexPath.row
+
+        faqTableView.reloadData()
+    }
+}
+
+
 
 import UIKit
+import SDWebImage
 
 @IBDesignable
 final class TicketCardView: UIView {
@@ -448,3 +619,4 @@ final class TicketCardView: UIView {
         imageView.image = UIImage(named: name)
     }
 }
+
