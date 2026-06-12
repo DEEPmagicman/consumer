@@ -84,7 +84,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isUpsellFeesExpanded = false
     private var isPricingLoading = false
     private let collapsedLines = 3
-    private let feeShimmerRowCount = 3
+    private let coverFeeShimmerRowCount = 3
+    private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
     private var fullTermsText = ""
     private var fullVenueMessageText = ""
@@ -193,6 +194,11 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             $0?.isScrollEnabled = false
             $0?.separatorStyle = .none
             $0?.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        }
+
+        [tableView, upsellTicketTableView].forEach {
+            $0?.rowHeight = UITableView.automaticDimension
+            $0?.estimatedRowHeight = 92
         }
         kvoRegistered = true
         applyFeeBreakdownState(animated: false)
@@ -507,13 +513,13 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         coverTicketFeesAndTaxTableViewHeight.constant = coverVisible
             ? feeTableHeight(
                 coverTicketFeesAndTaxTableView,
-                itemCount: coverIsLoading ? feeShimmerRowCount : feesAndTaxes.count
+                itemCount: coverIsLoading ? coverFeeShimmerRowCount : feesAndTaxes.count
             )
             : 0
         upsellTicketFeesAndTaxTableViewHeight.constant = upsellVisible
             ? feeTableHeight(
                 upsellTicketFeesAndTaxTableView,
-                itemCount: upsellIsLoading ? feeShimmerRowCount : upsellFeesAndTaxes.count
+                itemCount: upsellIsLoading ? upsellFeeShimmerRowCount : upsellFeesAndTaxes.count
             )
             : 0
 
@@ -956,11 +962,21 @@ extension CoverTicketCheckOutVC {
     private func cancelBooking() {
         countdownTimer?.invalidate()
         guard !bookingId.isEmpty else {
-            navigationController?.popToRootViewController(animated: false)
+            returnToCoverFlow(animated: false)
             return
         }
         PaymentPresenter.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
-            self?.navigationController?.popToRootViewController(animated: false)
+            self?.returnToCoverFlow(animated: false)
+        }
+    }
+
+    private func returnToCoverFlow(animated: Bool) {
+        guard let navigationController else { return }
+
+        if let coverListVC = navigationController.viewControllers.last(where: { $0 is CoverTicketListVC }) {
+            navigationController.popToViewController(coverListVC, animated: animated)
+        } else {
+            navigationController.popViewController(animated: animated)
         }
     }
 }
@@ -1103,28 +1119,50 @@ extension CoverTicketCheckOutVC {
 
         if let customFees = detail.customFees, !customFees.isEmpty {
             customFees.forEach {
-                items.append(FeeDisplayItem(title: $0.name, amount: $0.fee ?? 0))
+                appendFeeItem(
+                    title: $0.name,
+                    amount: $0.fee ?? $0.amount ?? 0,
+                    to: &items
+                )
             }
         } else if detail.customFee > 0 {
-            items.append(FeeDisplayItem(
+            appendFeeItem(
                 title: detail.customFeeName ?? "Custom Fee",
-                amount: detail.customFee
-            ))
+                amount: detail.customFee,
+                to: &items
+            )
         }
 
         if let salesTax = detail.salesTax, salesTax > 0 {
-            items.append(FeeDisplayItem(
+            appendFeeItem(
                 title: detail.salesTaxName ?? "Sales Tax",
-                amount: salesTax
-            ))
+                amount: salesTax,
+                to: &items
+            )
         }
 
         if detail.processingFee > 0 {
-            items.append(FeeDisplayItem(title: "Processing Fee", amount: detail.processingFee))
+            appendFeeItem(title: "Processing Fee", amount: detail.processingFee, to: &items)
         }
 
         items.append(FeeDisplayItem(title: "Total", amount: total))
         return items
+    }
+
+    private func appendFeeItem(title: String, amount: Double, to items: inout [FeeDisplayItem]) {
+        guard amount > 0 else { return }
+
+        let cleanTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let displayTitle = cleanTitle.isEmpty ? "Fee" : cleanTitle
+        let normalizedTitle = displayTitle.lowercased()
+
+        if let index = items.firstIndex(where: {
+            $0.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == normalizedTitle
+        }) {
+            items[index].amount += amount
+        } else {
+            items.append(FeeDisplayItem(title: displayTitle, amount: amount))
+        }
     }
 }
 
@@ -1345,9 +1383,8 @@ extension CoverTicketCheckOutVC {
         let ok = UIAlertAction(title: "Ok", style: .default) { [weak self] _ in
             guard let self else { return }
             self.countdownTimer?.invalidate()
-            self.cancelBooking()
             self.updateDelegate?.update()
-            self.navigationController?.popViewController(animated: true)
+            self.cancelBooking()
         }
         Alert.showAlertSheet(
             style: .alert,
@@ -1380,12 +1417,12 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         case self.tableView:                    return selectedCoverTickets.count
         case coverTicketFeesAndTaxTableView:
             return isPricingLoading && !selectedCoverTickets.isEmpty
-                ? feeShimmerRowCount
+                ? coverFeeShimmerRowCount
                 : feesAndTaxes.count
         case upsellTicketTableView:             return selectedAddOnsItems.count
         case upsellTicketFeesAndTaxTableView:
             return isPricingLoading && !selectedAddOnsItems.isEmpty
-                ? feeShimmerRowCount
+                ? upsellFeeShimmerRowCount
                 : upsellFeesAndTaxes.count
         default:                                return 0
         }
@@ -1437,6 +1474,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle           = .none
         cell.totalTicketCountLbl.text = "\(quantity)"
         cell.ticketNameLbl.text       = ticket.customName?.isEmpty == false ? ticket.customName : ticket.name
+        applyDescription(ticket.description, to: cell)
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
         return cell
     }
@@ -1451,10 +1489,17 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let total    = Double(quantity) * item.calculatedNetPrice
 
         cell.selectionStyle           = .none
-        cell.totalTicketCountLbl.text = "\(quantity)x"
+        cell.totalTicketCountLbl.text = "\(quantity)"
         cell.ticketNameLbl.text       = item.addOns?.name ?? ""
+        applyDescription(item.addOns?.description, to: cell)
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
         return cell
+    }
+
+    private func applyDescription(_ description: String?, to cell: QRTicketTableViewCell) {
+        let text = description?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        cell.discriptionLbl.text = text
+        cell.discriptionLbl.isHidden = text.isEmpty
     }
 
     private func makeFeeShimmerCell(in tableView: UITableView) -> UITableViewCell {

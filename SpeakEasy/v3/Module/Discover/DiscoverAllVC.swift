@@ -10,6 +10,12 @@ import Combine
 
 final class DiscoverAllVC: UIViewController {
 
+    private enum InitialLoadSection: CaseIterable, Hashable {
+        case tonightEvents
+        case venues
+        case allEvents
+    }
+
     @IBOutlet weak var todaysEventsView: DiscoverSectionView!
     @IBOutlet weak var venuesView: DiscoverSectionView!
     @IBOutlet weak var allEventsView: DiscoverSectionView!
@@ -36,6 +42,9 @@ final class DiscoverAllVC: UIViewController {
     private let eventService = EventService()
     
     private var cancellables = Set<AnyCancellable>()
+    private var pendingInitialLoadSections =
+        Set(InitialLoadSection.allCases)
+    private var initialLoadID = 0
 
     var selectedCity: String = ""
 
@@ -155,9 +164,25 @@ private extension DiscoverAllVC {
 
     func fetchInitialData() {
 
-        getTonightEvent()
-        getAllEvents()
-        fetchAllOpenVenueForMVP()
+        let loadID = beginInitialLoading()
+
+        getTonightEvent(loadID: loadID)
+        getAllEvents(loadID: loadID)
+        fetchAllOpenVenueForMVP(loadID: loadID)
+    }
+
+    func beginInitialLoading() -> Int {
+        initialLoadID += 1
+
+        pendingInitialLoadSections =
+            Set(InitialLoadSection.allCases)
+
+        view.isHidden = true
+
+        (parent as? DiscoverVC)?
+            .showSkeletonScreen()
+
+        return initialLoadID
     }
 }
 
@@ -165,7 +190,7 @@ private extension DiscoverAllVC {
 
 private extension DiscoverAllVC {
 
-    func getTonightEvent() {
+    func getTonightEvent(loadID: Int) {
 
         eventService.fetchEvents(
             from: tonightEventSkip,
@@ -175,6 +200,7 @@ private extension DiscoverAllVC {
         ) { [weak self] _, _, eventList, hasMore in
 
             guard let self else { return }
+            guard self.initialLoadID == loadID else { return }
 
             if self.tonightEventSkip == 0 {
                 self.todaysEvents.removeAll()
@@ -198,11 +224,14 @@ private extension DiscoverAllVC {
                 )
             }
 
-            self.checkAndHideSkeleton()
+            self.markInitialLoadFinished(
+                .tonightEvents,
+                loadID: loadID
+            )
         }
     }
 
-    func getAllEvents() {
+    func getAllEvents(loadID: Int) {
 
         eventService.fetchEvents(
             from: allEventSkip,
@@ -212,6 +241,7 @@ private extension DiscoverAllVC {
         ) { [weak self] _, _, eventList, hasMore in
 
             guard let self else { return }
+            guard self.initialLoadID == loadID else { return }
 
             if self.allEventSkip == 0 {
                 self.allEvents.removeAll()
@@ -237,11 +267,14 @@ private extension DiscoverAllVC {
                 )
             }
 
-            self.checkAndHideSkeleton()
+            self.markInitialLoadFinished(
+                .allEvents,
+                loadID: loadID
+            )
         }
     }
 
-    func fetchAllOpenVenueForMVP() {
+    func fetchAllOpenVenueForMVP(loadID: Int) {
 
         venueService.fetchVenuesForDiscover(
             skip: openFrom,
@@ -249,6 +282,7 @@ private extension DiscoverAllVC {
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }
+            guard self.initialLoadID == loadID else { return }
 
             if isSuccess {
 
@@ -264,17 +298,20 @@ private extension DiscoverAllVC {
 
                 self.openHasMore = hasMore
 
-                if !hasMore {
-                    self.fetchAllCloseVenueForMVP()
-                }
-
                 self.venuesView.configure(
                     type: .venues,
                     data: .venues(self.openVenueList),
                     city: selectedCity
                 )
 
-                self.checkAndHideSkeleton()
+                if hasMore {
+                    self.markInitialLoadFinished(
+                        .venues,
+                        loadID: loadID
+                    )
+                } else {
+                    self.fetchAllCloseVenueForMVP(loadID: loadID)
+                }
 
             } else {
 
@@ -283,11 +320,16 @@ private extension DiscoverAllVC {
                     title: errMsg ?? "Something went wrong",
                     message: ""
                 )
+
+                self.markInitialLoadFinished(
+                    .venues,
+                    loadID: loadID
+                )
             }
         }
     }
 
-    func fetchAllCloseVenueForMVP() {
+    func fetchAllCloseVenueForMVP(loadID: Int) {
 
         venueService.fetchVenuesForDiscover(
             skip: closeFrom,
@@ -295,6 +337,7 @@ private extension DiscoverAllVC {
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
 
             guard let self else { return }
+            guard self.initialLoadID == loadID else { return }
 
             if isSuccess {
 
@@ -318,7 +361,10 @@ private extension DiscoverAllVC {
                     city: selectedCity
                 )
 
-                self.checkAndHideSkeleton()
+                self.markInitialLoadFinished(
+                    .venues,
+                    loadID: loadID
+                )
 
             } else {
 
@@ -326,6 +372,11 @@ private extension DiscoverAllVC {
                     style: .alert,
                     title: errMsg ?? "Something went wrong",
                     message: ""
+                )
+
+                self.markInitialLoadFinished(
+                    .venues,
+                    loadID: loadID
                 )
             }
         }
@@ -371,7 +422,24 @@ private extension DiscoverAllVC {
         fetchInitialData()
     }
 
+    private func markInitialLoadFinished(
+        _ section: InitialLoadSection,
+        loadID: Int
+    ) {
+
+        guard initialLoadID == loadID else {
+            return
+        }
+
+        pendingInitialLoadSections.remove(section)
+        checkAndHideSkeleton()
+    }
+
     func checkAndHideSkeleton() {
+
+        guard pendingInitialLoadSections.isEmpty else {
+            return
+        }
 
         DispatchQueue.main.async {
 

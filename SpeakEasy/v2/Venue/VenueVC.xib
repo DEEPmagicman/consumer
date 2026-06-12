@@ -22,6 +22,7 @@
                 <outlet property="bgView" destination="AMn-Ou-B1g" id="6GY-xi-Xin"/>
                 <outlet property="buyticketView" destination="xNu-88-pSm" id="aRq-AA-XGA"/>
                 <outlet property="containerView" destination="57Y-Ii-nMO" id="rtB-Ht-n5m"/>
+                <outlet property="coverTicketView" destination="wnq-bd-Mgd" id="AAa-ct-row"/>
                 <outlet property="tabView" destination="M9l-zN-Efx" id="u7F-N2-ZOq"/>
                 <outlet property="venueLogo" destination="xhi-9o-YK3" id="5qX-bW-5Rb"/>
                 <outlet property="venueName" destination="ALN-3l-0qS" id="bN5-sl-oLd"/>
@@ -120,6 +121,14 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wnq-bd-Mgd">
                                             <rect key="frame" x="0.0" y="68" width="341" height="72"/>
                                             <subviews>
+                                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZN1-QU-EQx">
+                                                    <rect key="frame" x="0.0" y="0.0" width="341" height="72"/>
+                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="eiH-Mb-mmh">
+                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="72"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    </view>
+                                                    <blurEffect style="regular"/>
+                                                </visualEffectView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Buy cover Live at the Door" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BLI-Tt-qpq">
                                                     <rect key="frame" x="21" y="20" width="192.33333333333334" height="16"/>
                                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
@@ -176,8 +185,12 @@
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="TIR-X1-MWH" secondAttribute="trailing" id="3FD-F7-603"/>
                                                 <constraint firstItem="pmZ-2D-EFS" firstAttribute="centerY" secondItem="wnq-bd-Mgd" secondAttribute="centerY" id="6Yw-3L-7lf"/>
+                                                <constraint firstItem="ZN1-QU-EQx" firstAttribute="leading" secondItem="wnq-bd-Mgd" secondAttribute="leading" id="BSu-JC-odm"/>
                                                 <constraint firstAttribute="trailing" secondItem="pmZ-2D-EFS" secondAttribute="trailing" constant="10" id="DQl-Da-l8U"/>
+                                                <constraint firstAttribute="trailing" secondItem="ZN1-QU-EQx" secondAttribute="trailing" id="PVO-TV-bbf"/>
                                                 <constraint firstItem="ea3-wv-Ivn" firstAttribute="top" secondItem="BLI-Tt-qpq" secondAttribute="bottom" constant="3" id="VvT-n3-jDx"/>
+                                                <constraint firstItem="ZN1-QU-EQx" firstAttribute="top" secondItem="wnq-bd-Mgd" secondAttribute="top" id="X4Y-H6-Xyz"/>
+                                                <constraint firstAttribute="bottom" secondItem="ZN1-QU-EQx" secondAttribute="bottom" id="XHt-wL-PaD"/>
                                                 <constraint firstAttribute="bottom" secondItem="ea3-wv-Ivn" secondAttribute="bottom" constant="20" id="bLh-2v-OaG"/>
                                                 <constraint firstAttribute="bottom" secondItem="TIR-X1-MWH" secondAttribute="bottom" id="ew8-Sx-8du"/>
                                                 <constraint firstItem="BLI-Tt-qpq" firstAttribute="leading" secondItem="wnq-bd-Mgd" secondAttribute="leading" constant="21" id="hcA-qb-4Nq"/>

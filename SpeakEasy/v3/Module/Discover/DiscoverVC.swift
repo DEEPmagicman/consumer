@@ -40,17 +40,10 @@ final class DiscoverVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        landingHeaderView.isHidden = true
-        // Pin shimmer full-screen on top of everything
-//        view.addSubview(shimmerView)
+
         setupLandingHeader()
-//        shimmerView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
-//            shimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            shimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            shimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
+        setupSkeletonView()
+        showSkeletonScreen()
 
         showSegmentView(0)
         bindSelectedCity()
@@ -58,7 +51,8 @@ final class DiscoverVC: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if !shimmerDidFinish {
+        if !shimmerDidFinish,
+           !shimmerView.isHidden {
             shimmerView.startShimmer()
         }
     }
@@ -66,6 +60,8 @@ final class DiscoverVC: UIViewController {
     private func setupLandingHeader() {
 //        landingHeaderView.delegate = self
         landingHeaderView.setMapHidden(false)
+        landingHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        landingHeaderView.isHidden = true
         view.addSubview(landingHeaderView)
 
         NSLayoutConstraint.activate([
@@ -73,6 +69,19 @@ final class DiscoverVC: UIViewController {
             landingHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             landingHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             landingHeaderView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+    }
+
+    private func setupSkeletonView() {
+        shimmerView.translatesAutoresizingMaskIntoConstraints = false
+        shimmerView.isHidden = true
+        view.addSubview(shimmerView)
+
+        NSLayoutConstraint.activate([
+            shimmerView.topAnchor.constraint(equalTo: view.topAnchor),
+            shimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            shimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            shimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -87,6 +96,7 @@ final class DiscoverVC: UIViewController {
         shimmerDidFinish = false
         shimmerView.isHidden = false
         landingHeaderView.isHidden = true
+        view.bringSubviewToFront(shimmerView)
         shimmerView.startShimmer()
     }
     
@@ -163,6 +173,17 @@ final class DiscoverVC: UIViewController {
 
                 discoverAllVC.reloadCityData(city: city ?? "")
             }
+
+            if let discoverDateFilterVC = self.children.first(where: {
+                $0 is DiscoverDateFilterVC
+            }) as? DiscoverDateFilterVC,
+               self.isDateSelected {
+
+                discoverDateFilterVC.updateFilterDates(
+                    self.selectedDateRangeDisplayDates(),
+                    city: self.resolvedCity()
+                )
+            }
         }
     }
     
@@ -236,18 +257,23 @@ extension DiscoverVC: SelectedDateDelegate {
 
     func selectedDateRange(startDate: String?, endDate: String?) {
         self.startDate = startDate
-        if startDate != endDate { self.endDate = endDate }
+        self.endDate = startDate != endDate ? endDate : nil
         isDateSelected = true
         if let vc = children.first(where: { $0 is DiscoverDateFilterVC }) as? DiscoverDateFilterVC {
-            vc.selectedDates = datesBetween(
-                startDate: self.startDate ?? "",
-                endDate:   self.endDate   ?? ""
+            vc.updateFilterDates(
+                selectedDateRangeDisplayDates(),
+                city: resolvedCity()
             )
-            vc.dateCollectionView.reloadData()
-            vc.collectionView.reloadData()
         }
     }
     
+    private func selectedDateRangeDisplayDates() -> [String] {
+        datesBetween(
+            startDate: self.startDate ?? "",
+            endDate: self.endDate ?? self.startDate ?? ""
+        )
+    }
+
     func datesBetween(startDate: String, endDate: String) -> [String] {
         let inputFormatter        = DateFormatter()
         inputFormatter.dateFormat = "yyyy-MM-dd"

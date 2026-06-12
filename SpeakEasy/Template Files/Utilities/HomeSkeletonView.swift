@@ -10,123 +10,334 @@ import UIKit
 
 final class HomeSkeletonView: UIView {
 
-    private var allShimmerViews: [ShimmerView] = []
-    private var didSetup = false
+    private var shimmerViews: [ShimmerViewV3] = []
+    private var didBuildLayout = false
+    private var lastLayoutSize: CGSize = .zero
+    private var shouldAnimate = false
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        guard window != nil else {
+            return
+        }
+
+        didBuildLayout = false
+        setNeedsLayout()
+
+        if shouldAnimate {
+            DispatchQueue.main.async { [weak self] in
+                self?.startShimmer()
+            }
+        }
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        guard !didSetup, bounds.width > 0 else { return }
-        didSetup = true
-        setupUI()
-    }
 
-    private func setupUI() {
-        backgroundColor = .clear
-
-        let W       = bounds.width
-        let pad: CGFloat = 16
-        var y: CGFloat   = 60
-        // 1. FILTER CHIPS
-//        let chipWidths: [CGFloat] = [110, 90]
-//        var chipX: CGFloat = pad
-//        for cw in chipWidths {
-//            makeGlass(CGRect(x: chipX, y: y, width: cw, height: 34), corner: 17)
-//            chipX += cw + 10
-//        }
-//        y += 34 + 28
-        
-        // 2. "EVENTS TONIGHT" header
-        make(CGRect(x: pad, y: y, width: 160, height: 16), corner: 8)
-        makeGlass(CGRect(x: W - pad - 36, y: y - 10, width: 36, height: 36), corner: 18)
-        y += 16 + 16
-
-        // 3. EVENT CARDS — portrait, 3 visible (last one partial)
-        let cardW: CGFloat = (W - pad * 2 - 12 * 2) / 2.4
-        let cardH: CGFloat = cardW
-        var cardX: CGFloat = pad
-
-        for i in 0..<3 {
-            make(CGRect(x: cardX, y: y, width: cardW, height: cardH), corner: 14)
-
-            let tx  = cardX
-            let ty1 = y + cardH + 8
-            let ty2 = ty1 + 18
-
-            makeBright(CGRect(x: tx, y: ty1, width: cardW * 0.85, height: 14), corner: 6)
-            make(CGRect(x: tx, y: ty2, width: cardW * 0.65, height: 11), corner: 5)
-
-            cardX += cardW + 12
-            _ = i
+        guard window != nil else {
+            return
         }
 
-        y += cardH + 8 + 18 + 11 + 28
-
-        // 4. BANNER CARD (Premium Experiences style)
-        let bannerH: CGFloat = 80
-        makeGlass(CGRect(x: pad, y: y, width: W - pad * 2, height: bannerH), corner: 18)
-        make(CGRect(x: pad + 16, y: y + 16, width: 48, height: 48), corner: 10)
-        let btx = pad + 16 + 48 + 14
-        makeBright(CGRect(x: btx, y: y + 16, width: 160, height: 14), corner: 6)
-        make(CGRect(x: btx, y: y + 16 + 20, width: 200, height: 11), corner: 5)
-        make(CGRect(x: btx, y: y + 16 + 20 + 17, width: 100, height: 11), corner: 5)
-        makeGlass(CGRect(x: W - pad - 16 - 24, y: y + 16, width: 24, height: 24), corner: 12)
-
-        y += bannerH + 28
-
-        // 5. "EVENTS IN CITY" header
-        make(CGRect(x: pad, y: y, width: 200, height: 16), corner: 8)
-        makeGlass(CGRect(x: W - pad - 36, y: y - 10, width: 36, height: 36), corner: 18)
-        y += 16 + 16
-
-        // 6. SQUARE CARDS — 3 across
-        let sqW: CGFloat = (W - pad * 2 - 10 * 2) / 3
-        let sqH: CGFloat = sqW
-        var sqX: CGFloat = pad
-
-        for _ in 0..<3 {
-            make(CGRect(x: sqX, y: y, width: sqW, height: sqH), corner: 12)
-            make(CGRect(x: sqX, y: y + sqH + 8, width: sqW * 0.75, height: 11), corner: 5)
-            make(CGRect(x: sqX, y: y + sqH + 8 + 16, width: sqW * 0.55, height: 10), corner: 5)
-            sqX += sqW + 10
+        guard bounds.width > 0,
+              bounds.height > 0 else {
+            return
         }
-    }
 
-    private func make(_ frame: CGRect, corner: CGFloat = 8) {
-        let sv = ShimmerView(frame: frame)
-        sv.layer.cornerRadius = corner
-        sv.clipsToBounds = true
-        addSubview(sv)
-        allShimmerViews.append(sv)
-    }
+        let widthChanged =
+            abs(bounds.width - lastLayoutSize.width) > 0.5
 
-    private func makeBright(_ frame: CGRect, corner: CGFloat = 6) {
-        let sv = ShimmerView(frame: frame, lighter: true)
-        sv.layer.cornerRadius = corner
-        sv.clipsToBounds = true
-        addSubview(sv)
-        allShimmerViews.append(sv)
-    }
+        guard !didBuildLayout ||
+              widthChanged else {
+            return
+        }
 
-    private func makeGlass(_ frame: CGRect, corner: CGFloat = 12) {
-        let sv = ShimmerView(frame: frame)
-        sv.layer.cornerRadius  = corner
-        sv.layer.cornerCurve   = .continuous
-        sv.clipsToBounds       = true
-        // Liquid Glass tint: subtle white/blue overlay
-        sv.backgroundColor     = UIColor(white: 1, alpha: 0.07)
-        sv.layer.borderWidth   = 0.75
-        sv.layer.borderColor   = UIColor(white: 1, alpha: 0.12).cgColor
-        addSubview(sv)
-        allShimmerViews.append(sv)
+        didBuildLayout = true
+        lastLayoutSize = bounds.size
+        rebuildLayout()
     }
 
     func startShimmer() {
+        shouldAnimate = true
         isHidden = false
-        allShimmerViews.forEach { $0.startAnimating() }
+        setNeedsLayout()
+        layoutIfNeeded()
+
+        shimmerViews.forEach {
+            $0.startShimmer()
+        }
     }
 
     func stopShimmer() {
-        allShimmerViews.forEach { $0.stopAnimating() }
+        shouldAnimate = false
+
+        shimmerViews.forEach {
+            $0.stopShimmer()
+        }
+
         isHidden = true
+    }
+}
+
+// MARK: - Layout
+
+private extension HomeSkeletonView {
+
+    func setupView() {
+        backgroundColor = UIColor(
+            red: 9.0 / 255.0,
+            green: 15.0 / 255.0,
+            blue: 16.0 / 255.0,
+            alpha: 1
+        )
+
+        isUserInteractionEnabled = true
+    }
+
+    func rebuildLayout() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+
+        shimmerViews.forEach {
+            $0.stopShimmer()
+            $0.removeFromSuperview()
+        }
+
+        shimmerViews.removeAll()
+
+        let width = bounds.width
+        let pad: CGFloat = 16
+        let cardSpacing: CGFloat = 12
+        let cardWidth = min(
+            160,
+            max(
+                124,
+                (width - pad * 2 - cardSpacing * 2) / 2.35
+            )
+        )
+
+        let headerY = safeAreaInsets.top
+        let filterY = safeAreaInsets.top + 50
+        let firstSectionY = filterY + 30 + 32
+
+        addTopHeader(y: headerY)
+        addFilterRow(y: filterY)
+
+        var y = addSection(
+            y: firstSectionY,
+            titleWidth: 158,
+            cardWidth: cardWidth,
+            cardSpacing: cardSpacing
+        )
+
+        y = addSection(
+            y: y + 38,
+            titleWidth: 138,
+            cardWidth: cardWidth,
+            cardSpacing: cardSpacing
+        )
+
+        _ = addSection(
+            y: y + 38,
+            titleWidth: 178,
+            cardWidth: cardWidth,
+            cardSpacing: cardSpacing
+        )
+
+        CATransaction.commit()
+
+        if shouldAnimate {
+            shimmerViews.forEach {
+                $0.startShimmer()
+            }
+        }
+    }
+
+    func addTopHeader(y: CGFloat) {
+        let pad: CGFloat = 16
+        let headerHeight: CGFloat = 40
+        let avatarSize: CGFloat = 30
+        let avatarY = y + (headerHeight - avatarSize) / 2
+
+        addBlock(
+            frame: CGRect(
+                x: pad,
+                y: avatarY,
+                width: avatarSize,
+                height: avatarSize
+            ),
+            corner: avatarSize / 2
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: pad + avatarSize + 12,
+                y: avatarY + 7,
+                width: min(134, bounds.width * 0.36),
+                height: 16
+            ),
+            corner: 8
+        )
+
+        let buttonSize: CGFloat = 32
+
+        addBlock(
+            frame: CGRect(
+                x: bounds.width - 14 - buttonSize,
+                y: y + (headerHeight - buttonSize) / 2,
+                width: buttonSize,
+                height: buttonSize
+            ),
+            corner: buttonSize / 2
+        )
+    }
+
+    func addFilterRow(y: CGFloat) {
+        let pad: CGFloat = 16
+        let chipHeight: CGFloat = 30
+        let chipSpacing: CGFloat = 8
+        let cityChipWidth: CGFloat = 95
+        let dateChipWidth = min(
+            142,
+            bounds.width - pad * 2 - cityChipWidth - chipSpacing
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: pad,
+                y: y,
+                width: cityChipWidth,
+                height: chipHeight
+            ),
+            corner: chipHeight / 2
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: pad + cityChipWidth + chipSpacing,
+                y: y,
+                width: dateChipWidth,
+                height: chipHeight
+            ),
+            corner: chipHeight / 2
+        )
+    }
+
+    func addSection(
+        y: CGFloat,
+        titleWidth: CGFloat,
+        cardWidth: CGFloat,
+        cardSpacing: CGFloat
+    ) -> CGFloat {
+
+        let pad: CGFloat = 16
+        let buttonSize: CGFloat = 40
+        let rowTop = y + 58
+
+        addBlock(
+            frame: CGRect(
+                x: pad,
+                y: y,
+                width: min(titleWidth, bounds.width - pad * 2 - 70),
+                height: 24
+            ),
+            corner: 12
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: bounds.width - pad - buttonSize,
+                y: y - 8,
+                width: buttonSize,
+                height: buttonSize
+            ),
+            corner: buttonSize / 2
+        )
+
+        for index in 0..<3 {
+            let x = pad + CGFloat(index) * (cardWidth + cardSpacing)
+
+            addEventCard(
+                x: x,
+                y: rowTop,
+                width: cardWidth
+            )
+        }
+
+        return rowTop + cardWidth + 62
+    }
+
+    func addEventCard(
+        x: CGFloat,
+        y: CGFloat,
+        width: CGFloat
+    ) {
+
+        addBlock(
+            frame: CGRect(
+                x: x,
+                y: y,
+                width: width,
+                height: width
+            ),
+            corner: 8
+        )
+
+        let venueY = y + width + 9
+
+        addBlock(
+            frame: CGRect(
+                x: x,
+                y: venueY,
+                width: width * 0.66,
+                height: 12
+            ),
+            corner: 6
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: x,
+                y: venueY + 19,
+                width: width * 0.86,
+                height: 16
+            ),
+            corner: 8
+        )
+
+        addBlock(
+            frame: CGRect(
+                x: x,
+                y: venueY + 42,
+                width: width * 0.52,
+                height: 12
+            ),
+            corner: 6
+        )
+    }
+
+    func addBlock(
+        frame: CGRect,
+        corner: CGFloat
+    ) {
+
+        let shimmerView = ShimmerViewV3(
+            frame: frame.integral
+        )
+
+        shimmerView.layer.cornerRadius = corner
+        shimmerView.layer.cornerCurve = .continuous
+        addSubview(shimmerView)
+        shimmerViews.append(shimmerView)
     }
 }

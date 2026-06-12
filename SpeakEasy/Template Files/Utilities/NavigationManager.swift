@@ -553,7 +553,9 @@ final class Navigate {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event        = event
         vc.venueDetails = event?.venue
-        sender.presentPremium(vc)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        sender.presentPremium(nav)
 //        sender.pushVC(vc, animated: false)
     }
     
@@ -653,6 +655,7 @@ final class Navigate {
     func coverTicketListVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
         let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)
         vc.venueDetails = venueDetails
+        vc.hidesBottomBarWhenPushed = true
         sender.pushVC(vc)
     }
     

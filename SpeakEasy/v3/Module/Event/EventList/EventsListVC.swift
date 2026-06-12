@@ -22,6 +22,7 @@ final class EventsListVC: UIViewController {
     private var isLoading = false
     private var isInitialLoading = true
     private var isPaginating = false
+    private var lastCollectionLayoutWidth: CGFloat = 0
     
     var venue: SearchVenueItem? = nil
 
@@ -38,6 +39,7 @@ final class EventsListVC: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         view.applyScreenBgGradient()
+        refreshCollectionLayoutIfNeeded()
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
@@ -199,6 +201,22 @@ final class EventsListVC: UIViewController {
             layout.invalidateFooter()
         } else {
             collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
+    private func refreshCollectionLayoutIfNeeded() {
+        let width = collectionView.bounds.width
+
+        guard width > 0,
+              abs(width - lastCollectionLayoutWidth) > 0.5 else {
+            return
+        }
+
+        lastCollectionLayoutWidth = width
+
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.layoutIfNeeded()
         }
     }
 

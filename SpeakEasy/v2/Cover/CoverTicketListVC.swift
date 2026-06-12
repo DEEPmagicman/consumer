@@ -623,7 +623,7 @@ extension CoverTicketListVC {
         guard !selectedCoverTickets.isEmpty else { return }
 
         let tickets: [[String: Any]] = selectedCoverTickets.map {
-            ["ticketId": $0.id ?? "", "ticketQuantity": $0.selectedQuantity ?? 0]
+            ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
 
         view.isUserInteractionEnabled = false
@@ -726,25 +726,25 @@ extension CoverTicketListVC: UITableViewDataSource {
             let ticket = coverTickets[indexPath.row]
             let count = coverTicketCount[indexPath.row] ?? 0
             let name = ticket.customName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-                ? (ticket.customName ?? ticket.name ?? "")
-                : (ticket.name ?? "")
+            ? (ticket.customName ?? ticket.name)
+            : (ticket.name)
 
             cell.configure(
                 coverTicketName: name,
                 description: ticket.description,
-                price: ticket.price ?? 0,
+                price: ticket.price,
                 extraFees: ticket.extraFees,
                 selectedCount: count,
                 currency: currency,
                 whiteLabelColor: whiteLabelColor,
-                isDescriptionExpanded: expandedIndexSet.contains(ticket.id ?? ""),
+                isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )
 
             cell.onDescriptionToggle = { [weak self] in
                 guard let self else { return }
-                let id = ticket.id ?? ""
+                let id = ticket.id
                 if self.expandedIndexSet.contains(id) {
                     self.expandedIndexSet.remove(id)
                 } else {
@@ -766,14 +766,14 @@ extension CoverTicketListVC: UITableViewDataSource {
                 selectedCount: count,
                 currency: currency,
                 whiteLabelColor: whiteLabelColor,
-                isDescriptionExpanded: expandedIndexSet.contains(ticket.id ?? ""),
+                isDescriptionExpanded: expandedIndexSet.contains(ticket.id),
                 onPlus: { [weak self] in self?.plusBtnClicked(at: indexPath) },
                 onMinus: { [weak self] in self?.minusBtnClicked(at: indexPath) }
             )
 
             cell.onDescriptionToggle = { [weak self] in
                 guard let self else { return }
-                let id = ticket.id ?? ""
+                let id = ticket.id
                 if self.expandedIndexSet.contains(id) {
                     self.expandedIndexSet.remove(id)
                 } else {
@@ -872,8 +872,6 @@ extension CoverTicketListVC: CheckoutBarDelegate {
     }
 }
 
-
-
 import UIKit
 
 final class VenuePosterHeaderView: UIView {
@@ -882,6 +880,8 @@ final class VenuePosterHeaderView: UIView {
     private let backgroundImageView = UIImageView()
     private let bottomGradientView = UIView()
     private let bottomGradientLayer = CAGradientLayer()
+    private let placeholderImage = UIImage(named: "newSpeakeasy")
+    private var currentImageURLString: String?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -903,6 +903,8 @@ final class VenuePosterHeaderView: UIView {
     private func setupBackground() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
+        backgroundImageView.backgroundColor = screenBackgroundColor
+        backgroundImageView.image = placeholderImage
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundImageView)
 
@@ -946,15 +948,43 @@ final class VenuePosterHeaderView: UIView {
     }
 
     func setBackgroundImage(_ image: UIImage?) {
-        backgroundImageView.image = image
+        backgroundImageView.image = image ?? placeholderImage
     }
 
     func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        let trimmedURLString = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedURLString.isEmpty, let url = URL(string: trimmedURLString) else {
+            currentImageURLString = nil
+            backgroundImageView.sd_cancelCurrentImageLoad()
+            setBackgroundImage(placeholderImage)
+            return
+        }
 
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard error == nil, let self, let data, let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async { self.setBackgroundImage(image) }
-        }.resume()
+        guard currentImageURLString != trimmedURLString else { return }
+
+        currentImageURLString = trimmedURLString
+        let currentImage = backgroundImageView.image ?? placeholderImage
+
+        backgroundImageView.sd_setImage(
+            with: url,
+            placeholderImage: currentImage
+        ) { [weak self] image, _, cacheType, completedURL in
+            guard let self else { return }
+            guard completedURL?.absoluteString == self.currentImageURLString else { return }
+
+            guard cacheType == .none else {
+                self.setBackgroundImage(image)
+                return
+            }
+
+            UIView.transition(
+                with: self.backgroundImageView,
+                duration: 0.25,
+                options: [.transitionCrossDissolve, .allowUserInteraction],
+                animations: {
+                    self.setBackgroundImage(image)
+                }
+            )
+        }
     }
 }

@@ -1290,7 +1290,7 @@
                 </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bu5-yq-Vg8">
                     <rect key="frame" x="0.0" y="564.66666666666663" width="393" height="217.33333333333337"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <stackView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="O7V-Gy-ugB">
                     <rect key="frame" x="16" y="852" width="361" height="0.0"/>

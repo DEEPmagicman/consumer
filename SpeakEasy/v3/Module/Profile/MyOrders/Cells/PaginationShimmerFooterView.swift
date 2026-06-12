@@ -54,15 +54,16 @@ UICollectionReusableView {
                 constant: 24
             ),
 
-            leftCard.widthAnchor.constraint(
-                equalToConstant: 160
-            ),
-
             // RIGHT
 
             rightCard.topAnchor.constraint(
                 equalTo: topAnchor,
                 constant: 40
+            ),
+
+            rightCard.leadingAnchor.constraint(
+                equalTo: leftCard.trailingAnchor,
+                constant: 14
             ),
 
             rightCard.trailingAnchor.constraint(
@@ -71,7 +72,7 @@ UICollectionReusableView {
             ),
 
             rightCard.widthAnchor.constraint(
-                equalToConstant: 160
+                equalTo: leftCard.widthAnchor
             ),
 
             rightCard.bottomAnchor.constraint(

@@ -20,12 +20,9 @@ final class DiscoverDateFilterVC: UIViewController {
     private var hasMore = true
     private var isLoading = false
     private var isInitialLoading = true
-
-    // MARK: - Event Collection Layout
-    private let horizontalMargin: CGFloat = 16
-    private let interItemSpacing: CGFloat = 12
-    private let lineSpacing: CGFloat = 16
-    private let columns: CGFloat = 2
+    private var isPaginating = false
+    private var selectedCity = UserDefault.shared.localCity
+    private var loadID = 0
 
     private let eventService = EventService()
     
@@ -35,7 +32,31 @@ final class DiscoverDateFilterVC: UIViewController {
         setupDateCollectionView()
         setupEventCollectionView()
 
-        fetchEvents()
+        fetchEvents(reset: true)
+    }
+
+    func updateFilterDates(
+        _ dates: [String],
+        city: String
+    ) {
+
+        selectedDates = dates
+        selectedCity = city
+        selectedDateIndex = 0
+
+        guard isViewLoaded else {
+            return
+        }
+
+        dateCollectionView.reloadData()
+
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.reloadData()
+            collectionView.layoutIfNeeded()
+        }
+
+        fetchEvents(reset: true)
     }
 
     // MARK: - Setup Date CollectionView
@@ -72,71 +93,155 @@ final class DiscoverDateFilterVC: UIViewController {
 
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.prefetchDataSource = self
 
         collectionView.register(
-            EventCollectionViewCell.nib,
-            forCellWithReuseIdentifier: EventCollectionViewCell.identifier
+            OrderCardCollectionCell.self,
+            forCellWithReuseIdentifier: OrderCardCollectionCell.identifier
         )
 
+        collectionView.register(
+            OrderCardShimmerCell.self,
+            forCellWithReuseIdentifier: OrderCardShimmerCell.identifier
+        )
+
+        collectionView.register(
+            EmptyCollectionReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier
+        )
+
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier
+        )
+
+        collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceVertical = true
 
-        let layout = UICollectionViewFlowLayout()
-
-        layout.minimumLineSpacing = lineSpacing
-        layout.minimumInteritemSpacing = interItemSpacing
-
-        layout.sectionInset = UIEdgeInsets(
-            top: 16,
-            left: horizontalMargin,
-            bottom: 16,
-            right: horizontalMargin
-        )
+        let layout = PinterestLayout()
+        layout.numberOfColumns = 2
+        layout.interItemSpacing = 14
+        layout.lineSpacing = 22
+        layout.delegate = self
 
         collectionView.collectionViewLayout = layout
     }
 
     // MARK: - Fetch Events
-    private func fetchEvents() {
+    private func fetchEvents(reset: Bool = false) {
 
-        guard !isLoading, hasMore else {
-            return
-        }
+        guard !isLoading || reset else { return }
+        guard hasMore || reset else { return }
 
         isLoading = true
+        loadID += 1
+        let requestID = loadID
+
+        if reset {
+            skip = 0
+            hasMore = true
+            isInitialLoading = true
+            isPaginating = false
+            eventList.removeAll()
+            reloadUI()
+        }
+
+        let city = selectedCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
 
         eventService.fetchEvents(
             from: skip,
             venueId: "",
             time: "UPCOMING",
-            city: UserDefault.shared.localCity
+            city: city.isEmpty ? UserDefault.shared.localCity : city
         ) { [weak self] _, _, events, hasMore in
 
             guard let self else {
                 return
             }
 
-            self.eventList.append(contentsOf: events)
+            guard self.loadID == requestID else {
+                return
+            }
+
+            let oldCount = self.eventList.count
+
+            self.eventList = reset
+            ? events
+            : self.eventList + events
+
+            let newCount = self.eventList.count
 
             self.skip = self.eventList.count
             self.hasMore = hasMore
 
             self.isLoading = false
+            let wasInitialLoading = self.isInitialLoading
             self.isInitialLoading = false
 
-            self.collectionView.reloadData()
+            if wasInitialLoading || reset {
+                self.isPaginating = false
+                self.reloadUI()
+                return
+            }
+
+            let indexPaths = (oldCount..<newCount).map {
+                IndexPath(item: $0, section: 0)
+            }
+
+            guard !indexPaths.isEmpty else {
+                self.isPaginating = false
+                self.invalidateFooter()
+                return
+            }
+
+            self.insertEventItems(indexPaths)
         }
     }
 
-    // MARK: - Cell Width
-    private var cellWidth: CGFloat {
+    private func reloadUI() {
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.reloadData()
+            collectionView.layoutIfNeeded()
+        }
+    }
 
-        let totalMargins = horizontalMargin * 2
-        let totalSpacing = interItemSpacing * (columns - 1)
+    private func insertEventItems(_ indexPaths: [IndexPath]) {
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates {
+                collectionView.insertItems(at: indexPaths)
+            } completion: { [weak self] _ in
+                guard let self else { return }
+                self.isPaginating = false
+                self.invalidateFooter()
+            }
+        }
+    }
 
-        return floor(
-            (collectionView.bounds.width - totalMargins - totalSpacing) / columns
-        )
+    private func invalidateFooter() {
+        if let layout = collectionView.collectionViewLayout as? PinterestLayout {
+            layout.invalidateFooter()
+        } else {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+
+    private func loadNextPageIfNeeded() {
+        guard !isInitialLoading else { return }
+        guard !isPaginating else { return }
+        guard !isLoading else { return }
+        guard hasMore else { return }
+        guard !eventList.isEmpty else { return }
+
+        isPaginating = true
+        collectionView.collectionViewLayout.invalidateLayout()
+
+        fetchEvents(reset: false)
     }
 }
 
@@ -145,6 +250,12 @@ UICollectionViewDelegate,
 UICollectionViewDataSource,
 UICollectionViewDelegateFlowLayout {
 
+    func numberOfSections(
+        in collectionView: UICollectionView
+    ) -> Int {
+        return 1
+    }
+
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
@@ -152,6 +263,10 @@ UICollectionViewDelegateFlowLayout {
 
         if collectionView == dateCollectionView {
             return selectedDates.count
+        }
+
+        if isInitialLoading {
+            return 6
         }
 
         return eventList.count
@@ -179,20 +294,52 @@ UICollectionViewDelegateFlowLayout {
         }
 
         // MARK: - Event CollectionView
-        let cell: EventCollectionViewCell = collectionView.dequeue(
-            withIdentifier: EventCollectionViewCell.identifier,
+        if isInitialLoading {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                for: indexPath
+            )
+        }
+
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: OrderCardCollectionCell.identifier,
+            for: indexPath
+        ) as! OrderCardCollectionCell
+
+        guard eventList.indices.contains(indexPath.item) else {
+            return cell
+        }
+
+        cell.configureDiscoverEvent(eventList[indexPath.item])
+
+        return cell
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: PaginationShimmerFooterView.identifier,
+                for: indexPath
+            ) as! PaginationShimmerFooterView
+
+            footer.isHidden = !(isPaginating && hasMore)
+            return footer
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier,
             for: indexPath
         )
 
-        cell.imageViewWidthConstraint.constant = 173
-        cell.imageViewHeightConstraint.constant = 200
-
-        cell.configure(
-            with: .event(eventList[indexPath.item]),
-            screenType: .discover
-        )
-
-        return cell
+        header.isHidden = true
+        return header
     }
 
     func collectionView(
@@ -224,6 +371,10 @@ UICollectionViewDelegateFlowLayout {
             return
         }
 
+        guard eventList.indices.contains(indexPath.item) else {
+            return
+        }
+
         Navigate.eventDetailsVC(
             self,
             event: eventList[indexPath.item]
@@ -231,13 +382,9 @@ UICollectionViewDelegateFlowLayout {
     }
 
     // MARK: - Pagination
-    func collectionView(
-        _ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath
-    ) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-        guard collectionView == self.collectionView else {
+        guard scrollView == collectionView else {
             return
         }
 
@@ -245,9 +392,17 @@ UICollectionViewDelegateFlowLayout {
             return
         }
 
-        if indexPath.item == eventList.count - 2 {
-            fetchEvents()
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+
+        let threshold: CGFloat = 400
+
+        guard offsetY > contentHeight - visibleHeight - threshold else {
+            return
         }
+
+        loadNextPageIfNeeded()
     }
 
     // MARK: - Size
@@ -267,10 +422,7 @@ UICollectionViewDelegateFlowLayout {
         }
 
         // MARK: - Event CollectionView
-        return CGSize(
-            width: cellWidth,
-            height: 250
-        )
+        return .zero
     }
 
     func collectionView(
@@ -283,7 +435,7 @@ UICollectionViewDelegateFlowLayout {
             return 12
         }
 
-        return lineSpacing
+        return 22
     }
 
     func collectionView(
@@ -296,6 +448,139 @@ UICollectionViewDelegateFlowLayout {
             return 12
         }
 
-        return interItemSpacing
+        return 14
+    }
+}
+
+// MARK: - PinterestLayoutDelegate
+
+extension DiscoverDateFilterVC: PinterestLayoutDelegate {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        heightForItemAt indexPath: IndexPath,
+        with width: CGFloat
+    ) -> CGFloat {
+
+        if isInitialLoading {
+            let imageHeight = width * 1.2
+            return imageHeight + 90
+        }
+
+        guard eventList.indices.contains(indexPath.item) else {
+            return 0.1
+        }
+
+        let event = eventList[indexPath.item]
+
+        let imageHeight = width * 1.2
+
+        let title = event.title
+        let venue = event.venue?.name ?? ""
+
+        let dateText = event.startDateTime.convertDateFormat(
+            from: .yyyyMMddHHmmss,
+            to: .MMMDDATHMMA,
+            useDayLightSavingTime: true,
+            customTimeZone: event.venue?.useTimezone ?? ""
+        )
+
+        let titleFont = Constant.Font.geistMedium(size: 15)
+        let venueFont = Constant.Font.geistMedium(size: 14)
+        let dateFont = Constant.Font.geistMedium(size: 14)
+
+        let titleHeight = title.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: titleFont
+            ],
+            context: nil
+        ).height
+
+        let venueHeight = venue.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: venueFont
+            ],
+            context: nil
+        ).height
+
+        let dateHeight = dateText.boundingRect(
+            with: CGSize(
+                width: width,
+                height: .greatestFiniteMagnitude
+            ),
+            options: [
+                .usesLineFragmentOrigin,
+                .usesFontLeading
+            ],
+            attributes: [
+                .font: dateFont
+            ],
+            context: nil
+        ).height
+
+        let totalHeight =
+        imageHeight +
+        16 +
+        titleHeight +
+        3 +
+        venueHeight +
+        10 +
+        dateHeight
+
+        return ceil(totalHeight)
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForHeaderIn section: Int
+    ) -> CGFloat {
+        return 0.1
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        referenceHeightForFooterIn section: Int
+    ) -> CGFloat {
+        return isPaginating && hasMore ? 300 : 0
+    }
+}
+
+// MARK: - UICollectionViewDataSourcePrefetching
+
+extension DiscoverDateFilterVC: UICollectionViewDataSourcePrefetching {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        prefetchItemsAt indexPaths: [IndexPath]
+    ) {
+        guard collectionView == self.collectionView else {
+            return
+        }
+
+        guard !isInitialLoading else {
+            return
+        }
+
+        if indexPaths.contains(where: {
+            $0.item >= self.eventList.count - 4
+        }) {
+            loadNextPageIfNeeded()
+        }
     }
 }
