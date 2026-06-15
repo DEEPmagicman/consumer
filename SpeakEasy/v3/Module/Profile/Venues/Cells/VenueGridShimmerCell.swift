@@ -9,11 +9,11 @@ import UIKit
 
 final class VenueGridShimmerCell: UICollectionViewCell {
     
-    private let shimmer = ShimmerViewV3()
+    private var shimmer = ShimmerViewV3(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        shimmer = ShimmerViewV3(frame: frame)
         shimmer.layer.cornerRadius = 16
         shimmer.clipsToBounds = true
         

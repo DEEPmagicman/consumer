@@ -753,7 +753,7 @@ final class TicketCheckoutVC: UIViewController {
         ])
 
         func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerView {
-            let view = ShimmerView()
+            let view = ShimmerViewV3()
             view.translatesAutoresizingMaskIntoConstraints = false
             view.layer.cornerRadius = corner
             view.clipsToBounds = true

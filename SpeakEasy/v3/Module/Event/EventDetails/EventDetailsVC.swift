@@ -2623,7 +2623,7 @@ extension EventDetailsVC: MKMapViewDelegate {
 
 final class EventDetailsSkeletonView: UIView {
 
-    private var allShimmerViews: [ShimmerView] = []
+    private var allShimmerViews: [ShimmerViewV3] = []
     private var didSetup = false
 
     override func layoutSubviews() {
@@ -2754,7 +2754,7 @@ final class EventDetailsSkeletonView: UIView {
     // MARK: - Helpers (same as Home)
 
     private func make(_ frame: CGRect, corner: CGFloat = 8) {
-        let sv = ShimmerView(frame: frame)
+        let sv = ShimmerViewV3(frame: frame)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)
@@ -2762,7 +2762,7 @@ final class EventDetailsSkeletonView: UIView {
     }
 
     private func makeLighter(_ frame: CGRect, corner: CGFloat = 6) {
-        let sv = ShimmerView(frame: frame, lighter: true)
+        let sv = ShimmerViewV3(frame: frame, lighter: true)
         sv.layer.cornerRadius = corner
         sv.clipsToBounds = true
         addSubview(sv)
@@ -2773,11 +2773,11 @@ final class EventDetailsSkeletonView: UIView {
 
     func startShimmer() {
         isHidden = false
-        allShimmerViews.forEach { $0.startAnimating() }
+        allShimmerViews.forEach { $0.startShimmer() }
     }
 
     func stopShimmer() {
-        allShimmerViews.forEach { $0.stopAnimating() }
+        allShimmerViews.forEach { $0.stopShimmer() }
         isHidden = true
     }
 }

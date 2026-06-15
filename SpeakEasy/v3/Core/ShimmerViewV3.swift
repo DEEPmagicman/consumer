@@ -5,116 +5,6 @@
 //  Created by Paras on 28/05/26.
 //
 
-//import UIKit
-//
-//final class ShimmerViewV3: UIView {
-//
-//    private let gradientLayer =
-//        CAGradientLayer()
-//
-//    private var isAnimating = false
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//
-//        setupUI()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError()
-//    }
-//
-//    private func setupUI() {
-//
-//        backgroundColor =
-//            UIColor.white.withAlphaComponent(0.01)
-//
-//        clipsToBounds = true
-//
-//        layer.cornerRadius = 8
-//        layer.backgroundColor = UIColor.clear.cgColor
-//        gradientLayer.colors = [
-//
-//            UIColor.white
-//                .withAlphaComponent(0.01)
-//                .cgColor,
-//
-//            UIColor.white
-//                .withAlphaComponent(0.06)
-//                .cgColor,
-//
-//            UIColor.white
-//                .withAlphaComponent(0.01)
-//                .cgColor
-//        ]
-//
-//        gradientLayer.startPoint =
-//            CGPoint(x: 0, y: 0.5)
-//
-//        gradientLayer.endPoint =
-//            CGPoint(x: 1, y: 0.5)
-//
-//        layer.addSublayer(
-//            gradientLayer
-//        )
-//    }
-//
-//    override func layoutSubviews() {
-//
-//        super.layoutSubviews()
-//
-//        gradientLayer.frame = CGRect(
-//            x: -bounds.width,
-//            y: 0,
-//            width: bounds.width * 3,
-//            height: bounds.height
-//        )
-//    }
-//
-//    // MARK: - Start
-//
-//    func startShimmer() {
-//
-//        guard !isAnimating else {
-//            return
-//        }
-//
-//        isAnimating = true
-//
-//        let animation =
-//            CABasicAnimation(
-//                keyPath:
-//                    "transform.translation.x"
-//            )
-//
-//        animation.fromValue =
-//        -bounds.width
-//
-//        animation.toValue =
-//        bounds.width
-//
-//        animation.duration = 1.4
-//
-//        animation.repeatCount = .infinity
-//
-//        gradientLayer.add(
-//            animation,
-//            forKey: "shimmer"
-//        )
-//    }
-//
-//    // MARK: - Stop
-//
-//    func stopShimmer() {
-//
-//        isAnimating = false
-//
-//        gradientLayer.removeAnimation(
-//            forKey: "shimmer"
-//        )
-//    }
-//}
-
 import UIKit
 
 final class ShimmerViewV3: UIView {
@@ -126,45 +16,26 @@ final class ShimmerViewV3: UIView {
         super.init(frame: frame)
         setupUI()
     }
-
+    
+    init(frame: CGRect, lighter: Bool) {
+        super.init(frame: frame)
+        setupUI(lighter: lighter)
+    }
+    
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
-
-    private func setupUI() {
-
-        backgroundColor = UIColor.white.withAlphaComponent(0.01)
+    
+    private func setupUI(lighter: Bool = false) {
+        backgroundColor = UIColor.white.withAlphaComponent(lighter ? 0.05 : 0.07)
         clipsToBounds = true
         layer.cornerRadius = 8
-        layer.backgroundColor = UIColor.clear.cgColor
-
-        gradientLayer.colors = [
-            UIColor.white.withAlphaComponent(0.01).cgColor,
-            UIColor.white.withAlphaComponent(0.06).cgColor,
-            UIColor.white.withAlphaComponent(0.01).cgColor
-        ]
-
-        gradientLayer.locations  = [0.0, 0.5, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        gradientLayer.endPoint   = CGPoint(x: 1, y: 0.5)
-
-        layer.addSublayer(gradientLayer)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        gradientLayer.frame = CGRect(
-            x: -bounds.width,
-            y: 0,
-            width: bounds.width * 3,
-            height: bounds.height
-        )
-
-        if isAnimating {
-            gradientLayer.removeAnimation(forKey: "shimmer")
-            addShimmerAnimation()
-        }
+        gradientLayer.frame = bounds
     }
 
     // MARK: - Start
@@ -183,22 +54,18 @@ final class ShimmerViewV3: UIView {
     }
 
     // MARK: - Private
-
+//    
     private func addShimmerAnimation() {
 
-        let animation = CABasicAnimation(keyPath: "transform.translation.x")
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 0.3
+        animation.toValue = 1.0
 
-        // gradientLayer is 3× wide starting at -width
-        // so it must travel 2× width to fully exit right → no visible jump
-        animation.fromValue = -bounds.width      // gradient starts off-screen left
-        animation.toValue   =  bounds.width * 2  // ← only change from v1: was bounds.width
+        animation.duration = 0.8
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-        animation.duration       = 1.4           // same speed as v1
-        animation.repeatCount    = .infinity
-        animation.timingFunction = CAMediaTimingFunction(name: .linear) // no ease stutter
-        animation.fillMode              = .backwards
-        animation.isRemovedOnCompletion = false
-
-        gradientLayer.add(animation, forKey: "shimmer")
+        layer.add(animation, forKey: "pulse")
     }
 }
