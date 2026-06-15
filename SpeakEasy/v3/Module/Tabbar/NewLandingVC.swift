@@ -34,10 +34,13 @@ final class NewLandingVC: UIViewController {
     private lazy var searchVC: SearchVC = {
         StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)
     }()
+    
+    private lazy var myOrdersVC: MyOrdersVC = MyOrdersVC()
 
     private lazy var tabs: [UIViewController] = [
         discoverVC,
         experiencesVC,
+        myOrdersVC,
         searchVC
     ]
 
@@ -92,13 +95,19 @@ final class NewLandingVC: UIViewController {
             image: UIImage(resource: .experiencesIcon)
         )
 
+        let orders = makeSystemNav(
+            root: myOrdersVC,
+            title: "Orders",
+            image: UIImage(resource: .ordersIcon)
+        )
+        
         let search = makeSystemNav(
             root: searchVC,
             title: "Search",
             image: UIImage(resource: .searchIconV3)
         )
 
-        tabVC.viewControllers = [discover, experiences, search]
+        tabVC.viewControllers = [discover, experiences, orders, search]
         tabVC.selectedIndex = 0
         if #available(iOS 26.0, *) {
             tabVC.delegate = self

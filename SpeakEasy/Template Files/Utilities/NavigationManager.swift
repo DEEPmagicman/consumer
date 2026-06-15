@@ -775,6 +775,7 @@ final class Navigate {
     
     func myOrdersVC(_ sender: UIViewController) {
         let vc = MyOrdersVC()
+        vc.showsBackButtonHeader = true
         sender.pushVC(vc)
     }
     
