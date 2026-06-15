@@ -29,13 +29,13 @@
                         <rect key="frame" x="0.0" y="7" width="431" height="77"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission   " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ln-Zb-7eD">
-                                <rect key="frame" x="61" y="23.666666666666671" width="350" height="21"/>
+                                <rect key="frame" x="49" y="7.6666666666666643" width="362" height="21"/>
                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X72-jh-a2w">
-                                <rect key="frame" x="12" y="16" width="36" height="36"/>
+                                <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="efC-Vf-mYy">
                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
@@ -68,16 +68,11 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yZR-Pj-B5V">
-                                <rect key="frame" x="411" y="21" width="0.0" height="0.0"/>
+                                <rect key="frame" x="411" y="0.0" width="0.0" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNV-HA-AkY">
-                                        <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L48-1w-dPa">
-                                        <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
-                                        <color key="textColor" red="0.65490196079999996" green="0.65490196079999996" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -85,31 +80,25 @@
                                 <constraints>
                                     <constraint firstItem="PNV-HA-AkY" firstAttribute="leading" secondItem="yZR-Pj-B5V" secondAttribute="leading" id="0m2-GE-eCc"/>
                                     <constraint firstAttribute="trailing" secondItem="PNV-HA-AkY" secondAttribute="trailing" id="5DO-Us-hzt"/>
-                                    <constraint firstItem="L48-1w-dPa" firstAttribute="leading" secondItem="yZR-Pj-B5V" secondAttribute="leading" id="8Gl-Lb-7mn"/>
+                                    <constraint firstAttribute="bottom" secondItem="PNV-HA-AkY" secondAttribute="bottom" id="Tbe-NG-hUp"/>
                                     <constraint firstItem="PNV-HA-AkY" firstAttribute="top" secondItem="yZR-Pj-B5V" secondAttribute="top" id="ZUE-Gf-m8c"/>
-                                    <constraint firstItem="L48-1w-dPa" firstAttribute="top" secondItem="PNV-HA-AkY" secondAttribute="bottom" id="ayE-2G-mGP"/>
-                                    <constraint firstAttribute="bottom" secondItem="L48-1w-dPa" secondAttribute="bottom" id="e2h-EY-2aa"/>
-                                    <constraint firstAttribute="trailing" secondItem="L48-1w-dPa" secondAttribute="trailing" id="fvp-zQ-CB9"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="yZR-Pj-B5V" firstAttribute="top" secondItem="X72-jh-a2w" secondAttribute="top" constant="5" id="I87-ax-RqZ"/>
+                            <constraint firstItem="yZR-Pj-B5V" firstAttribute="top" secondItem="X72-jh-a2w" secondAttribute="top" id="I87-ax-RqZ"/>
                             <constraint firstAttribute="trailing" secondItem="yZR-Pj-B5V" secondAttribute="trailing" constant="20" id="M2M-5U-Dlz"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yZR-Pj-B5V" secondAttribute="bottom" constant="11" id="Q0g-5C-79M"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yZR-Pj-B5V" secondAttribute="bottom" id="Q0g-5C-79M"/>
                             <constraint firstItem="4Ln-Zb-7eD" firstAttribute="leading" secondItem="X72-jh-a2w" secondAttribute="trailing" constant="13" id="aH9-R5-fYv"/>
                             <constraint firstItem="4Ln-Zb-7eD" firstAttribute="centerY" secondItem="X72-jh-a2w" secondAttribute="centerY" id="bdp-kU-w5E"/>
-                            <constraint firstItem="X72-jh-a2w" firstAttribute="leading" secondItem="tdD-ke-6PO" secondAttribute="leading" constant="12" id="gUa-im-3tQ"/>
+                            <constraint firstItem="X72-jh-a2w" firstAttribute="leading" secondItem="tdD-ke-6PO" secondAttribute="leading" id="gUa-im-3tQ"/>
                             <constraint firstItem="yZR-Pj-B5V" firstAttribute="leading" secondItem="4Ln-Zb-7eD" secondAttribute="trailing" id="iLq-Oe-YOe"/>
-                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="X72-jh-a2w" secondAttribute="bottom" constant="16" id="lyN-Kz-0vt"/>
-                            <constraint firstItem="X72-jh-a2w" firstAttribute="top" secondItem="tdD-ke-6PO" secondAttribute="top" constant="16" id="xXp-2l-JRT"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="X72-jh-a2w" secondAttribute="bottom" id="lyN-Kz-0vt"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="4Ln-Zb-7eD" secondAttribute="bottom" id="qTF-57-n9v"/>
+                            <constraint firstItem="4Ln-Zb-7eD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tdD-ke-6PO" secondAttribute="top" id="urr-ge-z4k"/>
+                            <constraint firstItem="X72-jh-a2w" firstAttribute="top" secondItem="tdD-ke-6PO" secondAttribute="top" id="xXp-2l-JRT"/>
                         </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="15"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -124,7 +113,6 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="bgView" destination="tdD-ke-6PO" id="kOz-63-Vdb"/>
-                <outlet property="extraFeesLbl" destination="L48-1w-dPa" id="ioN-v3-mbH"/>
                 <outlet property="priceLbl" destination="PNV-HA-AkY" id="NYQ-ug-u9c"/>
                 <outlet property="ticketNameLbl" destination="4Ln-Zb-7eD" id="2YD-eN-MwD"/>
                 <outlet property="totalTicketCountLbl" destination="efC-Vf-mYy" id="vca-jt-nOL"/>

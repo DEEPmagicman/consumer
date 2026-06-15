@@ -301,8 +301,6 @@ private extension CoverTicketListVC {
             $0.status == "ENABLED"
         }
 
-        coverTickets.append(contentsOf: list)
-
         tableView.reloadData()
         updateCheckoutState()
     }
@@ -558,11 +556,12 @@ private extension CoverTicketListVC {
         guard !selectedCoverTickets.isEmpty else { return }
 
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
-            Navigate.to.coverPaymentVC(
+            Navigate.to.coverCheckOutVC(
                 self,
                 venue: venueDetails,
                 selectedCoverTickets: selectedCoverTickets,
                 selectedAddOnsItem: selectedAddOns,
+                totalPrice: 0,
                 bookingType: bookingType
             )
         } else {

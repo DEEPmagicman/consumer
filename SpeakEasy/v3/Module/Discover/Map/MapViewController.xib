@@ -19,7 +19,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapViewController" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="bottomPanelHeightConstraint" destination="9xJ-aP-v0B" id="Ml7-xH-xIk"/>
+                <outlet property="bottomPanelView" destination="Uqj-Ee-FVg" id="uP8-bx-7Aq"/>
                 <outlet property="browsingLbl" destination="0mL-lF-xlz" id="l5D-30-raE"/>
+                <outlet property="mapView" destination="KdH-OE-vNM" id="mPv-1W-3hJ"/>
                 <outlet property="tabView" destination="Je5-qt-wqm" id="UKQ-eI-sDp"/>
                 <outlet property="tableView" destination="yoi-6V-Sjc" id="xLh-Uu-ecZ"/>
                 <outlet property="view" destination="P5K-zG-5cp" id="yhv-a7-KiN"/>

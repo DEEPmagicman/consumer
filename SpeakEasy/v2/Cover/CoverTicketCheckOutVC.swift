@@ -76,12 +76,12 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isPaymentInitiated = false
     private var isFromApplePay = false
     
-    private var isTermsAccepted = false
-    private var isVenueMessageAccepted = false
+    private var isTermsAccepted = true
+    private var isVenueMessageAccepted = true
     private var isTermsExpanded = false
     private var isVenueMessageExpanded = false
-    private var isCoverFeesExpanded = false
-    private var isUpsellFeesExpanded = false
+    private var isCoverFeesExpanded = true
+    private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
     private let collapsedLines = 3
     private let coverFeeShimmerRowCount = 3
@@ -303,6 +303,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         paymentTypeView.layer.borderWidth = 1
         paymentTypeView.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
         paymentTypeView.clipsToBounds = true
+        paymentTypeView.isUserInteractionEnabled = false
     }
 
     private func updatePaymentMethodUI() {
@@ -625,16 +626,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     @IBAction func onClickPaymentTypeBtn(_ sender: Any) {
-        let vc = PaymentVC()
-        vc.venueDetails = venue
-        vc.selectedPaymentMethod = selectedPaymentMethod
-        vc.onPaymentSelected = { [weak self] method, details in
-            guard let self else { return }
-            self.selectedPaymentMethod = method
-            self.cardDetails = details
-            self.updatePaymentMethodUI()
-        }
-        navigationController?.pushViewController(vc, animated: true)
+        // Payment selection is handled inline through PaymentSheet now.
     }
 
     @objc private func handleBackSwipe() {
@@ -664,16 +656,25 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             return
         }
 
-        switch selectedPaymentMethod {
-        case .applePay:
-            applePayButtonTapped()
-        case .card:
-            guard cardDetails != nil else {
-                isPaymentInitiated = false
-                Alert.showToast("Please add card details")
-                return
+        guard let paymentSheet else {
+            isPaymentInitiated = false
+            Alert.showToast("Payment not ready yet. Please wait.")
+            return
+        }
+
+        paymentSheet.present(from: self) { [weak self] result in
+            guard let self else { return }
+
+            switch result {
+            case .completed:
+                self.checkOutBtnView.showLoader()
+                self.handleSuccessfulCardPayment()
+            case .canceled:
+                self.isPaymentInitiated = false
+            case .failed:
+                self.isPaymentInitiated = false
+                Alert.showToast("Payment failed. Please try again.")
             }
-            confirmCardPayment()
         }
     }
 }

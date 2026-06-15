@@ -12,13 +12,13 @@ class OrderItemTableViewCell: UITableViewCell {
     @IBOutlet weak var totalTicketCountLbl: UILabel!
     @IBOutlet weak var ticketNameLbl: UILabel!
     @IBOutlet weak var priceLbl: UILabel!
-    @IBOutlet weak var extraFeesLbl: UILabel!
+//    @IBOutlet weak var extraFeesLbl: UILabel!
     @IBOutlet weak var bgView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        bgView.applyAutoBorderBackground()
+//        bgView.applyAutoBorderBackground()
         selectionStyle = .none
     }
 

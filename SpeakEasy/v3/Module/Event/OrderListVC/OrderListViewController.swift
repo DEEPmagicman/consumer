@@ -1,9 +1,6 @@
 import UIKit
 import MHLoadingButton
-import PassKit
-import StripeApplePay
 import StripePaymentSheet
-import StripePayments
 
 // MARK: - OrderListViewController
 
@@ -56,12 +53,13 @@ final class OrderListViewController: UIViewController {
     private var paymentIntentClientSecret: String = ""
     private var stripePaymentHistoryId: String = ""
     private var stripeEphemeralKey: String = ""
+    private var savedPaymentMethods: [PaymentMethod] = []
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
 
     // MARK: - UI state
-    private var isTermsAccepted = false
-    private var isVenueMessageAccepted = false
+    private var isTermsAccepted = true
+    private var isVenueMessageAccepted = true
     private var isTermsExpanded = false
     private let collapsedLines = 2
     private var hasLaidOutTerms = false
@@ -85,6 +83,7 @@ final class OrderListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        loadSavedPaymentMethods()
         setupTableViews()
         setupHeaderData()
         calculateTotal()
@@ -115,24 +114,67 @@ final class OrderListViewController: UIViewController {
 
     private func setupUI() {
         yourOrderView.applyAutoBorderBackground()
-        feesAndTaxesParentView.applyAutoBorderBackground()
+//        feesAndTaxesParentView.applyAutoBorderBackground()
         view.applyScreenBgGradient()
         addPromoCodeView.isHidden = true
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
 
-        switch selectedPaymentMethod {
-        case .applePay:
-            paymentTypeName.text = "Apple Pay"
-            paymentCardImage.image = UIImage(named: "applePayIcon")
-        case .card:
-            paymentTypeName.text = "Pay with Card"
-            paymentCardImage.image = UIImage(named: "creditCardIcon")
-        case .none:
-            paymentTypeName.text = "Apple Pay"
-        }
+        paymentTypeView.isUserInteractionEnabled = false
+        updatePaymentMethodUI()
 
         checkOutView.delegate = self
+    }
+
+    private func loadSavedPaymentMethods() {
+        let customerId = UserDefault.shared.user?.stripeCusId ?? ""
+        guard !customerId.isEmpty else {
+            DispatchQueue.main.async { [weak self] in
+                self?.updatePaymentMethodUI()
+            }
+            return
+        }
+
+        PaymentPresenter.getUserSavedMethods(customerId: customerId) { [weak self] isSuccess, _, paymentMethods in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                if isSuccess {
+                    self.savedPaymentMethods = paymentMethods
+                    if self.selectedPaymentMethod == nil {
+                        self.selectedPaymentMethod = paymentMethods.isEmpty ? .applePay : .card
+                    }
+                }
+
+                self.updatePaymentMethodUI()
+            }
+        }
+    }
+
+    private func updatePaymentMethodUI() {
+        let title: String
+        let image: UIImage?
+
+        if let savedMethod = savedPaymentMethods.first {
+            title = "\(savedMethod.brand.capitalized) ending \(savedMethod.last4)"
+            image = savedMethod.brand.paymentImg
+        } else if selectedPaymentMethod == .applePay {
+            title = "Apple Pay"
+            image = UIImage(named: "applePayIcon")
+        } else if let cardDetails, selectedPaymentMethod == .card {
+            let last4 = cardDetails.cardNumber.suffix(4)
+            title = last4.isEmpty ? "Pay with Card" : "Card ending \(last4)"
+            image = UIImage(named: "creditCardIcon")
+        } else if selectedPaymentMethod == .card {
+            title = "Pay with Card"
+            image = UIImage(named: "creditCardIcon")
+        } else {
+            title = "Apple Pay"
+            image = UIImage(named: "applePayIcon")
+        }
+
+        paymentTypeName.text = title
+        paymentCardImage.image = image
     }
 
     private func setupTableViews() {
@@ -379,7 +421,7 @@ final class OrderListViewController: UIViewController {
     }
 
     @IBAction func onClickCardBtn(_ sender: Any) {
-        Navigate.to.back(self)
+        startPaymentFlow()
     }
 
     // MARK: - Booking
@@ -488,6 +530,7 @@ final class OrderListViewController: UIViewController {
             config.customer = .init(id: customerId, ephemeralKeySecret: ephemeralKey)
         }
 
+        config.savePaymentMethodOptInBehavior = .automatic
         config.allowsDelayedPaymentMethods = true
         config.applePay = .init(
             merchantId: "merchant.com.speakeasy",
@@ -498,15 +541,19 @@ final class OrderListViewController: UIViewController {
             paymentIntentClientSecret: clientSecret,
             configuration: config
         )
+        paymentTypeView.isUserInteractionEnabled = true
     }
 
     // MARK: - UI Updates
 
     private func updateUIWithPaymentDetail(_ detail: PaymentDetail?) {
+        paymentTypeView.isHidden = isFreeTicket
+
         guard let detail else {
             feesAndTaxes = []
             feesAndTaxesHiddenView.isHidden = true
             feesAndTaxesTableView.reloadData()
+            paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
             return
         }
 
@@ -536,6 +583,7 @@ final class OrderListViewController: UIViewController {
             self.tableViewHeight.constant = self.ticketTableView.contentSize.height
             self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
         }
+        paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
     }
 
     private func buildFeesArray(from fees: PaymentDetail?) -> [FeeDisplayItem] {
@@ -571,191 +619,56 @@ final class OrderListViewController: UIViewController {
         }
     }
 
-    // MARK: - Stripe: Card (direct STPAPIClient confirm)
+    // MARK: - Stripe Checkout
 
-    private func confirmCardPayment() {
-        guard let cardDetails else {
-            isPaymentInitiated = false
-            Alert.showToast("Card details missing.")
+    private func startPaymentFlow() {
+        guard !isPaymentInitiated else { return }
+
+        guard isTermsAccepted || termsAndConditions.isHidden else {
+            Alert.showToast("Please accept the terms and conditions")
             return
         }
 
-        guard !paymentIntentClientSecret.isEmpty else {
-            isPaymentInitiated = false
-            Alert.showToast("Payment not ready yet.")
+        if !venueMessageView.isHidden && !isVenueMessageAccepted {
+            Alert.showToast("Please accept the venue message")
             return
         }
 
-        checkOutView.showLoader()
-
-        // Step 1 — tokenize card via STPAPIClient (available in StripePaymentSheet)
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number   = cardDetails.cardNumber
-        cardParams.expMonth = NSNumber(value: cardDetails.expiryMonth)
-        cardParams.expYear  = NSNumber(value: cardDetails.expiryYear)
-        cardParams.cvc      = cardDetails.cvv
-
-        let billing = STPPaymentMethodBillingDetails()
-        billing.name = "\(cardDetails.firstName) \(cardDetails.lastName)"
-
-        let paymentMethodParams = STPPaymentMethodParams(
-            card: cardParams,
-            billingDetails: billing,
-            metadata: nil
-        )
-
-        STPAPIClient.shared.createPaymentMethod(with: paymentMethodParams) { [weak self] paymentMethod, error in
-            guard let self else { return }
-
-            if let error {
-                DispatchQueue.main.async {
-                    self.checkOutView.hideLoader()
-                    self.isPaymentInitiated = false
-                    Alert.showToast(error.localizedDescription)
-                }
-                return
-            }
-
-            guard let paymentMethodId = paymentMethod?.stripeId else {
-                DispatchQueue.main.async {
-                    self.checkOutView.hideLoader()
-                    self.isPaymentInitiated = false
-                    Alert.showToast("Failed to create payment method.")
-                }
-                return
-            }
-
-            // Step 2 — confirm via REST (no SDK type needed)
-            self.confirmIntentViaREST(paymentMethodId: paymentMethodId)
-        }
-    }
-
-    private func confirmIntentViaREST(paymentMethodId: String) {
-        // Extract intent ID from clientSecret: "pi_xxxxx_secret_yyyyy" → "pi_xxxxx"
-        let intentId = paymentIntentClientSecret
-            .components(separatedBy: "_secret_").first ?? ""
-
-        guard !intentId.isEmpty,
-              let url = URL(string: "https://api.stripe.com/v1/payment_intents/\(intentId)/confirm") else {
-            DispatchQueue.main.async {
-                self.checkOutView.hideLoader()
-                self.isPaymentInitiated = false
-                Alert.showToast("Invalid payment intent.")
-            }
+        if isFreeTicket {
+            isPaymentInitiated = true
+            confirmPaymentAndNavigate()
             return
         }
 
-        let bodyString = [
-            "payment_method=\(paymentMethodId)",
-            "client_secret=\(paymentIntentClientSecret)"
-        ].joined(separator: "&")
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue(
-            "Bearer \(STPAPIClient.shared.publishableKey ?? "")",
-            forHTTPHeaderField: "Authorization"
-        )
-        request.setValue(
-            "application/x-www-form-urlencoded",
-            forHTTPHeaderField: "Content-Type"
-        )
-        request.httpBody = bodyString.data(using: .utf8)
-
-        URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
-            DispatchQueue.main.async {
-                guard let self else { return }
-                self.checkOutView.hideLoader()
-
-                if let error {
-                    self.isPaymentInitiated = false
-                    Alert.showToast(error.localizedDescription)
-                    return
-                }
-
-                guard let data,
-                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    self.isPaymentInitiated = false
-                    Alert.showToast("Payment failed. Please try again.")
-                    return
-                }
-
-                // Check for Stripe error in response
-                if let errorObj = json["error"] as? [String: Any],
-                   let message = errorObj["message"] as? String {
-                    self.isPaymentInitiated = false
-                    Alert.showToast(message)
-                    return
-                }
-
-                let status = json["status"] as? String ?? ""
-                switch status {
-                case "succeeded", "requires_capture":
-                    self.confirmPaymentAndNavigate()
-                case "requires_action":
-                    // 3DS authentication needed — for now show message
-                    self.isPaymentInitiated = false
-                    Alert.showToast("Additional authentication required. Please use Apple Pay.")
-                default:
-                    self.isPaymentInitiated = false
-                    Alert.showToast("Payment status: \(status). Please try again.")
-                }
-            }
-        }.resume()
-    }
-
-    // MARK: - Stripe: Apple Pay (direct native sheet)
-
-    private func confirmApplePay() {
-        guard !paymentIntentClientSecret.isEmpty else {
-            isPaymentInitiated = false
+        guard let paymentSheet else {
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
 
-        guard StripeAPI.deviceSupportsApplePay() else {
-            isPaymentInitiated = false
-            Alert.showToast("Apple Pay is not available on this device.")
-            return
+        isPaymentInitiated = true
+        paymentSheet.present(from: self) { [weak self] result in
+            guard let self else { return }
+
+            switch result {
+            case .completed:
+                self.confirmPaymentAndNavigate()
+            case .canceled:
+                self.isPaymentInitiated = false
+            case .failed:
+                self.isPaymentInitiated = false
+                Alert.showToast("Payment failed. Please try again.")
+            }
         }
-
-        let merchantIdentifier = "merchant.com.speakeasy"
-        let countryCode = venueDetails?.code ?? "+1"
-        let currencyCode = venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
-        let amount = paymentDetail?.total ?? 0
-
-        let paymentRequest = StripeAPI.paymentRequest(
-            withMerchantIdentifier: merchantIdentifier,
-            country: "US",
-            currency: venueDetails?.venueSettings?.currencyCode?.uppercased() ?? "USD"
-        )
-        paymentRequest.supportedNetworks = [.visa, .masterCard, .amex, .discover]
-        paymentRequest.paymentSummaryItems = [
-            PKPaymentSummaryItem(
-                label: "Speakeasy Bookings Inc. (VIA Speakeasy Go!)",
-                amount: NSDecimalNumber(value: amount)
-            )
-        ]
-        paymentRequest.requiredBillingContactFields = []
-
-        guard let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
-            isPaymentInitiated = false
-            Alert.showToast("Problem with your Apple Pay configuration.")
-            return
-        }
-        
-        print("deviceSupportsApplePay:", StripeAPI.deviceSupportsApplePay())
-        print("canMakePayments:", PKPaymentAuthorizationViewController.canMakePayments())
-        print("canMakePaymentsUsingNetworks:", PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: [.visa, .masterCard, .amex, .discover]))
-        print("merchantId:", merchantIdentifier)
-        print("clientSecret empty:", paymentIntentClientSecret.isEmpty)
-        applePayContext.presentApplePay()
     }
 
     // MARK: - Confirm + Navigate
 
     private func confirmPaymentAndNavigate() {
-        guard let bookingId else { return }
+        guard let bookingId else {
+            isPaymentInitiated = false
+            Alert.showToast("Missing booking information.")
+            return
+        }
 
         Loader.show()
 
@@ -779,36 +692,6 @@ final class OrderListViewController: UIViewController {
                     Alert.showToast(errMsg ?? "Payment confirmation failed")
                 }
             }
-        }
-    }
-}
-
-extension OrderListViewController: ApplePayContextDelegate {
-    func applePayContext(
-        _ context: STPApplePayContext,
-        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
-        paymentInformation: PKPayment,
-        completion: @escaping STPIntentClientSecretCompletionBlock
-    ) {
-        completion(paymentIntentClientSecret, nil)
-    }
-
-    func applePayContext(
-        _ context: STPApplePayContext,
-        didCompleteWith status: STPApplePayContext.PaymentStatus,
-        error: Error?
-    ) {
-        switch status {
-        case .success:
-            confirmPaymentAndNavigate()
-        case .error:
-            isPaymentInitiated = false
-            Alert.showToast(error?.localizedDescription ?? "Payment failed")
-        case .userCancellation:
-            isPaymentInitiated = false
-        @unknown default:
-            isPaymentInitiated = false
-            Alert.showToast("Payment failed")
         }
     }
 }
@@ -841,10 +724,10 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.totalTicketCountLbl.text = "\(quantity)x"
             cell.ticketNameLbl.text = ticket.tierName
             cell.priceLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
-            cell.extraFeesLbl.isHidden = (ticket.extraFees ?? 0) <= 0
-            if (ticket.extraFees ?? 0) > 0 {
-                cell.extraFeesLbl.text = "Incl. \(currency)\((ticket.extraFees ?? 0).decimalFormat(true)) fees"
-            }
+//            cell.extraFeesLbl.isHidden = (ticket.extraFees ?? 0) <= 0
+//            if (ticket.extraFees ?? 0) > 0 {
+//                cell.extraFeesLbl.text = "Incl. \(currency)\((ticket.extraFees ?? 0).decimalFormat(true)) fees"
+//            }
             return cell
 
         } else {
@@ -873,27 +756,6 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
-//        guard !isPaymentInitiated else { return }
-
-        guard isTermsAccepted || termsAndConditions.isHidden else {
-            Alert.showToast("Please accept the terms and conditions")
-            return
-        }
-
-        isPaymentInitiated = true
-
-        if isFreeTicket {
-            confirmPaymentAndNavigate()
-            return
-        }
-
-        switch selectedPaymentMethod {
-        case .card:
-            confirmCardPayment()
-        case .applePay:
-            confirmApplePay()
-        case .none:
-            confirmCardPayment()
-        }
+        startPaymentFlow()
     }
 }

@@ -647,7 +647,13 @@ class TicketSelectionViewController: UIViewController {
             self.continueToCheckOutBtn.hideLoader()
             if isSuccess {
 //                Navigate.to.ticketCheckoutVC(self, event: event, selectedTickets: tickets, bookingId: id)
-                Navigate.to.paymentVc(self, event: event, selectedTickets: tickets, bookingId: id)
+                Navigate.orderListVC(
+                    self,
+                    event: event,
+                    selectedTickets: tickets,
+                    bookingId: id,
+                    paymentMethod: nil
+                )
             } else {
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
