@@ -132,7 +132,7 @@ final class TicketCheckoutVC: UIViewController {
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
     private var isLoading = false
-    private var shimmerBlocks: [ShimmerView] = []
+    private var shimmerBlocks: [ShimmerViewV3] = []
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
     
@@ -752,7 +752,7 @@ final class TicketCheckoutVC: UIViewController {
             content.bottomAnchor.constraint(equalTo: shimmerView.bottomAnchor)
         ])
 
-        func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerView {
+        func makeBlock(height: CGFloat, width: CGFloat? = nil, corner: CGFloat = 8) -> ShimmerViewV3 {
             let view = ShimmerViewV3()
             view.translatesAutoresizingMaskIntoConstraints = false
             view.layer.cornerRadius = corner
@@ -821,7 +821,7 @@ final class TicketCheckoutVC: UIViewController {
         row3.addArrangedSubview(makeBlock(height: 14, width: 48))
         stack.addArrangedSubview(row3)
 
-        shimmerBlocks.forEach { $0.startAnimating() }
+        shimmerBlocks.forEach { $0.startShimmer() }
     }
 
     private func hideCheckoutShimmerIfNeeded() {
@@ -830,7 +830,7 @@ final class TicketCheckoutVC: UIViewController {
         } else {
             guard isBookingLoaded, isPaymentIntentLoaded else { return }
         }
-        shimmerBlocks.forEach { $0.stopAnimating() }
+        shimmerBlocks.forEach { $0.stopShimmer() }
         shimmerView.isHidden = true
     }
     
