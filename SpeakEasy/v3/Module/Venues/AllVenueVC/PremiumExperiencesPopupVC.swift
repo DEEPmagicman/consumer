@@ -37,7 +37,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
         // Dimmed background
         dimmedView.translatesAutoresizingMaskIntoConstraints = false
-        dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         dimmedView.alpha = 0
         view.addSubview(dimmedView)
 
@@ -46,11 +46,12 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
         // Popup card
         popupView.translatesAutoresizingMaskIntoConstraints = false
-        popupView.backgroundColor = UIColor(hex: "#171717")
-        popupView.layer.cornerRadius = 34
+        popupView.fillColor = AppColor.primaryColor.withAlphaComponent(0.4).cgColor
+        popupView.showsBlur = true
+        popupView.blurAlpha = 0.9
+        popupView.cornerRadius = 34
         popupView.layer.cornerCurve = .continuous
         popupView.clipsToBounds = true
-        popupView.alpha = 0
         view.addSubview(popupView)
 
         // Icon
@@ -72,6 +73,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.0
         paragraphStyle.alignment = .center
+        paragraphStyle.lineSpacing = 4
 
         let kern = -0.01 * 12.0
 
@@ -100,7 +102,7 @@ final class PremiumExperiencesPopupVC: UIViewController {
         // Dismiss button
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         dismissButton.backgroundColor = .white
-        dismissButton.layer.cornerRadius = 28
+        dismissButton.layer.cornerRadius = 25
         dismissButton.layer.cornerCurve = .continuous
         dismissButton.clipsToBounds = true
 
@@ -128,9 +130,9 @@ final class PremiumExperiencesPopupVC: UIViewController {
             dimmedView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             // Popup — centered
-            popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            popupView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            popupView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -28),
 
             // Icon
             iconImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 36),
@@ -150,9 +152,9 @@ final class PremiumExperiencesPopupVC: UIViewController {
 
             // Dismiss button
             dismissButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 27),
-            dismissButton.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 12),
-            dismissButton.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -12),
-            dismissButton.heightAnchor.constraint(equalToConstant: 56),
+            dismissButton.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 16),
+            dismissButton.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -16),
+            dismissButton.heightAnchor.constraint(equalToConstant: 50),
             dismissButton.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -12)
         ])
     }

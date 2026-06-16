@@ -180,8 +180,8 @@ final class Navigate {
     func presentPremiumExpPopUp(_ sender: UIViewController) {
         let vc = PremiumExperiencesPopupVC()
         vc.modalTransitionStyle = .crossDissolve
-        vc.modalPresentationStyle = .overCurrentContext
-        sender.navigationController?.present(vc, animated: true)
+        vc.modalPresentationStyle = .overFullScreen
+        sender.tabBarController?.present(vc, animated: false)
     }
     
     func presentGSImageViewerController(_ sender: UIViewController, imageView: UIImageView) {

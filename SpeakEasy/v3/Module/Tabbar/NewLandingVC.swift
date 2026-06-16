@@ -27,9 +27,7 @@ final class NewLandingVC: UIViewController {
         StoryboardAndXibManager.StoryBoard.discover.instantiateVC(DiscoverVC.self)
     }()
 
-    private lazy var experiencesVC: PhotosVC = {
-        StoryboardAndXibManager.StoryBoard.photos.instantiateVC(PhotosVC.self)
-    }()
+    private lazy var experiencesVC: PremiumExpVC = PremiumExpVC()
 
     private lazy var searchVC: SearchVC = {
         StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)

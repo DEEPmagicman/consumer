@@ -20,6 +20,7 @@ final class UserDefault: NSObject {
         case localCity = "localCity"
         case defaultCitySelected = "defaultCitySelected"
         case isNotificationOnKey = "isNotificationOn"
+        case hasSeenPremiumIntro = "has_seen_premium_intro"
     }
     
     let userDefaults = UserDefaults.standard
@@ -117,6 +118,14 @@ final class UserDefault: NSObject {
             (UserDefaults.standard.value(forKey: UserDefaultKey.isNotificationOnKey.rawValue) as? Bool) ?? false
         } set {
             UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.isNotificationOnKey.rawValue)
+        }
+    }
+    
+    var hasSeenPremiumIntro: Bool? {
+        get {
+            return UserDefaults.standard.value(forKey: UserDefaultKey.hasSeenPremiumIntro.rawValue) as? Bool
+        } set {
+            UserDefaults.standard.setValue(newValue, forKey: UserDefaultKey.hasSeenPremiumIntro.rawValue)
         }
     }
     

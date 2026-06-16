@@ -9,13 +9,33 @@
 import UIKit
 
 final class GradientBorderCardView: UIView {
-
+    
+    var fillColor: CGColor = AuthTheme.cardViewColor.cgColor {
+        didSet {
+            fillLayer.backgroundColor = fillColor
+        }
+    }
+    
+    var showsBlur: Bool = false {
+        didSet {
+            blurView.isHidden = !showsBlur
+        }
+    }
+    
+    var blurAlpha: CGFloat = 0.4 {
+        didSet {
+            blurView.alpha = blurAlpha
+        }
+    }
+    
+    private let blurView = VisualEffectView(effect: UIBlurEffect(style: .dark))
+    
     private let fillLayer = CALayer()
     private let fullBorderLayer = CAShapeLayer()
     
     private let topGlassBorderLayer = CAGradientLayer()
     private let topGlassMaskLayer = CAShapeLayer()
-
+    
     private let bottomGlassBorderLayer = CAGradientLayer()
     private let bottomGlassMaskLayer = CAShapeLayer()
     
@@ -45,7 +65,25 @@ final class GradientBorderCardView: UIView {
         layer.cornerCurve = .continuous
         layer.masksToBounds = false
 
-        fillLayer.backgroundColor = AuthTheme.cardViewColor.cgColor
+        blurView.alpha = blurAlpha
+        blurView.isHidden = true
+        blurView.colorTintAlpha = 0.02
+        blurView.blurRadius = 20
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        blurView.layer.cornerRadius = glassCornerRadius
+        blurView.clipsToBounds = true
+        insertSubview(blurView, at: 0)
+
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        addSubview(blurView)
+        
+        fillLayer.backgroundColor = fillColor
         fillLayer.cornerRadius = glassCornerRadius
         layer.insertSublayer(fillLayer, at: 0)
 
@@ -74,6 +112,10 @@ final class GradientBorderCardView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
+        blurView.frame = bounds
+        blurView.layer.cornerRadius = glassCornerRadius
+        blurView.clipsToBounds = true
 
         fillLayer.frame = bounds
         topGlassBorderLayer.frame = bounds
@@ -108,7 +150,7 @@ final class GradientBorderCardView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        fillLayer.backgroundColor = AuthTheme.cardViewColor.cgColor
+        fillLayer.backgroundColor = fillColor
         fullBorderLayer.strokeColor = AppColor.primaryWhiteColor.withAlphaComponent(0.10).cgColor
 
         topGlassBorderLayer.colors = borderColors
