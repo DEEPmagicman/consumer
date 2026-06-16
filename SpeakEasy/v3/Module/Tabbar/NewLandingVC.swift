@@ -29,9 +29,7 @@ final class NewLandingVC: UIViewController {
 
     private lazy var experiencesVC: PremiumExpVC = PremiumExpVC()
 
-    private lazy var searchVC: SearchVC = {
-        StoryboardAndXibManager.StoryBoard.search.instantiateVC(SearchVC.self)
-    }()
+    private lazy var searchVC: PremiumSearchVC = PremiumSearchVC()
     
     private lazy var myOrdersVC: MyOrdersVC = MyOrdersVC()
 
