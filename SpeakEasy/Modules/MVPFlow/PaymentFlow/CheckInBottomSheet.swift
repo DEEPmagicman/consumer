@@ -30,6 +30,8 @@ final class CheckInBottomSheet: UIViewController {
                 self.delegate?.checkInStatusChange(checkInData: checkInData ?? [])
                 self.dismiss(animated: true)
             } else {
+                self.loader.isHidden = true
+                self.checkInBtn.isHidden = false
                 if errMsg != nil {
                     Alert.showAlertSheet(style: .alert, title: errMsg, message: "")
                 } else {
