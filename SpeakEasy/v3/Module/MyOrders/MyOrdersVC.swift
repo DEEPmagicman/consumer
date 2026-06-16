@@ -21,6 +21,11 @@ final class MyOrdersVC: UIViewController {
     private lazy var ticketsVC = TicketsOrdersVC()
     private lazy var tablesVC = TablesOrdersVC()
 
+    private let landingHeaderView = LandingHeaderView()
+    private var segmentTopConstraint: NSLayoutConstraint!
+    
+    var showsBackButtonHeader: Bool = false
+    
     private var pages: [UIViewController] {
         [ticketsVC, tablesVC]
     }
@@ -38,10 +43,35 @@ final class MyOrdersVC: UIViewController {
     }
 
     private func setupUI() {
+        setupLandingHeader()
         setupNav()
         setupSegment()
         setupPageVC()
         setupConstraints()
+        updateHeaderUI()
+    }
+    
+    private func updateHeaderUI() {
+
+        landingHeaderView.isHidden = showsBackButtonHeader
+
+        backBtn.isHidden = !showsBackButtonHeader
+        titleLabel.isHidden = !showsBackButtonHeader
+    }
+    
+    private func setupLandingHeader() {
+
+        landingHeaderView.setMapHidden(false)
+        landingHeaderView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(landingHeaderView)
+
+        NSLayoutConstraint.activate([
+            landingHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            landingHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            landingHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            landingHeaderView.heightAnchor.constraint(equalToConstant: 40)
+        ])
     }
 
     private func setupNav() {
@@ -88,6 +118,12 @@ final class MyOrdersVC: UIViewController {
     }
 
     private func setupConstraints() {
+        let headerBottomAnchor = showsBackButtonHeader
+            ? titleLabel.bottomAnchor
+            : landingHeaderView.bottomAnchor
+        let headerTopConstant = showsBackButtonHeader ? 20 : 10
+        let headerRightConstant = showsBackButtonHeader ? 22 : 16
+        
         NSLayoutConstraint.activate([
             backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -95,10 +131,10 @@ final class MyOrdersVC: UIViewController {
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: backBtn.centerYAnchor),
 
-            segmentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 22),
-            segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -22),
-            segmentView.heightAnchor.constraint(equalToConstant: 48),  // Optimized for new design
+            segmentView.topAnchor.constraint(equalTo: headerBottomAnchor, constant: CGFloat(headerTopConstant)),
+            segmentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(headerRightConstant)),
+            segmentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -CGFloat(headerRightConstant)),
+            segmentView.heightAnchor.constraint(equalToConstant: 48),
 
             pageVC.view.topAnchor.constraint(equalTo: segmentView.bottomAnchor, constant: 10),
             pageVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),

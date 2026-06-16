@@ -30,7 +30,7 @@ final class ShimmerViewV3: UIView {
     private func setupUI(lighter: Bool = false) {
         backgroundColor = UIColor.white.withAlphaComponent(lighter ? 0.05 : 0.07)
         clipsToBounds = true
-        layer.cornerRadius = 8
+        layer.cornerRadius = 5
     }
 
     override func layoutSubviews() {
