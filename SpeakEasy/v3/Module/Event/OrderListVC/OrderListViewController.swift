@@ -24,8 +24,10 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var feesAndTaxesParentView: UIView!
     @IBOutlet weak var promoCodeTitleView: UIView!
     @IBOutlet weak var promoCodeAppliedView: UIView!
-    @IBOutlet weak var promoCodeLbl: UILabel!
+//    @IBOutlet weak var promoCodeLbl: UILabel!
     @IBOutlet weak var promoCodeTitleLbl: UILabel!
+    @IBOutlet weak var orderFeesAmountLbl: UILabel!
+    @IBOutlet weak var orderTotalAmountLbl: UILabel!
     @IBOutlet weak var feesDropDowenIc: UIImageView!
     @IBOutlet weak var applyPromoBtn: LoadingButton!
     @IBOutlet weak var termsAndConditions: UIView!
@@ -38,7 +40,9 @@ final class OrderListViewController: UIViewController {
     @IBOutlet weak var paymentTypeView: UIView!
     @IBOutlet weak var paymentTypeName: UILabel!
     @IBOutlet weak var paymentCardImage: UIImageView!
-
+    @IBOutlet weak var discountAmountLbl: UILabel!
+    @IBOutlet weak var addedPromoCodeFeild: UITextField!
+    @IBOutlet weak var removePromoCodeView: UIView!
     // MARK: - Data
     var selectedTickets: [EventTicket] = []
     var venueDetails: ClipVenue?
@@ -61,15 +65,23 @@ final class OrderListViewController: UIViewController {
     private var isTermsAccepted = true
     private var isVenueMessageAccepted = true
     private var isTermsExpanded = false
+    private var isVenueMessageExpanded = false
     private let collapsedLines = 2
     private var hasLaidOutTerms = false
     private var fullTermsText = ""
+    private var fullVenueMessageText = ""
+    private let questionTableView = UITableView(frame: .zero, style: .plain)
+    private var questionTableViewHeight: NSLayoutConstraint?
+    private var questionContentSizeObservation: NSKeyValueObservation?
+    private weak var questionSectionView: UIView?
 
     // MARK: - Data state
     private var feesAndTaxes: [FeeDisplayItem] = []
     private var paymentDetail: PaymentDetail?
     private var isPromoCodeApplied = false
     private var appliedPromoCode = ""
+    private var eventQuestions: [Questions] = []
+    private var questionAnswers: [String: Any] = [:]
 
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -89,39 +101,44 @@ final class OrderListViewController: UIViewController {
         calculateTotal()
         setupTermsText()
         fetchPaymentIntentAndSetup(promoCode: "")
+        fetchEventQuestions()
         getBooking(id: bookingId)
         ticketTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         feesAndTaxesTableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         applyPromoBtn.indicator = MaterialLoadingIndicator(color: .black)
-        fullTermsText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-        venueMessageLbl.text = "Venue message text here"
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard !hasLaidOutTerms, termsAndConditionsLbl.frame.width > 0 else { return }
         hasLaidOutTerms = true
-        updateTermsLabel()
+        updateAgreementLabels()
         setupPosterBackground()
     }
 
     deinit {
         ticketTableView.removeObserver(self, forKeyPath: "contentSize")
         feesAndTaxesTableView.removeObserver(self, forKeyPath: "contentSize")
+        questionContentSizeObservation?.invalidate()
     }
 
     // MARK: - Setup
 
     private func setupUI() {
         yourOrderView.applyAutoBorderBackground()
+//        yourOrderView.backgroundColor = UIColor(red: 0.176, green: 0.176, blue: 0.165, alpha: 0.95)
+//        yourOrderView.layer.cornerRadius = 16
+//        yourOrderView.layer.masksToBounds = true
 //        feesAndTaxesParentView.applyAutoBorderBackground()
         view.applyScreenBgGradient()
         addPromoCodeView.isHidden = true
         promoCodeAppliedView.isHidden = true
         promoCodeTitleView.isHidden = false
+        feesAndTaxesHiddenView.isHidden = true
 
         paymentTypeView.isUserInteractionEnabled = false
         updatePaymentMethodUI()
+        configureQuestionSection()
 
         checkOutView.delegate = self
     }
@@ -178,22 +195,101 @@ final class OrderListViewController: UIViewController {
     }
 
     private func setupTableViews() {
+        ticketTableView.register(
+            UINib(nibName: OrderItemTableViewCell.identifier, bundle: nil),
+            forCellReuseIdentifier: OrderItemTableViewCell.identifier
+        )
+        feesAndTaxesTableView.register(
+            UINib(nibName: TicketItemTableViewCell.identifier, bundle: nil),
+            forCellReuseIdentifier: TicketItemTableViewCell.identifier
+        )
+        questionTableView.register(
+            OrderQuestionTableViewCell.self,
+            forCellReuseIdentifier: OrderQuestionTableViewCell.identifier
+        )
+
+        feesAndTaxesTableView.tableHeaderView = nil
+        feesAndTaxesTableView.tableFooterView = nil
+        questionTableView.tableHeaderView = nil
+        questionTableView.tableFooterView = nil
+        ticketTableView.separatorStyle = .none
+        feesAndTaxesTableView.separatorStyle = .none
+        questionTableView.separatorStyle = .none
+        ticketTableView.showsVerticalScrollIndicator = false
+        feesAndTaxesTableView.showsVerticalScrollIndicator = false
+        questionTableView.showsVerticalScrollIndicator = false
+        questionTableView.isScrollEnabled = false
+        questionTableView.backgroundColor = .clear
+        ticketTableView.rowHeight = UITableView.automaticDimension
+        ticketTableView.estimatedRowHeight = 44
+        feesAndTaxesTableView.rowHeight = UITableView.automaticDimension
+        feesAndTaxesTableView.estimatedRowHeight = 30
+        questionTableView.rowHeight = UITableView.automaticDimension
+        questionTableView.estimatedRowHeight = 132
+
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         feesAndTaxesTableView.delegate = self
         feesAndTaxesTableView.dataSource = self
-        ticketTableView.separatorStyle = .none
-        feesAndTaxesTableView.separatorStyle = .none
-        ticketTableView.showsVerticalScrollIndicator = false
-        feesAndTaxesTableView.showsVerticalScrollIndicator = false
-        ticketTableView.register(
-            OrderItemTableViewCell.nib,
-            forCellReuseIdentifier: OrderItemTableViewCell.identifier
-        )
-        feesAndTaxesTableView.register(
-            TicketItemTableViewCell.nib,
-            forCellReuseIdentifier: TicketItemTableViewCell.identifier
-        )
+        questionTableView.delegate = self
+        questionTableView.dataSource = self
+    }
+
+    private func configureQuestionSection() {
+        guard questionSectionView == nil,
+              let contentStack = yourOrderView.superview as? UIStackView else { return }
+
+        let sectionView = UIView()
+        sectionView.translatesAutoresizingMaskIntoConstraints = false
+        sectionView.backgroundColor = UIColor(hex: "#000000", alpha: 0.25)
+        sectionView.layer.cornerRadius = 16
+        sectionView.layer.borderWidth = 1
+        sectionView.layer.borderColor = UIColor(hex: "#FFFFFF", alpha: 0.12).cgColor
+        sectionView.clipsToBounds = true
+        sectionView.isHidden = true
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "Additional Information"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistSemiBold(size: 18)
+
+        questionTableView.translatesAutoresizingMaskIntoConstraints = false
+
+        sectionView.addSubview(titleLabel)
+        sectionView.addSubview(questionTableView)
+
+        let height = questionTableView.heightAnchor.constraint(equalToConstant: 1)
+        questionTableViewHeight = height
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: 18),
+            titleLabel.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 18),
+            titleLabel.trailingAnchor.constraint(equalTo: sectionView.trailingAnchor, constant: -18),
+
+            questionTableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            questionTableView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 10),
+            questionTableView.trailingAnchor.constraint(equalTo: sectionView.trailingAnchor, constant: -10),
+            questionTableView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -12),
+            height
+        ])
+
+        let insertIndex: Int
+        if let paymentIndex = contentStack.arrangedSubviews.firstIndex(of: paymentTypeView) {
+            insertIndex = paymentIndex + 1
+        } else if let termsIndex = contentStack.arrangedSubviews.firstIndex(of: termsAndConditions) {
+            insertIndex = termsIndex
+        } else {
+            insertIndex = contentStack.arrangedSubviews.count
+        }
+
+        contentStack.insertArrangedSubview(sectionView, at: insertIndex)
+        questionSectionView = sectionView
+
+        questionContentSizeObservation = questionTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
+            self?.questionTableViewHeight?.constant = max(1, tableView.contentSize.height)
+            self?.view.layoutIfNeeded()
+        }
     }
 
     private func setupPosterBackground() {
@@ -225,6 +321,8 @@ final class OrderListViewController: UIViewController {
                 from: .yyyyMMddHHmmss, to: .hmma, customTimeZone: timezone) ?? "LATE"
             dateandtimeLbl.text = "\(dateText) at \(startTime) - \(endTime)"
         }
+
+        configureAgreementText()
     }
 
     // MARK: - Terms & Conditions
@@ -233,18 +331,58 @@ final class OrderListViewController: UIViewController {
         termsAndConditionsLbl.font = Constant.Font.geistMedium(size: 12)
         termsAndConditionsLbl.textColor = .white
         termsAndConditionsLbl.isUserInteractionEnabled = true
+        termsAndConditionsLbl.numberOfLines = collapsedLines
         venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
-        termsAndConditionsLbl.addGestureRecognizer(tap)
+        venueMessageLbl.textColor = .white
+        venueMessageLbl.isUserInteractionEnabled = true
+        venueMessageLbl.numberOfLines = collapsedLines
+
+        let termsTap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
+        termsAndConditionsLbl.addGestureRecognizer(termsTap)
+
+        let venueMessageTap = UITapGestureRecognizer(target: self, action: #selector(onTapVenueMessageLabel))
+        venueMessageLbl.addGestureRecognizer(venueMessageTap)
+
+        updateAgreementLabels()
         updateTermsCheckboxUI()
         updateVenueCheckboxUI()
     }
 
-    private func updateTermsLabel() {
-        let toggleText = isTermsExpanded ? "View Less" : "View More"
-        let displayText = isTermsExpanded
-            ? "\(fullTermsText) \(toggleText)"
-            : "\(fullTermsText)... \(toggleText)"
+    private func configureAgreementText() {
+        let settings = venueDetails?.venueSettings ?? event?.venue?.venueSettings
+        let policyText = cleanAgreementText(settings?.policyText ?? "")
+        let emailPolicyText = cleanAgreementText(settings?.emailPolicyText ?? "")
+
+        fullTermsText = emailPolicyText
+        fullVenueMessageText = policyText
+        termsAndConditions.isHidden = fullTermsText.isEmpty
+        venueMessageView.isHidden = settings?.optedPolicy != true || fullVenueMessageText.isEmpty
+        updateAgreementLabels()
+    }
+
+    private func cleanAgreementText(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func updateAgreementLabels() {
+        updateAgreementLabel(termsAndConditionsLbl, text: fullTermsText, isExpanded: isTermsExpanded)
+        updateAgreementLabel(venueMessageLbl, text: fullVenueMessageText, isExpanded: isVenueMessageExpanded)
+    }
+
+    private func updateAgreementLabel(_ label: UILabel, text: String, isExpanded: Bool) {
+        guard !text.isEmpty else {
+            label.attributedText = nil
+            label.text = ""
+            label.numberOfLines = 0
+            return
+        }
+
+        let needsToggle = shouldShowAgreementToggle(for: text, label: label)
+        let toggleText = isExpanded ? "View Less" : "View More"
+        let bodyText = isExpanded || !needsToggle ? text : collapsedAgreementPreview(from: text)
+        let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
 
         let attributed = NSMutableAttributedString(
             string: displayText,
@@ -253,23 +391,72 @@ final class OrderListViewController: UIViewController {
                 .foregroundColor: UIColor.white
             ]
         )
-        let toggleRange = (displayText as NSString).range(of: toggleText)
-        attributed.addAttributes([
-            .font: Constant.Font.geistMedium(size: 10),
-            .foregroundColor: UIColor.lightGray
-        ], range: toggleRange)
+        if needsToggle {
+            let toggleRange = (displayText as NSString).range(of: toggleText)
+            attributed.addAttributes([
+                .font: Constant.Font.geistMedium(size: 10),
+                .foregroundColor: UIColor.lightGray
+            ], range: toggleRange)
+        }
 
-        termsAndConditionsLbl.numberOfLines = isTermsExpanded ? 0 : collapsedLines
-        termsAndConditionsLbl.attributedText = attributed
+        label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.attributedText = attributed
+    }
+
+    private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
+        let width = label.bounds.width > 0 ? label.bounds.width : max(view.bounds.width - 64, 240)
+        let font = Constant.Font.geistMedium(size: 12)
+        let textHeight = (text as NSString).boundingRect(
+            with: CGSize(width: width, height: .greatestFiniteMagnitude),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: [.font: font],
+            context: nil
+        ).height
+        return textHeight > (font.lineHeight * CGFloat(collapsedLines)) + 2
+    }
+
+    private func collapsedAgreementPreview(from text: String) -> String {
+        let cleanText = cleanAgreementText(text)
+        let maxCharacters = 140
+        guard cleanText.count > maxCharacters else { return cleanText }
+        let endIndex = cleanText.index(cleanText.startIndex, offsetBy: maxCharacters)
+        return String(cleanText[..<endIndex]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
     }
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
-        guard let text = termsAndConditionsLbl.attributedText?.string else { return }
-        let targetText = isTermsExpanded ? "View Less" : "View More"
-        let range = (text as NSString).range(of: targetText)
-        guard gesture.didTapAttributedTextInLabel(label: termsAndConditionsLbl, inRange: range) else { return }
-        isTermsExpanded.toggle()
-        updateTermsLabel()
+        toggleAgreementIfNeeded(
+            gesture: gesture,
+            label: termsAndConditionsLbl,
+            expanded: isTermsExpanded
+        ) { [weak self] in
+            self?.isTermsExpanded.toggle()
+        }
+    }
+
+    @objc private func onTapVenueMessageLabel(_ gesture: UITapGestureRecognizer) {
+        toggleAgreementIfNeeded(
+            gesture: gesture,
+            label: venueMessageLbl,
+            expanded: isVenueMessageExpanded
+        ) { [weak self] in
+            self?.isVenueMessageExpanded.toggle()
+        }
+    }
+
+    private func toggleAgreementIfNeeded(
+        gesture: UITapGestureRecognizer,
+        label: UILabel,
+        expanded: Bool,
+        toggle: () -> Void
+    ) {
+        guard let text = label.attributedText?.string else { return }
+        let toggleText = expanded ? "View Less" : "View More"
+        let range = (text as NSString).range(of: toggleText)
+        guard range.location != NSNotFound else { return }
+        let tappedToggle = gesture.didTapAttributedTextInLabel(label: label, inRange: range)
+        guard tappedToggle || label.bounds.contains(gesture.location(in: label)) else { return }
+        toggle()
+        updateAgreementLabels()
         UIView.animate(withDuration: 0.25) { self.view.layoutIfNeeded() }
     }
 
@@ -286,6 +473,7 @@ final class OrderListViewController: UIViewController {
             tableViewHeight.constant = table.contentSize.height
         } else if table === feesAndTaxesTableView {
             feesAndTaxesTableViewHeight.constant = table.contentSize.height
+            print("fees rows: \(feesAndTaxes.count), contentSize: \(table.contentSize.height)")
         }
         view.layoutIfNeeded()
     }
@@ -297,8 +485,14 @@ final class OrderListViewController: UIViewController {
             $0 + (Double($1.selectedTicketCount ?? 0) * ($1.price ?? 0))
         }
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
+        updateOrderSummaryAmounts(total: subtotal, fees: 0)
         checkOutView.updateSummary(currency: currency, count: totalTickets, subtotal: subtotal, fees: 0)
         checkOutView.setButtonTitle("Purchase Tickets")
+    }
+
+    private func updateOrderSummaryAmounts(total: Double, fees: Double) {
+        orderFeesAmountLbl.text = "\(currency)\(fees.decimalFormat(true))"
+        orderTotalAmountLbl.text = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
     }
 
     // MARK: - Checkbox UI
@@ -432,20 +626,10 @@ final class OrderListViewController: UIViewController {
             guard let self else { return }
             if isSuccess {
                 self.booking = booking
-                self.reloadFeesUIFromBooking()
             }
         }
     }
 
-    private func reloadFeesUIFromBooking() {
-        feesAndTaxes = buildFeesArray(from: booking?.fees)
-        feesAndTaxesHiddenView.isHidden = feesAndTaxes.isEmpty
-        feesAndTaxesTableView.reloadData()
-        DispatchQueue.main.async {
-            self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
-        }
-    }
-    
     private func buildCoverTicketsForPaymentIntent() -> [[String: Any]] {
         var coverTickets = [[String: Any]]()
         selectedTickets.forEach {
@@ -561,7 +745,8 @@ final class OrderListViewController: UIViewController {
         feesAndTaxesTableView.reloadData()
 
         let totalTickets = selectedTickets.reduce(0) { $0 + ($1.selectedTicketCount ?? 0) }
-        let feesAmount = detail.total - detail.subTotal
+        let feesAmount = feesAndTaxes.reduce(0) { $0 + $1.amount }
+        updateOrderSummaryAmounts(total: detail.total, fees: feesAmount)
         checkOutView.updateSummary(
             currency: currency,
             count: totalTickets,
@@ -569,20 +754,12 @@ final class OrderListViewController: UIViewController {
             fees: feesAmount
         )
 
-        let discount = detail.discount ?? 0
-        if discount > 0 {
-            promoCodeAppliedView.isHidden = false
-            promoCodeTitleView.isHidden = true
-            promoCodeTitleLbl.text = "-\(currency)\(discount.decimalFormat(true)) Discount"
-        } else {
-            promoCodeAppliedView.isHidden = true
-            promoCodeTitleView.isHidden = false
-        }
+        updatePromoCodeUI()
 
-        DispatchQueue.main.async {
-            self.tableViewHeight.constant = self.ticketTableView.contentSize.height
-            self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
-        }
+//        DispatchQueue.main.async {
+//            self.tableViewHeight.constant = self.ticketTableView.contentSize.height
+//            self.feesAndTaxesTableViewHeight.constant = self.feesAndTaxesTableView.contentSize.height
+//        }
         paymentTypeView.isUserInteractionEnabled = paymentSheet != nil && !isFreeTicket
     }
 
@@ -603,19 +780,116 @@ final class OrderListViewController: UIViewController {
 
     private func updatePromoCodeUI() {
         promoCodeAppliedView.isHidden = !isPromoCodeApplied
-        promoCodeTitleView.isHidden = isPromoCodeApplied
+        promoCodeStackView.isHidden = isPromoCodeApplied
+        removePromoCodeView.isHidden = !isPromoCodeApplied
         if isPromoCodeApplied {
-            promoCodeLbl.text = appliedPromoCode.uppercased()
+            addedPromoCodeFeild.text = addCodeTextFeild.text
+            addCodeTextFeild.isUserInteractionEnabled = false
             let discount = paymentDetail?.discount ?? 0
-            promoCodeTitleLbl.text = discount > 0
-                ? "\(currency)\(discount.decimalFormat(true)) OFF Applied"
-                : "Promo Applied"
+            promoCodeTitleLbl.text = "Discount Applied"
+            discountAmountLbl.text = "-\(currency)\(discount.decimalFormat(true))"
         } else {
-            promoCodeLbl.text = ""
             promoCodeTitleLbl.text = ""
+            discountAmountLbl.text = ""
             addCodeTextFeild.text = ""
             addCodeTextFeild.isUserInteractionEnabled = true
             addCodeTextFeild.alpha = 1
+        }
+    }
+
+    // MARK: - Event Questions
+
+    private func fetchEventQuestions() {
+        guard let eventUniqueId = event?.uniqueId, !eventUniqueId.isEmpty else {
+            updateQuestionSectionVisibility()
+            return
+        }
+
+        PaymentPresenter.getEventBookingQuestion(eventUniqueId: eventUniqueId) { [weak self] isSuccess, _, questions in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if isSuccess {
+                    self.eventQuestions = (questions ?? [])
+                        .filter { !$0.isDeleted }
+                        .sorted { $0.order < $1.order }
+                } else {
+                    self.eventQuestions = []
+                }
+
+                self.questionAnswers = self.questionAnswers.filter { answer in
+                    self.eventQuestions.contains { $0.id == answer.key }
+                }
+                self.questionTableView.reloadData()
+                self.updateQuestionSectionVisibility()
+            }
+        }
+    }
+
+    private func updateQuestionSectionVisibility() {
+        questionSectionView?.isHidden = eventQuestions.isEmpty
+        questionTableViewHeight?.constant = eventQuestions.isEmpty ? 1 : max(1, questionTableView.contentSize.height)
+        view.layoutIfNeeded()
+    }
+
+    private func validateQuestionAnswers() -> Bool {
+        guard let invalidQuestion = eventQuestions.first(where: { question in
+            guard !question.isOptional else { return false }
+            return !hasValidAnswer(for: question)
+        }) else { return true }
+
+        Alert.showToast("Please answer: \(invalidQuestion.question)")
+        return false
+    }
+
+    private func hasValidAnswer(for question: Questions) -> Bool {
+        let answer = questionAnswers[question.id]
+
+        switch question.questionType {
+        case "MULTI_SELECT":
+            return !(answer as? [String] ?? []).isEmpty
+        case "SINGLE_SELECT", "TEXT":
+            return !((answer as? String ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        case "CHECKBOX":
+            return answer as? Bool == true
+        default:
+            return true
+        }
+    }
+
+    private func submitQuestionAnswersIfNeeded(completion: @escaping (Bool) -> Void) {
+        guard !eventQuestions.isEmpty else {
+            completion(true)
+            return
+        }
+
+        guard validateQuestionAnswers() else {
+            completion(false)
+            return
+        }
+
+        guard let eventUniqueId = event?.uniqueId, !eventUniqueId.isEmpty, let bookingId else {
+            Alert.showToast("Missing booking information.")
+            completion(false)
+            return
+        }
+
+        let answers: [Any] = questionAnswers.map {
+            ["eventQuestionId": $0.key, "answer": $0.value] as [String: Any]
+        }
+
+        PaymentPresenter.postEventBookingQueAns(
+            eventUniqueId: eventUniqueId,
+            answers: answers,
+            bookingId: bookingId
+        ) { isSuccess, errMsg in
+            DispatchQueue.main.async {
+                if isSuccess {
+                    completion(true)
+                } else {
+                    Alert.showToast(errMsg ?? "Unable to save additional information")
+                    completion(false)
+                }
+            }
         }
     }
 
@@ -634,18 +908,31 @@ final class OrderListViewController: UIViewController {
             return
         }
 
+        guard validateQuestionAnswers() else { return }
+
+        isPaymentInitiated = true
+        submitQuestionAnswersIfNeeded { [weak self] isSubmitted in
+            guard let self else { return }
+            guard isSubmitted else {
+                self.isPaymentInitiated = false
+                return
+            }
+            self.continuePaymentFlow()
+        }
+    }
+
+    private func continuePaymentFlow() {
         if isFreeTicket {
-            isPaymentInitiated = true
             confirmPaymentAndNavigate()
             return
         }
 
         guard let paymentSheet else {
+            isPaymentInitiated = false
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
 
-        isPaymentInitiated = true
         paymentSheet.present(from: self) { [weak self] result in
             guard let self else { return }
 
@@ -670,14 +957,16 @@ final class OrderListViewController: UIViewController {
             return
         }
 
-        Loader.show()
+        showPurchaseLoading()
 
+        let optedPolicy = venueMessageView.isHidden ? nil : isVenueMessageAccepted
         paymentService.confirmPaymentSuccess(
             paymentHistoryId: stripePaymentHistoryId,
-            bookingId: bookingId
+            bookingId: bookingId,
+            optedPolicy: optedPolicy
         ) { [weak self] isSuccess, errMsg in
             DispatchQueue.main.async {
-                Loader.hide()
+                self?.hidePurchaseLoading()
                 guard let self else { return }
                 self.isPaymentInitiated = false
 
@@ -694,6 +983,42 @@ final class OrderListViewController: UIViewController {
             }
         }
     }
+
+    private let purchaseLoadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
+    private func showPurchaseLoading() {
+        checkOutView.isUserInteractionEnabled = false
+        if purchaseLoadingIndicator.superview == nil {
+            view.addSubview(purchaseLoadingIndicator)
+            NSLayoutConstraint.activate([
+                purchaseLoadingIndicator.centerXAnchor.constraint(equalTo: checkOutView.centerXAnchor),
+                purchaseLoadingIndicator.centerYAnchor.constraint(equalTo: checkOutView.centerYAnchor)
+            ])
+        }
+        purchaseLoadingIndicator.alpha = 0
+        purchaseLoadingIndicator.startAnimating()
+        UIView.animate(withDuration: 0.2) {
+            self.checkOutView.alpha = 0.4
+            self.purchaseLoadingIndicator.alpha = 1
+        }
+    }
+
+    private func hidePurchaseLoading() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.checkOutView.alpha = 1
+            self.purchaseLoadingIndicator.alpha = 0
+        }, completion: { _ in
+            self.purchaseLoadingIndicator.stopAnimating()
+            self.checkOutView.isUserInteractionEnabled = true
+        })
+    }
+
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource
@@ -701,7 +1026,13 @@ final class OrderListViewController: UIViewController {
 extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView === ticketTableView ? selectedTickets.count : feesAndTaxes.count
+        if tableView === ticketTableView {
+            return selectedTickets.count
+        } else if tableView === questionTableView {
+            return eventQuestions.count
+        } else {
+            return feesAndTaxes.count
+        }
     }
 
     func tableView(
@@ -711,8 +1042,7 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 
         if tableView === ticketTableView {
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: OrderItemTableViewCell.identifier,
-                for: indexPath
+                withIdentifier: OrderItemTableViewCell.identifier
             ) as? OrderItemTableViewCell else { return UITableViewCell() }
 
             let ticket = selectedTickets[indexPath.row]
@@ -730,10 +1060,22 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
 //            }
             return cell
 
+        } else if tableView === questionTableView {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: OrderQuestionTableViewCell.identifier
+            ) as? OrderQuestionTableViewCell else { return UITableViewCell() }
+
+            let question = eventQuestions[indexPath.row]
+            cell.configure(
+                question: question,
+                answer: questionAnswers[question.id],
+                delegate: self
+            )
+            return cell
+
         } else {
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: TicketItemTableViewCell.identifier,
-                for: indexPath
+                withIdentifier: TicketItemTableViewCell.identifier
             ) as? TicketItemTableViewCell else { return UITableViewCell() }
 
             let item = feesAndTaxes[indexPath.row]
@@ -751,11 +1093,278 @@ extension OrderListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - OrderQuestionTableViewCellDelegate
+
+extension OrderListViewController: OrderQuestionTableViewCellDelegate {
+
+    func orderQuestionCell(_ cell: OrderQuestionTableViewCell, didUpdate answer: Any, for question: Questions) {
+        questionAnswers[question.id] = answer
+    }
+}
+
 // MARK: - CheckoutBarDelegate
 
 extension OrderListViewController: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
         startPaymentFlow()
+    }
+}
+
+// MARK: - OrderQuestionTableViewCell
+
+protocol OrderQuestionTableViewCellDelegate: AnyObject {
+    func orderQuestionCell(_ cell: OrderQuestionTableViewCell, didUpdate answer: Any, for question: Questions)
+}
+
+final class OrderQuestionTableViewCell: UITableViewCell, UITextFieldDelegate {
+
+    private weak var delegate: OrderQuestionTableViewCellDelegate?
+    private var question: Questions?
+    private var currentAnswer: Any?
+    private var optionButtons: [UIButton] = []
+
+    private let mainStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let questionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = UIColor.white.withAlphaComponent(0.92)
+        label.font = Constant.Font.geistMedium(size: 14)
+        return label
+    }()
+
+    private let textFieldContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.18)
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.white.withAlphaComponent(0.14).cgColor
+        return view
+    }()
+
+    private let textField: UITextField = {
+        let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.textColor = .white
+        field.tintColor = .white
+        field.font = Constant.Font.geistMedium(size: 14)
+        field.attributedPlaceholder = NSAttributedString(
+            string: "Enter answer",
+            attributes: [.foregroundColor: UIColor.white.withAlphaComponent(0.45)]
+        )
+        return field
+    }()
+
+    private let optionStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        return stack
+    }()
+
+    private let checkboxRow: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .top
+        stack.spacing = 10
+        return stack
+    }()
+
+    private let checkboxButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    private let checkboxQuestionLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = UIColor.white.withAlphaComponent(0.92)
+        label.font = Constant.Font.geistMedium(size: 14)
+        return label
+    }()
+
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        return view
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        question = nil
+        currentAnswer = nil
+        delegate = nil
+        optionButtons.removeAll()
+        optionStack.arrangedSubviews.forEach {
+            optionStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        textField.text = nil
+    }
+
+    func configure(question: Questions, answer: Any?, delegate: OrderQuestionTableViewCellDelegate?) {
+        self.question = question
+        self.currentAnswer = answer
+        self.delegate = delegate
+
+        let title = "\(question.question)\(question.isOptional ? "" : " *")"
+        questionLabel.text = title
+        checkboxQuestionLabel.text = title
+
+        questionLabel.isHidden = question.questionType == "CHECKBOX"
+        textFieldContainer.isHidden = question.questionType != "TEXT"
+        optionStack.isHidden = !(question.questionType == "SINGLE_SELECT" || question.questionType == "MULTI_SELECT")
+        checkboxRow.isHidden = question.questionType != "CHECKBOX"
+
+        textField.text = answer as? String
+        configureOptions(question.eventQuestionHasOption?.filter { !$0.isDeleted }.map { $0.option } ?? [])
+        updateCheckboxState()
+        updateOptionStates()
+    }
+
+    private func setup() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        selectionStyle = .none
+
+        contentView.addSubview(mainStack)
+        mainStack.addArrangedSubview(questionLabel)
+        mainStack.addArrangedSubview(textFieldContainer)
+        mainStack.addArrangedSubview(optionStack)
+        mainStack.addArrangedSubview(checkboxRow)
+        mainStack.addArrangedSubview(separatorView)
+
+        textFieldContainer.addSubview(textField)
+        checkboxRow.addArrangedSubview(checkboxButton)
+        checkboxRow.addArrangedSubview(checkboxQuestionLabel)
+
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
+        checkboxButton.addTarget(self, action: #selector(onTapCheckbox), for: .touchUpInside)
+
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            mainStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            mainStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+
+            textFieldContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 48),
+            textField.topAnchor.constraint(equalTo: textFieldContainer.topAnchor, constant: 4),
+            textField.leadingAnchor.constraint(equalTo: textFieldContainer.leadingAnchor, constant: 14),
+            textField.trailingAnchor.constraint(equalTo: textFieldContainer.trailingAnchor, constant: -14),
+            textField.bottomAnchor.constraint(equalTo: textFieldContainer.bottomAnchor, constant: -4),
+
+            checkboxButton.widthAnchor.constraint(equalToConstant: 24),
+            checkboxButton.heightAnchor.constraint(equalToConstant: 24),
+            separatorView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+    }
+
+    private func configureOptions(_ options: [String]) {
+        optionStack.arrangedSubviews.forEach {
+            optionStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        optionButtons.removeAll()
+
+        options.enumerated().forEach { index, option in
+            let button = UIButton(type: .system)
+            button.tag = index
+            button.contentHorizontalAlignment = .left
+            button.titleLabel?.numberOfLines = 0
+            button.titleLabel?.font = Constant.Font.geistMedium(size: 14)
+            button.setTitle(option, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.tintColor = .white
+            button.backgroundColor = UIColor.black.withAlphaComponent(0.18)
+            button.layer.cornerRadius = 12
+            button.layer.borderWidth = 1
+            button.layer.borderColor = UIColor.white.withAlphaComponent(0.14).cgColor
+            button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+            button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8)
+            button.addTarget(self, action: #selector(onTapOption(_:)), for: .touchUpInside)
+            optionStack.addArrangedSubview(button)
+            optionButtons.append(button)
+        }
+    }
+
+    private func updateOptionStates() {
+        guard let question else { return }
+
+        optionButtons.forEach { button in
+            let option = button.title(for: .normal) ?? ""
+            let isSelected: Bool
+            if question.questionType == "MULTI_SELECT" {
+                isSelected = (currentAnswer as? [String] ?? []).contains(option)
+            } else {
+                isSelected = (currentAnswer as? String) == option
+            }
+
+            button.setImage(isSelected ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon, for: .normal)
+            button.layer.borderColor = (isSelected
+                ? UIColor(hex: "#69DC82", alpha: 0.65)
+                : UIColor.white.withAlphaComponent(0.14)).cgColor
+            button.setTitleColor(isSelected ? UIColor(hex: "#69DC82") : .white, for: .normal)
+        }
+    }
+
+    private func updateCheckboxState() {
+        let isChecked = currentAnswer as? Bool == true
+        checkboxButton.setImage(isChecked ? Constant.Icon.checkedIcon : Constant.Icon.uncheckedIcon, for: .normal)
+        checkboxQuestionLabel.textColor = isChecked ? UIColor(hex: "#69DC82") : UIColor.white.withAlphaComponent(0.92)
+    }
+
+    @objc private func textFieldChanged() {
+        guard let question else { return }
+        let answer = textField.text ?? ""
+        currentAnswer = answer
+        delegate?.orderQuestionCell(self, didUpdate: answer, for: question)
+    }
+
+    @objc private func onTapOption(_ sender: UIButton) {
+        guard let question, let selectedOption = sender.title(for: .normal) else { return }
+
+        if question.questionType == "MULTI_SELECT" {
+            var answers = currentAnswer as? [String] ?? []
+            if let index = answers.firstIndex(of: selectedOption) {
+                answers.remove(at: index)
+            } else {
+                answers.append(selectedOption)
+            }
+            currentAnswer = answers
+            delegate?.orderQuestionCell(self, didUpdate: answers, for: question)
+        } else {
+            currentAnswer = selectedOption
+            delegate?.orderQuestionCell(self, didUpdate: selectedOption, for: question)
+        }
+
+        updateOptionStates()
+    }
+
+    @objc private func onTapCheckbox() {
+        guard let question else { return }
+        let answer = !(currentAnswer as? Bool ?? false)
+        currentAnswer = answer
+        updateCheckboxState()
+        delegate?.orderQuestionCell(self, didUpdate: answer, for: question)
     }
 }

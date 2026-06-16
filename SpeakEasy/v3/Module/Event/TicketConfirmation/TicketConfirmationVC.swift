@@ -29,12 +29,8 @@ class TicketConfirmationVC: UIViewController {
     var bookingId: String?
     private var faqs: [(question: String, answer: String)] = [
         (
-            question: "Event details.",
-            answer: "View all event information including venue, date, time, and other event-related details."
-        ),
-        (
-            question: "How to use my tickets",
-            answer: "Show your QR ticket at the venue entrance for scanning and entry."
+            question: "A note from the venue",
+            answer: ""
         )
     ]
 
@@ -46,8 +42,6 @@ class TicketConfirmationVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         getBooking(id: bookingId ?? "be5af872-e29d-4115-93ab-6660d47662eb")
-       
-        
         setupFAQTableView()
         setupKVO()
     }
@@ -62,6 +56,13 @@ class TicketConfirmationVC: UIViewController {
 
         guard let booking = booking else { return }
         venueDetails = booking.venueObject
+        noteLbl.text = booking.note ?? ""
+
+        let dressCode = (venueDetails?.dressCode ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if !dressCode.isEmpty {
+            faqs[0].answer = dressCode
+            faqTableView.reloadData()
+        }
 //        venueLogoImg.sd_setImage(
 //            with: URL(string: (venueDetails?.logo?.key ?? "").imageURL),
 //            placeholderImage: Constant.Icon.uploadImage

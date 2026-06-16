@@ -13,8 +13,12 @@ class FAQsTableViewCell: UITableViewCell {
     @IBOutlet weak var dropDowenBtn: UIImageView!
     @IBOutlet weak var ansLbl: UILabel!
     @IBOutlet weak var ansView: UIView!
+    @IBOutlet weak var ansLblTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var ansLblBottomConstraint: NSLayoutConstraint!
 
     var onToggle: (() -> Void)?
+    private let compactAnswerTopPadding: CGFloat = 8
+    private let compactAnswerBottomPadding: CGFloat = 0
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,6 +28,7 @@ class FAQsTableViewCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         selectionStyle = .none
+        setAnswerPadding(top: compactAnswerTopPadding, bottom: compactAnswerBottomPadding)
     }
 
     override func prepareForReuse() {
@@ -31,16 +36,30 @@ class FAQsTableViewCell: UITableViewCell {
         onToggle = nil
     }
 
-    func configure(title: String, content: String, isExpanded: Bool) {
+    func configure(
+        title: String,
+        content: String,
+        isExpanded: Bool,
+        answerBottomPadding: CGFloat? = nil
+    ) {
         questionLbl.text = title
         ansLbl.text = content
 
         ansLbl.isHidden = !isExpanded
         ansView.isHidden = !isExpanded
+        setAnswerPadding(
+            top: compactAnswerTopPadding,
+            bottom: answerBottomPadding ?? compactAnswerBottomPadding
+        )
 
         dropDowenBtn.transform = isExpanded
             ? CGAffineTransform(rotationAngle: .pi)
             : .identity
+    }
+
+    func setAnswerPadding(top: CGFloat, bottom: CGFloat) {
+        ansLblTopConstraint.constant = top
+        ansLblBottomConstraint.constant = bottom
     }
 
     @IBAction func onClickQuestionView(_ sender: Any) {

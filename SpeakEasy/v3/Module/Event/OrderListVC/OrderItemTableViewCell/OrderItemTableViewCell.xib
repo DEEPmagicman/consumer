@@ -18,18 +18,18 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="84" id="KGk-i7-Jjw" customClass="OrderItemTableViewCell" customModule="Speakeasy" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="431" height="84"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="OrderItemTableViewCell" rowHeight="52" id="KGk-i7-Jjw" customClass="OrderItemTableViewCell" customModule="Speakeasy" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="431" height="52"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="431" height="84"/>
+                <rect key="frame" x="0.0" y="0.0" width="431" height="52"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tdD-ke-6PO">
-                        <rect key="frame" x="0.0" y="7" width="431" height="77"/>
+                        <rect key="frame" x="0.0" y="0.0" width="431" height="52"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="Female General Admission   " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ln-Zb-7eD">
-                                <rect key="frame" x="49" y="7.6666666666666643" width="362" height="21"/>
+                                <rect key="frame" x="48" y="7.6666666666666643" width="363" height="21"/>
                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -57,10 +57,10 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="7"/>
+                                        <real key="value" value="8"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" red="1" green="1" blue="1" alpha="0.091026628521126765" colorSpace="calibratedRGB"/>
@@ -70,7 +70,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yZR-Pj-B5V">
                                 <rect key="frame" x="411" y="0.0" width="0.0" height="0.0"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNV-HA-AkY">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNV-HA-AkY">
                                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -88,16 +88,16 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="yZR-Pj-B5V" firstAttribute="top" secondItem="X72-jh-a2w" secondAttribute="top" id="I87-ax-RqZ"/>
-                            <constraint firstAttribute="trailing" secondItem="yZR-Pj-B5V" secondAttribute="trailing" constant="20" id="M2M-5U-Dlz"/>
+                            <constraint firstAttribute="trailing" secondItem="yZR-Pj-B5V" secondAttribute="trailing" id="M2M-5U-Dlz"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yZR-Pj-B5V" secondAttribute="bottom" id="Q0g-5C-79M"/>
-                            <constraint firstItem="4Ln-Zb-7eD" firstAttribute="leading" secondItem="X72-jh-a2w" secondAttribute="trailing" constant="13" id="aH9-R5-fYv"/>
+                            <constraint firstItem="4Ln-Zb-7eD" firstAttribute="leading" secondItem="X72-jh-a2w" secondAttribute="trailing" constant="12" id="aH9-R5-fYv"/>
                             <constraint firstItem="4Ln-Zb-7eD" firstAttribute="centerY" secondItem="X72-jh-a2w" secondAttribute="centerY" id="bdp-kU-w5E"/>
                             <constraint firstItem="X72-jh-a2w" firstAttribute="leading" secondItem="tdD-ke-6PO" secondAttribute="leading" id="gUa-im-3tQ"/>
                             <constraint firstItem="yZR-Pj-B5V" firstAttribute="leading" secondItem="4Ln-Zb-7eD" secondAttribute="trailing" id="iLq-Oe-YOe"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="X72-jh-a2w" secondAttribute="bottom" id="lyN-Kz-0vt"/>
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="4Ln-Zb-7eD" secondAttribute="bottom" id="qTF-57-n9v"/>
                             <constraint firstItem="4Ln-Zb-7eD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tdD-ke-6PO" secondAttribute="top" id="urr-ge-z4k"/>
-                            <constraint firstItem="X72-jh-a2w" firstAttribute="top" secondItem="tdD-ke-6PO" secondAttribute="top" id="xXp-2l-JRT"/>
+                            <constraint firstItem="X72-jh-a2w" firstAttribute="top" secondItem="tdD-ke-6PO" secondAttribute="top" constant="4" id="xXp-2l-JRT"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -105,7 +105,7 @@
                 <constraints>
                     <constraint firstItem="tdD-ke-6PO" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="IcE-Wj-R35"/>
                     <constraint firstAttribute="bottom" secondItem="tdD-ke-6PO" secondAttribute="bottom" id="MOh-io-INF"/>
-                    <constraint firstItem="tdD-ke-6PO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="gGp-kh-eSO"/>
+                    <constraint firstItem="tdD-ke-6PO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="gGp-kh-eSO"/>
                     <constraint firstAttribute="trailing" secondItem="tdD-ke-6PO" secondAttribute="trailing" id="jeH-bD-w2h"/>
                 </constraints>
             </tableViewCellContentView>
