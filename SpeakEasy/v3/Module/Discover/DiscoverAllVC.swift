@@ -52,7 +52,7 @@ final class DiscoverAllVC: UIViewController {
         super.viewDidLoad()
 
         view.isHidden = true
-        selectedCity = UserDefault.shared.localCity
+        selectedCity = UserDefault.shared.activeCity
         setupSections()
         fetchInitialData()
         
@@ -457,7 +457,12 @@ extension DiscoverAllVC {
 
     func reloadCityData(city: String) {
 
-        selectedCity = city
+        let resolvedCity = city
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        selectedCity = resolvedCity.isEmpty
+            ? UserDefault.shared.activeCity
+            : resolvedCity
         refreshAllList()
     }
 }

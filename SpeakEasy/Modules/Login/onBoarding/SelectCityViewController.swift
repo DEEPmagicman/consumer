@@ -15,6 +15,7 @@ final class SelectCityViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     var userLocationCity = ""
+    var userLocationCoordinate: CLLocationCoordinate2D?
     private var arrCityList = [MVPCity]()
     private var displayList = [MVPCity]()
     private var selectedCity = ""
@@ -41,13 +42,8 @@ final class SelectCityViewController: UIViewController {
             if isSuccess {
                 self.arrCityList = cityList
                 self.displayList = cityList
-                if self.userLocationCity != "", cityList.contains(where: { list in
-                    list.value == self.userLocationCity
-                }) {
-                    self.selectedCity = self.userLocationCity
-                    self.onClickContinue()
-                }
                 self.selectCityTableView.reloadData()
+                self.resolveDetectedCityIfNeeded(cityList)
             } else {
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
@@ -59,12 +55,25 @@ final class SelectCityViewController: UIViewController {
             return
         }
         if sender.didTapAttributedTextInLabel(label: selectCityInfoLbl, inRange: range) {
-            locationManager.requestWhenInUseAuthorization()
-            if CLLocationManager.locationServicesEnabled() {
-                locationManager.delegate = self
-                locationManager.requestAlwaysAuthorization()
-                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-                locationManager.startUpdatingLocation()
+            locationManager.delegate = self
+
+            guard CLLocationManager.locationServicesEnabled() else {
+                showManualCitySelectionMessage()
+                return
+            }
+
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+
+            case .authorizedAlways, .authorizedWhenInUse:
+                startUpdatingCurrentLocation()
+
+            case .denied, .restricted:
+                showManualCitySelectionMessage()
+
+            @unknown default:
+                showManualCitySelectionMessage()
             }
         }
     }
@@ -91,6 +100,97 @@ final class SelectCityViewController: UIViewController {
             }
             Loader.hide()
         }
+    }
+
+    private func resolveDetectedCityIfNeeded(_ cityList: [MVPCity]) {
+        let detectedCity = userLocationCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !detectedCity.isEmpty else { return }
+
+        if let exactCity = cityList.first(where: {
+            $0.value.trimmingCharacters(in: .whitespacesAndNewlines)
+                .caseInsensitiveCompare(detectedCity) == .orderedSame
+        }) {
+            selectedCity = exactCity.value
+            onClickContinue()
+            return
+        }
+
+        guard let coordinate = userLocationCoordinate else {
+            showManualCitySelectionMessage()
+            return
+        }
+
+        let userLocation = CLLocation(
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude
+        )
+
+        selectNearestSupportedCity(
+            to: userLocation,
+            from: cityList
+        ) { [weak self] nearestCity in
+            guard let self else { return }
+
+            if let nearestCity {
+                self.selectedCity = nearestCity.value
+                self.onClickContinue()
+            } else {
+                self.showManualCitySelectionMessage()
+            }
+        }
+    }
+
+    private func showManualCitySelectionMessage() {
+        selectCityInfoLbl.text = "Select your primary location manually."
+    }
+
+    private func startUpdatingCurrentLocation() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.startUpdatingLocation()
+    }
+
+    private func selectNearestSupportedCity(
+        to userLocation: CLLocation,
+        from cityList: [MVPCity],
+        completion: @escaping (MVPCity?) -> Void
+    ) {
+        guard !cityList.isEmpty else {
+            completion(nil)
+            return
+        }
+
+        let geocoder = CLGeocoder()
+        var index = 0
+        var nearestCity: MVPCity?
+        var nearestDistance = CLLocationDistance.greatestFiniteMagnitude
+
+        func geocodeNextCity() {
+            guard index < cityList.count else {
+                completion(nearestCity)
+                return
+            }
+
+            let city = cityList[index]
+            index += 1
+
+            geocoder.geocodeAddressString(city.value) { placemarks, _ in
+                if let location = placemarks?.first?.location {
+                    let distance = userLocation.distance(from: location)
+                    if distance < nearestDistance {
+                        nearestDistance = distance
+                        nearestCity = city
+                    }
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    geocodeNextCity()
+                }
+            }
+        }
+
+        geocodeNextCity()
     }
 }
 
@@ -136,14 +236,34 @@ extension SelectCityViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension SelectCityViewController: CLLocationManagerDelegate {
+    func locationManager(
+        _ manager: CLLocationManager,
+        didChangeAuthorization status: CLAuthorizationStatus
+    ) {
+        switch status {
+        case .denied, .restricted:
+            showManualCitySelectionMessage()
+
+        case .authorizedAlways, .authorizedWhenInUse:
+            startUpdatingCurrentLocation()
+
+        case .notDetermined:
+            break
+
+        @unknown default:
+            showManualCitySelectionMessage()
+        }
+    }
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
         let city = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude).getCity { [weak self] cityName in
             guard let self = self else { return }
             self.locationManager.delegate = nil
-            self.locationManager.stopUpdatingHeading()
+            self.locationManager.stopUpdatingLocation()
             self.userLocationCity = cityName
+            self.userLocationCoordinate = locValue
             self.fetchCityList()
         }
     }

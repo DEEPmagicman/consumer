@@ -31,7 +31,7 @@ final class VenueService {
                 "venueAttachment"
             ],
             "bookingStatus": status,
-            "city": city ?? UserDefault.shared.localCity,
+            "city": city ?? UserDefault.shared.activeCity,
             "orderBy": "createdAt|desc"
         ]
         

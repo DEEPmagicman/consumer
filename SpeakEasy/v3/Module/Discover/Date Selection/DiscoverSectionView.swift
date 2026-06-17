@@ -46,7 +46,7 @@ final class DiscoverSectionView: UIView {
     func configure(
         type: DiscoverSectionType,
         data: DiscoverSectionData,
-        city: String = UserDefault.shared.localCity
+        city: String = UserDefault.shared.activeCity
     ) {
 
         self.sectionType = type
@@ -56,7 +56,7 @@ final class DiscoverSectionView: UIView {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         let displayCity = resolvedCity.isEmpty
-        ? UserDefault.shared.localCity
+        ? UserDefault.shared.activeCity
         : resolvedCity
 
         switch type {
@@ -114,13 +114,17 @@ private extension DiscoverSectionView {
         collectionView.showsHorizontalScrollIndicator = false
         
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                layout.sectionInset = UIEdgeInsets(
-                    top: 0,
-                    left: 16,
-                    bottom: 0,
-                    right: 16
-                )
-            }
+            layout.estimatedItemSize = .zero
+            layout.itemSize = CGSize(width: 143, height: 210)
+            layout.minimumLineSpacing = 10
+            layout.minimumInteritemSpacing = 10
+            layout.sectionInset = UIEdgeInsets(
+                top: 0,
+                left: 16,
+                bottom: 0,
+                right: 16
+            )
+        }
 
         collectionView.register(
             EventCollectionViewCell.nib,

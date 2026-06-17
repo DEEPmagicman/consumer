@@ -9,7 +9,7 @@ import UIKit
 
 final class SegmentedTabView: UIView {
 
-    
+
     var onSelectionChanged: ((Int) -> Void)?
 
     private(set) var selectedIndex: Int = 0 {
@@ -173,6 +173,9 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: UIView!
     @IBOutlet weak var bottomPanelView: UIView!
     @IBOutlet weak var bottomPanelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var selectedCityLbl: UILabel!
+    private weak var cityChipView: UIView?
+    private var cityChipWidthConstraint: NSLayoutConstraint?
 
     // MARK: - Tab Bar
     private let segmentedTab = SegmentedTabView(items: ["Venues", "Events"])
@@ -182,6 +185,7 @@ class MapViewController: UIViewController {
     private let bottomPanelCollapsedCornerRadius: CGFloat = 20
     private var bottomPanelPanStartHeight: CGFloat = 400
     private var isDraggingBottomPanelFromTable = false
+    private var screenFilterCity: String?
     private var isBottomPanelExpanded: Bool {
         bottomPanelHeightConstraint.constant >= bottomPanelExpandedHeight - 1
     }
@@ -194,13 +198,15 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
 
         setupSegmentedTab()
+        setupCityChipLayout()
         setupTableView()
         setupBottomPanelGesture()
         setupBottomPanelAppearance()
         tableView.showsHorizontalScrollIndicator = false
         tableView.showsVerticalScrollIndicator = false
+        updateBrowsingTitle()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.view.applyScreenBgGradient()
@@ -222,6 +228,16 @@ class MapViewController: UIViewController {
             guard let self else { return }
             self.applySelectedTab(index, animated: true, updateSegmentedTab: false)
         }
+    }
+
+    private func setupCityChipLayout() {
+        guard let chipView = selectedCityLbl.superview else { return }
+
+        cityChipView = chipView
+        let widthConstraint = chipView.widthAnchor.constraint(equalToConstant: 0)
+        widthConstraint.priority = .required
+        widthConstraint.isActive = true
+        cityChipWidthConstraint = widthConstraint
     }
 
     // MARK: - Setup TableView
@@ -269,14 +285,17 @@ class MapViewController: UIViewController {
         rightSwipe.direction = .right
         view.addGestureRecognizer(rightSwipe)
     }
-    
+
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
-    
+
     @IBAction func onClickFilterbtn(_ sender: Any) {
-        Navigate.to.filtersVC(self)
+        presentCityFilter()
+    }
+
+    @IBAction func onClickCityBtn(_ sender: Any) {
+        presentCityFilter()
     }
 
     @objc private func handleTabSwipe(_ gesture: UISwipeGestureRecognizer) {
@@ -302,9 +321,71 @@ class MapViewController: UIViewController {
         if updateSegmentedTab {
             segmentedTab.selectTab(at: index, animated: animated)
         }
-        browsingLbl.text = selectedIndex == 0 ? "Browsing Venues" : "Browsing Events"
+        updateBrowsingTitle()
         tableView.reloadData()
         tableView.setContentOffset(.zero, animated: false)
+    }
+
+    private func presentCityFilter() {
+        let city = screenFilterCity ?? UserDefault.shared.filterCity
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.persistsFilterSelection = false
+        vc.selectedFilterCity = city
+        vc.initialFilterCity = city
+        vc.onSelectFilterCity = { [weak self] city in
+            self?.applyScreenCityFilter(city)
+        }
+    }
+
+    private func applyScreenCityFilter(_ city: String?) {
+        let trimmedCity = city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        screenFilterCity = trimmedCity?.isEmpty == false
+            ? trimmedCity
+            : nil
+
+        updateBrowsingTitle()
+        tableView.reloadData()
+        tableView.setContentOffset(.zero, animated: false)
+    }
+
+    private func resolvedCity() -> String {
+        let city = (screenFilterCity ?? UserDefault.shared.activeCity)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return city.isEmpty ? "Chicago" : city
+    }
+
+    private func updateBrowsingTitle() {
+        let contentType = selectedIndex == 0 ? "Venues" : "Events"
+        let city = resolvedCity()
+
+        selectedCityLbl.text = city
+        refreshCityChipLayout()
+        browsingLbl.text = "Browsing \(contentType) in \(city)"
+    }
+
+    private func refreshCityChipLayout() {
+        updateCityChipWidth()
+        selectedCityLbl.invalidateIntrinsicContentSize()
+        selectedCityLbl.superview?.invalidateIntrinsicContentSize()
+        selectedCityLbl.superview?.setNeedsLayout()
+        selectedCityLbl.superview?.superview?.setNeedsLayout()
+
+        UIView.performWithoutAnimation {
+            view.layoutIfNeeded()
+        }
+    }
+
+    private func updateCityChipWidth() {
+        let city = selectedCityLbl.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let font = selectedCityLbl.font ?? Constant.Font.geistRegular(size: 13)
+        let textWidth = ceil((city as NSString).size(withAttributes: [.font: font]).width)
+        let width = 14 + 13 + 6 + textWidth + 19
+
+        cityChipWidthConstraint?.constant = min(max(width, 96), 240)
     }
 
     @objc private func handleBottomPanelPan(_ gesture: UIPanGestureRecognizer) {

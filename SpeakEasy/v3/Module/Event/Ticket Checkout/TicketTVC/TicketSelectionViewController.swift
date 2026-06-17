@@ -41,7 +41,15 @@ class TicketSelectionViewController: UIViewController {
     private var ticketLinks: [EventTicketLink] = []
     private var disabledTicketIds: Set<String> = []
     private var isLoading = true
+    private var isCheckoutInProgress = false
     private let posterHeaderView = EventPosterHeaderView()
+    private lazy var interactionBlockerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     private var ticketListHeightObservation: NSKeyValueObservation?
     private var groupListHeightObservation: NSKeyValueObservation?
@@ -107,6 +115,11 @@ class TicketSelectionViewController: UIViewController {
         super.viewDidLayoutSubviews()
         setupPosterBackground()
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setCheckoutInProgress(false)
+    }
     
     private func setupPosterBackground() {
 
@@ -150,6 +163,21 @@ class TicketSelectionViewController: UIViewController {
 
     private func setupContinueButton() {
         continueToCheckOutBtn.indicator = MaterialLoadingIndicator(color: .black)
+        view.addSubview(interactionBlockerView)
+        NSLayoutConstraint.activate([
+            interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
+            interactionBlockerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            interactionBlockerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interactionBlockerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setCheckoutInProgress(_ inProgress: Bool) {
+        isCheckoutInProgress = inProgress
+        interactionBlockerView.isHidden = !inProgress
+        if inProgress {
+            view.bringSubviewToFront(interactionBlockerView)
+        }
     }
 
     private func ticketDate(_ value: String?) -> Date? {
@@ -602,6 +630,8 @@ class TicketSelectionViewController: UIViewController {
     @IBAction func onClickLockBtn(_ sender: Any) {}
 
     @IBAction func onClickContinueBtn(_ sender: Any) {
+        guard !isCheckoutInProgress else { return }
+
         guard let user = UserDefault.shared.user else {
             Navigate.to.openPhoneLoginPopup(self)
             return
@@ -620,6 +650,7 @@ class TicketSelectionViewController: UIViewController {
 
             if addOnTickets.isEmpty {
                 continueToCheckOutBtn.showLoader(userInteraction: false)
+                setCheckoutInProgress(true)
                 createBooking(event: event, user: user, tickets: selectedNormalTickets)
             } else {
                 switchToAddOnMode()
@@ -628,7 +659,8 @@ class TicketSelectionViewController: UIViewController {
         case .addOn:
             let selectedAddOns = addOnTickets.filter { ($0.selectedTicketCount ?? 0) > 0 }
             let finalSelected = selectedNormalTickets + selectedAddOns
-            continueToCheckOutBtn.showLoader(userInteraction: true)
+            continueToCheckOutBtn.showLoader(userInteraction: false)
+            setCheckoutInProgress(true)
             createBooking(event: event, user: user, tickets: finalSelected)
         }
     }
@@ -655,6 +687,7 @@ class TicketSelectionViewController: UIViewController {
                     paymentMethod: nil
                 )
             } else {
+                self.setCheckoutInProgress(false)
                 Alert.showToast(errMsg ?? "Something went wrong")
             }
         }
@@ -726,6 +759,7 @@ class TicketSelectionViewController: UIViewController {
 
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
 
+        guard !isCheckoutInProgress else { return }
         guard !isTicketDisabledByLink(ticket),
               let event = event else { return }
         
@@ -749,14 +783,17 @@ class TicketSelectionViewController: UIViewController {
 
         selectedNormalTickets = [updatedTicket]
 
-        addOnTickets.isEmpty
-            ? Navigate.to.ticketCheckoutVC(
+        if addOnTickets.isEmpty {
+            setCheckoutInProgress(true)
+            Navigate.to.ticketCheckoutVC(
                 self,
                 event: event,
                 selectedTickets: selectedNormalTickets,
                 bookingId: nil
             )
-            : switchToAddOnMode()
+        } else {
+            switchToAddOnMode()
+        }
     }
 
     private func handleGroupPlus(ticket: EventTicket) {
@@ -816,6 +853,7 @@ class TicketSelectionViewController: UIViewController {
 
     private func handleGroupRSVP(ticket: EventTicket) {
 
+        guard !isCheckoutInProgress else { return }
         guard !isTicketDisabledByLink(ticket),
               let event = event,
               let ticketId = ticket.id else { return }
@@ -848,14 +886,17 @@ class TicketSelectionViewController: UIViewController {
 
             selectedNormalTickets = [selected]
 
-            addOnTickets.isEmpty
-                ? Navigate.to.ticketCheckoutVC(
+            if addOnTickets.isEmpty {
+                setCheckoutInProgress(true)
+                Navigate.to.ticketCheckoutVC(
                     self,
                     event: event,
                     selectedTickets: selectedNormalTickets,
                     bookingId: nil
                 )
-                : switchToAddOnMode()
+            } else {
+                switchToAddOnMode()
+            }
 
             return
         }

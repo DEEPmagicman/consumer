@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 import NBBottomSheet
 import GSImageViewerController
 
@@ -133,9 +134,14 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectCityVc(_ sender: UIViewController, userLocationCity: String = "") {
+    func selectCityVc(
+        _ sender: UIViewController,
+        userLocationCity: String = "",
+        userLocationCoordinate: CLLocationCoordinate2D? = nil
+    ) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectCityViewController.self)
         vc.userLocationCity = userLocationCity
+        vc.userLocationCoordinate = userLocationCoordinate
         if sender.navigationController?.viewControllers.last is SelectCityViewController { return }
         sender.navigationController?.pushViewController(vc, animated: true)
     }

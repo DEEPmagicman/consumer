@@ -131,10 +131,19 @@ final class TicketCheckoutVC: UIViewController {
     private var paymentDetail: PaymentDetail?
     private var isFreeTicket: Bool = false
     private var isPaymentInitiated = false
+    private var isPromoRequestInProgress = false
+    private var isSubmittingQuestions = false
     private var isLoading = false
     private var shimmerBlocks: [ShimmerViewV3] = []
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
+    private lazy var interactionBlockerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -189,6 +198,8 @@ final class TicketCheckoutVC: UIViewController {
         if !isFreeTicket {
             fetchPaymentIntentAndSetup(promoCode: "")
         }
+
+        setupInteractionBlocker()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -278,6 +289,23 @@ final class TicketCheckoutVC: UIViewController {
         } else {
             addPromoCodeBtn.setImage(UIImage(named: imageName), for: .normal)
             addPromoCodeBtn.tintColor = nil
+        }
+    }
+
+    private func setupInteractionBlocker() {
+        view.addSubview(interactionBlockerView)
+        NSLayoutConstraint.activate([
+            interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
+            interactionBlockerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            interactionBlockerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interactionBlockerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setScreenInteractionBlocked(_ blocked: Bool) {
+        interactionBlockerView.isHidden = !blocked
+        if blocked {
+            view.bringSubviewToFront(interactionBlockerView)
         }
     }
 
@@ -500,23 +528,35 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     private func completePaymentSuccess() {
-        guard let bookingId = bookingId else { return }
+        guard let bookingId = bookingId else {
+            isPaymentInitiated = false
+            setScreenInteractionBlocked(false)
+            return
+        }
         paymentService.confirmPaymentSuccess(paymentHistoryId: paymentHistoryId, bookingId: bookingId, optedPolicy: nil) { [weak self] isSuccess, _ in
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
                 Navigate.to.ticketConfirmationVC(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
+            } else {
+                self.isPaymentInitiated = false
+                self.setScreenInteractionBlocked(false)
+                Alert.showToast(Constant.String.somethingWrong)
             }
         }
     }
 
     private func createFreeEventBookingAndNavigate() {
-        guard let eventId = event?.id else { return }
+        guard let eventId = event?.id else {
+            isPaymentInitiated = false
+            setScreenInteractionBlocked(false)
+            return
+        }
 
         let ticketsPayload: [[String: Any]] = selectedTickets.map {
             [
                 "ticketId": $0.id ?? "",
-                "ticketQuantity": ($0.selectedTicketCount ?? 0) ?? 0,
+                "ticketQuantity": ($0.selectedTicketCount ?? 0),
                 "ticketPrice": $0.price ?? 0
             ]
         }
@@ -532,6 +572,10 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess, let id = id {
                 Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
+            } else {
+                self.isPaymentInitiated = false
+                self.setScreenInteractionBlocked(false)
+                Alert.showToast(Constant.String.somethingWrong)
             }
         }
     }
@@ -551,6 +595,7 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
 
             if isSuccess {
+                self.isSubmittingQuestions = false
                 self.isEventQueAnsCollected = true
                 self.customQuestionTableView.reloadData()
 
@@ -562,9 +607,12 @@ final class TicketCheckoutVC: UIViewController {
 //                    self.buyNowBtn.setTitle("BUY TICKET", for: .normal)
 //                }
 
+                self.isPaymentInitiated = false
                 self.onClickPurchaseTicket(UIButton())
             } else {
+                self.isSubmittingQuestions = false
                 self.isPaymentInitiated = false
+                self.setScreenInteractionBlocked(false)
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? Constant.String.somethingWrong,
@@ -575,14 +623,20 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     @IBAction func onClickSubmitPromoBtn(_ sender: Any) {
+        guard !isPromoRequestInProgress, !isPaymentInitiated else { return }
+
         let promo = (promoCodeTextFeild.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 
+        isPromoRequestInProgress = true
+        setScreenInteractionBlocked(true)
         addPromoCodeBtn.showLoader(userInteraction: false)
 
         if isPromoCodeApplied {
             fetchPaymentIntentAndSetup(promoCode: "", completion: { [weak self] isSuccess in
                 guard let self else { return }
                 self.addPromoCodeBtn.hideLoader()
+                self.isPromoRequestInProgress = false
+                self.setScreenInteractionBlocked(false)
 
                 if isSuccess {
                     self.isPromoCodeApplied = false
@@ -596,12 +650,16 @@ final class TicketCheckoutVC: UIViewController {
         } else {
             guard !promo.isEmpty else {
                 addPromoCodeBtn.hideLoader()
+                isPromoRequestInProgress = false
+                setScreenInteractionBlocked(false)
                 return
             }
 
             fetchPaymentIntentAndSetup(promoCode: promo, completion: { [weak self] isSuccess in
                 guard let self else { return }
                 self.addPromoCodeBtn.hideLoader()
+                self.isPromoRequestInProgress = false
+                self.setScreenInteractionBlocked(false)
 
                 if isSuccess {
                     self.isPromoCodeApplied = true
@@ -615,6 +673,8 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @IBAction func onClickCheckBox(_ sender: UIButton) {
+        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
+
         sender.isSelected.toggle()
         
         let image = sender.isSelected
@@ -634,7 +694,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @IBAction func onClickPurchaseTicket(_ sender: Any) {
-        guard !isPaymentInitiated else { return }
+        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
         
         if event?.venue?.venueSettings?.coverTicketSettings?.disclaimer?.isEmpty == false,
            checkBox.isSelected == false {
@@ -647,9 +707,16 @@ final class TicketCheckoutVC: UIViewController {
             return
         }
     
-        if !validateQuestionsAndProceed() { return }
-
         isPaymentInitiated = true
+        setScreenInteractionBlocked(true)
+
+        if !validateQuestionsAndProceed() {
+            if !isSubmittingQuestions {
+                isPaymentInitiated = false
+                setScreenInteractionBlocked(false)
+            }
+            return
+        }
 
         if isFreeTicket {
             createFreeEventBookingAndNavigate()
@@ -658,6 +725,7 @@ final class TicketCheckoutVC: UIViewController {
 
         guard let paymentSheet else {
             isPaymentInitiated = false
+            setScreenInteractionBlocked(false)
             return
         }
 
@@ -670,9 +738,11 @@ final class TicketCheckoutVC: UIViewController {
 
             case .canceled:
                 self.isPaymentInitiated = false
+                self.setScreenInteractionBlocked(false)
 
             case .failed:
                 self.isPaymentInitiated = false
+                self.setScreenInteractionBlocked(false)
             }
         }
     }
@@ -693,6 +763,7 @@ final class TicketCheckoutVC: UIViewController {
                 return false
             }
 
+            isSubmittingQuestions = true
             postQuestionAns(ans: answers)
             return false
         }
@@ -701,12 +772,15 @@ final class TicketCheckoutVC: UIViewController {
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
         cancelBooking()
         navigationController?.popToRootViewController(animated: false)
 
     }
 
     @IBAction func onClickFeesAndTaxes(_ sender: Any) {
+        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
+
         let isHidden = feesAndTaxesContainerView.isHidden
         feesAndTaxesContainerView.isHidden.toggle()
         UIView.animate(withDuration: 0.25) {
@@ -717,6 +791,7 @@ final class TicketCheckoutVC: UIViewController {
     }
     
     @IBAction func onClickAddPromoCode(_ sender: Any) {
+        guard !isPaymentInitiated, !isPromoRequestInProgress else { return }
         promoCodeView.isHidden.toggle()
     }
 

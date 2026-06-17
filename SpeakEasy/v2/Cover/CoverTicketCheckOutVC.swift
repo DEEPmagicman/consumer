@@ -83,12 +83,20 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isCoverFeesExpanded = true
     private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
+    private var shouldShowCheckoutButton = false
     private let collapsedLines = 3
     private let coverFeeShimmerRowCount = 3
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
     private var fullTermsText = ""
     private var fullVenueMessageText = ""
+    private lazy var interactionBlockerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     // Both must flip true before checkout button enables
     private var isBookingLoaded = false {
@@ -128,6 +136,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         setupCheckoutBar()
         setupPaymentMethodUI()
         setupCheckoutSurfaceStyle()
+        setupInteractionBlocker()
         hideScrollIndicators(in: view)
         setPricingLoading(true, animated: false)
 
@@ -237,15 +246,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         }
 
         venueName.text = venue?.name ?? ""
-        let termsText = venue?.venueSettings?.coverTicketSettings?.disclaimer
-            ?? Constant.String.checkoutTextCover
-        fullTermsText = cleanAgreementText(termsText)
-        fullVenueMessageText = cleanAgreementText(
-            venue?.venueSettings?.policyText
-            ?? "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
-        )
-        termsAndConditions.isHidden = fullTermsText.isEmpty
-        venueMessageView.isHidden = venue?.venueSettings?.optedPolicy != true || fullVenueMessageText.isEmpty
+        configureAgreementText()
 
         // Set initial state — hidden sections start invisible and collapsed
         // Animation happens later in animateContentIn() after data loads
@@ -267,6 +268,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private func setupCheckoutBar() {
         checkOutBtnView.delegate = self
         setCheckoutButton(enabled: false, animated: false)
+        checkOutBtnView.isHidden = true
+        checkOutBtnView.alpha = 0
+        checkOutBtnView.transform = CGAffineTransform(translationX: 0, y: 80)
         checkOutBtnView.setButtonTitle(
             bookingType == .FREE || totalPrice <= 0 ? "Confirm Free Booking" : "Pay Now"
         )
@@ -304,6 +308,29 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         paymentTypeView.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
         paymentTypeView.clipsToBounds = true
         paymentTypeView.isUserInteractionEnabled = false
+    }
+
+    private func setupInteractionBlocker() {
+        view.addSubview(interactionBlockerView)
+        NSLayoutConstraint.activate([
+            interactionBlockerView.topAnchor.constraint(equalTo: view.topAnchor),
+            interactionBlockerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            interactionBlockerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interactionBlockerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setScreenInteractionBlocked(_ blocked: Bool) {
+        interactionBlockerView.isHidden = !blocked
+        if blocked {
+            view.bringSubviewToFront(interactionBlockerView)
+        }
+    }
+
+    private func resetPaymentInteractionAfterFailure() {
+        isPaymentInitiated = false
+        setScreenInteractionBlocked(false)
+        updateCheckoutButtonState()
     }
 
     private func updatePaymentMethodUI() {
@@ -377,6 +404,24 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             scrollView.showsHorizontalScrollIndicator = false
         }
         rootView.subviews.forEach { hideScrollIndicators(in: $0) }
+    }
+
+    private func configureAgreementText() {
+        let settings = venue?.venueSettings
+        let fallbackTermsText =
+            settings?.coverTicketSettings?.disclaimer
+            ?? Constant.String.checkoutTextCover
+        let fallbackVenueMessageText =
+            "I agree to receive marketing related text messages from \(venue?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+
+        let termsText = cleanAgreementText(settings?.emailPolicyText ?? fallbackTermsText)
+        let venueMessageText = cleanAgreementText(settings?.policyText ?? fallbackVenueMessageText)
+
+        fullTermsText = termsText
+        fullVenueMessageText = venueMessageText
+        termsAndConditions.isHidden = fullTermsText.isEmpty
+        venueMessageView.isHidden = settings?.optedPolicy != true || fullVenueMessageText.isEmpty
+        updateAgreementLabels()
     }
 
     private func setPricingLoading(_ isLoading: Bool, animated: Bool) {
@@ -612,15 +657,18 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     // MARK: - Actions
     @IBAction func onClickBackBtn(_ sender: Any) {
+        guard !isPaymentInitiated else { return }
         cancelBooking()
     }
     
     @IBAction func onClickTermsBtn(_ sender: UIButton) {
+        guard !isPaymentInitiated else { return }
         isTermsAccepted.toggle()
         updateTermsCheckboxUI()
     }
 
     @IBAction func onClickVenueMessageBtn(_ sender: UIButton) {
+        guard !isPaymentInitiated else { return }
         isVenueMessageAccepted.toggle()
         updateVenueCheckboxUI()
     }
@@ -648,16 +696,17 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             return
         }
         isPaymentInitiated = true
+        setScreenInteractionBlocked(true)
+        updateCheckoutButtonState()
 
         if isFreeTicket || bookingType == .FREE || totalPrice <= 0 {
-            isPaymentInitiated = false
             checkOutBtnView.showLoader()
             createFreeBookingIfNeeded()
             return
         }
 
         guard let paymentSheet else {
-            isPaymentInitiated = false
+            resetPaymentInteractionAfterFailure()
             Alert.showToast("Payment not ready yet. Please wait.")
             return
         }
@@ -670,9 +719,9 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.checkOutBtnView.showLoader()
                 self.handleSuccessfulCardPayment()
             case .canceled:
-                self.isPaymentInitiated = false
+                self.resetPaymentInteractionAfterFailure()
             case .failed:
-                self.isPaymentInitiated = false
+                self.resetPaymentInteractionAfterFailure()
                 Alert.showToast("Payment failed. Please try again.")
             }
         }
@@ -684,23 +733,52 @@ extension CoverTicketCheckOutVC {
 
     /// Only called via didSet — single place that drives enabled/disabled.
     private func updateCheckoutButtonState() {
-        let ready = isBookingLoaded && isPaymentIntentLoaded
+        let hasData =
+            selectedCoverTickets.contains { ($0.selectedQuantity ?? 0) > 0 } ||
+            selectedAddOnsItems.contains { ($0.selectedQuantity ?? 0) > 0 }
+        let shouldShow = hasData && isBookingLoaded && isPaymentIntentLoaded
+        let enabled = shouldShow && !isPaymentInitiated
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            self.setCheckoutButton(enabled: ready, animated: true)
+            self.setCheckoutButton(visible: shouldShow, enabled: enabled, animated: true)
             self.refreshCheckoutBarSummary()
         }
     }
 
     private func setCheckoutButton(enabled: Bool, animated: Bool) {
+        setCheckoutButton(visible: enabled, enabled: enabled, animated: animated)
+    }
+
+    private func setCheckoutButton(visible: Bool, enabled: Bool, animated: Bool) {
+        shouldShowCheckoutButton = visible
         checkOutBtnView.isUserInteractionEnabled = enabled
-        let targetAlpha: CGFloat = enabled ? 1.0 : 0.5
+
+        let targetAlpha: CGFloat = visible ? 1.0 : 0
+        let targetTransform = visible ? .identity : CGAffineTransform(translationX: 0, y: 80)
+
         guard animated else {
+            checkOutBtnView.isHidden = !visible
             checkOutBtnView.alpha = targetAlpha
+            checkOutBtnView.transform = targetTransform
             return
         }
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut) {
+
+        if visible {
+            checkOutBtnView.isHidden = false
+        }
+
+        UIView.animate(
+            withDuration: 0.32,
+            delay: 0,
+            usingSpringWithDamping: 0.88,
+            initialSpringVelocity: 0.35,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
             self.checkOutBtnView.alpha = targetAlpha
+            self.checkOutBtnView.transform = targetTransform
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            self.checkOutBtnView.isHidden = !self.shouldShowCheckoutButton
         }
     }
 
@@ -750,13 +828,13 @@ extension CoverTicketCheckOutVC {
 
     private func confirmCardPayment() {
         guard let cardDetails else {
-            isPaymentInitiated = false
+            resetPaymentInteractionAfterFailure()
             Alert.showToast("Card details missing.")
             return
         }
 
         guard !paymentIntent.isEmpty else {
-            isPaymentInitiated = false
+            resetPaymentInteractionAfterFailure()
             Alert.showToast("Payment not ready yet.")
             return
         }
@@ -784,7 +862,7 @@ extension CoverTicketCheckOutVC {
             if let error {
                 DispatchQueue.main.async {
                     self.checkOutBtnView.hideLoader()
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast(error.localizedDescription)
                 }
                 return
@@ -793,7 +871,7 @@ extension CoverTicketCheckOutVC {
             guard let paymentMethodId = paymentMethod?.stripeId else {
                 DispatchQueue.main.async {
                     self.checkOutBtnView.hideLoader()
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast("Failed to create payment method.")
                 }
                 return
@@ -810,7 +888,7 @@ extension CoverTicketCheckOutVC {
               let url = URL(string: "https://api.stripe.com/v1/payment_intents/\(intentId)/confirm") else {
             DispatchQueue.main.async {
                 self.checkOutBtnView.hideLoader()
-                self.isPaymentInitiated = false
+                self.resetPaymentInteractionAfterFailure()
                 Alert.showToast("Invalid payment intent.")
             }
             return
@@ -839,21 +917,21 @@ extension CoverTicketCheckOutVC {
                 self.checkOutBtnView.hideLoader()
 
                 if let error {
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast(error.localizedDescription)
                     return
                 }
 
                 guard let data,
                       let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast("Payment failed. Please try again.")
                     return
                 }
 
                 if let errorObj = json["error"] as? [String: Any],
                    let message = errorObj["message"] as? String {
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast(message)
                     return
                 }
@@ -864,10 +942,10 @@ extension CoverTicketCheckOutVC {
                     self.checkOutBtnView.showLoader()
                     self.handleSuccessfulCardPayment()
                 case "requires_action":
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast("Additional authentication required. Please use Apple Pay.")
                 default:
-                    self.isPaymentInitiated = false
+                    self.resetPaymentInteractionAfterFailure()
                     Alert.showToast("Payment status: \(status). Please try again.")
                 }
             }
@@ -1241,6 +1319,7 @@ extension CoverTicketCheckOutVC {
                 completion()
             } else {
                 self?.checkOutBtnView.hideLoader()
+                self?.resetPaymentInteractionAfterFailure()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1256,6 +1335,7 @@ extension CoverTicketCheckOutVC {
                 completion()
             } else {
                 self?.checkOutBtnView.hideLoader()
+                self?.resetPaymentInteractionAfterFailure()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1273,6 +1353,7 @@ extension CoverTicketCheckOutVC {
                 completion()
             } else {
                 self.checkOutBtnView.hideLoader()
+                self.resetPaymentInteractionAfterFailure()
                 Alert.showAlertSheet(style: .alert, title: errMsg ?? Constant.String.somethingWrong, message: "")
             }
         }
@@ -1291,6 +1372,8 @@ extension CoverTicketCheckOutVC {
         }
 
         isPaymentInitiated = true
+        setScreenInteractionBlocked(true)
+        updateCheckoutButtonState()
 
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: "merchant.com.speakeasy",
@@ -1308,6 +1391,7 @@ extension CoverTicketCheckOutVC {
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) {
             applePayContext.presentApplePay()
         } else {
+            resetPaymentInteractionAfterFailure()
             Alert.showToast("Problem with your Apple Pay")
         }
     }
@@ -1319,7 +1403,7 @@ extension CoverTicketCheckOutVC {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
             self?.isFromApplePay = true
-            self?.isPaymentInitiated = false
+            self?.resetPaymentInteractionAfterFailure()
         })
         alert.addAction(UIAlertAction(title: "Add Card", style: .default) { _ in
             if let url = URL(string: "wallet://") {
@@ -1343,16 +1427,17 @@ extension CoverTicketCheckOutVC {
         didCompleteWith status: STPApplePayContext.PaymentStatus,
         error: Error?
     ) {
-        isPaymentInitiated = false
         switch status {
         case .success:
             checkOutBtnView.showLoader()
             handleSuccessfulCardPayment()
         case .error:
             isFromApplePay = true
+            resetPaymentInteractionAfterFailure()
             Alert.showAlertSheet(style: .alert, title: "Payment failed", message: "")
         case .userCancellation:
             isFromApplePay = true
+            resetPaymentInteractionAfterFailure()
         }
     }
 }

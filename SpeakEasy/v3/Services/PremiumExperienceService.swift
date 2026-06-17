@@ -12,7 +12,7 @@ final class PremiumExperienceService {
     func fetchPremiumExperiences(
         skip: Int,
         take: Int = 10,
-        city: String = UserDefault.shared.localCity,
+        city: String = UserDefault.shared.activeCity,
         completion: @escaping (
             _ isSuccess: Bool,
             _ errMsg: String?,

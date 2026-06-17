@@ -21,7 +21,7 @@ final class DiscoverDateFilterVC: UIViewController {
     private var isLoading = false
     private var isInitialLoading = true
     private var isPaginating = false
-    private var selectedCity = UserDefault.shared.localCity
+    private var selectedCity = UserDefault.shared.activeCity
     private var loadID = 0
 
     private let eventService = EventService()
@@ -157,7 +157,7 @@ final class DiscoverDateFilterVC: UIViewController {
             from: skip,
             venueId: "",
             time: "UPCOMING",
-            city: city.isEmpty ? UserDefault.shared.localCity : city
+            city: city.isEmpty ? UserDefault.shared.activeCity : city
         ) { [weak self] _, _, events, hasMore in
 
             guard let self else {
