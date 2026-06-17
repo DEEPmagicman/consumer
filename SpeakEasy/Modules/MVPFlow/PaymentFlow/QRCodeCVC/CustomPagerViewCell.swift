@@ -95,8 +95,8 @@ extension CustomPagerViewCell: UITableViewDataSource, UITableViewDelegate {
         } else {
             upsellQRBgView.borderColor = UIColor(hex: "#F1CE72")
             upsellQRBgView.borderWidth = 8
-            cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.description ?? ""
-            cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns.name ?? ""
+            cell.subTitleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns?.description ?? ""
+            cell.titleLbl.text = addOnsBooking?.uniqueTickets[indexPath.row].addOns?.name ?? ""
             cell.quantityLbl.text = "\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)x"
             let checkInCount = addOnsBooking?.uniqueTickets[indexPath.row].checkedInQuantity ?? 0
             cell.checkInCount.text = "\(checkInCount)/\(addOnsBooking?.uniqueTickets[indexPath.row].selectedQuantity ?? 0)"
