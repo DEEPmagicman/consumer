@@ -28,6 +28,12 @@ final class GradientBorderCardView: UIView {
         }
     }
     
+    var glassCornerRadius: CGFloat = 34 {
+        didSet {
+            layer.cornerRadius = glassCornerRadius
+        }
+    }
+    
     private let blurView = VisualEffectView(effect: UIBlurEffect(style: .dark))
     
     private let fillLayer = CALayer()
@@ -39,8 +45,6 @@ final class GradientBorderCardView: UIView {
     private let bottomGlassBorderLayer = CAGradientLayer()
     private let bottomGlassMaskLayer = CAShapeLayer()
     
-    private let glassCornerRadius: CGFloat = 34
-
     private let borderColors = [
         AppColor.primaryWhiteColor.withAlphaComponent(0).cgColor,
         AppColor.primaryWhiteColor.withAlphaComponent(0.11).cgColor,

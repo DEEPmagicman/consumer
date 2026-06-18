@@ -162,8 +162,8 @@ final class PremiumSearchHeaderView: UIView {
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
-            signInIconView.widthAnchor.constraint(equalToConstant: 18),
-            signInIconView.heightAnchor.constraint(equalToConstant: 18),
+            signInIconView.widthAnchor.constraint(equalTo: avatarGlassView.widthAnchor),
+            signInIconView.heightAnchor.constraint(equalTo: avatarGlassView.heightAnchor),
             
             imageView.topAnchor.constraint(equalTo: avatarGlassView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: avatarGlassView.leadingAnchor),

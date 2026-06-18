@@ -58,10 +58,8 @@ final class OrdersSegmentView: UIControl {
         backgroundColor = .clear
         clipsToBounds = false
 
-        selectedGlassView.overrideBackgroundColor = UIColor.black.withAlphaComponent(0.18)
         containerGlassView.translatesAutoresizingMaskIntoConstraints = false
         containerGlassView.isUserInteractionEnabled = false
-        selectedGradientLayer.backgroundColor = UIColor.clear.cgColor
         addSubview(containerGlassView)
 
         selectedGlassView.overrideBackgroundColor = .clear

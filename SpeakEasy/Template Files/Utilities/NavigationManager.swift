@@ -801,4 +801,10 @@ final class Navigate {
         vc.venueID = venueID
         sender.present(vc, animated: true)
     }
+    
+    func premiumEventContainerVC(_ sender: UIViewController, event: Event?) {
+        let vc = PremiumEventContainerVC()
+        vc.event = event
+        sender.pushVC(vc)
+    }
 }

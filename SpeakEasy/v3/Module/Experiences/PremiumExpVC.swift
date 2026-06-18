@@ -528,7 +528,8 @@ extension PremiumExpVC: UICollectionViewDataSource, UICollectionViewDelegate {
         guard items.indices.contains(indexPath.item) else { return }
         guard let event = items[indexPath.item].event else { return }
 
-        Navigate.eventDetailsVC(self, event: event)
+//        Navigate.eventDetailsVC(self, event: event)
+        Navigate.to.premiumEventContainerVC(self, event: event)
     }
 
     func collectionView(

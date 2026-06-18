@@ -20,12 +20,7 @@ final class PremiumHeaderView: UIView {
     
     // MARK: - Profile
     
-    private let avatarGlassView = LiquidGlassBackgroundView(
-        cornerRadius: 15,
-        fillColor: AppColor.primaryWhiteColor.withAlphaComponent(0.10),
-        borderColor: AppColor.primaryWhiteColor.withAlphaComponent(0.18),
-        borderWidth: 0.8
-    )
+    private let avatarGlassView = UIView()
     
     private let imageView = UIImageView()
     private let firstNameLetter = UILabel()
@@ -170,8 +165,8 @@ final class PremiumHeaderView: UIView {
             
             signInIconView.centerXAnchor.constraint(equalTo: avatarGlassView.centerXAnchor),
             signInIconView.centerYAnchor.constraint(equalTo: avatarGlassView.centerYAnchor),
-            signInIconView.widthAnchor.constraint(equalToConstant: 18),
-            signInIconView.heightAnchor.constraint(equalToConstant: 18),
+            signInIconView.widthAnchor.constraint(equalTo: avatarGlassView.widthAnchor),
+            signInIconView.heightAnchor.constraint(equalTo: avatarGlassView.heightAnchor),
             
             imageView.topAnchor.constraint(equalTo: avatarGlassView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: avatarGlassView.leadingAnchor),

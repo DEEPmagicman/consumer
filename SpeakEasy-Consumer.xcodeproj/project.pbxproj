@@ -170,6 +170,18 @@
 		6A60CADC2FC466F100155E9D /* TicketsOrdersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60CADB2FC466F100155E9D /* TicketsOrdersVC.swift */; };
 		6A60CADE2FC466F500155E9D /* TablesOrdersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A60CADD2FC466F500155E9D /* TablesOrdersVC.swift */; };
 		6A687D172FB30C5A001BEDBF /* BaseAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */; };
+		6A6AB6A92FE3B16F00A5801F /* PremiumEventContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6A82FE3B16F00A5801F /* PremiumEventContainerVC.swift */; };
+		6A6AB6AB2FE3B20600A5801F /* PremiumEventHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6AA2FE3B20600A5801F /* PremiumEventHeaderView.swift */; };
+		6A6AB6AD2FE3B29200A5801F /* PremiumEventSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6AC2FE3B29200A5801F /* PremiumEventSegmentView.swift */; };
+		6A6AB6AF2FE3B32D00A5801F /* PremiumMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6AE2FE3B32D00A5801F /* PremiumMapVC.swift */; };
+		6A6AB6B12FE3B33400A5801F /* PremiumReservationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6B02FE3B33400A5801F /* PremiumReservationVC.swift */; };
+		6A6AB6B32FE3B33A00A5801F /* PremiumInquiryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6B22FE3B33A00A5801F /* PremiumInquiryVC.swift */; };
+		6A6AB6BB2FE3D48A00A5801F /* PremiumReservationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6BA2FE3D48A00A5801F /* PremiumReservationCell.swift */; };
+		6A6AB6BD2FE3D4E300A5801F /* PremiumInfoPillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6BC2FE3D4E300A5801F /* PremiumInfoPillView.swift */; };
+		6A6AB6BF2FE3D55E00A5801F /* PremiumReservationShimmerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6BE2FE3D55E00A5801F /* PremiumReservationShimmerCell.swift */; };
+		6A6AB6C12FE3D56B00A5801F /* PremiumReservationShimmerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6C02FE3D56B00A5801F /* PremiumReservationShimmerView.swift */; };
+		6A6AB6C32FE3D5B100A5801F /* PremiumReservationPaginationFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6C22FE3D5B100A5801F /* PremiumReservationPaginationFooter.swift */; };
+		6A6AB6C52FE40C6B00A5801F /* PremiumMarqueeLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6AB6C42FE40C6B00A5801F /* PremiumMarqueeLabel.swift */; };
 		6A765E872FD05359000FEF22 /* BaseSearchSheetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A765E862FD05359000FEF22 /* BaseSearchSheetVC.swift */; };
 		6A765E892FD0539D000FEF22 /* SearchVenueVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A765E882FD0539D000FEF22 /* SearchVenueVC.swift */; };
 		6A765E8B2FD053C8000FEF22 /* SearchEventVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A765E8A2FD053C7000FEF22 /* SearchEventVC.swift */; };
@@ -750,6 +762,18 @@
 		6A60CADB2FC466F100155E9D /* TicketsOrdersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsOrdersVC.swift; sourceTree = "<group>"; };
 		6A60CADD2FC466F500155E9D /* TablesOrdersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TablesOrdersVC.swift; sourceTree = "<group>"; };
 		6A687D162FB30C55001BEDBF /* BaseAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthViewController.swift; sourceTree = "<group>"; };
+		6A6AB6A82FE3B16F00A5801F /* PremiumEventContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumEventContainerVC.swift; sourceTree = "<group>"; };
+		6A6AB6AA2FE3B20600A5801F /* PremiumEventHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumEventHeaderView.swift; sourceTree = "<group>"; };
+		6A6AB6AC2FE3B29200A5801F /* PremiumEventSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumEventSegmentView.swift; sourceTree = "<group>"; };
+		6A6AB6AE2FE3B32D00A5801F /* PremiumMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumMapVC.swift; sourceTree = "<group>"; };
+		6A6AB6B02FE3B33400A5801F /* PremiumReservationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReservationVC.swift; sourceTree = "<group>"; };
+		6A6AB6B22FE3B33A00A5801F /* PremiumInquiryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumInquiryVC.swift; sourceTree = "<group>"; };
+		6A6AB6BA2FE3D48A00A5801F /* PremiumReservationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReservationCell.swift; sourceTree = "<group>"; };
+		6A6AB6BC2FE3D4E300A5801F /* PremiumInfoPillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumInfoPillView.swift; sourceTree = "<group>"; };
+		6A6AB6BE2FE3D55E00A5801F /* PremiumReservationShimmerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReservationShimmerCell.swift; sourceTree = "<group>"; };
+		6A6AB6C02FE3D56B00A5801F /* PremiumReservationShimmerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReservationShimmerView.swift; sourceTree = "<group>"; };
+		6A6AB6C22FE3D5B100A5801F /* PremiumReservationPaginationFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumReservationPaginationFooter.swift; sourceTree = "<group>"; };
+		6A6AB6C42FE40C6B00A5801F /* PremiumMarqueeLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumMarqueeLabel.swift; sourceTree = "<group>"; };
 		6A765E862FD05359000FEF22 /* BaseSearchSheetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchSheetVC.swift; sourceTree = "<group>"; };
 		6A765E882FD0539D000FEF22 /* SearchVenueVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVenueVC.swift; sourceTree = "<group>"; };
 		6A765E8A2FD053C7000FEF22 /* SearchEventVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEventVC.swift; sourceTree = "<group>"; };
@@ -1571,6 +1595,7 @@
 		6A40D1B82FBEEAA500F3FAAB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				6A6AB6C42FE40C6B00A5801F /* PremiumMarqueeLabel.swift */,
 				6A4FA19B2FC818FB007EB116 /* PinterestLayout.swift */,
 				6A4FA1A32FC83EFC007EB116 /* ShimmerViewV3.swift */,
 				6AF6AA3E2FC0336E00834BF2 /* GlobalTextFieldHandler.swift */,
@@ -1752,6 +1777,96 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		6AD6C0F82FE2CACA000EA828 /* DetailsScreens */ = {
+			isa = PBXGroup;
+			children = (
+				6AD6C1002FE2CB92000EA828 /* Inquiry */,
+				6AD6C0FF2FE2CB8B000EA828 /* List */,
+				6AD6C0FE2FE2CB7B000EA828 /* 3DMap */,
+				6AD6C0F92FE2CB1A000EA828 /* Views */,
+				6A6AB6A82FE3B16F00A5801F /* PremiumEventContainerVC.swift */,
+			);
+			path = DetailsScreens;
+			sourceTree = "<group>";
+		};
+		6AD6C0F92FE2CB1A000EA828 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6AC2FE3B29200A5801F /* PremiumEventSegmentView.swift */,
+				6A6AB6AA2FE3B20600A5801F /* PremiumEventHeaderView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AD6C0FE2FE2CB7B000EA828 /* 3DMap */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6AE2FE3B32D00A5801F /* PremiumMapVC.swift */,
+				6AD6C1032FE2CBC4000EA828 /* Views */,
+			);
+			path = 3DMap;
+			sourceTree = "<group>";
+		};
+		6AD6C0FF2FE2CB8B000EA828 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6B02FE3B33400A5801F /* PremiumReservationVC.swift */,
+				6AD6C1062FE2CBFF000EA828 /* Cells */,
+				6AD6C1012FE2CBA9000EA828 /* Views */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		6AD6C1002FE2CB92000EA828 /* Inquiry */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6B22FE3B33A00A5801F /* PremiumInquiryVC.swift */,
+				6AD6C10E2FE2CE4B000EA828 /* Cells */,
+				6AD6C10B2FE2CC6A000EA828 /* Views */,
+			);
+			path = Inquiry;
+			sourceTree = "<group>";
+		};
+		6AD6C1012FE2CBA9000EA828 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6C22FE3D5B100A5801F /* PremiumReservationPaginationFooter.swift */,
+				6A6AB6C02FE3D56B00A5801F /* PremiumReservationShimmerView.swift */,
+				6A6AB6BC2FE3D4E300A5801F /* PremiumInfoPillView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AD6C1032FE2CBC4000EA828 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AD6C1062FE2CBFF000EA828 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				6A6AB6BE2FE3D55E00A5801F /* PremiumReservationShimmerCell.swift */,
+				6A6AB6BA2FE3D48A00A5801F /* PremiumReservationCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		6AD6C10B2FE2CC6A000EA828 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AD6C10E2FE2CE4B000EA828 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		6AD8CE322FBC778600AC8A89 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1834,6 +1949,7 @@
 		6AF556E02FE02DB500D39D94 /* Experiences */ = {
 			isa = PBXGroup;
 			children = (
+				6AD6C0F82FE2CACA000EA828 /* DetailsScreens */,
 				6AF556ED2FE14C1E00D39D94 /* Model */,
 				6AF556E82FE02DFA00D39D94 /* Cells */,
 				6AF556E52FE02DEE00D39D94 /* Views */,
@@ -3466,11 +3582,13 @@
 				6AD8CE2D2FBC63B900AC8A89 /* EditProfileVC.swift in Sources */,
 				BD942F4329595F6200D52115 /* UserDefault.swift in Sources */,
 				CAC4140328A478040007BA86 /* TimeInterval.swift in Sources */,
+				6A6AB6BB2FE3D48A00A5801F /* PremiumReservationCell.swift in Sources */,
 				CE3213CC29E03D8D00EBC179 /* TitleHeader.swift in Sources */,
 				CE0762EB2EFAA9B400670694 /* DateRangeSelectionVC.swift in Sources */,
 				BD532A172941BB9600B9E38C /* EnterNameViewController.swift in Sources */,
 				CEE0B519299F94E6004F0DA2 /* Toast.swift in Sources */,
 				CAC413F728A478040007BA86 /* Collection.swift in Sources */,
+				6A6AB6B12FE3B33400A5801F /* PremiumReservationVC.swift in Sources */,
 				BDD1D4B22943464E003EB5FC /* SetLocationViewController.swift in Sources */,
 				CEB654262E0D60C200E9BFD3 /* BarTabPresenter.swift in Sources */,
 				CE4245FB2FBAF811006FF16F /* MapEventsTableViewCell.swift in Sources */,
@@ -3521,6 +3639,7 @@
 				CE45A5B82C3BC9DF00E1FE3F /* DPDConstants.swift in Sources */,
 				6A60CAD82FC463A800155E9D /* MyOrdersVC.swift in Sources */,
 				CAC4141928A478050007BA86 /* DatePickerColors.swift in Sources */,
+				6A6AB6BD2FE3D4E300A5801F /* PremiumInfoPillView.swift in Sources */,
 				29868363297567DF00CB827B /* EventPresenter.swift in Sources */,
 				CE4867D7286F358800FD277E /* iCarousel.m in Sources */,
 				CE73492D2FB64BB900558DFB /* LocationUpdatePopupView.swift in Sources */,
@@ -3605,6 +3724,7 @@
 				6A91E2C32FC96F51000319C4 /* VenueGridShimmerCell.swift in Sources */,
 				CEE520CC29ED653300B916C8 /* PaymentPresenter.swift in Sources */,
 				CED5465F29F7BE65006465FD /* FullScreenImgVC.swift in Sources */,
+				6A6AB6A92FE3B16F00A5801F /* PremiumEventContainerVC.swift in Sources */,
 				0433FB922F3331EA008BC77B /* VenueDetailsVC.swift in Sources */,
 				04473071295AB8CE0001F568 /* CardDetailsViewController.swift in Sources */,
 				046940CA2959B7B100F8A053 /* PastPurchasesVisitsViewController.swift in Sources */,
@@ -3616,7 +3736,10 @@
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,
 				CE45A5B72C3BC9DB00E1FE3F /* DPDUIView+Extension.swift in Sources */,
+				6A6AB6AB2FE3B20600A5801F /* PremiumEventHeaderView.swift in Sources */,
 				691574652A0CD0EF002F303A /* Stripe.swift in Sources */,
+				6A6AB6B32FE3B33A00A5801F /* PremiumInquiryVC.swift in Sources */,
+				6A6AB6C32FE3D5B100A5801F /* PremiumReservationPaginationFooter.swift in Sources */,
 				6A79E2872FCEBAEA00B7F1F4 /* ProfileService.swift in Sources */,
 				6A40D1AF2FBDCC3100F3FAAB /* ConfirmContactVC.swift in Sources */,
 				6AF9DE022FB33B22008D6CBC /* GradientBorderCardView.swift in Sources */,
@@ -3632,6 +3755,7 @@
 				CEE02DAE2EFB97A700AC7756 /* DiscoverDateFilterVC.swift in Sources */,
 				CED54E442C3E8ABF00D3A942 /* EventCheckoutVC.swift in Sources */,
 				CE59ED6C2F6D5ADC00831974 /* CoverTicketTVC.swift in Sources */,
+				6A6AB6C52FE40C6B00A5801F /* PremiumMarqueeLabel.swift in Sources */,
 				CE486722286F2CB000FD277E /* AppDelegate.swift in Sources */,
 				6AF556F72FE164FC00D39D94 /* PremiumSearchVC.swift in Sources */,
 				BD3FB24F294068B900BE7713 /* StoryboardAndXibManager.swift in Sources */,
@@ -3667,9 +3791,11 @@
 				9257CAA12B988DD4009CE697 /* EncryptDecrypt.swift in Sources */,
 				04E8F67D2F72496A00F45536 /* CustomQuestionCheckboxCell.swift in Sources */,
 				CE4580202EF94FFB00A873C4 /* SearchVC.swift in Sources */,
+				6A6AB6AF2FE3B32D00A5801F /* PremiumMapVC.swift in Sources */,
 				6A79E2932FCEE97900B7F1F4 /* TableService.swift in Sources */,
 				CE09064C2EFBEB4000936E9D /* DateSelectionTVC.swift in Sources */,
 				6AF9DE082FB356F3008D6CBC /* AuthOTPInputView.swift in Sources */,
+				6A6AB6BF2FE3D55E00A5801F /* PremiumReservationShimmerCell.swift in Sources */,
 				6A79E2832FCEB76F00B7F1F4 /* AuthService.swift in Sources */,
 				CED07E9729AC746B004EBBC5 /* MVPCitySelectionVC.swift in Sources */,
 				CAC413F228A478040007BA86 /* UIScrollView.swift in Sources */,
@@ -3753,6 +3879,7 @@
 				04473066295AAA7F0001F568 /* PaymentMethodsViewController.swift in Sources */,
 				CAC413F528A478040007BA86 /* DeviceOrientation.swift in Sources */,
 				6AF2B9F72F0BC9CF00069A90 /* TableBookingListVC.swift in Sources */,
+				6A6AB6C12FE3D56B00A5801F /* PremiumReservationShimmerView.swift in Sources */,
 				CAC4140F28A478050007BA86 /* FrameHelper.swift in Sources */,
 				6A79E28F2FCEC52800B7F1F4 /* EventService.swift in Sources */,
 				BD3FB25729407F0900BE7713 /* EnterPhoneNumberViewController.swift in Sources */,
@@ -3760,6 +3887,7 @@
 				CE6813DB29DEEECE00B41418 /* TicketDetailTVC.swift in Sources */,
 				BD3FB24D294067D900BE7713 /* NavigationManager.swift in Sources */,
 				6AF556EA2FE02E0800D39D94 /* PremiumExperienceCell.swift in Sources */,
+				6A6AB6AD2FE3B29200A5801F /* PremiumEventSegmentView.swift in Sources */,
 				6AF9DE172FB480B4008D6CBC /* ProfileInfoVC.swift in Sources */,
 				2986836829756EA600CB827B /* Flyer.swift in Sources */,
 				6AF2BA002F0BE0CA00069A90 /* TableListTVC.swift in Sources */,
