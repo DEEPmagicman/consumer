@@ -21,6 +21,19 @@ enum DiscoverSectionData {
 
 final class DiscoverSectionView: UIView {
 
+    private enum DiscoverSectionLayout {
+        static let itemWidth: CGFloat = 143
+        static let titleTopPadding: CGFloat = 10
+        static let headerHeight: CGFloat = 28
+        static let headerToCollectionSpacing: CGFloat = 10
+        static let itemHeight: CGFloat = 210
+        static let sectionHeight: CGFloat =
+        titleTopPadding +
+        headerHeight +
+        headerToCollectionSpacing +
+        itemHeight
+    }
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var seeAllButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -32,6 +45,14 @@ final class DiscoverSectionView: UIView {
 
     private var sectionType: DiscoverSectionType = .tonightEvents
     private var sectionData: DiscoverSectionData?
+    private var currentHeight: CGFloat = DiscoverSectionLayout.sectionHeight
+
+    override var intrinsicContentSize: CGSize {
+        CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: currentHeight
+        )
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,6 +100,8 @@ final class DiscoverSectionView: UIView {
         }
 
         collectionView.reloadData()
+        collectionView.collectionViewLayout.invalidateLayout()
+        updateSectionHeight(animated: true)
     }
 }
 
@@ -115,7 +138,10 @@ private extension DiscoverSectionView {
         
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.estimatedItemSize = .zero
-            layout.itemSize = CGSize(width: 143, height: 210)
+            layout.itemSize = CGSize(
+                width: DiscoverSectionLayout.itemWidth,
+                height: DiscoverSectionLayout.itemHeight
+            )
             layout.minimumLineSpacing = 10
             layout.minimumInteritemSpacing = 10
             layout.sectionInset = UIEdgeInsets(
@@ -132,6 +158,58 @@ private extension DiscoverSectionView {
         )
     }
 
+    func updateSectionHeight(animated: Bool) {
+
+        updateHeightConstraint(
+            in: collectionView.constraints,
+            to: DiscoverSectionLayout.itemHeight
+        )
+
+        currentHeight = DiscoverSectionLayout.sectionHeight
+
+        updateHeightConstraint(
+            in: constraints,
+            to: currentHeight
+        )
+
+        invalidateIntrinsicContentSize()
+
+        let updates = {
+            self.collectionView.layoutIfNeeded()
+            self.superview?.layoutIfNeeded()
+        }
+
+        guard animated,
+              window != nil
+        else {
+            updates()
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [
+                .curveEaseInOut,
+                .allowUserInteraction
+            ],
+            animations: updates
+        )
+    }
+
+    func updateHeightConstraint(
+        in constraints: [NSLayoutConstraint],
+        to height: CGFloat
+    ) {
+
+        constraints
+            .first {
+                $0.firstAttribute == .height &&
+                $0.secondItem == nil
+            }?
+            .constant = ceil(height)
+    }
+
     @IBAction func onClickSeeAllButton(_ sender: UIButton) {
         onTapSeeAll?()
     }
@@ -141,7 +219,8 @@ private extension DiscoverSectionView {
 
 extension DiscoverSectionView:
 UICollectionViewDelegate,
-UICollectionViewDataSource {
+UICollectionViewDataSource,
+UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
@@ -243,5 +322,17 @@ UICollectionViewDataSource {
         case .none:
             break
         }
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+
+        return CGSize(
+            width: DiscoverSectionLayout.itemWidth,
+            height: DiscoverSectionLayout.itemHeight
+        )
     }
 }

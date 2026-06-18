@@ -17,34 +17,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
     private var searchWorkItem: DispatchWorkItem?
     
     private var isLoading = false
-
-    private let dummyVenues: [SearchVenueItem] = [
-        SearchVenueItem(
-            id: "1",
-            name: "The Grand Hall",
-            imageURL: nil
-        ),
-        SearchVenueItem(
-            id: "2",
-            name: "Skyline Rooftop",
-            imageURL: nil
-        ),
-        SearchVenueItem(
-            id: "3",
-            name: "Ocean View Lounge",
-            imageURL: nil
-        ),
-        SearchVenueItem(
-            id: "4",
-            name: "Downtown Club",
-            imageURL: nil
-        ),
-        SearchVenueItem(
-            id: "5",
-            name: "Sunset Terrace",
-            imageURL: nil
-        )
-    ]
+    private let venueService = VenueService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,8 +30,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
         setupTable()
         setupEmpty()
         
-        // MARK: Dummy Data
-        searchVenues("A")
+        searchVenues("")
     }
 
     private func setupSearchField() {
@@ -71,7 +43,7 @@ final class SearchVenueVC: BaseSearchSheetVC {
         searchField.layer.borderWidth = 0.5
         searchField.layer.cornerCurve = .continuous
         searchField.clipsToBounds = true
-        searchField.placeholder = "Search saved venues"
+        searchField.placeholder = "Search followed venues"
         searchField.leftView = makeSearchIcon()
         searchField.leftViewMode = .always
         searchField.addTarget(self, action: #selector(onSearchChanged), for: .editingChanged)
@@ -157,32 +129,45 @@ final class SearchVenueVC: BaseSearchSheetVC {
         tableView.isHidden = false
         tableView.reloadData()
         
-        SearchFlowService.shared.searchVenues(keyword: keyword) { [weak self] venues in
+        venueService.fetchFollowedVenues(
+            skip: 0,
+            take: 10,
+            search: keyword
+        ) { [weak self] isSuccess, _, venues, _ in
             guard let self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.isLoading = false
-                self.venues = venues
-                self.venues = self.dummyVenues // remove this line after correct api  implement
-                let hasResults = !self.venues.isEmpty
-                
-                if hasResults {
-                    UIView.animate(withDuration: 0.25) {
-                        self.emptyView.alpha = 0
-                    } completion: { _ in
-                        self.emptyView.isHidden = true
-                    }
-                } else {
-                    self.emptyView.isHidden = false
-                    self.emptyView.alpha = 0
-                    
-                    UIView.animate(withDuration: 0.25) {
-                        self.emptyView.alpha = 1
-                    }
-                }
-                
-                self.tableView.isHidden = !hasResults
-                self.tableView.reloadData()
+
+            self.isLoading = false
+
+            self.venues = isSuccess
+            ? venues.map {
+                SearchVenueItem(
+                    id: $0.uniqueId,
+                    name: $0.name,
+                    imageURL: $0.logo?.key.imageURL,
+                    venue: $0
+                )
             }
+            : []
+
+            let hasResults = !self.venues.isEmpty
+
+            if hasResults {
+                UIView.animate(withDuration: 0.25) {
+                    self.emptyView.alpha = 0
+                } completion: { _ in
+                    self.emptyView.isHidden = true
+                }
+            } else {
+                self.emptyView.isHidden = false
+                self.emptyView.alpha = 0
+
+                UIView.animate(withDuration: 0.25) {
+                    self.emptyView.alpha = 1
+                }
+            }
+
+            self.tableView.isHidden = !hasResults
+            self.tableView.reloadData()
         }
     }
 
@@ -227,9 +212,27 @@ extension SearchVenueVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if venues.count <= indexPath.row { return }
         let venue = venues[indexPath.row]
-        
-        Navigate.to.eventsListVC(
-            self, venue: venue
-        )
+
+        let presenter =
+        navigationController?.presentingViewController ??
+        presentingViewController
+
+        dismiss(animated: true) {
+            if let venueDetails = venue.venue {
+                let venueListVC =
+                presenter as? VenueListVC ??
+                (presenter as? UINavigationController)?.topViewController as? VenueListVC
+
+                Navigate.to.venueVC(
+                    presenter ?? self,
+                    venueDetails: venueDetails
+                ) { updatedVenue, isFollowing in
+                    venueListVC?.handleFollowStateChange(
+                        venue: updatedVenue,
+                        isFollowing: isFollowing
+                    )
+                }
+            }
+        }
     }
 }

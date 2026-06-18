@@ -28,10 +28,10 @@
                                 <rect key="frame" x="0.0" y="118" width="393" height="734"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="blO-r7-04o">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="962.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="943.33333333333337"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="YZp-Ho-6vy">
-                                                <rect key="frame" x="0.0" y="12" width="393" height="940.33333333333337"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="YZp-Ho-6vy">
+                                                <rect key="frame" x="0.0" y="12" width="393" height="921.33333333333337"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JRo-yq-Ry4">
                                                         <rect key="frame" x="0.0" y="-106" width="393" height="106"/>
@@ -118,14 +118,14 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXE-cQ-2Xm" customClass="DiscoverSectionView" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="393" height="260"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="393" height="258"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="260" id="Fni-V0-FQP"/>
+                                                            <constraint firstAttribute="height" constant="258" id="Fni-V0-FQP"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k4U-Ul-kyS">
-                                                        <rect key="frame" x="0.0" y="276" width="393" height="117.33333333333331"/>
+                                                        <rect key="frame" x="0.0" y="268" width="393" height="117.33333333333331"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wU7-2d-jDN">
                                                                 <rect key="frame" x="16" y="16" width="361" height="85.333333333333329"/>
@@ -208,17 +208,17 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hYZ-Jv-bge" customClass="DiscoverSectionView" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="409.33333333333337" width="393" height="260"/>
+                                                        <rect key="frame" x="0.0" y="395.33333333333337" width="393" height="258"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="260" id="fVh-DW-x38"/>
+                                                            <constraint firstAttribute="height" constant="258" id="fVh-DW-x38"/>
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-H7-BbT" customClass="DiscoverSectionView" customModule="Speakeasy" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="685.33333333333337" width="393" height="255"/>
+                                                        <rect key="frame" x="0.0" y="663.33333333333337" width="393" height="258"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="255" id="eKN-pH-X6a"/>
+                                                            <constraint firstAttribute="height" constant="258" id="eKN-pH-X6a"/>
                                                         </constraints>
                                                     </view>
                                                 </subviews>

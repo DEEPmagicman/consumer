@@ -275,6 +275,7 @@ final class DiscoverVC: UIViewController {
 
             discoverDateFilterVC.updateFilterDates(
                 selectedDateRangeDisplayDates(),
+                apiDates: selectedDateRangeAPIDates(),
                 city: resolvedCity()
             )
         }
@@ -365,6 +366,7 @@ extension DiscoverVC: SelectedDateDelegate {
         if let vc = children.first(where: { $0 is DiscoverDateFilterVC }) as? DiscoverDateFilterVC {
             vc.updateFilterDates(
                 selectedDateRangeDisplayDates(),
+                apiDates: selectedDateRangeAPIDates(),
                 city: resolvedCity()
             )
         }
@@ -377,13 +379,25 @@ extension DiscoverVC: SelectedDateDelegate {
         )
     }
 
-    func datesBetween(startDate: String, endDate: String) -> [String] {
+    private func selectedDateRangeAPIDates() -> [String] {
+        datesBetween(
+            startDate: self.startDate ?? "",
+            endDate: self.endDate ?? self.startDate ?? "",
+            outputFormat: "yyyy-MM-dd"
+        )
+    }
+
+    func datesBetween(
+        startDate: String,
+        endDate: String,
+        outputFormat: String = "MMM dd"
+    ) -> [String] {
         let inputFormatter        = DateFormatter()
         inputFormatter.dateFormat = "yyyy-MM-dd"
         inputFormatter.locale     = Locale(identifier: "en_US_POSIX")
 
         let outputFormatter        = DateFormatter()
-        outputFormatter.dateFormat = "MMM dd"
+        outputFormatter.dateFormat = outputFormat
         outputFormatter.locale     = Locale(identifier: "en_US_POSIX")
 
         guard

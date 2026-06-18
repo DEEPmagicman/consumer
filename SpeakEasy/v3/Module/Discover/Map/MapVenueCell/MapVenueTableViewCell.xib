@@ -29,7 +29,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demo logo" translatesAutoresizingMaskIntoConstraints="NO" id="mOd-Im-OJG">
-                        <rect key="frame" x="0.0" y="31.666666666666671" width="65" height="65"/>
+                        <rect key="frame" x="0.0" y="18" width="65" height="65"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="65" id="LE3-W8-I2n"/>
                             <constraint firstAttribute="height" constant="65" id="spC-pT-zVO"/>
@@ -40,20 +40,20 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MR PURPLE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgz-Kh-ZOl">
-                        <rect key="frame" x="80" y="38.666666666666664" width="394" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MR PURPLE" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dgz-Kh-ZOl">
+                        <rect key="frame" x="80" y="25" width="90.666666666666686" height="21"/>
                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="16"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
-                        <rect key="frame" x="80" y="63.666666666666657" width="122.66666666666669" height="13"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123 Main Street, New York" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vK0-ux-5dd">
+                        <rect key="frame" x="80" y="50" width="122.66666666666669" height="13"/>
                         <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
                         <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mpF-rh-IJB">
-                        <rect key="frame" x="80" y="85.666666666666671" width="85.666666666666686" height="15"/>
+                        <rect key="frame" x="80" y="72" width="85.666666666666686" height="15"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aPM-QH-cbi">
                                 <rect key="frame" x="7" y="2" width="71.666666666666671" height="11"/>
@@ -77,10 +77,10 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQk-rz-kGl" userLabel="View event">
-                        <rect key="frame" x="385.66666666666669" y="41.666666666666664" width="88.333333333333314" height="28.999999999999993"/>
+                        <rect key="frame" x="374" y="28" width="100" height="29"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See events" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXw-Nl-SMt">
-                                <rect key="frame" x="14.000000000000004" y="6" width="60.333333333333343" height="17"/>
+                                <rect key="frame" x="14" y="6" width="72" height="17"/>
                                 <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="12"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -90,6 +90,7 @@
                         <constraints>
                             <constraint firstItem="qXw-Nl-SMt" firstAttribute="leading" secondItem="sQk-rz-kGl" secondAttribute="leading" constant="14" id="F6h-nT-4Uk"/>
                             <constraint firstItem="qXw-Nl-SMt" firstAttribute="top" secondItem="sQk-rz-kGl" secondAttribute="top" constant="6" id="WOC-Br-WAZ"/>
+                            <constraint firstAttribute="width" constant="100" id="Yi3-M1-TnS"/>
                             <constraint firstAttribute="trailing" secondItem="qXw-Nl-SMt" secondAttribute="trailing" constant="14" id="hKf-xu-Od5"/>
                             <constraint firstAttribute="bottom" secondItem="qXw-Nl-SMt" secondAttribute="bottom" constant="6" id="tdl-N4-xMf"/>
                             <constraint firstAttribute="height" constant="29" id="vsR-18-KaP"/>
@@ -112,7 +113,8 @@
                 <constraints>
                     <constraint firstItem="mpF-rh-IJB" firstAttribute="top" secondItem="vK0-ux-5dd" secondAttribute="bottom" constant="9" id="4vE-Iu-gXS"/>
                     <constraint firstItem="bT6-2m-W2Z" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="7eG-Br-yNz"/>
-                    <constraint firstAttribute="trailing" secondItem="Dgz-Kh-ZOl" secondAttribute="trailing" id="A8Y-Kz-TE5"/>
+                    <constraint firstItem="sQk-rz-kGl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dgz-Kh-ZOl" secondAttribute="trailing" constant="20" id="BrH-I7-igr"/>
+                    <constraint firstItem="sQk-rz-kGl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vK0-ux-5dd" secondAttribute="trailing" constant="15" id="FWt-H6-nWS"/>
                     <constraint firstAttribute="bottom" secondItem="bT6-2m-W2Z" secondAttribute="bottom" id="Gs9-3V-gZ5"/>
                     <constraint firstItem="mpF-rh-IJB" firstAttribute="leading" secondItem="vK0-ux-5dd" secondAttribute="leading" id="LuM-Ho-cpk"/>
                     <constraint firstItem="mOd-Im-OJG" firstAttribute="leading" secondItem="kdO-1S-7yb" secondAttribute="leading" id="NeR-PF-dHI"/>
@@ -121,7 +123,7 @@
                     <constraint firstItem="sQk-rz-kGl" firstAttribute="top" secondItem="Dgz-Kh-ZOl" secondAttribute="top" constant="3" id="gf1-ng-mip"/>
                     <constraint firstAttribute="trailing" secondItem="sQk-rz-kGl" secondAttribute="trailing" id="iAX-4p-q5Q"/>
                     <constraint firstItem="Dgz-Kh-ZOl" firstAttribute="leading" secondItem="mOd-Im-OJG" secondAttribute="trailing" constant="15" id="mMA-89-iBh"/>
-                    <constraint firstItem="mOd-Im-OJG" firstAttribute="centerY" secondItem="kdO-1S-7yb" secondAttribute="centerY" id="n7j-PM-qW5"/>
+                    <constraint firstItem="mOd-Im-OJG" firstAttribute="top" secondItem="kdO-1S-7yb" secondAttribute="top" constant="18" id="pN3-JP-nSF"/>
                     <constraint firstItem="vK0-ux-5dd" firstAttribute="leading" secondItem="Dgz-Kh-ZOl" secondAttribute="leading" id="pVl-7E-KjB"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mOd-Im-OJG" secondAttribute="bottom" constant="18" id="u1Y-iV-hWV"/>
                     <constraint firstAttribute="trailing" secondItem="bT6-2m-W2Z" secondAttribute="trailing" id="v6H-rR-EYn"/>
@@ -130,6 +132,14 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="Coe-LF-Nx9"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="actionLabel" destination="qXw-Nl-SMt" id="map-venue-action"/>
+                <outlet property="addressLabel" destination="vK0-ux-5dd" id="map-venue-address"/>
+                <outlet property="badgeLabel" destination="aPM-QH-cbi" id="map-venue-badge-label"/>
+                <outlet property="badgeView" destination="mpF-rh-IJB" id="map-venue-badge-view"/>
+                <outlet property="nameLabel" destination="Dgz-Kh-ZOl" id="map-venue-name"/>
+                <outlet property="venueImageView" destination="mOd-Im-OJG" id="map-venue-image"/>
+            </connections>
             <point key="canvasLocation" x="127" y="17"/>
         </tableViewCell>
     </objects>

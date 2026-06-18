@@ -9,7 +9,7 @@ import UIKit
 
 final class SavedGridVC: BaseSingleGridVC {
 
-    private let orderService = OrderService()
+    private let eventService = EventService()
     
     override var emptyTitle: String {
         "No saved items found"
@@ -29,7 +29,7 @@ final class SavedGridVC: BaseSingleGridVC {
             reloadUI()
         }
 
-        orderService.fetchPastTickets(skip: skip) { [weak self] isSuccess, errMsg, bookings, hasMany in
+        eventService.fetchSavedEvents(skip: skip) { [weak self] isSuccess, errMsg, bookings, hasMany in
             guard let self else { return }
 
             self.isLoading = false
@@ -72,11 +72,45 @@ final class SavedGridVC: BaseSingleGridVC {
     }
 
     override func didSelect(_ booking: Booking) {
-        guard let _ = booking.event else { return }
+        guard let event = booking.event else { return }
 
-//        Navigate.to.eventDetails(
-//            self,
-//            event: event
-//        )
+        Navigate.eventDetailsVC(
+            self,
+            event: event
+        ) { [weak self] updatedEvent, isSaved in
+            self?.handleSaveStateChange(
+                event: updatedEvent,
+                isSaved: isSaved
+            )
+        }
+    }
+
+    private func handleSaveStateChange(
+        event: Event,
+        isSaved: Bool
+    ) {
+        guard !isSaved else {
+            loadData(reset: true)
+            return
+        }
+
+        guard let index = items.firstIndex(where: {
+            $0.event?.id == event.id ||
+            $0.event?.uniqueId == event.uniqueId
+        }) else {
+            loadData(reset: true)
+            return
+        }
+
+        items.remove(at: index)
+        skip = items.count
+
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(
+                at: [IndexPath(item: index, section: 0)]
+            )
+        } completion: { [weak self] _ in
+            self?.reloadUI()
+        }
     }
 }

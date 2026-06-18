@@ -301,6 +301,7 @@ final class OrderCardCollectionCell: UICollectionViewCell {
         let dateText: String
         let imageURL: String?
         let placeholder: UIImage?
+        var eventType: EventType?
 
         if let event = booking.event {
             dateText = event.startDateTime.convertDateFormat(
@@ -312,6 +313,12 @@ final class OrderCardCollectionCell: UICollectionViewCell {
 
             imageURL = (event.flyer?.key ?? "").imageURL
             placeholder = Constant.Icon.uploadImage
+            eventType =
+            isPastEvent(
+                event,
+                timezone: booking.venueObject?.useTimezone ??
+                event.venue?.useTimezone
+            ) ? .pastEvent : nil
         } else {
             dateText = booking.createdAt.convertDateFormat(
                 from: .yyyyMMddTHHmmssSSSz,
@@ -322,7 +329,10 @@ final class OrderCardCollectionCell: UICollectionViewCell {
             placeholder = UIImage(named: "newSpeakeasy")
         }
 
-        let (statusText, statusTextColor, statusBgColor) = configureStatusBadge(eventType: .pastEvent)
+        let status =
+        eventType.map {
+            configureStatusBadge(eventType: $0)
+        }
         
         configure(
             OrderCardViewModel(
@@ -332,11 +342,42 @@ final class OrderCardCollectionCell: UICollectionViewCell {
                 title: booking.event?.title ?? Constant.String.tableReservation,
                 subtitle: booking.venueObject?.name ?? "",
                 dateText: dateText,
-                statusText: statusText,
-                statusBgColor: statusBgColor,
-                statusTextColor: statusTextColor
+                statusText: status?.0,
+                statusBgColor: status?.2,
+                statusTextColor: status?.1
             )
         )
+    }
+
+    private func isPastEvent(
+        _ event: Event,
+        timezone: String?
+    ) -> Bool {
+
+        let endDateText =
+        event.endDateTime?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let comparisonText =
+        (endDateText?.isEmpty == false)
+        ? endDateText
+        : event.startDateTime
+
+        guard let comparisonText else { return false }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = DateFormat.yyyyMMddHHmmss.rawValue
+        formatter.timeZone =
+        TimeZone(identifier: timezone ?? "") ?? .current
+
+        guard let eventDate =
+                formatter.date(from: comparisonText)
+        else {
+            return false
+        }
+
+        return eventDate < Date.venueNow(timezone: timezone)
     }
 }
 

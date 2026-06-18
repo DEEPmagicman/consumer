@@ -14,7 +14,7 @@ final class AllVenueVC: UIViewController {
     @IBOutlet weak var backbtn: AppIconButton!
 
     private var venueList: [ClipVenue] = []
-    private var venueService = VenueService()
+    private var discoverService = DiscoverService()
 
     private var skip = 0
     private var hasMore = true
@@ -140,11 +140,11 @@ final class AllVenueVC: UIViewController {
             collectionView.collectionViewLayout.invalidateLayout()
         }
 
-        venueService.fetchVenueList(
+        discoverService.fetchDiscoverVenues(
+            city: resolvedCity(),
             skip: skip,
-            status: VenueStatus.open.rawValue,
-            city: resolvedCity()
-        ) { [weak self] isSuccess, errMsg, venues, hasMore in
+            timeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, errMsg, page in
             guard let self else { return }
             guard self.loadID == requestID else { return }
 
@@ -152,10 +152,11 @@ final class AllVenueVC: UIViewController {
             self.isInitialLoading = false
             self.isPaginating = false
 
-            if isSuccess {
-                self.venueList.append(contentsOf: venues)
+            if isSuccess,
+               let page {
+                self.venueList.append(contentsOf: page.list)
                 self.skip = self.venueList.count
-                self.hasMore = hasMore
+                self.hasMore = page.hasMore
             } else {
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
             }

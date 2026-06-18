@@ -541,10 +541,16 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    static func eventDetailsVC(_ sender: UIViewController, event: Event?) {
+    static func eventDetailsVC(
+        _ sender: UIViewController,
+        event: Event?,
+        heroSuffix: String? = nil,
+        onSaveStateChanged: ((Event, Bool) -> Void)? = nil
+    ) {
         let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
         vc.event        = event
         vc.venueDetails = event?.venue
+        vc.onSaveStateChanged = onSaveStateChanged
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.isHidden = true
         sender.presentPremium(nav)
@@ -629,9 +635,14 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func venueVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
+    func venueVC(
+        _ sender: UIViewController,
+        venueDetails: ClipVenue?,
+        onFollowStateChanged: ((ClipVenue, Bool) -> Void)? = nil
+    ) {
         let vc = VenueVC(nibName: "VenueVC", bundle: nil)
         vc.venueDetails = venueDetails
+        vc.onFollowStateChanged = onFollowStateChanged
         sender.pushVC(vc)
     }
     
@@ -652,10 +663,25 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func eventsListVC(_ sender: UIViewController, venue: SearchVenueItem? = nil) {
+    func eventsListVC(
+        _ sender: UIViewController,
+        venue: SearchVenueItem? = nil,
+        mode: EventsListMode = .cityEvents
+    ) {
         let vc = EventsListVC(nibName: "EventsListVC", bundle: nil)
         vc.venue = venue
+        vc.listMode = mode
         sender.pushVC(vc, animated: false)
+    }
+
+    func eventsListVC(
+        _ sender: UIViewController,
+        screenType: EventsListScreenType
+    ) {
+        eventsListVC(
+            sender,
+            mode: screenType.listMode
+        )
     }
     
     func filtersVC(_ sender: UIViewController) {

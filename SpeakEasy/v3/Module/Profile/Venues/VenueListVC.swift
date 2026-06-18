@@ -102,7 +102,7 @@ final class VenueListVC: UIViewController {
         searchBtn.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBtn)
 
-        titleLabel.text = "Venues"
+        titleLabel.text = "Followed Venues"
         titleLabel.textColor = AppColor.primaryWhiteColor
         titleLabel.font = Constant.Font.geistMedium(size: 22)
         titleLabel.textAlignment = .center
@@ -166,6 +166,35 @@ final class VenueListVC: UIViewController {
 
 extension VenueListVC {
     
+    func handleFollowStateChange(
+        venue: ClipVenue,
+        isFollowing: Bool
+    ) {
+        guard !isFollowing else {
+            getVenues(reset: true)
+            return
+        }
+
+        guard let index = venues.firstIndex(where: {
+            $0.id == venue.id ||
+            $0.uniqueId == venue.uniqueId
+        }) else {
+            getVenues(reset: true)
+            return
+        }
+
+        venues.remove(at: index)
+        skip = venues.count
+
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(
+                at: [IndexPath(item: index, section: 0)]
+            )
+        } completion: { [weak self] _ in
+            self?.updateEmptyState()
+        }
+    }
+
     private func getVenues(reset: Bool) {
         guard !isLoading else { return }
         
@@ -179,7 +208,7 @@ extension VenueListVC {
             collectionView.reloadData()
         }
         
-        venueService.fetchVenueList(skip: skip) { [weak self] isSuccess, errMsg, venues, hasMany in
+        venueService.fetchFollowedVenues(skip: skip) { [weak self] isSuccess, errMsg, venues, hasMany in
             guard let self else { return }
             
             self.isLoading = false
@@ -272,12 +301,12 @@ extension VenueListVC {
         emptyImageView.contentMode = .scaleAspectFit
         emptyImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        emptyTitleLabel.text = "No Venues Found"
+        emptyTitleLabel.text = "No Followed Venues"
         emptyTitleLabel.textColor = .white
         emptyTitleLabel.font = Constant.Font.geistMedium(size: 18)
         emptyTitleLabel.textAlignment = .center
         
-        emptySubTitleLabel.text = "Please check back later."
+        emptySubTitleLabel.text = "Venues you follow will appear here."
         emptySubTitleLabel.textColor = UIColor.white.withAlphaComponent(0.6)
         emptySubTitleLabel.font = Constant.Font.geistRegular(size: 15)
         emptySubTitleLabel.textAlignment = .center

@@ -21,10 +21,13 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var coverTicketView: UIView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var tabView: UIView!
+    @IBOutlet weak var followBtn: UIButton!
+    @IBOutlet weak var followBtnLbl: UILabel!
 
     @IBOutlet weak var bgView: UIView!
 
     var presenter = MVPPresenter()
+    private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
     private let navTitleStackView = UIStackView()
     private let navVenueNameLabel = UILabel()
@@ -59,6 +62,10 @@ final class VenueVC: UIViewController {
 
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
+    var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
+    private var isFollowing = false
+    private var isFollowLoading = false
+    private var followedVenueId: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,10 +84,12 @@ final class VenueVC: UIViewController {
     }
 
     private func getVenueDetails() {
-        presenter.getVenuesDetailForaMVP(
-            venueId: (venueDetails?.uniqueId ?? uniqueId) ?? "",
-            venueTimeZone: venueDetails?.useTimezone ?? "",
-            doormanId: ""
+        let venueUniqueId =
+        (venueDetails?.uniqueId ?? uniqueId) ?? ""
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, venueDetail in
             guard let self = self else { return }
 
@@ -101,6 +110,8 @@ final class VenueVC: UIViewController {
     private func setUpData() {
         venueName.text = displayVenueName
         updateNavTitleText()
+        syncFollowState()
+        updateFollowUI()
         updateCoverTicketViewVisibility()
         updatePosterBackgroundImage()
 
@@ -260,10 +271,192 @@ final class VenueVC: UIViewController {
         Navigate.to.coverTicketListVC(self, venueDetails: venueDetails)
     }
 
+    @IBAction func onClickFollowBtn(_ sender: Any) {
+        guard !isFollowLoading else { return }
+        guard !UserDefault.shared.isGuest else { return }
+
+        guard let venueUniqueId =
+                venueDetails?.uniqueId,
+              !venueUniqueId.isEmpty
+        else {
+            return
+        }
+
+        let previousState = isFollowing
+        let previousFollowedVenueId = followedVenueId
+
+        isFollowLoading = true
+        isFollowing.toggle()
+        updateFollowUI()
+
+        if isFollowing {
+            followVenueAPI(
+                venueUniqueId: venueUniqueId,
+                previousState: previousState,
+                previousFollowedVenueId: previousFollowedVenueId
+            )
+        } else {
+            guard let followedVenueId,
+                  !followedVenueId.isEmpty
+            else {
+                resolveAndUnfollowVenueAPI(
+                    venueUniqueId: venueUniqueId,
+                    previousState: previousState,
+                    previousFollowedVenueId: previousFollowedVenueId
+                )
+                return
+            }
+
+            unfollowVenueAPI(
+                followedVenueId: followedVenueId,
+                previousState: previousState,
+                previousFollowedVenueId: previousFollowedVenueId
+            )
+        }
+    }
+
 }
 
 // MARK: - Sticky Header Coordination
 private extension VenueVC {
+
+    func syncFollowState() {
+        followedVenueId =
+        venueDetails?.followedVenueId
+
+        isFollowing =
+        venueDetails?.isFollowing == true ||
+        followedVenueId != nil
+    }
+
+    func updateFollowUI() {
+        followBtnLbl?.text =
+        isFollowing ? "Following" : "Follow"
+
+        followBtn?.isUserInteractionEnabled =
+        !isFollowLoading
+
+        followBtnLbl?.alpha =
+        isFollowLoading ? 0.65 : 1
+    }
+
+    func followVenueAPI(
+        venueUniqueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+
+        venueService.followVenue(
+            uniqueId: venueUniqueId
+        ) { [weak self] isSuccess, _, relation in
+
+            guard let self else { return }
+
+            self.isFollowLoading = false
+
+            guard isSuccess,
+                  let id = relation?.id,
+                  !id.isEmpty
+            else {
+
+                self.rollbackFollowState(
+                    previousState: previousState,
+                    previousFollowedVenueId: previousFollowedVenueId
+                )
+                return
+            }
+
+            self.followedVenueId = id
+            self.venueDetails?.followedVenueId = id
+            self.venueDetails?.isFollowing = true
+            self.isFollowing = true
+            self.updateFollowUI()
+            if let venue = self.venueDetails {
+                self.onFollowStateChanged?(venue, true)
+            }
+        }
+    }
+
+    func unfollowVenueAPI(
+        followedVenueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+
+        venueService.unfollowVenue(
+            followedVenueId: followedVenueId
+        ) { [weak self] isSuccess, _, _ in
+
+            guard let self else { return }
+
+            self.isFollowLoading = false
+
+            guard isSuccess else {
+                self.rollbackFollowState(
+                    previousState: previousState,
+                    previousFollowedVenueId: previousFollowedVenueId
+                )
+                return
+            }
+
+            self.followedVenueId = nil
+            self.venueDetails?.followedVenueId = nil
+            self.venueDetails?.isFollowing = false
+            self.isFollowing = false
+            self.updateFollowUI()
+            if let venue = self.venueDetails {
+                self.onFollowStateChanged?(venue, false)
+            }
+        }
+    }
+
+    func resolveAndUnfollowVenueAPI(
+        venueUniqueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+
+        venueService.fetchFollowedVenueId(
+            uniqueId: venueUniqueId,
+            search: venueDetails?.name
+        ) { [weak self] followedVenueId in
+
+            guard let self else { return }
+
+            guard let followedVenueId,
+                  !followedVenueId.isEmpty
+            else {
+
+                self.rollbackFollowState(
+                    previousState: previousState,
+                    previousFollowedVenueId: previousFollowedVenueId
+                )
+                return
+            }
+
+            self.followedVenueId = followedVenueId
+            self.venueDetails?.followedVenueId = followedVenueId
+
+            self.unfollowVenueAPI(
+                followedVenueId: followedVenueId,
+                previousState: previousState,
+                previousFollowedVenueId: previousFollowedVenueId
+            )
+        }
+    }
+
+    func rollbackFollowState(
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+
+        isFollowLoading = false
+        isFollowing = previousState
+        followedVenueId = previousFollowedVenueId
+        venueDetails?.isFollowing = previousState
+        venueDetails?.followedVenueId = previousFollowedVenueId
+        updateFollowUI()
+    }
 
     var displayVenueName: String {
         let name = (venueDetails?.name ?? "").trimmingCharacters(in: .whitespacesAndNewlines)

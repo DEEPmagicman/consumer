@@ -83,6 +83,12 @@ private extension EventCollectionViewCell {
         venueLogoImage.clipsToBounds = true
         venueLogoImage.contentMode = .scaleAspectFit
         venueLogoImage.isHidden = true
+        venueName.numberOfLines = 2
+        venueName.lineBreakMode = .byTruncatingTail
+        eventName.numberOfLines = 2
+        eventName.lineBreakMode = .byTruncatingTail
+        eventDate.numberOfLines = 1
+        eventDate.lineBreakMode = .byTruncatingTail
     }
 
     func setupData(event: Event) {

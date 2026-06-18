@@ -7,6 +7,25 @@
 
 import UIKit
 
+enum EventsListMode {
+    case cityEvents
+    case tonight
+}
+
+enum EventsListScreenType {
+    case discoverExperiences
+    case allEvents
+
+    var listMode: EventsListMode {
+        switch self {
+        case .discoverExperiences:
+            return .tonight
+        case .allEvents:
+            return .cityEvents
+        }
+    }
+}
+
 final class EventsListVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
@@ -27,8 +46,9 @@ final class EventsListVC: UIViewController {
     private var loadID = 0
 
     var venue: SearchVenueItem? = nil
+    var listMode: EventsListMode = .cityEvents
 
-    private let eventService = EventService()
+    private let discoverService = DiscoverService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,26 +163,36 @@ final class EventsListVC: UIViewController {
             reloadUI()
         }
 
-        eventService.fetchEvents(
-            from: skip,
-            venueId: "",
-            time: "UPCOMING",
-            city: resolvedCity()
-        ) { [weak self] _, _, events, hasMore in
+        discoverService.fetchDiscoverEvents(
+            city: resolvedCity(),
+            skip: skip,
+            timeWindow: eventTimeWindow(),
+            timeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, errMsg, page in
 
             guard let self else { return }
             guard self.loadID == requestID else { return }
 
+            guard isSuccess,
+                  let page else {
+                self.isLoading = false
+                self.isInitialLoading = false
+                self.isPaginating = false
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                self.reloadUI()
+                return
+            }
+
             let oldCount = self.eventList.count
 
             self.eventList = reset
-                ? events
-                : self.eventList + events
+                ? page.list
+                : self.eventList + page.list
 
             let newCount = self.eventList.count
 
             self.skip = self.eventList.count
-            self.hasMore = hasMore
+            self.hasMore = page.hasMore
             self.isLoading = false
 
             let wasInitialLoading = self.isInitialLoading
@@ -186,6 +216,15 @@ final class EventsListVC: UIViewController {
             }
 
             self.insertEventItems(indexPaths)
+        }
+    }
+
+    private func eventTimeWindow() -> DiscoverEventTimeWindow {
+        switch listMode {
+        case .cityEvents:
+            return .cityEvents()
+        case .tonight:
+            return .tonight()
         }
     }
 
@@ -225,7 +264,14 @@ final class EventsListVC: UIViewController {
     }
 
     private func updateCityTitle() {
-        cityTitleLbl.text = "Events in \(resolvedCity())"
+        switch listMode {
+        case .cityEvents:
+            titleLbl.text = "Events in \(resolvedCity())"
+            cityTitleLbl.isHidden = true
+        case .tonight:
+            titleLbl.text = "Events Tonight"
+            cityTitleLbl.text = resolvedCity()
+        }
     }
 
     private func reloadUI() {

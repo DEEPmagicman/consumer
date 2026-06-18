@@ -22,14 +22,20 @@ final class VenueExperiencesVC: UIViewController,
     private var hasMore = true
 
     private var isLoading = false
-    private var shimmerView: VenueEventsShimmerView?
+    private var isInitialLoading = true
+    private var isPaginating = false
+    private var lastCollectionLayoutWidth: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupCollectionView()
-        showShimmer()
-        getEvents()
+        getEvents(reset: true)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        refreshCollectionLayoutIfNeeded()
     }
 
     func viewForSegmentControllerToObserveContentOffsetChange() -> UIView {
@@ -67,6 +73,18 @@ extension VenueExperiencesVC {
             forCellWithReuseIdentifier: OrderCardShimmerCell.identifier
         )
 
+        collectionView.register(
+            PaginationShimmerFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: PaginationShimmerFooterView.identifier
+        )
+
+        collectionView.register(
+            EmptyCollectionReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier
+        )
+
         let layout = PinterestLayout()
 
         layout.numberOfColumns = 2
@@ -74,7 +92,7 @@ extension VenueExperiencesVC {
         layout.sectionInsets = UIEdgeInsets(
             top: 10,
             left: 24,
-            bottom: 24,
+            bottom: 34,
             right: 24
         )
 
@@ -85,17 +103,61 @@ extension VenueExperiencesVC {
         collectionView.collectionViewLayout = layout
     }
 
-    private func showShimmer() {
+    private func reloadUI() {
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.reloadData()
+            collectionView.layoutIfNeeded()
+        }
+    }
 
-        let shimmer = VenueEventsShimmerView(
-            frame: collectionView.bounds
-        )
+    private func insertEventItems(_ indexPaths: [IndexPath]) {
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates {
+                collectionView.insertItems(at: indexPaths)
+            } completion: { [weak self] _ in
+                guard let self else { return }
+                self.isPaginating = false
+                self.invalidateFooter()
+            }
+        }
+    }
 
-        collectionView.addSubview(shimmer)
+    private func invalidateFooter() {
+        if let layout = collectionView.collectionViewLayout as? PinterestLayout {
+            layout.invalidateFooter()
+        } else {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
 
-        shimmer.start()
+    private func refreshCollectionLayoutIfNeeded() {
+        let width = collectionView.bounds.width
 
-        shimmerView = shimmer
+        guard width > 0,
+              abs(width - lastCollectionLayoutWidth) > 0.5 else {
+            return
+        }
+
+        lastCollectionLayoutWidth = width
+
+        UIView.performWithoutAnimation {
+            collectionView.collectionViewLayout.invalidateLayout()
+            collectionView.layoutIfNeeded()
+        }
+    }
+
+    private func loadNextPageIfNeeded() {
+        guard !isInitialLoading else { return }
+        guard !isPaginating else { return }
+        guard !isLoading else { return }
+        guard hasMore else { return }
+        guard !events.isEmpty else { return }
+
+        isPaginating = true
+        collectionView.collectionViewLayout.invalidateLayout()
+
+        getEvents(reset: false)
     }
 }
 
@@ -103,17 +165,29 @@ extension VenueExperiencesVC {
 
 extension VenueExperiencesVC {
 
-    func getEvents() {
+    func getEvents(reset: Bool = false) {
 
         guard !isLoading else { return }
-        guard hasMore else { return }
+        guard hasMore || reset else { return }
 
         isLoading = true
+
+        if reset {
+            skip = 0
+            hasMore = true
+            isInitialLoading = true
+            isPaginating = false
+            events.removeAll()
+            emptyView.isHidden = true
+            collectionView.isHidden = false
+            reloadUI()
+        }
 
         VenuePresenter.getEventVenues(
             venueId: venueId,
             skip: skip,
-            time: "UPCOMING"
+            time: "UPCOMING",
+            isPremium: true
         ) { [weak self] isSuccess,
             errMsg,
             list,
@@ -122,10 +196,9 @@ extension VenueExperiencesVC {
             guard let self = self else { return }
 
             DispatchQueue.main.async {
+                let oldCount = self.events.count
 
                 self.isLoading = false
-
-                self.shimmerView?.stop()
 
                 if isSuccess {
 
@@ -139,13 +212,35 @@ extension VenueExperiencesVC {
 
                     self.skip = self.events.count
                     self.hasMore = hasMore
+                    let newCount = self.events.count
+                    let wasInitialLoading = self.isInitialLoading
+                    self.isInitialLoading = false
 
                     self.emptyView.isHidden = !self.events.isEmpty
                     self.collectionView.isHidden = self.events.isEmpty
 
-                    self.collectionView.reloadData()
+                    if wasInitialLoading || reset {
+                        self.isPaginating = false
+                        self.reloadUI()
+                        return
+                    }
+
+                    let indexPaths = (oldCount..<newCount).map {
+                        IndexPath(item: $0, section: 0)
+                    }
+
+                    guard !indexPaths.isEmpty else {
+                        self.isPaginating = false
+                        self.invalidateFooter()
+                        return
+                    }
+
+                    self.insertEventItems(indexPaths)
 
                 } else {
+                    self.isInitialLoading = false
+                    self.isPaginating = false
+                    self.invalidateFooter()
 
                     self.emptyView.isHidden = false
                     self.collectionView.isHidden = true
@@ -171,6 +266,9 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
+        if isInitialLoading {
+            return 6
+        }
 
         return events.count
     }
@@ -179,6 +277,12 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
+        if isInitialLoading {
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: OrderCardShimmerCell.identifier,
+                for: indexPath
+            )
+        }
 
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: OrderCardCollectionCell.identifier,
@@ -191,6 +295,33 @@ extension VenueExperiencesVC: UICollectionViewDataSource {
 
         return cell
     }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: PaginationShimmerFooterView.identifier,
+                for: indexPath
+            ) as! PaginationShimmerFooterView
+
+            footer.isHidden = !(isPaginating && hasMore)
+            return footer
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: EmptyCollectionReusableView.identifier,
+            for: indexPath
+        )
+
+        header.isHidden = true
+        return header
+    }
 }
 
 // MARK: - UICollectionViewDelegate
@@ -201,6 +332,8 @@ extension VenueExperiencesVC: UICollectionViewDelegate {
         _ collectionView: UICollectionView,
         didSelectItemAt indexPath: IndexPath
     ) {
+        guard !isInitialLoading else { return }
+        guard events.indices.contains(indexPath.item) else { return }
 
         let event = events[indexPath.item]
 
@@ -222,9 +355,11 @@ extension VenueExperiencesVC: UICollectionViewDelegate {
 
         let threshold: CGFloat = 400
 
-        if offsetY > contentHeight - visibleHeight - threshold {
-            getEvents()
+        guard offsetY > contentHeight - visibleHeight - threshold else {
+            return
         }
+
+        loadNextPageIfNeeded()
     }
 }
 
@@ -238,10 +373,12 @@ extension VenueExperiencesVC:
         prefetchItemsAt indexPaths: [IndexPath]
     ) {
 
+        guard !isInitialLoading else { return }
+
         if indexPaths.contains(where: {
             $0.item >= self.events.count - 4
         }) {
-            getEvents()
+            loadNextPageIfNeeded()
         }
     }
 }
@@ -255,6 +392,10 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
         heightForItemAt indexPath: IndexPath,
         with width: CGFloat
     ) -> CGFloat {
+        if isInitialLoading {
+            let imageHeight = width * 1.2
+            return imageHeight + 90
+        }
 
         guard events.indices.contains(indexPath.item) else {
             return 0.1
@@ -264,7 +405,7 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
 
         let imageHeight = width * 1.2
 
-        let title = event.title ?? ""
+        let title = event.title
         let venue = event.venue?.name ?? ""
 
         let dateText = event.startDateTime.convertDateFormat(
@@ -348,6 +489,6 @@ extension VenueExperiencesVC: PinterestLayoutDelegate {
         referenceHeightForFooterIn section: Int
     ) -> CGFloat {
 
-        return hasMore ? 120 : 0
+        return isPaginating && hasMore ? 300 : 0
     }
 }

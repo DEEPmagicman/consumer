@@ -575,6 +575,7 @@
 		CEE646F42FC47CC9001DF84E /* TicketSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEE646F32FC47CC9001DF84E /* TicketSelectionViewController.xib */; };
 		CEE7A22A2A28BC9C009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
 		CEE7A22B2A28BCE3009A027F /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE7A2292A28BC9C009A027F /* Common.swift */; };
+		CEE8E8042FE41DA400C2B601 /* DiscoverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8E8032FE41DA400C2B601 /* DiscoverService.swift */; };
 		CEEACF452FD038690009EFB5 /* CoverQRCodeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = CEEACF442FD038690009EFB5 /* CoverQRCodeVC.xib */; };
 		CEEACF462FD038690009EFB5 /* CoverQRCodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEACF432FD038690009EFB5 /* CoverQRCodeVC.swift */; };
 		CEEACF492FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */; };
@@ -1127,6 +1128,7 @@
 		CEE646F12FC47CA6001DF84E /* TicketSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketSelectionViewController.swift; sourceTree = "<group>"; };
 		CEE646F32FC47CC9001DF84E /* TicketSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TicketSelectionViewController.xib; sourceTree = "<group>"; };
 		CEE7A2292A28BC9C009A027F /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		CEE8E8032FE41DA400C2B601 /* DiscoverService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverService.swift; sourceTree = "<group>"; };
 		CEEACF432FD038690009EFB5 /* CoverQRCodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverQRCodeVC.swift; sourceTree = "<group>"; };
 		CEEACF442FD038690009EFB5 /* CoverQRCodeVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CoverQRCodeVC.xib; sourceTree = "<group>"; };
 		CEEACF472FD03AE90009EFB5 /* CustomQRCodePagerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomQRCodePagerViewCell.swift; sourceTree = "<group>"; };
@@ -1718,6 +1720,7 @@
 				6A79E2862FCEBAEA00B7F1F4 /* ProfileService.swift */,
 				6A79E2842FCEB77400B7F1F4 /* SettingsService.swift */,
 				6A79E2822FCEB76F00B7F1F4 /* AuthService.swift */,
+				CEE8E8032FE41DA400C2B601 /* DiscoverService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3732,6 +3735,7 @@
 				CAC413F928A478040007BA86 /* UICollectionView.swift in Sources */,
 				CE4245F62FBAF38B006FF16F /* MapViewController.swift in Sources */,
 				6A765E892FD0539D000FEF22 /* SearchVenueVC.swift in Sources */,
+				CEE8E8042FE41DA400C2B601 /* DiscoverService.swift in Sources */,
 				045B4AA82F73EFDB00785381 /* InstagramProfileFoundPopupVC.swift in Sources */,
 				CE8AB896299F60210083059B /* MVPStartScreenVC.swift in Sources */,
 				CAC413FD28A478040007BA86 /* UIViewController.swift in Sources */,

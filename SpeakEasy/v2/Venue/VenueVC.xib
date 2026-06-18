@@ -23,6 +23,8 @@
                 <outlet property="buyticketView" destination="xNu-88-pSm" id="aRq-AA-XGA"/>
                 <outlet property="containerView" destination="57Y-Ii-nMO" id="rtB-Ht-n5m"/>
                 <outlet property="coverTicketView" destination="wnq-bd-Mgd" id="AAa-ct-row"/>
+                <outlet property="followBtn" destination="jUU-L9-aIQ" id="av8-Ij-fjW"/>
+                <outlet property="followBtnLbl" destination="TV7-Jm-5tJ" id="iqy-FU-HmI"/>
                 <outlet property="tabView" destination="M9l-zN-Efx" id="u7F-N2-ZOq"/>
                 <outlet property="venueLogo" destination="xhi-9o-YK3" id="5qX-bW-5Rb"/>
                 <outlet property="venueName" destination="ALN-3l-0qS" id="bN5-sl-oLd"/>
@@ -60,8 +62,11 @@
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jUU-L9-aIQ">
                                     <rect key="frame" x="0.0" y="0.0" width="80.333333333333329" height="34"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <connections>
+                                        <action selector="onClickFollowBtn:" destination="-1" eventType="touchUpInside" id="rKm-Rb-TnF"/>
+                                    </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Follow" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TV7-Jm-5tJ">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Follow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TV7-Jm-5tJ">
                                     <rect key="frame" x="16.000000000000004" y="6.6666666666666856" width="48.333333333333343" height="21"/>
                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

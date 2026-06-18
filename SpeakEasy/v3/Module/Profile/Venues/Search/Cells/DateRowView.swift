@@ -14,6 +14,7 @@ struct SearchVenueItem {
     let id: String
     let name: String
     let imageURL: String?
+    var venue: ClipVenue? = nil
 }
 
 struct SearchEventItem {

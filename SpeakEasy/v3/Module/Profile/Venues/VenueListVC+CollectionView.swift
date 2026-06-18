@@ -52,6 +52,12 @@ extension VenueListVC: UICollectionViewDataSource, UICollectionViewDelegate {
 
         let vc = VenueVC(nibName: "VenueVC", bundle: nil)
         vc.venueDetails = venue
+        vc.onFollowStateChanged = { [weak self] updatedVenue, isFollowing in
+            self?.handleFollowStateChange(
+                venue: updatedVenue,
+                isFollowing: isFollowing
+            )
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
 

@@ -11,6 +11,7 @@ final class DiscoverDateFilterVC: UIViewController {
     @IBOutlet weak var dateCollectionView: UICollectionView!
 
     var selectedDates = [String]()
+    private var selectedAPIDates = [String]()
 
     private var selectedDateIndex = 0
 
@@ -24,7 +25,7 @@ final class DiscoverDateFilterVC: UIViewController {
     private var selectedCity = UserDefault.shared.activeCity
     private var loadID = 0
 
-    private let eventService = EventService()
+    private let discoverService = DiscoverService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +38,12 @@ final class DiscoverDateFilterVC: UIViewController {
 
     func updateFilterDates(
         _ dates: [String],
+        apiDates: [String]? = nil,
         city: String
     ) {
 
         selectedDates = dates
+        selectedAPIDates = apiDates ?? dates
         selectedCity = city
         selectedDateIndex = 0
 
@@ -153,12 +156,12 @@ final class DiscoverDateFilterVC: UIViewController {
         let city = selectedCity
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        eventService.fetchEvents(
-            from: skip,
-            venueId: "",
-            time: "UPCOMING",
-            city: city.isEmpty ? UserDefault.shared.activeCity : city
-        ) { [weak self] _, _, events, hasMore in
+        discoverService.fetchDiscoverEvents(
+            city: city.isEmpty ? UserDefault.shared.activeCity : city,
+            skip: skip,
+            timeWindow: selectedDateTimeWindow(),
+            timeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, errMsg, page in
 
             guard let self else {
                 return
@@ -168,16 +171,26 @@ final class DiscoverDateFilterVC: UIViewController {
                 return
             }
 
+            guard isSuccess,
+                  let page else {
+                self.isLoading = false
+                self.isInitialLoading = false
+                self.isPaginating = false
+                Alert.showToast(errMsg ?? Constant.String.somethingWrong)
+                self.reloadUI()
+                return
+            }
+
             let oldCount = self.eventList.count
 
             self.eventList = reset
-            ? events
-            : self.eventList + events
+            ? page.list
+            : self.eventList + page.list
 
             let newCount = self.eventList.count
 
             self.skip = self.eventList.count
-            self.hasMore = hasMore
+            self.hasMore = page.hasMore
 
             self.isLoading = false
             let wasInitialLoading = self.isInitialLoading
@@ -201,6 +214,20 @@ final class DiscoverDateFilterVC: UIViewController {
 
             self.insertEventItems(indexPaths)
         }
+    }
+
+    private func selectedDateTimeWindow() -> DiscoverEventTimeWindow {
+        let apiDate: String
+
+        if selectedAPIDates.indices.contains(selectedDateIndex) {
+            apiDate = selectedAPIDates[selectedDateIndex]
+        } else if selectedDates.indices.contains(selectedDateIndex) {
+            apiDate = selectedDates[selectedDateIndex]
+        } else {
+            apiDate = Date().string(format: .YYYYMMDD, isUTC: false)
+        }
+
+        return .selectedDay(apiDate)
     }
 
     private func reloadUI() {
@@ -363,6 +390,7 @@ UICollectionViewDelegateFlowLayout {
                 )
             }
 
+            fetchEvents(reset: true)
             return
         }
 

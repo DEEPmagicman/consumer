@@ -55,6 +55,8 @@ struct Event: Codable {
     var isEnableReservationRequest: Bool
     var eventGallery: [EventGallery]?
     var eventAddOnTicket: [EventTicket]?
+    var isSaved: Bool?
+    var savedEventId: String?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }
         let filterTicket = eventTicket?.filter { ($0.isDeleted == false) && ($0.sellingPaused == false) && (($0.endSale.toDate(withFormat: .yyyyMMddHHmmss) ?? Date()) > Date()) && (($0.issuedUnits ?? 0) > ($0.soldUnits ?? 0)) }

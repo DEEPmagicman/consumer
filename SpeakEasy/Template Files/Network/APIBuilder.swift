@@ -14,6 +14,11 @@ struct APIBuilder {
             SharedURL.baseURL
         }
     }
+    static private var v3baseURL: String {
+        get {
+            SharedURL.v3baseURL
+        }
+    }
     static private let route = "/consumer"
     static private let auth = "/auth"
     static private let phoneLogin = "/phone-login"
@@ -79,6 +84,7 @@ struct APIBuilder {
     static private let bookingConfirm = "/booking-confirm"
     static private let getInstagramProfile = "/get-instagram-profile"
     static private let consumer = "/consumer"
+    static private let discover = "/discover"
     
     static let getInstagramCode = "https://api.instagram.com/oauth/authorize?client_id=" + Constant.String.InstagramClientId + "&redirect_uri=" + Constant.String.InstagramDirectUri + "&scope=user_profile,user_media&response_type=code"
     static let spotifyAuthUrl = "https://accounts.spotify.com/authorize?response_type=token&client_id=" + APIBuilder.clientId + "&scope=" + APIBuilder.SCOPE + "&redirect_uri=" + APIBuilder.redirectURI + "&show_dialog=false"
@@ -259,6 +265,10 @@ struct APIBuilder {
     static func eventDetailURL(_ id: String) -> String {
         baseURL + route + event + "/\(id)"
     }
+
+    static func v3EventDetailURL(_ uniqueId: String) -> String {
+        v3baseURL + route + event + "/\(uniqueId)"
+    }
     
     static func eventAttendeesURL(_ id: String) -> String {
         return baseURL + "/v2" + route + event + "/\(id)/attendees"
@@ -318,6 +328,26 @@ struct APIBuilder {
     
     static func MVPVenueDetailURL(_ id: String) -> String {
         baseURL + route + cover + "/\(id)"
+    }
+
+    static func v3CoverVenueDetailURL(
+        uniqueId: String,
+        userId: String
+    ) -> String {
+        let encodedUserId =
+        userId.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed
+        ) ?? userId
+
+        return v3baseURL + route + cover + "/\(uniqueId)?userId=\(encodedUserId)"
+    }
+
+    static var v3FollowedVenuesURL: String {
+        v3baseURL + route + "/followed/venues"
+    }
+
+    static func v3FollowedVenueURL(_ id: String) -> String {
+        v3baseURL + route + "/followed/venues/\(id)"
     }
     
     static var MVPVenueListURL: String {
@@ -451,6 +481,31 @@ struct APIBuilder {
     static var savedEventsURL: String {
         baseURL + route + "/saved"
     }
+
+    static var v3SavedEventsURL: String {
+        v3baseURL + route + "/saved/events"
+    }
+
+    static func v3SavedEventURL(_ id: String) -> String {
+        v3baseURL + route + "/saved/events/\(id)"
+    }
+
+    static func discoverURL(city: String) -> String {
+        let encodedCity =
+        city.addingPercentEncoding(
+            withAllowedCharacters: .urlQueryAllowed
+        ) ?? city
+
+        return v3baseURL + route + discover + "?city=\(encodedCity)"
+    }
+
+    static var discoverEventsURL: String {
+        v3baseURL + route + discover + "/events"
+    }
+
+    static var discoverVenuesURL: String {
+        v3baseURL + route + discover + "/venues"
+    }
     
     static var venueListURL: String {
         baseURL + route + venue + coverVenue
@@ -462,6 +517,7 @@ struct APIBuilder {
         take: Int = 20,
         skip: Int = 0,
         timeVersion: String,
+        isPremium: Bool = false,
         orderBy: String = "order|asc"
     ) -> String {
         
@@ -477,6 +533,9 @@ struct APIBuilder {
         queryItems.append("eventStatus=APPROVED")
         queryItems.append("timeVersion=\(timeVersion)")
         queryItems.append("venueId=\(venueId)")
+        if isPremium {
+            queryItems.append("isPremium=true")
+        }
         queryItems.append("include=eventTicket")
         queryItems.append("orderBy=\(orderBy.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
         

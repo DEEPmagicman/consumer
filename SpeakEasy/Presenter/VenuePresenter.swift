@@ -55,6 +55,7 @@ final class VenuePresenter {
     static func getEventVenues(
         venueId: String, skip: Int,
         time: String,
+        isPremium: Bool = false,
         completion: @escaping (_ isSuccess: Bool, _ errMsg: String?, _ list: [Event], _ hasMore: Bool) -> Void
     ) {
         
@@ -64,6 +65,7 @@ final class VenuePresenter {
             take: 5,
             skip: skip,
             timeVersion: time,
+            isPremium: isPremium,
             orderBy: "startDateTime|asc"
         )
         

@@ -20,9 +20,9 @@ struct ClipVenue: Codable {
     var dressCode: String?
     var city: String
     var pinCode: String?
-    var code: String
-    var phone: String
-    var website: String
+    var code: String?
+    var phone: String?
+    var website: String?
     var description: String?
     var status: String
 //    var bookingStatus: String?
@@ -45,6 +45,7 @@ struct ClipVenue: Codable {
     var isDiscoveryClickable: Bool?
     var isFollowing: Bool?
     var isSaved: Bool?
+    var followedVenueId: String?
     // MARK: app side parameters
     var latitude: Double {
         Double(lat) ?? 0.0
@@ -205,8 +206,8 @@ struct ClipVenue: Codable {
 struct LogoClip: Codable {
     
     var key: String
-    var name: String
-    var description: String
+    var name: String?
+    var description: String?
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

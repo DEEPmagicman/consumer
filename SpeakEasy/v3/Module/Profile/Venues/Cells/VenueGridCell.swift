@@ -78,10 +78,15 @@ final class VenueGridCell: UICollectionViewCell {
 
     func configure(_ venue: ClipVenue) {
 
+        let imageKey =
+        venue.venueAttachment?.first?.key ??
+        venue.logo?.key ??
+        ""
+
         imageView.sd_setImage(
             with: URL(
                 string:
-                "\(SharedURL.amazonStorage)\(venue.venueAttachment?.first?.key ?? "")"
+                "\(SharedURL.amazonStorage)\(imageKey)"
             ),
             placeholderImage: UIImage(named: "newSpeakeasy")
         )

@@ -99,6 +99,7 @@ class EventDetailsVC: UIViewController {
     var venueDetails: ClipVenue?
     var event: Event?
     var uniqueId: String? = ""
+    var onSaveStateChanged: ((Event, Bool) -> Void)?
     var promoteId = ""
     private var eventTicketId = [String]()
     private var artists = [ArtistData]()
@@ -120,6 +121,7 @@ class EventDetailsVC: UIViewController {
     private var isEventDetailAPICalled = false
     private var isSaved: Bool = false
     private var isSaveLoading: Bool = false
+    private var savedEventId: String?
     private let posterHeaderView = EventPosterHeaderView()
     private let collapseThreshold: CGFloat = 20
     private var isCollapsed = false
@@ -186,7 +188,7 @@ class EventDetailsVC: UIViewController {
         scrollView.contentInsetAdjustmentBehavior = .never
 
         scrollView.delegate = self
-        fetchSeatingAreas()
+//        fetchSeatingAreas()
         getEventDetail()
         
         setupData()
@@ -335,15 +337,20 @@ class EventDetailsVC: UIViewController {
     }
     
     private func setupUI() {
-        isSaved = venueDetails?.isSaved ?? false
+        savedEventId = event?.savedEventId
+        isSaved =
+        event?.isSaved == true ||
+        savedEventId != nil
         updateSaveUI()
     }
     
     private func updateSaveUI() {
-        let imageName = isSaved ? "ic-bookmark" : "ic-bookmark"
+        let imageName = isSaved ? "savedIcon" : "unSavedIcon"
         
         saveBtn.setImage(UIImage(named: imageName), for: .normal)
         saveBtn.tintColor =  .white
+        saveBtn.alpha = isSaveLoading ? 0.65 : 1
+        saveBtn.isUserInteractionEnabled = !isSaveLoading
     }
 
     
@@ -427,6 +434,35 @@ class EventDetailsVC: UIViewController {
 
         showSkeleton()
 
+        eventService.fetchV3EventDetail(
+            eventId: eventId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] _, _, detail, errCode in
+
+            guard let self = self else { return }
+
+            self.view.alpha = 1
+            self.isEventDetailAPICalled = true
+
+            guard let detail else {
+                if errCode == 404 && self.promoteId != "" {
+                    self.promoteId = ""
+                    self.isEventDetailAPICalled = false
+                    self.getEventDetail()
+                    return
+                }
+
+                self.hideSkeleton()
+                return
+            }
+
+            self.applyEventDetailBundle(detail)
+        }
+
+        /*
+        Old detail API flow is kept here for reference while the new
+        /consumer/event/{uniqueId} response owns all detail data.
+
         eventService.fetchEventDetail(
             eventId: eventId,
             venueTimeZone: venueDetails?.useTimezone,
@@ -435,7 +471,6 @@ class EventDetailsVC: UIViewController {
 
             guard let self = self else { return }
 
-          
             self.view.alpha = 1
             self.isEventDetailAPICalled = true
 
@@ -469,14 +504,130 @@ class EventDetailsVC: UIViewController {
             } else {
                 self.attendeesView.isHidden = true
             }
-            
-           
-            
+
             self.artists = self.event?.eventHasArtist?.filter({ $0.artist.status == "ENABLED" }) ?? []
 
             self.updateLineUpView()
             self.getEventFAQs()
             self.getTicketLinksAndRefresh()
+        }
+        */
+    }
+
+    private func applyEventDetailBundle(
+        _ detail: EventDetailBundle
+    ) {
+
+        let currentSavedEventId =
+        savedEventId ?? event?.savedEventId
+
+        let currentIsSaved =
+        isSaved || event?.isSaved == true
+
+        let detailHasSavedState =
+        detail.event.isSaved != nil ||
+        detail.event.savedEventId != nil
+
+        event = detail.event
+
+        if !detailHasSavedState,
+           let currentSavedEventId {
+            event?.savedEventId = currentSavedEventId
+        }
+
+        if !detailHasSavedState,
+           currentIsSaved {
+            event?.isSaved = true
+        }
+
+        if let venue = detail.event.venue {
+            venueDetails = venue
+        }
+
+        savedEventId = event?.savedEventId
+        isSaved =
+        event?.isSaved == true ||
+        savedEventId != nil
+        updateSaveUI()
+
+        eventTicketId =
+        detail.event.eventTicket?
+            .compactMap { $0.id } ?? []
+
+        let filtered =
+        filterSeatingAreas(
+            detail.seatingAreas
+        )
+
+        seatingAreas = detail.seatingAreas
+        seatingAreasFilteredOut = filtered.visible
+
+        ticketLinks = detail.ticketLinks
+
+        faqs = detail.faqs
+        expandedFAQIndex = nil
+        faqsView.isHidden = faqs.isEmpty
+        faqsTableView.reloadData()
+        faqsTableView.layoutIfNeeded()
+        faqsTableViewHeight.constant =
+        faqsTableView.contentSize.height
+
+        artists =
+        event?.eventHasArtist?
+            .filter { $0.artist.status == "ENABLED" } ?? []
+
+        lineUpCollectionView.reloadData()
+        updateLineUpView()
+
+        applyAttendees(
+            detail.attendees
+        )
+
+        setupData()
+        hideSkeleton()
+        showContinueBtn()
+    }
+
+    private func applyAttendees(
+        _ list: [Attendee]?
+    ) {
+
+        guard event?.showEventAttendees == true,
+              let list
+        else {
+
+            attendees = []
+            totalAttendees = 0
+            guestListTitleLbl.text = ""
+            guestListCollectionView.reloadData()
+            updateAttendeesView()
+            return
+        }
+
+        attendees =
+        sortAttendeesImageFirst(
+            list
+        )
+
+        totalAttendees = attendees.count
+        guestListCollectionView.reloadData()
+        updateAttendeesView()
+
+        guard let firstAttendee = attendees.first else {
+            guestListTitleLbl.text = ""
+            return
+        }
+
+        let firstName = firstAttendee.firstName ?? ""
+        let count = attendees.count
+
+        if count == 1 {
+            guestListTitleLbl.text = "\(firstName) is going"
+        } else if count > 1 {
+            let othersCount = count - 1
+            let otherText = othersCount == 1 ? "other" : "others"
+            guestListTitleLbl.text =
+            "\(firstName) and \(othersCount) \(otherText) going"
         }
     }
     
@@ -1867,19 +2018,166 @@ class EventDetailsVC: UIViewController {
     
     @IBAction func onClickSaveBtn(_ sender: Any) {
         guard !isSaveLoading else { return }
-        guard let venueId = event?.id else { return }
-        
-//        isSaveLoading = true
+
+        guard !UserDefault.shared.isGuest else {
+            return
+        }
+
+        guard let eventUniqueId =
+                event?.uniqueId,
+              !eventUniqueId.isEmpty
+        else {
+            return
+        }
         
         let previousState = isSaved
+        let previousSavedEventId = savedEventId
+
+        isSaveLoading = true
         isSaved.toggle()
         updateSaveUI()
         
         if isSaved {
-//            saveVenueAPI(venueId: venueId, previousState: previousState)
+            saveEventAPI(
+                eventUniqueId: eventUniqueId,
+                previousState: previousState,
+                previousSavedEventId: previousSavedEventId
+            )
         } else {
-//            unsaveVenueAPI(venueId: venueId, previousState: previousState)
+            guard let savedEventId,
+                  !savedEventId.isEmpty
+            else {
+                resolveAndUnsaveEventAPI(
+                    eventUniqueId: eventUniqueId,
+                    previousState: previousState,
+                    previousSavedEventId: previousSavedEventId
+                )
+                return
+            }
+
+            unsaveEventAPI(
+                savedEventId: savedEventId,
+                previousState: previousState,
+                previousSavedEventId: previousSavedEventId
+            )
         }
+    }
+
+    private func saveEventAPI(
+        eventUniqueId: String,
+        previousState: Bool,
+        previousSavedEventId: String?
+    ) {
+
+        eventService.saveEvent(
+            uniqueId: eventUniqueId
+        ) { [weak self] isSuccess, _, savedEvent in
+
+            guard let self else { return }
+
+            self.isSaveLoading = false
+
+            guard isSuccess,
+                  let id = savedEvent?.id,
+                  !id.isEmpty
+            else {
+
+                self.rollbackSaveState(
+                    previousState: previousState,
+                    previousSavedEventId: previousSavedEventId
+                )
+                return
+            }
+
+            self.savedEventId = id
+            self.event?.savedEventId = id
+            self.event?.isSaved = true
+            self.isSaved = true
+            self.updateSaveUI()
+            if let event = self.event {
+                self.onSaveStateChanged?(event, true)
+            }
+        }
+    }
+
+    private func unsaveEventAPI(
+        savedEventId: String,
+        previousState: Bool,
+        previousSavedEventId: String?
+    ) {
+
+        eventService.unsaveEvent(
+            savedEventId: savedEventId
+        ) { [weak self] isSuccess, _, _ in
+
+            guard let self else { return }
+
+            self.isSaveLoading = false
+
+            guard isSuccess else {
+                self.rollbackSaveState(
+                    previousState: previousState,
+                    previousSavedEventId: previousSavedEventId
+                )
+                return
+            }
+
+            self.savedEventId = nil
+            self.event?.savedEventId = nil
+            self.event?.isSaved = false
+            self.isSaved = false
+            self.updateSaveUI()
+            if let event = self.event {
+                self.onSaveStateChanged?(event, false)
+            }
+        }
+    }
+
+    private func resolveAndUnsaveEventAPI(
+        eventUniqueId: String,
+        previousState: Bool,
+        previousSavedEventId: String?
+    ) {
+
+        eventService.fetchSavedEventId(
+            uniqueId: eventUniqueId
+        ) { [weak self] savedEventId in
+
+            guard let self else { return }
+
+            guard let savedEventId,
+                  !savedEventId.isEmpty
+            else {
+
+                self.rollbackSaveState(
+                    previousState: previousState,
+                    previousSavedEventId: previousSavedEventId
+                )
+                return
+            }
+
+            self.savedEventId = savedEventId
+            self.event?.savedEventId = savedEventId
+
+            self.unsaveEventAPI(
+                savedEventId: savedEventId,
+                previousState: previousState,
+                previousSavedEventId: previousSavedEventId
+            )
+        }
+    }
+
+    private func rollbackSaveState(
+        previousState: Bool,
+        previousSavedEventId: String?
+    ) {
+
+        isSaveLoading = false
+        isSaved = previousState
+        savedEventId = previousSavedEventId
+        event?.isSaved = previousState
+        event?.savedEventId = previousSavedEventId
+        updateSaveUI()
     }
     
     
