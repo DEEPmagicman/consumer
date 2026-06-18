@@ -25,7 +25,6 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var bgView: UIView!
 
     var presenter = MVPPresenter()
-    private var shimmerView: VenueShimmerView?
     private let posterHeaderView = VenuePosterHeaderView()
     private let navTitleStackView = UIStackView()
     private let navVenueNameLabel = UILabel()
@@ -67,7 +66,7 @@ final class VenueVC: UIViewController {
         setupNavTitleView()
         setupPosterBackground()
         setUpData()
-//        showShimmer()
+        setupTabsIfNeeded()
         getVenueDetails()
     }
 
@@ -75,29 +74,6 @@ final class VenueVC: UIViewController {
         super.viewDidLayoutSubviews()
         updateHeaderCollapseMetrics()
         applyHeaderCollapse(animated: false)
-    }
-
-    private func showShimmer() {
-        if let shimmerView {
-            view.bringSubviewToFront(shimmerView)
-            shimmerView.start()
-            return
-        }
-
-        let shimmer = VenueShimmerView()
-        shimmer.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(shimmer)
-        view.bringSubviewToFront(shimmer)
-
-        NSLayoutConstraint.activate([
-            shimmer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            shimmer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            shimmer.topAnchor.constraint(equalTo: view.topAnchor),
-            shimmer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-
-        self.shimmerView = shimmer
-        shimmer.start()
     }
 
     private func getVenueDetails() {
@@ -110,11 +86,9 @@ final class VenueVC: UIViewController {
 
             if isSuccess, let venue = venueDetail {
                 self.venueDetails = venue
-                self.hideShimmer()
                 self.setUpData()
-                self.setUpTabs()
+                self.setupTabsIfNeeded()
             } else {
-                self.hideShimmer()
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? "Something went wrong",
@@ -122,11 +96,6 @@ final class VenueVC: UIViewController {
                 )
             }
         }
-    }
-
-    private func hideShimmer() {
-        shimmerView?.stop()
-        shimmerView = nil
     }
 
     private func setUpData() {
@@ -177,6 +146,12 @@ final class VenueVC: UIViewController {
         setupGlassSegment()
 
         view.bringSubviewToFront(tabView)
+    }
+
+    private func setupTabsIfNeeded() {
+        guard tabControllers.isEmpty else { return }
+        guard venueDetails?.id.isEmpty == false else { return }
+        setUpTabs()
     }
 
     private func createTabControllers() {
@@ -696,275 +671,6 @@ extension VenueVC: UIPageViewControllerDataSource, UIPageViewControllerDelegate 
         selectedIndex = index
         glassSegment.setSelectedIndex(index, animated: true)
         resetTrackedOffset(for: currentVC)
-    }
-}
-
-// MARK: - VenueShimmerView
-
-final class VenueShimmerView: UIView {
-
-    private var shimmerViews: [ShimmerViewV3] = []
-    private var didBuildLayout = false
-    private var lastLayoutSize: CGSize = .zero
-    private var shouldAnimate = false
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
-
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-
-        guard window != nil else {
-            return
-        }
-
-        didBuildLayout = false
-        setNeedsLayout()
-
-        if shouldAnimate {
-            DispatchQueue.main.async { [weak self] in
-                self?.start()
-            }
-        }
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        guard window != nil else {
-            return
-        }
-
-        guard bounds.width > 0,
-              bounds.height > 0 else {
-            return
-        }
-
-        let widthChanged =
-            abs(bounds.width - lastLayoutSize.width) > 0.5
-
-        guard !didBuildLayout ||
-              widthChanged else {
-            return
-        }
-
-        didBuildLayout = true
-        lastLayoutSize = bounds.size
-        rebuildLayout()
-    }
-
-    private func setupView() {
-        backgroundColor = .clear
-        isUserInteractionEnabled = true
-    }
-
-    private func rebuildLayout() {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-
-        shimmerViews.forEach {
-            $0.stopShimmer()
-            $0.removeFromSuperview()
-        }
-
-        shimmerViews.removeAll()
-
-        let width = bounds.width
-        let pad: CGFloat = 16
-        let safeTop = safeAreaInsets.top
-        let heroHeight = min(
-            max(bounds.height * 0.34, 250),
-            320
-        )
-
-        makeShimmer(
-            CGRect(
-                x: 0,
-                y: 0,
-                width: width,
-                height: heroHeight
-            ),
-            corner: 0
-        )
-
-        let navButtonSize: CGFloat = 40
-
-        makeShimmer(
-            CGRect(
-                x: pad,
-                y: safeTop + 12,
-                width: navButtonSize,
-                height: navButtonSize
-            ),
-            corner: navButtonSize / 2
-        )
-
-        makeShimmer(
-            CGRect(
-                x: width - pad - navButtonSize,
-                y: safeTop + 12,
-                width: navButtonSize,
-                height: navButtonSize
-            ),
-            corner: navButtonSize / 2
-        )
-
-        let logoSize: CGFloat = 74
-
-        makeShimmer(
-            CGRect(
-                x: (width - logoSize) / 2,
-                y: heroHeight - 102,
-                width: logoSize,
-                height: logoSize
-            ),
-            corner: logoSize / 2
-        )
-
-        makeShimmer(
-            CGRect(
-                x: (width - 164) / 2,
-                y: heroHeight - 16,
-                width: 164,
-                height: 26
-            ),
-            corner: 13
-        )
-
-        var y = heroHeight + 34
-
-        makeShimmer(
-            CGRect(
-                x: pad,
-                y: y,
-                width: width - pad * 2,
-                height: 54
-            ),
-            corner: 16
-        )
-
-        y += 74
-
-        makeShimmer(
-            CGRect(
-                x: pad,
-                y: y,
-                width: width - pad * 2,
-                height: 44
-            ),
-            corner: 22
-        )
-
-        y += 76
-
-        for _ in 0..<4 {
-            makeVenueRow(y: y, width: width, pad: pad)
-            y += 100
-        }
-
-        CATransaction.commit()
-
-        if shouldAnimate {
-            shimmerViews.forEach {
-                $0.startShimmer()
-            }
-        }
-    }
-
-    private func makeVenueRow(
-        y: CGFloat,
-        width: CGFloat,
-        pad: CGFloat
-    ) {
-
-        let imageSize: CGFloat = 82
-
-        makeShimmer(
-            CGRect(
-                x: pad,
-                y: y,
-                width: imageSize,
-                height: imageSize
-            ),
-            corner: 12
-        )
-
-        let textX = pad + imageSize + 14
-        let textWidth = width - textX - pad
-
-        makeShimmer(
-            CGRect(
-                x: textX,
-                y: y + 8,
-                width: textWidth,
-                height: 16
-            ),
-            corner: 8
-        )
-
-        makeShimmer(
-            CGRect(
-                x: textX,
-                y: y + 34,
-                width: textWidth * 0.72,
-                height: 13
-            ),
-            corner: 7
-        )
-
-        makeShimmer(
-            CGRect(
-                x: textX,
-                y: y + 58,
-                width: textWidth * 0.52,
-                height: 13
-            ),
-            corner: 7
-        )
-    }
-
-    private func makeShimmer(
-        _ frame: CGRect,
-        corner: CGFloat = 8
-    ) {
-
-        let view = ShimmerViewV3(
-            frame: frame.integral
-        )
-
-        view.layer.cornerRadius = corner
-        view.layer.cornerCurve = .continuous
-        view.clipsToBounds = true
-        addSubview(view)
-        shimmerViews.append(view)
-    }
-
-    func start() {
-        shouldAnimate = true
-        isHidden = false
-        setNeedsLayout()
-        layoutIfNeeded()
-
-        shimmerViews.forEach {
-            $0.startShimmer()
-        }
-    }
-
-    func stop() {
-        shouldAnimate = false
-
-        shimmerViews.forEach {
-            $0.stopShimmer()
-        }
-
-        removeFromSuperview()
     }
 }
 

@@ -18,6 +18,7 @@ final class UserDefault: NSObject {
         case isVersionV3Key = "isVersionV3"
         case isGuest = "isGuest"
         case localCity = "localCity"
+        case filterCity = "filterCity"
         case defaultCitySelected = "defaultCitySelected"
         case isNotificationOnKey = "isNotificationOn"
         case hasSeenPremiumIntro = "has_seen_premium_intro"
@@ -33,10 +34,15 @@ final class UserDefault: NSObject {
     }
     
     private let citySubject = CurrentValueSubject<String, Never>("")
+    private let filterCitySubject = CurrentValueSubject<String?, Never>(nil)
 
        var localCityPublisher: AnyPublisher<String, Never> {
            citySubject.eraseToAnyPublisher()
        }
+
+    var filterCityPublisher: AnyPublisher<String?, Never> {
+        filterCitySubject.eraseToAnyPublisher()
+    }
     
     var accessToken: String? {
         get {
@@ -104,6 +110,43 @@ final class UserDefault: NSObject {
             citySubject.send(newValue)
         }
     }
+
+    var filterCity: String? {
+        get {
+            guard let city = UserDefaults.standard.value(forKey: UserDefaultKey.filterCity.rawValue) as? String else {
+                return nil
+            }
+
+            let trimmedCity = city.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmedCity.isEmpty ? nil : trimmedCity
+        } set {
+            let trimmedCity = newValue?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            if let trimmedCity,
+               !trimmedCity.isEmpty {
+                UserDefaults.standard.setValue(trimmedCity, forKey: UserDefaultKey.filterCity.rawValue)
+                filterCitySubject.send(trimmedCity)
+            } else {
+                UserDefaults.standard.removeObject(forKey: UserDefaultKey.filterCity.rawValue)
+                filterCitySubject.send(nil)
+            }
+        }
+    }
+
+    var activeCity: String {
+        let temporaryCity = filterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let temporaryCity,
+           !temporaryCity.isEmpty {
+            return temporaryCity
+        }
+
+        let primaryCity = localCity
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return primaryCity.isEmpty ? "Chicago" : primaryCity
+    }
     
     var defaultCitySelected: Bool {
         get {
@@ -141,6 +184,7 @@ final class UserDefault: NSObject {
         user = nil
         isLoggedIn = false
         isGuest = true
+        filterCity = nil
         isNotificationOn = false
     }
 }

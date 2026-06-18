@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 import NBBottomSheet
 import GSImageViewerController
 
@@ -133,9 +134,14 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func selectCityVc(_ sender: UIViewController, userLocationCity: String = "") {
+    func selectCityVc(
+        _ sender: UIViewController,
+        userLocationCity: String = "",
+        userLocationCoordinate: CLLocationCoordinate2D? = nil
+    ) {
         let vc = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateVC(SelectCityViewController.self)
         vc.userLocationCity = userLocationCity
+        vc.userLocationCoordinate = userLocationCoordinate
         if sender.navigationController?.viewControllers.last is SelectCityViewController { return }
         sender.navigationController?.pushViewController(vc, animated: true)
     }
@@ -245,20 +251,6 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func coverPaymentVC(_ sender: UIViewController,
-                        venue: ClipVenue?,
-                        selectedCoverTickets: [CoverTicket],
-                        selectedAddOnsItem: [UpSellTicket],
-                        bookingType: TicketPriceType = .PAID) {
-        let vc = PaymentVC()
-        vc.venueDetails = venue
-        vc.selectedCoverTickets = selectedCoverTickets
-        vc.selectedAddOnsItems = selectedAddOnsItem
-        vc.bookingType = bookingType
-        vc.hidesBottomBarWhenPushed = true
-        sender.navigationController?.pushViewController(vc, animated: true)
-    }
-    
     func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
 //        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(EventQRTicketVC.self)
         let vc = EventQRTicketVC(nibName: "EventQRTicketVC", bundle: nil)
@@ -566,14 +558,6 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    func paymentVc(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
-        let vc = PaymentVC()
-        vc.event = event
-        vc.selectedTickets = selectedTickets
-        vc.bookingId = bookingId
-        sender.pushVC(vc)
-    }
-    
     func ticketCheckoutVC(_ sender: UIViewController, event: Event, selectedTickets: [EventTicket] = [], bookingId: String? = nil) {
         let vc = TicketCheckoutVC(nibName: "TicketCheckoutVC", bundle: nil)
         vc.event = event
@@ -582,7 +566,6 @@ final class Navigate {
         sender.pushVC(vc)
     }
     
-    // In Navigate.swift — update orderListVC:
     static func orderListVC(
         _ vc: UIViewController,
         event: Event?,
@@ -591,7 +574,7 @@ final class Navigate {
         paymentMethod: PaymentType?,
         cardDetails: CardDetails? = nil
     ) {
-        let dest = OrderListViewController()  // or storyboard instantiate
+        let dest = OrderListViewController(nibName: "OrderListViewController", bundle: nil)
         dest.event             = event
         dest.selectedTickets   = selectedTickets
         dest.bookingId         = bookingId

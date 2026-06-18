@@ -14,11 +14,7 @@ class EventQRTicketVC: UIViewController {
     @IBOutlet weak var fandQtableHiddenView: UIView!
 
     // MARK: - Data
-    var tickets: [EventTicketQR] = [
-        EventTicketQR(ticketName: "General Admission", qrString: "SPEAKEASY-GA-001-2026"),
-        EventTicketQR(ticketName: "VIP Access", qrString: "SPEAKEASY-VIP-002-2026"),
-        EventTicketQR(ticketName: "Backstage Pass", qrString: "SPEAKEASY-BSP-003-2026")
-    ]
+    var tickets: [EventTicketQR] = []
 
     private var dotViews: [UIView] = []
 
@@ -37,6 +33,7 @@ class EventQRTicketVC: UIViewController {
     private var isUpdatingTableHeight = false
     private var pagerViewConfigured = false
     private let posterHeaderView = EventPosterHeaderView()
+    private let eventService = EventService()
     private var hasSetupPosterBackground = false
 
     private var faqs: [(question: String, answer: String)] = [
@@ -46,28 +43,11 @@ class EventQRTicketVC: UIViewController {
         ),
         (
             question: "How to use my tickets",
-            answer: "Show your QR ticket at the venue entrance for scanning and entry."
+            answer: "This code will be your way in. Show it upon arrival"
         )
     ]
 
-    private var fandQItems: [(question: String, answer: String)] = [
-        (
-            question: "Can I transfer my ticket?",
-            answer: "Yes, tickets can be transferred to another user via the app up to 2 hours before the event starts."
-        ),
-        (
-            question: "What if I lose my QR code?",
-            answer: "Your QR code is always available in the app under My Tickets. Simply reopen the screen to retrieve it."
-        ),
-        (
-            question: "Is there a dress code?",
-            answer: "Smart casual is recommended. The venue reserves the right to refuse entry if the dress code is not met."
-        ),
-        (
-            question: "Can I get a refund?",
-            answer: "Tickets are non-refundable within 48 hours of the event. Please contact support for exceptions."
-        )
-    ]
+    private var fandQItems: [EventFAQ] = []
 
     private var expandedFandQIndex: Int?
     private var expandedFAQIndex: Int?
@@ -279,8 +259,34 @@ class EventQRTicketVC: UIViewController {
 //                self.setupData()
                 self.refreshPosterBackground()
                 self.setupTickets()
+                self.getEventFAQs()
                 self.tableView.reloadData()
                 self.pagerView.reloadData()
+            }
+        }
+    }
+
+    private func getEventFAQs() {
+        guard let eventId = booking?.event?.uniqueId, !eventId.isEmpty else {
+            updateFAndQAvailability()
+            return
+        }
+
+        eventService.fetchEventFAQs(eventId: eventId) { [weak self] isSuccess, _, faqs, _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if isSuccess {
+                    self.fandQItems = (faqs ?? [])
+                        .filter { $0.isDeleted != true }
+                        .sorted { ($0.order ?? 0) < ($1.order ?? 0) }
+                } else {
+                    self.fandQItems = []
+                }
+
+                self.expandedFandQIndex = nil
+                self.isFAndQExpanded = false
+                self.fandQtableView.reloadData()
+                self.updateFAndQAvailability()
             }
         }
     }
@@ -330,8 +336,20 @@ class EventQRTicketVC: UIViewController {
             updates()
         }
     }
+
+    private func updateFAndQAvailability() {
+        let hasFAQs = !fandQItems.isEmpty
+        fandQtableHiddenView.superview?.superview?.isHidden = !hasFAQs
+        if !hasFAQs {
+            isFAndQExpanded = false
+            fandQtableHiddenView.isHidden = true
+            fandQtableViewHeight.constant = 0
+        }
+        updateFAndQSection(animated: false)
+    }
     
     @IBAction func onClickFAndQBtn(_ sender: Any) {
+        guard !fandQItems.isEmpty else { return }
         isFAndQExpanded.toggle()
         updateFAndQSection(animated: true)
     }
@@ -386,14 +404,20 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
         ) as! FAQsTableViewCell
 
         let isFandQ = tableView === fandQtableView
-        let item = isFandQ ? fandQItems[indexPath.row] : faqs[indexPath.row]
+        let item = isFandQ
+            ? (
+                question: fandQItems[indexPath.row].title ?? "",
+                answer: fandQItems[indexPath.row].content?.fromHTML ?? ""
+            )
+            : faqs[indexPath.row]
         let expandedIndex = isFandQ ? expandedFandQIndex : expandedFAQIndex
 
         cell.selectionStyle = .none
         cell.configure(
             title: item.question,
             content: item.answer,
-            isExpanded: expandedIndex == indexPath.row
+            isExpanded: expandedIndex == indexPath.row,
+            answerBottomPadding: isFandQ ? nil : 12
         )
 
         cell.onToggle = { [weak self] in

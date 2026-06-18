@@ -170,7 +170,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AMA-wH-FHu">
-                            <rect key="frame" x="0.0" y="155.99999999999997" width="393" height="351.66666666666674"/>
+                            <rect key="frame" x="0.0" y="155.99999999999997" width="393" height="351.66666666666663"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RmE-3h-ojt">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="1102"/>

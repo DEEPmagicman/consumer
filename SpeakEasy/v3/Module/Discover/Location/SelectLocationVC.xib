@@ -29,6 +29,7 @@
                 <outlet property="editSearchTextFeild" destination="Ekl-Lr-G0Z" id="ufS-XU-ZLS"/>
                 <outlet property="pageTitleLbl" destination="61G-xF-YOf" id="rZp-B9-oQX"/>
                 <outlet property="primaryLocationLbl" destination="TOl-Og-DVW" id="uEu-GM-FRT"/>
+                <outlet property="primaryLocationView" destination="bzs-hV-EM2" id="Xs8-Ha-7t8"/>
                 <outlet property="searchFeildEditMode" destination="V50-Hp-bs9" id="hMb-G9-YAj"/>
                 <outlet property="searchFeildNormelMode" destination="86j-4h-ZXu" id="yKT-7E-0I6"/>
                 <outlet property="searchTextfeild" destination="KNh-Bj-FTs" id="hL8-Cw-6ah"/>

@@ -89,12 +89,12 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="iOU-70-zOe" firstAttribute="leading" secondItem="1LS-EJ-HRh" secondAttribute="leading" constant="12" id="1N4-c7-7mH"/>
-                                            <constraint firstAttribute="bottom" secondItem="iOU-70-zOe" secondAttribute="bottom" constant="12" id="C1X-IT-Y2N"/>
+                                            <constraint firstAttribute="bottom" secondItem="iOU-70-zOe" secondAttribute="bottom" id="C1X-IT-Y2N"/>
                                             <constraint firstAttribute="trailing" secondItem="Jo3-Os-7Xi" secondAttribute="trailing" constant="12" id="XMH-vf-Epg"/>
                                             <constraint firstItem="Jo3-Os-7Xi" firstAttribute="top" secondItem="1LS-EJ-HRh" secondAttribute="top" id="aRK-6P-n5T"/>
                                             <constraint firstItem="Jo3-Os-7Xi" firstAttribute="leading" secondItem="1LS-EJ-HRh" secondAttribute="leading" constant="12" id="d9e-t9-xN2"/>
                                             <constraint firstAttribute="trailing" secondItem="iOU-70-zOe" secondAttribute="trailing" constant="12" id="fby-n5-fiw"/>
-                                            <constraint firstItem="iOU-70-zOe" firstAttribute="top" secondItem="1LS-EJ-HRh" secondAttribute="top" constant="12" id="kLL-EA-01q"/>
+                                            <constraint firstItem="iOU-70-zOe" firstAttribute="top" secondItem="1LS-EJ-HRh" secondAttribute="top" constant="8" id="kLL-EA-01q"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -139,6 +139,8 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="ansLbl" destination="iOU-70-zOe" id="GhG-wb-mXY"/>
+                <outlet property="ansLblBottomConstraint" destination="C1X-IT-Y2N" id="Ree-Xy-mPV"/>
+                <outlet property="ansLblTopConstraint" destination="kLL-EA-01q" id="3nR-rj-EQv"/>
                 <outlet property="ansView" destination="1LS-EJ-HRh" id="oqL-0d-2of"/>
                 <outlet property="dropDowenBtn" destination="RgP-fX-0fY" id="bhc-Qy-vg4"/>
                 <outlet property="questionLbl" destination="oZA-9C-EK8" id="SXx-K6-xi1"/>

@@ -69,7 +69,7 @@
                         <constraint firstItem="kjL-uJ-sWL" firstAttribute="centerY" secondItem="SS7-l3-Pja" secondAttribute="centerY" id="uKC-wK-O3a"/>
                     </constraints>
                 </view>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ciB-vU-nok">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ciB-vU-nok">
                     <rect key="frame" x="0.0" y="182" width="393" height="670"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ekV-XY-jcI">

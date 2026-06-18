@@ -317,6 +317,7 @@ struct VenueSettings: Codable {
     
     var optedPolicy: Bool
     var policyText: String?
+    var emailPolicyText: String?
     var enabledCustomBookingSMS: Bool
     var bookingSMSText: String?
     var collectNameDuringBooking: Bool?
@@ -353,6 +354,7 @@ struct VenueSettings: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(optedPolicy, forKey: .optedPolicy)
         try container.encode(policyText, forKey: .policyText)
+        try container.encodeIfPresent(emailPolicyText, forKey: .emailPolicyText)
         try container.encode(enabledCustomBookingSMS, forKey: .enabledCustomBookingSMS)
         try container.encode(bookingSMSText, forKey: .bookingSMSText)
         try container.encodeIfPresent(collectNameDuringBooking, forKey: .collectNameDuringBooking)

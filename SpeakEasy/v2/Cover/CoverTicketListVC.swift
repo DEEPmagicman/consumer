@@ -60,6 +60,8 @@ final class CoverTicketListVC: UIViewController {
     private var tableViewHeightObserver: NSKeyValueObservation?
     private var lastTableContentHeight: CGFloat = 0
     private var lastScrollBottomInset: CGFloat = -1
+    private var isCheckoutNavigationInProgress = false
+    private var isFreeBookingInProgress = false
 
     private var isVenueOpen: Bool {
         venueDetails?.venueSettings?.bookingStatus?.uppercased() == "OPEN"
@@ -168,6 +170,12 @@ final class CoverTicketListVC: UIViewController {
         updateTableViewHeight(animated: false)
         updateScrollAllowance()
         updateStickyNavigation(for: scrollView.contentOffset.y)
+        updateVenueLogoCornerRadius()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isCheckoutNavigationInProgress = false
     }
 
     deinit {
@@ -227,6 +235,8 @@ private extension CoverTicketListVC {
     }
 
     func setupScreen() {
+        styleVenueHeader()
+
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
 
@@ -245,6 +255,33 @@ private extension CoverTicketListVC {
         continueToCheckoutBtn.isHidden = true
         continueToCheckoutBtn.alpha = 0
         continueToCheckoutBtn.delegate = self
+    }
+
+    func styleVenueHeader() {
+        headerView.clipsToBounds = false
+        venueImage.contentMode = .scaleAspectFit
+        venueImage.clipsToBounds = true
+
+        [venueName, navVenueNameLbl].forEach {
+            $0?.numberOfLines = 1
+            $0?.lineBreakMode = .byTruncatingTail
+            $0?.adjustsFontSizeToFitWidth = true
+            $0?.minimumScaleFactor = 0.75
+        }
+
+        [timeLbl, navTimeLbl].forEach {
+            $0?.numberOfLines = 1
+            $0?.lineBreakMode = .byTruncatingTail
+            $0?.adjustsFontSizeToFitWidth = true
+            $0?.minimumScaleFactor = 0.8
+        }
+    }
+
+    func updateVenueLogoCornerRadius() {
+        venueImage.layer.cornerRadius = min(
+            venueImage.bounds.width,
+            venueImage.bounds.height
+        ) / 2
     }
 
     func setupStickyTicketsTitle() {
@@ -268,13 +305,18 @@ private extension CoverTicketListVC {
         view.insertSubview(stickyTopBlurView, aboveSubview: scrollView)
         view.insertSubview(stickyTicketsTitleContainer, aboveSubview: stickyTopBlurView)
 
+        let stickyTopConstraint = stickyTicketsTitleContainer.topAnchor.constraint(
+            equalTo: navBarHiddenView.bottomAnchor,
+            constant: 20
+        )
+
         NSLayoutConstraint.activate([
             stickyTopBlurView.topAnchor.constraint(equalTo: view.topAnchor),
             stickyTopBlurView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stickyTopBlurView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stickyTopBlurView.bottomAnchor.constraint(equalTo: stickyTicketsTitleContainer.bottomAnchor, constant: 16),
 
-            stickyTicketsTitleContainer.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stickyTopConstraint,
             stickyTicketsTitleContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stickyTicketsTitleContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stickyTicketsTitleContainer.heightAnchor.constraint(equalTo: ticketsTitleLbl.heightAnchor),
@@ -300,8 +342,6 @@ private extension CoverTicketListVC {
             !($0.isDeleted ?? false) &&
             $0.status == "ENABLED"
         }
-
-        coverTickets.append(contentsOf: list)
 
         tableView.reloadData()
         updateCheckoutState()
@@ -407,7 +447,10 @@ private extension CoverTicketListVC {
         syncStickyTicketsTitle()
 
         let titleFrame = ticketsTitleLbl.convert(ticketsTitleLbl.bounds, to: view)
-        let shouldStick = titleFrame.minY <= scrollView.frame.minY
+        let stickyY = stickyTicketsTitleContainer.frame.minY > 0
+            ? stickyTicketsTitleContainer.frame.minY
+            : navBarHiddenView.frame.maxY + 20
+        let shouldStick = titleFrame.minY <= stickyY
 
         stickyTicketsTitleContainer.isHidden = !shouldStick
         stickyTicketsTitleContainer.alpha = shouldStick ? 1 : 0
@@ -555,14 +598,17 @@ private extension CoverTicketListVC {
     }
 
     func proceedToFinalCheckout() {
+        guard !isCheckoutNavigationInProgress else { return }
         guard !selectedCoverTickets.isEmpty else { return }
 
+        isCheckoutNavigationInProgress = true
         if !selectedAddOns.isEmpty || hasPaidCoverTicket {
-            Navigate.to.coverPaymentVC(
+            Navigate.to.coverCheckOutVC(
                 self,
                 venue: venueDetails,
                 selectedCoverTickets: selectedCoverTickets,
                 selectedAddOnsItem: selectedAddOns,
+                totalPrice: 0,
                 bookingType: bookingType
             )
         } else {
@@ -597,7 +643,23 @@ extension CoverTicketListVC {
         Navigate.to.back(self)
     }
 
+    @IBAction func onClickShare(_ sender: Any) {
+        let venueName = venueDetails?.name ?? "Venue"
+        let slug = venueName
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "-")
+        let venueUrl = String(
+            format: APIBuilder.venueWebURL,
+            slug,
+            venueDetails?.uniqueId ?? ""
+        )
+        let msgText = "Check out \(venueName) on Speakeasy. \(venueUrl) Download the app to directly connect with your favorite venues & never miss out! \(SharedURL.appStoreURL)"
+        Utility.main.shareSocialWith(text: msgText)
+    }
+
     private func onClickContinueBtn() {
+        guard !isCheckoutNavigationInProgress else { return }
+
         if UserDefault.shared.user == nil {
             Navigate.to.openPhoneLoginPopup(self) { [weak self] in
                 guard let self else { return }
@@ -620,12 +682,14 @@ extension CoverTicketListVC {
     }
 
     private func createFreeBooking() {
+        guard !isFreeBookingInProgress else { return }
         guard !selectedCoverTickets.isEmpty else { return }
 
         let tickets: [[String: Any]] = selectedCoverTickets.map {
             ["ticketId": $0.id, "ticketQuantity": $0.selectedQuantity ?? 0]
         }
 
+        isFreeBookingInProgress = true
         view.isUserInteractionEnabled = false
 
         PaymentPresenter.createCoverFreeBooking(
@@ -633,11 +697,13 @@ extension CoverTicketListVC {
             venueId: venueDetails?.id ?? ""
         ) { [weak self] isSuccess, errMsg, id, _ in
             guard let self else { return }
-            self.view.isUserInteractionEnabled = true
 
             if isSuccess, let id {
                 Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
             } else {
+                self.isCheckoutNavigationInProgress = false
+                self.isFreeBookingInProgress = false
+                self.view.isUserInteractionEnabled = true
                 Alert.showAlertSheet(
                     style: .alert,
                     title: errMsg ?? Constant.String.somethingWrong,

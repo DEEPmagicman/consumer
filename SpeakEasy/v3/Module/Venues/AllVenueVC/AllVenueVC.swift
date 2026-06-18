@@ -21,7 +21,9 @@ final class AllVenueVC: UIViewController {
     private var isLoading = false
     private var isInitialLoading = false
     private var isPaginating = false
-    
+    private var screenFilterCity: String?
+    private var loadID = 0
+
     // MARK: - Layout Constants
     private let horizontalMargin: CGFloat = 20
     private let interItemSpacing: CGFloat = 16
@@ -34,7 +36,7 @@ final class AllVenueVC: UIViewController {
         setupVenueTitle()
         fetchVenues()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.view.applyScreenBgGradient(direction: .topToBottom)
@@ -43,11 +45,15 @@ final class AllVenueVC: UIViewController {
     @IBAction func onClickBackBtn(_ sender: Any) {
         Navigate.to.back(self)
     }
-    
+
     @IBAction func onClickFilterBtn(_ sender: Any) {
-        Navigate.to.filtersVC(self)
+        presentCityFilter()
     }
-    
+
+    @IBAction func onClickCityBtn(_ sender: Any) {
+        presentCityFilter()
+    }
+
     // MARK: - Setup
 
     private func setupCollectionView() {
@@ -94,9 +100,9 @@ final class AllVenueVC: UIViewController {
     }
 
     private func resolvedCity() -> String {
-        let city = UserDefault.shared.localCity
+        let city = (screenFilterCity ?? UserDefault.shared.activeCity)
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        return city.isEmpty ? "New York" : city
+        return city.isEmpty ? "Chicago" : city
     }
 
     // MARK: - Cell Width Calculation
@@ -110,13 +116,24 @@ final class AllVenueVC: UIViewController {
 
     // MARK: - Fetch
 
-    private func fetchVenues(showLoader: Bool = true) {
-        guard !isLoading, hasMore else { return }
+    private func fetchVenues(showLoader: Bool = true, reset: Bool = false) {
+        guard !isLoading || reset else { return }
+        guard hasMore || reset else { return }
 
         isLoading = true
+        loadID += 1
+        let requestID = loadID
+
+        if reset {
+            skip = 0
+            hasMore = true
+            isPaginating = false
+            venueList.removeAll()
+        }
 
         if venueList.isEmpty {
             isInitialLoading = true
+            updateEmptyState()
             collectionView.reloadData()
         } else {
             isPaginating = true
@@ -125,9 +142,11 @@ final class AllVenueVC: UIViewController {
 
         venueService.fetchVenueList(
             skip: skip,
-            status: VenueStatus.open.rawValue
+            status: VenueStatus.open.rawValue,
+            city: resolvedCity()
         ) { [weak self] isSuccess, errMsg, venues, hasMore in
             guard let self else { return }
+            guard self.loadID == requestID else { return }
 
             self.isLoading = false
             self.isInitialLoading = false
@@ -143,45 +162,112 @@ final class AllVenueVC: UIViewController {
 
             self.collectionView.reloadData()
             self.collectionView.collectionViewLayout.invalidateLayout()
+            self.updateEmptyState()
         }
+    }
+
+    private func presentCityFilter() {
+        let city = screenFilterCity ?? UserDefault.shared.filterCity
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.persistsFilterSelection = false
+        vc.selectedFilterCity = city
+        vc.initialFilterCity = city
+        vc.onSelectFilterCity = { [weak self] city in
+            self?.applyScreenCityFilter(city)
+        }
+    }
+
+    private func applyScreenCityFilter(_ city: String?) {
+        let trimmedCity = city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        screenFilterCity = trimmedCity?.isEmpty == false
+            ? trimmedCity
+            : nil
+
+        setupVenueTitle()
+        fetchVenues(reset: true)
+    }
+
+    private func updateEmptyState() {
+        collectionView.backgroundView = !isInitialLoading && venueList.isEmpty
+            ? makeEmptyStateView()
+            : nil
+    }
+
+    private func makeEmptyStateView() -> UIView {
+        let container = UIView(frame: collectionView.bounds)
+        container.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No venues found"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistMedium(size: 18)
+        titleLabel.textAlignment = .center
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "Try another city."
+        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+
+        container.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -40),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+        ])
+
+        return container
     }
 }
 
 // MARK: - UICollectionViewDataSource
 
 extension AllVenueVC: UICollectionViewDataSource {
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
         return isInitialLoading ? 8 : venueList.count
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        
+
         if isInitialLoading {
             return collectionView.dequeueReusableCell(
                 withReuseIdentifier: VenueGridShimmerCell.identifier,
                 for: indexPath
             )
         }
-        
+
         guard venueList.indices.contains(indexPath.item) else {
             return collectionView.dequeueReusableCell(
                 withReuseIdentifier: VenueGridShimmerCell.identifier,
                 for: indexPath
             )
         }
-        
+
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: VenueGridCell.identifier,
             for: indexPath
         ) as! VenueGridCell
-        
+
         cell.configure(venueList[indexPath.item])
         return cell
     }
@@ -210,10 +296,10 @@ extension AllVenueVC: UICollectionViewDelegate {
     ) {
         guard !isInitialLoading else { return }
         guard venueList.indices.contains(indexPath.item) else { return }
-        
+
         Navigate.to.venueVC(self, venueDetails: venueList[indexPath.item])
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         viewForSupplementaryElementOfKind kind: String,
@@ -263,7 +349,7 @@ extension AllVenueVC: UICollectionViewDelegateFlowLayout {
     ) -> CGFloat {
         return lineSpacing
     }
-    
+
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

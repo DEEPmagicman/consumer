@@ -19,7 +19,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MapViewController" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="bottomPanelHeightConstraint" destination="9xJ-aP-v0B" id="Ml7-xH-xIk"/>
+                <outlet property="bottomPanelView" destination="Uqj-Ee-FVg" id="uP8-bx-7Aq"/>
                 <outlet property="browsingLbl" destination="0mL-lF-xlz" id="l5D-30-raE"/>
+                <outlet property="mapView" destination="KdH-OE-vNM" id="mPv-1W-3hJ"/>
+                <outlet property="selectedCityLbl" destination="svA-vG-VmX" id="Lzz-Jx-1mH"/>
                 <outlet property="tabView" destination="Je5-qt-wqm" id="UKQ-eI-sDp"/>
                 <outlet property="tableView" destination="yoi-6V-Sjc" id="xLh-Uu-ecZ"/>
                 <outlet property="view" destination="P5K-zG-5cp" id="yhv-a7-KiN"/>
@@ -49,28 +53,39 @@
                                     <blurEffect style="regular"/>
                                 </visualEffectView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lxg-5B-pLa" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                                    <rect key="frame" x="125.66666666666667" y="134" width="141.66666666666663" height="40"/>
+                                    <rect key="frame" x="129.66666666666666" y="134" width="133.99999999999997" height="40"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="locationIcon" translatesAutoresizingMaskIntoConstraints="NO" id="OuD-vU-olq">
-                                            <rect key="frame" x="13.999999999999986" y="12" width="13" height="16"/>
+                                            <rect key="frame" x="14" y="12" width="13" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="13" id="WY3-Ns-RHh"/>
                                                 <constraint firstAttribute="height" constant="16" id="qTj-IT-c2w"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York City" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="svA-vG-VmX">
-                                            <rect key="frame" x="32.999999999999979" y="11" width="83.666666666666686" height="18"/>
+                                            <rect key="frame" x="33" y="11" width="82" height="18"/>
                                             <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="13"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lyQ-8B-i5X">
+                                            <rect key="frame" x="0.0" y="0.0" width="134" height="40"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <connections>
+                                                <action selector="onClickCityBtn:" destination="-1" eventType="touchUpInside" id="gse-0r-Gku"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="OuD-vU-olq" firstAttribute="top" secondItem="lxg-5B-pLa" secondAttribute="top" constant="12" id="Alj-my-jXF"/>
-                                        <constraint firstAttribute="trailing" secondItem="svA-vG-VmX" secondAttribute="trailing" constant="25" id="T8F-3r-kAP"/>
+                                        <constraint firstAttribute="trailing" secondItem="svA-vG-VmX" secondAttribute="trailing" constant="19" id="T8F-3r-kAP"/>
                                         <constraint firstItem="svA-vG-VmX" firstAttribute="leading" secondItem="OuD-vU-olq" secondAttribute="trailing" constant="6" id="W7b-CA-akj"/>
+                                        <constraint firstItem="lyQ-8B-i5X" firstAttribute="top" secondItem="lxg-5B-pLa" secondAttribute="top" id="W8u-8n-A0Z"/>
+                                        <constraint firstAttribute="bottom" secondItem="lyQ-8B-i5X" secondAttribute="bottom" id="dd8-f5-IjM"/>
                                         <constraint firstItem="svA-vG-VmX" firstAttribute="top" secondItem="lxg-5B-pLa" secondAttribute="top" constant="11" id="ghY-bv-aZC"/>
+                                        <constraint firstAttribute="trailing" secondItem="lyQ-8B-i5X" secondAttribute="trailing" id="gip-ca-hIF"/>
+                                        <constraint firstItem="lyQ-8B-i5X" firstAttribute="leading" secondItem="lxg-5B-pLa" secondAttribute="leading" id="hIC-uN-1y6"/>
                                         <constraint firstAttribute="bottom" secondItem="OuD-vU-olq" secondAttribute="bottom" constant="12" id="k8z-Ga-Wj8"/>
                                         <constraint firstAttribute="bottom" secondItem="svA-vG-VmX" secondAttribute="bottom" constant="11" id="tY6-eX-mh1"/>
                                         <constraint firstItem="OuD-vU-olq" firstAttribute="leading" secondItem="lxg-5B-pLa" secondAttribute="leading" constant="14" id="xfn-tq-ys8"/>
@@ -173,13 +188,13 @@
                             <blurEffect style="regular"/>
                         </visualEffectView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Browsing venues" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mL-lF-xlz">
-                            <rect key="frame" x="19" y="40" width="159.66666666666666" height="26"/>
+                            <rect key="frame" x="19" y="40" width="153" height="23.333333333333329"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="yoi-6V-Sjc">
-                            <rect key="frame" x="19" y="83" width="355" height="317"/>
+                            <rect key="frame" x="19" y="80.333333333333371" width="355" height="319.66666666666669"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </tableView>
                     </subviews>

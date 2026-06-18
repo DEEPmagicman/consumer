@@ -26,7 +26,6 @@ final class EventCollectionViewCell: UICollectionViewCell {
         case normal
     }
 
-
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var eventName: UILabel!
     @IBOutlet weak var eventDate: UILabel!
@@ -34,7 +33,7 @@ final class EventCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var venueName: UILabel!
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var venueLogoImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,8 +43,14 @@ final class EventCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        image.sd_cancelCurrentImageLoad()
+        venueLogoImage.sd_cancelCurrentImageLoad()
         image.image = nil
+        venueLogoImage.image = nil
+        venueLogoImage.isHidden = true
 
+        eventName.isHidden = false
+        eventDate.isHidden = false
         eventName.text = nil
         eventDate.text = nil
         venueName.text = nil
@@ -75,9 +80,16 @@ private extension EventCollectionViewCell {
 
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFill
+        venueLogoImage.clipsToBounds = true
+        venueLogoImage.contentMode = .scaleAspectFit
+        venueLogoImage.isHidden = true
     }
 
     func setupData(event: Event) {
+        eventName.isHidden = false
+        eventDate.isHidden = false
+        venueLogoImage.isHidden = true
+        venueLogoImage.image = nil
 
         image.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),
@@ -95,6 +107,11 @@ private extension EventCollectionViewCell {
     }
 
     func setupPremiumExperience(_ event: Event) {
+        eventName.isHidden = false
+        eventDate.isHidden = false
+        venueLogoImage.isHidden = true
+        venueLogoImage.image = nil
+
         image.sd_setImage(
             with: URL(string: (event.flyer?.key ?? "").imageURL),
             placeholderImage: Constant.Icon.uploadImage
@@ -115,9 +132,10 @@ private extension EventCollectionViewCell {
         eventDate.isHidden = true
         venueName.text = venue.name.uppercased()
 
-        let logoUrl = URL(
-            string: "\(SharedURL.amazonStorage)\(venue.logo?.key ?? "")"
-        )
+        let logoKey = venue.logo?.key ?? ""
+        let logoUrl = URL(string: "\(SharedURL.amazonStorage)\(logoKey)")
+        venueLogoImage.isHidden = logoKey.isEmpty
+        venueLogoImage.image = nil
 
         let imageUrl = URL(
             string: "\(SharedURL.amazonStorage)\(venue.venueAttachment?.first?.key ?? "")"
@@ -127,6 +145,15 @@ private extension EventCollectionViewCell {
             with: imageUrl,
             placeholderImage: UIImage(named: "newSpeakeasy")
         )
+
+        if logoKey.isEmpty {
+            venueLogoImage.sd_cancelCurrentImageLoad()
+        } else {
+            venueLogoImage.sd_setImage(
+                with: logoUrl,
+                placeholderImage: nil
+            )
+        }
     }
 
     func formattedDate(

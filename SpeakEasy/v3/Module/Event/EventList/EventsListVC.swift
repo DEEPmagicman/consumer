@@ -13,7 +13,7 @@ final class EventsListVC: UIViewController {
     @IBOutlet weak var cityTitleLbl: UILabel!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var topRightSideBtn: AppIconButton!
-    
+
     private var eventList: [Event] = []
 
     private var skip = 0
@@ -23,11 +23,13 @@ final class EventsListVC: UIViewController {
     private var isInitialLoading = true
     private var isPaginating = false
     private var lastCollectionLayoutWidth: CGFloat = 0
-    
+    private var screenFilterCity: String?
+    private var loadID = 0
+
     var venue: SearchVenueItem? = nil
 
     private let eventService = EventService()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,17 +52,24 @@ final class EventsListVC: UIViewController {
         if let venue = venue {
             Navigate.to.searchEventVC(self, venueID: venue.id)
         } else {
-            Navigate.to.filtersVC(self)
+            presentCityFilter()
         }
     }
-    
+
+    @IBAction func onClickCityBtn(_ sender: Any) {
+        presentCityFilter()
+    }
+
     private func setupUI() {
         if let venue = venue {
             topRightSideBtn.iconTypeValue = AppIconType.search.rawValue
             topRightSideBtn.iconSize = 14
             topRightSideBtn.buttonSize = 40
-            
+
             titleLbl.text = venue.name
+            cityTitleLbl.text = ""
+        } else {
+            updateCityTitle()
         }
     }
 
@@ -95,7 +104,7 @@ final class EventsListVC: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: PaginationShimmerFooterView.identifier
         )
-        
+
         collectionView.register(
             EmptyCollectionReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -118,10 +127,12 @@ final class EventsListVC: UIViewController {
     }
 
     private func fetchEvents(reset: Bool = false) {
-        guard !isLoading else { return }
+        guard !isLoading || reset else { return }
         guard hasMore || reset else { return }
 
         isLoading = true
+        loadID += 1
+        let requestID = loadID
 
         if reset {
             skip = 0
@@ -136,10 +147,11 @@ final class EventsListVC: UIViewController {
             from: skip,
             venueId: "",
             time: "UPCOMING",
-            city: UserDefault.shared.localCity
+            city: resolvedCity()
         ) { [weak self] _, _, events, hasMore in
 
             guard let self else { return }
+            guard self.loadID == requestID else { return }
 
             let oldCount = self.eventList.count
 
@@ -169,11 +181,51 @@ final class EventsListVC: UIViewController {
             guard !indexPaths.isEmpty else {
                 self.isPaginating = false
                 self.invalidateFooter()
+                self.updateEmptyState()
                 return
             }
 
             self.insertEventItems(indexPaths)
         }
+    }
+
+    private func presentCityFilter() {
+        let city = screenFilterCity ?? UserDefault.shared.filterCity
+        let vc = Navigate.to.selectLocationVC(self)
+        vc.persistsFilterSelection = false
+        vc.selectedFilterCity = city
+        vc.initialFilterCity = city
+        vc.onSelectFilterCity = { [weak self] city in
+            self?.applyScreenCityFilter(city)
+        }
+    }
+
+    private func applyScreenCityFilter(_ city: String?) {
+        let trimmedCity = city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        screenFilterCity = trimmedCity?.isEmpty == false
+            ? trimmedCity
+            : nil
+
+        updateCityTitle()
+        fetchEvents(reset: true)
+    }
+
+    private func resolvedCity() -> String {
+        let city = screenFilterCity?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let city,
+           !city.isEmpty {
+            return city
+        }
+
+        return UserDefault.shared.activeCity
+    }
+
+    private func updateCityTitle() {
+        cityTitleLbl.text = "Events in \(resolvedCity())"
     }
 
     private func reloadUI() {
@@ -182,6 +234,8 @@ final class EventsListVC: UIViewController {
             collectionView.reloadData()
             collectionView.layoutIfNeeded()
         }
+
+        updateEmptyState()
     }
 
     private func insertEventItems(_ indexPaths: [IndexPath]) {
@@ -192,8 +246,52 @@ final class EventsListVC: UIViewController {
                 guard let self else { return }
                 self.isPaginating = false
                 self.invalidateFooter()
+                self.updateEmptyState()
             }
         }
+    }
+
+    private func updateEmptyState() {
+        collectionView.backgroundView = !isInitialLoading && eventList.isEmpty
+            ? makeEmptyStateView()
+            : nil
+    }
+
+    private func makeEmptyStateView() -> UIView {
+        let container = UIView(frame: collectionView.bounds)
+        container.backgroundColor = .clear
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = "No events found"
+        titleLabel.textColor = .white
+        titleLabel.font = Constant.Font.geistMedium(size: 18)
+        titleLabel.textAlignment = .center
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.text = "Try another city."
+        subtitleLabel.textColor = AppColor.primaryWhiteColor.withAlphaComponent(0.55)
+        subtitleLabel.font = Constant.Font.geistRegular(size: 14)
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+
+        container.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: container.centerYAnchor, constant: -40),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: container.leadingAnchor, constant: 32),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: container.trailingAnchor, constant: -32)
+        ])
+
+        return container
     }
 
     private func invalidateFooter() {

@@ -34,20 +34,45 @@ final class SelectLocationVC: UIViewController {
     @IBOutlet weak var editBtn: UIButton!
     @IBOutlet weak var editBtnView: UIView!
     @IBOutlet weak var primaryLocationLbl: UILabel!
-    
-    
+    @IBOutlet weak var primaryLocationView: UIView!
+
     // MARK: - Properties
 
-    var mode: SelectLocationMode = .selectCity
+    var mode: SelectLocationMode = .selectCity {
+        didSet {
+            guard isViewLoaded else { return }
+            setupUI()
+            fetchCityList()
+        }
+    }
 
     private var fullCityList = [MVPCity]()
     private var displayList = [MVPCity]()
 
     private var primaryCity = ""
-     var selectedFilterCity: String?
+     var selectedFilterCity: String? {
+        didSet {
+            guard isViewLoaded else { return }
+            updateApplyButtonState()
+            tableView.reloadData()
+        }
+    }
     private var selectedCity = ""
-     var initialFilterCity: String?
+     var initialFilterCity: String? {
+        didSet {
+            guard isViewLoaded else { return }
+            updateApplyButtonState()
+        }
+    }
     private var initialPrimaryCity = ""
+    var persistsFilterSelection = true {
+        didSet {
+            guard isViewLoaded else { return }
+            normalizeFilterSelectionIfNeeded()
+            setupUI()
+            tableView.reloadData()
+        }
+    }
     
     var onSelectFilterCity: ((String?) -> Void)?
 
@@ -62,6 +87,11 @@ final class SelectLocationVC: UIViewController {
         primaryCity = UserDefault.shared.localCity
         selectedCity = primaryCity
         initialPrimaryCity = primaryCity
+        if persistsFilterSelection {
+            selectedFilterCity = selectedFilterCity ?? UserDefault.shared.filterCity
+        }
+        normalizeFilterSelectionIfNeeded()
+        initialFilterCity = initialFilterCity ?? selectedFilterCity
         setupTableView()
         setupSearch()
         setupUI()
@@ -144,6 +174,8 @@ private extension SelectLocationVC {
         case .selectCity:
 
             pageTitleLbl.text = "Select City"
+            primaryLocationView.isHidden = !persistsFilterSelection
+            discriptionLbl.isHidden = !persistsFilterSelection
 
             searchFeildNormelMode.isHidden = false
             searchFeildEditMode.isHidden = true
@@ -151,13 +183,13 @@ private extension SelectLocationVC {
             updateLocationBtn.isHidden = true
 
             editBtnView.isHidden = false
-            discriptionLbl.isHidden = false
 
             updateApplyButtonState()
 
         case .updatePrimaryLocation:
 
             pageTitleLbl.text = "Location"
+            primaryLocationView.isHidden = false
 
             searchFeildNormelMode.isHidden = true
             searchFeildEditMode.isHidden = false
@@ -172,13 +204,31 @@ private extension SelectLocationVC {
     func updateApplyButtonState() {
         updateLocationBtn.isHidden = true
         applyBtn.isHidden =
-        selectedFilterCity == initialFilterCity
+        normalizedCity(selectedFilterCity) == normalizedCity(initialFilterCity)
     }
 
     func updateLocationButtonState() {
         applyBtn.isHidden = true
         updateLocationBtn.isHidden =
         selectedCity == initialPrimaryCity
+    }
+
+    func normalizeFilterSelectionIfNeeded() {
+        guard normalizedCity(selectedFilterCity) == normalizedCity(primaryCity) else {
+            return
+        }
+
+        selectedFilterCity = nil
+
+        if persistsFilterSelection {
+            UserDefault.shared.filterCity = nil
+        }
+    }
+
+    func normalizedCity(_ city: String?) -> String {
+        city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased() ?? ""
     }
 }
 
@@ -214,14 +264,18 @@ extension SelectLocationVC {
 
     @IBAction func onClickApply(_ sender: Any) {
 
-        onSelectFilterCity?(selectedFilterCity)
+        let city = normalizedCity(selectedFilterCity) == normalizedCity(primaryCity)
+            ? nil
+            : selectedFilterCity
+
+        if persistsFilterSelection {
+            UserDefault.shared.filterCity = city
+        }
+        onSelectFilterCity?(city)
 
         dismiss(animated: true)
     }
     
-    
-    
-
     @IBAction func onClickUpdateLocation(_ sender: Any) {
 
         guard !selectedCity.isEmpty else { return }
@@ -236,6 +290,12 @@ extension SelectLocationVC {
 
             UserDefault.shared.localCity =
             self.selectedCity
+
+            if UserDefault.shared.filterCity?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .caseInsensitiveCompare(self.selectedCity) == .orderedSame {
+                UserDefault.shared.filterCity = nil
+            }
 
             self.primaryLocationLbl.text =
             self.selectedCity

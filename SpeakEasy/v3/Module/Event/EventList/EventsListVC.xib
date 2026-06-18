@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -49,15 +49,26 @@
                                     <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m4b-cs-d5E">
+                                    <rect key="frame" x="0.0" y="0.0" width="180.66666666666666" height="56.666666666666664"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <connections>
+                                        <action selector="onClickCityBtn:" destination="-1" eventType="touchUpInside" id="s5n-AU-Q8O"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="87k-IA-iUM"/>
+                                <constraint firstItem="m4b-cs-d5E" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" id="A6p-p8-AXh"/>
+                                <constraint firstAttribute="trailing" secondItem="m4b-cs-d5E" secondAttribute="trailing" id="N0h-Xh-Qgl"/>
                                 <constraint firstAttribute="bottom" secondItem="hjO-Fu-O30" secondAttribute="bottom" constant="9" id="Pkk-Qm-6ZW"/>
                                 <constraint firstAttribute="trailing" secondItem="hjO-Fu-O30" secondAttribute="trailing" id="S3K-W0-0mY"/>
+                                <constraint firstAttribute="bottom" secondItem="m4b-cs-d5E" secondAttribute="bottom" id="VNH-1B-Yt3"/>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="centerX" secondItem="pVF-yC-Oqd" secondAttribute="centerX" id="Y7t-9Y-RbL"/>
                                 <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" constant="9" id="eZb-Iv-t56"/>
                                 <constraint firstAttribute="trailing" secondItem="qOS-tW-KDW" secondAttribute="trailing" constant="30" id="kaz-sX-5dz"/>
+                                <constraint firstItem="m4b-cs-d5E" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="lJ8-4n-SYR"/>
                                 <constraint firstItem="hjO-Fu-O30" firstAttribute="top" secondItem="qOS-tW-KDW" secondAttribute="bottom" constant="3" id="pDZ-dy-Tbh"/>
                                 <constraint firstItem="qOS-tW-KDW" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" constant="30" id="qNR-YT-zgy"/>
                             </constraints>

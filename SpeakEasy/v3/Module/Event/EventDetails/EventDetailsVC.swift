@@ -3284,11 +3284,12 @@ extension EventDetailsVC: CheckoutBarDelegate {
 
             if isSuccess {
 
-                Navigate.to.paymentVc(
+                Navigate.orderListVC(
                     self,
                     event: event,
                     selectedTickets: selectedTickets,
-                    bookingId: bookingId
+                    bookingId: bookingId,
+                    paymentMethod: nil
                 )
 
             } else {
