@@ -119,10 +119,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FZN-ZJ-SOO">
-                                <rect key="frame" x="383.66666666666669" y="176" width="108.33333333333331" height="36"/>
+                                <rect key="frame" x="299.66666666666669" y="176" width="192.33333333333331" height="36"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="kOz-OP-c2L">
-                                        <rect key="frame" x="0.0" y="0.0" width="108.33333333333333" height="36"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="192.33333333333334" height="36"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a3I-Rf-f1Z">
                                                 <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
@@ -198,8 +198,8 @@
                                                     <constraint firstAttribute="width" constant="36" id="u7g-cq-GIh"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFH-Qy-HBi">
-                                                <rect key="frame" x="108.33333333333331" y="0.0" width="72" height="36"/>
+                                            <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eFH-Qy-HBi">
+                                                <rect key="frame" x="120.33333333333331" y="0.0" width="72" height="36"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8p-T5-xKp">
                                                         <rect key="frame" x="0.0" y="0.0" width="72" height="36"/>
@@ -236,10 +236,16 @@
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                         <real key="value" value="18"/>
                                                     </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                        <color key="value" red="1" green="1" blue="1" alpha="0.091173835130000005" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K1K-Xe-Cpo">
-                                                <rect key="frame" x="108.33333333333331" y="0.0" width="32" height="36"/>
+                                                <rect key="frame" x="192.33333333333331" y="0.0" width="32" height="36"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="COMING SOON" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aX9-Ng-7um">
                                                         <rect key="frame" x="16" y="10" width="0.0" height="16"/>
@@ -263,7 +269,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PLv-SK-N5k">
-                                                <rect key="frame" x="108.33333333333331" y="0.0" width="72" height="36"/>
+                                                <rect key="frame" x="192.33333333333331" y="0.0" width="72" height="36"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NzX-uO-SDM">
                                                         <rect key="frame" x="0.0" y="0.0" width="72" height="36"/>

@@ -95,6 +95,9 @@ class EventDetailsVC: UIViewController {
     private var ticketTableObserver: NSKeyValueObservation?
     private var groupTableObserver: NSKeyValueObservation?
     private var additionalButtonsTableObserver: NSKeyValueObservation?
+    private let eventTitleMarqueeLabel = PremiumMarqueeLabel()
+    private let youTubeShimmerView = ShimmerViewV3(frame: .zero, lighter: true)
+    private var isYouTubePlayerReady = false
 
     var venueDetails: ClipVenue?
     var event: Event?
@@ -191,7 +194,7 @@ class EventDetailsVC: UIViewController {
 //        fetchSeatingAreas()
         getEventDetail()
         
-        setupData()
+        setupEventHeaderData()
         setupCollectionViews()
         setupTableView()
         startTicketTableObserver()
@@ -200,6 +203,8 @@ class EventDetailsVC: UIViewController {
         startAdditionalButtonsTableObserver()
         setupUI()
         setupSkeletonView()
+        setupTitleMarqueeLabel()
+        setupYouTubeShimmerView()
         showSkeleton()
         
         additionalButtonsTableView.delegate = self
@@ -268,7 +273,8 @@ class EventDetailsVC: UIViewController {
 
         ticketTableObserver = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
-            self.ticketTableHeightConstraint.constant = tableView.contentSize.height
+            self.ticketTableHeightConstraint.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -278,7 +284,8 @@ class EventDetailsVC: UIViewController {
 
         groupTableObserver = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] tableView, _ in
             guard let self = self else { return }
-            self.groupTableViewHeight.constant = tableView.contentSize.height
+            self.groupTableViewHeight.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -294,7 +301,8 @@ class EventDetailsVC: UIViewController {
 
             guard let self = self else { return }
 
-            self.additionalButtonsTableHeight.constant = tableView.contentSize.height
+            self.additionalButtonsTableHeight.constant =
+            tableView.isHidden ? 0 : tableView.contentSize.height
             self.view.layoutIfNeeded()
         }
     }
@@ -339,7 +347,7 @@ class EventDetailsVC: UIViewController {
     private func setupUI() {
         savedEventId = event?.savedEventId
         isSaved =
-        event?.isSaved == true ||
+        event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
     }
@@ -351,6 +359,109 @@ class EventDetailsVC: UIViewController {
         saveBtn.tintColor =  .white
         saveBtn.alpha = isSaveLoading ? 0.65 : 1
         saveBtn.isUserInteractionEnabled = !isSaveLoading
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard eventTitleMarqueeLabel.superview == nil,
+              let stackView = pageTitleName.superview as? UIStackView,
+              let index = stackView.arrangedSubviews.firstIndex(of: pageTitleName)
+        else { return }
+
+        eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 24)
+        eventTitleMarqueeLabel.textColor = AppColor.primaryWhiteColor
+        eventTitleMarqueeLabel.animationSpeed = 25
+        eventTitleMarqueeLabel.animationDelay = 1.4
+        eventTitleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.insertArrangedSubview(eventTitleMarqueeLabel, at: index)
+        pageTitleName.isHidden = true
+
+        NSLayoutConstraint.activate([
+            eventTitleMarqueeLabel.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    private func setupYouTubeShimmerView() {
+        guard youTubeShimmerView.superview == nil else { return }
+
+        youTubeShimmerView.translatesAutoresizingMaskIntoConstraints = false
+        youTubeShimmerView.layer.cornerRadius = 12
+        youTubeShimmerView.isHidden = true
+        youTubePlayerView.addSubview(youTubeShimmerView)
+
+        NSLayoutConstraint.activate([
+            youTubeShimmerView.topAnchor.constraint(equalTo: youTubePlayerView.topAnchor),
+            youTubeShimmerView.leadingAnchor.constraint(equalTo: youTubePlayerView.leadingAnchor),
+            youTubeShimmerView.trailingAnchor.constraint(equalTo: youTubePlayerView.trailingAnchor),
+            youTubeShimmerView.bottomAnchor.constraint(equalTo: youTubePlayerView.bottomAnchor)
+        ])
+    }
+
+    private func showYouTubeShimmer() {
+        isYouTubePlayerReady = false
+        youTubeShimmerView.isHidden = false
+        youTubeShimmerView.alpha = 1
+        youTubeShimmerView.startShimmer()
+        youTubePlayerView.bringSubviewToFront(youTubeShimmerView)
+    }
+
+    private func hideYouTubeShimmer() {
+        guard !youTubeShimmerView.isHidden else { return }
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            self.youTubeShimmerView.alpha = 0
+        } completion: { _ in
+            self.youTubeShimmerView.stopShimmer()
+            self.youTubeShimmerView.layer.removeAllAnimations()
+            self.youTubeShimmerView.isHidden = true
+            self.youTubeShimmerView.alpha = 1
+        }
+    }
+
+    private func setSection(
+        _ sectionView: UIView,
+        hidden: Bool,
+        animated: Bool = true
+    ) {
+        if sectionView.isHidden == hidden {
+            sectionView.alpha = hidden ? 0 : 1
+            return
+        }
+
+        let shouldAnimate =
+        animated &&
+        view.window != nil &&
+        !contentStackView.isHidden
+
+        guard shouldAnimate else {
+            sectionView.alpha = hidden ? 0 : 1
+            sectionView.isHidden = hidden
+            return
+        }
+
+        view.layoutIfNeeded()
+
+        if !hidden {
+            sectionView.alpha = 0
+            sectionView.isHidden = false
+        }
+
+        UIView.animate(
+            withDuration: 0.22,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction]
+        ) {
+            sectionView.alpha = hidden ? 0 : 1
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            sectionView.isHidden = hidden
+            sectionView.alpha = hidden ? 0 : 1
+            self.contentStackView.layoutIfNeeded()
+        }
     }
 
     
@@ -457,6 +568,14 @@ class EventDetailsVC: UIViewController {
             }
 
             self.applyEventDetailBundle(detail)
+            if let show = self.event?.showEventAttendees {
+                self.attendeesView.isHidden = !show
+                if show {
+                    self.getEventAttendees()
+                }
+            } else {
+                self.attendeesView.isHidden = true
+            }
         }
 
         /*
@@ -522,10 +641,10 @@ class EventDetailsVC: UIViewController {
         savedEventId ?? event?.savedEventId
 
         let currentIsSaved =
-        isSaved || event?.isSaved == true
+        isSaved || event?.hasSavedEvent == true
 
         let detailHasSavedState =
-        detail.event.isSaved != nil ||
+        detail.event.hasSavedEvent != nil ||
         detail.event.savedEventId != nil
 
         event = detail.event
@@ -537,7 +656,7 @@ class EventDetailsVC: UIViewController {
 
         if !detailHasSavedState,
            currentIsSaved {
-            event?.isSaved = true
+            event?.hasSavedEvent = true
         }
 
         if let venue = detail.event.venue {
@@ -546,9 +665,10 @@ class EventDetailsVC: UIViewController {
 
         savedEventId = event?.savedEventId
         isSaved =
-        event?.isSaved == true ||
+        event?.hasSavedEvent == true ||
         savedEventId != nil
         updateSaveUI()
+        setupTicketsButton()
 
         eventTicketId =
         detail.event.eventTicket?
@@ -1083,6 +1203,62 @@ class EventDetailsVC: UIViewController {
         let withoutImage = list.filter { !$0.hasImage }
         return withImage + withoutImage
     }
+    
+    private func setupEventHeaderData() {
+        guard let event = event else { return }
+        titleLbl.text = event.title
+        eventTitleMarqueeLabel.setText(event.title)
+        if let imageUrlString = event.venue?.logo?.key.imageURL,
+           let url = URL(string: imageUrlString) {
+            venueLogo.sd_setImage(with: url) { [weak self] _, _, _, _ in
+                guard let self = self else { return }
+            }
+            
+        } else {
+            venueLogo.isHidden = true
+        }
+        venueTitleLbl.text = event.venue?.name.uppercased() ?? ""
+        pageTitleName.text = event.title
+
+        if let customText = event.openTimeCustomText,
+           !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            timingLbl.text = customText
+        } else {
+            let timezone = venueDetails?.useTimezone ?? ""
+
+            let dateText = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .EEEMMMD,
+                customTimeZone: timezone
+            )
+
+            let startTime = event.startDateTime.convertDateFormat(
+                from: .yyyyMMddHHmmss,
+                to: .hmma,
+                customTimeZone: timezone
+            )
+
+            if !dateText.isEmpty && !startTime.isEmpty {
+                let hideEnd = event.hideEventEnd == true
+                let hasEndTime = !(event.endDateTime?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+
+                if hideEnd || !hasEndTime {
+                    timingLbl.text = "\(dateText) at \(startTime)"
+                } else {
+                    let endTime = event.endDateTime?.convertDateFormat(
+                        from: .yyyyMMddHHmmss,
+                        to: .hmma,
+                        customTimeZone: timezone
+                    ) ?? ""
+
+                    timingLbl.text = "\(dateText) at \(startTime) - \(endTime)"
+                }
+            } else {
+                timingLbl.text = ""
+            }
+        }
+    }
+    
 
     private func setupData() {
         guard let event = event else { return }
@@ -1091,6 +1267,7 @@ class EventDetailsVC: UIViewController {
 
         mainImg.sd_setImage(with: URL(string: (event.flyer?.key ?? "").imageURL), placeholderImage: Constant.Icon.uploadImage)
         titleLbl.text = event.title
+        eventTitleMarqueeLabel.setText(event.title)
         fullText = event.description
         setupExpandableLabel()
         setupPolicyExpandableLabel()
@@ -1128,13 +1305,16 @@ class EventDetailsVC: UIViewController {
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = venueDetails?.name.uppercased() ?? ""
 
-        webSiteView.isHidden = event.additionalButtons?.isEmpty ?? true
+        let enabledAdditionalButtons = event.additionalButtons?.filter { $0.isEnable } ?? []
+        additionalButtonsTableView.isHidden = enabledAdditionalButtons.isEmpty
+        additionalButtonsTableView.reloadData()
+        additionalButtonsTableHeight.constant = enabledAdditionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
+        setSection(webSiteView, hidden: enabledAdditionalButtons.isEmpty)
         
         configureVIPTablesView()
         setupGalleryGrid()
 
         let showInlineTickets = event.eventTicketSettings?.showTicketListingOnMainScreen ?? false
-        ticketHidenView.isHidden = !showInlineTickets
 
         if showInlineTickets {
             setupInlineTicketData()
@@ -1142,20 +1322,31 @@ class EventDetailsVC: UIViewController {
             tickets = []
             normalTickets = []
             groupedNormalTickets = []
+            ticketTableView.isHidden = true
+            groupTableView.isHidden = true
             ticketTableView.reloadData()
             groupTableView.reloadData()
             ticketTableHeightConstraint.constant = 0
             groupTableViewHeight.constant = 0
             protectedTicketView.isHidden = true
+            lockIcon.isHidden = true
+            setSection(ticketHidenView, hidden: true)
         }
 
         if let youtubeVideoLink = event.youtubeVideoLink, !youtubeVideoLink.isEmpty {
             youTubeSuperView.isHidden = false
             setupYouTubePlayer()
             if let id = extractVideoID(from: youtubeVideoLink) {
-                playerView.load(withVideoId: id)
+                showYouTubeShimmer()
+                playerView.load(
+                    withVideoId: id,
+                    playerVars: youtubePlayerVars()
+                )
+            } else {
+                hideYouTubeShimmer()
             }
         } else {
+            hideYouTubeShimmer()
             youTubeSuperView.isHidden = true
         }
 
@@ -1251,7 +1442,7 @@ class EventDetailsVC: UIViewController {
         if let hexColor = event.whiteLabelColor {
             let color = UIColor(hex: hexColor)
             timingLbl.textColor = color
-            checkOutBtn.backgroundColor = color
+//            checkOutBtn.backgroundColor = color
 //            buyNowBtnLbl.textColor = color.suitableTextColor()
             webSiteView.borderColor = color
             checkOutBtn.indicator = MaterialLoadingIndicator(color: .black)
@@ -1261,7 +1452,6 @@ class EventDetailsVC: UIViewController {
         }
 
         setupSocialLinks()
-        setupTicketsButton()
 
 //        if event.eventTicket == nil {
 //        } else {
@@ -1329,14 +1519,7 @@ class EventDetailsVC: UIViewController {
         checkOutBtn.isEnabled = true
         checkOutBtn.isUserInteractionEnabled = true
 
-        guard let tickets = event.eventTicket, !tickets.isEmpty else {
-            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
-            checkOutBtn.isEnabled = false
-            checkOutBtn.isUserInteractionEnabled = false
-            soldOutView.isHidden = false
-            soldOutLbl.text = Constant.String.salePaused.uppercased()
-            return
-        }
+      
 
         if event.isPausedSellingAllTickets == true {
             checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
@@ -1368,6 +1551,15 @@ class EventDetailsVC: UIViewController {
             checkOutBtn.isUserInteractionEnabled = false
             soldOutView.isHidden = false
             soldOutLbl.text = Constant.String.soldOut.uppercased()
+            return
+        }
+        
+        guard let tickets = event.eventTicket, !tickets.isEmpty else {
+            checkOutBtn.setTitle(Constant.String.salePaused.uppercased(), for: .normal)
+            checkOutBtn.isEnabled = false
+            checkOutBtn.isUserInteractionEnabled = false
+            soldOutView.isHidden = false
+            soldOutLbl.text = Constant.String.salePaused.uppercased()
             return
         }
 
@@ -1403,7 +1595,7 @@ class EventDetailsVC: UIViewController {
             return false
         }()
         
-        vipTablesView.isHidden = !(shouldShowVIPTablesView && isEventDetailAPICalled)
+        setSection(vipTablesView, hidden: !(shouldShowVIPTablesView && isEventDetailAPICalled))
         
         // MARK: - Subtitle
         
@@ -1498,23 +1690,33 @@ class EventDetailsVC: UIViewController {
         protectedTicketView.isHidden = protectedVisibleCandidates.isEmpty
         lockIcon.isHidden = protectedVisibleCandidates.isEmpty
 
+        ticketTableView.isHidden = normalTickets.isEmpty
         groupTableView.isHidden = groupedNormalTickets.isEmpty
 
         ticketTableView.reloadData()
         groupTableView.reloadData()
         updateTicketTableHeight()
         updateGroupTableHeight()
+
+        let hasInlineContent =
+        !normalTickets.isEmpty ||
+        !groupedNormalTickets.isEmpty ||
+        !protectedVisibleCandidates.isEmpty
+
+        setSection(ticketHidenView, hidden: !hasInlineContent)
         updateContinueBtnState()
     }
 
     private func updateTicketTableHeight() {
         ticketTableView.layoutIfNeeded()
-        ticketTableHeightConstraint.constant = ticketTableView.contentSize.height
+        ticketTableHeightConstraint.constant =
+        ticketTableView.isHidden ? 0 : ticketTableView.contentSize.height
     }
 
     private func updateGroupTableHeight() {
         groupTableView.layoutIfNeeded()
-        groupTableViewHeight.constant = groupTableView.contentSize.height
+        groupTableViewHeight.constant =
+        groupTableView.isHidden ? 0 : groupTableView.contentSize.height
     }
 
     private func syncUpdatedTicketToEvent(_ updatedTicket: EventTicket) {
@@ -1918,7 +2120,8 @@ class EventDetailsVC: UIViewController {
 
     @IBAction func onClickVIPtable(_ sender: Any) {
         if let event = self.event {
-            Navigate.to.tableCheckOutVC(self, event: event, seatingAreas: self.seatingAreas, seatingAreasFilteredOut: seatingAreasFilteredOut)
+            Navigate.to.premiumEventContainerVC(self, event: event)
+
         }
     }
     
@@ -2091,7 +2294,7 @@ class EventDetailsVC: UIViewController {
 
             self.savedEventId = id
             self.event?.savedEventId = id
-            self.event?.isSaved = true
+            self.event?.hasSavedEvent = true
             self.isSaved = true
             self.updateSaveUI()
             if let event = self.event {
@@ -2124,7 +2327,7 @@ class EventDetailsVC: UIViewController {
 
             self.savedEventId = nil
             self.event?.savedEventId = nil
-            self.event?.isSaved = false
+            self.event?.hasSavedEvent = false
             self.isSaved = false
             self.updateSaveUI()
             if let event = self.event {
@@ -2175,7 +2378,7 @@ class EventDetailsVC: UIViewController {
         isSaveLoading = false
         isSaved = previousState
         savedEventId = previousSavedEventId
-        event?.isSaved = previousState
+        event?.hasSavedEvent = previousState
         event?.savedEventId = previousSavedEventId
         updateSaveUI()
     }
@@ -2189,7 +2392,7 @@ class EventDetailsVC: UIViewController {
 //        APIManager.shared.saveVenue(venueId: venueId) { [weak self] success in
 //            guard let self = self else { return }
 //            self.isSaveLoading = false
-//            
+//
 //            if !success {
 //                self.isSaved = previousState
 //                self.updateSaveUI()
@@ -2201,7 +2404,7 @@ class EventDetailsVC: UIViewController {
 //        APIManager.shared.unsaveVenue(venueId: venueId) { [weak self] success in
 //            guard let self = self else { return }
 //            self.isSaveLoading = false
-//            
+//
 //            if !success {
 //                self.isSaved = previousState
 //                self.updateSaveUI()
@@ -2861,6 +3064,11 @@ extension EventDetailsVC {
 extension EventDetailsVC: YTPlayerViewDelegate {
 
     func setupYouTubePlayer() {
+        if playerView != nil {
+            playerView.delegate = self
+            return
+        }
+
         playerView = YTPlayerView()
         playerView.translatesAutoresizingMaskIntoConstraints = false
         playerView.delegate = self
@@ -2873,26 +3081,59 @@ extension EventDetailsVC: YTPlayerViewDelegate {
             playerView.leadingAnchor.constraint(equalTo: youTubePlayerView.leadingAnchor),
             playerView.trailingAnchor.constraint(equalTo: youTubePlayerView.trailingAnchor)
         ])
+        youTubePlayerView.bringSubviewToFront(youTubeShimmerView)
+    }
 
-        let videoID = "dQw4w9WgXcQ"
-
-        playerView.load(
-            withVideoId: videoID,
-            playerVars: [
-                "playsinline": 1,
-                "autoplay": 0,
-                "controls": 1,
-                "modestbranding": 1,
-                "rel": 0
-            ]
-        )
+    func youtubePlayerVars() -> [AnyHashable: Any] {
+        [
+            "playsinline": 1,
+            "autoplay": 0,
+            "controls": 1,
+            "modestbranding": 1,
+            "rel": 0
+        ]
     }
 
     func extractVideoID(from url: String) -> String? {
-        return URLComponents(string: url)?
-            .queryItems?
+        guard let components = URLComponents(string: url) else {
+            return nil
+        }
+
+        if let id = components.queryItems?
             .first(where: { $0.name == "v" })?
-            .value
+            .value,
+           !id.isEmpty {
+            return id
+        }
+
+        let pathComponents = components.path
+            .split(separator: "/")
+            .map(String.init)
+
+        if components.host?.contains("youtu.be") == true {
+            return pathComponents.first
+        }
+
+        if let markerIndex = pathComponents.firstIndex(where: {
+            $0 == "embed" || $0 == "shorts"
+        }),
+           pathComponents.indices.contains(markerIndex + 1) {
+            return pathComponents[markerIndex + 1]
+        }
+
+        return nil
+    }
+
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+        isYouTubePlayerReady = true
+        hideYouTubeShimmer()
+    }
+
+    func playerView(
+        _ playerView: YTPlayerView,
+        receivedError error: YTPlayerError
+    ) {
+        hideYouTubeShimmer()
     }
 }
 

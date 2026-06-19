@@ -355,7 +355,23 @@ class EventQRTicketVC: UIViewController {
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        self.dismiss(animated: false)
+        returnToDiscoverScreen()
+    }
+
+    private func returnToDiscoverScreen() {
+        let presenter = presentingViewController
+
+        dismiss(animated: false) {
+            if let navigationController = presenter as? UINavigationController {
+                navigationController.tabBarController?.selectedIndex = 0
+                navigationController.popToRootViewController(animated: false)
+            } else if let navigationController = presenter?.navigationController {
+                navigationController.tabBarController?.selectedIndex = 0
+                navigationController.popToRootViewController(animated: false)
+            } else if let tabBarController = presenter?.tabBarController {
+                tabBarController.selectedIndex = 0
+            }
+        }
     }
 }
 

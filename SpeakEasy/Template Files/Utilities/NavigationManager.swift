@@ -645,6 +645,21 @@ final class Navigate {
         vc.onFollowStateChanged = onFollowStateChanged
         sender.pushVC(vc)
     }
+
+    func premiumVenueVC(
+        _ sender: UIViewController,
+        venueDetails: ClipVenue?,
+        onFollowStateChanged: ((ClipVenue, Bool) -> Void)? = nil
+    ) {
+        let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+        vc.venueDetails = venueDetails
+        vc.onFollowStateChanged = onFollowStateChanged
+        vc.isPresentedPremium = true
+
+        let nav = UINavigationController(rootViewController: vc)
+        nav.navigationBar.isHidden = true
+        sender.presentPremium(nav)
+    }
     
     func coverTicketListVC(_ sender: UIViewController, venueDetails: ClipVenue?) {
         let vc = CoverTicketListVC(nibName: "CoverTicketListVC", bundle: nil)

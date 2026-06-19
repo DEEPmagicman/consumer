@@ -540,7 +540,7 @@ class MapViewController: UIViewController {
         discoverService.fetchDiscoverEvents(
             city: city,
             skip: eventSkip,
-            timeWindow: .tonight(),
+            eventListType: .eventsTonight,
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
             guard let self else { return }

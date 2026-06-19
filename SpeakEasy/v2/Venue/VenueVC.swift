@@ -63,6 +63,7 @@ final class VenueVC: UIViewController {
     var venueDetails: ClipVenue?
     var uniqueId: String? = ""
     var onFollowStateChanged: ((ClipVenue, Bool) -> Void)?
+    var isPresentedPremium = false
     private var isFollowing = false
     private var isFollowLoading = false
     private var followedVenueId: String?
@@ -258,6 +259,11 @@ final class VenueVC: UIViewController {
     }
 
     @IBAction func onClickBackBtn(_ sender: Any) {
+        if isPresentedPremium {
+            dismissPremium()
+            return
+        }
+
         Navigate.to.back(self)
     }
 

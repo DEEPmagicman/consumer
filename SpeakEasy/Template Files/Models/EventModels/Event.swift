@@ -55,7 +55,7 @@ struct Event: Codable {
     var isEnableReservationRequest: Bool
     var eventGallery: [EventGallery]?
     var eventAddOnTicket: [EventTicket]?
-    var isSaved: Bool?
+    var hasSavedEvent: Bool?
     var savedEventId: String?
     var lowestPriceTicket: EventTicket? {
         if eventTicket?.count == 0 { return nil }

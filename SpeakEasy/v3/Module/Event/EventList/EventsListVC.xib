@@ -23,6 +23,9 @@
                 <outlet property="collectionView" destination="ydC-08-RKW" id="K01-1K-0ZI"/>
                 <outlet property="titleLbl" destination="qOS-tW-KDW" id="BhE-7S-yyh"/>
                 <outlet property="topRightSideBtn" destination="tCf-nv-FrM" id="IWP-v0-GQm"/>
+                <outlet property="topTitleView" destination="pVF-yC-Oqd" id="Vuc-Gp-VTw"/>
+                <outlet property="topViewLeftSideConstraint" destination="knz-mM-TLd" id="AG6-hC-j0H"/>
+                <outlet property="topViewRightSideConstraint" destination="K7I-5V-CPo" id="c7I-kQ-uJu"/>
                 <outlet property="view" destination="QEx-Gc-EKI" id="Ht5-5E-FU6"/>
             </connections>
         </placeholder>
@@ -35,22 +38,40 @@
                     <rect key="frame" x="0.0" y="118" width="393" height="72"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pVF-yC-Oqd" customClass="LiquidGlassBackgroundView" customModule="Speakeasy" customModuleProvider="target">
-                            <rect key="frame" x="106.33333333333333" y="7.6666666666666679" width="180.66666666666669" height="56.666666666666657"/>
+                            <rect key="frame" x="106.33333333333333" y="0.0" width="180.66666666666669" height="72"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events Tonight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOS-tW-KDW">
-                                    <rect key="frame" x="30.000000000000007" y="8.9999999999999876" width="120.66666666666669" height="23.666666666666671"/>
-                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW YORK CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hjO-Fu-O30">
-                                    <rect key="frame" x="0.0" y="35.666666666666671" width="180.66666666666666" height="12"/>
-                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
-                                    <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iIi-K3-eqL">
+                                    <rect key="frame" x="0.0" y="10" width="180.66666666666666" height="52"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3se-Gr-FL9">
+                                            <rect key="frame" x="0.0" y="0.0" width="180.66666666666666" height="40"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Events Tonight" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOS-tW-KDW">
+                                                    <rect key="frame" x="30.000000000000007" y="0.0" width="120.66666666666669" height="40"/>
+                                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="qOS-tW-KDW" firstAttribute="leading" secondItem="3se-Gr-FL9" secondAttribute="leading" constant="30" id="K7I-5V-CPo"/>
+                                                <constraint firstAttribute="bottom" secondItem="qOS-tW-KDW" secondAttribute="bottom" id="QOi-kA-Aue"/>
+                                                <constraint firstAttribute="trailing" secondItem="qOS-tW-KDW" secondAttribute="trailing" constant="30" id="knz-mM-TLd"/>
+                                                <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="3se-Gr-FL9" secondAttribute="top" id="pyj-tG-7TD"/>
+                                                <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="3se-Gr-FL9" secondAttribute="top" id="r6G-hZ-jgy"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW YORK CITY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hjO-Fu-O30">
+                                            <rect key="frame" x="0.0" y="40" width="180.66666666666666" height="12"/>
+                                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
+                                            <color key="textColor" red="0.63137254899999995" green="0.63137254899999995" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m4b-cs-d5E">
-                                    <rect key="frame" x="0.0" y="0.0" width="180.66666666666666" height="56.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="180.66666666666666" height="72"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <connections>
                                         <action selector="onClickCityBtn:" destination="-1" eventType="touchUpInside" id="s5n-AU-Q8O"/>
@@ -59,18 +80,14 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="hjO-Fu-O30" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="87k-IA-iUM"/>
                                 <constraint firstItem="m4b-cs-d5E" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" id="A6p-p8-AXh"/>
+                                <constraint firstItem="iIi-K3-eqL" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" constant="10" id="Cx5-gf-8Pc"/>
                                 <constraint firstAttribute="trailing" secondItem="m4b-cs-d5E" secondAttribute="trailing" id="N0h-Xh-Qgl"/>
-                                <constraint firstAttribute="bottom" secondItem="hjO-Fu-O30" secondAttribute="bottom" constant="9" id="Pkk-Qm-6ZW"/>
-                                <constraint firstAttribute="trailing" secondItem="hjO-Fu-O30" secondAttribute="trailing" id="S3K-W0-0mY"/>
                                 <constraint firstAttribute="bottom" secondItem="m4b-cs-d5E" secondAttribute="bottom" id="VNH-1B-Yt3"/>
-                                <constraint firstItem="hjO-Fu-O30" firstAttribute="centerX" secondItem="pVF-yC-Oqd" secondAttribute="centerX" id="Y7t-9Y-RbL"/>
-                                <constraint firstItem="qOS-tW-KDW" firstAttribute="top" secondItem="pVF-yC-Oqd" secondAttribute="top" constant="9" id="eZb-Iv-t56"/>
-                                <constraint firstAttribute="trailing" secondItem="qOS-tW-KDW" secondAttribute="trailing" constant="30" id="kaz-sX-5dz"/>
+                                <constraint firstItem="iIi-K3-eqL" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="Xgc-iP-X4J"/>
+                                <constraint firstAttribute="bottom" secondItem="iIi-K3-eqL" secondAttribute="bottom" constant="10" id="hgl-4Y-Hjp"/>
                                 <constraint firstItem="m4b-cs-d5E" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" id="lJ8-4n-SYR"/>
-                                <constraint firstItem="hjO-Fu-O30" firstAttribute="top" secondItem="qOS-tW-KDW" secondAttribute="bottom" constant="3" id="pDZ-dy-Tbh"/>
-                                <constraint firstItem="qOS-tW-KDW" firstAttribute="leading" secondItem="pVF-yC-Oqd" secondAttribute="leading" constant="30" id="qNR-YT-zgy"/>
+                                <constraint firstAttribute="trailing" secondItem="iIi-K3-eqL" secondAttribute="trailing" id="pIF-ka-lrs"/>
                             </constraints>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

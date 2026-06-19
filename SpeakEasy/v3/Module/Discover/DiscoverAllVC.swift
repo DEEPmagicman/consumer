@@ -21,6 +21,7 @@ final class DiscoverAllVC: UIViewController {
 
     private let discoverService = DiscoverService()
     private var initialLoadID = 0
+    private var isNavigatingToDiscoverItem = false
 
     var selectedCity: String = ""
 
@@ -36,6 +37,11 @@ final class DiscoverAllVC: UIViewController {
                 smallDeviceValue: 65,
                 regularDeviceValue: 75
             )
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isNavigatingToDiscoverItem = false
     }
 
     @IBAction func onClickPremiumCloseBtn(_ sender: Any) {
@@ -81,10 +87,12 @@ private extension DiscoverAllVC {
         todaysEventsView.onTapEvent = { [weak self] event, _ in
             guard let self else { return }
 
-            Navigate.eventDetailsVC(
-                self,
-                event: event
-            )
+            self.navigateToDiscoverItem { sender in
+                Navigate.eventDetailsVC(
+                    sender,
+                    event: event
+                )
+            }
         }
 
         venuesView.onTapSeeAll = { [weak self] in
@@ -95,10 +103,12 @@ private extension DiscoverAllVC {
         venuesView.onTapVenue = { [weak self] venue in
             guard let self else { return }
 
-            Navigate.to.venueVC(
-                self,
-                venueDetails: venue
-            )
+            self.navigateToDiscoverItem { sender in
+                Navigate.to.premiumVenueVC(
+                    sender,
+                    venueDetails: venue
+                )
+            }
         }
 
         allEventsView.onTapSeeAll = { [weak self] in
@@ -113,12 +123,34 @@ private extension DiscoverAllVC {
         allEventsView.onTapEvent = { [weak self] event, _ in
             guard let self else { return }
 
-            Navigate.eventDetailsVC(
-                self,
-                event: event
-            )
+            self.navigateToDiscoverItem { sender in
+                Navigate.eventDetailsVC(
+                    sender,
+                    event: event
+                )
+            }
         }
 
+    }
+
+    func navigateToDiscoverItem(_ action: @escaping (DiscoverAllVC) -> Void) {
+        guard !isNavigatingToDiscoverItem,
+              presentedViewController == nil
+        else {
+            return
+        }
+
+        isNavigatingToDiscoverItem = true
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            action(self)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) { [weak self] in
+                self?.isNavigatingToDiscoverItem = false
+            }
+        }
     }
 
     func fetchInitialData() {

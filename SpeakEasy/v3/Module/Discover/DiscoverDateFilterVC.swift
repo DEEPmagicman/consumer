@@ -24,6 +24,7 @@ final class DiscoverDateFilterVC: UIViewController {
     private var isPaginating = false
     private var selectedCity = UserDefault.shared.activeCity
     private var loadID = 0
+    private var isNavigatingToEvent = false
 
     private let discoverService = DiscoverService()
     
@@ -34,6 +35,11 @@ final class DiscoverDateFilterVC: UIViewController {
         setupEventCollectionView()
 
         fetchEvents(reset: true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isNavigatingToEvent = false
     }
 
     func updateFilterDates(
@@ -160,6 +166,7 @@ final class DiscoverDateFilterVC: UIViewController {
             city: city.isEmpty ? UserDefault.shared.activeCity : city,
             skip: skip,
             timeWindow: selectedDateTimeWindow(),
+            eventListType: .eventsInCity,
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
 
@@ -269,6 +276,29 @@ final class DiscoverDateFilterVC: UIViewController {
         collectionView.collectionViewLayout.invalidateLayout()
 
         fetchEvents(reset: false)
+    }
+
+    private func navigateToEvent(_ event: Event) {
+        guard !isNavigatingToEvent,
+              presentedViewController == nil
+        else {
+            return
+        }
+
+        isNavigatingToEvent = true
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            Navigate.eventDetailsVC(
+                self,
+                event: event
+            )
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) { [weak self] in
+                self?.isNavigatingToEvent = false
+            }
+        }
     }
 }
 
@@ -403,10 +433,12 @@ UICollectionViewDelegateFlowLayout {
             return
         }
 
-        Navigate.eventDetailsVC(
-            self,
-            event: eventList[indexPath.item]
+        collectionView.deselectItem(
+            at: indexPath,
+            animated: true
         )
+
+        navigateToEvent(eventList[indexPath.item])
     }
 
     // MARK: - Pagination

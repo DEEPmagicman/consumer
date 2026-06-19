@@ -36,6 +36,8 @@ class CheckoutBarView: UIView {
         }
 
         containerView = view
+        backgroundColor = .clear
+        containerView.backgroundColor = .clear
 
         containerView.frame = bounds
         containerView.autoresizingMask = [

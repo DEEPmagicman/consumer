@@ -55,6 +55,11 @@ struct DiscoverEventTimeWindow {
     }
 }
 
+enum DiscoverEventListType: String {
+    case eventsTonight = "EVENTS_TONIGHT"
+    case eventsInCity = "EVENTS_IN_CITY"
+}
+
 final class DiscoverService {
 
     func fetchDiscover(
@@ -130,7 +135,8 @@ final class DiscoverService {
         city: String,
         skip: Int,
         take: Int = 10,
-        timeWindow: DiscoverEventTimeWindow,
+        timeWindow: DiscoverEventTimeWindow? = nil,
+        eventListType: DiscoverEventListType? = nil,
         isPremiumOnly: Bool? = nil,
         search: String? = nil,
         timeZone: String = TimeZone.current.identifier,
@@ -147,11 +153,15 @@ final class DiscoverService {
             "take": take
         ]
 
-        if let startDateTime = timeWindow.startDateTime {
+        if let eventListType {
+            params["eventListType"] = eventListType.rawValue
+        }
+
+        if let startDateTime = timeWindow?.startDateTime {
             params["startDateTime"] = startDateTime
         }
 
-        if let endDateTime = timeWindow.endDateTime {
+        if let endDateTime = timeWindow?.endDateTime {
             params["endDateTime"] = endDateTime
         }
 
@@ -365,14 +375,14 @@ private extension DiscoverService {
             venue["logo"] = normalizedMedia(logo)
         }
 
-//        if let attachments =
-//            venue["venueAttachment"] as? [[String: Any]] {
-//
-//            venue["venueAttachment"] =
-//            attachments.map { normalizedMedia($0) }
-//        } else if let logo = venue["logo"] as? [String: Any] {
-////            venue["venueAttachment"] = [normalizedMedia(logo)]
-//        }
+        if let attachments =
+            venue["venueAttachment"] as? [[String: Any]] {
+
+            venue["venueAttachment"] =
+            attachments.map { normalizedMedia($0) }
+        } else if let logo = venue["logo"] as? [String: Any] {
+//            venue["venueAttachment"] = [normalizedMedia(logo)]
+        }
 
         return venue
     }

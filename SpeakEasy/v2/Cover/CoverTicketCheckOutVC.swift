@@ -74,6 +74,8 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var appliedPromoCode = ""
     private var isFreeTicket = false
     private var isPaymentInitiated = false
+    private var isCancellingTransaction = false
+    private var wasInteractivePopGestureEnabled = true
     private var isFromApplePay = false
     
     private var isTermsAccepted = true
@@ -159,18 +161,15 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.addTarget(
-            self, action: #selector(handleBackSwipe)
-        )
+        wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled ?? true
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         imageParentView.playEntryAnimation()
         WebSocketWrapper.shared.delegate.append(self)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        navigationController?.interactivePopGestureRecognizer?.removeTarget(
-            self, action: #selector(handleBackSwipe)
-        )
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
 
@@ -658,7 +657,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     // MARK: - Actions
     @IBAction func onClickBackBtn(_ sender: Any) {
         guard !isPaymentInitiated else { return }
-        cancelBooking()
+        showCancelTransactionPrompt()
     }
     
     @IBAction func onClickTermsBtn(_ sender: UIButton) {
@@ -678,14 +677,11 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     }
 
     @objc private func handleBackSwipe() {
-        navigationController?.interactivePopGestureRecognizer?.removeTarget(
-            self, action: #selector(handleBackSwipe)
-        )
-        cancelBooking()
+        showCancelTransactionPrompt()
     }
 
     func onClickContinueToCheckout() {
-        guard !isPaymentInitiated else { return }
+        guard !isPaymentInitiated, !isCancellingTransaction else { return }
         if termsAndConditions.isHidden == false && !isTermsAccepted {
             Alert.showToast("Please accept Terms & Conditions")
             return
@@ -719,7 +715,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
                 self.checkOutBtnView.showLoader()
                 self.handleSuccessfulCardPayment()
             case .canceled:
-                self.resetPaymentInteractionAfterFailure()
+                self.handlePaymentCanceled()
             case .failed:
                 self.resetPaymentInteractionAfterFailure()
                 Alert.showToast("Payment failed. Please try again.")
@@ -1039,14 +1035,41 @@ extension CoverTicketCheckOutVC {
     }
 
     private func cancelBooking() {
+        guard !isCancellingTransaction else { return }
         countdownTimer?.invalidate()
+        isCancellingTransaction = true
+        setScreenInteractionBlocked(true)
+        Loader.show()
+
         guard !bookingId.isEmpty else {
+            Loader.hide()
+            isCancellingTransaction = false
+            setScreenInteractionBlocked(false)
             returnToCoverFlow(animated: false)
             return
         }
         PaymentPresenter.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
-            self?.returnToCoverFlow(animated: false)
+            DispatchQueue.main.async {
+                Loader.hide()
+                guard let self else { return }
+                self.isCancellingTransaction = false
+                self.setScreenInteractionBlocked(false)
+                self.returnToCoverFlow(animated: false)
+            }
         }
+    }
+
+    private func showCancelTransactionPrompt() {
+        guard !isPaymentInitiated, !isCancellingTransaction else { return }
+        presentTransactionCancelConfirmation { [weak self] in
+            self?.cancelBooking()
+        }
+    }
+
+    private func handlePaymentCanceled() {
+        resetPaymentInteractionAfterFailure()
+        Alert.showToast("Payment canceled.")
+        cancelBooking()
     }
 
     private func returnToCoverFlow(animated: Bool) {
@@ -1437,7 +1460,7 @@ extension CoverTicketCheckOutVC {
             Alert.showAlertSheet(style: .alert, title: "Payment failed", message: "")
         case .userCancellation:
             isFromApplePay = true
-            resetPaymentInteractionAfterFailure()
+            handlePaymentCanceled()
         }
     }
 }

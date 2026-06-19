@@ -27,6 +27,7 @@ class TicketSelectionViewController: UIViewController {
     @IBOutlet weak var totalTicketLbl: UILabel!
     @IBOutlet weak var extraFeesLbl: UILabel!
     @IBOutlet weak var backgroundContainerView: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
 
     var mode: TicketMode = .normal
     var event: Event?
@@ -42,6 +43,7 @@ class TicketSelectionViewController: UIViewController {
     private var disabledTicketIds: Set<String> = []
     private var isLoading = true
     private var isCheckoutInProgress = false
+    private let shimmerRowCount = 3
     private let posterHeaderView = EventPosterHeaderView()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
@@ -114,6 +116,7 @@ class TicketSelectionViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         setupPosterBackground()
+        updateScrollBottomInset()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -122,6 +125,7 @@ class TicketSelectionViewController: UIViewController {
     }
     
     private func setupPosterBackground() {
+        guard posterHeaderView.superview == nil else { return }
 
         backgroundContainerView.addSubview(posterHeaderView)
         posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,26 +142,145 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func setupTableViews() {
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.alwaysBounceVertical = true
+        if #available(iOS 11.0, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
+        removeScrollContentHeightConstraintIfNeeded()
+
         ticketTableView.delegate = self
         ticketTableView.dataSource = self
         ticketTableView.register(TicketsTVC.nib, forCellReuseIdentifier: TicketsTVC.identifier)
+        ticketTableView.register(
+            TicketSelectionShimmerCell.self,
+            forCellReuseIdentifier: TicketSelectionShimmerCell.identifier
+        )
+        ticketTableView.showsVerticalScrollIndicator = false
+        ticketTableView.showsHorizontalScrollIndicator = false
+        ticketTableView.isScrollEnabled = false
+        ticketTableView.alwaysBounceVertical = false
+        ticketTableView.contentInset = .zero
+        ticketTableView.scrollIndicatorInsets = .zero
+        ticketTableView.rowHeight = UITableView.automaticDimension
+        ticketTableView.estimatedRowHeight = 150
+        if #available(iOS 11.0, *) {
+            ticketTableView.contentInsetAdjustmentBehavior = .never
+        }
 
         groupTableView.delegate = self
         groupTableView.dataSource = self
+        groupTableView.showsVerticalScrollIndicator = false
+        groupTableView.showsHorizontalScrollIndicator = false
+        groupTableView.isScrollEnabled = false
+        groupTableView.alwaysBounceVertical = false
+        groupTableView.contentInset = .zero
+        groupTableView.scrollIndicatorInsets = .zero
+        groupTableView.rowHeight = UITableView.automaticDimension
+        groupTableView.estimatedRowHeight = 220
+        if #available(iOS 11.0, *) {
+            groupTableView.contentInsetAdjustmentBehavior = .never
+        }
         groupTableView.register(GroupTicketTVC.nib, forCellReuseIdentifier: GroupTicketTVC.identifier)
+
+        groupTableView.isHidden = true
+        groupTableViewHeight.constant = 0
+        ticketTableViewHeight.constant = 0
+    }
+
+    private func removeScrollContentHeightConstraintIfNeeded() {
+        guard let contentStackView = ticketTableView.superview else { return }
+
+        scrollView.constraints
+            .filter {
+                ($0.firstItem as? UIView) === contentStackView &&
+                ($0.secondItem as? UIView) === scrollView &&
+                $0.firstAttribute == .height &&
+                $0.secondAttribute == .height
+            }
+            .forEach { $0.isActive = false }
     }
 
     private func setupTableViewObservers() {
-        ticketListHeightObservation = ticketTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+        ticketListHeightObservation = ticketTableView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
             guard let self else { return }
-            self.ticketTableViewHeight.constant = self.ticketTableView.contentSize.height
-            self.ticketTableView.layoutIfNeeded()
+            self.updateTicketTableHeight()
         }
 
-        groupListHeightObservation = groupTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
+        groupListHeightObservation = groupTableView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
             guard let self else { return }
-            self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
-            self.groupTableView.layoutIfNeeded()
+            self.updateGroupTableHeightFromContent()
+        }
+    }
+
+    private func updateTicketTableHeight() {
+        ticketTableView.layoutIfNeeded()
+        let contentHeight = ceil(ticketTableView.contentSize.height)
+        ticketTableViewHeight.constant = isLoading
+            ? max(contentHeight, CGFloat(shimmerRowCount) * 150)
+            : contentHeight
+        ticketTableView.contentOffset = .zero
+        updateScrollBottomInset()
+    }
+
+    private func updateGroupTableHeightFromContent() {
+        groupTableView.layoutIfNeeded()
+        groupTableViewHeight.constant = groupTableView.isHidden
+            ? 0
+            : ceil(groupTableView.contentSize.height)
+        groupTableView.contentOffset = .zero
+        updateScrollBottomInset()
+    }
+
+    private func resetTicketScrollPosition() {
+        scrollView.setContentOffset(
+            CGPoint(x: -scrollView.contentInset.left, y: -scrollView.contentInset.top),
+            animated: false
+        )
+        ticketTableView.contentOffset = .zero
+        groupTableView.contentOffset = .zero
+    }
+
+    private func updateScrollBottomInset(checkoutVisible: Bool? = nil) {
+        let visible = checkoutVisible ?? (!continueToCheckOutView.isHidden || continueToCheckOutView.alpha > 0.01)
+        let baselineInset: CGFloat = 18
+        var bottomInset = baselineInset
+
+        if visible {
+            let scrollFrame = scrollView.convert(scrollView.bounds, to: view)
+            let checkoutFrame = continueToCheckOutView.convert(continueToCheckOutView.bounds, to: view)
+            let overlap = max(0, scrollFrame.maxY - checkoutFrame.minY)
+            bottomInset = max(baselineInset + 10, overlap + baselineInset)
+        }
+
+        guard abs(scrollView.contentInset.bottom - bottomInset) > 0.5 else {
+            clampScrollOffsetIfNeeded()
+            return
+        }
+
+        scrollView.contentInset.bottom = bottomInset
+        scrollView.scrollIndicatorInsets.bottom = bottomInset
+        clampScrollOffsetIfNeeded()
+    }
+
+    private func clampScrollOffsetIfNeeded() {
+        let minOffsetY = -scrollView.contentInset.top
+        let maxOffsetY = max(
+            minOffsetY,
+            scrollView.contentSize.height + scrollView.contentInset.bottom - scrollView.bounds.height
+        )
+
+        if scrollView.contentOffset.y > maxOffsetY {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: maxOffsetY),
+                animated: false
+            )
+        } else if scrollView.contentOffset.y < minOffsetY {
+            scrollView.setContentOffset(
+                CGPoint(x: scrollView.contentOffset.x, y: minOffsetY),
+                animated: false
+            )
         }
     }
 
@@ -279,7 +402,18 @@ class TicketSelectionViewController: UIViewController {
     }
 
     private func setupData() {
-        guard let event = event else { return }
+        guard let event = event else {
+            isLoading = false
+            tickets.removeAll()
+            normalTickets.removeAll()
+            addOnTickets.removeAll()
+            groupedNormalTickets.removeAll()
+            ticketTableView.reloadData()
+            groupTableView.reloadData()
+            updateTicketTableHeight()
+            updateGroupTableHeight()
+            return
+        }
 
         venueName.text = venueDetails?.name ?? ""
         eventTitleLbl.text = event.title
@@ -296,7 +430,9 @@ class TicketSelectionViewController: UIViewController {
 
         groupTableView.reloadData()
         ticketTableView.reloadData()
+        updateTicketTableHeight()
         updateGroupTableHeight()
+        resetTicketScrollPosition()
 
 //        let protectedVisible = filterAvailableTickets(event.protectedEventTicket ?? [])
 //        protectedTicketView.isHidden = protectedVisible.isEmpty
@@ -344,6 +480,8 @@ class TicketSelectionViewController: UIViewController {
     private func getTicketLinksAndSetup() {
         isLoading = true
         ticketTableView.reloadData()
+        updateTicketTableHeight()
+        resetTicketScrollPosition()
 
         guard let eventId = event?.uniqueId else {
             isLoading = false
@@ -382,7 +520,10 @@ class TicketSelectionViewController: UIViewController {
 
         groupTableView.reloadData()
 
+        updateTicketTableHeight()
         updateGroupTableHeight()
+        updateScrollBottomInset()
+        resetTicketScrollPosition()
     }
 
     private func switchToAddOnMode() {
@@ -404,6 +545,10 @@ class TicketSelectionViewController: UIViewController {
         updateCheckoutSummary()
 
         ticketTableView.reloadData()
+        updateTicketTableHeight()
+        updateGroupTableHeightFromContent()
+        updateScrollBottomInset()
+        resetTicketScrollPosition()
     }
 
     private func makeGroupedTickets(from list: [EventTicket]) -> (nonGrouped: [EventTicket], grouped: [(groupName: String, tickets: [EventTicket])]) {
@@ -440,8 +585,9 @@ class TicketSelectionViewController: UIViewController {
     private func updateGroupTableHeight() {
         groupTableView.reloadData()
         groupTableView.layoutIfNeeded()
-        groupTableViewHeight.constant = groupTableView.contentSize.height
+        updateGroupTableHeightFromContent()
         view.layoutIfNeeded()
+        updateScrollBottomInset()
     }
 
     private func updateGroupTableLayout() {
@@ -449,8 +595,9 @@ class TicketSelectionViewController: UIViewController {
         groupTableView.reloadData()
         groupTableView.endUpdates()
         groupTableView.layoutIfNeeded()
-        groupTableViewHeight.constant = groupTableView.contentSize.height
+        updateGroupTableHeightFromContent()
         view.layoutIfNeeded()
+        updateScrollBottomInset()
     }
 
     private func buildTicketsPayload(from selected: [EventTicket]) -> [[String: Any]] {
@@ -621,6 +768,7 @@ class TicketSelectionViewController: UIViewController {
         }
 
         ticketTableView.reloadData()
+        updateTicketTableHeight()
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
@@ -732,7 +880,7 @@ class TicketSelectionViewController: UIViewController {
 
         tickets[index].selectedTicketCount = nextCount
         replaceTicketInCurrentMode(tickets[index])
-        ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        reloadTicketRowIfNeeded(index)
         updateContinueBtnState()
         updateContinueButtonForMode()
         updateCheckoutSummary()
@@ -751,10 +899,31 @@ class TicketSelectionViewController: UIViewController {
 
         tickets[index].selectedTicketCount = nextCount > 0 ? nextCount : nil
         replaceTicketInCurrentMode(tickets[index])
-        ticketTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        reloadTicketRowIfNeeded(index)
         updateContinueBtnState()
         updateContinueButtonForMode()
         updateCheckoutSummary()
+    }
+
+    private func reloadTicketRowIfNeeded(_ index: Int) {
+        guard !isLoading,
+              tickets.indices.contains(index),
+              ticketTableView.numberOfRows(inSection: 0) > index
+        else {
+            UIView.performWithoutAnimation {
+                ticketTableView.reloadData()
+                updateTicketTableHeight()
+            }
+            return
+        }
+
+        UIView.performWithoutAnimation {
+            ticketTableView.reloadRows(
+                at: [IndexPath(row: index, section: 0)],
+                with: .none
+            )
+            updateTicketTableHeight()
+        }
     }
 
     private func handleRSVP(ticket: EventTicket, cell: TicketsTVC) {
@@ -785,11 +954,12 @@ class TicketSelectionViewController: UIViewController {
 
         if addOnTickets.isEmpty {
             setCheckoutInProgress(true)
-            Navigate.to.ticketCheckoutVC(
+            Navigate.orderListVC(
                 self,
                 event: event,
                 selectedTickets: selectedNormalTickets,
-                bookingId: nil
+                bookingId: nil,
+                paymentMethod: nil
             )
         } else {
             switchToAddOnMode()
@@ -888,11 +1058,12 @@ class TicketSelectionViewController: UIViewController {
 
             if addOnTickets.isEmpty {
                 setCheckoutInProgress(true)
-                Navigate.to.ticketCheckoutVC(
+                Navigate.orderListVC(
                     self,
                     event: event,
                     selectedTickets: selectedNormalTickets,
-                    bookingId: nil
+                    bookingId: nil,
+                    paymentMethod: nil
                 )
             } else {
                 switchToAddOnMode()
@@ -928,17 +1099,28 @@ class TicketSelectionViewController: UIViewController {
 
         guard continueToCheckOutView.isHidden == shouldShow else { return }
 
-        let hiddenBottom: CGFloat = -continueToCheckOutView.bounds.height - 24
         let shownBottom: CGFloat = 32
 
         continueToCheckOutView.isHidden = false
+        continueButtonBottomConstraint.constant = shownBottom
+        continueToCheckOutView.transform = shouldShow
+        ? CGAffineTransform(translationX: 0, y: 40)
+        : .identity
+        updateScrollBottomInset(checkoutVisible: shouldShow)
 
-        UIView.animate(withDuration: 0.25) {
-            self.continueButtonBottomConstraint.constant = shouldShow ? shownBottom : hiddenBottom
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0,
+            options: [.curveEaseOut, .allowUserInteraction]
+        ) {
             self.continueToCheckOutView.alpha = shouldShow ? 1 : 0
-            self.view.layoutIfNeeded()
+            self.continueToCheckOutView.transform = shouldShow
+            ? .identity
+            : CGAffineTransform(translationX: 0, y: 40)
         } completion: { _ in
             self.continueToCheckOutView.isHidden = !shouldShow
+            self.continueToCheckOutView.transform = .identity
+            self.updateScrollBottomInset(checkoutVisible: shouldShow)
         }
     }
 }
@@ -947,7 +1129,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView == ticketTableView {
-            return isLoading ? 4 : tickets.count
+            return isLoading ? shimmerRowCount : tickets.count
         } else if tableView == groupTableView {
             return groupedNormalTickets.count
         }
@@ -962,14 +1144,25 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     private func ticketCell(for indexPath: IndexPath, in tableView: UITableView) -> UITableViewCell {
+        if isLoading {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: TicketSelectionShimmerCell.identifier,
+                for: indexPath
+            ) as? TicketSelectionShimmerCell else {
+                return UITableViewCell()
+            }
+
+            cell.startShimmer()
+            return cell
+        }
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TicketsTVC.identifier, for: indexPath) as? TicketsTVC else {
             return UITableViewCell()
         }
 
         cell.selectionStyle = .none
 
-        if isLoading {
-            cell.showShimmer()
+        guard tickets.indices.contains(indexPath.row) else {
             return cell
         }
 
@@ -1009,6 +1202,10 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             return UITableViewCell()
         }
 
+        guard groupedNormalTickets.indices.contains(indexPath.row) else {
+            return cell
+        }
+
         let item = groupedNormalTickets[indexPath.row]
         let currency = venueDetails?.venueSettings?.currencySymbol ?? "$"
 
@@ -1038,7 +1235,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
             self.groupTableView.beginUpdates()
             self.groupTableView.endUpdates()
             self.groupTableView.layoutIfNeeded()
-            self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+            self.updateGroupTableHeightFromContent()
         }
 
         cell.onHeightChanged = { [weak self] in
@@ -1053,7 +1250,7 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
                 initialSpringVelocity: 0.2,
                 options: [.curveEaseInOut, .allowUserInteraction]
             ) {
-                self.groupTableViewHeight.constant = self.groupTableView.contentSize.height
+                self.updateGroupTableHeightFromContent()
                 self.view.layoutIfNeeded()
             }
         }
@@ -1063,6 +1260,8 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard tableView == ticketTableView else { return }
+        guard !isLoading else { return }
+        guard tickets.indices.contains(indexPath.row) else { return }
 
         let ticket = tickets[indexPath.row]
 
@@ -1083,5 +1282,111 @@ extension TicketSelectionViewController: UITableViewDelegate, UITableViewDataSou
         let price = ticket.price ?? 0
         let extraFees = ticket.extraFees ?? 0
         return price == 0 && extraFees == 0
+    }
+}
+
+private final class TicketSelectionShimmerCell: UITableViewCell {
+
+    private let cardView = UIView()
+    private let titleLine = ShimmerViewV3()
+    private let priceLine = ShimmerViewV3()
+    private let feeLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let actionView = ShimmerViewV3(frame: .zero, lighter: true)
+
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            titleLine,
+            priceLine,
+            feeLine,
+            actionView
+        ]
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        startShimmer()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+
+        if newWindow == nil {
+            stopShimmer()
+        } else {
+            startShimmer()
+        }
+    }
+
+    func startShimmer() {
+        shimmerViews.forEach { $0.startShimmer() }
+    }
+
+    private func stopShimmer() {
+        shimmerViews.forEach { $0.stopShimmer() }
+    }
+
+    private func setupUI() {
+        selectionStyle = .none
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.backgroundColor = UIColor(hex: "#6D6D6D", alpha: 0.18)
+        cardView.layer.cornerRadius = 10
+        cardView.layer.borderWidth = 1
+        cardView.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
+        cardView.clipsToBounds = true
+
+        contentView.addSubview(cardView)
+
+        shimmerViews.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            cardView.addSubview($0)
+            $0.startShimmer()
+        }
+
+        titleLine.layer.cornerRadius = 6
+        priceLine.layer.cornerRadius = 6
+        feeLine.layer.cornerRadius = 5
+        actionView.layer.cornerRadius = 16
+
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            cardView.heightAnchor.constraint(equalToConstant: 113),
+
+            titleLine.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 20),
+            titleLine.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 18),
+            titleLine.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.48),
+            titleLine.heightAnchor.constraint(equalToConstant: 18),
+
+            priceLine.leadingAnchor.constraint(equalTo: titleLine.leadingAnchor),
+            priceLine.bottomAnchor.constraint(equalTo: feeLine.topAnchor, constant: -5),
+            priceLine.widthAnchor.constraint(equalToConstant: 84),
+            priceLine.heightAnchor.constraint(equalToConstant: 24),
+
+            feeLine.topAnchor.constraint(equalTo: priceLine.bottomAnchor, constant: 12),
+            feeLine.leadingAnchor.constraint(equalTo: priceLine.leadingAnchor),
+            feeLine.widthAnchor.constraint(equalToConstant: 82),
+            feeLine.heightAnchor.constraint(equalToConstant: 13),
+            feeLine.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16),
+
+            actionView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -20),
+            actionView.centerYAnchor.constraint(equalTo: priceLine.centerYAnchor),
+            actionView.widthAnchor.constraint(equalToConstant: 58),
+            actionView.heightAnchor.constraint(equalToConstant: 38)
+        ])
     }
 }
