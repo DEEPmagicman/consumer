@@ -516,6 +516,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             cell.ticketTypeLbl.text = ticket?.customName ?? "" == "" ? ticket?.name : ticket?.customName
             cell.infoLbl.text = ticket?.description
             cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
+            let currencySymbol = venueDetails?.venueSettings?.currencySymbol
+            let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+            
             if ticket?.price ?? 0 < 2 && ticket?.name.lowercased().contains("general") == true {
                 cell.ticketPriceLbl.text = "FREE"
             } else if ticket?.isCustom == true && ticket?.price ?? 0 == 0 {
@@ -523,18 +526,36 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
             } else {
                 if venueDetails?.venueSettings?.coverTicketSettings?.isUpFront == true {
                     if venueDetails?.modifiedCoverTicket[indexPath.row].isCustom == true {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = CurrencyFormatter.amount(
+                            Double(ticket?.price ?? 0),
+                            symbol: currencySymbol,
+                            position: currencyPosition
+                        )
                     } else {
-                        cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true))"
+                        cell.ticketPriceLbl.text = CurrencyFormatter.amount(
+                            Double(venueDetails?.modifiedCoverTicket[indexPath.row].price ?? 0),
+                            symbol: currencySymbol,
+                            position: currencyPosition
+                        )
                     }
                 } else {
-                    cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(ticket?.price ?? 0).decimalFormat(true))"
+                    cell.ticketPriceLbl.text = CurrencyFormatter.amount(
+                        Double(ticket?.price ?? 0),
+                        symbol: currencySymbol,
+                        position: currencyPosition
+                    )
                 }
                 cell.plusBtn.isUserInteractionEnabled = true
             }
             if ticket?.extraFees ?? 0 > 0 {
                 cell.lblExtraFeesValue.isHidden = false
-                cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((ticket?.extraFees ?? 0).decimalFormat(true)) in fees)"
+                let fees = CurrencyFormatter.amount(
+                    ticket?.extraFees ?? 0,
+                    symbol: currencySymbol,
+                    position: currencyPosition
+                )
+
+                cell.lblExtraFeesValue.text = "(Incl. \(fees) in fees)"
             } else {
                 cell.lblExtraFeesValue.isHidden = true
             }
@@ -588,7 +609,9 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
                     cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
+                    let currencySymbol = venueDetails?.venueSettings?.currencySymbol
+                    let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+                    cell.ticketCountLbl.text = "\(CurrencyFormatter.amount(Double(event.lowestPriceTicket?.price ?? 0), symbol: currencySymbol, position: currencyPosition))+"
                 }
                 cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
             }
@@ -614,7 +637,10 @@ extension MVPVenueDetailVc: UITableViewDataSource, UITableViewDelegate {
                 if event.lowestPriceTicket?.price ?? 0 == 0 {
                     cell.ticketCountLbl.text = "FREE"
                 } else {
-                    cell.ticketCountLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event.lowestPriceTicket?.price ?? 0).decimalFormat(true))+"
+                    let currencySymbol = venueDetails?.venueSettings?.currencySymbol
+                    let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+                    
+                    cell.ticketCountLbl.text = "\(CurrencyFormatter.amount(Double(event.lowestPriceTicket?.price ?? 0), symbol: currencySymbol, position: currencyPosition))+"
                 }
                 cell.blurView.backgroundColor  = UIColor(red: 0.96, green: 0.51, blue: 1, alpha: 0.75)
             }

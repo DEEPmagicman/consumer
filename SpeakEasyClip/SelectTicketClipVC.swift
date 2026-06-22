@@ -540,7 +540,15 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TicketTypeTVC", for: indexPath) as! TicketTypeTVC
         cell.ticketTypeLbl.text = self.venueDetail?.coverTicket?[indexPath.row].customName ?? "" == "" ? venueDetail?.coverTicket?[indexPath.row].displayName : venueDetail?.coverTicket?[indexPath.row].displayCustomName
         cell.infoLbl.text = self.venueDetail?.coverTicket?[indexPath.row].displayDescription
-        cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Double(self.venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true))"
+        
+        let currencySymbol = venueDetail?.venueSettings?.currencySymbol
+        let currencyPosition = venueDetail?.venueSettings?.currencyPosition
+        
+        cell.ticketPriceLbl.text = CurrencyFormatter.amount(
+            Double(self.venueDetail?.coverTicket?[indexPath.row].price ?? 0),
+            symbol: currencySymbol,
+            position: currencyPosition
+        )
         cell.plusBtn.alpha = isMaxTicketReached ? 0.5 : 1
         cell.plusBtn.isUserInteractionEnabled = isMaxTicketReached ? false : true
         if venueDetail?.coverTicket?[indexPath.row].price ?? 0 < 2 && venueDetail?.coverTicket?[indexPath.row].name.lowercased().contains("general") == true {
@@ -551,15 +559,27 @@ extension SelectTicketClipVC: UITableViewDelegate, UITableViewDataSource {
             if venueDetail?.venueSettings?.coverTicketSettings?.isUpFront == true {
                 let price = venueDetail?.modifiedCoverTicket[indexPath.row].isCustom == true ? Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true) : Double(venueDetail?.modifiedCoverTicket[indexPath.row].price ?? 0).decimalFormat(true)
                 let dPrice = price.components(separatedBy: ".")[1]
-                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price)"
+                
+                let formattedAmount = Int(dPrice) == 0 ? "\(Int(price.components(separatedBy: ".")[0]) ?? 0)" : price
+
+                switch CurrencyPosition(rawValue: currencyPosition?.lowercased() ?? "prefix") {
+                case .suffix:
+                    cell.ticketPriceLbl.text = "\(formattedAmount)\(currencySymbol ?? "$")"
+                case .prefix, .none:
+                    cell.ticketPriceLbl.text = "\(currencySymbol ?? "$")\(formattedAmount)"
+                }
             } else {
-                let price = Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0).decimalFormat(true)
-                cell.ticketPriceLbl.text = "\(venueDetail?.venueSettings?.currencySymbol ?? "$")\(price)"
+                cell.ticketPriceLbl.text =  CurrencyFormatter.amount(
+                    Double(venueDetail?.coverTicket?[indexPath.row].price ?? 0),
+                    symbol: currencySymbol,
+                    position: currencyPosition
+                )
             }
         }
         if venueDetail?.coverTicket?[indexPath.row].extraFees ?? 0 > 0 {
             cell.lblExtraFeesValue.isHidden = false
-            cell.lblExtraFeesValue.text = "(Incl. \(venueDetail?.venueSettings?.currencySymbol ?? "$")\((venueDetail?.coverTicket?[indexPath.row].extraFees ?? 0).decimalFormat(true)) in fees)"
+            
+            cell.lblExtraFeesValue.text = "(Incl. \(CurrencyFormatter.amount(venueDetail?.coverTicket?[indexPath.row].extraFees ?? 0, symbol: currencySymbol, position: currencyPosition)) in fees)"
         } else {
             cell.lblExtraFeesValue.isHidden = true
         }

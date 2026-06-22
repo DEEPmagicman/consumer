@@ -269,11 +269,19 @@ final class ShowQRCodeVC: UIViewController {
         }
     }
     
+    private func formatCurrency(_ amount: Double) -> String {
+        CurrencyFormatter.amount(
+            amount,
+            symbol: booking?.venueObject?.venueSettings?.currencySymbol,
+            position: booking?.venueObject?.venueSettings?.currencyPosition
+        )
+    }
+    
     private func setFeeData() {
         totalAmount.text = "-"
         switch booking?.bookingType ?? "" {
         case "FREE_EVENT_TICKET", "FREE_APPCLIP":
-            totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
+            totalAmount.text = formatCurrency(booking?.fees?.total ?? 0)
         case "EVENT":
             if booking?.bookingDetails?.eventTicketSettings?.isUpFront ?? false == false {
                 processingFeeView.isHidden = (booking?.fees?.processingFee ?? 0 == 0 || booking?.bookingDetails?.eventTicketSettings?.isProcessingFeePassToCustomer == false) ? true : false
@@ -309,15 +317,15 @@ final class ShowQRCodeVC: UIViewController {
             break
         }
         
-        subTotalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.subTotal ?? 0).decimalFormat(true))"
-        salesTaxAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.salesTax ?? 0).decimalFormat(true))"
+        subTotalAmount.text = formatCurrency(booking?.fees?.subTotal ?? 0)
+        salesTaxAmount.text = formatCurrency(booking?.fees?.salesTax ?? 0)
         salesTaxName.text = booking?.fees?.salesTaxName ?? "" == "" ? "Sales Tax" : booking?.fees?.salesTaxName
-        processingFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.processingFee ?? 0).decimalFormat(true))"
-        customFeeAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.customFee ?? 0).decimalFormat(true))"
+        processingFeeAmount.text = formatCurrency(booking?.fees?.processingFee ?? 0)
+        customFeeAmount.text = formatCurrency(booking?.fees?.customFee ?? 0)
         customFeeName.text = booking?.fees?.customFeeName ?? "Custom Fee"
-        discountAmount.text = "-\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.discount ?? 0).decimalFormat(true))"
+        discountAmount.text = "-\(formatCurrency(booking?.fees?.discount ?? 0))"
         noFeeView.isHidden = !(subTotalView.isHidden && salesTaxView.isHidden && processingFeeView.isHidden && customFeeView.isHidden)
-        totalAmount.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\((booking?.fees?.total ?? 0).decimalFormat(true))"
+        totalAmount.text = formatCurrency(booking?.fees?.total ?? 0)
     }
     
     @IBAction func onClickClose(_ sender: Any) {

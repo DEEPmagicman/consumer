@@ -635,10 +635,12 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         
         switch type {
         case .singleTickedEvent:
-            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
-            totalPrice = paymentDetail?.total ?? 0
-            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
-            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
+            let currencySymbol = venue?.venueSettings?.currencySymbol
+            let currencyPosition = venue?.venueSettings?.currencyPosition
+            
+            totalPriceLbl.text = CurrencyFormatter.amount((paymentDetail?.total ?? 0), symbol: currencySymbol, position: currencyPosition)
+            subTotalAmount.text = CurrencyFormatter.amount((paymentDetail?.subTotal ?? 0), symbol: currencySymbol, position: currencyPosition)
+            processingFeeAmount.text = CurrencyFormatter.amount((paymentDetail?.processingFee ?? 0), symbol: currencySymbol, position: currencyPosition)
 //            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
             if paymentDetail?.customFee ?? 0 == 0 {
                 customFeesView.isHidden = true
@@ -652,7 +654,7 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
                 discountView.isHidden = true
             } else {
                 discountView.isHidden = false
-                discountAmount.text = "-\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.discount ?? 0).decimalFormat(true))"
+                discountAmount.text = "-\(CurrencyFormatter.amount((paymentDetail?.discount ?? 0), symbol: currencySymbol, position: currencyPosition))"
             }
             subTotalView.isHidden = false
             processingFeesView.isHidden = event?.eventTicketSettings?.isProcessingFeePassToCustomer == true ? false : true
@@ -699,12 +701,18 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
             self.customFeesTableView.setNeedsLayout()
             self.customFeesTableView.reloadData()
 //            salesTaxPr.text = "(\(venue?.venueSettings?.coverTicketFeesSettings?.salesTax ?? 0.0)%)"
-            processingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.processingFee ?? 0).decimalFormat(true))"
-            totalPriceLbl.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.total ?? 0).decimalFormat(true))"
+            let currencySymbol = venue?.venueSettings?.currencySymbol
+            let currencyPosition = venue?.venueSettings?.currencyPosition
+            
+            processingFeeAmount.text = CurrencyFormatter.amount((paymentDetail?.processingFee ?? 0), symbol: currencySymbol, position: currencyPosition)
+
+            totalPriceLbl.text = CurrencyFormatter.amount((paymentDetail?.total ?? 0), symbol: currencySymbol, position: currencyPosition)
+
             totalPrice = ((paymentDetail?.total ?? 0) + (addOnsPaymentDetails?.total ?? 0))
-            mainTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((totalPrice).decimalFormat(true))"
+            mainTotalAmount.text = CurrencyFormatter.amount(totalPrice, symbol: currencySymbol, position: currencyPosition)
 //            salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.salesTax ?? 0).decimalFormat(true))"
-            subTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((paymentDetail?.subTotal ?? 0).decimalFormat(true))"
+            subTotalAmount.text = CurrencyFormatter.amount((paymentDetail?.subTotal ?? 0), symbol: currencySymbol, position: currencyPosition)
+
 //            salesTaxName.text = paymentDetail?.salesTaxName ?? "" == "" ? "Sales Tax" : paymentDetail?.salesTaxName
             if bookingType == .FREE {
                 subTotalView.isHidden = true
@@ -734,12 +742,20 @@ final class CheckOutVC: UIViewController, ApplePayContextDelegate {
         addOnsCustomFeesView.isHidden = !setAddOnsCustomTaxView
         addOnsNoFeeView.isHidden = !addOnsSubTotalView.isHidden
         
-        addOnsCustomFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.customFee ?? 0).decimalFormat(true))"
-        addOnsProcessingFeeAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.processingFee ?? 0).decimalFormat(true))"
-        addOnsTotal.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.total ?? 0).decimalFormat(true))"
+        let currencySymbol = venue?.venueSettings?.currencySymbol
+        let currencyPosition = venue?.venueSettings?.currencyPosition
+        
+        addOnsCustomFeeAmount.text = CurrencyFormatter.amount((addOnsPaymentDetails?.customFee ?? 0), symbol: currencySymbol, position: currencyPosition)
+
+        addOnsProcessingFeeAmount.text = CurrencyFormatter.amount((addOnsPaymentDetails?.processingFee ?? 0), symbol: currencySymbol, position: currencyPosition)
+
+        addOnsTotal.text = CurrencyFormatter.amount((addOnsPaymentDetails?.total ?? 0), symbol: currencySymbol, position: currencyPosition)
+
 //        totalPrice = addOnsPaymentDetails?.total ?? 0
-        addOnsSalesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.salesTax ?? 0).decimalFormat(true))"
-        addOnsSubTotalAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((addOnsPaymentDetails?.subTotal ?? 0).decimalFormat(true))"
+        addOnsSalesTaxAmount.text = CurrencyFormatter.amount((addOnsPaymentDetails?.salesTax ?? 0), symbol: currencySymbol, position: currencyPosition)
+
+        addOnsSubTotalAmount.text = CurrencyFormatter.amount((addOnsPaymentDetails?.subTotal ?? 0), symbol: currencySymbol, position: currencyPosition)
+
         addOnsCustomFeeNameLbl.text = addOnsPaymentDetails?.customFeeName ?? "Custom fee"
         addOnsSalesTaxName.text = addOnsPaymentDetails?.salesTaxName ?? "" == "" ? "Sales Tax" : addOnsPaymentDetails?.salesTaxName
     }
@@ -1070,13 +1086,19 @@ extension CheckOutVC: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomFeeTVC", for: indexPath) as! CustomFeeTVC
             let customFee = self.paymentDetail?.customFees?[indexPath.row]
             cell.lblFeeName.text = customFee?.name ?? "Custom fee"
-            cell.lblFeeValue.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((customFee?.fee ?? 0).decimalFormat(true))"
+            let currencySymbol = venue?.venueSettings?.currencySymbol
+            let currencyPosition = venue?.venueSettings?.currencyPosition
+
+            cell.lblFeeValue.text =  CurrencyFormatter.amount((customFee?.fee ?? 0), symbol: currencySymbol, position: currencyPosition)
             return cell
         } else if tableView == salesTaxTableView {
             let cell = tableView.dequeueReusableCell(withIdentifier: "SalesTaxTVC", for: indexPath) as! SalesTaxTVC
                 let tax = salesTaxList[indexPath.row]
             cell.salesTaxName.text = tax.salesTaxName ?? "Sales Tax"
-            cell.salesTaxAmount.text = "\(venue?.venueSettings?.currencySymbol ?? "$")\((tax.salesTax ?? 0).decimalFormat(true))"
+            let currencySymbol = venue?.venueSettings?.currencySymbol
+            let currencyPosition = venue?.venueSettings?.currencyPosition
+
+            cell.salesTaxAmount.text = CurrencyFormatter.amount((tax.salesTax ?? 0), symbol: currencySymbol, position: currencyPosition)
                 cell.salesTaxPr.text = ""
                 cell.selectionStyle = .none
                 return cell

@@ -28,7 +28,9 @@ final class PaymentDetailVC: UIViewController {
             getBooking(id: booking?.id ?? "")
         }
         setUpData()
-        totalPriceLbl.text = "\(booking?.venueObject?.venueSettings?.currencySymbol ?? "$")\(booking?.fees?.total ?? 0)"
+        let currencySymbole = booking?.venueObject?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = booking?.venueObject?.venueSettings?.currencyPosition
+        totalPriceLbl.text = CurrencyFormatter.amount(booking?.fees?.total ?? 0, symbol: currencySymbole, position: currencyPosition)
         ticketListTableView.register(UINib(nibName: "TicketDetailTVC", bundle: nil), forCellReuseIdentifier: "TicketDetailTVC")
         ticketListHeightObservation = ticketListTableView.observe(\.contentSize, options: []) { [weak self] _, _ in
             guard let self = self else { return }

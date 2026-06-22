@@ -350,3 +350,28 @@ extension String {
         }
     }
 }
+
+enum CurrencyPosition: String {
+    case prefix
+    case suffix
+}
+
+struct CurrencyFormatter {
+
+    static func amount(
+        _ value: Double,
+        symbol: String?,
+        position: String?
+    ) -> String {
+
+        let currencySymbol = symbol ?? "$"
+        let formattedAmount = value.decimalFormat(true)
+
+        switch CurrencyPosition(rawValue: position?.lowercased() ?? "prefix") {
+        case .suffix:
+            return "\(formattedAmount)\(currencySymbol)"
+        case .prefix, .none:
+            return "\(currencySymbol)\(formattedAmount)"
+        }
+    }
+}

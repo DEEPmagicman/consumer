@@ -198,7 +198,10 @@ final class EventDetailVC: UIViewController {
                 isNotSellingStage = true
                 updateContinueBtn()
             } else {
-                continueBtn.setTitle("BUY NOW - STARTING AT \(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(event?.lowestPriceTicket?.price ?? 0).decimalFormat(true))", for: .normal)
+                let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+                let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+                
+                continueBtn.setTitle("BUY NOW - STARTING AT \(CurrencyFormatter.amount(Double(event?.lowestPriceTicket?.price ?? 0), symbol: currencySymbole, position: currencyPosition))", for: .normal)
                 isNotSellingStage = false
                 updateContinueBtn(forceRemove: true)
             }
@@ -526,7 +529,10 @@ extension EventDetailVC: UITableViewDelegate, UITableViewDataSource {
                 cell.plusBtn.alpha = 0.5
                 cell.plusBtn.isUserInteractionEnabled = false
             } else {
-                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
+                let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+                let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+                
+                cell.ticketPriceLbl.text = CurrencyFormatter.amount(Double(activeTickets?[indexPath.row].price ?? 0), symbol: currencySymbole, position: currencyPosition)
                 
 //                cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\(event?.eventTicketSettings?.isUpFront == true ? (activeTickets?[indexPath.row].priceWithFees ?? 0).decimalFormat(true) : Double(activeTickets?[indexPath.row].price ?? 0).decimalFormat(true))"
                 

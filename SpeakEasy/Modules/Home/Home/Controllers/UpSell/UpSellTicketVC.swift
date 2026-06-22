@@ -216,10 +216,14 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ticketTypeTableViewCell", for: indexPath) as! ticketTypeTableViewCell
         cell.ticketTypeLbl.text = upSellTicket[indexPath.row].addOns?.name ?? ""
         cell.infoLbl.text = upSellTicket[indexPath.row].addOns?.description ?? ""
+        
+        let currencySymbole = venueDetails?.venueSettings?.currencySymbol ?? "$"
+        let currencyPosition = venueDetails?.venueSettings?.currencyPosition
+        
         if venueDetails?.venueSettings?.addOnsBookingSettings?.isUpFront == true {
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((modifiedUpSellTicket[indexPath.row].price).decimalFormat(true))"
+            cell.ticketPriceLbl.text = CurrencyFormatter.amount((modifiedUpSellTicket[indexPath.row].price), symbol: currencySymbole, position: currencyPosition)
         } else {
-            cell.ticketPriceLbl.text = "\(venueDetails?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].price).decimalFormat(true))"
+            cell.ticketPriceLbl.text = CurrencyFormatter.amount((upSellTicket[indexPath.row].price), symbol: currencySymbole, position: currencyPosition)
         }
         cell.ticketPlusMinusView.isHidden = !(upSellTicket[indexPath.row].selectedQuantity ?? 0 > 0)
         if let quantity = upSellTicket[indexPath.row].selectedQuantity {
@@ -227,7 +231,7 @@ extension UpSellTicketVC: UITableViewDataSource, UITableViewDelegate {
         }
         if upSellTicket[indexPath.row].extraFees ?? 0 > 0 {
             cell.lblExtraFeesValue.isHidden = false
-            cell.lblExtraFeesValue.text = "(Incl. \(venueDetails?.venueSettings?.currencySymbol ?? "$")\((upSellTicket[indexPath.row].extraFees ?? 0).decimalFormat(true)) in fees)"
+            cell.lblExtraFeesValue.text = "(Incl. \(CurrencyFormatter.amount((upSellTicket[indexPath.row].extraFees ?? 0), symbol: currencySymbole, position: currencyPosition)) in fees)"
         } else {
             cell.lblExtraFeesValue.isHidden = true
         }
