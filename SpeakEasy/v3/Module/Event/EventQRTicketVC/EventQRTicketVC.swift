@@ -12,7 +12,8 @@ class EventQRTicketVC: UIViewController {
     @IBOutlet weak var fandQtableViewHeight: NSLayoutConstraint!
     @IBOutlet weak var fAndQDropDownImage: UIImageView!
     @IBOutlet weak var fandQtableHiddenView: UIView!
-
+    @IBOutlet weak var eventTitle: UILabel!
+    
     // MARK: - Data
     var tickets: [EventTicketQR] = []
 
@@ -34,18 +35,10 @@ class EventQRTicketVC: UIViewController {
     private var pagerViewConfigured = false
     private let posterHeaderView = EventPosterHeaderView()
     private let eventService = EventService()
+    private let loadingShimmerView = EventQRLoadingShimmerView()
     private var hasSetupPosterBackground = false
 
-    private var faqs: [(question: String, answer: String)] = [
-        (
-            question: "Event details.",
-            answer: "View all event information including venue, date, time, and other event-related details."
-        ),
-        (
-            question: "How to use my tickets",
-            answer: "This code will be your way in. Show it upon arrival"
-        )
-    ]
+    private var faqs: [(question: String, answer: String)] = []
 
     private var fandQItems: [EventFAQ] = []
 
@@ -58,12 +51,10 @@ class EventQRTicketVC: UIViewController {
         super.viewDidLoad()
 
         setupPosterBackground()
+        setupLoadingShimmer()
         setupPagerView()
-        setupProgressDots(count: tickets.count)
         setupTableView()
         setupKVO()
-//        setupData()
-        getBooking(id: bookingId)
 
         tableView.register(
             UINib(nibName: "TicketDetailTVC", bundle: nil),
@@ -74,6 +65,8 @@ class EventQRTicketVC: UIViewController {
             guard let self = self else { return }
             self.tableViewHeight.constant = self.tableView.contentSize.height
         }
+
+        loadBookingData()
     }
 
     override func viewDidLayoutSubviews() {
@@ -109,6 +102,29 @@ class EventQRTicketVC: UIViewController {
             posterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             posterHeaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    private func setupLoadingShimmer() {
+        loadingShimmerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadingShimmerView)
+
+        NSLayoutConstraint.activate([
+            loadingShimmerView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingShimmerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingShimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+
+    private func setQRLoading(_ isLoading: Bool) {
+        DispatchQueue.main.async {
+            if isLoading {
+                self.view.bringSubviewToFront(self.loadingShimmerView)
+                self.loadingShimmerView.show()
+            } else {
+                self.loadingShimmerView.hide()
+            }
+        }
     }
 
     private func refreshPosterBackground() {
@@ -197,6 +213,57 @@ class EventQRTicketVC: UIViewController {
         setupProgressDots(count: tickets.count)
     }
 
+    private func loadBookingData() {
+        tableView.isHidden = true
+        fandQtableHiddenView.superview?.superview?.isHidden = true
+        setupProgressDots(count: 0)
+
+        if let booking {
+            applyBooking(booking)
+            return
+        }
+
+        guard !bookingId.isEmpty else {
+            updateFAndQAvailability()
+            return
+        }
+
+        getBooking(id: bookingId)
+    }
+
+    private func applyBooking(_ booking: Booking) {
+        self.booking = booking
+        self.eventTitle.text = booking.event?.title
+        if bookingId.isEmpty {
+            bookingId = booking.id
+        }
+
+        configureEventRows()
+        refreshPosterBackground()
+        setupTickets()
+        getEventFAQs()
+
+        UIView.performWithoutAnimation {
+            self.tableView.reloadData()
+            self.pagerView.reloadData()
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func configureEventRows() {
+        faqs = [
+            (
+                question: "Event details.",
+                answer: "View all event information including venue, date, time, and other event-related details."
+            ),
+            (
+                question: "How to use my tickets",
+                answer: "This code will be your way in. Show it upon arrival"
+            )
+        ]
+        tableView.isHidden = false
+    }
+
     // MARK: - Progress Dots
     private func setupProgressDots(count: Int) {
         progressBarView.subviews.forEach { $0.removeFromSuperview() }
@@ -247,21 +314,19 @@ class EventQRTicketVC: UIViewController {
     }
 
     private func getBooking(id: String) {
-        Loader.show()
+        setQRLoading(true)
 
         PaymentPresenter.getBooking(bookingId: id) { [weak self] isSuccess, errMsg, booking in
-            Loader.hide()
-
             guard let self = self else { return }
 
-            if isSuccess {
-                self.booking = booking
-//                self.setupData()
-                self.refreshPosterBackground()
-                self.setupTickets()
-                self.getEventFAQs()
-                self.tableView.reloadData()
-                self.pagerView.reloadData()
+            DispatchQueue.main.async {
+                self.setQRLoading(false)
+                guard isSuccess, let booking else {
+                    self.updateFAndQAvailability()
+                    return
+                }
+
+                self.applyBooking(booking)
             }
         }
     }
@@ -438,6 +503,11 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
 
         cell.onToggle = { [weak self] in
             guard let self = self else { return }
+            
+            if indexPath.row == 0 {
+                openEventDetails()
+                return
+            }
 
             if isFandQ {
                 let previous = self.expandedFandQIndex
@@ -478,6 +548,12 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     
+        if indexPath.row == 0 {
+            openEventDetails()
+            return
+        }
+        
         if tableView === fandQtableView {
             expandedFandQIndex = expandedFandQIndex == indexPath.row ? nil : indexPath.row
             fandQtableView.reloadData()
@@ -485,5 +561,159 @@ extension EventQRTicketVC: UITableViewDelegate, UITableViewDataSource {
             expandedFAQIndex = expandedFAQIndex == indexPath.row ? nil : indexPath.row
             self.tableView.reloadData()
         }
+    }
+}
+
+private extension EventQRTicketVC {
+    func openEventDetails() {
+        
+        var event = self.booking?.event
+        event?.venue = self.booking?.venueObject
+        
+        Navigate.eventDetailsVC(
+            self,
+            event: event
+        )
+    }
+}
+
+private final class EventQRLoadingShimmerView: UIView {
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
+    private let posterBlock = ShimmerViewV3()
+    private let titleLine = ShimmerViewV3()
+    private let subtitleLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let qrCard = UIView()
+    private let qrSquare = ShimmerViewV3()
+    private let qrLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let pillLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let detailLineOne = ShimmerViewV3()
+    private let detailLineTwo = ShimmerViewV3(frame: .zero, lighter: true)
+
+    private var shimmerViews: [ShimmerViewV3] {
+        [
+            posterBlock,
+            titleLine,
+            subtitleLine,
+            qrSquare,
+            qrLine,
+            pillLine,
+            detailLineOne,
+            detailLineTwo
+        ]
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    func show() {
+        isHidden = false
+        shimmerViews.forEach { $0.startShimmer() }
+        alpha = 0
+        UIView.animate(withDuration: 0.18) {
+            self.alpha = 1
+        }
+    }
+
+    func hide() {
+        UIView.animate(withDuration: 0.22, animations: {
+            self.alpha = 0
+        }, completion: { _ in
+            self.shimmerViews.forEach { $0.stopShimmer() }
+            self.isHidden = true
+            self.alpha = 1
+        })
+    }
+
+    private func setupUI() {
+        isHidden = true
+        alpha = 0
+        backgroundColor = UIColor.black.withAlphaComponent(0.58)
+        isUserInteractionEnabled = true
+
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(blurView)
+
+        qrCard.translatesAutoresizingMaskIntoConstraints = false
+        qrCard.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        qrCard.layer.cornerRadius = 24
+        qrCard.layer.borderWidth = 1
+        qrCard.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
+        qrCard.clipsToBounds = true
+        addSubview(qrCard)
+
+        [posterBlock, titleLine, subtitleLine, detailLineOne, detailLineTwo].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            addSubview($0)
+        }
+
+        [qrSquare, qrLine, pillLine].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 10
+            qrCard.addSubview($0)
+        }
+
+        posterBlock.layer.cornerRadius = 22
+        qrSquare.layer.cornerRadius = 18
+        pillLine.layer.cornerRadius = 18
+
+        NSLayoutConstraint.activate([
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            posterBlock.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 112),
+            posterBlock.centerXAnchor.constraint(equalTo: centerXAnchor),
+            posterBlock.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.52),
+            posterBlock.heightAnchor.constraint(equalTo: posterBlock.widthAnchor, multiplier: 1.15),
+
+            titleLine.topAnchor.constraint(equalTo: posterBlock.bottomAnchor, constant: 28),
+            titleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.58),
+            titleLine.heightAnchor.constraint(equalToConstant: 18),
+
+            subtitleLine.topAnchor.constraint(equalTo: titleLine.bottomAnchor, constant: 12),
+            subtitleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            subtitleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.34),
+            subtitleLine.heightAnchor.constraint(equalToConstant: 12),
+
+            qrCard.topAnchor.constraint(equalTo: subtitleLine.bottomAnchor, constant: 34),
+            qrCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
+            qrCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -28),
+            qrCard.heightAnchor.constraint(equalToConstant: 176),
+
+            qrSquare.leadingAnchor.constraint(equalTo: qrCard.leadingAnchor, constant: 22),
+            qrSquare.centerYAnchor.constraint(equalTo: qrCard.centerYAnchor),
+            qrSquare.widthAnchor.constraint(equalToConstant: 112),
+            qrSquare.heightAnchor.constraint(equalTo: qrSquare.widthAnchor),
+
+            qrLine.leadingAnchor.constraint(equalTo: qrSquare.trailingAnchor, constant: 22),
+            qrLine.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor, constant: -24),
+            qrLine.topAnchor.constraint(equalTo: qrSquare.topAnchor, constant: 16),
+            qrLine.heightAnchor.constraint(equalToConstant: 18),
+
+            pillLine.leadingAnchor.constraint(equalTo: qrLine.leadingAnchor),
+            pillLine.trailingAnchor.constraint(equalTo: qrLine.trailingAnchor, constant: -36),
+            pillLine.bottomAnchor.constraint(equalTo: qrSquare.bottomAnchor, constant: -8),
+            pillLine.heightAnchor.constraint(equalToConstant: 42),
+
+            detailLineOne.topAnchor.constraint(equalTo: qrCard.bottomAnchor, constant: 34),
+            detailLineOne.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
+            detailLineOne.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.72),
+            detailLineOne.heightAnchor.constraint(equalToConstant: 14),
+
+            detailLineTwo.topAnchor.constraint(equalTo: detailLineOne.bottomAnchor, constant: 16),
+            detailLineTwo.leadingAnchor.constraint(equalTo: detailLineOne.leadingAnchor),
+            detailLineTwo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.52),
+            detailLineTwo.heightAnchor.constraint(equalToConstant: 12)
+        ])
     }
 }

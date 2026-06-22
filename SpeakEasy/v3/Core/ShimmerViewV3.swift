@@ -51,6 +51,7 @@ final class ShimmerViewV3: UIView {
     func stopShimmer() {
         isAnimating = false
         gradientLayer.removeAnimation(forKey: "shimmer")
+        layer.removeAnimation(forKey: "pulse")
     }
 
     // MARK: - Private

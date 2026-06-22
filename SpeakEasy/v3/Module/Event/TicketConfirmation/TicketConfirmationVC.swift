@@ -102,8 +102,8 @@ class TicketConfirmationVC: UIViewController {
         
         if let hexColor = event?.whiteLabelColor {
             let color = UIColor(hex: hexColor)
-            viewTicketBtnView.backgroundColor = color
-            dateandtimeLbl.textColor = color
+//            viewTicketBtnView.backgroundColor = color
+//            dateandtimeLbl.textColor = color
         }
         
         let timezone = venueDetails?.useTimezone ?? ""

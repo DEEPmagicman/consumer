@@ -149,7 +149,7 @@ private extension EventCollectionViewCell {
 
         image.sd_setImage(
             with: imageUrl,
-            placeholderImage: UIImage(named: "newSpeakeasy")
+            placeholderImage: UIImage(named: "premiumExpBg")
         )
 
         if logoKey.isEmpty {

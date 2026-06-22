@@ -1252,9 +1252,9 @@
 			isa = PBXGroup;
 			children = (
 				04E254C52BFF48F000505774 /* PaymentTVC */,
-				0436D084295966CF0087D3DB /* Settings.storyboard */,
 				0436D086295966E30087D3DB /* SettingsViewController.swift */,
 				0436D088295978060087D3DB /* NotificationViewController.swift */,
+				0436D084295966CF0087D3DB /* Settings.storyboard */,
 				0436D08A295978170087D3DB /* DeleteAccountViewController.swift */,
 				0436D08C295981AA0087D3DB /* PersonalInformationViewController.swift */,
 				046940C92959B7B100F8A053 /* PastPurchasesVisitsViewController.swift */,

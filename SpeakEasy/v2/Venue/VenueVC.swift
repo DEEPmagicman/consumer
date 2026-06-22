@@ -67,10 +67,19 @@ final class VenueVC: UIViewController {
     private var isFollowing = false
     private var isFollowLoading = false
     private var followedVenueId: String?
+    private let followActivityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .white
+        indicator.hidesWhenStopped = false
+        indicator.alpha = 0
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         captureContainerTopConstraint()
+        setupFollowButtonAnimation()
         setupNavTitleView()
         setupPosterBackground()
         setUpData()
@@ -112,7 +121,7 @@ final class VenueVC: UIViewController {
         venueName.text = displayVenueName
         updateNavTitleText()
         syncFollowState()
-        updateFollowUI()
+        updateFollowUI(animated: false)
         updateCoverTicketViewVisibility()
         updatePosterBackgroundImage()
 
@@ -179,6 +188,7 @@ final class VenueVC: UIViewController {
 
         let vc3 = ArtistsVC(nibName: "ArtistsVC", bundle: nil)
         vc3.title = "Artists"
+        vc3.venueId = venueDetails?.id ?? ""
         vc3.scrollDelegate = self
 
         tabControllers = [vc1, vc2, vc3]
@@ -293,7 +303,8 @@ final class VenueVC: UIViewController {
 
         isFollowLoading = true
         isFollowing.toggle()
-        updateFollowUI()
+        animateFollowTap()
+        updateFollowUI(animated: true)
 
         if isFollowing {
             followVenueAPI(
@@ -335,15 +346,103 @@ private extension VenueVC {
         followedVenueId != nil
     }
 
-    func updateFollowUI() {
-        followBtnLbl?.text =
-        isFollowing ? "Following" : "Follow"
+    func setupFollowButtonAnimation() {
+        guard let followContainer = followBtn?.superview else { return }
 
-        followBtn?.isUserInteractionEnabled =
-        !isFollowLoading
+        followBtnLbl?.numberOfLines = 1
+        followBtnLbl?.lineBreakMode = .byClipping
+        followBtnLbl?.setContentCompressionResistancePriority(.required, for: .horizontal)
+        followBtnLbl?.setContentHuggingPriority(.required, for: .horizontal)
 
-        followBtnLbl?.alpha =
-        isFollowLoading ? 0.65 : 1
+        guard followActivityIndicator.superview == nil else { return }
+
+        followContainer.addSubview(followActivityIndicator)
+
+        NSLayoutConstraint.activate([
+            followActivityIndicator.centerXAnchor.constraint(equalTo: followContainer.centerXAnchor),
+            followActivityIndicator.centerYAnchor.constraint(equalTo: followContainer.centerYAnchor)
+        ])
+    }
+
+    func updateFollowUI(animated: Bool = true) {
+        let newTitle = isFollowing ? "Following" : "Follow"
+        let textChanged = followBtnLbl?.text != newTitle
+
+        followBtn?.isUserInteractionEnabled = !isFollowLoading
+
+        let applyTitle = {
+            self.followBtnLbl?.text = newTitle
+            self.followBtnLbl?.alpha = self.isFollowLoading ? 0 : 1
+            self.followActivityIndicator.alpha = self.isFollowLoading ? 1 : 0
+            self.followBtn?.superview?.layoutIfNeeded()
+        }
+
+        if isFollowLoading {
+            followActivityIndicator.startAnimating()
+        } else {
+            followActivityIndicator.stopAnimating()
+        }
+
+        guard animated else {
+            applyTitle()
+            if !isFollowLoading {
+                followActivityIndicator.stopAnimating()
+            }
+            return
+        }
+
+        let animations = {
+            applyTitle()
+        }
+        let completion: (Bool) -> Void = { [weak self] _ in
+            guard let self else { return }
+            if !self.isFollowLoading {
+                self.followActivityIndicator.stopAnimating()
+            }
+        }
+
+        if textChanged {
+            UIView.transition(
+                with: followBtnLbl,
+                duration: 0.18,
+                options: [.transitionCrossDissolve, .beginFromCurrentState],
+                animations: animations,
+                completion: completion
+            )
+        } else {
+            UIView.animate(
+                withDuration: 0.18,
+                delay: 0,
+                options: [.curveEaseOut, .beginFromCurrentState],
+                animations: animations,
+                completion: completion
+            )
+        }
+    }
+
+    func animateFollowTap() {
+        guard let followContainer = followBtn?.superview else { return }
+
+        UIView.animate(
+            withDuration: 0.08,
+            delay: 0,
+            options: [.curveEaseOut, .beginFromCurrentState],
+            animations: {
+                followContainer.transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+            },
+            completion: { _ in
+                UIView.animate(
+                    withDuration: 0.22,
+                    delay: 0,
+                    usingSpringWithDamping: 0.74,
+                    initialSpringVelocity: 0.6,
+                    options: [.curveEaseOut, .beginFromCurrentState],
+                    animations: {
+                        followContainer.transform = .identity
+                    }
+                )
+            }
+        )
     }
 
     func followVenueAPI(
@@ -376,7 +475,7 @@ private extension VenueVC {
             self.venueDetails?.followedVenueId = id
             self.venueDetails?.isFollowing = true
             self.isFollowing = true
-            self.updateFollowUI()
+            self.updateFollowUI(animated: true)
             if let venue = self.venueDetails {
                 self.onFollowStateChanged?(venue, true)
             }
@@ -409,7 +508,7 @@ private extension VenueVC {
             self.venueDetails?.followedVenueId = nil
             self.venueDetails?.isFollowing = false
             self.isFollowing = false
-            self.updateFollowUI()
+            self.updateFollowUI(animated: true)
             if let venue = self.venueDetails {
                 self.onFollowStateChanged?(venue, false)
             }
@@ -461,7 +560,7 @@ private extension VenueVC {
         followedVenueId = previousFollowedVenueId
         venueDetails?.isFollowing = previousState
         venueDetails?.followedVenueId = previousFollowedVenueId
-        updateFollowUI()
+        updateFollowUI(animated: true)
     }
 
     var displayVenueName: String {

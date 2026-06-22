@@ -47,6 +47,7 @@ final class EditProfileVC: UIViewController {
     private var originalDOB = ""
     private var originalGender = ""
     private var originalImageUrl = ""
+    private var isPresentingDatePicker = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -128,7 +129,9 @@ final class EditProfileVC: UIViewController {
 
         dobTF.inputView = UIView()
         dobTF.tintColor = .clear
+        dobTF.delegate = self
         dobView.addTarget(self, action: #selector(onClickDOB), for: .touchUpInside)
+        dobTF.addTarget(self, action: #selector(onClickDOB), for: .touchDown)
         
         firstNameTF.addTarget(self, action: #selector(profileFieldDidChange), for: .editingChanged)
         lastNameTF.addTarget(self, action: #selector(profileFieldDidChange), for: .editingChanged)
@@ -365,11 +368,17 @@ final class EditProfileVC: UIViewController {
     }
     
     @objc private func onClickDOB() {
+        guard !isPresentingDatePicker else { return }
+        isPresentingDatePicker = true
         view.endEditing(true)
         Navigate.to.presentDateSelectionBottomSheet(
             self,
             date: self.dobTF.text?.toDate(withFormat: .MMDDYYYY, isUTC: false)
         )
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            self.isPresentingDatePicker = false
+        }
     }
     
     @objc private func onClickGender() {
@@ -632,5 +641,13 @@ extension EditProfileVC: DateSelectionDelegate {
         dobView.text = dobTF.text
         clearValidationUI()
         updateSaveButtonState()
+    }
+}
+
+extension EditProfileVC: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        guard textField === dobTF else { return true }
+        onClickDOB()
+        return false
     }
 }

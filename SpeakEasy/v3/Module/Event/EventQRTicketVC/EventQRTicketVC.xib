@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -19,6 +18,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EventQRTicketVC" customModule="Speakeasy" customModuleProvider="target">
             <connections>
+                <outlet property="eventTitle" destination="P3E-rZ-Zg2" id="QEN-XQ-WTk"/>
                 <outlet property="fAndQDropDownImage" destination="Gzj-G8-gGy" id="QXn-bI-rJz"/>
                 <outlet property="fandQtableHiddenView" destination="OL6-Hk-AYB" id="6ZO-8k-Gat"/>
                 <outlet property="fandQtableView" destination="v3V-ih-ArD" id="82O-UK-89u"/>
@@ -72,13 +72,12 @@
                             <constraints>
                                 <constraint firstItem="P3E-rZ-Zg2" firstAttribute="top" secondItem="ueZ-cN-36Z" secondAttribute="top" id="PAY-qh-HR1"/>
                                 <constraint firstAttribute="bottom" secondItem="P3E-rZ-Zg2" secondAttribute="bottom" id="U9R-EX-iuo"/>
-                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="P3E-rZ-Zg2" secondAttribute="trailing" constant="10" id="Vbp-mH-4fK"/>
                                 <constraint firstItem="P3E-rZ-Zg2" firstAttribute="centerX" secondItem="ueZ-cN-36Z" secondAttribute="centerX" id="eKC-Kh-Ayd"/>
                             </constraints>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sEc-JL-PkN">
                             <rect key="frame" x="105" y="0.0" width="50" height="10"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="50" id="0Bp-Fu-RNS"/>
                                 <constraint firstAttribute="height" constant="10" id="RVr-ZA-NTS"/>
@@ -86,7 +85,7 @@
                         </view>
                     </subviews>
                 </stackView>
-                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKC-xq-O17" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKC-xq-O17" customClass="AppIconButton" customModule="Speakeasy" customModuleProvider="target">
                     <rect key="frame" x="340" y="134" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="hEU-LM-nY4"/>
@@ -260,12 +259,13 @@
                 <constraint firstItem="M5u-vh-4b0" firstAttribute="trailing" secondItem="hsK-KI-aK9" secondAttribute="trailing" id="GDV-Mo-4bB"/>
                 <constraint firstItem="ZMi-0z-8At" firstAttribute="top" secondItem="M5u-vh-4b0" secondAttribute="top" constant="16" id="Wjt-hw-RHf"/>
                 <constraint firstItem="M5u-vh-4b0" firstAttribute="trailing" secondItem="UKC-xq-O17" secondAttribute="trailing" constant="20" id="XQN-fc-Lwq"/>
-                <constraint firstItem="UKC-xq-O17" firstAttribute="leading" secondItem="QJU-BX-EDK" secondAttribute="trailing" constant="10" id="Zqe-xF-npO"/>
                 <constraint firstItem="ZMi-0z-8At" firstAttribute="leading" secondItem="M5u-vh-4b0" secondAttribute="leading" constant="20" id="gxs-ih-lke"/>
                 <constraint firstItem="hsK-KI-aK9" firstAttribute="leading" secondItem="M5u-vh-4b0" secondAttribute="leading" id="hVQ-c5-IKC"/>
                 <constraint firstItem="hsK-KI-aK9" firstAttribute="top" secondItem="QJU-BX-EDK" secondAttribute="bottom" constant="23" id="kHn-dj-TYo"/>
                 <constraint firstItem="QJU-BX-EDK" firstAttribute="top" secondItem="M5u-vh-4b0" secondAttribute="top" constant="25" id="peU-Sm-ZdU"/>
+                <constraint firstItem="M5u-vh-4b0" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="QJU-BX-EDK" secondAttribute="trailing" id="s4O-Oi-248"/>
                 <constraint firstItem="QJU-BX-EDK" firstAttribute="leading" secondItem="ZMi-0z-8At" secondAttribute="trailing" constant="10" id="tlz-eY-PwA"/>
+                <constraint firstItem="QJU-BX-EDK" firstAttribute="centerX" secondItem="HCa-96-ji0" secondAttribute="centerX" id="uHF-VI-68U"/>
                 <constraint firstItem="ueZ-cN-36Z" firstAttribute="centerY" secondItem="ZMi-0z-8At" secondAttribute="centerY" id="zwh-1p-GeR"/>
             </constraints>
             <point key="canvasLocation" x="383.96946564885496" y="93.661971830985919"/>
@@ -273,8 +273,5 @@
     </objects>
     <resources>
         <image name="arrowTopIcon" width="8.6666669845581055" height="6"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

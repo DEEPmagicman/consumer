@@ -742,10 +742,8 @@ final class OrderListViewController: UIViewController {
         guard !isCancellingTransaction else { return }
         isCancellingTransaction = true
         countdownTimer?.invalidate()
-//        Loader.show()
 
         guard let bookingId, !bookingId.isEmpty else {
-//            Loader.hide()
             isCancellingTransaction = false
             returnToEventDetails(animated: false)
             return
@@ -753,7 +751,6 @@ final class OrderListViewController: UIViewController {
 
         paymentService.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
-//                Loader.hide()
                 guard let self else { return }
                 self.isCancellingTransaction = false
                 self.returnToEventDetails(animated: false)

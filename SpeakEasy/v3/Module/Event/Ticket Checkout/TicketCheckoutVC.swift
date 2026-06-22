@@ -619,10 +619,8 @@ final class TicketCheckoutVC: UIViewController {
         guard !isCancellingTransaction else { return }
         isCancellingTransaction = true
         setScreenInteractionBlocked(true)
-        Loader.show()
 
         cancelBooking { [weak self] in
-            Loader.hide()
             guard let self else { return }
             self.isCancellingTransaction = false
             self.setScreenInteractionBlocked(false)

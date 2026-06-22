@@ -42,22 +42,22 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YwQ-o1-DLD">
-                    <rect key="frame" x="0.0" y="134" width="393" height="74.666666666666686"/>
+                    <rect key="frame" x="0.0" y="134" width="393" height="0.0"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Arodes with Lasarte" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tVh-rE-d29">
-                            <rect key="frame" x="112.00000000000001" y="13.000000000000002" width="169.33333333333337" height="23.666666666666671"/>
+                            <rect key="frame" x="112.00000000000001" y="-61.666666666666671" width="169.33333333333337" height="23.666666666666671"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MARQUEE SKYDECK" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocF-Cl-EAb">
-                            <rect key="frame" x="148.33333333333334" y="44.666666666666657" width="96.666666666666657" height="13"/>
+                            <rect key="frame" x="148.33333333333334" y="-30" width="96.666666666666657" height="13"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Sep 19 at 9:00 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UbH-RG-uEp">
-                            <rect key="frame" x="145.33333333333334" y="61.666666666666657" width="102.66666666666666" height="13"/>
+                            <rect key="frame" x="145.33333333333334" y="-13" width="102.66666666666666" height="13"/>
                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="10"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -69,7 +69,6 @@
                         <constraint firstItem="ocF-Cl-EAb" firstAttribute="centerX" secondItem="YwQ-o1-DLD" secondAttribute="centerX" id="Bme-Ph-h65"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tVh-rE-d29" secondAttribute="trailing" constant="10" id="Ehx-j0-c9m"/>
                         <constraint firstItem="UbH-RG-uEp" firstAttribute="centerX" secondItem="YwQ-o1-DLD" secondAttribute="centerX" id="Fp6-68-Xys"/>
-                        <constraint firstItem="tVh-rE-d29" firstAttribute="top" secondItem="YwQ-o1-DLD" secondAttribute="top" constant="13" id="Q7y-vq-1m0"/>
                         <constraint firstItem="tVh-rE-d29" firstAttribute="centerX" secondItem="YwQ-o1-DLD" secondAttribute="centerX" id="TcE-aJ-ARs"/>
                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ocF-Cl-EAb" secondAttribute="trailing" constant="10" id="ajJ-UD-81b"/>
                         <constraint firstItem="ocF-Cl-EAb" firstAttribute="top" secondItem="tVh-rE-d29" secondAttribute="bottom" constant="8" id="bLO-fc-qAj"/>
@@ -98,7 +97,7 @@
                     </connections>
                 </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="olc-gG-AFb">
-                    <rect key="frame" x="0.0" y="222.66666666666669" width="393" height="629.33333333333326"/>
+                    <rect key="frame" x="0.0" y="148" width="393" height="704"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8FF-xz-vis">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="728"/>
@@ -114,7 +113,7 @@
                                     <rect key="frame" x="135.33333333333334" y="328" width="122.66666666666666" height="46"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="View ticket" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bJA-h0-rdB">
-                                            <rect key="frame" x="14" y="11.333333333333373" width="94.666666666666671" height="23.666666666666671"/>
+                                            <rect key="frame" x="14" y="11.333333333333316" width="94.666666666666671" height="23.666666666666671"/>
                                             <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="18"/>
                                             <color key="textColor" red="0.070588235294117646" green="0.070588235294117646" blue="0.070588235294117646" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -302,10 +301,10 @@ VIDEO &amp; PHOTOGRAPHY MAY OCCUR WHILE ON E11EVEN MIAMI PREMISES. YOUR ATTENDA
                 <constraint firstItem="27K-eW-iYE" firstAttribute="trailing" secondItem="olc-gG-AFb" secondAttribute="trailing" id="IXH-b8-bfg"/>
                 <constraint firstItem="cMH-eU-kq4" firstAttribute="leading" secondItem="27K-eW-iYE" secondAttribute="leading" constant="20" id="Ino-jD-jza"/>
                 <constraint firstItem="cMH-eU-kq4" firstAttribute="top" secondItem="27K-eW-iYE" secondAttribute="top" constant="16" id="Psl-OU-EE6"/>
+                <constraint firstItem="YwQ-o1-DLD" firstAttribute="top" secondItem="cMH-eU-kq4" secondAttribute="top" id="X2n-RD-zkG"/>
                 <constraint firstItem="olc-gG-AFb" firstAttribute="leading" secondItem="27K-eW-iYE" secondAttribute="leading" id="ekJ-d1-aua"/>
                 <constraint firstItem="YwQ-o1-DLD" firstAttribute="trailing" secondItem="27K-eW-iYE" secondAttribute="trailing" id="gpB-Vs-0ZI"/>
                 <constraint firstAttribute="bottom" secondItem="olc-gG-AFb" secondAttribute="bottom" id="j5D-qo-JCB"/>
-                <constraint firstItem="YwQ-o1-DLD" firstAttribute="top" secondItem="27K-eW-iYE" secondAttribute="top" constant="16" id="ntl-YP-pXe"/>
             </constraints>
             <point key="canvasLocation" x="383.96946564885496" y="93.661971830985919"/>
         </view>

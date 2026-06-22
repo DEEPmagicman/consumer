@@ -1039,10 +1039,8 @@ extension CoverTicketCheckOutVC {
         countdownTimer?.invalidate()
         isCancellingTransaction = true
         setScreenInteractionBlocked(true)
-        Loader.show()
 
         guard !bookingId.isEmpty else {
-            Loader.hide()
             isCancellingTransaction = false
             setScreenInteractionBlocked(false)
             returnToCoverFlow(animated: false)
@@ -1050,7 +1048,6 @@ extension CoverTicketCheckOutVC {
         }
         PaymentPresenter.cancelBooking(bookingId: bookingId) { [weak self] _, _ in
             DispatchQueue.main.async {
-                Loader.hide()
                 guard let self else { return }
                 self.isCancellingTransaction = false
                 self.setScreenInteractionBlocked(false)
@@ -1585,6 +1582,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.ticketNameLbl.text       = ticket.customName?.isEmpty == false ? ticket.customName : ticket.name
         applyDescription(ticket.description, to: cell)
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        cell.priceLbl.isHidden        = false
         return cell
     }
 
@@ -1602,6 +1600,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         cell.ticketNameLbl.text       = item.addOns?.name ?? ""
         applyDescription(item.addOns?.description, to: cell)
         cell.priceLbl.text            = total <= 0 ? "Free" : "\(currency)\(total.decimalFormat(true))"
+        cell.priceLbl.isHidden        = false
         return cell
     }
 
@@ -1609,6 +1608,7 @@ extension CoverTicketCheckOutVC: UITableViewDelegate, UITableViewDataSource {
         let text = description?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         cell.discriptionLbl.text = text
         cell.discriptionLbl.isHidden = text.isEmpty
+        cell.discriptionLbl.superview?.isHidden = text.isEmpty
     }
 
     private func makeFeeShimmerCell(in tableView: UITableView) -> UITableViewCell {

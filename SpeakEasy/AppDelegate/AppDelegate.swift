@@ -13,36 +13,36 @@ import LGSideMenuController
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+
     var window: UIWindow?
     var application: UIApplication?
     static let shared: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     var guestUserLastNavigation: (NavigationDestination, String) = (.appLaunch, "")
     var pendingDeepLink: (NavigationDestination, String, String?, String?, String?)?
-    
+
     func application(_ application: UIApplication,
                      continue userActivity: NSUserActivity,
                      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        
+
         guard let incomingURL = userActivity.webpageURL else {
             return false
         }
-        
+
         handleForURL(incomingURL)
         return true
     }
-    
+
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         handleForURL(url)
         return true
     }
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         self.application = application
-        
+
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         if AppDesign.useModernIOS26Design {
@@ -51,17 +51,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         RemoteConfigHelper.shared.getRemoteConfigValues()
         window = UIWindow(frame: UIScreen.main.bounds)
-        
+
         // isVersionV3 is true for new v3 version design
         UserDefault.shared.isVersionV3 = true
         launchApplication()
         return true
     }
-    
+
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         .portrait
     }
-    
+
     func showMaintenanceVC() {
         let vc = MaintenanceVC(nibName: "MaintenanceVC", bundle: nil)
         self.window?.rootViewController = vc
@@ -69,14 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
-    
+
     private func launchApplication() {
         let controller = Splash()
         self.window?.rootViewController = controller
         self.window?.makeKeyAndVisible()
         ThemeManager.shared.apply(theme: ThemeManager.shared.current)
     }
-    
+
     func changeRootViewController(forceCreateAccount: Bool = false) {
         if UserDefault.shared.isLoggedIn == true {
             if UserDefault.shared.user?.isProfileCompleted == true || UserDefault.shared.isGuest == true {
@@ -102,7 +102,7 @@ extension AppDelegate {
             showOnboarding(forceCreateAccount: forceCreateAccount)
         }
     }
-    
+
     func showOnboarding(isNavigateToDetail: Bool = false, forceCreateAccount: Bool = false) {
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
         let tutorialNavigation = UINavigationController(rootViewController: controller)
@@ -118,7 +118,7 @@ extension AppDelegate {
 //            Navigate.to.enterPhoneNumVc(controller)
 //        }
     }
-    
+
     func showNameVC() {
         let controller = StoryboardAndXibManager.StoryBoard.onBoarding.instantiateViewController(withIdentifier: IdentifierHelper.getIdentifier(StartScreenViewController.self)) as! StartScreenViewController
         let tutorialNavigation = UINavigationController(rootViewController: controller)
@@ -128,42 +128,47 @@ extension AppDelegate {
         Navigate.to.signUpViewControllerVc(controller)
         self.window?.rootViewController = tutorialNavigation
     }
-    
+
     private func handleForURL(_ url: URL) {
-        
-        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-              let queryItems = components.queryItems else { return }
-        
-        if let value = queryItems.first(where: { $0.name == "eid" })?.value {
-            pendingDeepLink = (.event, value, nil, nil, url.absoluteString)
-            changeRootViewController()
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else { return }
+        let queryItems = components.queryItems ?? []
+
+        if let value = value(for: ["eid", "eventId"], in: queryItems) {
+            queueDeepLink(.event, id: value, sourceURL: url.absoluteString)
             return
         }
-        
-        if let value = queryItems.first(where: { $0.name == "vid" })?.value {
-            pendingDeepLink = (.venue, value, nil, nil, nil)
-            changeRootViewController()
+
+        if let value = value(for: ["vid"], in: queryItems) {
+            queueDeepLink(.venue, id: value)
             return
         }
-        
-        if let value = queryItems.first(where: { $0.name == "bid" })?.value {
-            pendingDeepLink = (.booking, value, nil, nil, nil)
-            changeRootViewController()
+
+        if let value = value(for: ["bid", "bookingId"], in: queryItems) {
+            queueDeepLink(.booking, id: value)
             return
         }
-        
-        if let value = queryItems.first(where: { $0.name == "iid" })?.value {
-            pendingDeepLink = (.inviteLink, value, nil, nil, nil)
-            changeRootViewController()
+
+        if let value = value(for: ["aid", "addOnsBookingId"], in: queryItems) {
+            queueDeepLink(.addOns, id: value)
+            return
+        }
+
+        if let value = value(for: ["iid", "L", "inviteId"], in: queryItems) {
+            queueDeepLink(.inviteLink, id: value)
+            return
+        }
+
+        if let eventId = pathValue(after: "event", in: components) {
+            queueDeepLink(.event, id: eventId, sourceURL: url.absoluteString)
             return
         }
     }
-    
+
     func setRootVC() {
         ReachabilityManager.shared.startMonitoring()
-        
+
         var navigation = UINavigationController()
-        
+
         if UserDefault.shared.isVersionV3 == true {
             let vc = NewLandingVC()
             navigation = UINavigationController(rootViewController: vc)
@@ -171,50 +176,147 @@ extension AppDelegate {
             let vc = AppDelegate.gotoTab
             navigation = UINavigationController(rootViewController: vc)
         }
-//        
+//
         navigation.navigationBar.isHidden = true
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.handlePendingDeepLink()
         }
     }
-    
+
     private func handlePendingDeepLink() {
-        
-        guard let deepLink = pendingDeepLink else { return }
-        pendingDeepLink = nil
-        
-        guard let rootNav = window?.rootViewController as? UINavigationController,
-              let sideMenu = rootNav.viewControllers.first as? LGSideMenuController,
+        guard let deepLink = pendingDeepLink,
+              let rootNav = window?.rootViewController as? UINavigationController else { return }
+
+        if rootNav.viewControllers.first is NewLandingVC {
+            pendingDeepLink = nil
+            handleV3DeepLink(deepLink, rootNav: rootNav)
+            return
+        }
+
+        guard let sideMenu = rootNav.viewControllers.first as? LGSideMenuController,
               let rootVC = sideMenu.rootViewController as? LandingVC else { return }
-        
+
+        pendingDeepLink = nil
+        handleV2DeepLink(deepLink, rootVC: rootVC, rootNav: rootNav)
+    }
+
+    private func value(for names: [String], in queryItems: [URLQueryItem]) -> String? {
+        let lowercasedNames = names.map { $0.lowercased() }
+        return queryItems.first {
+            lowercasedNames.contains($0.name.lowercased()) && ($0.value?.isEmpty == false)
+        }?.value
+    }
+
+    private func queueDeepLink(
+        _ destination: NavigationDestination,
+        id: String,
+        sourceURL: String? = nil
+    ) {
+        guard id.isEmpty == false else { return }
+        pendingDeepLink = (destination, id, nil, nil, sourceURL)
+        changeRootViewController()
+    }
+
+    private func pathValue(after marker: String, in components: URLComponents) -> String? {
+        let pathComponents = components.path
+            .split(separator: "/")
+            .map { String($0) }
+
+        guard let index = pathComponents.firstIndex(where: { $0.lowercased() == marker.lowercased() }),
+              pathComponents.indices.contains(index + 1) else { return nil }
+
+        let value = pathComponents[index + 1]
+        return value.isEmpty ? nil : value
+    }
+
+    private func handleV3DeepLink(
+        _ deepLink: (NavigationDestination, String, String?, String?, String?),
+        rootNav: UINavigationController
+    ) {
+        rootNav.dismiss(animated: false)
+        rootNav.popToRootViewController(animated: false)
+
+        guard let sender = rootNav.topViewController else { return }
+
         switch deepLink.0 {
         case .event:
             let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
             vc.uniqueId = deepLink.1
-            rootVC.navigationController?.pushViewController(vc, animated: true)
-            
+            rootNav.pushViewController(vc, animated: true)
+
         case .venue:
             let vc = VenueVC(nibName: "VenueVC", bundle: nil)
             vc.uniqueId = deepLink.1
-            rootVC.navigationController?.pushViewController(vc, animated: true)
+            rootNav.pushViewController(vc, animated: true)
+
         case .booking:
-            Navigate.to.showQRCode(rootVC, booking: nil, bookingId: deepLink.1, type: .singleTickedEvent)
+            Navigate.to.scanQR(sender, bookingId: deepLink.1, addOnsBookingId: "")
+
+        case .addOns:
+            Navigate.to.scanQR(
+                sender,
+                isAddOnsAvailable: true,
+                bookingId: "",
+                isOnlyAddOnAvailable: true,
+                addOnsBookingId: deepLink.1
+            )
+
         case .inviteLink:
-            Navigate.to.inviteVC(rootVC, inviteId: deepLink.1)
+            Navigate.to.inviteVC(sender, inviteId: deepLink.1)
+
         default:
             break
         }
     }
-    
+
+    private func handleV2DeepLink(
+        _ deepLink: (NavigationDestination, String, String?, String?, String?),
+        rootVC: LandingVC,
+        rootNav: UINavigationController
+    ) {
+        let navigationController = rootVC.navigationController ?? rootNav
+        let sender = navigationController.topViewController ?? rootVC
+
+        switch deepLink.0 {
+        case .event:
+            let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
+            vc.uniqueId = deepLink.1
+            navigationController.pushViewController(vc, animated: true)
+
+        case .venue:
+            let vc = VenueVC(nibName: "VenueVC", bundle: nil)
+            vc.uniqueId = deepLink.1
+            navigationController.pushViewController(vc, animated: true)
+
+        case .booking:
+            Navigate.to.scanQR(sender, bookingId: deepLink.1, addOnsBookingId: "")
+
+        case .addOns:
+            Navigate.to.scanQR(
+                sender,
+                isAddOnsAvailable: true,
+                bookingId: "",
+                isOnlyAddOnAvailable: true,
+                addOnsBookingId: deepLink.1
+            )
+
+        case .inviteLink:
+            Navigate.to.inviteVC(sender, inviteId: deepLink.1)
+
+        default:
+            break
+        }
+    }
+
     private func setGuestUserLastNavigation(_ sender: UIViewController) {
         if guestUserLastNavigation.0 == .inviteLink {
             inviteLinkNav(sender, id: guestUserLastNavigation.1)
         }
     }
-    
+
     private func inviteLinkNav(_ sender: UIViewController, id: String) {
         Navigate.to.inviteVC(sender, inviteId: id)
         if UserDefault.shared.isGuest == true {
@@ -223,33 +325,33 @@ extension AppDelegate {
             guestUserLastNavigation = (.appLaunch, "")
         }
     }
-    
+
     static var gotoSignUp: UIViewController {
         let signUp = StoryboardAndXibManager.StoryBoard.signUp
             .instantiateVC(withIdentifier: VerifyNumberViewController.self)
         return signUp
     }
-    
+
     static var gotoTab: UIViewController {
         let rootScreen = StoryboardAndXibManager.StoryBoard.landing.instantiateVC(withIdentifier: LandingVC.self)
         let root = StoryboardAndXibManager.StoryBoard.landing.instantiateInitialViewController()
         let sideMenu = SideMenuVC(nibName: "SideMenuVC", bundle: nil)
-        
+
         let sideMenuController = LGSideMenuController(rootViewController: root,
                                                       leftViewController: sideMenu,
                                                       rightViewController: nil)
-        
+
         sideMenuController.isLeftViewSwipeGestureEnabled = false
         sideMenuController.isRightViewSwipeGestureEnabled = false
         sideMenuController.rightViewPresentationStyle = .slideAbove
         sideMenuController.leftViewCoverBlurEffect = UIBlurEffect(style: .dark)
         sideMenuController.modalPresentationStyle = .overFullScreen
-        
+
         let screenWidth: CGFloat = UIScreen.main.bounds.size.width - 100
         sideMenuController.leftViewWidth = screenWidth
         sideMenuController.rootViewController = rootScreen
         sideMenuController.rootViewController?.sideMenuController?.rootViewCoverBlurEffect = UIBlurEffect(style: .dark)
-        
+
         return sideMenuController
     }
 }

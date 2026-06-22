@@ -1305,11 +1305,11 @@ class EventDetailsVC: UIViewController {
         venueAddressLbl.text = addressComponents.joined(separator: ", ")
         venueTitleLbl.text = venueDetails?.name.uppercased() ?? ""
 
-        let enabledAdditionalButtons = event.additionalButtons?.filter { $0.isEnable } ?? []
-        additionalButtonsTableView.isHidden = enabledAdditionalButtons.isEmpty
+        let additionalButtons = enabledAdditionalButtons
+        additionalButtonsTableView.isHidden = additionalButtons.isEmpty
         additionalButtonsTableView.reloadData()
-        additionalButtonsTableHeight.constant = enabledAdditionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
-        setSection(webSiteView, hidden: enabledAdditionalButtons.isEmpty)
+        additionalButtonsTableHeight.constant = additionalButtons.isEmpty ? 0 : additionalButtonsTableView.contentSize.height
+        setSection(webSiteView, hidden: additionalButtons.isEmpty)
         
         configureVIPTablesView()
         setupGalleryGrid()
@@ -1376,30 +1376,40 @@ class EventDetailsVC: UIViewController {
         }
         
         
-        let coordinate: CLLocationCoordinate2D
+        let coordinate: CLLocationCoordinate2D?
         let title: String
+        let mapImageURL: String?
 
         if let custom = event.customVenue,
            venueDetails?.venueSettings?.isOrganizer == true {
             
-            coordinate = CLLocationCoordinate2D(
+            coordinate = CLLocationCoordinate2D.valid(
                 latitude: Double(custom.lat ?? "") ?? 0,
                 longitude: Double(custom.lng ?? "") ?? 0
             )
             
             title = custom.name ?? "Venue"
+            let mapImageKey = event.flyer?.key ?? ""
+            mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
             
         } else {
             
-            coordinate = CLLocationCoordinate2D(
+            coordinate = CLLocationCoordinate2D.valid(
                 latitude: venueDetails?.latitude ?? 0,
                 longitude: venueDetails?.longitude ?? 0
             )
             
             title = venueDetails?.name ?? "Venue"
+            let mapImageKey = venueDetails?.logo?.key ?? venueDetails?.venueAttachment?.first?.key ?? event.flyer?.key ?? ""
+            mapImageURL = mapImageKey.isEmpty ? nil : mapImageKey.imageURL
         }
 
-        updateLocationOnMap(to: coordinate, with: title)
+        if let coordinate {
+            updateLocationOnMap(to: coordinate, with: title, imageURL: mapImageURL)
+        } else {
+            mapView.isHidden = true
+            eventAddressView.isHidden = true
+        }
 
         if let customText = event.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -2142,10 +2152,8 @@ class EventDetailsVC: UIViewController {
     }
 
     @IBAction func onClickWebSiteLinkView(_ sender: Any) {
-        if let button = event?.additionalButtons?.first(where: { $0.isEnable }),
-           let url = URL(string: button.link) {
-            UIApplication.shared.open(url)
-        }
+        guard let button = enabledAdditionalButtons.first else { return }
+        openAdditionalButton(button)
     }
         
     @IBAction func onClickViewGuestListBtn(_ sender: Any) {
@@ -2559,8 +2567,14 @@ class EventDetailsVC: UIViewController {
         }
     }
 
-    func updateLocationOnMap(to coordinate: CLLocationCoordinate2D, with title: String?) {
+    func updateLocationOnMap(
+        to coordinate: CLLocationCoordinate2D,
+        with title: String?,
+        imageURL: String?
+    ) {
+        mapView.isHidden = false
         mapView.delegate = self
+        mapView.overrideUserInterfaceStyle = .dark
         if #available(iOS 16.0, *) {
             let config = MKStandardMapConfiguration(elevationStyle: .flat)
             config.emphasisStyle = .muted
@@ -2577,16 +2591,20 @@ class EventDetailsVC: UIViewController {
         mapView.showsBuildings = false
         mapView.isRotateEnabled = false
         mapView.isPitchEnabled = false
-        mapView.removeAnnotations(mapView.annotations)
+        let oldAnnotations = mapView.annotations.filter { !($0 is MKUserLocation) }
+        mapView.removeAnnotations(oldAnnotations)
 
-        let point = MKPointAnnotation()
-        point.title = title
-        point.coordinate = coordinate
+        let point = EventDetailsMapAnnotation(
+            coordinate: coordinate,
+            title: title,
+            imageURL: imageURL
+        )
         mapView.addAnnotation(point)
 
         let region = MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008)
+            latitudinalMeters: 2600,
+            longitudinalMeters: 2600
         )
 
         mapView.setRegion(region, animated: false)
@@ -2749,7 +2767,7 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         if tableView == additionalButtonsTableView {
-            return event?.additionalButtons?.filter({ $0.isEnable }).count ?? 0
+            return enabledAdditionalButtons.count
         }
 
         return 0
@@ -2897,20 +2915,19 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
 
-            let buttons = event?.additionalButtons?.filter({ $0.isEnable }) ?? []
+            let buttons = enabledAdditionalButtons
             let item = buttons[indexPath.row]
 
             cell.selectionStyle = .none
-
-            cell.webSiteTitleLbl.text = item.title
-//            cell.webSiteDiscriptionLbl.text = item.
 
             let tintColor = UIColor(
                 hex: event?.whiteLabelColor ?? "#FFFFFF"
             )
 
-            cell.linkImageView.image = UIImage(named: "ic_link")?.withRenderingMode(.alwaysTemplate)
-            cell.linkImageView.tintColor = tintColor
+            cell.configure(with: item, tintColor: tintColor)
+            cell.onTap = { [weak self] in
+                self?.openAdditionalButton(item)
+            }
 
             return cell
         }
@@ -2973,6 +2990,13 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView == additionalButtonsTableView {
+            let buttons = enabledAdditionalButtons
+            guard buttons.indices.contains(indexPath.row) else { return }
+            openAdditionalButton(buttons[indexPath.row])
+            return
+        }
+
         if tableView == faqsTableView {
             if expandedFAQIndex == indexPath.row {
                 expandedFAQIndex = nil
@@ -2997,6 +3021,38 @@ extension EventDetailsVC: UITableViewDelegate, UITableViewDataSource {
           guard currentCount == 0 else { return }
 
           handlePlus(ticket: ticket)
+    }
+}
+
+private extension EventDetailsVC {
+
+    var enabledAdditionalButtons: [AdditionalButton] {
+        event?.additionalButtons?.filter { button in
+            button.isEnable &&
+            !button.link.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        } ?? []
+    }
+
+    func openAdditionalButton(_ button: AdditionalButton) {
+        let link = button.link.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let url = normalizedAdditionalButtonURL(from: link) else {
+            Alert.showToast("Invalid link")
+            return
+        }
+
+        UIApplication.shared.open(url)
+    }
+
+    func normalizedAdditionalButtonURL(from link: String) -> URL? {
+        guard !link.isEmpty else { return nil }
+
+        if let url = URL(string: link),
+           url.scheme != nil {
+            return url
+        }
+
+        return URL(string: "https://\(link)")
     }
 }
 
@@ -3140,22 +3196,108 @@ extension EventDetailsVC: YTPlayerViewDelegate {
 extension EventDetailsVC: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let id = "venuePin"
-
-        var view = mapView.dequeueReusableAnnotationView(withIdentifier: id)
-
-        if view == nil {
-            view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: id)
+        guard let annotation = annotation as? EventDetailsMapAnnotation else {
+            return nil
         }
 
-        view?.annotation = annotation
+        let id = "EventDetailsImagePin"
+        let view = mapView.dequeueReusableAnnotationView(
+            withIdentifier: id
+        ) as? EventDetailsImageAnnotationView ?? EventDetailsImageAnnotationView(
+            annotation: annotation,
+            reuseIdentifier: id
+        )
 
-        if let marker = view as? MKMarkerAnnotationView {
-            marker.markerTintColor = .systemBlue
-            marker.titleVisibility = .hidden
-        }
-
+        view.annotation = annotation
+        view.configure(imageURL: annotation.imageURL)
         return view
+    }
+}
+
+private final class EventDetailsMapAnnotation: NSObject, MKAnnotation {
+
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    let imageURL: String?
+
+    init(
+        coordinate: CLLocationCoordinate2D,
+        title: String?,
+        imageURL: String?
+    ) {
+        self.coordinate = coordinate
+        self.title = title
+        self.imageURL = imageURL
+        super.init()
+    }
+}
+
+private final class EventDetailsImageAnnotationView: MKAnnotationView {
+
+    private let imageView = UIImageView()
+    private let ringView = UIView()
+
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.sd_cancelCurrentImageLoad()
+        imageView.image = UIImage(named: "newSpeakeasy")
+    }
+
+    func configure(imageURL: String?) {
+        imageView.sd_setImage(
+            with: URL(string: imageURL ?? ""),
+            placeholderImage: UIImage(named: "newSpeakeasy")
+        )
+    }
+
+    private func setup() {
+        frame = CGRect(x: 0, y: 0, width: 46, height: 46)
+        centerOffset = CGPoint(x: 0, y: -18)
+        canShowCallout = false
+
+        ringView.frame = bounds
+        ringView.backgroundColor = AppColor.primaryWhiteColor.withAlphaComponent(0.16)
+        ringView.layer.cornerRadius = bounds.width / 2
+        ringView.layer.borderColor = UIColor.white.withAlphaComponent(0.86).cgColor
+        ringView.layer.borderWidth = 2
+        ringView.layer.shadowColor = UIColor.black.cgColor
+        ringView.layer.shadowOpacity = 0.35
+        ringView.layer.shadowRadius = 8
+        ringView.layer.shadowOffset = CGSize(width: 0, height: 3)
+        addSubview(ringView)
+
+        imageView.frame = bounds.insetBy(dx: 5, dy: 5)
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = imageView.bounds.width / 2
+        imageView.image = UIImage(named: "newSpeakeasy")
+        addSubview(imageView)
+    }
+}
+
+private extension CLLocationCoordinate2D {
+    static func valid(
+        latitude: CLLocationDegrees,
+        longitude: CLLocationDegrees
+    ) -> CLLocationCoordinate2D? {
+        guard CLLocationCoordinate2DIsValid(
+            CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        ) else {
+            return nil
+        }
+
+        guard latitude != 0 || longitude != 0 else { return nil }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -3163,27 +3305,33 @@ extension EventDetailsVC: MKMapViewDelegate {
 final class EventDetailsSkeletonView: UIView {
 
     private var allShimmerViews: [ShimmerViewV3] = []
-    private var didSetup = false
+    private var lastLayoutWidth: CGFloat = 0
+    private var isShimmering = false
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        guard !didSetup, bounds.width > 0 else { return }
-        didSetup = true
+        guard bounds.width > 0 else { return }
+        guard abs(bounds.width - lastLayoutWidth) > 1 else { return }
+        lastLayoutWidth = bounds.width
         setupUI()
     }
 
     private func setupUI() {
+        allShimmerViews.forEach { $0.removeFromSuperview() }
+        allShimmerViews.removeAll()
+
         backgroundColor = .clear
 
         let W = bounds.width
         let pad: CGFloat = 16
-        var y: CGFloat = 16
+        let contentWidth = max(0, W - pad * 2)
+        var y: CGFloat = 0
 
         // ─────────────────────────────
         // 1. VIP Banner
         // ─────────────────────────────
 
-        let bannerWidth = W - pad * 2
+        let bannerWidth = contentWidth
         let bannerHeight: CGFloat = 60
 
         make(
@@ -3221,9 +3369,9 @@ final class EventDetailsSkeletonView: UIView {
         make(CGRect(x: pad, y: y, width: 80, height: 14), corner: 6)
         y += 24
 
-        make(CGRect(x: pad, y: y, width: W * 0.7, height: 10), corner: 5)
+        make(CGRect(x: pad, y: y, width: contentWidth * 0.7, height: 10), corner: 5)
         y += 16
-        make(CGRect(x: pad, y: y, width: W * 0.5, height: 10), corner: 5)
+        make(CGRect(x: pad, y: y, width: contentWidth * 0.5, height: 10), corner: 5)
 
         y += 28
 //
@@ -3248,7 +3396,7 @@ final class EventDetailsSkeletonView: UIView {
             ), corner: avatarSize/2)
         }
 
-        make(CGRect(x: W - pad - 80, y: y + 8, width: 80, height: 10), corner: 5)
+        make(CGRect(x: pad + contentWidth - 80, y: y + 8, width: 80, height: 10), corner: 5)
 
         y += avatarSize + 24
         
@@ -3260,9 +3408,9 @@ final class EventDetailsSkeletonView: UIView {
 
         make(
             CGRect(
-                x: 16,
+                x: pad,
                 y: y,
-                width: W - 32,
+                width: contentWidth,
                 height: continueBtnHeight
             ),
             corner: 22
@@ -3288,6 +3436,10 @@ final class EventDetailsSkeletonView: UIView {
 //        make(CGRect(x: pad, y: y + 14, width: 70, height: 8), corner: 5)
 //
 //        make(CGRect(x: W - pad - 80, y: y, width: 80, height: 30), corner: 15)
+
+        if isShimmering {
+            allShimmerViews.forEach { $0.startShimmer() }
+        }
     }
 
     // MARK: - Helpers (same as Home)
@@ -3311,11 +3463,13 @@ final class EventDetailsSkeletonView: UIView {
     // MARK: - Control
 
     func startShimmer() {
+        isShimmering = true
         isHidden = false
         allShimmerViews.forEach { $0.startShimmer() }
     }
 
     func stopShimmer() {
+        isShimmering = false
         allShimmerViews.forEach { $0.stopShimmer() }
         isHidden = true
     }

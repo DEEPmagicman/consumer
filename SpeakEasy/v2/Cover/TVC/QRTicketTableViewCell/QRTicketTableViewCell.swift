@@ -32,6 +32,7 @@ class QRTicketTableViewCell: UITableViewCell {
         totalTicketCountLbl.text = nil
         priceLbl.text = nil
         priceLbl.isHidden = true
+        discriptionLbl.isHidden = true
         discriptionLbl.superview?.isHidden = true
     }
 
@@ -51,6 +52,7 @@ class QRTicketTableViewCell: UITableViewCell {
             ?? ""
 
         discriptionLbl.text = cleanDescription
+        discriptionLbl.isHidden = cleanDescription.isEmpty
         discriptionLbl.superview?.isHidden = cleanDescription.isEmpty
     }
 

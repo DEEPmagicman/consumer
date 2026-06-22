@@ -709,8 +709,9 @@ final class Navigate {
         sender.pushVC(vc, animated: true)
     }
     
-    func gotoArtistDetailsVC(_ sender: UIViewController) {
+    func gotoArtistDetailsVC(_ sender: UIViewController, artist: ArtistDetailsContext? = nil) {
         let vc = ArtistDetailsVC(nibName: "ArtistDetailsVC", bundle: nil)
+        vc.artist = artist
         sender.pushVC(vc)
     }
     
