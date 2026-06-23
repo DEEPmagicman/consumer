@@ -71,6 +71,7 @@ private extension DiscoverAllVC {
         )
 
         setupActions()
+        setupPremiumExperienceTap()
     }
 
     func setupActions() {
@@ -131,6 +132,23 @@ private extension DiscoverAllVC {
             }
         }
 
+    }
+
+    func setupPremiumExperienceTap() {
+        premiumExperiencesView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(onTapPremiumExperiences)
+        )
+        premiumExperiencesView.addGestureRecognizer(tap)
+    }
+
+    @objc func onTapPremiumExperiences() {
+        NotificationCenter.default.post(
+            name: .openPremiumTabFromDiscover,
+            object: self,
+            userInfo: ["city": selectedCity]
+        )
     }
 
     func navigateToDiscoverItem(_ action: @escaping (DiscoverAllVC) -> Void) {

@@ -106,57 +106,70 @@
                                         <constraint firstItem="2AT-bv-FlY" firstAttribute="leading" secondItem="BaZ-pN-YFG" secondAttribute="leading" id="gur-sp-eLD"/>
                                     </constraints>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Live Cover Ticket" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROy-cI-PxJ">
-                                    <rect key="frame" x="120" y="14.000000000000002" width="233" height="23.666666666666671"/>
-                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jl1-Ss-5CO">
-                                    <rect key="frame" x="120" y="45.666666666666657" width="59" height="18"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgx-ML-B0O">
+                                    <rect key="frame" x="120" y="14" width="233" height="85"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Sep 19" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EmH-Fb-uI6">
-                                            <rect key="frame" x="8" y="3" width="43" height="12"/>
-                                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="AFY-J7-dlw">
+                                            <rect key="frame" x="0.0" y="0.0" width="233" height="50.666666666666664"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Live Cover Ticket" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROy-cI-PxJ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="140" height="23.666666666666668"/>
+                                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="18"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jl1-Ss-5CO">
+                                                    <rect key="frame" x="0.0" y="26.666666666666657" width="59" height="20"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri, Sep 19" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EmH-Fb-uI6">
+                                                            <rect key="frame" x="8" y="3" width="43" height="14"/>
+                                                            <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="9"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.1606789173" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstItem="EmH-Fb-uI6" firstAttribute="top" secondItem="jl1-Ss-5CO" secondAttribute="top" constant="3" id="4Sy-Tg-uWs"/>
+                                                        <constraint firstItem="EmH-Fb-uI6" firstAttribute="leading" secondItem="jl1-Ss-5CO" secondAttribute="leading" constant="8" id="Cop-pw-CUe"/>
+                                                        <constraint firstAttribute="bottom" secondItem="EmH-Fb-uI6" secondAttribute="bottom" constant="3" id="PAX-TX-ps7"/>
+                                                        <constraint firstAttribute="height" constant="20" id="SEX-5V-0pp"/>
+                                                        <constraint firstAttribute="trailing" secondItem="EmH-Fb-uI6" secondAttribute="trailing" constant="8" id="hV7-Qd-9qQ"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="10"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laissez Faire" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exb-8p-Xbr">
+                                                    <rect key="frame" x="0.0" y="29.666666666666657" width="96" height="21"/>
+                                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
-                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.1606789173" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="EmH-Fb-uI6" firstAttribute="top" secondItem="jl1-Ss-5CO" secondAttribute="top" constant="3" id="4Sy-Tg-uWs"/>
-                                        <constraint firstItem="EmH-Fb-uI6" firstAttribute="leading" secondItem="jl1-Ss-5CO" secondAttribute="leading" constant="8" id="Cop-pw-CUe"/>
-                                        <constraint firstAttribute="bottom" secondItem="EmH-Fb-uI6" secondAttribute="bottom" constant="3" id="PAX-TX-ps7"/>
-                                        <constraint firstAttribute="trailing" secondItem="EmH-Fb-uI6" secondAttribute="trailing" constant="8" id="hV7-Qd-9qQ"/>
+                                        <constraint firstAttribute="trailing" secondItem="AFY-J7-dlw" secondAttribute="trailing" id="2Aq-z3-cv6"/>
+                                        <constraint firstItem="AFY-J7-dlw" firstAttribute="leading" secondItem="Hgx-ML-B0O" secondAttribute="leading" id="6dV-fH-ljd"/>
+                                        <constraint firstItem="AFY-J7-dlw" firstAttribute="top" secondItem="Hgx-ML-B0O" secondAttribute="top" id="Gbq-Dj-M7r"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="AFY-J7-dlw" secondAttribute="bottom" id="job-I5-x8b"/>
                                     </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <real key="value" value="10"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
                                 </view>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laissez Faire, New York City" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="exb-8p-Xbr">
-                                    <rect key="frame" x="120" y="69.666666666666657" width="233" height="21"/>
-                                    <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="exb-8p-Xbr" secondAttribute="trailing" id="01h-zG-WOO"/>
                                 <constraint firstAttribute="height" constant="100" id="3GK-lR-se5"/>
-                                <constraint firstItem="ROy-cI-PxJ" firstAttribute="top" secondItem="BaZ-pN-YFG" secondAttribute="top" constant="14" id="7uh-33-WE0"/>
-                                <constraint firstAttribute="trailing" secondItem="ROy-cI-PxJ" secondAttribute="trailing" id="NMN-EC-T0W"/>
-                                <constraint firstItem="jl1-Ss-5CO" firstAttribute="leading" secondItem="BaZ-pN-YFG" secondAttribute="trailing" constant="20" id="VPc-zK-2OH"/>
+                                <constraint firstItem="Hgx-ML-B0O" firstAttribute="leading" secondItem="BaZ-pN-YFG" secondAttribute="trailing" constant="20" id="8Ji-aa-igw"/>
+                                <constraint firstAttribute="bottom" secondItem="Hgx-ML-B0O" secondAttribute="bottom" constant="1" id="TsJ-qX-Y7C"/>
+                                <constraint firstAttribute="trailing" secondItem="Hgx-ML-B0O" secondAttribute="trailing" id="ayT-PE-koJ"/>
                                 <constraint firstItem="BaZ-pN-YFG" firstAttribute="top" secondItem="4V2-dX-l8F" secondAttribute="top" id="bVh-JJ-Ybk"/>
-                                <constraint firstItem="jl1-Ss-5CO" firstAttribute="top" secondItem="ROy-cI-PxJ" secondAttribute="bottom" constant="8" id="c4U-Rl-3Uu"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BaZ-pN-YFG" secondAttribute="bottom" id="n3Q-gv-sjv"/>
-                                <constraint firstItem="exb-8p-Xbr" firstAttribute="leading" secondItem="BaZ-pN-YFG" secondAttribute="trailing" constant="20" id="nh0-55-fJC"/>
-                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="exb-8p-Xbr" secondAttribute="bottom" constant="1" id="p2r-Xt-lQu"/>
+                                <constraint firstItem="Hgx-ML-B0O" firstAttribute="top" secondItem="4V2-dX-l8F" secondAttribute="top" constant="14" id="opJ-qx-irc"/>
                                 <constraint firstItem="BaZ-pN-YFG" firstAttribute="leading" secondItem="4V2-dX-l8F" secondAttribute="leading" id="w7g-bT-G0n"/>
-                                <constraint firstItem="exb-8p-Xbr" firstAttribute="top" secondItem="jl1-Ss-5CO" secondAttribute="bottom" constant="6" id="z7M-9p-wuQ"/>
-                                <constraint firstItem="ROy-cI-PxJ" firstAttribute="leading" secondItem="BaZ-pN-YFG" secondAttribute="trailing" constant="20" id="zFh-gT-5SY"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your tickets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4o-tJ-o5a">
@@ -169,7 +182,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AMA-wH-FHu">
-                            <rect key="frame" x="0.0" y="156" width="393" height="351.66666666666674"/>
+                            <rect key="frame" x="0.0" y="155.99999999999997" width="393" height="351.66666666666663"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RmE-3h-ojt">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="1102"/>

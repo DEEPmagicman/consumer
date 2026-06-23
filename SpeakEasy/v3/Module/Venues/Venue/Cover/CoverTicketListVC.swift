@@ -32,6 +32,7 @@ final class CoverTicketListVC: UIViewController {
     private let stickyTopBlurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private let stickyTicketsTitleContainer = UIView()
     private let stickyTicketsTitleLabel = UILabel()
+    private let venueService = VenueService()
 
     // MARK: - Public
 
@@ -61,6 +62,7 @@ final class CoverTicketListVC: UIViewController {
     private var lastTableContentHeight: CGFloat = 0
     private var isCheckoutNavigationInProgress = false
     private var isFreeBookingInProgress = false
+    private var isSocketRefreshInProgress = false
 
     private var isVenueOpen: Bool {
         venueDetails?.venueSettings?.bookingStatus?.uppercased() == "OPEN"
@@ -175,6 +177,12 @@ final class CoverTicketListVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isCheckoutNavigationInProgress = false
+        registerSocketDelegate()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unregisterSocketDelegate()
     }
 
     deinit {
@@ -185,6 +193,15 @@ final class CoverTicketListVC: UIViewController {
 // MARK: - Setup
 
 private extension CoverTicketListVC {
+
+    func registerSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+
+    func unregisterSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+    }
 
     func setupScrollBehavior() {
         scrollView.delegate = self
@@ -241,9 +258,13 @@ private extension CoverTicketListVC {
         venueImage.sd_setImage(with: URL(string: logoUrl), completed: nil)
 
         venueName.text = venueDetails?.name ?? ""
-        timeLbl.text = venueDetails?.timezone
+        let displayCity = venueDetails?.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let locationText = displayCity?.isEmpty == false
+            ? displayCity
+            : venueDetails?.timezone
+        timeLbl.text = locationText
         navVenueNameLbl.text = venueDetails?.name ?? ""
-        navTimeLbl.text = venueDetails?.timezone
+        navTimeLbl.text = locationText
 
         if let hexColor = venueDetails?.venueSettings?.whiteLabelColor {
             timeLbl.textColor = UIColor(hex: hexColor)
@@ -331,8 +352,11 @@ private extension CoverTicketListVC {
     }
 
     func setupCoverTickets() {
+        let selectedTicketIds = Set(selectedCoverTickets.map { $0.id })
+
         guard let list = venueDetails?.coverTicket else {
             coverTickets = []
+            coverTicketCount.removeAll()
             tableView.reloadData()
             updateCheckoutState()
             return
@@ -341,6 +365,17 @@ private extension CoverTicketListVC {
         coverTickets = list.filter {
             !($0.isDeleted ?? false) &&
             $0.status == "ENABLED"
+        }
+
+        if !selectedTicketIds.isEmpty {
+            var remappedCounts: [Int: Int] = [:]
+            coverTickets.enumerated().forEach { index, ticket in
+                guard selectedTicketIds.contains(ticket.id) else { return }
+                remappedCounts[index] = selectedCoverTickets.first(where: { $0.id == ticket.id })?.selectedQuantity ?? 0
+            }
+            coverTicketCount = remappedCounts.filter { $0.value > 0 }
+        } else {
+            coverTicketCount.removeAll()
         }
 
         tableView.reloadData()
@@ -526,6 +561,40 @@ extension CoverTicketListVC: UIScrollViewDelegate {
 // MARK: - API
 
 private extension CoverTicketListVC {
+
+    func refreshVenueFromSocket(clearSelection: Bool) {
+        guard !isSocketRefreshInProgress else { return }
+
+        let venueUniqueId = venueDetails?.uniqueId ?? ""
+        guard !venueUniqueId.isEmpty else { return }
+
+        isSocketRefreshInProgress = true
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, _, venueDetail in
+            guard let self else { return }
+
+            self.isSocketRefreshInProgress = false
+
+            guard isSuccess, let venueDetail else { return }
+
+            self.venueDetails = venueDetail
+            self.setupScreen()
+
+            if clearSelection {
+                self.coverTicketCount.removeAll()
+                self.upSellTicketCount.removeAll()
+                self.currentStep = .coverTickets
+            }
+
+            self.setupCoverTickets()
+            self.getUpsellTickets()
+            self.updateCheckoutState()
+            self.refreshScrollLayoutAfterUpdates()
+        }
+    }
 
     func getUpsellTickets() {
         guard let venueId = venueDetails?.id, !venueId.isEmpty else {
@@ -1030,6 +1099,43 @@ extension CoverTicketListVC: CheckoutBarDelegate {
 
     func checkoutBarDidTapButton() {
         onClickContinueBtn()
+    }
+}
+
+// MARK: - WebSocket
+
+extension CoverTicketListVC: WebSocketCallBackDelegate {
+
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        guard isCurrentVenueCoverTicketUpdate(ticket) else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        guard isCurrentVenueAddOnUpdate(ticket) else { return }
+        refreshVenueFromSocket(clearSelection: currentStep == .addOns)
+    }
+
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        guard venueDetails?.id == venueId else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        guard venueDetails?.id == venueId || venueDetails?.uniqueId == uniqueId else { return }
+        refreshVenueFromSocket(clearSelection: true)
+    }
+
+    private func isCurrentVenueCoverTicketUpdate(_ tickets: [CoverTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.venueId == currentVenueId }
+    }
+
+    private func isCurrentVenueAddOnUpdate(_ tickets: [UpSellTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.addOns?.venueId == currentVenueId }
     }
 }
 

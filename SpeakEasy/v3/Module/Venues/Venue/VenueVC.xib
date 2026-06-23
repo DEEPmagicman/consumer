@@ -26,6 +26,7 @@
                 <outlet property="followBtn" destination="jUU-L9-aIQ" id="av8-Ij-fjW"/>
                 <outlet property="followBtnLbl" destination="TV7-Jm-5tJ" id="iqy-FU-HmI"/>
                 <outlet property="tabView" destination="M9l-zN-Efx" id="u7F-N2-ZOq"/>
+                <outlet property="venueCityLbl" destination="5cF-u5-2Lg" id="HCw-cC-8YW"/>
                 <outlet property="venueLogo" destination="xhi-9o-YK3" id="5qX-bW-5Rb"/>
                 <outlet property="venueName" destination="ALN-3l-0qS" id="bN5-sl-oLd"/>
                 <outlet property="venueView" destination="LtE-MV-TC6" id="5ov-YO-cqB"/>
@@ -101,7 +102,7 @@
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nebula New York" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ALN-3l-0qS">
                                                     <rect key="frame" x="0.0" y="0.0" width="341" height="39.666666666666664"/>
-                                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="28"/>
+                                                    <fontDescription key="fontDescription" name="Geist-Medium" family="Geist" pointSize="22"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -134,8 +135,8 @@
                                                     </view>
                                                     <blurEffect style="regular"/>
                                                 </visualEffectView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Buy cover Live at the Door" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BLI-Tt-qpq">
-                                                    <rect key="frame" x="21" y="20" width="192.33333333333334" height="16"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Buy live cover" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BLI-Tt-qpq">
+                                                    <rect key="frame" x="21.000000000000007" y="20" width="101.66666666666669" height="16"/>
                                                     <fontDescription key="fontDescription" name="Geist-Regular" family="Geist" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>

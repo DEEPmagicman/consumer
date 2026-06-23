@@ -205,6 +205,8 @@ class EventDetailsVC: UIViewController {
         setupSkeletonView()
         setupTitleMarqueeLabel()
         setupYouTubeShimmerView()
+        setupEventDetailsTypography()
+        enableInteractiveSwipeBack()
         showSkeleton()
         
         additionalButtonsTableView.delegate = self
@@ -232,11 +234,13 @@ class EventDetailsVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         startAutoScrollIfNeeded()
+        enableInteractiveSwipeBack()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.layoutIfNeeded()
+        updateVenueLogoCornerRadius()
     }
 
     deinit {
@@ -359,6 +363,28 @@ class EventDetailsVC: UIViewController {
         saveBtn.tintColor =  .white
         saveBtn.alpha = isSaveLoading ? 0.65 : 1
         saveBtn.isUserInteractionEnabled = !isSaveLoading
+    }
+
+    private func setupEventDetailsTypography() {
+        titleLbl.font = Constant.Font.geistMedium(size: 22)
+        eventTitleMarqueeLabel.font = Constant.Font.geistMedium(size: 22)
+        venueTitleLbl.font = Constant.Font.geistSemiBold(size: 12)
+        venueName.font = Constant.Font.geistMedium(size: 14)
+        venueNameLbl.font = Constant.Font.geistMedium(size: 18)
+        updateVenueLogoCornerRadius()
+    }
+
+    private func updateVenueLogoCornerRadius() {
+        venueLogoImg.layer.cornerRadius = min(
+            venueLogoImg.bounds.width,
+            venueLogoImg.bounds.height
+        ) / 2
+        venueLogoImg.clipsToBounds = true
+    }
+
+    private func enableInteractiveSwipeBack() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
     private func setupTitleMarqueeLabel() {
@@ -2574,16 +2600,7 @@ class EventDetailsVC: UIViewController {
     ) {
         mapView.isHidden = false
         mapView.delegate = self
-        mapView.overrideUserInterfaceStyle = .dark
-        if #available(iOS 16.0, *) {
-            let config = MKStandardMapConfiguration(elevationStyle: .flat)
-            config.emphasisStyle = .muted
-            config.pointOfInterestFilter = .excludingAll
-            mapView.preferredConfiguration = config
-        } else {
-            mapView.mapType = .mutedStandard
-            mapView.pointOfInterestFilter = .excludingAll
-        }
+        mapView.applySpeakEasyDarkStyle(showPointsOfInterest: false)
 
         mapView.showsCompass = false
         mapView.showsScale = false
@@ -3211,6 +3228,17 @@ extension EventDetailsVC: MKMapViewDelegate {
         view.annotation = annotation
         view.configure(imageURL: annotation.imageURL)
         return view
+    }
+}
+
+extension EventDetailsVC: UIGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer === navigationController?.interactivePopGestureRecognizer {
+            return (navigationController?.viewControllers.count ?? 0) > 1
+        }
+
+        return true
     }
 }
 

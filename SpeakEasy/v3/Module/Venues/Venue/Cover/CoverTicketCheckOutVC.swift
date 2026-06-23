@@ -86,7 +86,7 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
     private var isUpsellFeesExpanded = true
     private var isPricingLoading = false
     private var shouldShowCheckoutButton = false
-    private let collapsedLines = 3
+    private let collapsedLines = 5
     private let coverFeeShimmerRowCount = 3
     private let upsellFeeShimmerRowCount = 1
     private var hasLaidOutTerms = false
@@ -374,11 +374,13 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         termsAndConditionsLbl.textColor = UIColor.white.withAlphaComponent(0.78)
         termsAndConditionsLbl.isUserInteractionEnabled = true
         termsAndConditionsLbl.numberOfLines = collapsedLines
+        termsAndConditionsLbl.lineBreakMode = .byWordWrapping
 
         venueMessageLbl.font = Constant.Font.geistRegular(size: 10)
         venueMessageLbl.textColor = UIColor.white.withAlphaComponent(0.78)
         venueMessageLbl.isUserInteractionEnabled = true
         venueMessageLbl.numberOfLines = collapsedLines
+        venueMessageLbl.lineBreakMode = .byWordWrapping
 
         let termsTap = UITapGestureRecognizer(
             target: self,
@@ -463,7 +465,14 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
 
         let needsToggle = shouldShowAgreementToggle(for: text, label: label)
         let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded || !needsToggle ? text : collapsedAgreementPreview(from: text)
+        let bodyText = isExpanded || !needsToggle
+            ? text
+            : collapsedAgreementPreview(
+                from: text,
+                label: label,
+                font: Constant.Font.geistRegular(size: 10),
+                toggleText: toggleText
+            )
         let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
 
         let attributed = NSMutableAttributedString(
@@ -483,7 +492,11 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
         }
 
         label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.lineBreakMode = .byWordWrapping
         label.attributedText = attributed
+        label.invalidateIntrinsicContentSize()
+        label.superview?.invalidateIntrinsicContentSize()
+        label.superview?.setNeedsLayout()
     }
 
     private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
@@ -497,19 +510,58 @@ final class CoverTicketCheckOutVC: UIViewController, ApplePayContextDelegate {
             attributes: [.font: font],
             context: nil
         ).height
-        return textHeight > (font.lineHeight * CGFloat(collapsedLines)) + 2
+        return textHeight > collapsedAgreementHeight(for: font)
     }
 
-    private func collapsedAgreementPreview(from text: String) -> String {
+    private func collapsedAgreementPreview(
+        from text: String,
+        label: UILabel,
+        font: UIFont,
+        toggleText: String
+    ) -> String {
         let cleanText = cleanAgreementText(text)
-        let maxCharacters = 140
+        let width = label.bounds.width > 0
+            ? label.bounds.width
+            : max(view.bounds.width - 64, 240)
+        let maxHeight = collapsedAgreementHeight(for: font)
 
-        guard cleanText.count > maxCharacters else { return cleanText }
+        func height(for value: String) -> CGFloat {
+            (value as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: font],
+                context: nil
+            ).height
+        }
 
-        let endIndex = cleanText.index(cleanText.startIndex, offsetBy: maxCharacters)
-        return String(cleanText[..<endIndex])
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            + "..."
+        guard height(for: "\(cleanText) \(toggleText)") > maxHeight else {
+            return cleanText
+        }
+
+        var low = 0
+        var high = cleanText.count
+        var best = ""
+
+        while low <= high {
+            let mid = (low + high) / 2
+            let endIndex = cleanText.index(cleanText.startIndex, offsetBy: mid)
+            let candidate = String(cleanText[..<endIndex])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let display = "\(candidate)... \(toggleText)"
+
+            if height(for: display) <= maxHeight {
+                best = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+        }
+
+        return best.isEmpty ? "..." : "\(best)..."
+    }
+
+    private func collapsedAgreementHeight(for font: UIFont) -> CGFloat {
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
     }
 
     private func agreementToggleRange(in label: UILabel, expanded: Bool) -> NSRange {
@@ -1665,6 +1717,7 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
     }
 
     func updateVenueStatus(venueId: String, venueStatus: String) {
+        guard venue?.id == venueId else { return }
         Alert.showAlertSheet(
             style: .alert,
             title: "Update",
@@ -1697,10 +1750,16 @@ extension CoverTicketCheckOutVC: WebSocketCallBackDelegate {
     private func popAction() -> UIAlertAction {
         UIAlertAction(title: "OK", style: .default) { [weak self] _ in
             guard let self else { return }
-            if let vc = navigationController?.viewControllers.first(where: { $0 is MVPVenueListVc }) {
+            if let vc = navigationController?.viewControllers.first(where: { $0 is CoverTicketListVC }) {
+                navigationController?.popToViewController(vc, animated: true)
+            } else if let vc = navigationController?.viewControllers.first(where: { $0 is VenueVC }) {
+                navigationController?.popToViewController(vc, animated: true)
+            } else if let vc = navigationController?.viewControllers.first(where: { $0 is MVPVenueListVc }) {
                 navigationController?.popToViewController(vc, animated: true)
             } else if let vc = navigationController?.viewControllers.first(where: { $0 is MVPVenueDetailVc }) {
                 navigationController?.popToViewController(vc, animated: true)
+            } else {
+                navigationController?.popViewController(animated: true)
             }
         }
     }

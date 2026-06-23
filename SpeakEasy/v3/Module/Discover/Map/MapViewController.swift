@@ -399,17 +399,8 @@ class MapViewController: UIViewController {
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.showsUserLocation = false
-        mapView.overrideUserInterfaceStyle = .dark
-
-        if #available(iOS 16.0, *) {
-            let configuration = MKStandardMapConfiguration(elevationStyle: .flat)
-            configuration.emphasisStyle = .muted
-            configuration.pointOfInterestFilter = .includingAll
-            mapView.preferredConfiguration = configuration
-        } else {
-            mapView.mapType = .mutedStandard
-        }
-
+        mapView.applySpeakEasyDarkStyle(showPointsOfInterest: true)
+        
         mapView.setRegion(
             MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 41.8781, longitude: -87.6298),

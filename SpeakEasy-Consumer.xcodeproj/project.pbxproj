@@ -2281,6 +2281,7 @@
 				0433FB902F3331EA008BC77B /* VenueDetailsVC.xib */,
 				CE901FFC2F6D2544008727A4 /* VenueExperiencesVC.swift */,
 				CE901FFD2F6D2544008727A4 /* VenueExperiencesVC.xib */,
+				CE9020012F6D4A99008727A4 /* Cover */,
 			);
 			path = Venue;
 			sourceTree = "<group>";
@@ -2311,6 +2312,13 @@
 				046E586F2AA075C200FAA0F6 /* TimeSlot.swift */,
 			);
 			path = Booking;
+			sourceTree = "<group>";
+		};
+		CE1D94582FEA658600A30707 /* VenueV2 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VenueV2;
 			sourceTree = "<group>";
 		};
 		CE221A4F2C3BC91300BC1BD8 /* Package */ = {
@@ -2653,6 +2661,7 @@
 		CE587F332FC810FF00FD70DA /* Venues */ = {
 			isa = PBXGroup;
 			children = (
+				CE0BA9272F6BFDE500AB8996 /* Venue */,
 				CE587F392FC811C900FD70DA /* CVC */,
 				CE587F342FC8113500FD70DA /* AllVenueVC */,
 			);
@@ -2901,8 +2910,7 @@
 		CEC6D6D02EF9261400A05672 /* v2 */ = {
 			isa = PBXGroup;
 			children = (
-				CE9020012F6D4A99008727A4 /* Cover */,
-				CE0BA9272F6BFDE500AB8996 /* Venue */,
+				CE1D94582FEA658600A30707 /* VenueV2 */,
 				6AF2B9C22F093ECC00069A90 /* Event */,
 				CE0906492EFBEB2E00936E9D /* TVC */,
 				CEF48B4F2EFA491E006A6468 /* CVC */,

@@ -165,6 +165,11 @@ extension VenueExperiencesVC {
 
 extension VenueExperiencesVC {
 
+    func refreshFromSocket() {
+        guard isViewLoaded else { return }
+        getEvents(reset: true)
+    }
+
     func getEvents(reset: Bool = false) {
 
         guard !isLoading else { return }

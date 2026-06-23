@@ -23,9 +23,10 @@ final class VenueVC: UIViewController {
     @IBOutlet weak var tabView: UIView!
     @IBOutlet weak var followBtn: UIButton!
     @IBOutlet weak var followBtnLbl: UILabel!
-
     @IBOutlet weak var bgView: UIView!
-
+    @IBOutlet weak var venueCityLbl: UILabel!
+    
+    
     var presenter = MVPPresenter()
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
@@ -66,6 +67,7 @@ final class VenueVC: UIViewController {
     var isPresentedPremium = false
     private var isFollowing = false
     private var isFollowLoading = false
+    private var isSocketRefreshInProgress = false
     private var followedVenueId: String?
     private let followActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -85,6 +87,16 @@ final class VenueVC: UIViewController {
         setUpData()
         setupTabsIfNeeded()
         getVenueDetails()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        registerSocketDelegate()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        unregisterSocketDelegate()
     }
 
     override func viewDidLayoutSubviews() {
@@ -127,6 +139,12 @@ final class VenueVC: UIViewController {
 
         let logoUrl = "\(SharedURL.amazonStorage)\(venueDetails?.logo?.key ?? "")"
         venueLogo.sd_setImage(with: URL(string: logoUrl), completed: nil)
+        
+        let displayCity = venueDetails?.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let locationText = displayCity?.isEmpty == false
+            ? displayCity
+            : venueDetails?.timezone
+        venueCityLbl.text = locationText
 
 //        if let url = URL(string: imageUrlString) {
 //            bgImage.sd_setImage(with: url, placeholderImage: UIImage(named: "newSpeakeasy"))
@@ -334,8 +352,98 @@ final class VenueVC: UIViewController {
 
 }
 
+// MARK: - WebSocket
+extension VenueVC: WebSocketCallBackDelegate {
+
+    func updateTicketPrice(ticket: [CoverTicket]) {
+        guard isCurrentVenueCoverTicketUpdate(ticket) else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func updateAddOnsTicketPrice(ticket: [UpSellTicket]) {
+        guard isCurrentVenueAddOnUpdate(ticket) else { return }
+        refreshVenueFromSocket(resetTickets: false)
+    }
+
+    func updateVenueStatus(venueId: String, venueStatus: String) {
+        guard venueDetails?.id == venueId else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func didGenderWiseTicketChange(venueId: String, uniqueId: String) {
+        guard venueDetails?.id == venueId || venueDetails?.uniqueId == uniqueId else { return }
+        refreshVenueFromSocket(resetTickets: true)
+    }
+
+    func didUpdateEvent(eventId: String) {
+        refreshVenueEventTabs()
+    }
+
+    func didUpdateEventTicket(ticket: EventTicket) {
+        refreshVenueEventTabs()
+    }
+}
+
 // MARK: - Sticky Header Coordination
 private extension VenueVC {
+
+    func registerSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+        WebSocketWrapper.shared.delegate.append(self)
+    }
+
+    func unregisterSocketDelegate() {
+        WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+    }
+
+    func refreshVenueFromSocket(resetTickets: Bool) {
+        guard !isSocketRefreshInProgress else { return }
+
+        let venueUniqueId = (venueDetails?.uniqueId ?? uniqueId) ?? ""
+        guard !venueUniqueId.isEmpty else { return }
+
+        isSocketRefreshInProgress = true
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, _, venueDetail in
+            guard let self else { return }
+
+            self.isSocketRefreshInProgress = false
+
+            guard isSuccess, let venueDetail else { return }
+
+            self.venueDetails = venueDetail
+            self.setUpData()
+
+            if resetTickets {
+                self.refreshVenueEventTabs()
+            }
+        }
+    }
+
+    func refreshVenueEventTabs() {
+        tabControllers.forEach { controller in
+            if let eventsVC = controller as? VenueEventsVC {
+                eventsVC.refreshFromSocket()
+            } else if let experiencesVC = controller as? VenueExperiencesVC {
+                experiencesVC.refreshFromSocket()
+            }
+        }
+    }
+
+    func isCurrentVenueCoverTicketUpdate(_ tickets: [CoverTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.venueId == currentVenueId }
+    }
+
+    func isCurrentVenueAddOnUpdate(_ tickets: [UpSellTicket]) -> Bool {
+        let currentVenueId = venueDetails?.id ?? ""
+        guard !currentVenueId.isEmpty else { return false }
+        return tickets.contains { $0.addOns?.venueId == currentVenueId }
+    }
 
     func syncFollowState() {
         followedVenueId =

@@ -34,6 +34,7 @@ final class PremiumExpVC: UIViewController {
     private var isPaginating = false
     private var lastCollectionLayoutWidth: CGFloat = 0
     private var hasPresentedIntro = false
+    private var selectedCity: String = UserDefault.shared.activeCity
     
     init() {
         let layout = PinterestLayout()
@@ -70,7 +71,7 @@ final class PremiumExpVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        headerView.configure(city: UserDefault.shared.localCity)
+        headerView.configure(city: selectedCity)
         headerView.reloadUser()
     }
 
@@ -348,7 +349,7 @@ private extension PremiumExpVC {
 
         service.fetchPremiumExperiences(
             skip: skip,
-            city: UserDefault.shared.localCity
+            city: selectedCity
         ) { [weak self] isSuccess, errMsg, newItems, hasMore in
             guard let self else { return }
 
@@ -462,6 +463,29 @@ private extension PremiumExpVC {
         isPaginating = true
         collectionView.collectionViewLayout.invalidateLayout()
         loadPremiumExperiences(reset: false)
+    }
+}
+
+extension PremiumExpVC {
+
+    func applyCity(_ city: String?) {
+        let trimmedCity = city?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let resolvedCity = trimmedCity?.isEmpty == false
+            ? trimmedCity!
+            : UserDefault.shared.activeCity
+
+        guard resolvedCity.caseInsensitiveCompare(selectedCity) != .orderedSame else {
+            headerView.configure(city: selectedCity)
+            return
+        }
+
+        selectedCity = resolvedCity
+        headerView.configure(city: resolvedCity)
+
+        guard isViewLoaded else { return }
+        loadPremiumExperiences(reset: true)
     }
 }
 

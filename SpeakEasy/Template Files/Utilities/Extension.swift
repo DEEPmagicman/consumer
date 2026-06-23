@@ -8,6 +8,7 @@
 import CoreLocation
 import UIKit
 import FirebaseCrashlytics
+import MapKit
 
 extension CLLocation {
     func getCity(completion: @escaping (String) -> Void) {
@@ -496,10 +497,27 @@ extension UIView {
     }
 }
 
+extension MKMapView {
+    func applySpeakEasyDarkStyle(showPointsOfInterest: Bool) {
+        overrideUserInterfaceStyle = .init(.dark)
+        
+        if #available(iOS 16.0, *) {
+            let config = MKStandardMapConfiguration(elevationStyle: .flat, emphasisStyle: .muted)
+            config.pointOfInterestFilter = showPointsOfInterest ? .includingAll : .excludingAll
+            preferredConfiguration = config
+        } else {
+            pointOfInterestFilter = showPointsOfInterest ? .includingAll : .excludingAll
+        }
+    }
+}
+
 extension Notification.Name {
 
     static let userProfileDidUpdate =
         Notification.Name("userProfileDidUpdate")
+
+    static let openPremiumTabFromDiscover =
+        Notification.Name("openPremiumTabFromDiscover")
 }
 
 extension String {

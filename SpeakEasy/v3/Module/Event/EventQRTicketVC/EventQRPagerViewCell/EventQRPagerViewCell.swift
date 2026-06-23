@@ -5,6 +5,7 @@ import FSPagerView
 struct EventTicketQR {
     let ticketName: String
     let qrString: String
+    let backupCode: String
 }
 
 class EventQRPagerViewCell: FSPagerViewCell {

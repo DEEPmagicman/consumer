@@ -427,10 +427,12 @@ final class OrderListViewController: UIViewController {
         termsAndConditionsLbl.textColor = .white
         termsAndConditionsLbl.isUserInteractionEnabled = true
         termsAndConditionsLbl.numberOfLines = collapsedLines
+        termsAndConditionsLbl.lineBreakMode = .byWordWrapping
         venueMessageLbl.font = Constant.Font.geistMedium(size: 12)
         venueMessageLbl.textColor = .white
         venueMessageLbl.isUserInteractionEnabled = true
         venueMessageLbl.numberOfLines = collapsedLines
+        venueMessageLbl.lineBreakMode = .byWordWrapping
 
         let termsTap = UITapGestureRecognizer(target: self, action: #selector(onTapTermsLabel))
         termsAndConditionsLbl.addGestureRecognizer(termsTap)
@@ -476,7 +478,14 @@ final class OrderListViewController: UIViewController {
 
         let needsToggle = shouldShowAgreementToggle(for: text, label: label)
         let toggleText = isExpanded ? "View Less" : "View More"
-        let bodyText = isExpanded || !needsToggle ? text : collapsedAgreementPreview(from: text)
+        let bodyText = isExpanded || !needsToggle
+            ? text
+            : collapsedAgreementPreview(
+                from: text,
+                label: label,
+                font: Constant.Font.geistMedium(size: 12),
+                toggleText: toggleText
+            )
         let displayText = needsToggle ? "\(bodyText) \(toggleText)" : bodyText
 
         let attributed = NSMutableAttributedString(
@@ -495,7 +504,11 @@ final class OrderListViewController: UIViewController {
         }
 
         label.numberOfLines = isExpanded || !needsToggle ? 0 : collapsedLines
+        label.lineBreakMode = .byWordWrapping
         label.attributedText = attributed
+        label.invalidateIntrinsicContentSize()
+        label.superview?.invalidateIntrinsicContentSize()
+        label.superview?.setNeedsLayout()
     }
 
     private func shouldShowAgreementToggle(for text: String, label: UILabel) -> Bool {
@@ -507,15 +520,56 @@ final class OrderListViewController: UIViewController {
             attributes: [.font: font],
             context: nil
         ).height
-        return textHeight > (font.lineHeight * CGFloat(collapsedLines)) + 2
+        return textHeight > collapsedAgreementHeight(for: font)
     }
 
-    private func collapsedAgreementPreview(from text: String) -> String {
+    private func collapsedAgreementPreview(
+        from text: String,
+        label: UILabel,
+        font: UIFont,
+        toggleText: String
+    ) -> String {
         let cleanText = cleanAgreementText(text)
-        let maxCharacters = 140
-        guard cleanText.count > maxCharacters else { return cleanText }
-        let endIndex = cleanText.index(cleanText.startIndex, offsetBy: maxCharacters)
-        return String(cleanText[..<endIndex]).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+        let width = label.bounds.width > 0 ? label.bounds.width : max(view.bounds.width - 64, 240)
+        let maxHeight = collapsedAgreementHeight(for: font)
+
+        func height(for value: String) -> CGFloat {
+            (value as NSString).boundingRect(
+                with: CGSize(width: width, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                attributes: [.font: font],
+                context: nil
+            ).height
+        }
+
+        guard height(for: "\(cleanText) \(toggleText)") > maxHeight else {
+            return cleanText
+        }
+
+        var low = 0
+        var high = cleanText.count
+        var best = ""
+
+        while low <= high {
+            let mid = (low + high) / 2
+            let endIndex = cleanText.index(cleanText.startIndex, offsetBy: mid)
+            let candidate = String(cleanText[..<endIndex])
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let display = "\(candidate)... \(toggleText)"
+
+            if height(for: display) <= maxHeight {
+                best = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
+        }
+
+        return best.isEmpty ? "..." : "\(best)..."
+    }
+
+    private func collapsedAgreementHeight(for font: UIFont) -> CGFloat {
+        ceil(font.lineHeight * CGFloat(collapsedLines)) + 6
     }
 
     @objc private func onTapTermsLabel(_ gesture: UITapGestureRecognizer) {
@@ -1134,7 +1188,7 @@ final class OrderListViewController: UIViewController {
 
                 if isSuccess {
                     self.countdownTimer?.invalidate()
-                    Navigate.to.ticketConfirmationVC(
+                    Navigate.to.showQRCode(
                         self,
                         booking: nil,
                         bookingId: bookingId,
@@ -1269,7 +1323,7 @@ final class TransactionCancelPopupVC: UIViewController {
     init(
         title: String = "Cancel transaction?",
         subtitle: String = "Your reserved tickets will be released and this checkout will close.",
-        keepTitle: String = "Keep checkout",
+        keepTitle: String = "Continue to checkout",
         cancelTitle: String = "Cancel transaction",
         onCancelTransaction: @escaping () -> Void
     ) {
