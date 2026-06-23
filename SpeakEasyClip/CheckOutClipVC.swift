@@ -1585,7 +1585,7 @@ extension CheckOutClipVC {
             print("Error converting dictionary to JSON string: \(error)")
         }
         
-        guard let userURL = URL(string: "\(SharedURL.baseURL)/appclip-user/free-booking") else { return }
+        guard let userURL = URL(string: "\(SharedURL.baseURL)/consumer/booking/appclip/free-booking") else { return }
         var request = URLRequest(url: userURL, timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "accept")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
