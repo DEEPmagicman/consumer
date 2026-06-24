@@ -1377,7 +1377,8 @@ extension CoverTicketCheckOutVC {
             isOnlyAddOnAvailable: isOnlyAddOn,
             venueId: venue?.id ?? "",
             addOnsBookingId: addOnsBookingId ?? "",
-            venueName: venue?.name ?? ""
+            venueName: venue?.name ?? "",
+            shouldPushFromVenueFlow: true
         )
     }
 

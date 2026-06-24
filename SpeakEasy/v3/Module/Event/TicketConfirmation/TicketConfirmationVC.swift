@@ -37,11 +37,13 @@ class TicketConfirmationVC: UIViewController {
     private var expandedFAQIndex: Int?
     private var isUpdatingTableHeight = false
     private var wasInteractivePopGestureEnabled = true
+    private let titleMarqueeLabel = PremiumMarqueeLabel()
 
     private let paymentService = PaymentService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTitleMarqueeLabel()
         getBooking(id: bookingId ?? "be5af872-e29d-4115-93ab-6660d47662eb")
         setupFAQTableView()
         setupKVO()
@@ -79,7 +81,7 @@ class TicketConfirmationVC: UIViewController {
 
         venueName.text = venueDetails?.name ?? ""
 //        venueName2.text = venueDetails?.name ?? ""
-        eventTitleLbl.text = event?.title ?? ""
+        setHeaderTitle(event?.title ?? "")
 //        eventImgView.sd_setImage(
 //            with: URL(string: (event?.flyer?.key ?? "").imageURL),
 //            placeholderImage: Constant.Icon.uploadImage
@@ -132,6 +134,33 @@ class TicketConfirmationVC: UIViewController {
         if let customText = event?.venue?.dressCode,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
         }
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard titleMarqueeLabel.superview == nil,
+              let parent = eventTitleLbl.superview else { return }
+
+        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleMarqueeLabel.font = eventTitleLbl.font ?? Constant.Font.geistMedium(size: 22)
+        titleMarqueeLabel.textColor = eventTitleLbl.textColor ?? .white
+        titleMarqueeLabel.animationSpeed = 25
+        titleMarqueeLabel.animationDelay = 1.2
+        titleMarqueeLabel.trailingSpacing = 48
+        parent.addSubview(titleMarqueeLabel)
+        eventTitleLbl.isHidden = true
+
+        NSLayoutConstraint.activate([
+            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventTitleLbl.centerXAnchor),
+            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventTitleLbl.centerYAnchor),
+            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventTitleLbl.leadingAnchor),
+            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventTitleLbl.trailingAnchor),
+            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventTitleLbl.heightAnchor)
+        ])
+    }
+
+    private func setHeaderTitle(_ title: String?) {
+        eventTitleLbl.text = title
+        titleMarqueeLabel.setText(title)
     }
     
     private func setupFAQTableView() {
@@ -193,7 +222,14 @@ class TicketConfirmationVC: UIViewController {
     }
     
     @IBAction func onClickViewtTicket(_ sender: Any) {
-        Navigate.to.showQRCode(self, booking: nil, bookingId: self.bookingId ?? "", type: .singleTickedEvent)
+        Navigate.to.showQRCode(
+            self,
+            booking: nil,
+            bookingId: self.bookingId ?? "",
+            type: .singleTickedEvent,
+            sourceEvent: self.event,
+            presentationMode: .pushedFromPurchase
+        )
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {

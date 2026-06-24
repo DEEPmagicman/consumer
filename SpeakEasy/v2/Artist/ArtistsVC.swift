@@ -40,6 +40,9 @@ final class ArtistsVC: UIViewController, SJSegmentedViewControllerViewSource {
         tableView.dataSource = self
 
         tableView.backgroundColor = .clear
+        tableView.clipsToBounds = false
+        tableView.layer.masksToBounds = false
+        view.clipsToBounds = false
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.alwaysBounceVertical = true

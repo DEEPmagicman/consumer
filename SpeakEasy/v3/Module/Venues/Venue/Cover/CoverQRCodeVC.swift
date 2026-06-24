@@ -38,6 +38,7 @@ final class CoverQRCodeVC: UIViewController {
     var isOnlyAddOnAvailable: Bool = false
     var venueId = String()
     var venueNameText: String? = ""
+    var shouldReturnToVenueAfterClose = false
 
     private let paymentService = PaymentService()
     private let posterHeaderView = VenuePosterHeaderView()
@@ -46,6 +47,9 @@ final class CoverQRCodeVC: UIViewController {
     private var currentPage: Int = 0
     private let fallbackPagerHeight: CGFloat = 415
     private var pass: PKPass?
+    private let venueNameMarqueeLabel = PremiumMarqueeLabel()
+    private var wasInteractivePopGestureEnabled: Bool?
+    private weak var interactivePopNavigationController: UINavigationController?
 
     private var showsAddOnsPage: Bool {
         isAddOnsAvailable && !isOnlyAddOnAvailable
@@ -86,11 +90,21 @@ final class CoverQRCodeVC: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if shouldReturnToVenueAfterClose {
+            interactivePopNavigationController = navigationController
+            wasInteractivePopGestureEnabled = navigationController?.interactivePopGestureRecognizer?.isEnabled
+            interactivePopNavigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        }
         WebSocketWrapper.shared.delegate.append(self)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        if let wasInteractivePopGestureEnabled {
+            interactivePopNavigationController?.interactivePopGestureRecognizer?.isEnabled = wasInteractivePopGestureEnabled
+            self.wasInteractivePopGestureEnabled = nil
+            interactivePopNavigationController = nil
+        }
         WebSocketWrapper.shared.delegate.removeAll(where: { $0 as? NSObject == self })
     }
 
@@ -101,16 +115,12 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Setup
     private func setupUI() {
         setupHeaderLabels()
-        venueName.text = venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-")
+        setVenueTitle(venueNameText?.isEmpty == false ? venueNameText : (venue?.name.isEmpty == false ? venue?.name : "-"))
         cityLbl.text = venue?.city
     }
 
     private func setupHeaderLabels() {
-        venueName.numberOfLines = 2
-        venueName.lineBreakMode = .byWordWrapping
-        venueName.textAlignment = .center
-        venueName.adjustsFontSizeToFitWidth = true
-        venueName.minimumScaleFactor = 0.75
+        setupVenueTitleMarquee()
 
         cityLbl.numberOfLines = 1
         cityLbl.lineBreakMode = .byTruncatingTail
@@ -136,6 +146,33 @@ final class CoverQRCodeVC: UIViewController {
                 constant: -24
             )
         ])
+    }
+
+    private func setupVenueTitleMarquee() {
+        guard venueNameMarqueeLabel.superview == nil,
+              let parent = venueName.superview else { return }
+
+        venueNameMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+        venueNameMarqueeLabel.font = venueName.font ?? Constant.Font.geistMedium(size: 22)
+        venueNameMarqueeLabel.textColor = venueName.textColor ?? .white
+        venueNameMarqueeLabel.animationSpeed = 25
+        venueNameMarqueeLabel.animationDelay = 1.2
+        venueNameMarqueeLabel.trailingSpacing = 48
+        parent.addSubview(venueNameMarqueeLabel)
+        venueName.isHidden = true
+
+        NSLayoutConstraint.activate([
+            venueNameMarqueeLabel.centerXAnchor.constraint(equalTo: venueName.centerXAnchor),
+            venueNameMarqueeLabel.centerYAnchor.constraint(equalTo: venueName.centerYAnchor),
+            venueNameMarqueeLabel.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 72),
+            venueNameMarqueeLabel.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: -72),
+            venueNameMarqueeLabel.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+
+    private func setVenueTitle(_ title: String?) {
+        venueName.text = title
+        venueNameMarqueeLabel.setText(title)
     }
 
     private func setupPosterBackground() {
@@ -221,7 +258,7 @@ final class CoverQRCodeVC: UIViewController {
     // MARK: - Data Loading
     private func loadInitialData() {
         if isOnlyAddOnAvailable {
-            fetchAddOnsBooking(showLoader: true)
+            fetchAddOnsBooking(showLoader: false)
             return
         }
 
@@ -230,22 +267,19 @@ final class CoverQRCodeVC: UIViewController {
         }
 
         guard !bookingId.isEmpty else { return }
-        fetchCoverBooking(showLoader: booking == nil)
+        fetchCoverBooking(showLoader: false)
     }
 
     @objc private func refreshData() {
         if isOnlyAddOnAvailable {
-            fetchAddOnsBooking(showLoader: true)
+            fetchAddOnsBooking(showLoader: false)
             return
         }
-        fetchCoverBooking(showLoader: true)
+        fetchCoverBooking(showLoader: false)
     }
 
     private func fetchCoverBooking(showLoader: Bool) {
-        if showLoader { Loader.show() }
-
         paymentService.fetchBookingDetail(bookingId: bookingId) { [weak self] isSuccess, _, fetchedBooking in
-            if showLoader { Loader.hide() }
             guard let self else { return }
             guard isSuccess, let fetchedBooking else { return }
 
@@ -259,7 +293,7 @@ final class CoverQRCodeVC: UIViewController {
     private func applyCoverBooking(_ booking: Booking) {
         self.booking = booking
         venue = booking.venueObject ?? venue
-        venueName.text = booking.venueObject?.name ?? venueNameText ?? "-"
+        setVenueTitle(booking.venueObject?.name ?? venueNameText ?? "-")
         cityLbl.text = booking.venueObject?.city ?? venue?.city
 
         if isAddOnsAvailable || !addOnsBookingId.isEmpty || !(booking.addOnsBookingId ?? "").isEmpty {
@@ -294,10 +328,7 @@ final class CoverQRCodeVC: UIViewController {
         let resolvedAddOnsBookingId = resolvedAddOnsBookingID()
         guard !resolvedAddOnsBookingId.isEmpty else { return }
 
-        if showLoader { Loader.show() }
-
         PaymentPresenter.getAddOnsBooking(addOnsBookingId: resolvedAddOnsBookingId) { [weak self] isSuccess, _, fetchedAddOnsBooking in
-            if showLoader { Loader.hide() }
             guard let self else { return }
             guard isSuccess, let fetchedAddOnsBooking else { return }
 
@@ -313,7 +344,7 @@ final class CoverQRCodeVC: UIViewController {
         isAddOnsAvailable = true
 
         if isOnlyAddOnAvailable || booking == nil {
-            venueName.text = addOnsBooking.venue?.name ?? venueNameText ?? "-"
+            setVenueTitle(addOnsBooking.venue?.name ?? venueNameText ?? "-")
             let imageUrlString = "\(SharedURL.amazonStorage)\(addOnsBooking.venue?.venueAttachment?.first?.key ?? "")"
             posterHeaderView.loadImage(from: imageUrlString)
         }
@@ -443,14 +474,43 @@ final class CoverQRCodeVC: UIViewController {
             venueUniqueId: uniqueId,
             venueTimeZone: timeZone
         )
-        dismiss(animated: true)
+        if shouldReturnToVenueAfterClose {
+            returnToVenueScreen(animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
 
     @IBAction func onClickCloseBtn(_ sender: Any) {
+        if shouldReturnToVenueAfterClose {
+            returnToVenueScreen(animated: true)
+            return
+        }
         returnToDiscoverScreen()
     }
 
+    private func returnToVenueScreen(animated: Bool) {
+        guard let navigationController else {
+            dismiss(animated: animated)
+            return
+        }
+
+        if let venueVC = navigationController.viewControllers.last(where: { $0 is VenueVC }) {
+            navigationController.popToViewController(venueVC, animated: animated)
+        } else if navigationController.viewControllers.count > 1 {
+            navigationController.popViewController(animated: animated)
+        } else {
+            dismiss(animated: animated)
+        }
+    }
+
     private func returnToDiscoverScreen() {
+        if let navigationController,
+           navigationController.viewControllers.count > 1 {
+            navigationController.popViewController(animated: true)
+            return
+        }
+
         let presenter = presentingViewController
 
         dismiss(animated: false) {
@@ -493,10 +553,14 @@ final class CoverQRCodeVC: UIViewController {
 
         guard let url = URL(string: APIBuilder.appClipAppleWallet(bookingID)) else { return }
 
-        Loader.show()
+        addToWalletBtn.isUserInteractionEnabled = false
+        addToWalletBtn.alpha = 0.65
         URLSession.shared.fetchData(at: url) { [weak self] data, error in
-            Loader.hide()
             guard let self else { return }
+            DispatchQueue.main.async {
+                self.addToWalletBtn.isUserInteractionEnabled = true
+                self.addToWalletBtn.alpha = 1
+            }
             guard let data else {
                 DispatchQueue.main.async {
                     Alert.showAlertSheet(style: .alert, title: Constant.String.somethingWrong, message: "")

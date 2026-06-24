@@ -5,6 +5,11 @@ import EventKit
 import MapKit
 import SDWebImage
 
+enum EventQRTicketPresentationMode {
+    case modal
+    case pushedFromPurchase
+}
+
 class EventQRTicketVC: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
@@ -30,7 +35,9 @@ class EventQRTicketVC: UIViewController {
 
     var bookingId = ""
     var booking: Booking?
+    var sourceEvent: Event?
     var type: PaymentIntentType = .singleTickedEvent
+    var presentationMode: EventQRTicketPresentationMode = .modal
 
     private var pass: PKPass?
     private var ticketListHeightObservation: NSKeyValueObservation?
@@ -72,6 +79,7 @@ class EventQRTicketVC: UIViewController {
     private var isShowingBackupCode = false
     private var qrFlipWorkItem: DispatchWorkItem?
     private var didFetchFullBookingDetail = false
+    private var previousInteractivePopEnabled: Bool?
 
     private var faqs: [(question: String, answer: String)] = []
 
@@ -89,6 +97,7 @@ class EventQRTicketVC: UIViewController {
         setupLoadingShimmer()
         setupLegacyContentHidden()
         setupTicketPassLayout()
+        configurePresentationMode()
         setupPagerView()
         setupTableView()
         setupActionSection()
@@ -113,11 +122,26 @@ class EventQRTicketVC: UIViewController {
         WebSocketWrapper.shared.delegate.append(self)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard presentationMode == .pushedFromPurchase else { return }
+        previousInteractivePopEnabled =
+        navigationController?.interactivePopGestureRecognizer?.isEnabled
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         introHideWorkItem?.cancel()
         qrFlipWorkItem?.cancel()
         WebSocketWrapper.shared.delegate.removeAll { $0 === self }
+
+        if presentationMode == .pushedFromPurchase,
+           let previousInteractivePopEnabled {
+            navigationController?.interactivePopGestureRecognizer?.isEnabled =
+            previousInteractivePopEnabled
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -165,6 +189,42 @@ class EventQRTicketVC: UIViewController {
             loadingShimmerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             loadingShimmerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    private func configurePresentationMode() {
+        let isPushed = presentationMode == .pushedFromPurchase
+        closeButton()?.iconTypeValue =
+        isPushed
+        ? AppIconType.leftSideBack.rawValue
+        : AppIconType.close.rawValue
+    }
+
+    private func closeButton() -> AppIconButton? {
+        findAppIconButton(in: view) { button in
+            button.iconTypeValue == AppIconType.close.rawValue ||
+            button.iconTypeValue == AppIconType.leftSideBack.rawValue
+        }
+    }
+
+    private func findAppIconButton(
+        in view: UIView,
+        where predicate: (AppIconButton) -> Bool
+    ) -> AppIconButton? {
+        for subview in view.subviews {
+            if let button = subview as? AppIconButton,
+               predicate(button) {
+                return button
+            }
+
+            if let button = findAppIconButton(
+                in: subview,
+                where: predicate
+            ) {
+                return button
+            }
+        }
+
+        return nil
     }
 
     private func setQRLoading(_ isLoading: Bool) {
@@ -261,23 +321,23 @@ class EventQRTicketVC: UIViewController {
         labelStack.translatesAutoresizingMaskIntoConstraints = false
         topHeaderView.addSubview(labelStack)
 
-        eventHeaderTitleLabel.font = Constant.Font.geistSemiBold(size: 20)
+        eventHeaderTitleLabel.font = Constant.Font.geistMedium(size: 20)
         eventHeaderTitleLabel.textColor = .white
         eventHeaderTitleLabel.animationSpeed = 25
         eventHeaderTitleLabel.animationDelay = 1.2
         eventHeaderTitleLabel.trailingSpacing = 48
         eventHeaderTitleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        eventHeaderVenueLabel.font = Constant.Font.geistSemiBold(size: 14)
+        eventHeaderVenueLabel.font = Constant.Font.geistMedium(size: 14)
         eventHeaderVenueLabel.textColor = .white
         eventHeaderVenueLabel.textAlignment = .center
         eventHeaderVenueLabel.numberOfLines = 1
         eventHeaderVenueLabel.lineBreakMode = .byTruncatingTail
 
-        eventHeaderTimeLabel.font = Constant.Font.geistSemiBold(size: 14)
+        eventHeaderTimeLabel.font = Constant.Font.geistMedium(size: 14)
         eventHeaderTimeLabel.textColor = .white
         eventHeaderTimeLabel.textAlignment = .center
-        eventHeaderTimeLabel.numberOfLines = 1
+        eventHeaderTimeLabel.numberOfLines = 2
         eventHeaderTimeLabel.lineBreakMode = .byTruncatingTail
 
         labelStack.addArrangedSubview(eventHeaderTitleLabel)
@@ -286,8 +346,8 @@ class EventQRTicketVC: UIViewController {
 
         NSLayoutConstraint.activate([
             topHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            topHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 106),
-            topHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -106),
+            topHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 75),
+            topHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -75),
 
             labelStack.topAnchor.constraint(equalTo: topHeaderView.topAnchor),
             labelStack.leadingAnchor.constraint(equalTo: topHeaderView.leadingAnchor),
@@ -1539,23 +1599,34 @@ class EventQRTicketVC: UIViewController {
     }
     
     @IBAction func onClickCloseBtn(_ sender: Any) {
-        returnToDiscoverScreen()
+        switch presentationMode {
+        case .modal:
+            dismiss(animated: true)
+
+        case .pushedFromPurchase:
+            returnToEventDetails()
+        }
     }
 
-    private func returnToDiscoverScreen() {
-        let presenter = presentingViewController
-
-        dismiss(animated: false) {
-            if let navigationController = presenter as? UINavigationController {
-                navigationController.tabBarController?.selectedIndex = 0
-                navigationController.popToRootViewController(animated: false)
-            } else if let navigationController = presenter?.navigationController {
-                navigationController.tabBarController?.selectedIndex = 0
-                navigationController.popToRootViewController(animated: false)
-            } else if let tabBarController = presenter?.tabBarController {
-                tabBarController.selectedIndex = 0
-            }
+    private func returnToEventDetails() {
+        guard let navigationController else {
+            dismiss(animated: true)
+            return
         }
+
+        if let eventDetailsVC = navigationController.viewControllers
+            .last(where: { $0 is EventDetailsVC }) {
+            navigationController.popToViewController(
+                eventDetailsVC,
+                animated: true
+            )
+            return
+        }
+
+        showEventDetailsFromBooking(
+            in: navigationController,
+            animated: true
+        )
     }
 }
 
@@ -1724,36 +1795,122 @@ private extension EventQRTicketVC {
             return
         }
         event?.venue = self.booking?.venueObject
+
+        if let eventDetailsVC = navigationController?.viewControllers
+            .last(where: { $0 is EventDetailsVC }) {
+            navigationController?.popToViewController(
+                eventDetailsVC,
+                animated: true
+            )
+            return
+        }
+
+        if let navigationController {
+            showEventDetailsFromBooking(
+                in: navigationController,
+                animated: true
+            )
+            return
+        }
         
         Navigate.eventDetailsVC(
             self,
             event: event
         )
     }
+
+    func showEventDetailsFromBooking(
+        in navigationController: UINavigationController,
+        animated: Bool
+    ) {
+        var event = booking?.event ?? sourceEvent
+
+        guard event != nil else {
+            navigationController.popViewController(animated: animated)
+            return
+        }
+
+        if let venue = booking?.venueObject {
+            event?.venue = venue
+        }
+
+        let vc = EventDetailsVC(nibName: "EventDetailsVC", bundle: nil)
+        vc.event = event
+        vc.venueDetails = event?.venue
+
+        var stack = navigationController.viewControllers
+        if let currentIndex = stack.firstIndex(of: self) {
+            stack = Array(stack.prefix(currentIndex))
+        }
+
+        stack.removeAll {
+            $0 is OrderListViewController ||
+            $0 is TicketCheckoutVC ||
+            $0 is TicketConfirmationVC
+        }
+
+        stack.append(vc)
+        navigationController.setViewControllers(
+            stack,
+            animated: animated
+        )
+    }
 }
 
 private final class EventQRLoadingShimmerView: UIView {
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
-    private let posterBlock = ShimmerViewV3()
     private let titleLine = ShimmerViewV3()
     private let subtitleLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let timeLine = ShimmerViewV3(frame: .zero, lighter: true)
     private let qrCard = UIView()
+    private let accountLine = ShimmerViewV3()
+    private let purchaseLine = ShimmerViewV3(frame: .zero, lighter: true)
     private let qrSquare = ShimmerViewV3()
-    private let qrLine = ShimmerViewV3(frame: .zero, lighter: true)
-    private let pillLine = ShimmerViewV3(frame: .zero, lighter: true)
-    private let detailLineOne = ShimmerViewV3()
-    private let detailLineTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let helperLine = ShimmerViewV3(frame: .zero, lighter: true)
+    private let ticketLineOne = ShimmerViewV3()
+    private let ticketCountOne = ShimmerViewV3(frame: .zero, lighter: true)
+    private let progressLineOne = ShimmerViewV3(frame: .zero, lighter: true)
+    private let ticketLineTwo = ShimmerViewV3()
+    private let ticketCountTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let progressLineTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let orderCard = UIView()
+    private let orderTitleLine = ShimmerViewV3()
+    private let orderLineOne = ShimmerViewV3(frame: .zero, lighter: true)
+    private let orderValueOne = ShimmerViewV3(frame: .zero, lighter: true)
+    private let orderLineTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let orderValueTwo = ShimmerViewV3(frame: .zero, lighter: true)
+    private let orderTotalLine = ShimmerViewV3()
+    private let orderTotalValue = ShimmerViewV3()
+    private let actionCard = UIView()
+    private let actionLineOne = ShimmerViewV3()
+    private let actionLineTwo = ShimmerViewV3()
+    private let actionLineThree = ShimmerViewV3()
 
     private var shimmerViews: [ShimmerViewV3] {
         [
-            posterBlock,
             titleLine,
             subtitleLine,
+            timeLine,
+            accountLine,
+            purchaseLine,
             qrSquare,
-            qrLine,
-            pillLine,
-            detailLineOne,
-            detailLineTwo
+            helperLine,
+            ticketLineOne,
+            ticketCountOne,
+            progressLineOne,
+            ticketLineTwo,
+            ticketCountTwo,
+            progressLineTwo,
+            orderTitleLine,
+            orderLineOne,
+            orderValueOne,
+            orderLineTwo,
+            orderValueTwo,
+            orderTotalLine,
+            orderTotalValue,
+            actionLineOne,
+            actionLineTwo,
+            actionLineThree
         ]
     }
 
@@ -1789,35 +1946,65 @@ private final class EventQRLoadingShimmerView: UIView {
     private func setupUI() {
         isHidden = true
         alpha = 0
-        backgroundColor = UIColor.black.withAlphaComponent(0.58)
+        backgroundColor = UIColor.black.withAlphaComponent(0.72)
         isUserInteractionEnabled = true
 
         blurView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(blurView)
 
-        qrCard.translatesAutoresizingMaskIntoConstraints = false
-        qrCard.backgroundColor = UIColor.white.withAlphaComponent(0.08)
-        qrCard.layer.cornerRadius = 24
-        qrCard.layer.borderWidth = 1
-        qrCard.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
-        qrCard.clipsToBounds = true
-        addSubview(qrCard)
+        [qrCard, orderCard, actionCard].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = UIColor.white.withAlphaComponent(0.075)
+            $0.layer.cornerRadius = 20
+            $0.layer.borderWidth = 1
+            $0.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
+            $0.clipsToBounds = true
+            addSubview($0)
+        }
 
-        [posterBlock, titleLine, subtitleLine, detailLineOne, detailLineTwo].forEach {
+        qrCard.translatesAutoresizingMaskIntoConstraints = false
+
+        [titleLine, subtitleLine, timeLine].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.layer.cornerRadius = 8
             addSubview($0)
         }
 
-        [qrSquare, qrLine, pillLine].forEach {
+        [
+            accountLine,
+            purchaseLine,
+            qrSquare,
+            helperLine,
+            ticketLineOne,
+            ticketCountOne,
+            progressLineOne,
+            ticketLineTwo,
+            ticketCountTwo,
+            progressLineTwo
+        ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.layer.cornerRadius = 10
+            $0.layer.cornerRadius = 8
             qrCard.addSubview($0)
         }
+        [
+            orderTitleLine,
+            orderLineOne,
+            orderValueOne,
+            orderLineTwo,
+            orderValueTwo,
+            orderTotalLine,
+            orderTotalValue
+        ].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            orderCard.addSubview($0)
+        }
 
-        posterBlock.layer.cornerRadius = 22
-        qrSquare.layer.cornerRadius = 18
-        pillLine.layer.cornerRadius = 18
+        [actionLineOne, actionLineTwo, actionLineThree].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.cornerRadius = 8
+            actionCard.addSubview($0)
+        }
 
         NSLayoutConstraint.activate([
             blurView.topAnchor.constraint(equalTo: topAnchor),
@@ -1825,50 +2012,135 @@ private final class EventQRLoadingShimmerView: UIView {
             blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            posterBlock.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 112),
-            posterBlock.centerXAnchor.constraint(equalTo: centerXAnchor),
-            posterBlock.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.52),
-            posterBlock.heightAnchor.constraint(equalTo: posterBlock.widthAnchor, multiplier: 1.15),
-
-            titleLine.topAnchor.constraint(equalTo: posterBlock.bottomAnchor, constant: 28),
+            titleLine.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 42),
             titleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.58),
-            titleLine.heightAnchor.constraint(equalToConstant: 18),
+            titleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.62),
+            titleLine.heightAnchor.constraint(equalToConstant: 22),
 
             subtitleLine.topAnchor.constraint(equalTo: titleLine.bottomAnchor, constant: 12),
             subtitleLine.centerXAnchor.constraint(equalTo: centerXAnchor),
-            subtitleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.34),
-            subtitleLine.heightAnchor.constraint(equalToConstant: 12),
+            subtitleLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.38),
+            subtitleLine.heightAnchor.constraint(equalToConstant: 14),
 
-            qrCard.topAnchor.constraint(equalTo: subtitleLine.bottomAnchor, constant: 34),
-            qrCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
-            qrCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -28),
-            qrCard.heightAnchor.constraint(equalToConstant: 176),
+            timeLine.topAnchor.constraint(equalTo: subtitleLine.bottomAnchor, constant: 10),
+            timeLine.centerXAnchor.constraint(equalTo: centerXAnchor),
+            timeLine.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.46),
+            timeLine.heightAnchor.constraint(equalToConstant: 14),
 
-            qrSquare.leadingAnchor.constraint(equalTo: qrCard.leadingAnchor, constant: 22),
-            qrSquare.centerYAnchor.constraint(equalTo: qrCard.centerYAnchor),
-            qrSquare.widthAnchor.constraint(equalToConstant: 112),
+            qrCard.topAnchor.constraint(equalTo: timeLine.bottomAnchor, constant: 26),
+            qrCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            qrCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+
+            accountLine.topAnchor.constraint(equalTo: qrCard.topAnchor, constant: 24),
+            accountLine.centerXAnchor.constraint(equalTo: qrCard.centerXAnchor),
+            accountLine.widthAnchor.constraint(equalTo: qrCard.widthAnchor, multiplier: 0.42),
+            accountLine.heightAnchor.constraint(equalToConstant: 18),
+
+            purchaseLine.topAnchor.constraint(equalTo: accountLine.bottomAnchor, constant: 12),
+            purchaseLine.centerXAnchor.constraint(equalTo: qrCard.centerXAnchor),
+            purchaseLine.widthAnchor.constraint(equalTo: qrCard.widthAnchor, multiplier: 0.62),
+            purchaseLine.heightAnchor.constraint(equalToConstant: 14),
+
+            qrSquare.topAnchor.constraint(equalTo: purchaseLine.bottomAnchor, constant: 26),
+            qrSquare.centerXAnchor.constraint(equalTo: qrCard.centerXAnchor),
+            qrSquare.widthAnchor.constraint(equalToConstant: 214),
             qrSquare.heightAnchor.constraint(equalTo: qrSquare.widthAnchor),
 
-            qrLine.leadingAnchor.constraint(equalTo: qrSquare.trailingAnchor, constant: 22),
-            qrLine.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor, constant: -24),
-            qrLine.topAnchor.constraint(equalTo: qrSquare.topAnchor, constant: 16),
-            qrLine.heightAnchor.constraint(equalToConstant: 18),
+            helperLine.topAnchor.constraint(equalTo: qrSquare.bottomAnchor, constant: 24),
+            helperLine.centerXAnchor.constraint(equalTo: qrCard.centerXAnchor),
+            helperLine.widthAnchor.constraint(equalTo: qrCard.widthAnchor, multiplier: 0.72),
+            helperLine.heightAnchor.constraint(equalToConstant: 14),
 
-            pillLine.leadingAnchor.constraint(equalTo: qrLine.leadingAnchor),
-            pillLine.trailingAnchor.constraint(equalTo: qrLine.trailingAnchor, constant: -36),
-            pillLine.bottomAnchor.constraint(equalTo: qrSquare.bottomAnchor, constant: -8),
-            pillLine.heightAnchor.constraint(equalToConstant: 42),
+            ticketLineOne.topAnchor.constraint(equalTo: helperLine.bottomAnchor, constant: 28),
+            ticketLineOne.leadingAnchor.constraint(equalTo: qrCard.leadingAnchor, constant: 32),
+            ticketLineOne.widthAnchor.constraint(equalTo: qrCard.widthAnchor, multiplier: 0.34),
+            ticketLineOne.heightAnchor.constraint(equalToConstant: 16),
 
-            detailLineOne.topAnchor.constraint(equalTo: qrCard.bottomAnchor, constant: 34),
-            detailLineOne.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32),
-            detailLineOne.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.72),
-            detailLineOne.heightAnchor.constraint(equalToConstant: 14),
+            ticketCountOne.centerYAnchor.constraint(equalTo: ticketLineOne.centerYAnchor),
+            ticketCountOne.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor, constant: -32),
+            ticketCountOne.widthAnchor.constraint(equalToConstant: 32),
+            ticketCountOne.heightAnchor.constraint(equalToConstant: 16),
 
-            detailLineTwo.topAnchor.constraint(equalTo: detailLineOne.bottomAnchor, constant: 16),
-            detailLineTwo.leadingAnchor.constraint(equalTo: detailLineOne.leadingAnchor),
-            detailLineTwo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.52),
-            detailLineTwo.heightAnchor.constraint(equalToConstant: 12)
+            progressLineOne.topAnchor.constraint(equalTo: ticketLineOne.bottomAnchor, constant: 18),
+            progressLineOne.leadingAnchor.constraint(equalTo: ticketLineOne.leadingAnchor),
+            progressLineOne.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor, constant: -88),
+            progressLineOne.heightAnchor.constraint(equalToConstant: 10),
+
+            ticketLineTwo.topAnchor.constraint(equalTo: progressLineOne.bottomAnchor, constant: 28),
+            ticketLineTwo.leadingAnchor.constraint(equalTo: ticketLineOne.leadingAnchor),
+            ticketLineTwo.widthAnchor.constraint(equalTo: qrCard.widthAnchor, multiplier: 0.48),
+            ticketLineTwo.heightAnchor.constraint(equalToConstant: 16),
+
+            ticketCountTwo.centerYAnchor.constraint(equalTo: ticketLineTwo.centerYAnchor),
+            ticketCountTwo.trailingAnchor.constraint(equalTo: ticketCountOne.trailingAnchor),
+            ticketCountTwo.widthAnchor.constraint(equalTo: ticketCountOne.widthAnchor),
+            ticketCountTwo.heightAnchor.constraint(equalTo: ticketCountOne.heightAnchor),
+
+            progressLineTwo.topAnchor.constraint(equalTo: ticketLineTwo.bottomAnchor, constant: 18),
+            progressLineTwo.leadingAnchor.constraint(equalTo: ticketLineTwo.leadingAnchor),
+            progressLineTwo.trailingAnchor.constraint(equalTo: progressLineOne.trailingAnchor),
+            progressLineTwo.heightAnchor.constraint(equalToConstant: 10),
+            progressLineTwo.bottomAnchor.constraint(equalTo: qrCard.bottomAnchor, constant: -26),
+
+            orderCard.topAnchor.constraint(equalTo: qrCard.bottomAnchor, constant: 18),
+            orderCard.leadingAnchor.constraint(equalTo: qrCard.leadingAnchor),
+            orderCard.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor),
+            orderCard.heightAnchor.constraint(equalToConstant: 156),
+
+            orderTitleLine.topAnchor.constraint(equalTo: orderCard.topAnchor, constant: 20),
+            orderTitleLine.leadingAnchor.constraint(equalTo: orderCard.leadingAnchor, constant: 18),
+            orderTitleLine.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.34),
+            orderTitleLine.heightAnchor.constraint(equalToConstant: 18),
+
+            orderLineOne.topAnchor.constraint(equalTo: orderTitleLine.bottomAnchor, constant: 24),
+            orderLineOne.leadingAnchor.constraint(equalTo: orderTitleLine.leadingAnchor),
+            orderLineOne.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.42),
+            orderLineOne.heightAnchor.constraint(equalToConstant: 13),
+
+            orderValueOne.centerYAnchor.constraint(equalTo: orderLineOne.centerYAnchor),
+            orderValueOne.trailingAnchor.constraint(equalTo: orderCard.trailingAnchor, constant: -18),
+            orderValueOne.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.18),
+            orderValueOne.heightAnchor.constraint(equalTo: orderLineOne.heightAnchor),
+
+            orderLineTwo.topAnchor.constraint(equalTo: orderLineOne.bottomAnchor, constant: 14),
+            orderLineTwo.leadingAnchor.constraint(equalTo: orderLineOne.leadingAnchor),
+            orderLineTwo.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.34),
+            orderLineTwo.heightAnchor.constraint(equalToConstant: 13),
+
+            orderValueTwo.centerYAnchor.constraint(equalTo: orderLineTwo.centerYAnchor),
+            orderValueTwo.trailingAnchor.constraint(equalTo: orderValueOne.trailingAnchor),
+            orderValueTwo.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.14),
+            orderValueTwo.heightAnchor.constraint(equalTo: orderLineTwo.heightAnchor),
+
+            orderTotalLine.topAnchor.constraint(equalTo: orderLineTwo.bottomAnchor, constant: 20),
+            orderTotalLine.leadingAnchor.constraint(equalTo: orderLineOne.leadingAnchor),
+            orderTotalLine.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.24),
+            orderTotalLine.heightAnchor.constraint(equalToConstant: 15),
+
+            orderTotalValue.centerYAnchor.constraint(equalTo: orderTotalLine.centerYAnchor),
+            orderTotalValue.trailingAnchor.constraint(equalTo: orderValueOne.trailingAnchor),
+            orderTotalValue.widthAnchor.constraint(equalTo: orderCard.widthAnchor, multiplier: 0.22),
+            orderTotalValue.heightAnchor.constraint(equalTo: orderTotalLine.heightAnchor),
+
+            actionCard.topAnchor.constraint(equalTo: orderCard.bottomAnchor, constant: 18),
+            actionCard.leadingAnchor.constraint(equalTo: qrCard.leadingAnchor),
+            actionCard.trailingAnchor.constraint(equalTo: qrCard.trailingAnchor),
+            actionCard.heightAnchor.constraint(equalToConstant: 152),
+
+            actionLineOne.topAnchor.constraint(equalTo: actionCard.topAnchor, constant: 24),
+            actionLineOne.leadingAnchor.constraint(equalTo: actionCard.leadingAnchor, constant: 24),
+            actionLineOne.widthAnchor.constraint(equalTo: actionCard.widthAnchor, multiplier: 0.34),
+            actionLineOne.heightAnchor.constraint(equalToConstant: 18),
+
+            actionLineTwo.topAnchor.constraint(equalTo: actionLineOne.bottomAnchor, constant: 28),
+            actionLineTwo.leadingAnchor.constraint(equalTo: actionLineOne.leadingAnchor),
+            actionLineTwo.widthAnchor.constraint(equalTo: actionCard.widthAnchor, multiplier: 0.48),
+            actionLineTwo.heightAnchor.constraint(equalToConstant: 18),
+
+            actionLineThree.topAnchor.constraint(equalTo: actionLineTwo.bottomAnchor, constant: 28),
+            actionLineThree.leadingAnchor.constraint(equalTo: actionLineOne.leadingAnchor),
+            actionLineThree.widthAnchor.constraint(equalTo: actionCard.widthAnchor, multiplier: 0.42),
+            actionLineThree.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
 }

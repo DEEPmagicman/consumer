@@ -34,7 +34,12 @@ final class Navigate {
     }
     
     func back(_ sender: UIViewController) {
-        sender.navigationController?.popViewController(animated: true)
+        if let navigationController = sender.navigationController,
+           navigationController.viewControllers.count > 1 {
+            navigationController.popViewController(animated: true)
+        } else {
+            sender.dismiss(animated: true)
+        }
     }
     
     func enterPhoneNumVc(_ sender: UIViewController, isFromLogin: Bool = false, isFromSettings: Bool = false) {
@@ -251,13 +256,22 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
 
-    func showQRCode(_ sender: UIViewController, booking: Booking?, bookingId: String, type: PaymentIntentType) {
+    func showQRCode(
+        _ sender: UIViewController,
+        booking: Booking?,
+        bookingId: String,
+        type: PaymentIntentType,
+        sourceEvent: Event? = nil,
+        presentationMode: EventQRTicketPresentationMode = .modal
+    ) {
 //        let vc = StoryboardAndXibManager.StoryBoard.payment.instantiateVC(EventQRTicketVC.self)
         let vc = EventQRTicketVC(nibName: "EventQRTicketVC", bundle: nil)
         vc.booking = booking
         vc.bookingId = bookingId
+        vc.sourceEvent = sourceEvent ?? booking?.event
 //        vc.delegate = sender as? QRCodeVCNavigationDelegate
         vc.type = type
+        vc.presentationMode = presentationMode
 //        if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
 //            homeVc.present(vc, animated: true)
 //            homeVc.tabBarController?.selectedIndex = 1
@@ -273,7 +287,19 @@ final class Navigate {
 //            vc.delegate = accountVc as? AccountVC
 //            return
 //        }
-        sender.navigationController?.present(vc, animated: true)
+        switch presentationMode {
+        case .modal:
+            sender.navigationController?.present(vc, animated: true)
+
+        case .pushedFromPurchase:
+            vc.hidesBottomBarWhenPushed = true
+
+            if let navigationController = sender.navigationController {
+                navigationController.pushViewController(vc, animated: true)
+            } else {
+                sender.present(vc, animated: true)
+            }
+        }
     }
     
     func paymentDetailVC(_ sender: UIViewController, booking: Booking?) {
@@ -342,7 +368,17 @@ final class Navigate {
         sender.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func scanQR(_ sender: UIViewController, isAddOnsAvailable: Bool = false, bookingId: String, booking: Booking? = nil, isOnlyAddOnAvailable: Bool = false, venueId: String = "", addOnsBookingId: String, venueName: String? = "") {
+    func scanQR(
+        _ sender: UIViewController,
+        isAddOnsAvailable: Bool = false,
+        bookingId: String,
+        booking: Booking? = nil,
+        isOnlyAddOnAvailable: Bool = false,
+        venueId: String = "",
+        addOnsBookingId: String,
+        venueName: String? = "",
+        shouldPushFromVenueFlow: Bool = false
+    ) {
         let vc = CoverQRCodeVC(nibName: "CoverQRCodeVC", bundle: nil)
         vc.isAddOnsAvailable = isAddOnsAvailable
         vc.bookingId = bookingId
@@ -353,6 +389,15 @@ final class Navigate {
         vc.delegate = sender as? QRCodeVCNavigationDelegate
         vc.addOnsBookingId = addOnsBookingId
         vc.venueNameText = venueName
+        vc.shouldReturnToVenueAfterClose = shouldPushFromVenueFlow
+
+        if shouldPushFromVenueFlow,
+           let navigationController = sender.navigationController {
+            vc.hidesBottomBarWhenPushed = true
+            navigationController.pushViewController(vc, animated: true)
+            return
+        }
+
         if let homeVc = sender.navigationController?.viewControllers.first(where: { $0.isKind(of: MVPVenueListVc.self) }) {
             homeVc.present(vc, animated: true)
             homeVc.tabBarController?.selectedIndex = 1
@@ -553,6 +598,7 @@ final class Navigate {
         vc.onSaveStateChanged = onSaveStateChanged
         let nav = UINavigationController(rootViewController: vc)
         nav.navigationBar.isHidden = true
+        nav.isModalInPresentation = true
         sender.presentPremium(nav)
 //        sender.pushVC(vc, animated: false)
     }

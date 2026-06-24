@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 struct ArtistDetailsContext {
     let id: String
@@ -59,6 +60,7 @@ final class ArtistDetailsVC: UIViewController {
 
     private weak var artistImageView: UIImageView?
     private weak var artistNameLabel: UILabel?
+    private let posterHeaderView = EventPosterHeaderView()
 
     private var events: [Event] = []
     private var skip = 0
@@ -71,6 +73,7 @@ final class ArtistDetailsVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupPosterBackground()
         captureHeaderViews()
         setupHeader()
         setupCollectionView()
@@ -102,9 +105,11 @@ final class ArtistDetailsVC: UIViewController {
         guard let imageURL = artist?.imageURL,
               let url = URL(string: imageURL) else {
             artistImageView?.image = Constant.Icon.uploadImage
+            posterHeaderView.setBackgroundImage(Constant.Icon.uploadImage)
             return
         }
 
+        posterHeaderView.loadImage(from: imageURL)
         artistImageView?.sd_setImage(
             with: url,
             placeholderImage: Constant.Icon.uploadImage
@@ -122,6 +127,8 @@ final class ArtistDetailsVC: UIViewController {
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
         collectionView.backgroundColor = .clear
+        collectionView.clipsToBounds = false
+        collectionView.layer.masksToBounds = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceVertical = true
@@ -346,6 +353,22 @@ final class ArtistDetailsVC: UIViewController {
             collectionView.collectionViewLayout.invalidateLayout()
             collectionView.layoutIfNeeded()
         }
+    }
+
+    private func setupPosterBackground() {
+        view.backgroundColor = AppColor.primaryBlackColor
+        view.subviews.first?.backgroundColor = .clear
+
+        posterHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        posterHeaderView.isUserInteractionEnabled = false
+        view.insertSubview(posterHeaderView, at: 0)
+
+        NSLayoutConstraint.activate([
+            posterHeaderView.topAnchor.constraint(equalTo: view.topAnchor),
+            posterHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            posterHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            posterHeaderView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 
     private func loadNextPageIfNeeded() {

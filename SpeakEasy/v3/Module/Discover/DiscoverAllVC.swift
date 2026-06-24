@@ -21,6 +21,8 @@ final class DiscoverAllVC: UIViewController {
 
     private let discoverService = DiscoverService()
     private var initialLoadID = 0
+    private var activeLoadShowsSkeleton = true
+    private weak var refreshControl: UIRefreshControl?
     private var isNavigatingToDiscoverItem = false
 
     var selectedCity: String = ""
@@ -30,6 +32,7 @@ final class DiscoverAllVC: UIViewController {
 
         view.isHidden = true
         selectedCity = UserDefault.shared.activeCity
+        setupPullToRefresh()
         setupSections()
         fetchInitialData()
         
@@ -178,15 +181,34 @@ private extension DiscoverAllVC {
         fetchDiscoverData(loadID: loadID)
     }
 
-    func beginInitialLoading() -> Int {
+    func beginInitialLoading(showsSkeleton: Bool = true) -> Int {
         initialLoadID += 1
+        activeLoadShowsSkeleton = showsSkeleton
 
-        view.isHidden = true
+        if showsSkeleton {
+            view.isHidden = true
 
-        (parent as? DiscoverVC)?
-            .showSkeletonScreen()
+            (parent as? DiscoverVC)?
+                .showSkeletonScreen()
+        }
 
         return initialLoadID
+    }
+
+    func setupPullToRefresh() {
+        guard refreshControl == nil,
+              let scrollView = view.firstSubview(of: UIScrollView.self)
+        else { return }
+
+        let control = UIRefreshControl()
+        control.tintColor = .white
+        control.addTarget(self, action: #selector(onPullToRefresh), for: .valueChanged)
+        scrollView.refreshControl = control
+        refreshControl = control
+    }
+
+    @objc func onPullToRefresh() {
+        refreshAllList(showsSkeleton: false)
     }
 }
 
@@ -257,7 +279,7 @@ private extension DiscoverAllVC {
 
 private extension DiscoverAllVC {
 
-    func refreshAllList() {
+    func refreshAllList(showsSkeleton: Bool = true) {
 
         todaysEvents.removeAll()
         allEvents.removeAll()
@@ -281,7 +303,8 @@ private extension DiscoverAllVC {
             city: selectedCity
         )
 
-        fetchInitialData()
+        let loadID = beginInitialLoading(showsSkeleton: showsSkeleton)
+        fetchDiscoverData(loadID: loadID)
     }
 
     private func finishInitialLoad(
@@ -294,10 +317,13 @@ private extension DiscoverAllVC {
 
         DispatchQueue.main.async {
 
-            (self.parent as? DiscoverVC)?
-                .hideSkeletonScreen()
+            if self.activeLoadShowsSkeleton {
+                (self.parent as? DiscoverVC)?
+                    .hideSkeletonScreen()
+            }
 
             self.view.isHidden = false
+            self.refreshControl?.endRefreshing()
         }
     }
 }
@@ -315,5 +341,21 @@ extension DiscoverAllVC {
             ? UserDefault.shared.activeCity
             : resolvedCity
         refreshAllList()
+    }
+}
+
+private extension UIView {
+    func firstSubview<T: UIView>(of type: T.Type) -> T? {
+        for subview in subviews {
+            if let match = subview as? T {
+                return match
+            }
+
+            if let match = subview.firstSubview(of: type) {
+                return match
+            }
+        }
+
+        return nil
     }
 }

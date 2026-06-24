@@ -88,6 +88,7 @@ final class OrderListViewController: UIViewController {
     private var questionAnswers: [String: Any] = [:]
     private let holdTimerView = UIView()
     private let holdTimerLabel = UILabel()
+    private let titleMarqueeLabel = PremiumMarqueeLabel()
 
     private var currency: String {
         venueDetails?.venueSettings?.currencySymbol ?? "$"
@@ -103,6 +104,7 @@ final class OrderListViewController: UIViewController {
         setupUI()
         loadSavedPaymentMethods()
         setupTableViews()
+        setupTitleMarqueeLabel()
         setupHeaderData()
         calculateTotal()
         setupTermsText()
@@ -401,7 +403,7 @@ final class OrderListViewController: UIViewController {
 
     private func setupHeaderData() {
         venueName.text = event?.venue?.name.uppercased()
-        eventNameLbl.text = event?.title
+        setHeaderTitle(event?.title)
 
         if let customText = event?.openTimeCustomText,
            !customText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -418,6 +420,33 @@ final class OrderListViewController: UIViewController {
         }
 
         configureAgreementText()
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard titleMarqueeLabel.superview == nil,
+              let parent = eventNameLbl.superview else { return }
+
+        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleMarqueeLabel.font = eventNameLbl.font ?? Constant.Font.geistMedium(size: 22)
+        titleMarqueeLabel.textColor = eventNameLbl.textColor ?? .white
+        titleMarqueeLabel.animationSpeed = 25
+        titleMarqueeLabel.animationDelay = 1.2
+        titleMarqueeLabel.trailingSpacing = 48
+        parent.addSubview(titleMarqueeLabel)
+        eventNameLbl.isHidden = true
+
+        NSLayoutConstraint.activate([
+            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventNameLbl.centerXAnchor),
+            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventNameLbl.centerYAnchor),
+            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventNameLbl.leadingAnchor),
+            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventNameLbl.trailingAnchor),
+            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventNameLbl.heightAnchor)
+        ])
+    }
+
+    private func setHeaderTitle(_ title: String?) {
+        eventNameLbl.text = title
+        titleMarqueeLabel.setText(title)
     }
 
     // MARK: - Terms & Conditions
@@ -1192,7 +1221,9 @@ final class OrderListViewController: UIViewController {
                         self,
                         booking: nil,
                         bookingId: bookingId,
-                        type: .singleTickedEvent
+                        type: .singleTickedEvent,
+                        sourceEvent: self.event,
+                        presentationMode: .pushedFromPurchase
                     )
                 } else {
                     Alert.showToast(errMsg ?? "Payment confirmation failed")

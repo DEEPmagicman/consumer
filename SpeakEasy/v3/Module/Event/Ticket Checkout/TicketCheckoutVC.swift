@@ -139,6 +139,7 @@ final class TicketCheckoutVC: UIViewController {
     private var shimmerBlocks: [ShimmerViewV3] = []
     private var isBookingLoaded = false
     private var isPaymentIntentLoaded = false
+    private let titleMarqueeLabel = PremiumMarqueeLabel()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -188,6 +189,7 @@ final class TicketCheckoutVC: UIViewController {
         purchaseTicketBtn.alpha = 0.5
 
         calculateTotal()
+        setupTitleMarqueeLabel()
         setupHeaderData()
         startCountdown()
         showCheckoutShimmer()
@@ -236,8 +238,35 @@ final class TicketCheckoutVC: UIViewController {
 
         venueName.text = venueDetails?.name
         venueName2.text = venueDetails?.name
-        eventTitleLbl.text = event?.title
+        setHeaderTitle(event?.title)
         privacyPolicyLbl.text = "I agree to receive marketing related text messages from \(venueDetails?.name ?? ""). Msg & data rates may apply. Reply STOP to opt out or HELP for support."
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard titleMarqueeLabel.superview == nil,
+              let parent = eventTitleLbl.superview else { return }
+
+        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleMarqueeLabel.font = eventTitleLbl.font ?? Constant.Font.geistMedium(size: 22)
+        titleMarqueeLabel.textColor = eventTitleLbl.textColor ?? .white
+        titleMarqueeLabel.animationSpeed = 25
+        titleMarqueeLabel.animationDelay = 1.2
+        titleMarqueeLabel.trailingSpacing = 48
+        parent.addSubview(titleMarqueeLabel)
+        eventTitleLbl.isHidden = true
+
+        NSLayoutConstraint.activate([
+            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventTitleLbl.centerXAnchor),
+            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventTitleLbl.centerYAnchor),
+            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventTitleLbl.leadingAnchor),
+            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventTitleLbl.trailingAnchor),
+            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventTitleLbl.heightAnchor)
+        ])
+    }
+
+    private func setHeaderTitle(_ title: String?) {
+        eventTitleLbl.text = title
+        titleMarqueeLabel.setText(title)
     }
 
     private func getBooking(id: String?) {
@@ -541,7 +570,14 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess {
                 countdownTimer?.invalidate()
-                Navigate.to.showQRCode(self, booking: nil, bookingId: bookingId, type: .singleTickedEvent)
+                Navigate.to.showQRCode(
+                    self,
+                    booking: nil,
+                    bookingId: bookingId,
+                    type: .singleTickedEvent,
+                    sourceEvent: self.event,
+                    presentationMode: .pushedFromPurchase
+                )
             } else {
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)
@@ -576,7 +612,14 @@ final class TicketCheckoutVC: UIViewController {
             guard let self = self else { return }
             if isSuccess, let id = id {
                 self.countdownTimer?.invalidate()
-                Navigate.to.showQRCode(self, booking: nil, bookingId: id, type: .singleTickedEvent)
+                Navigate.to.showQRCode(
+                    self,
+                    booking: nil,
+                    bookingId: id,
+                    type: .singleTickedEvent,
+                    sourceEvent: self.event,
+                    presentationMode: .pushedFromPurchase
+                )
             } else {
                 self.isPaymentInitiated = false
                 self.setScreenInteractionBlocked(false)

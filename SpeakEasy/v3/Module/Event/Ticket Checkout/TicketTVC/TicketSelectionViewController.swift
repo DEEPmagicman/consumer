@@ -45,6 +45,7 @@ class TicketSelectionViewController: UIViewController {
     private var isCheckoutInProgress = false
     private let shimmerRowCount = 3
     private let posterHeaderView = EventPosterHeaderView()
+    private let titleMarqueeLabel = PremiumMarqueeLabel()
     private lazy var interactionBlockerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -109,6 +110,7 @@ class TicketSelectionViewController: UIViewController {
         setupTableViews()
         setupTableViewObservers()
         setupContinueButton()
+        setupTitleMarqueeLabel()
         getTicketLinksAndSetup()
         setupHeaderData()
     }
@@ -397,8 +399,35 @@ class TicketSelectionViewController: UIViewController {
         guard let event = event else { return }
 
         venueName.text = venueDetails?.name ?? ""
-        eventTitleLbl.text = event.title
+        setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
+    }
+
+    private func setupTitleMarqueeLabel() {
+        guard titleMarqueeLabel.superview == nil,
+              let parent = eventTitleLbl.superview else { return }
+
+        titleMarqueeLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleMarqueeLabel.font = eventTitleLbl.font ?? Constant.Font.geistMedium(size: 22)
+        titleMarqueeLabel.textColor = eventTitleLbl.textColor ?? .white
+        titleMarqueeLabel.animationSpeed = 25
+        titleMarqueeLabel.animationDelay = 1.2
+        titleMarqueeLabel.trailingSpacing = 48
+        parent.addSubview(titleMarqueeLabel)
+        eventTitleLbl.isHidden = true
+
+        NSLayoutConstraint.activate([
+            titleMarqueeLabel.centerXAnchor.constraint(equalTo: eventTitleLbl.centerXAnchor),
+            titleMarqueeLabel.centerYAnchor.constraint(equalTo: eventTitleLbl.centerYAnchor),
+            titleMarqueeLabel.leadingAnchor.constraint(equalTo: eventTitleLbl.leadingAnchor),
+            titleMarqueeLabel.trailingAnchor.constraint(equalTo: eventTitleLbl.trailingAnchor),
+            titleMarqueeLabel.heightAnchor.constraint(equalTo: eventTitleLbl.heightAnchor)
+        ])
+    }
+
+    private func setHeaderTitle(_ title: String?) {
+        eventTitleLbl.text = title
+        titleMarqueeLabel.setText(title)
     }
 
     private func setupData() {
@@ -416,7 +445,7 @@ class TicketSelectionViewController: UIViewController {
         }
 
         venueName.text = venueDetails?.name ?? ""
-        eventTitleLbl.text = event.title
+        setHeaderTitle(event.title)
         dateandtimeLbl.text = formattedDateText(for: event)
         disabledTicketIds.removeAll()
 

@@ -821,7 +821,13 @@ extension CoverTicketListVC {
             guard let self else { return }
 
             if isSuccess, let id {
-                Navigate.to.scanQR(self, bookingId: id, addOnsBookingId: "")
+                Navigate.to.scanQR(
+                    self,
+                    bookingId: id,
+                    addOnsBookingId: "",
+                    venueName: venueDetails?.name ?? "",
+                    shouldPushFromVenueFlow: true
+                )
             } else {
                 self.isCheckoutNavigationInProgress = false
                 self.isFreeBookingInProgress = false

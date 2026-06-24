@@ -10,6 +10,7 @@ import UIKit
 import MapKit
 import YouTubeiOSPlayerHelper
 import MHLoadingButton
+import SDWebImage
 
 class EventDetailsVC: UIViewController {
 
@@ -3609,20 +3610,34 @@ final class EventPosterHeaderView: UIView {
     }
     
     func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard
-                error == nil,
-                let self,
-                let data,
-                let image = UIImage(data: data)
-            else { return }
-            
+        guard let url = URL(string: urlString) else {
+            setBackgroundImage(nil)
+            return
+        }
+
+        SDWebImageManager.shared.loadImage(
+            with: url,
+            options: [.retryFailed, .continueInBackground, .highPriority],
+            progress: nil
+        ) { [weak self] image, _, _, _, _, _ in
+            guard let self, let image else { return }
+
             DispatchQueue.main.async {
+                let shouldAnimate = self.backgroundImageView.image == nil
+                self.backgroundImageView.alpha = shouldAnimate ? 0 : 0.75
                 self.setBackgroundImage(image)
+
+                guard shouldAnimate else { return }
+
+                UIView.animate(
+                    withDuration: 0.22,
+                    delay: 0,
+                    options: [.curveEaseOut]
+                ) {
+                    self.backgroundImageView.alpha = 0.75
+                }
             }
-        }.resume()
+        }
     }
 }
 

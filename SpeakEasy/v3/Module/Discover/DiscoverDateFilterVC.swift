@@ -25,6 +25,7 @@ final class DiscoverDateFilterVC: UIViewController {
     private var selectedCity = UserDefault.shared.activeCity
     private var loadID = 0
     private var isNavigatingToEvent = false
+    private let refreshControl = UIRefreshControl()
 
     private let discoverService = DiscoverService()
     
@@ -33,6 +34,7 @@ final class DiscoverDateFilterVC: UIViewController {
 
         setupDateCollectionView()
         setupEventCollectionView()
+        setupPullToRefresh()
 
         fetchEvents(reset: true)
     }
@@ -141,10 +143,30 @@ final class DiscoverDateFilterVC: UIViewController {
     }
 
     // MARK: - Fetch Events
-    private func fetchEvents(reset: Bool = false) {
+    private func setupPullToRefresh() {
+        refreshControl.tintColor = .white
+        refreshControl.addTarget(
+            self,
+            action: #selector(onPullToRefresh),
+            for: .valueChanged
+        )
+        collectionView.refreshControl = refreshControl
+    }
+
+    @objc private func onPullToRefresh() {
+        fetchEvents(reset: true, showsInitialShimmer: false)
+    }
+
+    private func fetchEvents(
+        reset: Bool = false,
+        showsInitialShimmer: Bool = true
+    ) {
 
         guard !isLoading || reset else { return }
-        guard hasMore || reset else { return }
+        guard hasMore || reset else {
+            refreshControl.endRefreshing()
+            return
+        }
 
         isLoading = true
         loadID += 1
@@ -153,10 +175,12 @@ final class DiscoverDateFilterVC: UIViewController {
         if reset {
             skip = 0
             hasMore = true
-            isInitialLoading = true
+            isInitialLoading = showsInitialShimmer
             isPaginating = false
-            eventList.removeAll()
-            reloadUI()
+            if showsInitialShimmer {
+                eventList.removeAll()
+                reloadUI()
+            }
         }
 
         let city = selectedCity
@@ -183,6 +207,7 @@ final class DiscoverDateFilterVC: UIViewController {
                 self.isLoading = false
                 self.isInitialLoading = false
                 self.isPaginating = false
+                self.refreshControl.endRefreshing()
                 Alert.showToast(errMsg ?? Constant.String.somethingWrong)
                 self.reloadUI()
                 return
@@ -200,6 +225,7 @@ final class DiscoverDateFilterVC: UIViewController {
             self.hasMore = page.hasMore
 
             self.isLoading = false
+            self.refreshControl.endRefreshing()
             let wasInitialLoading = self.isInitialLoading
             self.isInitialLoading = false
 

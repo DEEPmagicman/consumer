@@ -263,6 +263,7 @@ class MapViewController: UIViewController {
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         tableView.isScrollEnabled = true
 
         tableView.register(
@@ -490,7 +491,9 @@ class MapViewController: UIViewController {
                 return
             }
 
-            self.venueList = reset ? page.list : self.venueList + page.list
+            self.venueList = reset
+                ? page.list
+                : self.venueList + self.uniqueVenues(from: page.list)
             self.venueSkip = self.venueList.count
             self.hasMoreVenues = page.hasMore
             self.isPaginatingVenues = false
@@ -500,6 +503,7 @@ class MapViewController: UIViewController {
                 self.updateEmptyState()
                 self.updatePaginationFooter()
                 self.refreshMapAnnotations(animated: true)
+                self.loadNextPageIfContentNeedsMoreRows()
             }
         }
     }
@@ -531,7 +535,7 @@ class MapViewController: UIViewController {
         discoverService.fetchDiscoverEvents(
             city: city,
             skip: eventSkip,
-            eventListType: .eventsTonight,
+            eventListType: .eventsInCity,
             timeZone: TimeZone.current.identifier
         ) { [weak self] isSuccess, errMsg, page in
             guard let self else { return }
@@ -550,7 +554,9 @@ class MapViewController: UIViewController {
                 return
             }
 
-            self.eventList = reset ? page.list : self.eventList + page.list
+            self.eventList = reset
+                ? page.list
+                : self.eventList + self.uniqueEvents(from: page.list)
             self.eventSkip = self.eventList.count
             self.hasMoreEvents = page.hasMore
             self.isPaginatingEvents = false
@@ -560,6 +566,7 @@ class MapViewController: UIViewController {
                 self.updateEmptyState()
                 self.updatePaginationFooter()
                 self.refreshMapAnnotations(animated: true)
+                self.loadNextPageIfContentNeedsMoreRows()
             }
         }
     }
@@ -567,15 +574,46 @@ class MapViewController: UIViewController {
     private func loadNextPageIfNeeded() {
         if selectedIndex == 0 {
             guard !isInitialLoadingVenues else { return }
+            guard !isLoadingVenues else { return }
             guard !isPaginatingVenues else { return }
             guard !venueList.isEmpty else { return }
+            guard hasMoreVenues else { return }
             fetchVenues()
         } else {
             guard !isInitialLoadingEvents else { return }
+            guard !isLoadingEvents else { return }
             guard !isPaginatingEvents else { return }
             guard !eventList.isEmpty else { return }
+            guard hasMoreEvents else { return }
             fetchEvents()
         }
+    }
+
+    private func loadNextPageIfContentNeedsMoreRows() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.tableView.layoutIfNeeded()
+
+            let contentHeight = self.tableView.contentSize.height
+            let visibleHeight = self.tableView.bounds.height
+            guard contentHeight > 0,
+                  contentHeight <= visibleHeight + 80 else {
+                return
+            }
+
+            self.loadNextPageIfNeeded()
+        }
+    }
+
+    private func uniqueVenues(from newVenues: [ClipVenue]) -> [ClipVenue] {
+        let existingIDs = Set(venueList.map { $0.id })
+        return newVenues.filter { !existingIDs.contains($0.id) }
+    }
+
+    private func uniqueEvents(from newEvents: [Event]) -> [Event] {
+        let existingIDs = Set(eventList.map { $0.id })
+        return newEvents.filter { !existingIDs.contains($0.id) }
     }
 
     private func updateEmptyState() {
@@ -599,7 +637,7 @@ class MapViewController: UIViewController {
             return
         }
 
-        let footerHeight: CGFloat = 144
+        let footerHeight: CGFloat = 164
         let footer = MapPaginationShimmerFooterView(
             frame: CGRect(
                 x: 0,
@@ -977,6 +1015,23 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(
         _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard !(selectedIndex == 0 && isInitialLoadingVenues) else { return }
+        guard !(selectedIndex == 1 && isInitialLoadingEvents) else { return }
+
+        let count = selectedIndex == 0 ? venueList.count : eventList.count
+        guard count > 0,
+              indexPath.row >= count - 3 else {
+            return
+        }
+
+        loadNextPageIfNeeded()
+    }
+
+    func tableView(
+        _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
         return UITableView.automaticDimension
@@ -991,13 +1046,34 @@ extension MapViewController: UITableViewDelegate, UITableViewDataSource {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView === tableView else { return }
+        guard !(selectedIndex == 0 && isInitialLoadingVenues) else { return }
+        guard !(selectedIndex == 1 && isInitialLoadingEvents) else { return }
 
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let visibleHeight = scrollView.bounds.height
-        let threshold: CGFloat = 260
+        let threshold: CGFloat = 360
 
         guard offsetY > contentHeight - visibleHeight - threshold else { return }
+        loadNextPageIfNeeded()
+    }
+}
+
+extension MapViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(
+        _ tableView: UITableView,
+        prefetchRowsAt indexPaths: [IndexPath]
+    ) {
+        guard !(selectedIndex == 0 && isInitialLoadingVenues) else { return }
+        guard !(selectedIndex == 1 && isInitialLoadingEvents) else { return }
+
+        let count = selectedIndex == 0 ? venueList.count : eventList.count
+        guard count > 0,
+              indexPaths.contains(where: { $0.row >= count - 4 }) else {
+            return
+        }
+
         loadNextPageIfNeeded()
     }
 }

@@ -30,7 +30,7 @@ final class VenueVC: UIViewController {
     private let venueService = VenueService()
     private let posterHeaderView = VenuePosterHeaderView()
     private let navTitleStackView = UIStackView()
-    private let navVenueNameLabel = UILabel()
+    private let navVenueNameLabel = PremiumMarqueeLabel()
     private let navVenueCityLabel = UILabel()
 
     private let glassSegment = GlassSegmentView(titles: ["Events", "Premium", "Artists"])
@@ -66,6 +66,7 @@ final class VenueVC: UIViewController {
     var isPresentedPremium = false
     private var isFollowing = false
     private var isFollowLoading = false
+    private var didAppearOnce = false
     private var isSocketRefreshInProgress = false
     private var followedVenueId: String?
     private var hasLocalFollowState = false
@@ -92,6 +93,12 @@ final class VenueVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         registerSocketDelegate()
+
+        if didAppearOnce {
+            refreshVenueFollowStateIfNeeded()
+        } else {
+            didAppearOnce = true
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -458,10 +465,37 @@ private extension VenueVC {
     }
 
     func applyLocalFollowStateIfNeeded(to venue: inout ClipVenue) {
-        guard hasLocalFollowState else { return }
+        guard hasLocalFollowState, isFollowLoading else { return }
 
         venue.isFollowing = isFollowing
         venue.followedVenueId = followedVenueId
+    }
+
+    func refreshVenueFollowStateIfNeeded() {
+        guard !isFollowLoading else { return }
+
+        let venueUniqueId = (venueDetails?.uniqueId ?? uniqueId) ?? ""
+        guard !venueUniqueId.isEmpty else { return }
+
+        venueService.fetchCoverVenueDetail(
+            uniqueId: venueUniqueId,
+            venueTimeZone: TimeZone.current.identifier
+        ) { [weak self] isSuccess, _, venueDetail in
+            guard let self,
+                  isSuccess,
+                  var venueDetail
+            else { return }
+
+            self.applyLocalFollowStateIfNeeded(to: &venueDetail)
+            self.venueDetails = venueDetail
+            self.syncFollowState()
+            self.updateFollowUI(animated: true)
+            self.updateCoverTicketViewVisibility()
+
+            if let venue = self.venueDetails {
+                self.onFollowStateChanged?(venue, self.isFollowing)
+            }
+        }
     }
 
     func applyFollowState(
@@ -599,8 +633,8 @@ private extension VenueVC {
                   let id = relation?.id,
                   !id.isEmpty
             else {
-
-                self.rollbackFollowState(
+                self.resolveFollowStateAfterFollowFailure(
+                    venueUniqueId: venueUniqueId,
                     previousState: previousState,
                     previousFollowedVenueId: previousFollowedVenueId
                 )
@@ -610,6 +644,35 @@ private extension VenueVC {
             self.applyFollowState(
                 isFollowing: true,
                 followedVenueId: id,
+                notify: true
+            )
+        }
+    }
+
+    func resolveFollowStateAfterFollowFailure(
+        venueUniqueId: String,
+        previousState: Bool,
+        previousFollowedVenueId: String?
+    ) {
+        venueService.fetchFollowedVenueId(
+            uniqueId: venueUniqueId,
+            search: venueDetails?.name
+        ) { [weak self] followedVenueId in
+            guard let self else { return }
+
+            guard let followedVenueId,
+                  !followedVenueId.isEmpty
+            else {
+                self.rollbackFollowState(
+                    previousState: previousState,
+                    previousFollowedVenueId: previousFollowedVenueId
+                )
+                return
+            }
+
+            self.applyFollowState(
+                isFollowing: true,
+                followedVenueId: followedVenueId,
                 notify: true
             )
         }
@@ -726,9 +789,9 @@ private extension VenueVC {
 
         navVenueNameLabel.font = Constant.Font.geistMedium(size: 20)
         navVenueNameLabel.textColor = .white
-        navVenueNameLabel.textAlignment = .center
-        navVenueNameLabel.numberOfLines = 1
-        navVenueNameLabel.lineBreakMode = .byTruncatingTail
+        navVenueNameLabel.animationSpeed = 25
+        navVenueNameLabel.animationDelay = 1.2
+        navVenueNameLabel.trailingSpacing = 48
         navVenueNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         navVenueCityLabel.font = Constant.Font.geistMedium(size: 12)
@@ -746,12 +809,14 @@ private extension VenueVC {
             navTitleStackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             navTitleStackView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 36),
             navTitleStackView.leadingAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 72),
-            navTitleStackView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72)
+            navTitleStackView.trailingAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -72),
+            navVenueNameLabel.widthAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.widthAnchor, constant: -144),
+            navVenueNameLabel.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
 
     func updateNavTitleText() {
-        navVenueNameLabel.text = displayVenueName
+        navVenueNameLabel.setText(displayVenueName)
         navVenueCityLabel.text = displayVenueCity
         navVenueCityLabel.isHidden = displayVenueCity.isEmpty
     }
