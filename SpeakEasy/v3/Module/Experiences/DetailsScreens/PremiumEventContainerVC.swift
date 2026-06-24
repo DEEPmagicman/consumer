@@ -56,7 +56,7 @@ final class PremiumEventContainerVC: UIViewController {
 
     private lazy var listVC = PremiumReservationVC()
 
-    private lazy var inquiryVC = TableRequestVC()
+    private lazy var inquiryVC = PremiumInquiryVC()
 
     private var currentVC: UIViewController?
 
@@ -223,6 +223,7 @@ private extension PremiumEventContainerVC {
         listVC.seatingAreas = bookableSeatingAreas
 
         inquiryVC.event = event
+        inquiryVC.seatingAreas = hiddenSeatingAreas
     }
     
     private func filterSeatingAreas(
