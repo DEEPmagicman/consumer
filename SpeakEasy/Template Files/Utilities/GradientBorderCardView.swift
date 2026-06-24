@@ -5,7 +5,6 @@
 //  Created by Paras on 12/05/26.
 //
 
-
 import UIKit
 
 final class GradientBorderCardView: UIView {
@@ -31,6 +30,8 @@ final class GradientBorderCardView: UIView {
     var glassCornerRadius: CGFloat = 34 {
         didSet {
             layer.cornerRadius = glassCornerRadius
+            blurView.layer.cornerRadius = glassCornerRadius
+            fillLayer.cornerRadius = glassCornerRadius
         }
     }
     
@@ -45,13 +46,28 @@ final class GradientBorderCardView: UIView {
     private let bottomGlassBorderLayer = CAGradientLayer()
     private let bottomGlassMaskLayer = CAShapeLayer()
     
-    private let borderColors = [
+    private var borderColors = [
         AppColor.primaryWhiteColor.withAlphaComponent(0).cgColor,
         AppColor.primaryWhiteColor.withAlphaComponent(0.11).cgColor,
         AppColor.primaryWhiteColor.withAlphaComponent(0.20).cgColor,
         AppColor.primaryWhiteColor.withAlphaComponent(0.24).cgColor,
         AppColor.primaryWhiteColor.withAlphaComponent(0).cgColor
     ]
+    
+    var thinBorder: Bool = false {
+        didSet {
+            if thinBorder { borderColors = [
+                AppColor.primaryWhiteColor.withAlphaComponent(0).cgColor,
+                AppColor.primaryWhiteColor.withAlphaComponent(0.06).cgColor,
+                AppColor.primaryWhiteColor.withAlphaComponent(0.14).cgColor,
+                AppColor.primaryWhiteColor.withAlphaComponent(0.20).cgColor,
+                AppColor.primaryWhiteColor.withAlphaComponent(0).cgColor
+            ]
+            }
+            setNeedsLayout()
+        }
+    }
+        
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -116,7 +132,10 @@ final class GradientBorderCardView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        let fullWidth: CGFloat = thinBorder ? 0.3  : 0.8
+        let topWidth: CGFloat = thinBorder ? 0.7  : 1.30
+        let bottomWidth: CGFloat = thinBorder ? 0.7  : 1.10
+        
         blurView.frame = bounds
         blurView.layer.cornerRadius = glassCornerRadius
         blurView.clipsToBounds = true
@@ -131,11 +150,12 @@ final class GradientBorderCardView: UIView {
             roundedRect: rect,
             cornerRadius: glassCornerRadius
         ).cgPath
+        fullBorderLayer.lineWidth = fullWidth
 
         topGlassMaskLayer.path = makeTopHalfBorderPath(rect: rect, radius: glassCornerRadius).cgPath
         topGlassMaskLayer.fillColor = UIColor.clear.cgColor
         topGlassMaskLayer.strokeColor = UIColor.white.cgColor
-        topGlassMaskLayer.lineWidth = 1.30
+        topGlassMaskLayer.lineWidth = topWidth
         topGlassMaskLayer.lineCap = .round
         topGlassMaskLayer.lineJoin = .round
         
@@ -146,7 +166,7 @@ final class GradientBorderCardView: UIView {
 
         bottomGlassMaskLayer.fillColor = UIColor.clear.cgColor
         bottomGlassMaskLayer.strokeColor = UIColor.white.cgColor
-        bottomGlassMaskLayer.lineWidth = 1.10
+        bottomGlassMaskLayer.lineWidth = bottomWidth
         bottomGlassMaskLayer.lineCap = .round
         bottomGlassMaskLayer.lineJoin = .round
     }

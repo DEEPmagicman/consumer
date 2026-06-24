@@ -93,6 +93,7 @@ final class PremiumInfoPillView: UIView {
             
         case .guests:
             iconView.image = UIImage(resource: .guestIcon)
+            iconView.image = UIImage(resource: .guestIcon)
             
         case .time:
             iconView.image = UIImage(resource: .icClock1)
